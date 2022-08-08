@@ -1,10 +1,24 @@
 -- DB update 2022_06_14_00 -> 2022_06_14_01
 --
-ALTER TABLE `gameobject_template_addon`
-	ADD COLUMN `artkit0` INT NOT NULL DEFAULT 0 AFTER `maxgold`,
-	ADD COLUMN `artkit1` INT NOT NULL DEFAULT 0 AFTER `artkit0`,
-	ADD COLUMN `artkit2` INT NOT NULL DEFAULT 0 AFTER `artkit1`,
-	ADD COLUMN `artkit3` INT NOT NULL DEFAULT 0 AFTER `artkit2`;
+DROP PROCEDURE IF EXISTS `updateDb`;
+DELIMITER //
+CREATE PROCEDURE updateDb ()
+proc:BEGIN
+SELECT COUNT(*) INTO @COLEXISTS
+FROM information_schema.COLUMNS
+WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'gameobject_template_addon' AND COLUMN_NAME = 'artkit0';
+IF @COLEXISTS = 1 THEN LEAVE proc; END IF;
+START TRANSACTION;
+ALTER TABLE `gameobject_template_addon` 
+     ADD COLUMN `artkit0` INT NOT NULL DEFAULT 0 AFTER `maxgold`,
+     ADD COLUMN `artkit1` INT NOT NULL DEFAULT 0 AFTER `artkit0`,
+     ADD COLUMN `artkit2` INT NOT NULL DEFAULT 0 AFTER `artkit1`,
+     ADD COLUMN `artkit3` INT NOT NULL DEFAULT 0 AFTER `artkit2`;
+
+END //
+DELIMITER ;
+
+CALL updateDb();
 
 DROP TABLE IF EXISTS `gameobjectartkit_dbc`;
 
