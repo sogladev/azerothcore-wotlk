@@ -101,6 +101,7 @@ function comp_compile() {
   comp_ccacheResetStats
 
   time make -j $MTHREADS
+  sudo chown -R acore:acore /azerothcore/env/dist/bin                          
   make -j $MTHREADS install
 
   comp_ccacheShowStats
