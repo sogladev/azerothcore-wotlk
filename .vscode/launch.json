@@ -2,10 +2,34 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Linux/Docker debug",
+            "name": "Linux/Docker Worldserver debug",
             "type": "cppdbg",
             "request": "launch",
             "program": "/azerothcore/env/dist/bin/worldserver",
+            "cwd": "/azerothcore",
+            "args": [],
+            "environment": [],
+            "externalConsole": false,
+            "sourceFileMap": {
+                "/azerothcore": "${workspaceFolder}"
+            },
+            "linux": {
+                "MIMode": "gdb",
+                "miDebuggerPath": "/usr/bin/gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": false
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Linux/Docker Authserver debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/azerothcore/env/dist/bin/authserver",
             "cwd": "/azerothcore",
             "args": [],
             "environment": [],
@@ -63,6 +87,13 @@
                 "MIMode": "gdb",
                 "miDebuggerPath": "C:\\MinGw\\bin\\gdb.exe"
             }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Linux/Docker Worldserver-Authserver debug",
+            "configurations": ["Linux/Docker Worldserver debug", "Linux/Docker Authserver debug"],
+            "stopAll": true
         }
     ]
 }
