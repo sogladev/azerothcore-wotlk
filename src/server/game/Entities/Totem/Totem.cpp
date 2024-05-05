@@ -63,8 +63,6 @@ void Totem::InitStats(uint32 duration)
             // set display id depending on caster's race
             SetDisplayId(owner->GetModelForTotem(PlayerTotemType(m_Properties->Id)));
         }
-
-        SetLevel(owner->GetLevel());
     }
 
     Minion::InitStats(duration);

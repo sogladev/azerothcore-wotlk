@@ -5940,67 +5940,6 @@ void Spell::SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const* 
     if (caster->IsTotem())
         caster = caster->ToTotem()->GetOwner();
 
-    // in another case summon new
-    uint8 summonLevel = caster->GetLevel();
-
-    // level of pet summoned using engineering item based at engineering skill level
-    if (m_CastItem && caster->GetTypeId() == TYPEID_PLAYER)
-        if (ItemTemplate const* proto = m_CastItem->GetTemplate())
-        {
-            // xinef: few special cases
-            if (proto->RequiredSkill == SKILL_ENGINEERING)
-            {
-                if (uint16 skill202 = caster->ToPlayer()->GetSkillValue(SKILL_ENGINEERING))
-                    summonLevel = skill202 / 5;
-            }
-
-            switch (m_spellInfo->Id)
-            {
-                // Dragon's Call
-                case 13049:
-                    summonLevel = 55;
-                    break;
-
-                // Cleansed Timberling Heart: Summon Timberling
-                case 5666:
-                    summonLevel = 7;
-                    break;
-
-                // Glowing Cat Figurine: Summon Ghost Saber
-                case 6084:
-                    // minLevel 19, maxLevel 20
-                    summonLevel = 20;
-                    break;
-
-                // Spiked Collar: Summon Felhunter
-                case 8176:
-                    summonLevel = 30;
-                    break;
-
-                // Dog Whistle: Summon Tracking Hound
-                case 9515:
-                    summonLevel = 30;
-                    break;
-
-                // Barov Peasant Caller: Death by Peasant
-                case 18307:
-                case 18308:
-                    summonLevel = 60;
-                    break;
-
-                // Thornling Seed: Plant Thornling
-                case 22792:
-                    summonLevel = 60;
-                    break;
-
-                // Cannonball Runner: Summon Crimson Cannon
-                case 6251:
-                    summonLevel = 61;
-                    break;
-            }
-        }
-
-    summonLevel = std::min<uint8>(sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL) + sWorld->getIntConfig(CONFIG_WORLD_BOSS_LEVEL_DIFF), std::max<uint8>(1U, summonLevel));
 
     float radius = 5.0f;
     int32 duration = m_spellInfo->GetDuration();
@@ -6038,14 +5977,17 @@ void Spell::SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const* 
         if (!summon)
             return;
 
-        // xinef: set calculated level
-        summon->SetLevel(summonLevel);
-
-        // if summonLevel changed, set stats for calculated level
-        if (summonLevel != caster->GetLevel())
-        {
-            ((Guardian*)summon)->InitStatsForLevel(summonLevel);
-        }
+        // level of pet summoned using engineering item based at engineering skill level
+        if (m_CastItem && caster->GetTypeId() == TYPEID_PLAYER)
+            if (ItemTemplate const* proto = m_CastItem->GetTemplate())
+            {
+                // xinef: few special cases
+                if (proto->RequiredSkill == SKILL_ENGINEERING)
+                {
+                    if (uint16 skill202 = caster->ToPlayer()->GetSkillValue(SKILL_ENGINEERING))
+                        static_cast<Guardian*>(summon)->InitStatsForLevel(skill202 / 5);
+                }
+            }
 
         // xinef: if we have more than one guardian, change follow angle
         if (summon->HasUnitTypeMask(UNIT_MASK_MINION) && totalNumGuardians > 1)
