@@ -5940,9 +5940,75 @@ void Spell::SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const* 
     if (caster->IsTotem())
         caster = caster->ToTotem()->GetOwner();
 
-
     float radius = 5.0f;
     int32 duration = m_spellInfo->GetDuration();
+
+    // Expected Level
+    uint32 creatureLevel = caster->GetLevel();
+
+    // Everything considered as guardian or critter pets uses its creature template level by default (may change depending on SpellEffect params)
+    if (properties)
+    {
+        if (properties->Type == SUMMON_TYPE_MINIPET || (properties->Flags & SUMMON_PROP_FLAG_USE_CREATURE_LEVEL))
+        {
+            if (CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(GetSpellInfo()->Effects[i].MiscValue))
+                creatureLevel = urand(cInfo->minlevel, cInfo->maxlevel);
+            else
+            {
+                // sLog.outError("Spell Effect EFFECT_SUMMON (%u) - no creature template found for summoned NPC %u (spell id %u, effIndex %u)", m_spellInfo->Effect[eff_idx], m_spellInfo->EffectMiscValue[eff_idx], m_spellInfo->Id, eff_idx);
+                // return;
+            }
+        }
+        else if (properties->Type != SUMMON_TYPE_NONE && properties->Category != SUMMON_CATEGORY_WILD) // use invoker level for other cases than wild
+        {
+            if (CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(GetSpellInfo()->Effects[i].MiscValue))
+                if (cInfo->minlevel > caster->GetLevel()) // prevent caster summoning too high level mobs
+                {
+                    creatureLevel = caster->GetLevel();
+                }
+                else
+                {
+                    creatureLevel = std::max(std::min(caster->GetLevel(), cInfo->maxlevel), cInfo->minlevel);
+                }
+                // creatureLevel = std::max(std::min(caster->GetLevel(), cInfo->maxlevel), cInfo->minlevel); // this breaks some creatures, wrong minvalues? See redrige .go c 4463
+            else
+            {
+                // sLog.outError("Spell Effect EFFECT_SUMMON (%u) - no creature template found for summoned NPC %u (spell id %u, effIndex %u)", m_spellInfo->Effect[eff_idx], m_spellInfo->EffectMiscValue[eff_idx], m_spellInfo->Id, eff_idx);
+                // return;
+            }
+        }
+    }
+
+    if (!caster->IsPlayer())
+    {
+        // If EffectMultipleValue <= 0, pets have their calculated level modified by EffectBonusMultiplier?
+        if (GetSpellInfo()->Effects[i].BonusMultiplier <= 0) // TODO: Check if instead of using level variable, should not use 0 in this check
+        {
+            uint32 resultLevel = std::max(creatureLevel + GetSpellInfo()->Effects[i].ValueMultiplier, 0.0f);
+            // Result level should be a valid level for creatures
+            if (resultLevel > 0 && resultLevel <= (sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL)+ sWorld->getIntConfig(CONFIG_WORLD_BOSS_LEVEL_DIFF)))
+                creatureLevel = resultLevel;
+
+        }
+    }
+    creatureLevel = std::min<uint8>(sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL) + sWorld->getIntConfig(CONFIG_WORLD_BOSS_LEVEL_DIFF), std::max<uint8>(1U, creatureLevel));
+
+    // level of pet summoned using engineering item based at engineering skill level
+    if (m_CastItem && caster->GetTypeId() == TYPEID_PLAYER)
+    {
+        if (ItemTemplate const* proto = m_CastItem->GetTemplate())
+        {
+            // xinef: few special cases
+            if (proto->RequiredSkill == SKILL_ENGINEERING)
+            {
+                if (uint16 skill202 = caster->ToPlayer()->GetSkillValue(SKILL_ENGINEERING))
+                    creatureLevel = skill202 / 5;
+            }
+        }
+    }
+
+    // Level ends
+
 
     if (Player* modOwner = m_originalCaster->GetSpellModOwner())
         modOwner->ApplySpellMod(m_spellInfo->Id, SPELLMOD_DURATION, duration);
@@ -5977,6 +6043,14 @@ void Spell::SummonGuardian(uint32 i, uint32 entry, SummonPropertiesEntry const* 
         if (!summon)
             return;
 
+        // xinef: set calculated level
+        summon->SetLevel(creatureLevel);
+
+        // if summonLevel changed, set stats for calculated level
+        if (creatureLevel != caster->GetLevel())
+        {
+            ((Guardian*)summon)->InitStatsForLevel(creatureLevel);
+        }
         // level of pet summoned using engineering item based at engineering skill level
         if (m_CastItem && caster->GetTypeId() == TYPEID_PLAYER)
             if (ItemTemplate const* proto = m_CastItem->GetTemplate())

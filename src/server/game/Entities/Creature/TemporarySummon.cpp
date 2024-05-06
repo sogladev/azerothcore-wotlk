@@ -240,9 +240,6 @@ void TempSummon::InitStats(uint32 duration)
             }
             owner->m_SummonSlot[slot] = GetGUID();
         }
-        bool useCreatureLevel = (m_Properties->Flags & SUMMON_PROP_FLAG_USE_CREATURE_LEVEL) != 0;
-        if (!useCreatureLevel)
-            SetLevel(owner->GetLevel());
     }
 
     if (m_Properties->Faction)
