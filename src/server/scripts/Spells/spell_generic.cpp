@@ -5134,6 +5134,38 @@ class spell_gen_choking_vines : public AuraScript
     }
 };
 
+// 32027 - Expedition Flare
+enum ExpeditionFlare
+{
+    SPELL_SUMMON_EXPEDITION_SCOUT =  32030,
+};
+
+class spell_expedition_flare : public SpellScript
+{
+    PrepareSpellScript(spell_expedition_flare);
+
+    bool Validate(SpellInfo const* /*spellInfo*/) override
+    {
+        return ValidateSpellInfo({ SPELL_SUMMON_EXPEDITION_SCOUT });
+    }
+
+    void HandleScriptEffect(SpellEffIndex /*effIndex*/)
+    {
+        Player* player = GetCaster()->ToPlayer();
+        player->CastSpell(player, SPELL_SUMMON_EXPEDITION_SCOUT, true);
+    }
+
+    void HandleDummy(SpellEffIndex /*effIndex*/)
+    {
+    }
+
+    void Register() override
+    {
+        OnEffectHitTarget += SpellEffectFn(spell_expedition_flare::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget += SpellEffectFn(spell_expedition_flare::HandleDummy, EFFECT_1, SPELL_EFFECT_DUMMY);
+    }
+};
+
 void AddSC_generic_spell_scripts()
 {
     RegisterSpellScript(spell_silithyst);
@@ -5287,5 +5319,6 @@ void AddSC_generic_spell_scripts()
     RegisterSpellScript(spell_gen_jubling_cooldown);
     RegisterSpellScript(spell_gen_yehkinya_bramble);
     RegisterSpellScript(spell_gen_choking_vines);
+    RegisterSpellScript(spell_expedition_flare);
 }
 
