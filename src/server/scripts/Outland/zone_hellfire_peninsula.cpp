@@ -604,10 +604,87 @@ public:
     }
 };
 
+enum TrollBanesCommand
+{
+    SPELL_NAZGRELS_FERVOR         = 39913,
+    SPELL_TROLL_BANES_COMMAND     = 39911,
+    WS_MAGTHERIDONS_HEAD_HORDE    = 3550,
+    WS_MAGTHERIDONS_HEAD_ALLIANCE = 3551,
+    ZONEID_HELLFIRE_PENINSULA     = 3483,
+    ZONEID_HELLFIRE_RAMPARTS      = 3562,
+    ZONEID_HELLFIRE_CITADEL       = 3563,
+    ZONEID_BLOOD_FURNACE          = 3713,
+    ZONEID_SHATTERED_HALLS        = 3714,
+    ZONEID_MAGTHERIDON_LAIR       = 3836,
+    AREA_HONOR_HOLD               = 3538,
+    AREA_THRALLMAR                = 3536,
+};
+
+GuidVector magtheridonHeadGUIDs;
+
+class TrollBanesCommandPlayerScript : public PlayerScript
+{
+public:
+    TrollBanesCommandPlayerScript() : PlayerScript("TrollBanesCommandPlayerScript", {PLAYERHOOK_ON_UPDATE_ZONE}) { }
+
+    void OnUpdateZone(Player* player, uint32 newZone, uint32 /*newArea*/) override
+    {
+       switch (newZone)
+       {
+            case ZONEID_HELLFIRE_PENINSULA:
+            case ZONEID_HELLFIRE_RAMPARTS:
+            case ZONEID_HELLFIRE_CITADEL:
+            case ZONEID_BLOOD_FURNACE:
+            case ZONEID_SHATTERED_HALLS:
+            case ZONEID_MAGTHERIDON_LAIR:
+                magtheridonHeadGUIDs.push_back(player->GetGUID());
+                if (player->GetTeamId() == TEAM_ALLIANCE && sWorld->getWorldState(WS_MAGTHERIDONS_HEAD_ALLIANCE))
+                {
+                    player->CastSpell(player, SPELL_TROLL_BANES_COMMAND, true);
+                }
+                if (player->GetTeamId() == TEAM_HORDE && sWorld->getWorldState(WS_MAGTHERIDONS_HEAD_HORDE))
+                {
+                    player->CastSpell(player, SPELL_NAZGRELS_FERVOR, true);
+                }
+                break;
+       }
+    }
+};
+
+class go_magtheridons_head : public GameObjectScript
+{
+public:
+    go_magtheridons_head() : GameObjectScript("go_magtheridons_head") { }
+
+    struct go_matheridons_headAI : public NullGameObjectAI
+    {
+        go_matheridons_headAI(GameObject* gameObject) : NullGameObjectAI(gameObject) { }
+
+        void Reset() override
+        {
+            if (me->GetAreaId() == AREA_HONOR_HOLD)
+            {
+                sWorld->setWorldState(WS_MAGTHERIDONS_HEAD_ALLIANCE, 1);
+            }
+            else if (me->GetAreaId() == AREA_THRALLMAR)
+            {
+                sWorld->setWorldState(WS_MAGTHERIDONS_HEAD_HORDE, 1);
+            }
+        }
+    };
+
+    GameObjectAI* GetAI(GameObject* go) const override
+    {
+        return new go_matheridons_headAI(go);
+    }
+};
+
 void AddSC_hellfire_peninsula()
 {
     // Ours
     new spell_q10935_the_exorcism_of_colonel_jules();
+    new TrollBanesCommandPlayerScript();
+    new go_magtheridons_head();
 
     // Theirs
     new npc_aeranas();
