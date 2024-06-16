@@ -63,19 +63,10 @@ enum Actions
     ACTION_BACK_TO_TRAINING        = 4,
 };
 
-enum Misc
+enum Groups
 {
     GROUP_OOC_RP                    = 0,
-    PATH_RAZUVIOUS                  = 1283120,
-    POINT_DEATH_KNIGHT              = 0,
-    WP_TOP_LEFT                     = 1,
-    WP_TOP_RIGHT                    = 2,
-    WP_MIDDLE_RIGHT                 = 3,
-    WP_MIDDLE_BOTTOM                = 4,
 };
-
-const uint32 TABLE_WAYPOINT_RP_10[4] = {WP_MIDDLE_BOTTOM, WP_TOP_RIGHT, WP_MIDDLE_BOTTOM, WP_TOP_RIGHT};
-const uint32 TABLE_WAYPOINT_RP_25[4] = {WP_MIDDLE_BOTTOM, WP_TOP_LEFT, WP_MIDDLE_RIGHT, WP_TOP_RIGHT};
 
 class boss_razuvious : public CreatureScript
 {
@@ -120,107 +111,6 @@ public:
             summons.DespawnAll();
             events.Reset();
             SpawnHelpers();
-            _roleplayWaypointNextIndex = 0;
-            _roleplayReady = false;
-            ScheduleRP();
-        }
-
-        void ScheduleInteractWithDeathKnight()
-        {
-            scheduler.Schedule(2s, GROUP_OOC_RP, [this](TaskContext /*context*/)
-            {
-                if (rpBuddyGUID)
-                    if (Creature* understudy = ObjectAccessor::GetCreature(*me, rpBuddyGUID))
-                        understudy->AI()->DoAction(ACTION_FACE_ME);
-            }).Schedule(8s, GROUP_OOC_RP, [this](TaskContext /*context*/)
-            {
-                if (rpBuddyGUID)
-                    if (Creature* understudy = ObjectAccessor::GetCreature(*me, rpBuddyGUID))
-                        understudy->AI()->DoAction(ACTION_SALUTE);
-            }).Schedule(11s, GROUP_OOC_RP, [this](TaskContext /*context*/)
-            {
-                me->GetMotionMaster()->MovePath(PATH_RAZUVIOUS, true);
-            }).Schedule(13s, GROUP_OOC_RP, [this](TaskContext /*context*/)
-            {
-                if (rpBuddyGUID)
-                    if (Creature* understudy = ObjectAccessor::GetCreature(*me, rpBuddyGUID))
-                        understudy->AI()->DoAction(ACTION_BACK_TO_TRAINING);
-                ScheduleRP();
-            });
-
-            if (rpBuddyGUID)
-                if (Creature* understudy = ObjectAccessor::GetCreature(*me, rpBuddyGUID))
-                    me->SetFacingToObject(understudy);
-
-            if (roll_chance_i(75))
-            {
-                bool longText = roll_chance_i(50);
-                Talk(longText ? SAY_TARGET_DUMMY : SAY_PATHETIC);
-                scheduler.Schedule(4s, GROUP_OOC_RP, [this](TaskContext /*context*/)
-                {
-                    if (rpBuddyGUID)
-                        if (Creature* understudy = ObjectAccessor::GetCreature(*me, rpBuddyGUID))
-                            understudy->AI()->DoAction(ACTION_TALK);
-                });
-                if (longText)
-                    scheduler.DelayGroup(GROUP_OOC_RP, 5s);
-            }
-            else
-            {
-                me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-                scheduler.Schedule(4s, GROUP_OOC_RP, [this](TaskContext /*context*/)
-                {
-                    if (rpBuddyGUID)
-                        if (Creature* understudy = ObjectAccessor::GetCreature(*me, rpBuddyGUID))
-                        {
-                            if (roll_chance_i(25))
-                                understudy->AI()->DoAction(ACTION_EMOTE);
-                            else
-                                understudy->AI()->DoAction(ACTION_TALK);
-                        }
-                });
-            }
-        }
-
-        void MovementInform(uint32 type, uint32 id) override
-        {
-            if (type == POINT_MOTION_TYPE && id == POINT_DEATH_KNIGHT)
-            {
-                ScheduleInteractWithDeathKnight();
-            }
-
-            if (type != WAYPOINT_MOTION_TYPE)
-                return;
-
-            if (!_roleplayReady)
-                return;
-
-            if (id == _roleplayWaypoint)
-            {
-                _roleplayReady = false;
-                if (Creature* understudy = GetClosestCreatureWithEntry(me, NPC_DEATH_KNIGHT_UNDERSTUDY, 20.0f))
-                {
-                    rpBuddyGUID = understudy->GetGUID();
-                    me->GetMotionMaster()->MovementExpired(false);
-                    me->GetMotionMaster()->MoveIdle();
-                }
-                scheduler.Schedule(0s, GROUP_OOC_RP, [this](TaskContext /*context*/)
-                {
-                    if (rpBuddyGUID)
-                        if (Creature* understudy = ObjectAccessor::GetCreature(*me, rpBuddyGUID))
-                            me->GetMotionMaster()->MovePoint(POINT_DEATH_KNIGHT, understudy->GetNearPosition(INTERACTION_DISTANCE, understudy->GetRelativeAngle(me)));
-                });
-            }
-        }
-
-        void ScheduleRP()
-        {
-            scheduler.Schedule(10s, 10s, GROUP_OOC_RP, [this](TaskContext /*context*/) // TODO: increase this time to 60s-80s
-            {
-                _roleplayWaypoint = RAID_MODE(TABLE_WAYPOINT_RP_10, TABLE_WAYPOINT_RP_25)[_roleplayWaypointNextIndex];
-                _roleplayReady = true;
-                _roleplayWaypointNextIndex = (_roleplayWaypointNextIndex + 1) % 4;
-            });
         }
 
         void KilledUnit(Unit* who) override
@@ -262,7 +152,6 @@ public:
         void JustEngagedWith(Unit* who) override
         {
             BossAI::JustEngagedWith(who);
-            scheduler.CancelGroup(GROUP_OOC_RP);
             Talk(SAY_AGGRO);
             events.ScheduleEvent(EVENT_UNBALANCING_STRIKE, 20s);
             events.ScheduleEvent(EVENT_DISRUPTING_SHOUT, 15s);
@@ -272,9 +161,6 @@ public:
 
         void UpdateAI(uint32 diff) override
         {
-            if (!me->IsInCombat())
-                scheduler.Update(diff);
-
             if (!UpdateVictim())
                 return;
 
@@ -302,11 +188,6 @@ public:
             }
             DoMeleeAttackIfReady();
         }
-    private:
-        bool _roleplayReady;
-        uint8 _roleplayWaypointNextIndex;
-        uint8 _roleplayWaypoint;
-        ObjectGuid rpBuddyGUID;
     };
 };
 
@@ -344,34 +225,6 @@ public:
             });
         }
 
-        void DoAction(int32 action) override
-        {
-            switch (action)
-            {
-                case ACTION_FACE_ME:
-                    scheduler.CancelGroup(GROUP_OOC_RP);
-                    me->SetSheath(SHEATH_STATE_UNARMED);
-                    me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_NONE);
-                    if (InstanceScript* instance = me->GetInstanceScript())
-                        if (Creature* cr = ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_RAZUVIOUS)))
-                            me->SetFacingToObject(cr);
-                    break;
-                case ACTION_TALK:
-                    Talk(SAY_DEATH_KNIGHT_UNDERSTUDY);
-                    break;
-                case ACTION_EMOTE:
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
-                    break;
-                case ACTION_SALUTE:
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                    break;
-                case ACTION_BACK_TO_TRAINING:
-                    me->SetSheath(SHEATH_STATE_MELEE);
-                    ScheduleAttackDummy();
-                    break;
-            }
-        }
-
         void KilledUnit(Unit* who) override
         {
             if (who->GetTypeId() == TYPEID_PLAYER && me->GetInstanceScript())
@@ -383,10 +236,13 @@ public:
         void JustEngagedWith(Unit* who) override
         {
             scheduler.CancelGroup(GROUP_OOC_RP);
-            if (Creature* cr = me->FindNearestCreature(NPC_RAZUVIOUS, 100.0f))
+            if (InstanceScript* instance = me->GetInstanceScript())
             {
-                cr->SetInCombatWithZone();
-                cr->AI()->AttackStart(who);
+                if (Creature* creature = ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_RAZUVIOUS)))
+                {
+                    creature->SetInCombatWithZone();
+                    creature->AI()->AttackStart(who);
+                }
             }
         }
 
