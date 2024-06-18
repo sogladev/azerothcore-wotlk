@@ -632,12 +632,14 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                     bool isWithinMeleeRange = distanceToTarget <= meleeRange;
                     bool isRangedAttack = spellMaxRange > NOMINAL_MELEE_RANGE;
                     bool isTargetRooted = target->ToUnit()->HasUnitState(UNIT_STATE_ROOT);
+                    bool isInstantCast = spellInfo->CalcCastTime() == 0;
                     // To prevent running back and forth when OOM, we must have more than 10% mana.
-                    bool canCastSpell = me->GetPowerPct(POWER_MANA) > 10.0f && spellInfo->CalcPowerCost(me, spellInfo->GetSchoolMask()) < (int32)me->GetPower(POWER_MANA) && !me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED);
+                    bool canCastSpell =  me->GetPowerPct(POWER_MANA) > 10.0f && spellInfo->CalcPowerCost(me, spellInfo->GetSchoolMask()) < (int32)me->GetPower(POWER_MANA) && !me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SILENCED);
+                    bool canCastRangedWeaponSpell = spellInfo->IsRangedWeaponSpell() && !me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISARMED) && (spellInfo->CalcPowerCost(me, spellInfo->GetSchoolMask()) == 0);
                     bool isSpellIgnoreLOS = spellInfo->HasAttribute(SPELL_ATTR2_IGNORE_LINE_OF_SIGHT);
 
                     // If target is rooted we move out of melee range before casting, but not further than spell max range.
-                    if (isWithinLOSInMap && isWithinMeleeRange && isRangedAttack && isTargetRooted && canCastSpell)
+                    if (isWithinLOSInMap && isWithinMeleeRange && isRangedAttack && isTargetRooted && (canCastSpell || canCastRangedWeaponSpell) && !isInstantCast)
                     {
                         failedSpellCast = true; // Mark spellcast as failed so we can retry it later
                         float minDistance = std::max(meleeRange, spellMinRange) - distanceToTarget + NOMINAL_MELEE_RANGE;
