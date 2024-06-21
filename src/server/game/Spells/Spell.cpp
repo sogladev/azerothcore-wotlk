@@ -3115,6 +3115,10 @@ SpellMissInfo Spell::DoSpellHitOnUnit(Unit* unit, uint32 effectMask, bool scaleA
             {
                 unit->IncrDiminishing(m_diminishGroup);
             }
+            else if (m_diminishGroup == DIMINISHING_DISARM)
+            {
+                unit->IncrDiminishing(m_diminishGroup);
+            }
         }
     }
 
