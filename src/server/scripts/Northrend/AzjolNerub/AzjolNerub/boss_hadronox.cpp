@@ -323,50 +323,33 @@ public:
     }
 };
 
-class spell_hadronox_summon_periodic : public SpellScriptLoader
+class spell_hadronox_summon_periodic_aura : public AuraScript
 {
-public:
-    spell_hadronox_summon_periodic(const char* name, uint32 delay, uint32 spellEntry) : SpellScriptLoader(name), _delay(delay), _spellEntry(spellEntry) { }
+    PrepareAuraScript(spell_hadronox_summon_periodic_aura);
 
-    class spell_hadronox_summon_periodic_AuraScript : public AuraScript
+    void HandlePeriodic(AuraEffect const* /*aurEff*/)
     {
-    public:
-        spell_hadronox_summon_periodic_AuraScript(uint32 delay, uint32 spellEntry) : _delay(delay), _spellEntry(spellEntry) { }
-        PrepareAuraScript(spell_hadronox_summon_periodic_AuraScript);
+        PreventDefaultAction();
+        Unit* owner = GetUnitOwner();
+        if (InstanceScript* instance = owner->GetInstanceScript())
+            if (instance->GetBossState(DATA_HADRONOX_EVENT) != DONE)
+            {
+                if (!owner->HasAura(SPELL_WEB_FRONT_DOORS))
+                    owner->CastSpell(owner, _spellEntry, true);
+                else if (!instance->IsEncounterInProgress())
+                    owner->RemoveAurasDueToSpell(SPELL_WEB_FRONT_DOORS);
+            }
+    }
 
-        void HandlePeriodic(AuraEffect const* /*aurEff*/)
-        {
-            PreventDefaultAction();
-            Unit* owner = GetUnitOwner();
-            if (InstanceScript* instance = owner->GetInstanceScript())
-                if (instance->GetBossState(DATA_HADRONOX_EVENT) != DONE)
-                {
-                    if (!owner->HasAura(SPELL_WEB_FRONT_DOORS))
-                        owner->CastSpell(owner, _spellEntry, true);
-                    else if (!instance->IsEncounterInProgress())
-                        owner->RemoveAurasDueToSpell(SPELL_WEB_FRONT_DOORS);
-                }
-        }
-
-        void OnApply(AuraEffect const* auraEffect, AuraEffectHandleModes)
-        {
-            GetAura()->GetEffect(auraEffect->GetEffIndex())->SetPeriodicTimer(_delay);
-        }
-
-        void Register() override
-        {
-            OnEffectPeriodic += AuraEffectPeriodicFn(spell_hadronox_summon_periodic_AuraScript::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
-            OnEffectApply += AuraEffectApplyFn(spell_hadronox_summon_periodic_AuraScript::OnApply, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
-        }
-
-    private:
-        uint32 _delay;
-        uint32 _spellEntry;
-    };
-
-    AuraScript* GetAuraScript() const override
+    void OnApply(AuraEffect const* auraEffect, AuraEffectHandleModes)
     {
-        return new spell_hadronox_summon_periodic_AuraScript(_delay, _spellEntry);
+        GetAura()->GetEffect(auraEffect->GetEffIndex())->SetPeriodicTimer(_delay);
+    }
+
+    void Register() override
+    {
+        OnEffectPeriodic += AuraEffectPeriodicFn(spell_hadronox_summon_periodic_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectApply += AuraEffectApplyFn(spell_hadronox_summon_periodic_aura::OnApply, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 
 private:
@@ -422,7 +405,7 @@ void AddSC_boss_hadronox()
 {
     new boss_hadronox();
     new npc_anub_ar_crusher();
-    new spell_hadronox_summon_periodic("spell_hadronox_summon_periodic_champion", 15000, SPELL_SUMMON_ANUBAR_CHAMPION);
+    RegisterSpellScriptWithArgs("spell_hadronox_summon_periodic_champion", 15000, SPELL_SUMMON_ANUBAR_CHAMPION);
     new spell_hadronox_summon_periodic("spell_hadronox_summon_periodic_necromancer", 10000, SPELL_SUMMON_ANUBAR_NECROMANCER);
     new spell_hadronox_summon_periodic("spell_hadronox_summon_periodic_crypt_fiend", 5000, SPELL_SUMMON_ANUBAR_CRYPT_FIEND);
     new spell_hadronox_leech_poison();

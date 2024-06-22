@@ -51,3 +51,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_halion_twilight_cutter_perio
 UPDATE `spell_script_names` SET `ScriptName`='spell_optic_link_aura' WHERE `spell_id`=54396;
 UPDATE `spell_script_names` SET `ScriptName`='spell_destroy_door_seal_aura' WHERE `spell_id`=58040;
 UPDATE `spell_script_names` SET `ScriptName`='spell_azjol_nerub_web_wrap_aura' WHERE `spell_id`=52086;
+UPDATE `spell_script_names` SET `ScriptName`='spell_hadronox_summon_periodic_champion_aura' WHERE `spell_id`=53035;
