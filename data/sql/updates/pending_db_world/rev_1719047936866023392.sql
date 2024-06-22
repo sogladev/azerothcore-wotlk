@@ -91,3 +91,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_sindragosa_permeating_chill_
 UPDATE `spell_script_names` SET `ScriptName`='spell_sindragosa_instability_aura' WHERE `spell_id`=69766;
 UPDATE `spell_script_names` SET `ScriptName`='spell_sindragosa_frost_beacon_aura' WHERE `spell_id`=70126;
 UPDATE `spell_script_names` SET `ScriptName`='spell_sindragosa_soul_preservation_aura' WHERE `spell_id`=72465;
+UPDATE `spell_script_names` SET `ScriptName`='spell_the_lich_king_infest_aura' WHERE `spell_id` IN (70541,73779,73780,73781);
