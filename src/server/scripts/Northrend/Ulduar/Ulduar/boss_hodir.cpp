@@ -1180,31 +1180,26 @@ public:
     };
 };
 
-class spell_hodir_shatter_chest : public SpellScriptLoader
+class spell_hodir_shatter_chest : public SpellScript
 {
-public:
-    spell_hodir_shatter_chest() : SpellScriptLoader("spell_hodir_shatter_chest") { }
+    PrepareSpellScript(spell_hodir_shatter_chest);
 
-    class spell_hodir_shatter_chestSpellScript : public SpellScript
+    void destroyWinterCache(SpellEffIndex effIndex)
     {
-        PrepareSpellScript(spell_hodir_shatter_chestSpellScript)
+        PreventHitDefaultEffect(effIndex);
 
-        void destroyWinterCache(SpellEffIndex effIndex)
-        {
-            PreventHitDefaultEffect(effIndex);
+        if (Unit* hodir = GetCaster())
+            hodir->GetAI()->DoAction(EVENT_FAIL_HM);
+    }
 
-            if (Unit* hodir = GetCaster())
-                hodir->GetAI()->DoAction(EVENT_FAIL_HM);
-        }
-
-        void Register() override
-        {
-            OnEffectHit += SpellEffectFn(spell_hodir_shatter_chestSpellScript::destroyWinterCache, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
+    void Register() override
+    {
+        OnEffectHit += SpellEffectFn(spell_hodir_shatter_chestSpellScript::destroyWinterCache, EFFECT_0, SPELL_EFFECT_TRIGGER_MISSILE);
         };
-    };
+        };
 
-    SpellScript* GetSpellScript() const override
-    {
+        SpellScript* GetSpellScript() const override
+        {
         return new spell_hodir_shatter_chestSpellScript();
     }
 };
@@ -1636,7 +1631,7 @@ void AddSC_boss_hodir()
     new spell_hodir_flash_freeze();
     new spell_hodir_storm_power();
     new spell_hodir_storm_cloud();
-    new spell_hodir_shatter_chest();
+    RegisterSpellScript(spell_hodir_shatter_chest);
 
     new achievement_cheese_the_freeze();
     new achievement_getting_cold_in_here();
