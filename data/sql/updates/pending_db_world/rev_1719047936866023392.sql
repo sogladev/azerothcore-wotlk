@@ -59,3 +59,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_pursuing_spikes_aura' WHERE 
 UPDATE `spell_script_names` SET `ScriptName`='spell_gen_leeching_swarm_aura' WHERE `spell_id` IN (66118,67630,68646,68647);
 UPDATE `spell_script_names` SET `ScriptName`='spell_valkyr_essence_aura' WHERE `spell_id` IN (65684,65686,67176,67177,67178,67222,67223,67224);
 UPDATE `spell_script_names` SET `ScriptName`='spell_valkyr_touch_aura' WHERE `spell_id` IN (65950,66001,67281,67282,67283,67296,67297,67298);
+UPDATE `spell_script_names` SET `ScriptName`='spell_valkyr_ball_periodic_dummy_aura' WHERE `spell_id`=100101;
