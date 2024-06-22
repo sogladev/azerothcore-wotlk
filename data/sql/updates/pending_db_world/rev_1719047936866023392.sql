@@ -23,3 +23,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_hor_shared_suffering_aura' W
 UPDATE `spell_script_names` SET `ScriptName`='spell_moorabi_mojo_frenzy_aura' WHERE `spell_id`=55163;
 UPDATE `spell_script_names` SET `ScriptName`='spell_sladran_grip_of_sladran_aura' WHERE `spell_id`=55093;
 UPDATE `spell_script_names` SET `ScriptName`='spell_ticking_time_bomb_aura' WHERE `spell_id`=59686;
+UPDATE `spell_script_names` SET `ScriptName`='spell_frost_tomb_aura' WHERE `spell_id`=42672;
