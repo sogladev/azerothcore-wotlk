@@ -135,3 +135,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_uldaman_stoned_aura' WHERE `
 UPDATE `spell_script_names` SET `ScriptName`='spell_karazhan_brittle_bones_aura' WHERE `spell_id`=32441;
 UPDATE `spell_script_names` SET `ScriptName`='spell_karazhan_overload_aura' WHERE `spell_id`=29768;
 UPDATE `spell_script_names` SET `ScriptName`='spell_mount_check_aura' WHERE `spell_id`=75420;
+UPDATE `spell_script_names` SET `ScriptName`='spell_boss_salramm_steal_flesh_aura' WHERE `spell_id`=52708;
