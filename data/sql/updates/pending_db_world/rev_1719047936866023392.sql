@@ -29,3 +29,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_koralon_meteor_fists_aura' W
 UPDATE `spell_script_names` SET `ScriptName`='spell_flame_warder_meteor_fists_aura' WHERE `spell_id` IN (66808,68160);
 UPDATE `spell_script_names` SET `ScriptName`='spell_hos_dark_matter_aura' WHERE `spell_id`=51001;
 UPDATE `spell_script_names` SET `ScriptName`='spell_hodir_storm_power_aura' WHERE `spell_id` IN (63711,65134);
+UPDATE `spell_script_names` SET `ScriptName`='spell_hodir_storm_cloud_aura' WHERE `spell_id` IN (65123,65133);
