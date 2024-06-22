@@ -104,3 +104,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_igb_rocket_pack_aura' WHERE 
 UPDATE `spell_script_names` SET `ScriptName`='spell_igb_rocket_pack_useable_aura' WHERE `spell_id`=70348;
 UPDATE `spell_script_names` SET `ScriptName`='spell_igb_explosion_main_aura' WHERE `spell_id` IN (72134,72137);
 UPDATE `spell_script_names` SET `ScriptName`='spell_igb_periodic_trigger_with_power_cost_aura' WHERE `spell_id` IN (69470,69487);
+UPDATE `spell_script_names` SET `ScriptName`='spell_igb_overheat_aura' WHERE `spell_id`=69487;
