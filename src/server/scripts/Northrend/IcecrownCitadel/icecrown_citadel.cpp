@@ -2131,35 +2131,24 @@ class spell_svalna_revive_champion : public SpellScript
     }
 };
 
-class spell_svalna_remove_spear : public SpellScriptLoader
+class spell_svalna_remove_spear : public SpellScript
 {
-public:
-    spell_svalna_remove_spear() : SpellScriptLoader("spell_svalna_remove_spear") { }
+    PrepareSpellScript(spell_svalna_remove_spear);
 
-    class spell_svalna_remove_spear_SpellScript : public SpellScript
+    void HandleScript(SpellEffIndex effIndex)
     {
-        PrepareSpellScript(spell_svalna_remove_spear_SpellScript);
-
-        void HandleScript(SpellEffIndex effIndex)
+        PreventHitDefaultEffect(effIndex);
+        if (Creature* target = GetHitCreature())
         {
-            PreventHitDefaultEffect(effIndex);
-            if (Creature* target = GetHitCreature())
-            {
-                if (Unit* vehicle = target->GetVehicleBase())
-                    vehicle->RemoveAurasDueToSpell(SPELL_IMPALING_SPEAR);
-                target->DespawnOrUnsummon(1);
-            }
+            if (Unit* vehicle = target->GetVehicleBase())
+                vehicle->RemoveAurasDueToSpell(SPELL_IMPALING_SPEAR);
+            target->DespawnOrUnsummon(1);
         }
+    }
 
-        void Register() override
-        {
-            OnEffectHitTarget += SpellEffectFn(spell_svalna_remove_spear_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
-        }
-    };
-
-    SpellScript* GetSpellScript() const override
+    void Register() override
     {
-        return new spell_svalna_remove_spear_SpellScript();
+        OnEffectHitTarget += SpellEffectFn(spell_svalna_remove_spear::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -3727,7 +3716,7 @@ void AddSC_icecrown_citadel()
     RegisterSpellScript(spell_icc_harvest_blight_specimen);
     new spell_trigger_spell_from_caster("spell_svalna_caress_of_death", SPELL_IMPALING_SPEAR_KILL);
     RegisterSpellScript(spell_svalna_revive_champion);
-    new spell_svalna_remove_spear();
+    RegisterSpellScript(spell_svalna_remove_spear);
     new spell_icc_soul_missile();
     new at_icc_saurfang_portal();
     new at_icc_shutdown_traps();
