@@ -951,35 +951,24 @@ public:
     }
 };
 
-class spell_hexlord_unstable_affliction : public SpellScriptLoader
+class spell_hexlord_unstable_affliction_aura : public AuraScript
 {
-public:
-    spell_hexlord_unstable_affliction() : SpellScriptLoader("spell_hexlord_unstable_affliction") { }
+    PrepareAuraScript(spell_hexlord_unstable_affliction_aura);
 
-    class spell_hexlord_unstable_affliction_AuraScript : public AuraScript
+    bool Validate(SpellInfo const* /*spell*/) override
     {
-        PrepareAuraScript(spell_hexlord_unstable_affliction_AuraScript);
+        return ValidateSpellInfo({ SPELL_WL_UNSTABLE_AFFL_DISPEL });
+    }
 
-        bool Validate(SpellInfo const* /*spell*/) override
-        {
-            return ValidateSpellInfo({ SPELL_WL_UNSTABLE_AFFL_DISPEL });
-        }
-
-        void HandleDispel(DispelInfo* dispelInfo)
-        {
-            if (Unit* caster = GetCaster())
-                caster->CastSpell(dispelInfo->GetDispeller(), SPELL_WL_UNSTABLE_AFFL_DISPEL, true, nullptr, GetEffect(EFFECT_0));
-        }
-
-        void Register() override
-        {
-            AfterDispel += AuraDispelFn(spell_hexlord_unstable_affliction_AuraScript::HandleDispel);
-        }
-    };
-
-    AuraScript* GetAuraScript() const override
+    void HandleDispel(DispelInfo* dispelInfo)
     {
-        return new spell_hexlord_unstable_affliction_AuraScript();
+        if (Unit* caster = GetCaster())
+            caster->CastSpell(dispelInfo->GetDispeller(), SPELL_WL_UNSTABLE_AFFL_DISPEL, true, nullptr, GetEffect(EFFECT_0));
+    }
+
+    void Register() override
+    {
+        AfterDispel += AuraDispelFn(spell_hexlord_unstable_affliction_aura::HandleDispel);
     }
 };
 
@@ -994,6 +983,6 @@ void AddSC_boss_hex_lord_malacrass()
     new boss_fenstalker();
     new boss_koragg();
     new boss_alyson_antille();
-    new spell_hexlord_unstable_affliction();
+    RegisterSpellScript(spell_hexlord_unstable_affliction_aura);
 }
 
