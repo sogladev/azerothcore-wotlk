@@ -2112,38 +2112,25 @@ class spell_igb_gunship_fall_teleport : public SpellScript
     }
 };
 
-class spell_igb_explosion_main : public SpellScriptLoader
+class spell_igb_explosion_main_aura : public AuraScript
 {
-public:
-    spell_igb_explosion_main() : SpellScriptLoader("spell_igb_explosion_main") { }
+    PrepareAuraScript(spell_igb_explosion_main_aura);
 
-    class spell_igb_explosion_main_AuraScript : public AuraScript
+    bool Load() override
     {
-        PrepareAuraScript(spell_igb_explosion_main_AuraScript);
+        tickNo = urand(0, 3);
+        return true;
+    }
 
-        bool Load() override
-        {
-            tickNo = urand(0, 3);
-            return true;
-        }
-
-        void PeriodicTick(AuraEffect const* aurEff)
-        {
-            if ((aurEff->GetTickNumber() % 4) != tickNo)
-                PreventDefaultAction();
-        }
-
-        void Register() override
-        {
-            OnEffectPeriodic += AuraEffectPeriodicFn(spell_igb_explosion_main_AuraScript::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
-        }
-
-        uint32 tickNo;
-    };
-
-    AuraScript* GetAuraScript() const override
+    void PeriodicTick(AuraEffect const* aurEff)
     {
-        return new spell_igb_explosion_main_AuraScript();
+        if ((aurEff->GetTickNumber() % 4) != tickNo)
+            PreventDefaultAction();
+    }
+
+    void Register() override
+    {
+        OnEffectPeriodic += AuraEffectPeriodicFn(spell_igb_explosion_main_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -2727,7 +2714,7 @@ void AddSC_boss_icecrown_gunship_battle()
     RegisterSpellScript(spell_igb_teleport_to_enemy_ship);
     RegisterSpellScript(spell_igb_check_for_players);
     RegisterSpellScript(spell_igb_gunship_fall_teleport);
-    new spell_igb_explosion_main();
+    RegisterSpellScript(spell_igb_explosion_main_aura);
     new spell_igb_explosion();
     new spell_igb_teleport_players_on_victory();
     new spell_igb_periodic_trigger_with_power_cost();
