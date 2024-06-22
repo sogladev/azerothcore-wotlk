@@ -90,3 +90,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_putricide_mutated_transforma
 UPDATE `spell_script_names` SET `ScriptName`='spell_sindragosa_permeating_chill_aura' WHERE `spell_id`=70107;
 UPDATE `spell_script_names` SET `ScriptName`='spell_sindragosa_instability_aura' WHERE `spell_id`=69766;
 UPDATE `spell_script_names` SET `ScriptName`='spell_sindragosa_frost_beacon_aura' WHERE `spell_id`=70126;
+UPDATE `spell_script_names` SET `ScriptName`='spell_sindragosa_soul_preservation_aura' WHERE `spell_id`=72465;
