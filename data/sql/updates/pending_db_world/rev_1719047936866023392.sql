@@ -11,3 +11,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_z_check_aura' WHERE `spell_i
 UPDATE `spell_script_names` SET `ScriptName`='spell_warhead_fuse_aura' WHERE `spell_id`=49181;
 UPDATE `spell_script_names` SET `ScriptName`='spell_shield_of_bones_aura' WHERE `spell_id` IN (69069,70207);
 UPDATE `spell_script_names` SET `ScriptName`='spell_wailing_souls_periodic_aura' WHERE `spell_id`=68875;
+UPDATE `spell_script_names` SET `ScriptName`='spell_bronjahm_soulstorm_channel_ooc_aura' WHERE `spell_id`=69008;
