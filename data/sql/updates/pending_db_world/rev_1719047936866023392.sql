@@ -85,3 +85,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_deathwhisper_mana_barrier_au
 UPDATE `spell_script_names` SET `ScriptName`='spell_putricide_grow_stacker_aura' WHERE `spell_id`=70345;
 UPDATE `spell_script_names` SET `ScriptName`='spell_putricide_gaseous_bloat_aura' WHERE `spell_id` IN (70672,72455,72832,72833);
 UPDATE `spell_script_names` SET `ScriptName`='spell_putricide_mutated_plague_aura' WHERE `spell_id` IN (72451,72463,72671,72672);
+UPDATE `spell_script_names` SET `ScriptName`='spell_putricide_unbound_plague_dmg_aura' WHERE `spell_id` IN (70911,72854,72855,72856);
