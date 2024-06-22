@@ -9,3 +9,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_wintergrasp_hide_small_eleme
 UPDATE `spell_script_names` SET `ScriptName`='spell_infected_worgen_bite_aura' WHERE `spell_id`=53094;
 UPDATE `spell_script_names` SET `ScriptName`='spell_z_check_aura' WHERE `spell_id`=61678;
 UPDATE `spell_script_names` SET `ScriptName`='spell_warhead_fuse_aura' WHERE `spell_id`=49181;
+UPDATE `spell_script_names` SET `ScriptName`='spell_shield_of_bones_aura' WHERE `spell_id` IN (69069,70207);
