@@ -2648,80 +2648,69 @@ class spell_the_lich_king_teleport_to_frostmourne_hc : public SpellScript
     }
 };
 
-class spell_the_lich_king_valkyr_target_search : public SpellScriptLoader
+class spell_the_lich_king_valkyr_target_search : public SpellScript
 {
-public:
-    spell_the_lich_king_valkyr_target_search() : SpellScriptLoader("spell_the_lich_king_valkyr_target_search") { }
+    PrepareSpellScript(spell_the_lich_king_valkyr_target_search);
 
-    class spell_the_lich_king_valkyr_target_search_SpellScript : public SpellScript
+    WorldObject* _target;
+
+    bool Load() override
     {
-        PrepareSpellScript(spell_the_lich_king_valkyr_target_search_SpellScript);
+        _target = nullptr;
+        return true;
+    }
 
-        WorldObject* _target;
-
-        bool Load() override
+    void SelectTarget(std::list<WorldObject*>& targets)
+    {
+        if (targets.empty())
+            return;
+        Creature* caster = GetCaster()->ToCreature();
+        if (!caster)
         {
-            _target = nullptr;
-            return true;
-        }
-
-        void SelectTarget(std::list<WorldObject*>& targets)
-        {
-            if (targets.empty())
-                return;
-            Creature* caster = GetCaster()->ToCreature();
-            if (!caster)
-            {
-                targets.clear();
-                return;
-            }
-            targets.remove_if(Acore::UnitAuraCheck(true, GetSpellInfo()->Id));
-            targets.remove_if(Acore::UnitAuraCheck(true, SPELL_BOSS_HITTIN_YA_AURA)); // done in dbc, but just to be sure xd
-            targets.remove_if(Acore::UnitAuraCheck(true, SPELL_HARVEST_SOUL_VALKYR));
-            if (InstanceScript* _instance = caster->GetInstanceScript())
-                if (Creature* lichKing = ObjectAccessor::GetCreature(*caster, _instance->GetGuidData(DATA_THE_LICH_KING)))
-                    if (Spell* s = lichKing->GetCurrentSpell(CURRENT_GENERIC_SPELL))
-                        if (s->GetSpellInfo()->Id == SPELL_DEFILE && s->m_targets.GetUnitTarget())
-                            targets.remove(s->m_targets.GetUnitTarget());
-
-            if (targets.empty())
-                return;
-
-            _target = Acore::Containers::SelectRandomContainerElement(targets);
             targets.clear();
+            return;
+        }
+        targets.remove_if(Acore::UnitAuraCheck(true, GetSpellInfo()->Id));
+        targets.remove_if(Acore::UnitAuraCheck(true, SPELL_BOSS_HITTIN_YA_AURA)); // done in dbc, but just to be sure xd
+        targets.remove_if(Acore::UnitAuraCheck(true, SPELL_HARVEST_SOUL_VALKYR));
+        if (InstanceScript* _instance = caster->GetInstanceScript())
+            if (Creature* lichKing = ObjectAccessor::GetCreature(*caster, _instance->GetGuidData(DATA_THE_LICH_KING)))
+                if (Spell* s = lichKing->GetCurrentSpell(CURRENT_GENERIC_SPELL))
+                    if (s->GetSpellInfo()->Id == SPELL_DEFILE && s->m_targets.GetUnitTarget())
+                        targets.remove(s->m_targets.GetUnitTarget());
+
+        if (targets.empty())
+            return;
+
+        _target = Acore::Containers::SelectRandomContainerElement(targets);
+        targets.clear();
+        targets.push_back(_target);
+        if (Creature* caster = GetCaster()->ToCreature())
+            caster->AI()->SetGUID(_target->GetGUID());
+    }
+
+    void ReplaceTarget(std::list<WorldObject*>& targets)
+    {
+        targets.clear();
+        if (_target)
             targets.push_back(_target);
-            if (Creature* caster = GetCaster()->ToCreature())
-                caster->AI()->SetGUID(_target->GetGUID());
-        }
+    }
 
-        void ReplaceTarget(std::list<WorldObject*>& targets)
-        {
-            targets.clear();
-            if (_target)
-                targets.push_back(_target);
-        }
-
-        void HandleScript(SpellEffIndex effIndex)
-        {
-            PreventHitDefaultEffect(effIndex);
-            if (Unit* target = GetHitUnit())
-            {
-                GetCaster()->GetMotionMaster()->MoveCharge(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ() + 4.0f, 42.0f, EVENT_CHARGE);
-                GetCaster()->SetDisableGravity(true, true);
-            }
-        }
-
-        void Register() override
-        {
-            OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_the_lich_king_valkyr_target_search_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
-            OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_the_lich_king_valkyr_target_search_SpellScript::ReplaceTarget, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
-            OnEffectHitTarget += SpellEffectFn(spell_the_lich_king_valkyr_target_search_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
-        }
-    };
-
-    SpellScript* GetSpellScript() const override
+    void HandleScript(SpellEffIndex effIndex)
     {
-        return new spell_the_lich_king_valkyr_target_search_SpellScript();
+        PreventHitDefaultEffect(effIndex);
+        if (Unit* target = GetHitUnit())
+        {
+            GetCaster()->GetMotionMaster()->MoveCharge(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ() + 4.0f, 42.0f, EVENT_CHARGE);
+            GetCaster()->SetDisableGravity(true, true);
+        }
+    }
+
+    void Register() override
+    {
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_the_lich_king_valkyr_target_search::SelectTarget, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_the_lich_king_valkyr_target_search::ReplaceTarget, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnEffectHitTarget += SpellEffectFn(spell_the_lich_king_valkyr_target_search::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -3675,7 +3664,7 @@ void AddSC_boss_the_lich_king()
     new npc_valkyr_shadowguard();
     RegisterSpellScript(spell_the_lich_king_summon_into_air);
     RegisterSpellScript(spell_the_lich_king_teleport_to_frostmourne_hc);
-    new spell_the_lich_king_valkyr_target_search();
+    RegisterSpellScript(spell_the_lich_king_valkyr_target_search);
     new spell_the_lich_king_cast_back_to_caster();
     new spell_the_lich_king_life_siphon();
     new spell_the_lich_king_vile_spirits();
