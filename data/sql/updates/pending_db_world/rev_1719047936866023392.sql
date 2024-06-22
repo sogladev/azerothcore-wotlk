@@ -52,3 +52,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_optic_link_aura' WHERE `spel
 UPDATE `spell_script_names` SET `ScriptName`='spell_destroy_door_seal_aura' WHERE `spell_id`=58040;
 UPDATE `spell_script_names` SET `ScriptName`='spell_azjol_nerub_web_wrap_aura' WHERE `spell_id`=52086;
 UPDATE `spell_script_names` SET `ScriptName`='spell_hadronox_summon_periodic_champion_aura' WHERE `spell_id`=53035;
+UPDATE `spell_script_names` SET `ScriptName`='spell_hadronox_leech_poison_aura' WHERE `spell_id` IN (53030,59417);
