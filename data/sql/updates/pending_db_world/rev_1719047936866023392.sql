@@ -100,3 +100,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_the_lich_king_harvest_soul_a
 UPDATE `spell_script_names` SET `ScriptName`='spell_the_lich_king_lights_favor_aura' WHERE `spell_id`=69382;
 UPDATE `spell_script_names` SET `ScriptName`='spell_the_lich_king_dark_hunger_aura' WHERE `spell_id`=69383;
 UPDATE `spell_script_names` SET `ScriptName`='spell_the_lich_king_soul_rip_aura' WHERE `spell_id`=69397;
+UPDATE `spell_script_names` SET `ScriptName`='spell_igb_rocket_pack_aura' WHERE `spell_id`=68721;
