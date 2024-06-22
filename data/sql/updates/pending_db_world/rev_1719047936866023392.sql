@@ -35,3 +35,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_hodir_starlight_aura' WHERE 
 UPDATE `spell_script_names` SET `ScriptName`='spell_oculus_stop_time_aura' WHERE `spell_id`=49838;
 UPDATE `spell_script_names` SET `ScriptName`='spell_oculus_evasive_maneuvers_aura' WHERE `spell_id`=50240;
 UPDATE `spell_script_names` SET `ScriptName`='spell_oculus_temporal_rift_aura' WHERE `spell_id`=49592;
+UPDATE `spell_script_names` SET `ScriptName`='spell_oculus_dream_funnel_aura' WHERE `spell_id`=50344;
