@@ -3183,56 +3183,43 @@ class spell_the_lich_king_lights_favor_aura : public AuraScript
     }
 };
 
-class spell_the_lich_king_restore_soul : public SpellScriptLoader
+class spell_the_lich_king_restore_soul : public SpellScript
 {
-public:
-    spell_the_lich_king_restore_soul() : SpellScriptLoader("spell_the_lich_king_restore_soul") { }
+    PrepareSpellScript(spell_the_lich_king_restore_soul);
 
-    class spell_the_lich_king_restore_soul_SpellScript : public SpellScript
+    bool Load() override
     {
-        PrepareSpellScript(spell_the_lich_king_restore_soul_SpellScript);
+        _instance = GetCaster()->GetInstanceScript();
+        return _instance != nullptr;
+    }
 
-        bool Load() override
-        {
-            _instance = GetCaster()->GetInstanceScript();
-            return _instance != nullptr;
-        }
-
-        void FilterTargets(std::list<WorldObject*>& unitList)
-        {
-            for (std::list<WorldObject*>::const_iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
-                if (Unit* target = (*itr)->ToUnit())
-                    target->RemoveAurasDueToSpell(target->GetMap()->IsHeroic() ? SPELL_HARVEST_SOULS_TELEPORT : SPELL_HARVEST_SOUL_TELEPORT);
-            if (Creature* lichKing = ObjectAccessor::GetCreature(*GetCaster(), _instance->GetGuidData(DATA_THE_LICH_KING)))
-                lichKing->AI()->DoAction(ACTION_TELEPORT_BACK);
-            if (Creature* spawner = GetCaster()->FindNearestCreature(NPC_WORLD_TRIGGER_INFINITE_AOI, 50.0f, true))
-            {
-                spawner->RemoveAllAuras();
-                spawner->m_Events.KillAllEvents(true);
-            }
-
-            std::list<Creature*> spirits;
-            GetCaster()->GetCreatureListWithEntryInGrid(spirits, NPC_WICKED_SPIRIT, 200.0f);
-            for (std::list<Creature*>::iterator itr = spirits.begin(); itr != spirits.end(); ++itr)
-            {
-                (*itr)->m_Events.KillAllEvents(true);
-                (*itr)->RemoveAllAuras();
-                (*itr)->AI()->EnterEvadeMode();
-                (*itr)->SetReactState(REACT_PASSIVE);
-            }
-        }
-
-        void Register() override
-        {
-            OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_the_lich_king_restore_soul_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
-        }
-
-        InstanceScript* _instance;
-    };
-
-    SpellScript* GetSpellScript() const override
+    void FilterTargets(std::list<WorldObject*>& unitList)
     {
-        return new spell_the_lich_king_restore_soul_SpellScript();
+        for (std::list<WorldObject*>::const_iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
+            if (Unit* target = (*itr)->ToUnit())
+                target->RemoveAurasDueToSpell(target->GetMap()->IsHeroic() ? SPELL_HARVEST_SOULS_TELEPORT : SPELL_HARVEST_SOUL_TELEPORT);
+        if (Creature* lichKing = ObjectAccessor::GetCreature(*GetCaster(), _instance->GetGuidData(DATA_THE_LICH_KING)))
+            lichKing->AI()->DoAction(ACTION_TELEPORT_BACK);
+        if (Creature* spawner = GetCaster()->FindNearestCreature(NPC_WORLD_TRIGGER_INFINITE_AOI, 50.0f, true))
+        {
+            spawner->RemoveAllAuras();
+            spawner->m_Events.KillAllEvents(true);
+        }
+
+        std::list<Creature*> spirits;
+        GetCaster()->GetCreatureListWithEntryInGrid(spirits, NPC_WICKED_SPIRIT, 200.0f);
+        for (std::list<Creature*>::iterator itr = spirits.begin(); itr != spirits.end(); ++itr)
+        {
+            (*itr)->m_Events.KillAllEvents(true);
+            (*itr)->RemoveAllAuras();
+            (*itr)->AI()->EnterEvadeMode();
+            (*itr)->SetReactState(REACT_PASSIVE);
+        }
+    }
+
+    void Register() override
+    {
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_the_lich_king_restore_soul::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
     }
 };
 
@@ -3593,7 +3580,7 @@ void AddSC_boss_the_lich_king()
     new npc_strangulate_vehicle();
     new npc_terenas_menethil();
     RegisterSpellScript(spell_the_lich_king_lights_favor_aura);
-    new spell_the_lich_king_restore_soul();
+    RegisterSpellScript(spell_the_lich_king_restore_soul);
     new npc_spirit_warden();
     new spell_the_lich_king_dark_hunger();
     new spell_the_lich_king_soul_rip();
