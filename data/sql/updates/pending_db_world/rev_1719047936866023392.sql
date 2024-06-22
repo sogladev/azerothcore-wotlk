@@ -25,3 +25,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_sladran_grip_of_sladran_aura
 UPDATE `spell_script_names` SET `ScriptName`='spell_ticking_time_bomb_aura' WHERE `spell_id`=59686;
 UPDATE `spell_script_names` SET `ScriptName`='spell_frost_tomb_aura' WHERE `spell_id`=42672;
 UPDATE `spell_script_names` SET `ScriptName`='spell_voa_overcharge_aura' WHERE `spell_id`=64217;
+UPDATE `spell_script_names` SET `ScriptName`='spell_koralon_meteor_fists_aura' WHERE `spell_id` IN (66725,68161);
