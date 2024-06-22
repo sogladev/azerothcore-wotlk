@@ -141,3 +141,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_mark_of_kazzak_aura' WHERE `
 UPDATE `spell_script_names` SET `ScriptName`='spell_npc22275_crystal_prison_aura' WHERE `spell_id`=40846;
 UPDATE `spell_script_names` SET `ScriptName`='spell_q10563_q10596_to_legion_hold_aura' WHERE `spell_id`=37097;
 UPDATE `spell_script_names` SET `ScriptName`='spell_mother_shahraz_random_periodic_aura' WHERE `spell_id`=40867;
+UPDATE `spell_script_names` SET `ScriptName`='spell_mother_shahraz_beam_periodic_aura' WHERE `spell_id` IN (40862,40863,40865,40866);
