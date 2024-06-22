@@ -20,3 +20,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_pos_blight_aura' WHERE `spel
 UPDATE `spell_script_names` SET `ScriptName`='spell_pos_glacial_strike_aura' WHERE `spell_id` IN (70292,71316,71317);
 UPDATE `spell_script_names` SET `ScriptName`='spell_hor_gunship_cannon_fire_aura' WHERE `spell_id`=70017;
 UPDATE `spell_script_names` SET `ScriptName`='spell_hor_shared_suffering_aura' WHERE `spell_id` IN (72368,72369);
+UPDATE `spell_script_names` SET `ScriptName`='spell_moorabi_mojo_frenzy_aura' WHERE `spell_id`=55163;
