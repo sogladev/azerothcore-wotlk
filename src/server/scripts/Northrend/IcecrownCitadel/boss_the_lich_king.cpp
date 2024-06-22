@@ -2729,34 +2729,23 @@ class spell_the_lich_king_cast_back_to_caster : public SpellScript
     }
 };
 
-class spell_the_lich_king_life_siphon : public SpellScriptLoader
+class spell_the_lich_king_life_siphon : public SpellScript
 {
-public:
-    spell_the_lich_king_life_siphon() : SpellScriptLoader("spell_the_lich_king_life_siphon") { }
+    PrepareSpellScript(spell_the_lich_king_life_siphon);
 
-    class spell_the_lich_king_life_siphon_SpellScript : public SpellScript
+    bool Validate(SpellInfo const* /*spell*/) override
     {
-        PrepareSpellScript(spell_the_lich_king_life_siphon_SpellScript);
+        return ValidateSpellInfo({ SPELL_LIFE_SIPHON_HEAL });
+    }
 
-        bool Validate(SpellInfo const* /*spell*/) override
-        {
-            return ValidateSpellInfo({ SPELL_LIFE_SIPHON_HEAL });
-        }
-
-        void TriggerHeal()
-        {
-            GetHitUnit()->CastCustomSpell(SPELL_LIFE_SIPHON_HEAL, SPELLVALUE_BASE_POINT0, GetHitDamage() * 10, GetCaster(), true);
-        }
-
-        void Register() override
-        {
-            AfterHit += SpellHitFn(spell_the_lich_king_life_siphon_SpellScript::TriggerHeal);
-        }
-    };
-
-    SpellScript* GetSpellScript() const override
+    void TriggerHeal()
     {
-        return new spell_the_lich_king_life_siphon_SpellScript();
+        GetHitUnit()->CastCustomSpell(SPELL_LIFE_SIPHON_HEAL, SPELLVALUE_BASE_POINT0, GetHitDamage() * 10, GetCaster(), true);
+    }
+
+    void Register() override
+    {
+        AfterHit += SpellHitFn(spell_the_lich_king_life_siphon::TriggerHeal);
     }
 };
 
@@ -3655,7 +3644,7 @@ void AddSC_boss_the_lich_king()
     RegisterSpellScript(spell_the_lich_king_teleport_to_frostmourne_hc);
     RegisterSpellScript(spell_the_lich_king_valkyr_target_search);
     RegisterSpellScript(spell_the_lich_king_cast_back_to_caster);
-    new spell_the_lich_king_life_siphon();
+    RegisterSpellScript(spell_the_lich_king_life_siphon);
     new spell_the_lich_king_vile_spirits();
     new spell_the_lich_king_vile_spirits_visual();
     new spell_the_lich_king_vile_spirit_move_target_search();
