@@ -1005,34 +1005,23 @@ class spell_halion_damage_aoe_summon : public SpellScript
     }
 };
 
-class spell_halion_clear_debuffs : public SpellScriptLoader
+class spell_halion_clear_debuffs : public SpellScript
 {
-public:
-    spell_halion_clear_debuffs() : SpellScriptLoader("spell_halion_clear_debuffs") { }
+    PrepareSpellScript(spell_halion_clear_debuffs);
 
-    class spell_halion_clear_debuffs_SpellScript : public SpellScript
+    void HandleScriptEffect(SpellEffIndex  /*effIndex*/)
     {
-        PrepareSpellScript(spell_halion_clear_debuffs_SpellScript);
-
-        void HandleScriptEffect(SpellEffIndex  /*effIndex*/)
+        if (GetHitUnit())
         {
-            if (GetHitUnit())
-            {
-                GetHitUnit()->RemoveAurasDueToSpell(GetSpellInfo()->Effects[EFFECT_0].CalcValue());
-                GetHitUnit()->RemoveAurasDueToSpell(GetSpellInfo()->Effects[EFFECT_1].CalcValue());
-                GetHitUnit()->RemoveAurasDueToSpell(SPELL_FIERY_COMBUSTION);
-            }
+            GetHitUnit()->RemoveAurasDueToSpell(GetSpellInfo()->Effects[EFFECT_0].CalcValue());
+            GetHitUnit()->RemoveAurasDueToSpell(GetSpellInfo()->Effects[EFFECT_1].CalcValue());
+            GetHitUnit()->RemoveAurasDueToSpell(SPELL_FIERY_COMBUSTION);
         }
+    }
 
-        void Register() override
-        {
-            OnEffectHitTarget += SpellEffectFn(spell_halion_clear_debuffs_SpellScript::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
-        }
-    };
-
-    SpellScript* GetSpellScript() const override
+    void Register() override
     {
-        return new spell_halion_clear_debuffs_SpellScript();
+        OnEffectHitTarget += SpellEffectFn(spell_halion_clear_debuffs::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -1415,7 +1404,7 @@ void AddSC_boss_halion()
     new spell_halion_marks("spell_halion_mark_of_consumption", SPELL_SOUL_CONSUMPTION_SUMMON, SPELL_SOUL_CONSUMPTION);
     RegisterSpellScriptWithArgs("spell_halion_combustion_summon", SPELL_FIERY_COMBUSTION_EXPLOSION, SPELL_COMBUSTION_DAMAGE_AURA);
     new spell_halion_damage_aoe_summon("spell_halion_consumption_summon", SPELL_SOUL_CONSUMPTION_EXPLOSION, SPELL_CONSUMPTION_DAMAGE_AURA);
-    new spell_halion_clear_debuffs();
+    RegisterSpellScript(spell_halion_clear_debuffs);
     new spell_halion_twilight_phasing();
     new spell_halion_twilight_realm();
     new spell_halion_leave_twilight_realm();
