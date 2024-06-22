@@ -61,3 +61,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_valkyr_essence_aura' WHERE `
 UPDATE `spell_script_names` SET `ScriptName`='spell_valkyr_touch_aura' WHERE `spell_id` IN (65950,66001,67281,67282,67283,67296,67297,67298);
 UPDATE `spell_script_names` SET `ScriptName`='spell_valkyr_ball_periodic_dummy_aura' WHERE `spell_id`=100101;
 UPDATE `spell_script_names` SET `ScriptName`='spell_reflective_shield_aura' WHERE `spell_id`=66515;
+UPDATE `spell_script_names` SET `ScriptName`='spell_dtk_raise_dead_aura' WHERE `spell_id` IN (48597,48605);
