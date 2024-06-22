@@ -132,3 +132,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_felmyst_fog_of_corruption_ch
 UPDATE `spell_script_names` SET `ScriptName`='spell_temple_of_atal_hakkar_hex_of_jammal_an_aura' WHERE `spell_id`=12479;
 UPDATE `spell_script_names` SET `ScriptName`='spell_hexlord_unstable_affliction_aura' WHERE `spell_id`=43522;
 UPDATE `spell_script_names` SET `ScriptName`='spell_uldaman_stoned_aura' WHERE `spell_id`=10255;
+UPDATE `spell_script_names` SET `ScriptName`='spell_karazhan_brittle_bones_aura' WHERE `spell_id`=32441;
