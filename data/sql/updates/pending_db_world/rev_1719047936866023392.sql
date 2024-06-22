@@ -54,3 +54,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_azjol_nerub_web_wrap_aura' W
 UPDATE `spell_script_names` SET `ScriptName`='spell_hadronox_summon_periodic_champion_aura' WHERE `spell_id`=53035;
 UPDATE `spell_script_names` SET `ScriptName`='spell_hadronox_leech_poison_aura' WHERE `spell_id` IN (53030,59417);
 UPDATE `spell_script_names` SET `ScriptName`='spell_toc25_mistress_kiss_aura' WHERE `spell_id` IN (66334,67905,67906,67907);
+UPDATE `spell_script_names` SET `ScriptName`='spell_faction_champion_warl_unstable_affliction_aura' WHERE `spell_id` IN (65812,68154,68155,68156);
