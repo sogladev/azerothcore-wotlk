@@ -49,3 +49,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_halion_twilight_realm_aura' 
 UPDATE `spell_script_names` SET `ScriptName`='spell_halion_leave_twilight_realm_aura' WHERE `spell_id`=74812;
 UPDATE `spell_script_names` SET `ScriptName`='spell_halion_twilight_cutter_periodic_aura' WHERE `spell_id`=74768;
 UPDATE `spell_script_names` SET `ScriptName`='spell_optic_link_aura' WHERE `spell_id`=54396;
+UPDATE `spell_script_names` SET `ScriptName`='spell_destroy_door_seal_aura' WHERE `spell_id`=58040;
