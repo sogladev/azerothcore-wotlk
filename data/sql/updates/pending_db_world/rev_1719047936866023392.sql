@@ -8,3 +8,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_close_rift_aura' WHERE `spel
 UPDATE `spell_script_names` SET `ScriptName`='spell_wintergrasp_hide_small_elementals_aura' WHERE `spell_id`=52107;
 UPDATE `spell_script_names` SET `ScriptName`='spell_infected_worgen_bite_aura' WHERE `spell_id`=53094;
 UPDATE `spell_script_names` SET `ScriptName`='spell_z_check_aura' WHERE `spell_id`=61678;
+UPDATE `spell_script_names` SET `ScriptName`='spell_warhead_fuse_aura' WHERE `spell_id`=49181;
