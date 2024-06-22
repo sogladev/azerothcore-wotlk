@@ -1196,70 +1196,57 @@ class spell_deathbringer_blood_power_aura : public AuraScript
     }
 };
 
-class spell_deathbringer_blood_nova_targeting : public SpellScriptLoader
+class spell_deathbringer_blood_nova_targeting : public SpellScript
 {
-public:
-    spell_deathbringer_blood_nova_targeting() : SpellScriptLoader("spell_deathbringer_blood_nova_targeting") { }
+    PrepareSpellScript(spell_deathbringer_blood_nova_targeting);
 
-    class spell_deathbringer_blood_nova_targeting_SpellScript : public SpellScript
+    bool Load() override
     {
-        PrepareSpellScript(spell_deathbringer_blood_nova_targeting_SpellScript);
+        // initialize variable
+        target = nullptr;
+        return true;
+    }
 
-        bool Load() override
-        {
-            // initialize variable
-            target = nullptr;
-            return true;
-        }
-
-        void FilterTargetsInitial(std::list<WorldObject*>& targets)
-        {
-            // select one random target, with preference of ranged targets
-            uint32 targetsAtRange = 0;
-            uint32 const minTargets = uint32(GetCaster()->GetMap()->GetSpawnMode() & 1 ? 10 : 4);
-            targets.sort(Acore::ObjectDistanceOrderPred(GetCaster(), false));
-
-            // get target count at range
-            for (std::list<WorldObject*>::iterator itr = targets.begin(); itr != targets.end(); ++itr, ++targetsAtRange)
-                if ((*itr)->GetDistance(GetCaster()) < 12.0f)
-                    break;
-
-            // set the upper cap
-            if (targetsAtRange < minTargets)
-                targetsAtRange = std::min<uint32>(targets.size(), minTargets);
-
-            if (!targetsAtRange)
-                return;
-
-            std::list<WorldObject*>::iterator itrTarget = targets.begin();
-            std::advance(itrTarget, urand(0, targetsAtRange - 1));
-            target = *itrTarget;
-            targets.clear();
-            targets.push_back(target);
-        }
-
-        // use the same target for first and second effect
-        void FilterTargetsSubsequent(std::list<WorldObject*>& targets)
-        {
-            if (!target)
-                return;
-
-            targets.clear();
-            targets.push_back(target);
-        }
-
-        void Register() override
-        {
-            OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_deathbringer_blood_nova_targeting_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
-            OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_deathbringer_blood_nova_targeting_SpellScript::FilterTargetsSubsequent, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
-        }
-
-        WorldObject* target;
-    };
-
-    SpellScript* GetSpellScript() const override
+    void FilterTargetsInitial(std::list<WorldObject*>& targets)
     {
-        return new spell_deathbringer_blood_nova_targeting_SpellScript();
+        // select one random target, with preference of ranged targets
+        uint32 targetsAtRange = 0;
+        uint32 const minTargets = uint32(GetCaster()->GetMap()->GetSpawnMode() & 1 ? 10 : 4);
+        targets.sort(Acore::ObjectDistanceOrderPred(GetCaster(), false));
+
+        // get target count at range
+        for (std::list<WorldObject*>::iterator itr = targets.begin(); itr != targets.end(); ++itr, ++targetsAtRange)
+            if ((*itr)->GetDistance(GetCaster()) < 12.0f)
+                break;
+
+        // set the upper cap
+        if (targetsAtRange < minTargets)
+            targetsAtRange = std::min<uint32>(targets.size(), minTargets);
+
+        if (!targetsAtRange)
+            return;
+
+        std::list<WorldObject*>::iterator itrTarget = targets.begin();
+        std::advance(itrTarget, urand(0, targetsAtRange - 1));
+        target = *itrTarget;
+        targets.clear();
+        targets.push_back(target);
+    }
+
+    // use the same target for first and second effect
+    void FilterTargetsSubsequent(std::list<WorldObject*>& targets)
+    {
+        if (!target)
+            return;
+
+        targets.clear();
+        targets.push_back(target);
+    }
+
+    void Register() override
+    {
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_deathbringer_blood_nova_targeting::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_deathbringer_blood_nova_targeting::FilterTargetsSubsequent, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -1375,7 +1362,7 @@ void AddSC_boss_deathbringer_saurfang()
     RegisterSpellScript(spell_deathbringer_blood_link_blood_beast_aura);
     RegisterSpellScript(spell_deathbringer_blood_link);
     RegisterSpellAndAuraScriptPair(spell_deathbringer_blood_power, spell_deathbringer_blood_power_aura);
-    new spell_deathbringer_blood_nova_targeting();
+    RegisterSpellScript(spell_deathbringer_blood_nova_targeting);
     new spell_deathbringer_boiling_blood();
     new achievement_ive_gone_and_made_a_mess();
     new npc_icc_blood_beast();
