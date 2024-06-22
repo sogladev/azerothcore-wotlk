@@ -119,3 +119,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_majordomo_separation_nexiety
 UPDATE `spell_script_names` SET `ScriptName`='spell_geddon_inferno_aura' WHERE `spell_id`=19695;
 UPDATE `spell_script_names` SET `ScriptName`='spell_geddon_armageddon_aura' WHERE `spell_id`=20478;
 UPDATE `spell_script_names` SET `ScriptName`='spell_threatening_gaze_aura' WHERE `spell_id`=24314;
+UPDATE `spell_script_names` SET `ScriptName`='spell_kiljaeden_shadow_spike_aura' WHERE `spell_id`=46680;
