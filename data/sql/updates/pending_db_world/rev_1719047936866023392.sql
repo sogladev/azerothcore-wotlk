@@ -22,3 +22,4 @@ UPDATE `spell_script_names` SET `ScriptName`='spell_hor_gunship_cannon_fire_aura
 UPDATE `spell_script_names` SET `ScriptName`='spell_hor_shared_suffering_aura' WHERE `spell_id` IN (72368,72369);
 UPDATE `spell_script_names` SET `ScriptName`='spell_moorabi_mojo_frenzy_aura' WHERE `spell_id`=55163;
 UPDATE `spell_script_names` SET `ScriptName`='spell_sladran_grip_of_sladran_aura' WHERE `spell_id`=55093;
+UPDATE `spell_script_names` SET `ScriptName`='spell_ticking_time_bomb_aura' WHERE `spell_id`=59686;
