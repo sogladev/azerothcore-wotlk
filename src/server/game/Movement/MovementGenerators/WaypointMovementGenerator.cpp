@@ -61,6 +61,10 @@ void WaypointMovementGenerator<Creature>::DoFinalize(Creature* creature)
 
 void WaypointMovementGenerator<Creature>::DoReset(Creature* creature)
 {
+    if (stalled)
+    {
+        return;
+    }
     creature->AddUnitState(UNIT_STATE_ROAMING | UNIT_STATE_ROAMING_MOVE);
     StartMoveNow(creature);
 }
@@ -209,7 +213,12 @@ bool WaypointMovementGenerator<Creature>::DoUpdate(Creature* creature, uint32 di
 {
     // Waypoint movement can be switched on/off
     // This is quite handy for escort quests and other stuff
-    if (stalled || creature->HasUnitState(UNIT_STATE_NOT_MOVE) || creature->IsMovementPreventedByCasting())
+    if (stalled)
+    {
+        Stop(1000);
+        return true;
+    }
+    if (creature->HasUnitState(UNIT_STATE_NOT_MOVE) || creature->IsMovementPreventedByCasting())
     {
         creature->StopMoving();
         Stop(1000);
