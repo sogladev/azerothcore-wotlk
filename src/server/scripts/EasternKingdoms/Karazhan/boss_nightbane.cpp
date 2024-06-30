@@ -131,18 +131,13 @@ struct boss_nightbane : public BossAI
         });
     }
 
-    void JustReachedHome() override
-    {
-        BossAI::JustReachedHome();
-        me->DespawnOnEvade();
-    }
-
     void EnterEvadeMode(EvadeReason why) override
     {
         me->SetHomePosition(homePos);
         me->SetCanFly(true);
         me->SetDisableGravity(true);
         me->SendMovementFlagUpdate();
+        me->DespawnOrUnsummon(10s, 2s);
         BossAI::EnterEvadeMode(why);
     }
 
