@@ -1887,16 +1887,14 @@ void GameObject::Use(Unit* user)
                 {
                     if (!user->IsPlayer())
                         return;
-                    if (ObjectGuid ownerGuid = GetOwnerGUID())
+                    ObjectGuid ownerGuid = GetOwnerGUID();
+                    if (!ownerGuid)
+                        return;
+                    if (user->GetGUID() != ownerGuid)
                     {
-                        if (user->GetGUID() != ownerGuid)
-                        {
-                            Group* group = user->ToPlayer()->GetGroup();
-                            if (!group)
-                                return;
-                            if (!group->IsMember(ownerGuid))
-                                return;
-                        }
+                        Group* group = user->ToPlayer()->GetGroup();
+                        if (!group || !group->IsMember(ownerGuid))
+                            return;
                     }
                 }
 
