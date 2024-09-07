@@ -19726,6 +19726,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     if (!m_vehicle)
         return;
 
+    VehicleSeatAddon const* seatAddon = m_vehicle->GetSeatAddonForSeatOfPassenger(this);
     m_vehicle->RemovePassenger(this);
 
     Player* player = ToPlayer();
@@ -19745,35 +19746,50 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     SetControlled(false, UNIT_STATE_ROOT);      // SMSG_MOVE_FORCE_UNROOT, ~MOVEMENTFLAG_ROOT
 
     Position pos;
-    if (!exitPosition)                          // Exit position not specified
-        pos = vehicleBase->GetPosition();  // This should use passenger's current position, leaving it as it is now
-    // because we calculate positions incorrect (sometimes under map)
-    else
-        pos = *exitPosition;
-
-    // HACK
-    VehicleEntry const* vehicleInfo = vehicle->GetVehicleInfo();
-    if (vehicleInfo)
+    // If we ask for a specific exit position, use that one. Otherwise allow scripts to modify it
+    if (exitPosition)
     {
-        if (vehicleInfo->m_ID == 380) // Kologarn right arm
+        pos = *exitPosition;
+    }
+    else
+    {
+        // Set exit position to vehicle position and use the current orientation
+        pos = vehicleBase->GetPosition();  // This should use passenger's current position, leaving it as it is now
+        pos.SetOrientation(GetOrientation());
+
+        // Change exit position based on seat entry addon data
+        if (seatAddon)
         {
-            pos.Relocate(1776.0f, -24.0f, 448.75f, 0.0f);
-        }
-        else if (vehicleInfo->m_ID == 91) // Helsman's Ship
-        {
-            pos.Relocate(2802.18f, 7054.91f, -0.6f, 4.67f);
-        }
-        else if (vehicleInfo->m_ID == 349) // AT Mounts, dismount to the right
-        {
-            float x = pos.GetPositionX() + 2.0f * cos(pos.GetOrientation() - M_PI / 2.0f);
-            float y = pos.GetPositionY() + 2.0f * std::sin(pos.GetOrientation() - M_PI / 2.0f);
-            float z = GetMapHeight(x, y, pos.GetPositionZ());
-            if (z > INVALID_HEIGHT)
-            {
-                pos.Relocate(x, y, z);
-            }
+            if (seatAddon->ExitParameter == VehicleExitParameters::VehicleExitParamOffset)
+                pos.RelocateOffset({ seatAddon->ExitParameterX, seatAddon->ExitParameterY, seatAddon->ExitParameterZ, seatAddon->ExitParameterO });
+            else if (seatAddon->ExitParameter == VehicleExitParameters::VehicleExitParamDest)
+                pos.Relocate({ seatAddon->ExitParameterX, seatAddon->ExitParameterY, seatAddon->ExitParameterZ, seatAddon->ExitParameterO });
         }
     }
+
+    VehicleEntry const* vehicleInfo = vehicle->GetVehicleInfo();
+    // HACK
+    // if (vehicleInfo)
+    // {
+    //     if (vehicleInfo->m_ID == 380) // Kologarn right arm
+    //     {
+    //         pos.Relocate(1776.0f, -24.0f, 448.75f, 0.0f);
+    //     }
+    //     else if (vehicleInfo->m_ID == 91) // Helsman's Ship
+    //     {
+    //         pos.Relocate(2802.18f, 7054.91f, -0.6f, 4.67f);
+    //     }
+    //     else if (vehicleInfo->m_ID == 349) // AT Mounts, dismount to the right
+    //     {
+    //         float x = pos.GetPositionX() + 2.0f * cos(pos.GetOrientation() - M_PI / 2.0f);
+    //         float y = pos.GetPositionY() + 2.0f * std::sin(pos.GetOrientation() - M_PI / 2.0f);
+    //         float z = GetMapHeight(x, y, pos.GetPositionZ());
+    //         if (z > INVALID_HEIGHT)
+    //         {
+    //             pos.Relocate(x, y, z);
+    //         }
+    //     }
+    // }
 
     AddUnitState(UNIT_STATE_MOVE);
 
@@ -19819,10 +19835,10 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     }
 
     // xinef: move fall, should we support all creatures that exited vehicle in air? Currently Quest Drag and Drop only, Air Assault quest
-    if (IsCreature() && !CanFly() && vehicleInfo && (vehicleInfo->m_ID == 113 || vehicleInfo->m_ID == 8 || vehicleInfo->m_ID == 290 || vehicleInfo->m_ID == 298))
-    {
-        GetMotionMaster()->MoveFall();
-    }
+    // if (IsCreature() && !CanFly() && vehicleInfo && (vehicleInfo->m_ID == 113 || vehicleInfo->m_ID == 8 || vehicleInfo->m_ID == 290 || vehicleInfo->m_ID == 298))
+    // {
+        // GetMotionMaster()->MoveFall();
+    // }
 
     if ((!player || !(player->GetDelayedOperations() & DELAYED_VEHICLE_TELEPORT)) && vehicle->GetBase()->HasUnitTypeMask(UNIT_MASK_MINION))
         if (((Minion*)vehicleBase)->GetOwner() == this)
