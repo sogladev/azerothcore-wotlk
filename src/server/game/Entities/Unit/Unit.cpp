@@ -19769,17 +19769,25 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 
     VehicleEntry const* vehicleInfo = vehicle->GetVehicleInfo();
     // HACK
-    // if (vehicleInfo)
-    // {
+    if (vehicleInfo)
+    {
+        if (vehicleInfo->m_ID == 313 && IsPlayer()) // Traveler's Mammoth
+        {
+            // pos = vehicleBase->GetPosition();  // This should use passenger's current position, leaving it as it is now
+            // pos.SetOrientation(GetOrientation());
+        }
     //     if (vehicleInfo->m_ID == 380) // Kologarn right arm
+    // seat 3690 3691 3692
     //     {
     //         pos.Relocate(1776.0f, -24.0f, 448.75f, 0.0f);
     //     }
     //     else if (vehicleInfo->m_ID == 91) // Helsman's Ship
     //     {
+    // 1472 1473 1474 1476 1476
     //         pos.Relocate(2802.18f, 7054.91f, -0.6f, 4.67f);
     //     }
     //     else if (vehicleInfo->m_ID == 349) // AT Mounts, dismount to the right
+    // 3129
     //     {
     //         float x = pos.GetPositionX() + 2.0f * cos(pos.GetOrientation() - M_PI / 2.0f);
     //         float y = pos.GetPositionY() + 2.0f * std::sin(pos.GetOrientation() - M_PI / 2.0f);
@@ -19789,7 +19797,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     //             pos.Relocate(x, y, z);
     //         }
     //     }
-    // }
+    }
 
     AddUnitState(UNIT_STATE_MOVE);
 
