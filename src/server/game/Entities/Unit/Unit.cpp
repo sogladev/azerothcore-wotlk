@@ -19756,6 +19756,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
         // Set exit position to vehicle position and use the current orientation
         pos = vehicleBase->GetPosition();  // This should use passenger's current position, leaving it as it is now
         pos.SetOrientation(GetOrientation());
+        // pos.SetOrientation(vehicleBase->GetOrientation()); // hack: need to use unit o instead
 
         // Change exit position based on seat entry addon data
         if (seatAddon)
@@ -19884,7 +19885,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     if (player)
     {
         player->ResummonPetTemporaryUnSummonedIfAny();
-        player->SetCanTeleport(true);
+        // player->SetCanTeleport(true);
     }
 }
 
