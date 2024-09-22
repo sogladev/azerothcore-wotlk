@@ -19818,6 +19818,22 @@ void Unit::_ExitVehicle(Position const* exitPosition)
     // xinef: hack for flameleviathan seat vehicle
     if (!vehicleInfo || vehicleInfo->m_ID != 341)
     {
+        if (IsPlayer())
+        {
+            float vehicleCollisionHeight = vehicle->GetBase()->GetCollisionHeight();
+            float height = pos.GetPositionZ() + vehicleCollisionHeight;
+            ToPlayer()->m_Events.AddEventAtOffset([this, pos]
+            {
+                Movement::MoveSplineInit init(this);
+                // Creatures without inhabit type air should begin falling after exiting the vehicle
+                init.MoveTo(pos, false);
+                init.SetFacing(GetOrientation());
+                init.SetTransportExit();
+                init.Launch();
+            }, 0s);
+        }
+        else
+        {
         float vehicleCollisionHeight = vehicle->GetBase()->GetCollisionHeight();
         float height = pos.GetPositionZ() + vehicleCollisionHeight;
 
@@ -19829,6 +19845,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
         init.SetFacing(GetOrientation());
         init.SetTransportExit();
         init.Launch();
+        }
     }
     else
     {
