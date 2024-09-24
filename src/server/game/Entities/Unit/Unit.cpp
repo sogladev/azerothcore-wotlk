@@ -9635,9 +9635,10 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
                     return false;
                 break;                                   // continue normal case
             }
-        // Finish movies that add combo
+        // Finishing moves that add combo points
         case 14189: // Seal Fate (Netherblade set)
         case 14157: // Ruthlessness
+        case 70802: // Mayhem (Shadowblade sets)
             {
                 victim = nullptr;
                 // Need add combopoint AFTER finish movie (or they dropped in finish phase)
