@@ -5134,10 +5134,81 @@ class spell_gen_choking_vines : public AuraScript
     }
 };
 
+enum ExpeditionAid
+{
+    SAY_LAND    = 0,
+    POINT_LAND  = 1
+};
+
+class npc_expedition_aid : public ScriptedAI
+{
+public:
+    npc_expedition_aid(Creature* creature) : ScriptedAI(creature)
+    {
+        creature->SetDisableGravity(true);
+        creature->SetHover(true);
+    }
+
+    void Reset() override
+    {
+        me->SetReactState(REACT_PASSIVE);
+        me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+    }
+
+    void JustDied(Unit* /*killer*/) override
+    {
+        me->DespawnOrUnsummon(3s, 0s);
+    }
+
+    void IsSummonedBy(WorldObject* summoner) override
+    {
+        _playerGUID = summoner->GetGUID();
+        me->SetFacingToObject(summoner);
+        Position pos = summoner->GetPosition();
+        me->GetMotionMaster()->MovePoint(POINT_LAND, pos);
+    }
+
+    void MovementInform(uint32 type, uint32 id) override
+    {
+        if (type == POINT_MOTION_TYPE && id == POINT_LAND)
+        {
+            if (Player* player = ObjectAccessor::GetPlayer(*me, _playerGUID))
+                Talk(SAY_LAND, player);
+
+            me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
+        }
+    }
+private:
+    ObjectGuid _playerGUID;
+};
+
+//14881 // My work here is done.
+// male
+
+// 32029 - Summon Expedition Preserver
+// 32030 - Summon Expedition Scout
+class spell_summon_expedition_aid : public SpellScript
+{
+    PrepareSpellScript(spell_summon_expedition_aid);
+
+    void SetDest(SpellDestination& dest)
+    {
+        // Adjust effect summon position
+        Position const offset = { -14.0f, -14.0f, 16.0f, 0.0f }; // incorrect
+        dest.RelocateOffset(offset);
+    }
+
+    void Register() override
+    {
+        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_summon_expedition_aid::SetDest, EFFECT_0, TARGET_DEST_CASTER_SUMMON);
+    }
+};
+
 // 32027 - Expedition Flare
 enum ExpeditionFlare
 {
     SPELL_SUMMON_EXPEDITION_SCOUT =  32030,
+    SPELL_SUMMON_EXPEDITION_PRESERVER = 32029,
 };
 
 class spell_expedition_flare : public SpellScript
@@ -5146,23 +5217,18 @@ class spell_expedition_flare : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_EXPEDITION_SCOUT });
+        return ValidateSpellInfo({ SPELL_SUMMON_EXPEDITION_SCOUT, SPELL_SUMMON_EXPEDITION_PRESERVER });
     }
 
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
     {
         Player* player = GetCaster()->ToPlayer();
-        player->CastSpell(player, SPELL_SUMMON_EXPEDITION_SCOUT, true);
-    }
-
-    void HandleDummy(SpellEffIndex /*effIndex*/)
-    {
+        player->CastSpell(player, RAND(SPELL_SUMMON_EXPEDITION_SCOUT, SPELL_SUMMON_EXPEDITION_PRESERVER), true);
     }
 
     void Register() override
     {
         OnEffectHitTarget += SpellEffectFn(spell_expedition_flare::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
-        OnEffectHitTarget += SpellEffectFn(spell_expedition_flare::HandleDummy, EFFECT_1, SPELL_EFFECT_DUMMY);
     }
 };
 
