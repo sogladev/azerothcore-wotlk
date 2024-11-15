@@ -157,9 +157,9 @@ public:
         {
             if (param == ACTION_ESSENCE_OF_SUFFERING)
             {
-                PhaseTransitionSpawns();
+                // PhaseTransitionSpawns();
 
-                ScheduleUniqueTimedEvent(38s, [&] {
+                ScheduleUniqueTimedEvent(1s, [&] {
                     summons.DespawnAll();
                     me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
                     DoCastSelf(SPELL_SUMMON_ESSENCE_OF_DESIRE);
@@ -167,9 +167,9 @@ public:
             }
             else if (param == ACTION_ESSENCE_OF_DESIRE)
             {
-                PhaseTransitionSpawns();
+                // PhaseTransitionSpawns();
 
-                ScheduleUniqueTimedEvent(38s, [&] {
+                ScheduleUniqueTimedEvent(1s, [&] {
                     summons.DespawnAll();
                     me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
                     DoCastSelf(SPELL_SUMMON_ESSENCE_OF_ANGER);
