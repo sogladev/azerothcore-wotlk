@@ -260,7 +260,7 @@ struct boss_kaelthas : public BossAI
         _advisorsAlive = 4;
 
         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_HOVER, true); // hover effect 36550 - Floating Drowned
-        me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
+        // me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
         me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE);
         SetRoomState(GO_STATE_READY);
         me->SetDisableGravity(false);
@@ -279,10 +279,10 @@ struct boss_kaelthas : public BossAI
         {
             _phase = PHASE_SINGLE_ADVISOR;
             me->SetInCombatWithZone();
-            me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_DISABLE_MOVE);
+            // me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_DISABLE_MOVE);
             Talk(SAY_INTRO);
             DoCastAOE(SPELL_REMOVE_ENCHANTED_WEAPONS, true);
-            ScheduleUniqueTimedEvent(21s, [&]
+            ScheduleUniqueTimedEvent(1s, [&]
             {
                 IntroduceNewAdvisor(SAY_INTRO_THALADRED, ACTION_START_THALADRED);
             }, EVENT_PREFIGHT_PHASE1_01);
@@ -355,7 +355,7 @@ struct boss_kaelthas : public BossAI
             me->SetWalk(false);
             me->RemoveAurasDueToSpell(SPELL_KAEL_FULL_POWER);
             me->SetReactState(REACT_AGGRESSIVE);
-            me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+            // me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
             //re-set validator
             scheduler.SetValidator([this]{
                 return !me->HasUnitState(UNIT_STATE_CASTING);
@@ -416,7 +416,7 @@ struct boss_kaelthas : public BossAI
 
     void ExecuteMiddleEvent()
     {
-        me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+        // me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
         me->RemoveAllAttackers();
         scheduler.ClearValidator();
         me->SetTarget();
@@ -559,19 +559,19 @@ struct boss_kaelthas : public BossAI
         switch (kaelAction)
         {
             case ACTION_START_THALADRED:
-                attackStartTimer = 7000ms;
+                attackStartTimer = 1s;
                 advisorNPCId = NPC_THALADRED;
                 break;
             case ACTION_START_SANGUINAR:
-                attackStartTimer = 14500ms;
+                attackStartTimer = 1s;
                 advisorNPCId = NPC_LORD_SANGUINAR;
                 break;
             case ACTION_START_CAPERNIAN:
-                attackStartTimer = 9000ms;
+                attackStartTimer = 1s;
                 advisorNPCId = NPC_CAPERNIAN;
                 break;
             case ACTION_START_TELONICUS:
-                attackStartTimer = 10400ms;
+                attackStartTimer = 1s;
                 advisorNPCId = NPC_TELONICUS;
                 break;
             default:
@@ -595,10 +595,10 @@ struct boss_kaelthas : public BossAI
     {
         ScheduleUniqueTimedEvent(3s, [&]{
             Talk(SAY_PHASE2_WEAPON);
-            DoCastSelf(SPELL_SUMMON_WEAPONS);
+            // DoCastSelf(SPELL_SUMMON_WEAPONS);
             _phase = PHASE_WEAPONS;
         }, EVENT_PREFIGHT_PHASE5_01);
-        ScheduleUniqueTimedEvent(9s, [&]{
+        ScheduleUniqueTimedEvent(5s, [&]{
             summons.DoForAllSummons([&](WorldObject* summon)
             {
                 if (Creature* summonedCreature = summon->ToCreature())
@@ -614,7 +614,7 @@ struct boss_kaelthas : public BossAI
                     }
                 }
             });
-            scheduler.Schedule(3min, GROUP_PROGRESS_PHASE, [this](TaskContext)
+            scheduler.Schedule(1s, GROUP_PROGRESS_PHASE, [this](TaskContext)
             {
                 PhaseAllAdvisorsExecute();
             });
@@ -630,7 +630,7 @@ struct boss_kaelthas : public BossAI
             DoCastSelf(SPELL_RESURRECTION);
             _phase = PHASE_ALL_ADVISORS;
         }, EVENT_PREFIGHT_PHASE6_02);
-        scheduler.Schedule(192s, GROUP_PROGRESS_PHASE, [this](TaskContext)
+        scheduler.Schedule(99999s, GROUP_PROGRESS_PHASE, [this](TaskContext)
         {
             PhaseKaelExecute();
         });
@@ -642,7 +642,7 @@ struct boss_kaelthas : public BossAI
         Talk(SAY_PHASE4_INTRO2);
         _phase = PHASE_FINAL;
         DoResetThreatList();
-        me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_DISABLE_MOVE);
+        // me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_DISABLE_MOVE);
         if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
         {
             AttackStart(target);
@@ -738,7 +738,7 @@ struct advisor_baseAI : public ScriptedAI
     {
         _preventDeath = true;
         _feigning = false;
-        me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
+        // me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
         scheduler.CancelAll();
     }
 
@@ -755,7 +755,7 @@ struct advisor_baseAI : public ScriptedAI
                 return;
             scheduler.CancelAll();
             me->AttackStop();
-            me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
+            // me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
             DoCastAOE(SPELL_KAEL_PHASE_TWO, true);
             DoCastSelf(SPELL_PERMANENT_FEIGN_DEATH, true);
             _feigning = true;
@@ -773,7 +773,7 @@ struct advisor_baseAI : public ScriptedAI
             {
                 _preventDeath = false;
                 _feigning = false;
-                me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
+                // me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                 DoResetThreatList();
                 me->SetInCombatWithZone();
                 me->SetReactState(REACT_AGGRESSIVE);
