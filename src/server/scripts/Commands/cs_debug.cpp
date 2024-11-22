@@ -73,6 +73,13 @@ public:
             { "setphaseshift",  HandleDebugSendSetPhaseShiftCommand,   SEC_ADMINISTRATOR, Console::No },
             { "spellfail",      HandleDebugSendSpellFailCommand,       SEC_ADMINISTRATOR, Console::No }
         };
+
+        static ChatCommandTable debugScriptCommandTable =
+        {
+            { "help",           HandleSD2HelpCommand,                  SEC_ADMINISTRATOR, Console::No },
+            { "command",        HandleSD2ScriptCommand,                SEC_ADMINISTRATOR, Console::No }
+        };
+
         static ChatCommandTable debugCommandTable =
         {
             { "setbit",         HandleDebugSet32BitCommand,            SEC_ADMINISTRATOR, Console::No },
@@ -104,7 +111,8 @@ public:
             { "moveflags",      HandleDebugMoveflagsCommand,           SEC_ADMINISTRATOR, Console::No },
             { "unitstate",      HandleDebugUnitStateCommand,           SEC_ADMINISTRATOR, Console::No },
             { "objectcount",    HandleDebugObjectCountCommand,         SEC_ADMINISTRATOR, Console::Yes},
-            { "dummy",          HandleDebugDummyCommand,               SEC_ADMINISTRATOR, Console::No }
+            { "dummy",          HandleDebugDummyCommand,               SEC_ADMINISTRATOR, Console::No },
+            { "script",         debugScriptCommandTable },
         };
         static ChatCommandTable commandTable =
         {
@@ -237,6 +245,27 @@ public:
         }
 
         handler->GetSession()->SendPacket(&data);
+        return true;
+    }
+
+
+    static bool HandleSD2HelpCommand(ChatHandler* handler)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+        if (InstanceScript *instance = player->GetInstanceScript())
+            instance->ShowChatCommands(handler);
+        else
+            handler->PSendSysMessage("Map script does not support chat commands.");
+        return true;
+    }
+
+    static bool HandleSD2ScriptCommand(ChatHandler* handler, std::string args)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+        if (InstanceScript *instance = player->GetInstanceScript())
+            instance->ExecuteChatCommand(handler, args);
+        else
+            handler->PSendSysMessage("Map script does not support chat commands.");
         return true;
     }
 

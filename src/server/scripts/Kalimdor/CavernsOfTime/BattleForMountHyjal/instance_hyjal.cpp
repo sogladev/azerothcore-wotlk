@@ -19,6 +19,7 @@
 #include "InstanceMapScript.h"
 #include "InstanceScript.h"
 #include "Player.h"
+#include "Tokenize.h"
 #include "hyjal.h"
 
 /* Battle of Mount Hyjal encounters:
@@ -561,6 +562,33 @@ public:
             if (inWater && player->GetAreaId() == AREA_NORDRASSIL)
             {
                 player->CastSpell(player, SPELL_ETERNAL_SILENCE, true);
+            }
+        }
+
+        void ShowChatCommands(ChatHandler* handler) override
+        {
+            handler->SendSysMessage("This instance supports the following commands:\n spawnarchimonde");
+        }
+
+        void ExecuteChatCommand(ChatHandler* handler, std::string_view args) override
+        {
+            if (args.empty())
+                return;
+
+            std::vector<std::string_view> tokens = Acore::Tokenize(args, ' ', false);
+            if (tokens.empty())
+            {
+                ShowChatCommands(handler);
+                return;
+            }
+            std::string_view command = tokens[0];
+
+            if (command == "spawnarchimonde")
+            {
+                if (Creature* archi = GetCreature(DATA_ARCHIMONDE))
+                {
+                    archi->AI()->DoAction(ACTION_BECOME_ACTIVE_AND_CHANNEL);
+                }
             }
         }
 

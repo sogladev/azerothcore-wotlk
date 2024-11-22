@@ -18,6 +18,7 @@
 #ifndef ACORE_INSTANCE_DATA_H
 #define ACORE_INSTANCE_DATA_H
 
+#include "Chat.h"
 #include "CreatureAI.h"
 #include "ObjectMgr.h"
 #include "TaskScheduler.h"
@@ -255,6 +256,9 @@ public:
     void SendEncounterUnit(uint32 type, Unit* unit = nullptr, uint8 param1 = 0, uint8 param2 = 0);
 
     virtual void FillInitialWorldStates(WorldPacket& /*data*/) {}
+
+    virtual void ShowChatCommands(ChatHandler* /*handler*/) {}
+    virtual void ExecuteChatCommand(ChatHandler* /*handler*/, std::string_view /*args*/) {}
 
     uint32 GetEncounterCount() const { return bosses.size(); }
 
