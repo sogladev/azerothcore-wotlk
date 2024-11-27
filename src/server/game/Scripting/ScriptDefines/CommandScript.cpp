@@ -32,8 +32,7 @@ Acore::ChatCommands::ChatCommandTable ScriptMgr::GetChatCommands()
     return table;
 }
 
-CommandScript::CommandScript(const char* name)
-    : ScriptObject(name)
+CommandScript::CommandScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<CommandScript>::AddScript(this);
 }

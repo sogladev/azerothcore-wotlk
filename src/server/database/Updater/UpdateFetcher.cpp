@@ -37,29 +37,32 @@ struct UpdateFetcher::DirectoryEntry
     State const state;
 };
 
-UpdateFetcher::UpdateFetcher(Path const& sourceDirectory,
-                             std::function<void(std::string const&)> const& apply,
-                             std::function<void(Path const& path)> const& applyFile,
-                             std::function<QueryResult(std::string const&)> const& retrieve, std::string const& dbModuleName, std::vector<std::string> const* setDirectories /*= nullptr*/) :
-    _sourceDirectory(std::make_unique<Path>(sourceDirectory)), _apply(apply), _applyFile(applyFile),
-    _retrieve(retrieve), _dbModuleName(dbModuleName), _setDirectories(setDirectories)
-{
-}
-
-UpdateFetcher::UpdateFetcher(Path const& sourceDirectory,
-    std::function<void(std::string const&)> const& apply,
+UpdateFetcher::UpdateFetcher(Path const& sourceDirectory, std::function<void(std::string const&)> const& apply,
     std::function<void(Path const& path)> const& applyFile,
-    std::function<QueryResult(std::string const&)> const& retrieve,
-    std::string const& dbModuleName,
-    std::string_view modulesList /*= {}*/) :
-    _sourceDirectory(std::make_unique<Path>(sourceDirectory)), _apply(apply), _applyFile(applyFile),
-    _retrieve(retrieve), _dbModuleName(dbModuleName), _setDirectories(nullptr), _modulesList(modulesList)
-{
-}
+    std::function<QueryResult(std::string const&)> const& retrieve, std::string const& dbModuleName,
+    std::vector<std::string> const* setDirectories /*= nullptr*/) :
+    _sourceDirectory(std::make_unique<Path>(sourceDirectory)),
+    _apply(apply),
+    _applyFile(applyFile),
+    _retrieve(retrieve),
+    _dbModuleName(dbModuleName),
+    _setDirectories(setDirectories)
+{ }
 
-UpdateFetcher::~UpdateFetcher()
-{
-}
+UpdateFetcher::UpdateFetcher(Path const& sourceDirectory, std::function<void(std::string const&)> const& apply,
+    std::function<void(Path const& path)> const& applyFile,
+    std::function<QueryResult(std::string const&)> const& retrieve, std::string const& dbModuleName,
+    std::string_view modulesList /*= {}*/) :
+    _sourceDirectory(std::make_unique<Path>(sourceDirectory)),
+    _apply(apply),
+    _applyFile(applyFile),
+    _retrieve(retrieve),
+    _dbModuleName(dbModuleName),
+    _setDirectories(nullptr),
+    _modulesList(modulesList)
+{ }
+
+UpdateFetcher::~UpdateFetcher() { }
 
 UpdateFetcher::LocaleFileStorage UpdateFetcher::GetFileList() const
 {
@@ -71,7 +74,8 @@ UpdateFetcher::LocaleFileStorage UpdateFetcher::GetFileList() const
     return files;
 }
 
-void UpdateFetcher::FillFileListRecursively(Path const& path, LocaleFileStorage& storage, State const state, uint32 const depth) const
+void UpdateFetcher::FillFileListRecursively(
+    Path const& path, LocaleFileStorage& storage, State const state, uint32 const depth) const
 {
     static uint32 const MAX_DEPTH = 10;
     static directory_iterator const end;
@@ -85,16 +89,21 @@ void UpdateFetcher::FillFileListRecursively(Path const& path, LocaleFileStorage&
         }
         else if (itr->path().extension() == ".sql")
         {
-            LOG_TRACE("sql.updates", "Added locale file \"{}\" state '{}'.", itr->path().filename().generic_string(), AppliedFileEntry::StateConvert(state));
+            LOG_TRACE("sql.updates",
+                "Added locale file \"{}\" state '{}'.",
+                itr->path().filename().generic_string(),
+                AppliedFileEntry::StateConvert(state));
 
-            LocaleFileEntry const entry = { itr->path(), state };
+            LocaleFileEntry const entry = {itr->path(), state};
 
             // Check for doubled filenames
             // Because elements are only compared by their filenames, this is ok
             if (storage.find(entry) != storage.end())
             {
-                LOG_FATAL("sql.updates", "Duplicate filename \"{}\" occurred. Because updates are ordered " \
-                          "by their filenames, every name needs to be unique!", itr->path().generic_string());
+                LOG_FATAL("sql.updates",
+                    "Duplicate filename \"{}\" occurred. Because updates are ordered "
+                    "by their filenames, every name needs to be unique!",
+                    itr->path().generic_string());
 
                 throw UpdateException("Updating failed, see the log for details.");
             }
@@ -134,7 +143,7 @@ UpdateFetcher::DirectoryStorage UpdateFetcher::ReceiveIncludedDirectories() cons
         {
             Field* fields = result->Fetch();
 
-            std::string path  = fields[0].Get<std::string>();
+            std::string path = fields[0].Get<std::string>();
             std::string state = fields[1].Get<std::string>();
             if (path.substr(0, 1) == "$")
                 path = _sourceDirectory->generic_string() + path.substr(1);
@@ -143,36 +152,38 @@ UpdateFetcher::DirectoryStorage UpdateFetcher::ReceiveIncludedDirectories() cons
 
             if (!is_directory(p))
             {
-                LOG_WARN("sql.updates", "DBUpdater: Given update include directory \"{}\" does not exist, skipped!", p.generic_string());
+                LOG_WARN("sql.updates",
+                    "DBUpdater: Given update include directory \"{}\" does not exist, skipped!",
+                    p.generic_string());
                 continue;
             }
 
             DirectoryEntry const entry = {p, AppliedFileEntry::StateConvert(state)};
             directories.push_back(entry);
 
-            LOG_TRACE("sql.updates", "Added applied file \"{}\" '{}' state from remote.", p.filename().generic_string(), state);
+            LOG_TRACE("sql.updates",
+                "Added applied file \"{}\" '{}' state from remote.",
+                p.filename().generic_string(),
+                state);
 
         } while (result->NextRow());
 
         std::vector<std::string> moduleList;
 
         for (auto const& itr : Acore::Tokenize(_modulesList, ',', true))
-        {
             moduleList.emplace_back(itr);
-        }
 
         // data/sql
         for (auto const& itr : moduleList)
         {
-            std::string path = _sourceDirectory->generic_string() + "/modules/" + itr + "/data/sql/" + _dbModuleName; // modules/mod-name/data/sql/db-world
+            std::string path = _sourceDirectory->generic_string() + "/modules/" + itr + "/data/sql/" +
+                               _dbModuleName; // modules/mod-name/data/sql/db-world
 
             Path const p(path);
             if (!is_directory(p))
-            {
                 continue;
-            }
 
-            DirectoryEntry const entry = { p, AppliedFileEntry::StateConvert("MODULE") };
+            DirectoryEntry const entry = {p, AppliedFileEntry::StateConvert("MODULE")};
             directories.push_back(entry);
 
             LOG_TRACE("sql.updates", "Added applied modules file \"{}\" from remote.", p.filename().generic_string());
@@ -186,7 +197,8 @@ UpdateFetcher::AppliedFileStorage UpdateFetcher::ReceiveAppliedFiles() const
 {
     AppliedFileStorage map;
 
-    QueryResult result = _retrieve("SELECT `name`, `hash`, `state`, UNIX_TIMESTAMP(`timestamp`) FROM `updates` ORDER BY `name` ASC");
+    QueryResult result =
+        _retrieve("SELECT `name`, `hash`, `state`, UNIX_TIMESTAMP(`timestamp`) FROM `updates` ORDER BY `name` ASC");
     if (!result)
         return map;
 
@@ -194,10 +206,10 @@ UpdateFetcher::AppliedFileStorage UpdateFetcher::ReceiveAppliedFiles() const
     {
         Field* fields = result->Fetch();
 
-        AppliedFileEntry const entry =
-        {
-            fields[0].Get<std::string>(), fields[1].Get<std::string>(), AppliedFileEntry::StateConvert(fields[2].Get<std::string>()), fields[3].Get<uint64>()
-        };
+        AppliedFileEntry const entry = {fields[0].Get<std::string>(),
+            fields[1].Get<std::string>(),
+            AppliedFileEntry::StateConvert(fields[2].Get<std::string>()),
+            fields[3].Get<uint64>()};
 
         map.emplace(entry.name, entry);
     } while (result->NextRow());
@@ -210,10 +222,11 @@ std::string UpdateFetcher::ReadSQLUpdate(Path const& file) const
     std::ifstream in(file.c_str());
     if (!in.is_open())
     {
-        LOG_FATAL("sql.updates", "Failed to open the sql update \"{}\" for reading! "
-                  "Stopping the server to keep the database integrity, "
-                  "try to identify and solve the issue or disable the database updater.",
-                  file.generic_string());
+        LOG_FATAL("sql.updates",
+            "Failed to open the sql update \"{}\" for reading! "
+            "Stopping the server to keep the database integrity, "
+            "try to identify and solve the issue or disable the database updater.",
+            file.generic_string());
 
         throw UpdateException("Opening the sql update failed!");
     }
@@ -229,16 +242,12 @@ std::string UpdateFetcher::ReadSQLUpdate(Path const& file) const
     return update;
 }
 
-UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
-                                   bool const allowRehash,
-                                   bool const archivedRedundancy,
-                                   int32 const cleanDeadReferencesMaxCount) const
+UpdateResult UpdateFetcher::Update(bool const redundancyChecks, bool const allowRehash, bool const archivedRedundancy,
+    int32 const cleanDeadReferencesMaxCount) const
 {
     LocaleFileStorage const available = GetFileList();
     if (_setDirectories && available.empty())
-    {
         return UpdateResult();
-    }
 
     AppliedFileStorage applied = ReceiveAppliedFiles();
 
@@ -280,7 +289,8 @@ UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
             // If the update is in an archived directory and is marked as archived in our database, skip redundancy checks (archived updates never change).
             if (!archivedRedundancy && (iter->second.state == ARCHIVED) && (sqlFile.second == ARCHIVED))
             {
-                LOG_DEBUG("sql.updates", ">> Update is archived and marked as archived in database, skipping redundancy checks.");
+                LOG_DEBUG("sql.updates",
+                    ">> Update is archived and marked as archived in database, skipping redundancy checks.");
                 applied.erase(iter);
                 return;
             }
@@ -301,21 +311,28 @@ UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
                 LocaleFileStorage::const_iterator localeIter;
 
                 // Push localeIter forward
-                for (localeIter = available.begin(); (localeIter != available.end()) &&
-                        (localeIter->first.filename().string() != hashIter->second); ++localeIter);
+                for (localeIter = available.begin();
+                     (localeIter != available.end()) && (localeIter->first.filename().string() != hashIter->second);
+                     ++localeIter)
+                    ;
 
                 // Conflict!
                 if (localeIter != available.end())
                 {
-                    LOG_WARN("sql.updates", ">> It seems like the update \"{}\" \'{}\' was renamed, but the old file is still there! " \
-                             "Treating it as a new file! (It is probably an unmodified copy of the file \"{}\")",
-                             filePath.filename().string(), hash.substr(0, 7),
-                             localeIter->first.filename().string());
+                    LOG_WARN("sql.updates",
+                        ">> It seems like the update \"{}\" \'{}\' was renamed, but the old file is still there! "
+                        "Treating it as a new file! (It is probably an unmodified copy of the file \"{}\")",
+                        filePath.filename().string(),
+                        hash.substr(0, 7),
+                        localeIter->first.filename().string());
                 }
                 else // It is safe to treat the file as renamed here
                 {
-                    LOG_INFO("sql.updates", ">> Renaming update \"{}\" to \"{}\" \'{}\'.",
-                             hashIter->second, filePath.filename().string(), hash.substr(0, 7));
+                    LOG_INFO("sql.updates",
+                        ">> Renaming update \"{}\" to \"{}\" \'{}\'.",
+                        hashIter->second,
+                        filePath.filename().string(),
+                        hash.substr(0, 7));
 
                     RenameEntry(hashIter->second, filePath.filename().string());
                     applied.erase(hashIter->second);
@@ -325,8 +342,10 @@ UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
             // Apply the update if it was never seen before.
             else
             {
-                LOG_INFO("sql.updates", ">> Applying update \"{}\" \'{}\'...",
-                    filePath.filename().string(), hash.substr(0, 7));
+                LOG_INFO("sql.updates",
+                    ">> Applying update \"{}\" \'{}\'...",
+                    filePath.filename().string(),
+                    hash.substr(0, 7));
             }
         }
         // Rehash the update entry if it exists in our database with an empty hash.
@@ -334,7 +353,9 @@ UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
         {
             mode = MODE_REHASH;
 
-            LOG_INFO("sql.updates", ">> Re-hashing update \"{}\" \'{}\'...", filePath.filename().string(),
+            LOG_INFO("sql.updates",
+                ">> Re-hashing update \"{}\" \'{}\'...",
+                filePath.filename().string(),
                 hash.substr(0, 7));
         }
         else
@@ -342,21 +363,27 @@ UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
             // If the hash of the files differs from the one stored in our database, reapply the update (because it changed).
             if (iter->second.hash != hash)
             {
-                LOG_INFO("sql.updates", ">> Reapplying update \"{}\" \'{}\' -> \'{}\' (it changed)...", filePath.filename().string(),
-                    iter->second.hash.substr(0, 7), hash.substr(0, 7));
+                LOG_INFO("sql.updates",
+                    ">> Reapplying update \"{}\" \'{}\' -> \'{}\' (it changed)...",
+                    filePath.filename().string(),
+                    iter->second.hash.substr(0, 7),
+                    hash.substr(0, 7));
             }
             else
             {
                 // If the file wasn't changed and just moved, update its state (if necessary).
                 if (iter->second.state != fileState)
                 {
-                    LOG_DEBUG("sql.updates", ">> Updating the state of \"{}\" to \'{}\'...",
-                              filePath.filename().string(), AppliedFileEntry::StateConvert(fileState));
+                    LOG_DEBUG("sql.updates",
+                        ">> Updating the state of \"{}\" to \'{}\'...",
+                        filePath.filename().string(),
+                        AppliedFileEntry::StateConvert(fileState));
 
                     UpdateState(filePath.filename().string(), fileState);
                 }
 
-                LOG_DEBUG("sql.updates", ">> Update is already applied and matches the hash \'{}\'.", hash.substr(0, 7));
+                LOG_DEBUG(
+                    "sql.updates", ">> Update is already applied and matches the hash \'{}\'.", hash.substr(0, 7));
 
                 applied.erase(iter);
                 return;
@@ -364,7 +391,7 @@ UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
         }
 
         uint32 speed = 0;
-        AppliedFileEntry const file = { filePath.filename().string(), hash, fileState, 0 };
+        AppliedFileEntry const file = {filePath.filename().string(), hash, fileState, 0};
 
         switch (mode)
         {
@@ -385,22 +412,19 @@ UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
 
     // Apply default updates
     for (auto const& availableQuery : available)
-    {
         if (availableQuery.second != CUSTOM && availableQuery.second != MODULE)
             ApplyUpdateFile(availableQuery);
-    }
 
     // Apply only custom/module updates
     for (auto const& availableQuery : available)
-    {
         if (availableQuery.second == CUSTOM || availableQuery.second == MODULE)
             ApplyUpdateFile(availableQuery);
-    }
 
     // Cleanup up orphaned entries (if enabled)
     if (!applied.empty() && !_setDirectories)
     {
-        bool const doCleanup = (cleanDeadReferencesMaxCount < 0) || (applied.size() <= static_cast<size_t>(cleanDeadReferencesMaxCount));
+        bool const doCleanup =
+            (cleanDeadReferencesMaxCount < 0) || (applied.size() <= static_cast<size_t>(cleanDeadReferencesMaxCount));
 
         AppliedFileStorage toCleanup;
         for (auto const& entry : applied)
@@ -408,9 +432,9 @@ UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
             if (entry.second.state != MODULE)
             {
                 LOG_WARN("sql.updates",
-                         ">> The file \'{}\' was applied to the database, but is missing in"
-                         " your update directory now!",
-                         entry.first);
+                    ">> The file \'{}\' was applied to the database, but is missing in"
+                    " your update directory now!",
+                    entry.first);
 
                 if (doCleanup)
                 {
@@ -427,9 +451,9 @@ UpdateResult UpdateFetcher::Update(bool const redundancyChecks,
             else
             {
                 LOG_ERROR("sql.updates",
-                          "Cleanup is disabled! There were {} dirty files applied to your database, "
-                          "but they are now missing in your source directory!",
-                          toCleanup.size());
+                    "Cleanup is disabled! There were {} dirty files applied to your database, "
+                    "but they are now missing in your source directory!",
+                    toCleanup.size());
             }
         }
     }
@@ -453,8 +477,9 @@ uint32 UpdateFetcher::Apply(Path const& path) const
 
 void UpdateFetcher::UpdateEntry(AppliedFileEntry const& entry, uint32 const speed) const
 {
-    std::string const update = "REPLACE INTO `updates` (`name`, `hash`, `state`, `speed`) VALUES (\"" +
-                               entry.name + "\", \"" + entry.hash + "\", \'" + entry.GetStateAsString() + "\', " + std::to_string(speed) + ")";
+    std::string const update = "REPLACE INTO `updates` (`name`, `hash`, `state`, `speed`) VALUES (\"" + entry.name +
+                               "\", \"" + entry.hash + "\", \'" + entry.GetStateAsString() + "\', " +
+                               std::to_string(speed) + ")";
 
     // Update database
     _apply(update);
@@ -504,7 +529,8 @@ void UpdateFetcher::CleanUp(AppliedFileStorage const& storage) const
 
 void UpdateFetcher::UpdateState(std::string const& name, State const state) const
 {
-    std::string const update = "UPDATE `updates` SET `state`=\'" + AppliedFileEntry::StateConvert(state) + "\' WHERE `name`=\"" + name + "\"";
+    std::string const update =
+        "UPDATE `updates` SET `state`=\'" + AppliedFileEntry::StateConvert(state) + "\' WHERE `name`=\"" + name + "\"";
 
     // Update database
     _apply(update);

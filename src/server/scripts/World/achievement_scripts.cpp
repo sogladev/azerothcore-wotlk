@@ -32,7 +32,8 @@ public:
     bool OnCheck(Player* source, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
         Battleground* bg = source->GetBattleground();
-        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_AB && bg->ToBattlegroundAB()->IsTeamScores500Disadvantage(source->GetTeamId());
+        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_AB &&
+               bg->ToBattlegroundAB()->IsTeamScores500Disadvantage(source->GetTeamId());
     }
 };
 
@@ -61,7 +62,8 @@ public:
         if (Player const* player = target->ToPlayer())
         {
             Battleground* bg = source->GetBattleground();
-            return bg && bg->GetBgTypeID(true) == BATTLEGROUND_WS && bg->ToBattlegroundWS()->GetFlagState(player->GetTeamId()) == BG_WS_FLAG_STATE_ON_BASE;
+            return bg && bg->GetBgTypeID(true) == BATTLEGROUND_WS &&
+                   bg->ToBattlegroundWS()->GetFlagState(player->GetTeamId()) == BG_WS_FLAG_STATE_ON_BASE;
         }
         return false;
     }
@@ -75,7 +77,8 @@ public:
     bool OnCheck(Player* source, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
         Battleground* bg = source->GetBattleground();
-        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_IC && bg->ToBattlegroundIC()->IsResourceGlutAllowed(source->GetTeamId());
+        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_IC &&
+               bg->ToBattlegroundIC()->IsResourceGlutAllowed(source->GetTeamId());
     }
 };
 
@@ -87,7 +90,7 @@ public:
     bool OnCheck(Player* source, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
         if (Creature* vehicle = source->GetVehicleCreatureBase())
-            return vehicle->GetEntry() == NPC_GLAIVE_THROWER_H ||  vehicle->GetEntry() == NPC_GLAIVE_THROWER_A;
+            return vehicle->GetEntry() == NPC_GLAIVE_THROWER_H || vehicle->GetEntry() == NPC_GLAIVE_THROWER_A;
 
         return false;
     }
@@ -124,10 +127,10 @@ public:
 class achievement_arena_by_type : public AchievementCriteriaScript
 {
 public:
-    achievement_arena_by_type(char const* name, uint8 arenaType) : AchievementCriteriaScript(name),
+    achievement_arena_by_type(char const* name, uint8 arenaType) :
+        AchievementCriteriaScript(name),
         _arenaType(arenaType)
-    {
-    }
+    { }
 
     bool OnCheck(Player* source, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
@@ -164,7 +167,8 @@ public:
     bool OnCheck(Player* source, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
         Battleground* bg = source->GetBattleground();
-        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_AV && bg->ToBattlegroundAV()->IsBothMinesControlledByTeam(source->GetTeamId());
+        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_AV &&
+               bg->ToBattlegroundAV()->IsBothMinesControlledByTeam(source->GetTeamId());
     }
 };
 
@@ -176,7 +180,8 @@ public:
     bool OnCheck(Player* source, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
         Battleground* bg = source->GetBattleground();
-        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_AV && bg->ToBattlegroundAV()->IsAllTowersControlledAndCaptainAlive(source->GetTeamId());
+        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_AV &&
+               bg->ToBattlegroundAV()->IsAllTowersControlledAndCaptainAlive(source->GetTeamId());
     }
 };
 
@@ -188,24 +193,25 @@ public:
     bool OnCheck(Player* source, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
         Battleground* bg = source->GetBattleground();
-        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_SA && bg->ToBattlegroundSA()->AllowDefenseOfTheAncients(source);
+        return bg && bg->GetBgTypeID(true) == BATTLEGROUND_SA &&
+               bg->ToBattlegroundSA()->AllowDefenseOfTheAncients(source);
     }
 };
 
 enum ArgentTournamentAreas
 {
-    AREA_ARGENT_TOURNAMENT_FIELDS  = 4658,
-    AREA_RING_OF_ASPIRANTS         = 4670,
-    AREA_RING_OF_ARGENT_VALIANTS   = 4671,
+    AREA_ARGENT_TOURNAMENT_FIELDS = 4658,
+    AREA_RING_OF_ASPIRANTS = 4670,
+    AREA_RING_OF_ARGENT_VALIANTS = 4671,
     AREA_RING_OF_ALLIANCE_VALIANTS = 4672,
-    AREA_RING_OF_HORDE_VALIANTS    = 4673,
-    AREA_RING_OF_CHAMPIONS         = 4669,
+    AREA_RING_OF_HORDE_VALIANTS = 4673,
+    AREA_RING_OF_CHAMPIONS = 4669,
 };
 
 class achievement_tilted : public AchievementCriteriaScript
 {
 public:
-    achievement_tilted() : AchievementCriteriaScript("achievement_tilted") {}
+    achievement_tilted() : AchievementCriteriaScript("achievement_tilted") { }
 
     bool OnCheck(Player* player, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
@@ -213,12 +219,9 @@ public:
             return false;
 
         uint32 areaid = player->GetAreaId();
-        bool checkArea =    areaid == AREA_ARGENT_TOURNAMENT_FIELDS ||
-                            areaid == AREA_RING_OF_ASPIRANTS ||
-                            areaid == AREA_RING_OF_ARGENT_VALIANTS ||
-                            areaid == AREA_RING_OF_ALLIANCE_VALIANTS ||
-                            areaid == AREA_RING_OF_HORDE_VALIANTS ||
-                            areaid == AREA_RING_OF_CHAMPIONS;
+        bool checkArea = areaid == AREA_ARGENT_TOURNAMENT_FIELDS || areaid == AREA_RING_OF_ASPIRANTS ||
+                         areaid == AREA_RING_OF_ARGENT_VALIANTS || areaid == AREA_RING_OF_ALLIANCE_VALIANTS ||
+                         areaid == AREA_RING_OF_HORDE_VALIANTS || areaid == AREA_RING_OF_CHAMPIONS;
 
         return checkArea && player->duel && player->duel->IsMounted;
     }
@@ -235,7 +238,8 @@ public:
             return false;
 
         Battleground* battleground = source->GetBattleground();
-        return battleground && battleground->GetBgTypeID(true) == BATTLEGROUND_SA && battleground->ToBattlegroundSA()->notEvenAScratch(source->GetTeamId());
+        return battleground && battleground->GetBgTypeID(true) == BATTLEGROUND_SA &&
+               battleground->ToBattlegroundSA()->notEvenAScratch(source->GetTeamId());
     }
 };
 
@@ -252,26 +256,29 @@ public:
 
 enum FlirtWithDisaster
 {
-    AURA_PERFUME_FOREVER           = 70235,
-    AURA_PERFUME_ENCHANTRESS       = 70234,
-    AURA_PERFUME_VICTORY           = 70233,
+    AURA_PERFUME_FOREVER = 70235,
+    AURA_PERFUME_ENCHANTRESS = 70234,
+    AURA_PERFUME_VICTORY = 70233,
 };
 
 class achievement_flirt_with_disaster_perf_check : public AchievementCriteriaScript
 {
-    public:
-        achievement_flirt_with_disaster_perf_check() : AchievementCriteriaScript("achievement_flirt_with_disaster_perf_check") { }
+public:
+    achievement_flirt_with_disaster_perf_check() :
+        AchievementCriteriaScript("achievement_flirt_with_disaster_perf_check")
+    { }
 
-        bool OnCheck(Player* player, Unit* /*target*/, uint32 /*criteria_id*/) override
-        {
-            if (!player)
-                return false;
-
-            if (player->HasAura(AURA_PERFUME_FOREVER) || player->HasAura(AURA_PERFUME_ENCHANTRESS) || player->HasAura(AURA_PERFUME_VICTORY))
-                return true;
-
+    bool OnCheck(Player* player, Unit* /*target*/, uint32 /*criteria_id*/) override
+    {
+        if (!player)
             return false;
-        }
+
+        if (player->HasAura(AURA_PERFUME_FOREVER) || player->HasAura(AURA_PERFUME_ENCHANTRESS) ||
+            player->HasAura(AURA_PERFUME_VICTORY))
+            return true;
+
+        return false;
+    }
 };
 
 void AddSC_achievement_scripts()

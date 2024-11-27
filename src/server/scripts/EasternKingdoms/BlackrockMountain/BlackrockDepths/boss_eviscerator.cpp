@@ -22,21 +22,21 @@
 enum Spells
 {
     SPELL_SHADOWBOLT_VOLLEY = 15245,
-    SPELL_REND              = 14331,
-    SPELL_SHIELD            = 7121
+    SPELL_REND = 14331,
+    SPELL_SHIELD = 7121
 };
 
 enum Timers
 {
     TIMER_SHADOWBOLT_VOLLEY = 7000,
-    TIMER_REND              = 20000,
-    TIMER_SHIELD            = 12000
+    TIMER_REND = 20000,
+    TIMER_SHIELD = 12000
 };
 
 class boss_eviscerator : public CreatureScript
 {
 public:
-    boss_eviscerator() : CreatureScript("boss_eviscerator") {}
+    boss_eviscerator() : CreatureScript("boss_eviscerator") { }
 
     CreatureAI* GetAI(Creature* creature) const override
     {
@@ -45,7 +45,7 @@ public:
 
     struct boss_evisceratorAI : public BossAI
     {
-        boss_evisceratorAI(Creature* creature) : BossAI(creature, DATA_EVISCERATOR) {}
+        boss_evisceratorAI(Creature* creature) : BossAI(creature, DATA_EVISCERATOR) { }
 
         bool SpellShieldReady = false;
 
@@ -53,11 +53,12 @@ public:
         {
             _JustEngagedWith();
             events.ScheduleEvent(SPELL_SHADOWBOLT_VOLLEY, 0.2 * (int)TIMER_SHADOWBOLT_VOLLEY);
-            events.ScheduleEvent(SPELL_REND, 0.2 * (int) TIMER_REND);
-            events.ScheduleEvent(SPELL_SHIELD, 0.2 * (int) TIMER_SHIELD);
+            events.ScheduleEvent(SPELL_REND, 0.2 * (int)TIMER_REND);
+            events.ScheduleEvent(SPELL_SHIELD, 0.2 * (int)TIMER_SHIELD);
         }
 
-        void DamageTaken(Unit* /* doneBy */, uint32& /* damage */, DamageEffectType /* damagetype */, SpellSchoolMask damageSchoolMask) override
+        void DamageTaken(Unit* /* doneBy */, uint32& /* damage */, DamageEffectType /* damagetype */,
+            SpellSchoolMask damageSchoolMask) override
         {
             if ((damageSchoolMask & SPELL_SCHOOL_MASK_MAGIC) && SpellShieldReady)
             {
@@ -71,32 +72,29 @@ public:
         {
             //Return since we have no target
             if (!UpdateVictim())
-            {
                 return;
-            }
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
             while (uint32 eventId = events.ExecuteEvent())
             {
                 switch (eventId)
                 {
-                case SPELL_SHADOWBOLT_VOLLEY:
-                    DoCastVictim(SPELL_SHADOWBOLT_VOLLEY);
-                    events.ScheduleEvent(SPELL_SHADOWBOLT_VOLLEY, urand(TIMER_SHADOWBOLT_VOLLEY - 2000, TIMER_SHADOWBOLT_VOLLEY + 2000));
-                    break;
-                case SPELL_REND:
-                    DoCastVictim(SPELL_REND);
-                    events.ScheduleEvent(SPELL_REND, urand(TIMER_REND - 2000, TIMER_REND + 2000));
-                    break;
-                case SPELL_SHIELD:
-                    SpellShieldReady = true;
-                    break;
-                default:
-                    break;
+                    case SPELL_SHADOWBOLT_VOLLEY:
+                        DoCastVictim(SPELL_SHADOWBOLT_VOLLEY);
+                        events.ScheduleEvent(SPELL_SHADOWBOLT_VOLLEY,
+                            urand(TIMER_SHADOWBOLT_VOLLEY - 2000, TIMER_SHADOWBOLT_VOLLEY + 2000));
+                        break;
+                    case SPELL_REND:
+                        DoCastVictim(SPELL_REND);
+                        events.ScheduleEvent(SPELL_REND, urand(TIMER_REND - 2000, TIMER_REND + 2000));
+                        break;
+                    case SPELL_SHIELD:
+                        SpellShieldReady = true;
+                        break;
+                    default:
+                        break;
                 }
             }
             DoMeleeAttackIfReady();

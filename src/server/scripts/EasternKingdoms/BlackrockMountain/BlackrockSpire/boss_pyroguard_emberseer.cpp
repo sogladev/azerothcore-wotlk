@@ -24,48 +24,48 @@
 
 enum Text
 {
-    EMOTE_ONE_STACK                 = 0,
-    EMOTE_TEN_STACK                 = 1,
-    EMOTE_FREE_OF_BONDS             = 2,
-    YELL_FREE_OF_BONDS              = 3
+    EMOTE_ONE_STACK = 0,
+    EMOTE_TEN_STACK = 1,
+    EMOTE_FREE_OF_BONDS = 2,
+    YELL_FREE_OF_BONDS = 3
 };
 
 enum Spells
 {
-    SPELL_ENCAGED_EMBERSEER         = 15282, // Self on spawn
-    SPELL_FIRE_SHIELD_TRIGGER       = 13377, // Self on spawn missing from 335 dbc triggers SPELL_FIRE_SHIELD every 3 sec
-    SPELL_FIRE_SHIELD               = 13376, // Triggered by SPELL_FIRE_SHIELD_TRIGGER
-    SPELL_FREEZE_ANIM               = 16245, // Self on event start
-    SPELL_EMBERSEER_GROWING         = 16048, // Self on event start
+    SPELL_ENCAGED_EMBERSEER = 15282,   // Self on spawn
+    SPELL_FIRE_SHIELD_TRIGGER = 13377, // Self on spawn missing from 335 dbc triggers SPELL_FIRE_SHIELD every 3 sec
+    SPELL_FIRE_SHIELD = 13376,         // Triggered by SPELL_FIRE_SHIELD_TRIGGER
+    SPELL_FREEZE_ANIM = 16245,         // Self on event start
+    SPELL_EMBERSEER_GROWING = 16048,   // Self on event start
     SPELL_EMBERSEER_GROWING_TRIGGER = 16049, // Triggered by SPELL_EMBERSEER_GROWING
-    SPELL_EMBERSEER_FULL_STRENGTH   = 16047, // Emberseer Full Strength
-    SPELL_FIRENOVA                  = 23462, // Combat
-    SPELL_FLAMEBUFFET               = 23341, // Combat
-    SPELL_PYROBLAST                 = 17274, // Combat
+    SPELL_EMBERSEER_FULL_STRENGTH = 16047,   // Emberseer Full Strength
+    SPELL_FIRENOVA = 23462,                  // Combat
+    SPELL_FLAMEBUFFET = 23341,               // Combat
+    SPELL_PYROBLAST = 17274,                 // Combat
     // Blackhand Incarcerator Spells
-    SPELL_ENCAGE_EMBERSEER          = 15281, // Emberseer on spawn
-    SPELL_STRIKE                    = 15580, // Combat
-    SPELL_ENCAGE                    = 16045, // Combat
+    SPELL_ENCAGE_EMBERSEER = 15281, // Emberseer on spawn
+    SPELL_STRIKE = 15580,           // Combat
+    SPELL_ENCAGE = 16045,           // Combat
     // Cast on player by altar
-    SPELL_EMBERSEER_OBJECT_VISUAL   = 16532
+    SPELL_EMBERSEER_OBJECT_VISUAL = 16532
 };
 
 enum Events
 {
     // Respawn
-    EVENT_RESPAWN                   = 1,
+    EVENT_RESPAWN = 1,
     // Pre fight
-    EVENT_PRE_FIGHT_1               = 2,
-    EVENT_PRE_FIGHT_2               = 3,
+    EVENT_PRE_FIGHT_1 = 2,
+    EVENT_PRE_FIGHT_2 = 3,
     // Combat
-    EVENT_FIRENOVA                  = 4,
-    EVENT_FLAMEBUFFET               = 5,
-    EVENT_PYROBLAST                 = 6,
+    EVENT_FIRENOVA = 4,
+    EVENT_FLAMEBUFFET = 5,
+    EVENT_PYROBLAST = 6,
     // Hack due to trigger spell not in dbc
-    EVENT_FIRE_SHIELD               = 7,
-    EVENT_PRE_ENTER_COMBAT_1        = 8,
-    EVENT_PRE_ENTER_COMBAT_2        = 9,
-    EVENT_ENTER_COMBAT              = 10
+    EVENT_FIRE_SHIELD = 7,
+    EVENT_PRE_ENTER_COMBAT_1 = 8,
+    EVENT_PRE_ENTER_COMBAT_2 = 9,
+    EVENT_ENTER_COMBAT = 10
 };
 
 class boss_pyroguard_emberseer : public CreatureScript
@@ -124,9 +124,9 @@ public:
         void JustEngagedWith(Unit* /*who*/) override
         {
             // ### TODO Check combat timing ###
-            events.ScheduleEvent(EVENT_FIRENOVA,    6s);
+            events.ScheduleEvent(EVENT_FIRENOVA, 6s);
             events.ScheduleEvent(EVENT_FLAMEBUFFET, 3s);
-            events.ScheduleEvent(EVENT_PYROBLAST,  14s);
+            events.ScheduleEvent(EVENT_PYROBLAST, 14s);
         }
 
         void JustDied(Unit* /*killer*/) override
@@ -154,7 +154,8 @@ public:
 
                 if (me->GetAuraCount(SPELL_EMBERSEER_GROWING_TRIGGER) == 20)
                 {
-                    events.CancelEvent(EVENT_FIRE_SHIELD); // temporarily cancel fire shield to keep it from interrupting combat start
+                    events.CancelEvent(
+                        EVENT_FIRE_SHIELD); // temporarily cancel fire shield to keep it from interrupting combat start
 
                     // Schedule out the pre-combat scene
                     events.ScheduleEvent(EVENT_PRE_ENTER_COMBAT_1, 0s);
@@ -208,35 +209,37 @@ public:
                     switch (eventId)
                     {
                         case EVENT_RESPAWN:
-                            {
-                                // Respawn all Blackhand Incarcerators
-                                std::list<Creature*> creatureList;
-                                GetCreatureListWithEntryInGrid(creatureList, me, NPC_BLACKHAND_INCARCERATOR, 35.0f);
-                                for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
-                                    if (Creature* creature = *itr)
-                                    {
-                                        if (!creature->IsAlive())
-                                            creature->Respawn();
-
-                                        creature->AI()->SetData(1, 2);
-                                    }
-                                me->AddAura(SPELL_ENCAGED_EMBERSEER, me);
-                                instance->SetBossState(DATA_PYROGAURD_EMBERSEER, NOT_STARTED);
-                                break;
-                            }
-                        case EVENT_PRE_FIGHT_1:
-                            {
-                                // Set data on all Blackhand Incarcerators
-                                std::list<Creature*> creatureList;
-                                GetCreatureListWithEntryInGrid(creatureList, me, NPC_BLACKHAND_INCARCERATOR, 35.0f);
-                                for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
+                        {
+                            // Respawn all Blackhand Incarcerators
+                            std::list<Creature*> creatureList;
+                            GetCreatureListWithEntryInGrid(creatureList, me, NPC_BLACKHAND_INCARCERATOR, 35.0f);
+                            for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end();
+                                 ++itr)
+                                if (Creature* creature = *itr)
                                 {
-                                    if (Creature* creature = *itr)
-                                        creature->AI()->SetData(1, 1);
+                                    if (!creature->IsAlive())
+                                        creature->Respawn();
+
+                                    creature->AI()->SetData(1, 2);
                                 }
-                                events.ScheduleEvent(EVENT_PRE_FIGHT_2, 2s);
-                                break;
+                            me->AddAura(SPELL_ENCAGED_EMBERSEER, me);
+                            instance->SetBossState(DATA_PYROGAURD_EMBERSEER, NOT_STARTED);
+                            break;
+                        }
+                        case EVENT_PRE_FIGHT_1:
+                        {
+                            // Set data on all Blackhand Incarcerators
+                            std::list<Creature*> creatureList;
+                            GetCreatureListWithEntryInGrid(creatureList, me, NPC_BLACKHAND_INCARCERATOR, 35.0f);
+                            for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end();
+                                 ++itr)
+                            {
+                                if (Creature* creature = *itr)
+                                    creature->AI()->SetData(1, 1);
                             }
+                            events.ScheduleEvent(EVENT_PRE_FIGHT_2, 2s);
+                            break;
+                        }
                         case EVENT_PRE_FIGHT_2:
                             me->CastSpell(me, SPELL_FREEZE_ANIM);
                             me->CastSpell(me, SPELL_EMBERSEER_GROWING);
@@ -313,12 +316,12 @@ public:
 enum IncarceratorData
 {
     // OOC
-    EVENT_ENCAGED_EMBERSEER         = 1,
+    EVENT_ENCAGED_EMBERSEER = 1,
     // Combat
-    EVENT_STRIKE                    = 2,
-    EVENT_ENCAGE                    = 3,
+    EVENT_STRIKE = 2,
+    EVENT_ENCAGE = 3,
 
-    EMOTE_FLEE                      = 0
+    EMOTE_FLEE = 0
 };
 
 class npc_blackhand_incarcerator : public CreatureScript
@@ -342,7 +345,8 @@ public:
             _fleedForAssistance = false;
         }
 
-        void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
+        void DamageTaken(
+            Unit* /*attacker*/, uint32& damage, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
         {
             if (!_fleedForAssistance && me->HealthBelowPctDamaged(30, damage))
             {
@@ -376,10 +380,8 @@ public:
             std::list<Creature*> creatureList;
             GetCreatureListWithEntryInGrid(creatureList, me, NPC_BLACKHAND_INCARCERATOR, 60.0f);
             for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
-            {
                 if (Creature* creature = *itr)
-                    creature->SetInCombatWithZone();    // AI()->AttackStart(me->GetVictim());
-            }
+                    creature->SetInCombatWithZone(); // AI()->AttackStart(me->GetVictim());
 
             _events.ScheduleEvent(EVENT_STRIKE, 8s, 16s);
         }
@@ -395,13 +397,14 @@ public:
                     switch (eventId)
                     {
                         case EVENT_ENCAGED_EMBERSEER:
-                            {
-                                if (me->GetPositionX() == me->GetHomePosition().GetPositionX())
-                                    if (!me->HasAura(SPELL_ENCAGE_EMBERSEER))
-                                        if (Creature* Emberseer = me->FindNearestCreature(NPC_PYROGAURD_EMBERSEER, 30.0f, true))
-                                            DoCast(Emberseer, SPELL_ENCAGE_EMBERSEER);
-                                break;
-                            }
+                        {
+                            if (me->GetPositionX() == me->GetHomePosition().GetPositionX())
+                                if (!me->HasAura(SPELL_ENCAGE_EMBERSEER))
+                                    if (Creature* Emberseer =
+                                            me->FindNearestCreature(NPC_PYROGAURD_EMBERSEER, 30.0f, true))
+                                        DoCast(Emberseer, SPELL_ENCAGE_EMBERSEER);
+                            break;
+                        }
                     }
                 }
                 return;

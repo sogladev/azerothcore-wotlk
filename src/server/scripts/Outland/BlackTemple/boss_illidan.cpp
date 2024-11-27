@@ -16,142 +16,141 @@
  */
 
 #include "CreatureScript.h"
+#include "Player.h"
 #include "ScriptedCreature.h"
 #include "ScriptedEscortAI.h"
-#include "SpellScriptLoader.h"
-#include "black_temple.h"
-#include "Player.h"
 #include "ScriptedGossip.h"
 #include "SpellAuraEffects.h"
 #include "SpellScript.h"
+#include "SpellScriptLoader.h"
+#include "black_temple.h"
 
 enum Says
 {
-    SAY_ILLIDAN_MINION         = 0,
-    SAY_ILLIDAN_KILL           = 1,
-    SAY_ILLIDAN_TAKEOFF        = 2,
-    SAY_ILLIDAN_SUMMONFLAMES   = 3,
-    SAY_ILLIDAN_EYE_BLAST      = 4,
-    SAY_ILLIDAN_MORPH          = 5,
-    SAY_ILLIDAN_ENRAGE         = 6,
-    SAY_ILLIDAN_TAUNT          = 7,
-    SAY_ILLIDAN_DUPLICITY      = 8,
-    SAY_ILLIDAN_UNCONVINCED    = 9,
-    SAY_ILLIDAN_PREPARED       = 10,
-    SAY_ILLIDAN_SHADOW_PRISON  = 11,
+    SAY_ILLIDAN_MINION = 0,
+    SAY_ILLIDAN_KILL = 1,
+    SAY_ILLIDAN_TAKEOFF = 2,
+    SAY_ILLIDAN_SUMMONFLAMES = 3,
+    SAY_ILLIDAN_EYE_BLAST = 4,
+    SAY_ILLIDAN_MORPH = 5,
+    SAY_ILLIDAN_ENRAGE = 6,
+    SAY_ILLIDAN_TAUNT = 7,
+    SAY_ILLIDAN_DUPLICITY = 8,
+    SAY_ILLIDAN_UNCONVINCED = 9,
+    SAY_ILLIDAN_PREPARED = 10,
+    SAY_ILLIDAN_SHADOW_PRISON = 11,
     SAY_ILLIDAN_CONFRONT_MAIEV = 12,
-    SAY_ILLIDAN_FRENZY         = 13,
-    SAY_ILLIDAN_DEFEATED       = 14,
+    SAY_ILLIDAN_FRENZY = 13,
+    SAY_ILLIDAN_DEFEATED = 14,
 
-    EMOTE_AZZINOTH_GAZE        = 0
+    EMOTE_AZZINOTH_GAZE = 0
 };
 
 enum Spells
 {
-    SPELL_ILLIDAN_KNEEL_INTRO           = 39656, // Aura removal does not play the full animation, using StandState instead
-    SPELL_DUAL_WIELD                    = 42459,
-    SPELL_BERSERK                       = 45078,
-    SPELL_EMOTE_TALK_QUESTION           = 41616,
-    SPELL_CLEAR_ALL_DEBUFFS             = 34098,
-    SPELL_HIT_CHANCE                    = 43689,
+    SPELL_ILLIDAN_KNEEL_INTRO = 39656, // Aura removal does not play the full animation, using StandState instead
+    SPELL_DUAL_WIELD = 42459,
+    SPELL_BERSERK = 45078,
+    SPELL_EMOTE_TALK_QUESTION = 41616,
+    SPELL_CLEAR_ALL_DEBUFFS = 34098,
+    SPELL_HIT_CHANCE = 43689,
 
     // Phase 1
-    SPELL_FLAME_CRASH                   = 40832,
-    SPELL_DRAW_SOUL                     = 40904,
-    SPELL_DRAW_SOUL_HEAL                = 40903,
-    SPELL_PARASITIC_SHADOWFIEND         = 41917,
+    SPELL_FLAME_CRASH = 40832,
+    SPELL_DRAW_SOUL = 40904,
+    SPELL_DRAW_SOUL_HEAL = 40903,
+    SPELL_PARASITIC_SHADOWFIEND = 41917,
     SPELL_PARASITIC_SHADOWFIEND_TRIGGER = 41914,
     SPELL_SUMMON_PARASITIC_SHADOWFIENDS = 41915,
 
     // Phase 2
-    SPELL_THROW_GLAIVE                  = 39635,
-    SPELL_THROW_GLAIVE2                 = 39849,
-    SPELL_GLAIVE_RETURNS                = 39873,
-    SPELL_SUMMON_GLAIVE                 = 41466,
-    SPELL_FIREBALL                      = 40598,
-    SPELL_DARK_BARRAGE                  = 40585,
-    SPELL_EYE_BLAST                     = 39908,
+    SPELL_THROW_GLAIVE = 39635,
+    SPELL_THROW_GLAIVE2 = 39849,
+    SPELL_GLAIVE_RETURNS = 39873,
+    SPELL_SUMMON_GLAIVE = 41466,
+    SPELL_FIREBALL = 40598,
+    SPELL_DARK_BARRAGE = 40585,
+    SPELL_EYE_BLAST = 39908,
 
     // Phase 3
-    SPELL_AGONIZING_FLAMES              = 40932,
-    SPELL_SUMMON_MAIEV                  = 40403,
-    SPELL_SHADOW_PRISON                 = 40647,
+    SPELL_AGONIZING_FLAMES = 40932,
+    SPELL_SUMMON_MAIEV = 40403,
+    SPELL_SHADOW_PRISON = 40647,
 
     // Phase 4
-    SPELL_DEMON_TRANSFORM_1             = 40511,
-    SPELL_DEMON_TRANSFORM_2             = 40398,
-    SPELL_DEMON_TRANSFORM_3             = 40510,
-    SPELL_DEMON_FORM                    = 40506,
-    SPELL_SHADOW_BLAST                  = 41078,
-    SPELL_FLAME_BURST                   = 41126,
-    SPELL_FLAME_BURST_EFFECT            = 41131,
-    SPELL_SUMMON_SHADOW_DEMON           = 41117,
-    SPELL_CONSUME_SOUL                  = 41080,
-    SPELL_FIND_TARGET                   = 41081,
+    SPELL_DEMON_TRANSFORM_1 = 40511,
+    SPELL_DEMON_TRANSFORM_2 = 40398,
+    SPELL_DEMON_TRANSFORM_3 = 40510,
+    SPELL_DEMON_FORM = 40506,
+    SPELL_SHADOW_BLAST = 41078,
+    SPELL_FLAME_BURST = 41126,
+    SPELL_FLAME_BURST_EFFECT = 41131,
+    SPELL_SUMMON_SHADOW_DEMON = 41117,
+    SPELL_CONSUME_SOUL = 41080,
+    SPELL_FIND_TARGET = 41081,
 
     // Phase 5
-    SPELL_FRENZY                        = 40683,
-    SPELL_TELEPORT_MAIEV                = 41221,
-    SPELL_DEATH                         = 41218,
+    SPELL_FRENZY = 40683,
+    SPELL_TELEPORT_MAIEV = 41221,
+    SPELL_DEATH = 41218,
 
     // Cage
-    SPELL_CAGE_TRAP                     = 40693,
-    SPELL_CAGE_TRAP_PERIODIC            = 40760,
-    SPELL_CAGE_TRAP_DUMMY               = 40761,
-    SPELL_CAGED_DEBUFF                  = 40695,
-    SPELL_CAGED_SUMMON1                 = 40696,
-    SPELL_CAGED_SUMMON8                 = 40703
+    SPELL_CAGE_TRAP = 40693,
+    SPELL_CAGE_TRAP_PERIODIC = 40760,
+    SPELL_CAGE_TRAP_DUMMY = 40761,
+    SPELL_CAGED_DEBUFF = 40695,
+    SPELL_CAGED_SUMMON1 = 40696,
+    SPELL_CAGED_SUMMON8 = 40703
 };
 
 enum Misc
 {
-    EQUIPMENT_UNARMED                   = 0,
-    EQUIPMENT_GLAIVES                   = 1,
+    EQUIPMENT_UNARMED = 0,
+    EQUIPMENT_GLAIVES = 1,
 
     // Illidan
-    ACTION_START_EVENT                  = 1,
-    ACTION_ILLIDAN_LIFTOFF              = 2,
-    ACTION_ILLIDAN_CAGED                = 3,
-    ACTION_SHADOW_PRISON                = 4,
-    ACTION_ILLIDAN_DIE                  = 5,
-    ACTION_ILLIDAN_DEMON_TRANSFORM      = 6,
+    ACTION_START_EVENT = 1,
+    ACTION_ILLIDAN_LIFTOFF = 2,
+    ACTION_ILLIDAN_CAGED = 3,
+    ACTION_SHADOW_PRISON = 4,
+    ACTION_ILLIDAN_DIE = 5,
+    ACTION_ILLIDAN_DEMON_TRANSFORM = 6,
     ACTION_ILLIDAN_DEMON_TRANSFORM_BACK = 7,
 
     // Akama
-    ACTION_ILLIDARI_COUNCIL_DONE        = 0,
-    ACTION_AKAMA_MINIONS                = 1,
-    ACTION_AKAMA_ENDING                 = 2,
-    ACTION_AKAMA_MAIEV_DESPAWN          = 3,
+    ACTION_ILLIDARI_COUNCIL_DONE = 0,
+    ACTION_AKAMA_MINIONS = 1,
+    ACTION_AKAMA_ENDING = 2,
+    ACTION_AKAMA_MAIEV_DESPAWN = 3,
 
     // Summons
-    ACTION_MAIEV_ENDING                 = 1,
-    ACTION_RETURN_BLADE                 = 2, // Sent to 22996 (Blade of Azzinoth)
+    ACTION_MAIEV_ENDING = 1,
+    ACTION_RETURN_BLADE = 2, // Sent to 22996 (Blade of Azzinoth)
 
-    MAX_EYE_BEAM_POS                    = 4,
+    MAX_EYE_BEAM_POS = 4,
 
-    POINT_ILLIDAN_TAKEOFF               = 1,
-    POINT_ILLIDAN_HOVER                 = 2,
-    POINT_ILLIDAN_LAND                  = 3,
+    POINT_ILLIDAN_TAKEOFF = 1,
+    POINT_ILLIDAN_HOVER = 2,
+    POINT_ILLIDAN_LAND = 3,
 
-    GROUP_BERSERK                       = 1,
-    GROUP_PHASE_FLYING                  = 2,
-    GROUP_DEMON_FORM                    = 3,
+    GROUP_BERSERK = 1,
+    GROUP_PHASE_FLYING = 2,
+    GROUP_DEMON_FORM = 3,
 
-    NPC_WORLD_TRIGGER                   = 22515,
-    NPC_ILLIDAN_DB_TARGET               = 23070,
-    NPC_MAIEV_SHADOWSONG                = 23197,
+    NPC_WORLD_TRIGGER = 22515,
+    NPC_ILLIDAN_DB_TARGET = 23070,
+    NPC_MAIEV_SHADOWSONG = 23197,
 
-    GO_CAGE_TRAP                        = 185916,
+    GO_CAGE_TRAP = 185916,
 
-    PHASE_INITIAL                       = 1,
-    PHASE_FLYING                        = 2,
-    PHASE_LANDING                       = 3,
-    PHASE_DEMON                         = 4,
-    PHASE_MAIEV                         = 5
+    PHASE_INITIAL = 1,
+    PHASE_FLYING = 2,
+    PHASE_LANDING = 3,
+    PHASE_DEMON = 4,
+    PHASE_MAIEV = 5
 };
 
-const Position eyeBeamPos[MAX_EYE_BEAM_POS * 2] =
-{
+Position const eyeBeamPos[MAX_EYE_BEAM_POS * 2] = {
     {639.97f, 301.63f, 354.0f, 0.0f},
     {658.83f, 265.10f, 354.0f, 0.0f},
     {656.86f, 344.07f, 354.0f, 0.0f},
@@ -163,22 +162,20 @@ const Position eyeBeamPos[MAX_EYE_BEAM_POS * 2] =
     {705.92f, 337.14f, 354.0f, 0.0f}
 };
 
-const Position airHoverPos[MAX_EYE_BEAM_POS] =
-{
+Position const airHoverPos[MAX_EYE_BEAM_POS] = {
     {658.83f, 265.10f, 356.0f, 0.0f},
     {706.22f, 273.26f, 356.0f, 0.0f},
     {705.92f, 337.14f, 356.0f, 0.0f},
     {656.86f, 344.07f, 356.0f, 0.0f}
 };
 
-Position illidanTakeoffPoint = { 727.6356f, 305.62753, 359.1486f };
-Position illidanLand = { 676.648f, 304.76074f, 354.18906f, 6.230825424194335937f };
-Position roomCenter = { 676.021f, 305.455f, 353.582f, 3.82227f };
+Position illidanTakeoffPoint = {727.6356f, 305.62753, 359.1486f};
+Position illidanLand = {676.648f, 304.76074f, 354.18906f, 6.230825424194335937f};
+Position roomCenter = {676.021f, 305.455f, 353.582f, 3.82227f};
 
-Position const BladesPositions[2] =
-{
-    { 676.226013f, 325.230988f },
-    { 678.059998f, 285.220001f }
+Position const BladesPositions[2] = {
+    {676.226013f, 325.230988f},
+    {678.059998f, 285.220001f}
 };
 
 class ChargeTargetSelector
@@ -188,15 +185,21 @@ public:
 
     bool operator()(Unit* unit) const
     {
-        return unit->IsPlayer()
-            && unit->GetDistance2d(BladesPositions[0].GetPositionX(), BladesPositions[0].GetPositionY()) > 25.0f
-            && unit->GetDistance2d(BladesPositions[1].GetPositionX(), BladesPositions[1].GetPositionY()) > 25.0f;
+        return unit->IsPlayer() &&
+               unit->GetDistance2d(BladesPositions[0].GetPositionX(), BladesPositions[0].GetPositionY()) > 25.0f &&
+               unit->GetDistance2d(BladesPositions[1].GetPositionX(), BladesPositions[1].GetPositionY()) > 25.0f;
     }
 };
 
 struct boss_illidan_stormrage : public BossAI
 {
-    boss_illidan_stormrage(Creature* creature) : BossAI(creature, DATA_ILLIDAN_STORMRAGE), _canTalk(true), _dying(false), _inCutscene(false), beamPosId(0) { }
+    boss_illidan_stormrage(Creature* creature) :
+        BossAI(creature, DATA_ILLIDAN_STORMRAGE),
+        _canTalk(true),
+        _dying(false),
+        _inCutscene(false),
+        beamPosId(0)
+    { }
 
     void Reset() override
     {
@@ -218,18 +221,24 @@ struct boss_illidan_stormrage : public BossAI
         me->SetControlled(false, UNIT_STATE_ROOT);
         me->SetCombatMovement(true);
 
-        ScheduleHealthCheckEvent(90, [&] {
+        ScheduleHealthCheckEvent(90,
+            [&]
+        {
             // Call for minions
             Talk(SAY_ILLIDAN_MINION);
             if (Creature* akama = instance->GetCreature(DATA_AKAMA_ILLIDAN))
                 akama->AI()->DoAction(ACTION_AKAMA_MINIONS);
         });
-        ScheduleHealthCheckEvent(65, [&] {
+        ScheduleHealthCheckEvent(65,
+            [&]
+        {
             // Phase 2
             scheduler.CancelAll();
             DoAction(ACTION_ILLIDAN_LIFTOFF);
         });
-        ScheduleHealthCheckEvent(30, [&] {
+        ScheduleHealthCheckEvent(30,
+            [&]
+        {
             // Maiev Spawn Scene
             scheduler.CancelAll();
             if (me->HasAura(SPELL_DEMON_FORM))
@@ -248,34 +257,25 @@ struct boss_illidan_stormrage : public BossAI
             {
                 me->SetStandState(UNIT_STAND_STATE_STAND);
 
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_ILLIDAN_DUPLICITY);
-                }, 2210ms);
-                me->m_Events.AddEventAtOffset([&] {
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
-                }, 5670ms); // 3460ms
-                me->m_Events.AddEventAtOffset([&] {
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
-                }, 8100ms); // 2430ms
-                me->m_Events.AddEventAtOffset([&] {
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
-                }, 11750ms); // 3650ms
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_ILLIDAN_UNCONVINCED);
-                }, 26950ms); // 15200ms
-                me->m_Events.AddEventAtOffset([&] {
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
-                }, 29980ms); // 3030ms
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_ILLIDAN_PREPARED);
-                }, 39710ms); // 9730ms
-                me->m_Events.AddEventAtOffset([&] {
-                    me->SetSheath(SHEATH_STATE_MELEE);
-                }, 40920ms); // 1210ms
-                me->m_Events.AddEventAtOffset([&] {
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_ILLIDAN_DUPLICITY); }, 2210ms);
+                me->m_Events.AddEventAtOffset(
+                    [&] { me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION); }, 5670ms); // 3460ms
+                me->m_Events.AddEventAtOffset(
+                    [&] { me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION); }, 8100ms); // 2430ms
+                me->m_Events.AddEventAtOffset(
+                    [&] { me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION); }, 11750ms);          // 3650ms
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_ILLIDAN_UNCONVINCED); }, 26950ms); // 15200ms
+                me->m_Events.AddEventAtOffset(
+                    [&] { me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION); }, 29980ms);              // 3030ms
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_ILLIDAN_PREPARED); }, 39710ms);        // 9730ms
+                me->m_Events.AddEventAtOffset([&] { me->SetSheath(SHEATH_STATE_MELEE); }, 40920ms); // 1210ms
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     me->RemoveUnitFlag(UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_IMMUNE_TO_NPC);
                     me->SetInCombatWithZone();
-                }, 43370ms); // 2450ms
+                },
+                    43370ms); // 2450ms
             }
             break;
             case ACTION_ILLIDAN_LIFTOFF:
@@ -291,12 +291,10 @@ struct boss_illidan_stormrage : public BossAI
                 me->SetOrientation(2.837961435317993164f);
                 me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
 
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_ILLIDAN_TAKEOFF);
-                    }, 3640ms);
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_ILLIDAN_TAKEOFF); }, 3640ms);
                 me->m_Events.AddEventAtOffset([&] {
                     me->GetMotionMaster()->MovePoint(POINT_ILLIDAN_TAKEOFF, illidanTakeoffPoint);
-                    }, 7290ms); // 3650ms
+                }, 7290ms); // 3650ms
             }
             break;
             case ACTION_SHADOW_PRISON:
@@ -308,27 +306,21 @@ struct boss_illidan_stormrage : public BossAI
                 me->SetReactState(REACT_PASSIVE);
                 me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
 
-                me->m_Events.AddEventAtOffset([&] {
-                    DoCastSelf(SPELL_EMOTE_TALK_QUESTION);
-                }, 1200ms);
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_ILLIDAN_SHADOW_PRISON);
-                }, 1430ms); // 230ms
-                me->m_Events.AddEventAtOffset([&] {
-                    DoCastSelf(SPELL_SUMMON_MAIEV);
-                }, 10940ms); // 9510ms
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_ILLIDAN_CONFRONT_MAIEV);
-                }, 19490ms); // 8550ms
-                me->m_Events.AddEventAtOffset([&] {
-                    me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY1H);
-                }, 23080ms); // 3590ms
-                me->m_Events.AddEventAtOffset([&] {
+                me->m_Events.AddEventAtOffset([&] { DoCastSelf(SPELL_EMOTE_TALK_QUESTION); }, 1200ms);
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_ILLIDAN_SHADOW_PRISON); }, 1430ms);   // 230ms
+                me->m_Events.AddEventAtOffset([&] { DoCastSelf(SPELL_SUMMON_MAIEV); }, 10940ms);   // 9510ms
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_ILLIDAN_CONFRONT_MAIEV); }, 19490ms); // 8550ms
+                me->m_Events.AddEventAtOffset(
+                    [&] { me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY1H); }, 23080ms); // 3590ms
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                     me->SetReactState(REACT_AGGRESSIVE);
                     ScheduleAbilities(PHASE_MAIEV);
                     _inCutscene = false;
-                }, 32830ms); // 9750ms
+                },
+                    32830ms); // 9750ms
             }
             break;
             case ACTION_ILLIDAN_DEMON_TRANSFORM:
@@ -343,11 +335,15 @@ struct boss_illidan_stormrage : public BossAI
 
                 Talk(SAY_ILLIDAN_MORPH, 2630ms);
 
-                me->m_Events.AddEventAtOffset([&] {
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     // me->SetControlled(false, UNIT_STATE_ROOT);
                     me->SetReactState(REACT_AGGRESSIVE);
                     ScheduleAbilities(PHASE_DEMON);
-                }, 12230ms, GROUP_DEMON_FORM);
+                },
+                    12230ms,
+                    GROUP_DEMON_FORM);
             }
             break;
             case ACTION_ILLIDAN_DEMON_TRANSFORM_BACK:
@@ -369,9 +365,7 @@ struct boss_illidan_stormrage : public BossAI
                 me->RemoveAurasDueToSpell(SPELL_FRENZY);
                 DoCastSelf(SPELL_CAGE_TRAP_PERIODIC, true);
 
-                me->m_Events.AddEventAtOffset([&] {
-                    DoAction(ACTION_ILLIDAN_DEMON_TRANSFORM);
-                }, 15s, GROUP_DEMON_FORM);
+                me->m_Events.AddEventAtOffset([&] { DoAction(ACTION_ILLIDAN_DEMON_TRANSFORM); }, 15s, GROUP_DEMON_FORM);
             }
             break;
             case ACTION_ILLIDAN_DIE:
@@ -387,22 +381,21 @@ struct boss_illidan_stormrage : public BossAI
                     maiev->AI()->DoAction(ACTION_MAIEV_ENDING);
                 if (Creature* akama = instance->GetCreature(DATA_AKAMA_ILLIDAN))
                     akama->AI()->DoAction(ACTION_AKAMA_ENDING);
-                me->m_Events.AddEventAtOffset([&] {
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     if (Creature* akama = instance->GetCreature(DATA_AKAMA_ILLIDAN))
                         akama->AI()->DoAction(ACTION_AKAMA_ENDING);
-                }, 1s);
+                },
+                    1s);
 
                 me->SetControlled(true, UNIT_STATE_ROOT);
                 DoCastSelf(SPELL_CLEAR_ALL_DEBUFFS, true);
                 DoCastSelf(SPELL_DEATH, true);
                 me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
 
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_ILLIDAN_DEFEATED);
-                }, 7490ms);
-                me->m_Events.AddEventAtOffset([&] {
-                    Unit::Kill(nullptr, me);
-                }, 25530ms); // 18040ms
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_ILLIDAN_DEFEATED); }, 7490ms);
+                me->m_Events.AddEventAtOffset([&] { Unit::Kill(nullptr, me); }, 25530ms); // 18040ms
             }
             break;
         }
@@ -419,16 +412,15 @@ struct boss_illidan_stormrage : public BossAI
                     me->SetFacingTo(me->GetAngle(&roomCenter));
                     Talk(SAY_ILLIDAN_SUMMONFLAMES);
 
-                    me->m_Events.AddEventAtOffset([&] {
-                        DoCastSelf(SPELL_THROW_GLAIVE2);
-                    }, 1210ms);
-                    me->m_Events.AddEventAtOffset([&] {
+                    me->m_Events.AddEventAtOffset([&] { DoCastSelf(SPELL_THROW_GLAIVE2); }, 1210ms);
+                    me->m_Events.AddEventAtOffset(
+                        [&]
+                    {
                         DoCastSelf(SPELL_THROW_GLAIVE);
                         me->LoadEquipment(EQUIPMENT_UNARMED, true);
-                    }, 2430ms); // 1220ms
-                    me->m_Events.AddEventAtOffset([&] {
-                        ScheduleAbilities(PHASE_FLYING);
-                    }, 3090ms); // 660ms
+                    },
+                        2430ms);                                                                     // 1220ms
+                    me->m_Events.AddEventAtOffset([&] { ScheduleAbilities(PHASE_FLYING); }, 3090ms); // 660ms
                 }
                 break;
                 case POINT_ILLIDAN_HOVER:
@@ -443,24 +435,26 @@ struct boss_illidan_stormrage : public BossAI
                     EntryCheckPredicate pred(NPC_BLADE_OF_AZZINOTH);
                     summons.DoAction(ACTION_RETURN_BLADE, pred);
 
-                    me->m_Events.AddEventAtOffset([&] {
-                        me->LoadEquipment(EQUIPMENT_GLAIVES);
-                    }, 1215ms);
-                    me->m_Events.AddEventAtOffset([&] {
+                    me->m_Events.AddEventAtOffset([&] { me->LoadEquipment(EQUIPMENT_GLAIVES); }, 1215ms);
+                    me->m_Events.AddEventAtOffset(
+                        [&]
+                    {
                         me->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
                         me->SetDisableGravity(false);
                         me->SetHover(false);
-                    }, 3665ms); // 2450ms
-                    me->m_Events.AddEventAtOffset([&] {
+                    },
+                        3665ms); // 2450ms
+                    me->m_Events.AddEventAtOffset(
+                        [&]
+                    {
                         DoResetThreatList();
                         me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                         me->SetReactState(REACT_AGGRESSIVE);
                         me->SetControlled(false, UNIT_STATE_ROOT);
                         ScheduleAbilities(PHASE_LANDING);
-                    }, 6095ms); // 2430ms
-                    me->m_Events.AddEventAtOffset([&] {
-                        DoCastSelf(SPELL_HIT_CHANCE, true);
-                    }, 7305ms); // 1210ms
+                    },
+                        6095ms);                                                                        // 2430ms
+                    me->m_Events.AddEventAtOffset([&] { DoCastSelf(SPELL_HIT_CHANCE, true); }, 7305ms); // 1210ms
                 }
                 break;
             }
@@ -473,34 +467,32 @@ struct boss_illidan_stormrage : public BossAI
         {
             case PHASE_INITIAL:
             {
-                ScheduleTimedEvent(25s, 30s, [&] {
-                    DoCastVictim(SPELL_FLAME_CRASH);
-                }, 26s, 35s);
+                ScheduleTimedEvent(25s, 30s, [&] { DoCastVictim(SPELL_FLAME_CRASH); }, 26s, 35s);
 
-                ScheduleTimedEvent(32s, [&] {
-                    DoCastVictim(SPELL_DRAW_SOUL);
-                }, 32s);
+                ScheduleTimedEvent(32s, [&] { DoCastVictim(SPELL_DRAW_SOUL); }, 32s);
 
-                ScheduleTimedEvent(25s, 30s, [&] {
-                    DoCastRandomTarget(SPELL_PARASITIC_SHADOWFIEND, 0U, 100.f);
-                }, 25s, 30s);
+                ScheduleTimedEvent(
+                    25s, 30s, [&] { DoCastRandomTarget(SPELL_PARASITIC_SHADOWFIEND, 0U, 100.f); }, 25s, 30s);
 
                 // Custom from SunwellCore?
-                ScheduleTimedEvent(30s, 60s, [&] {
-                    Talk(SAY_ILLIDAN_TAUNT);
-                }, 30s, 60s);
+                ScheduleTimedEvent(30s, 60s, [&] { Talk(SAY_ILLIDAN_TAUNT); }, 30s, 60s);
             }
             break;
             case PHASE_FLYING:
             {
                 me->SetFacingTo(me->GetAngle(&roomCenter));
 
-                scheduler.Schedule(0s, [this](TaskContext context)
+                scheduler
+                    .Schedule(0s,
+                        [this](TaskContext context)
                 {
                     // Do not repeat if interrupted (Eye Beam is cast)
                     if (DoCastRandomTarget(SPELL_FIREBALL, 0U, 50000.f, true, false, true) == SPELL_CAST_OK)
                         context.Repeat(2400ms);
-                }).Schedule(25s, 45s, [this](TaskContext /*context*/)
+                })
+                    .Schedule(25s,
+                        45s,
+                        [this](TaskContext /*context*/)
                 {
                     // Eye Blast
                     me->InterruptNonMeleeSpells(false);
@@ -510,16 +502,22 @@ struct boss_illidan_stormrage : public BossAI
                         trigger->GetMotionMaster()->MovePoint(0, eyeBeamPos[beamPosId + MAX_EYE_BEAM_POS], false, true);
 
                     // Reposition
-                    me->m_Events.AddEventAtOffset([&] {
+                    me->m_Events.AddEventAtOffset(
+                        [&]
+                    {
                         scheduler.CancelAll();
                         me->InterruptNonMeleeSpells(false);
                         me->SetControlled(false, UNIT_STATE_ROOT);
                         CycleBeamPos(beamPosId);
                         me->GetMotionMaster()->MovePoint(POINT_ILLIDAN_HOVER, airHoverPos[beamPosId], false, true);
-                    }, 20s, GROUP_PHASE_FLYING);
+                    },
+                        20s,
+                        GROUP_PHASE_FLYING);
                 });
                 // Check for Phase Transition
-                scheduler.Schedule(5s, [this](TaskContext context) {
+                scheduler.Schedule(5s,
+                    [this](TaskContext context)
+                {
                     if (!SelectTargetFromPlayerList(150.0f))
                     {
                         EnterEvadeMode(EVADE_REASON_NO_HOSTILES);
@@ -544,67 +542,66 @@ struct boss_illidan_stormrage : public BossAI
             {
                 scheduler.CancelAll();
 
-                ScheduleTimedEvent(25s, 30s, [&] {
-                    DoCastVictim(SPELL_FLAME_CRASH);
-                }, 26s, 35s);
+                ScheduleTimedEvent(25s, 30s, [&] { DoCastVictim(SPELL_FLAME_CRASH); }, 26s, 35s);
 
-                ScheduleTimedEvent(32s, [&] {
-                    DoCastVictim(SPELL_DRAW_SOUL);
-                }, 32s);
+                ScheduleTimedEvent(32s, [&] { DoCastVictim(SPELL_DRAW_SOUL); }, 32s);
 
-                ScheduleTimedEvent(25s, 30s, [&] {
-                    DoCastRandomTarget(SPELL_PARASITIC_SHADOWFIEND, 0U, 100.f);
-                }, 25s, 30s);
+                ScheduleTimedEvent(
+                    25s, 30s, [&] { DoCastRandomTarget(SPELL_PARASITIC_SHADOWFIEND, 0U, 100.f); }, 25s, 30s);
 
-                ScheduleTimedEvent(25s, [&] {
-                    DoCastSelf(SPELL_AGONIZING_FLAMES);
-                }, 24s);
+                ScheduleTimedEvent(25s, [&] { DoCastSelf(SPELL_AGONIZING_FLAMES); }, 24s);
 
-                ScheduleTimedEvent(60s, [&] {
+                ScheduleTimedEvent(60s,
+                    [&]
+                {
                     if (!_inCutscene)
                         DoAction(ACTION_ILLIDAN_DEMON_TRANSFORM);
-                }, 60s);
+                },
+                    60s);
             }
             break;
             case PHASE_DEMON:
             {
                 scheduler.CancelAll();
 
-                ScheduleTimedEvent(30s, [&] {
-                    DoCastSelf(SPELL_SUMMON_SHADOW_DEMON, true);
-                }, 100s);
+                ScheduleTimedEvent(30s, [&] { DoCastSelf(SPELL_SUMMON_SHADOW_DEMON, true); }, 100s);
 
-                ScheduleTimedEvent(1s, 2500ms, [&] {
-                    DoCastVictim(SPELL_SHADOW_BLAST);
-                }, 2500ms);
+                ScheduleTimedEvent(1s, 2500ms, [&] { DoCastVictim(SPELL_SHADOW_BLAST); }, 2500ms);
 
-                ScheduleTimedEvent(7s, [&] {
-                    DoCastSelf(SPELL_FLAME_BURST);
-                }, 19500ms);
+                ScheduleTimedEvent(7s, [&] { DoCastSelf(SPELL_FLAME_BURST); }, 19500ms);
 
-                me->m_Events.AddEventAtOffset([&] {
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     DoAction(ACTION_ILLIDAN_DEMON_TRANSFORM_BACK);
                     if (summons.GetCreatureWithEntry(NPC_MAIEV_SHADOWSONG))
                         ScheduleAbilities(PHASE_MAIEV);
                     else
                         ScheduleAbilities(PHASE_LANDING);
                     DoResetThreatList();
-                }, 60s);
+                },
+                    60s);
             }
             break;
             case PHASE_MAIEV:
             {
                 ScheduleAbilities(PHASE_LANDING);
 
-                ScheduleTimedEvent(40s, [&] {
+                ScheduleTimedEvent(40s,
+                    [&]
+                {
                     Talk(SAY_ILLIDAN_FRENZY);
                     DoCastSelf(SPELL_FRENZY, true);
-                }, 100s);
+                },
+                    100s);
 
-                ScheduleTimedEvent(30s, [&] {
+                ScheduleTimedEvent(30s,
+                    [&]
+                {
                     if (Creature* maiev = summons.GetCreatureWithEntry(NPC_MAIEV_SHADOWSONG))
                         DoCast(maiev, SPELL_CAGE_TRAP, true);
-                }, 45s);
+                },
+                    45s);
             }
             break;
         }
@@ -617,9 +614,7 @@ struct boss_illidan_stormrage : public BossAI
         if (Creature* akama = instance->GetCreature(DATA_AKAMA_ILLIDAN))
             akama->AI()->AttackStart(me);
 
-        me->m_Events.AddEventAtOffset([&] {
-            DoCastSelf(SPELL_BERSERK, true);
-        }, 25min, GROUP_BERSERK);
+        me->m_Events.AddEventAtOffset([&] { DoCastSelf(SPELL_BERSERK, true); }, 25min, GROUP_BERSERK);
     }
 
     void EnterEvadeMode(EvadeReason why) override
@@ -657,13 +652,12 @@ struct boss_illidan_stormrage : public BossAI
             Talk(SAY_ILLIDAN_KILL);
             _canTalk = false;
 
-            me->m_Events.AddEventAtOffset([&] {
-                _canTalk = true;
-            }, 6s); // 3590ms
+            me->m_Events.AddEventAtOffset([&] { _canTalk = true; }, 6s); // 3590ms
         }
     }
 
-    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
+    void DamageTaken(
+        Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
     {
         if (damage >= me->GetHealth())
         {
@@ -694,7 +688,7 @@ private:
     bool _inCutscene;
     uint8 beamPosId;
 
-    void CycleBeamPos(uint8 &beamPosId)
+    void CycleBeamPos(uint8& beamPosId)
     {
         uint8 _incumbentBeamPos = urand(0, MAX_EYE_BEAM_POS);
         if (_incumbentBeamPos == beamPosId)
@@ -706,62 +700,61 @@ private:
 
 enum Akama
 {
-    POINT_FACE_ILLIDAN            = 1,
-    POINT_ILLIDAN_DEFEATED_1      = 2,
-    POINT_ILLIDAN_DEFEATED_2      = 3,
+    POINT_FACE_ILLIDAN = 1,
+    POINT_ILLIDAN_DEFEATED_1 = 2,
+    POINT_ILLIDAN_DEFEATED_2 = 3,
 
-    SPELL_AKAMA_DOOR_OPEN         = 41268,
-    SPELL_AKAMA_DOOR_FAIL         = 41271,
-    SPELL_DEATHSWORN_DOOR_OPEN    = 41269,
-    SPELL_ARCANE_EXPLOSION_VIS    = 35426,
-    SPELL_HEALING_POTION          = 40535,
-    SPELL_CHAIN_LIGHTNING         = 40536,
-    SPELL_REDUCED_THREAT          = 41000,
-    SPELL_AKAMA_TELEPORT          = 41077,
-    SPELL_AKAMA_DESPAWN           = 41242,
+    SPELL_AKAMA_DOOR_OPEN = 41268,
+    SPELL_AKAMA_DOOR_FAIL = 41271,
+    SPELL_DEATHSWORN_DOOR_OPEN = 41269,
+    SPELL_ARCANE_EXPLOSION_VIS = 35426,
+    SPELL_HEALING_POTION = 40535,
+    SPELL_CHAIN_LIGHTNING = 40536,
+    SPELL_REDUCED_THREAT = 41000,
+    SPELL_AKAMA_TELEPORT = 41077,
+    SPELL_AKAMA_DESPAWN = 41242,
 
-    NPC_ILLIDAN_DOOR_TRIGGER      = 23412,
-    NPC_SPIRIT_OF_OLUM            = 23411,
-    NPC_SPIRIT_OF_UDALO           = 23410,
-    NPC_ILLIDARI_ELITE            = 23226,
+    NPC_ILLIDAN_DOOR_TRIGGER = 23412,
+    NPC_SPIRIT_OF_OLUM = 23411,
+    NPC_SPIRIT_OF_UDALO = 23410,
+    NPC_ILLIDARI_ELITE = 23226,
 
     PATH_AKAMA_ILLIDARI_COUNCIL_1 = 230891,
     PATH_AKAMA_ILLIDARI_COUNCIL_2 = 230892,
     PATH_AKAMA_ILLIDARI_COUNCIL_3 = 230893,
-    PATH_AKAMA_MINIONS            = 230894,
+    PATH_AKAMA_MINIONS = 230894,
 
-    SAY_UDALO                     = 0,
-    SAY_OLUM                      = 0,
+    SAY_UDALO = 0,
+    SAY_OLUM = 0,
 
-    SAY_AKAMA_DOOR                = 0,
-    SAY_AKAMA_ALONE               = 1,
-    SAY_AKAMA_SALUTE              = 2,
-    SAY_AKAMA_BETRAYER            = 3,
-    SAY_AKAMA_FREE                = 4,
-    SAY_AKAMA_TIME_HAS_COME       = 5,
-    SAY_AKAMA_MINIONS             = 6,
-    SAY_AKAMA_LIGHT               = 7,
-    SAY_AKAMA_COUNCIL_1           = 8,
-    SAY_AKAMA_COUNCIL_2           = 9
+    SAY_AKAMA_DOOR = 0,
+    SAY_AKAMA_ALONE = 1,
+    SAY_AKAMA_SALUTE = 2,
+    SAY_AKAMA_BETRAYER = 3,
+    SAY_AKAMA_FREE = 4,
+    SAY_AKAMA_TIME_HAS_COME = 5,
+    SAY_AKAMA_MINIONS = 6,
+    SAY_AKAMA_LIGHT = 7,
+    SAY_AKAMA_COUNCIL_1 = 8,
+    SAY_AKAMA_COUNCIL_2 = 9
 };
 
-Position AkamaIllidariCouncilTeleport = { 609.772f, 308.456f, 271.826f, 6.1972566f };
-Position SpiritUdaloPos = { 751.4565f, 311.01065f, 312.18997f, 0.f };
-Position SpiritOlumPos = { 751.6437f, 297.2233f, 312.20825f, 6.038839340209960937f };
-Position FaceIllidan = { 745.225f, 304.946f, 352.98593f };
-Position IllidanDefeated = { 753.04553f, 369.30273f, 353.1165f };
-Position IllidariMinionPos[10] =
-{
-{ 750.0472f , 282.32742f, 309.4353f , 3.071779489517211914f },
-{ 747.0576f , 326.42682f, 309.06885f, 0.0f                  },
-{ 754.0332f , 325.81363f, 310.31952f, 2.914699792861938476f },
-{ 745.25525f, 322.15738f, 310.45963f, 6.038839340209960937f },
-{ 748.8422f , 288.06195f, 310.9782f , 1.884955525398254394f },
-{ 745.3237f , 283.986f  , 309.2765f , 0.628318548202514648f },
-{ 743.9686f , 289.64468f, 311.18066f, 6.056292533874511718f },
-{ 751.08777f, 327.6505f , 309.45758f, 6.17846536636352539f  },
-{ 750.03217f, 323.60635f, 310.27567f, 5.497786998748779296f },
-{ 753.8425f , 286.56195f, 310.9353f , 1.029744267463684082f }
+Position AkamaIllidariCouncilTeleport = {609.772f, 308.456f, 271.826f, 6.1972566f};
+Position SpiritUdaloPos = {751.4565f, 311.01065f, 312.18997f, 0.f};
+Position SpiritOlumPos = {751.6437f, 297.2233f, 312.20825f, 6.038839340209960937f};
+Position FaceIllidan = {745.225f, 304.946f, 352.98593f};
+Position IllidanDefeated = {753.04553f, 369.30273f, 353.1165f};
+Position IllidariMinionPos[10] = {
+    {750.0472f,  282.32742f, 309.4353f,  3.071779489517211914f},
+    {747.0576f,  326.42682f, 309.06885f, 0.0f                 },
+    {754.0332f,  325.81363f, 310.31952f, 2.914699792861938476f},
+    {745.25525f, 322.15738f, 310.45963f, 6.038839340209960937f},
+    {748.8422f,  288.06195f, 310.9782f,  1.884955525398254394f},
+    {745.3237f,  283.986f,   309.2765f,  0.628318548202514648f},
+    {743.9686f,  289.64468f, 311.18066f, 6.056292533874511718f},
+    {751.08777f, 327.6505f,  309.45758f, 6.17846536636352539f },
+    {750.03217f, 323.60635f, 310.27567f, 5.497786998748779296f},
+    {753.8425f,  286.56195f, 310.9353f,  1.029744267463684082f}
 };
 
 struct npc_akama_illidan : public ScriptedAI
@@ -786,7 +779,7 @@ struct npc_akama_illidan : public ScriptedAI
         me->SetControlled(false, UNIT_STATE_ROOT);
     }
 
-    void sGossipSelect(Player* player, uint32 /*sender*/, uint32  /*action*/) override
+    void sGossipSelect(Player* player, uint32 /*sender*/, uint32 /*action*/) override
     {
         CloseGossipMenuFor(player);
         me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_NONE);
@@ -837,16 +830,15 @@ struct npc_akama_illidan : public ScriptedAI
             case ACTION_AKAMA_MAIEV_DESPAWN:
             {
                 Talk(SAY_AKAMA_LIGHT);
-                me->m_Events.AddEventAtOffset([&] {
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                }, 3490ms);
-                me->m_Events.AddEventAtOffset([&] {
+                me->m_Events.AddEventAtOffset([&] { me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE); }, 3490ms);
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     me->SetRespawnDelay(WEEK);
                     DoCastSelf(SPELL_AKAMA_DESPAWN);
-                }, 8340ms); // 4850ms
-                me->m_Events.AddEventAtOffset([&] {
-                    me->DespawnOnEvade();
-                }, 8740ms);
+                },
+                    8340ms); // 4850ms
+                me->m_Events.AddEventAtOffset([&] { me->DespawnOnEvade(); }, 8740ms);
             }
             break;
         }
@@ -866,26 +858,26 @@ struct npc_akama_illidan : public ScriptedAI
                         illidan->AI()->DoAction(ACTION_START_EVENT);
                         me->SetHomePosition(me->GetPosition());
                     }
-                    me->m_Events.AddEventAtOffset([&] {
-                        Talk(SAY_AKAMA_FREE);
-                    }, 15400ms);
-                    me->m_Events.AddEventAtOffset([&] {
-                        me->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
-                    }, 19440ms); // 4040ms
-                    me->m_Events.AddEventAtOffset([&] {
-                        me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                    }, 23080ms); // 3640ms
-                    me->m_Events.AddEventAtOffset([&] {
-                        Talk(SAY_AKAMA_TIME_HAS_COME);
-                    }, 33840ms); // 10760ms
-                    me->m_Events.AddEventAtOffset([&] {
+                    me->m_Events.AddEventAtOffset([&] { Talk(SAY_AKAMA_FREE); }, 15400ms);
+                    me->m_Events.AddEventAtOffset(
+                        [&] { me->HandleEmoteCommand(EMOTE_ONESHOT_TALK); }, 19440ms); // 4040ms
+                    me->m_Events.AddEventAtOffset(
+                        [&] { me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE); }, 23080ms);            // 3640ms
+                    me->m_Events.AddEventAtOffset([&] { Talk(SAY_AKAMA_TIME_HAS_COME); }, 33840ms); // 10760ms
+                    me->m_Events.AddEventAtOffset(
+                        [&]
+                    {
                         me->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);
                         me->SetSheath(SHEATH_STATE_MELEE);
-                    }, 35210ms); // 1370ms
-                    me->m_Events.AddEventAtOffset([&] {
+                    },
+                        35210ms); // 1370ms
+                    me->m_Events.AddEventAtOffset(
+                        [&]
+                    {
                         me->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);
                         me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY1H);
-                    }, 37640ms); // 2430ms
+                    },
+                        37640ms); // 2430ms
                 }
                 break;
                 case POINT_ILLIDAN_DEFEATED_1:
@@ -895,7 +887,8 @@ struct npc_akama_illidan : public ScriptedAI
                     {
                         float x, y, z;
                         me->GetNearPoint(illidan, x, y, z, 15.f, 0, me->GetAngle(illidan));
-                        me->GetMotionMaster()->MovePoint(POINT_ILLIDAN_DEFEATED_2, x, y, z);  // Maiev starts Akama's Ending scene
+                        me->GetMotionMaster()->MovePoint(
+                            POINT_ILLIDAN_DEFEATED_2, x, y, z); // Maiev starts Akama's Ending scene
                     }
                 }
                 break;
@@ -916,52 +909,64 @@ struct npc_akama_illidan : public ScriptedAI
             // Talk to Open Door
             case PATH_AKAMA_ILLIDARI_COUNCIL_1:
             {
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_AKAMA_COUNCIL_1);
-                }, 200ms);
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_AKAMA_COUNCIL_1); }, 200ms);
 
-                me->m_Events.AddEventAtOffset([&] {
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     Talk(SAY_AKAMA_COUNCIL_2);
                     me->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
-                }, 8000ms); // 7800ms
+                },
+                    8000ms); // 7800ms
             }
             break;
             // Reached Door
             case PATH_AKAMA_ILLIDARI_COUNCIL_2:
             {
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_AKAMA_DOOR);
-                }, 4600ms);
-                me->m_Events.AddEventAtOffset([&] {
-                    DoCastSelf(SPELL_AKAMA_DOOR_FAIL);
-                }, 8120ms); // 3520ms
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_AKAMA_ALONE);
-                }, 17860ms); // 9740ms
-                me->m_Events.AddEventAtOffset([&] {
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_AKAMA_DOOR); }, 4600ms);
+                me->m_Events.AddEventAtOffset([&] { DoCastSelf(SPELL_AKAMA_DOOR_FAIL); }, 8120ms); // 3520ms
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_AKAMA_ALONE); }, 17860ms);            // 9740ms
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     me->SummonCreature(NPC_SPIRIT_OF_UDALO, SpiritUdaloPos, TEMPSUMMON_TIMED_DESPAWN, 60000);
                     me->SummonCreature(NPC_SPIRIT_OF_OLUM, SpiritOlumPos, TEMPSUMMON_TIMED_DESPAWN, 60000);
-                }, 23930ms); // 6070ms
-                me->m_Events.AddEventAtOffset([&] {
+                },
+                    23930ms); // 6070ms
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     if (Creature* udalo = me->FindNearestCreature(NPC_SPIRIT_OF_UDALO, 15.0f))
                         udalo->AI()->Talk(SAY_UDALO);
-                }, 25190ms); // 1260ms
-                me->m_Events.AddEventAtOffset([&] {
+                },
+                    25190ms); // 1260ms
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     if (Creature* olum = me->FindNearestCreature(NPC_SPIRIT_OF_OLUM, 15.0f))
                         olum->AI()->Talk(SAY_OLUM);
-                }, 31370ms); // 6180ms
-                me->m_Events.AddEventAtOffset([&] {
+                },
+                    31370ms); // 6180ms
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     DoCastSelf(SPELL_AKAMA_DOOR_OPEN);
                     if (Creature* udalo = me->FindNearestCreature(NPC_SPIRIT_OF_UDALO, 15.0f))
                         udalo->AI()->DoCastSelf(SPELL_DEATHSWORN_DOOR_OPEN);
                     if (Creature* olum = me->FindNearestCreature(NPC_SPIRIT_OF_OLUM, 15.0f))
                         olum->AI()->DoCastSelf(SPELL_DEATHSWORN_DOOR_OPEN);
-                }, 39710ms); // 8340ms
-                me->m_Events.AddEventAtOffset([&] {
+                },
+                    39710ms); // 8340ms
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     if (Creature* door = me->FindNearestCreature(NPC_ILLIDAN_DOOR_TRIGGER, 15.0f))
                         door->AI()->DoCastSelf(SPELL_ARCANE_EXPLOSION_VIS);
-                }, 50660ms); // 10950ms
-                me->m_Events.AddEventAtOffset([&] {
+                },
+                    50660ms); // 10950ms
+                me->m_Events.AddEventAtOffset(
+                    [&]
+                {
                     me->InterruptNonMeleeSpells(false);
                     if (Creature* udalo = me->FindNearestCreature(NPC_SPIRIT_OF_UDALO, 15.0f))
                         udalo->InterruptNonMeleeSpells(false);
@@ -969,13 +974,11 @@ struct npc_akama_illidan : public ScriptedAI
                         olum->InterruptNonMeleeSpells(false);
                     instance->SetBossState(DATA_AKAMA_ILLIDAN, NOT_STARTED);
                     instance->SetBossState(DATA_AKAMA_ILLIDAN, DONE);
-                }, 50680ms); // 20ms
-                me->m_Events.AddEventAtOffset([&] {
-                    Talk(SAY_AKAMA_SALUTE);
-                }, 56955ms); // 6275ms
-                me->m_Events.AddEventAtOffset([&] {
-                    me->GetMotionMaster()->MovePath(PATH_AKAMA_ILLIDARI_COUNCIL_3, false);
-                }, 64030ms); // 7075ms
+                },
+                    50680ms);                                                            // 20ms
+                me->m_Events.AddEventAtOffset([&] { Talk(SAY_AKAMA_SALUTE); }, 56955ms); // 6275ms
+                me->m_Events.AddEventAtOffset(
+                    [&] { me->GetMotionMaster()->MovePath(PATH_AKAMA_ILLIDARI_COUNCIL_3, false); }, 64030ms); // 7075ms
             }
             break;
             // Talk to Initiate Fight
@@ -991,7 +994,8 @@ struct npc_akama_illidan : public ScriptedAI
                 me->SetReactState(REACT_AGGRESSIVE);
 
                 for (int i = 0; i < 10; ++i)
-                    me->SummonCreature(NPC_ILLIDARI_ELITE, IllidariMinionPos[i], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1200);
+                    me->SummonCreature(
+                        NPC_ILLIDARI_ELITE, IllidariMinionPos[i], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1200);
             }
             break;
         }
@@ -1000,21 +1004,17 @@ struct npc_akama_illidan : public ScriptedAI
     void JustReachedHome() override
     {
         // Minions Event
-        if (instance->GetBossState(DATA_ILLIDAN_STORMRAGE) == IN_PROGRESS && !instance->GetCreature(DATA_ILLIDAN_STORMRAGE)->HasAura(SPELL_DEATH))
+        if (instance->GetBossState(DATA_ILLIDAN_STORMRAGE) == IN_PROGRESS &&
+            !instance->GetCreature(DATA_ILLIDAN_STORMRAGE)->HasAura(SPELL_DEATH))
         {
             me->SetReactState(REACT_PASSIVE);
             me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY1H);
 
-            me->m_Events.AddEventAtOffset([&] {
-                Talk(SAY_AKAMA_MINIONS);
-            }, 6700ms);
-            me->m_Events.AddEventAtOffset([&] {
-                me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-            }, 9530ms); // 2830ms
-            me->m_Events.AddEventAtOffset([&] {
-                me->GetMotionMaster()->MovePath(PATH_AKAMA_MINIONS, false);
-            }, 14400ms); // 4870ms
+            me->m_Events.AddEventAtOffset([&] { Talk(SAY_AKAMA_MINIONS); }, 6700ms);
+            me->m_Events.AddEventAtOffset([&] { me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION); }, 9530ms); // 2830ms
+            me->m_Events.AddEventAtOffset(
+                [&] { me->GetMotionMaster()->MovePath(PATH_AKAMA_MINIONS, false); }, 14400ms); // 4870ms
         }
     }
 
@@ -1039,19 +1039,23 @@ struct npc_akama_illidan : public ScriptedAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->GetEntry() == NPC_ILLIDARI_ELITE)
-            me->SummonCreature(NPC_ILLIDARI_ELITE, IllidariMinionPos[urand(0, 9)], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1200);
+            me->SummonCreature(
+                NPC_ILLIDARI_ELITE, IllidariMinionPos[urand(0, 9)], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 1200);
     }
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        ScheduleTimedEvent(12s, 18s, [&] {
-            DoCastVictim(SPELL_CHAIN_LIGHTNING);
-        }, 16s, 24s);
+        ScheduleTimedEvent(12s, 18s, [&] { DoCastVictim(SPELL_CHAIN_LIGHTNING); }, 16s, 24s);
 
-        ScheduleTimedEvent(5s, 10s, [&] {
+        ScheduleTimedEvent(5s,
+            10s,
+            [&]
+        {
             if (me->HealthBelowPct(20))
                 DoCastSelf(SPELL_HEALING_POTION);
-        }, 5s, 10s);
+        },
+            5s,
+            10s);
     }
 
     void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
@@ -1077,19 +1081,19 @@ private:
 
 enum Maiev
 {
-    SPELL_MAIEV_DOWN              = 40409,
-    SPELL_THROW_DAGGER            = 41152,
-    SPELL_SHADOW_STRIKE           = 40685,
-    SPELL_CAGE_TRAP_SUMMON        = 40694,
-    SPELL_TELEPORT_VISUAL         = 41236,
+    SPELL_MAIEV_DOWN = 40409,
+    SPELL_THROW_DAGGER = 41152,
+    SPELL_SHADOW_STRIKE = 40685,
+    SPELL_CAGE_TRAP_SUMMON = 40694,
+    SPELL_TELEPORT_VISUAL = 41236,
 
-    SAY_MAIEV_SHADOWSONG_TAUNT    = 0,
-    SAY_MAIEV_SHADOWSONG_APPEAR   = 1,
-    SAY_MAIEV_SHADOWSONG_JUSTICE  = 2,
-    SAY_MAIEV_SHADOWSONG_TRAP     = 3,
-    SAY_MAIEV_SHADOWSONG_DOWN     = 4,
+    SAY_MAIEV_SHADOWSONG_TAUNT = 0,
+    SAY_MAIEV_SHADOWSONG_APPEAR = 1,
+    SAY_MAIEV_SHADOWSONG_JUSTICE = 2,
+    SAY_MAIEV_SHADOWSONG_TRAP = 3,
+    SAY_MAIEV_SHADOWSONG_DOWN = 4,
     SAY_MAIEV_SHADOWSONG_FINISHED = 5,
-    SAY_MAIEV_SHADOWSONG_OUTRO    = 6,
+    SAY_MAIEV_SHADOWSONG_OUTRO = 6,
     SAY_MAIEV_SHADOWSONG_FAREWELL = 7
 };
 
@@ -1127,23 +1131,18 @@ struct npc_maiev_illidan : public ScriptedAI
                 }
             }
 
-            me->m_Events.AddEventAtOffset([&] {
-                Talk(SAY_MAIEV_SHADOWSONG_FINISHED);
-            }, 1420ms);
-            me->m_Events.AddEventAtOffset([&] {
-                Talk(SAY_MAIEV_SHADOWSONG_OUTRO);
-            }, 28550ms); // 27130ms
-            me->m_Events.AddEventAtOffset([&] {
-                Talk(SAY_MAIEV_SHADOWSONG_FAREWELL);
-            }, 39510ms); // 10960ms
-            me->m_Events.AddEventAtOffset([&] {
-                DoCastSelf(SPELL_TELEPORT_VISUAL);
-            }, 41700ms); // 2190ms
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset([&] { Talk(SAY_MAIEV_SHADOWSONG_FINISHED); }, 1420ms);
+            me->m_Events.AddEventAtOffset([&] { Talk(SAY_MAIEV_SHADOWSONG_OUTRO); }, 28550ms);    // 27130ms
+            me->m_Events.AddEventAtOffset([&] { Talk(SAY_MAIEV_SHADOWSONG_FAREWELL); }, 39510ms); // 10960ms
+            me->m_Events.AddEventAtOffset([&] { DoCastSelf(SPELL_TELEPORT_VISUAL); }, 41700ms);   // 2190ms
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 if (Creature* akama = instance->GetCreature(DATA_AKAMA_ILLIDAN))
                     akama->AI()->DoAction(ACTION_AKAMA_MAIEV_DESPAWN);
                 me->DespawnOnEvade();
-            }, 43320ms); // 1620ms
+            },
+                43320ms); // 1620ms
         }
     }
 
@@ -1152,49 +1151,44 @@ struct npc_maiev_illidan : public ScriptedAI
         me->SetReactState(REACT_PASSIVE);
         me->SetFacingToObject(summoner);
 
-        me->m_Events.AddEventAtOffset([&] {
-            Talk(SAY_MAIEV_SHADOWSONG_APPEAR);
-        }, 25ms);
-        me->m_Events.AddEventAtOffset([&] {
-            me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-        }, 2415ms); // 2390ms
-        me->m_Events.AddEventAtOffset([&] {
-            Talk(SAY_MAIEV_SHADOWSONG_JUSTICE);
-        }, 14815ms); // 12400ms
-        me->m_Events.AddEventAtOffset([&] {
-            me->HandleEmoteCommand(EMOTE_ONESHOT_YES);
-        }, 17015ms); // 2200ms
-        me->m_Events.AddEventAtOffset([&] {
-            me->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);
-        }, 19445ms); // 2430ms
-        me->m_Events.AddEventAtOffset([&] {
-            me->SetReactState(REACT_AGGRESSIVE);
-        }, 21920ms); // 2475ms
-        me->m_Events.AddEventAtOffset([&] {
+        me->m_Events.AddEventAtOffset([&] { Talk(SAY_MAIEV_SHADOWSONG_APPEAR); }, 25ms);
+        me->m_Events.AddEventAtOffset([&] { me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION); }, 2415ms); // 2390ms
+        me->m_Events.AddEventAtOffset([&] { Talk(SAY_MAIEV_SHADOWSONG_JUSTICE); }, 14815ms);               // 12400ms
+        me->m_Events.AddEventAtOffset([&] { me->HandleEmoteCommand(EMOTE_ONESHOT_YES); }, 17015ms);        // 2200ms
+        me->m_Events.AddEventAtOffset([&] { me->HandleEmoteCommand(EMOTE_ONESHOT_ROAR); }, 19445ms);       // 2430ms
+        me->m_Events.AddEventAtOffset([&] { me->SetReactState(REACT_AGGRESSIVE); }, 21920ms);              // 2475ms
+        me->m_Events.AddEventAtOffset(
+            [&]
+        {
             if (Creature* illidan = me->FindNearestCreature(NPC_ILLIDAN_STORMRAGE, 15.0f))
                 AttackStart(illidan);
-        }, 23095ms); // 1175ms
+        },
+            23095ms); // 1175ms
     }
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        ScheduleTimedEvent(7s, [&] {
-            DoCastVictim(SPELL_THROW_DAGGER);
-        }, 30s);
+        ScheduleTimedEvent(7s, [&] { DoCastVictim(SPELL_THROW_DAGGER); }, 30s);
 
-        ScheduleTimedEvent(22s, [&] {
+        ScheduleTimedEvent(22s,
+            [&]
+        {
             DoCastVictim(SPELL_SHADOW_STRIKE);
             if (roll_chance_i(50))
                 Talk(SAY_MAIEV_SHADOWSONG_TAUNT);
-        }, 30s);
+        },
+            30s);
 
-        ScheduleTimedEvent(1200ms, [&] {
+        ScheduleTimedEvent(1200ms,
+            [&]
+        {
             if (me->HealthBelowPct(20))
             {
                 Talk(SAY_MAIEV_SHADOWSONG_DOWN);
                 DoCastSelf(SPELL_MAIEV_DOWN);
             }
-        }, 1200ms);
+        },
+            1200ms);
     }
 
     void SpellHit(Unit* /*caster*/, SpellInfo const* spell) override
@@ -1233,7 +1227,8 @@ struct npc_parasitic_shadowfiend : public ScriptedAI
 
     bool CanAIAttack(Unit const* who) const override
     {
-        return !who->HasAura(SPELL_PARASITIC_SHADOWFIEND) && !who->HasAura(SPELL_PARASITIC_SHADOWFIEND_TRIGGER) && who->IsPlayer();
+        return !who->HasAura(SPELL_PARASITIC_SHADOWFIEND) && !who->HasAura(SPELL_PARASITIC_SHADOWFIEND_TRIGGER) &&
+               who->IsPlayer();
     }
 
     void EnterEvadeMode(EvadeReason /*why*/) override
@@ -1246,7 +1241,8 @@ struct npc_parasitic_shadowfiend : public ScriptedAI
         // Simulate blizz-like AI delay to avoid extreme overpopulation of adds
         me->SetReactState(REACT_DEFENSIVE);
 
-        scheduler.Schedule(2400ms, [this](TaskContext context)
+        scheduler.Schedule(2400ms,
+            [this](TaskContext context)
         {
             me->SetReactState(REACT_AGGRESSIVE);
             me->SetInCombatWithZone();
@@ -1269,10 +1265,10 @@ enum WarbladeTear
 {
     SOUND_WARBLADE_SPAWN = 11689,
 
-    SPELL_SUMMON_TEAR    = 39855,
-    SPELL_TEAR_CHANNEL   = 39857,
+    SPELL_SUMMON_TEAR = 39855,
+    SPELL_TEAR_CHANNEL = 39857,
 
-    MODEL_INVISIBLE      = 11686
+    MODEL_INVISIBLE = 11686
 };
 
 struct npc_blade_of_azzinoth : public ScriptedAI
@@ -1288,9 +1284,7 @@ struct npc_blade_of_azzinoth : public ScriptedAI
         me->PlayRadiusSound(SOUND_WARBLADE_SPAWN, 150.f);
         me->SetInCombatWithZone();
 
-        me->m_Events.AddEventAtOffset([&] {
-            DoCastSelf(SPELL_SUMMON_TEAR);
-        }, 2700ms);
+        me->m_Events.AddEventAtOffset([&] { DoCastSelf(SPELL_SUMMON_TEAR); }, 2700ms);
     }
 
     void JustSummoned(Creature* summon) override
@@ -1305,25 +1299,21 @@ struct npc_blade_of_azzinoth : public ScriptedAI
             if (Creature* illidan = me->FindNearestCreature(NPC_ILLIDAN_STORMRAGE, 100.0f))
                 DoCast(illidan, SPELL_GLAIVE_RETURNS, true);
 
-            me->m_Events.AddEventAtOffset([&] {
-                me->SetDisplayId(MODEL_INVISIBLE);
-            }, 10ms);
-            me->m_Events.AddEventAtOffset([&] {
-                me->DespawnOrUnsummon();
-            }, 2020ms);
+            me->m_Events.AddEventAtOffset([&] { me->SetDisplayId(MODEL_INVISIBLE); }, 10ms);
+            me->m_Events.AddEventAtOffset([&] { me->DespawnOrUnsummon(); }, 2020ms);
         }
     }
 };
 
 enum FlameAzzinoth
 {
-    NPC_BLAZE           = 23259,
+    NPC_BLAZE = 23259,
 
-    SPELL_BLAZE_EFFECT  = 40610,
-    SPELL_FLAME_BLAST   = 40631,
-    SPELL_CHARGE        = 42003,
+    SPELL_BLAZE_EFFECT = 40610,
+    SPELL_FLAME_BLAST = 40631,
+    SPELL_CHARGE = 42003,
     SPELL_UNCAGED_WRATH = 39869,
-    SPELL_BLAZE         = 40637
+    SPELL_BLAZE = 40637
 };
 
 struct npc_flame_of_azzinoth : public ScriptedAI
@@ -1338,10 +1328,13 @@ struct npc_flame_of_azzinoth : public ScriptedAI
 
         me->SetCorpseDelay(2);
         me->SetReactState(REACT_DEFENSIVE);
-        me->m_Events.AddEventAtOffset([&] {
+        me->m_Events.AddEventAtOffset(
+            [&]
+        {
             me->SetReactState(REACT_AGGRESSIVE);
             me->SetInCombatWithZone();
-        }, 2020ms);
+        },
+            2020ms);
     }
 
     void JustSummoned(Creature* summon) override
@@ -1356,19 +1349,31 @@ struct npc_flame_of_azzinoth : public ScriptedAI
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        ScheduleTimedEvent(10s, [&] {
+        ScheduleTimedEvent(10s,
+            [&]
+        {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, ChargeTargetSelector()))
                 DoCast(target, SPELL_CHARGE);
-        }, 5s, 20s);
+        },
+            5s,
+            20s);
 
-        ScheduleTimedEvent(10s, 20s, [&] {
+        ScheduleTimedEvent(10s,
+            20s,
+            [&]
+        {
             DoCastVictim(SPELL_FLAME_BLAST);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 if (Unit* victim = me->GetVictim())
                     victim->CastSpell(victim, SPELL_BLAZE, true);
-            }, 1s);
-        }, 15s, 20s);
+            },
+                1s);
+        },
+            15s,
+            20s);
     }
 
     void UpdateAI(uint32 diff) override
@@ -1391,7 +1396,7 @@ class spell_illidan_draw_soul : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRAW_SOUL_HEAL });
+        return ValidateSpellInfo({SPELL_DRAW_SOUL_HEAL});
     }
 
     void HandleScriptEffect(SpellEffIndex effIndex)
@@ -1403,7 +1408,8 @@ class spell_illidan_draw_soul : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_illidan_draw_soul::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_illidan_draw_soul::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -1413,18 +1419,22 @@ class spell_illidan_parasitic_shadowfiend_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_PARASITIC_SHADOWFIENDS });
+        return ValidateSpellInfo({SPELL_SUMMON_PARASITIC_SHADOWFIENDS});
     }
 
-    void HandleEffectRemove(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
-        if (!GetTarget()->HasAura(SPELL_SHADOW_PRISON) && GetTarget()->GetInstanceScript() && GetTarget()->GetInstanceScript()->IsEncounterInProgress())
+        if (!GetTarget()->HasAura(SPELL_SHADOW_PRISON) && GetTarget()->GetInstanceScript() &&
+            GetTarget()->GetInstanceScript()->IsEncounterInProgress())
             GetTarget()->CastSpell(GetTarget(), SPELL_SUMMON_PARASITIC_SHADOWFIENDS, true);
     }
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_illidan_parasitic_shadowfiend_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_illidan_parasitic_shadowfiend_aura::HandleEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DAMAGE,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -1441,7 +1451,8 @@ class spell_illidan_parasitic_shadowfiend_trigger : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_illidan_parasitic_shadowfiend_trigger::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget += SpellEffectFn(
+            spell_illidan_parasitic_shadowfiend_trigger::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -1451,18 +1462,22 @@ class spell_illidan_parasitic_shadowfiend_trigger_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_PARASITIC_SHADOWFIENDS });
+        return ValidateSpellInfo({SPELL_SUMMON_PARASITIC_SHADOWFIENDS});
     }
 
-    void HandleEffectRemove(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
-        if (!GetTarget()->HasAura(SPELL_SHADOW_PRISON) && GetTarget()->GetInstanceScript() && GetTarget()->GetInstanceScript()->IsEncounterInProgress())
+        if (!GetTarget()->HasAura(SPELL_SHADOW_PRISON) && GetTarget()->GetInstanceScript() &&
+            GetTarget()->GetInstanceScript()->IsEncounterInProgress())
             GetTarget()->CastSpell(GetTarget(), SPELL_SUMMON_PARASITIC_SHADOWFIENDS, true);
     }
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_illidan_parasitic_shadowfiend_trigger_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_illidan_parasitic_shadowfiend_trigger_aura::HandleEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DAMAGE,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -1472,7 +1487,7 @@ class spell_illidan_glaive_throw : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_GLAIVE });
+        return ValidateSpellInfo({SPELL_SUMMON_GLAIVE});
     }
 
     void HandleDummy(SpellEffIndex effIndex)
@@ -1494,10 +1509,10 @@ class spell_illidan_tear_of_azzinoth_summon_channel_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_UNCAGED_WRATH, SPELL_CHARGE });
+        return ValidateSpellInfo({SPELL_UNCAGED_WRATH, SPELL_CHARGE});
     }
 
-    void OnPeriodic(AuraEffect const*  /*aurEff*/)
+    void OnPeriodic(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction();
         if (Unit* caster = GetCaster())
@@ -1512,7 +1527,9 @@ class spell_illidan_tear_of_azzinoth_summon_channel_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_illidan_tear_of_azzinoth_summon_channel_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(spell_illidan_tear_of_azzinoth_summon_channel_aura::OnPeriodic,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -1527,7 +1544,8 @@ class spell_illidan_shadow_prison : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_illidan_shadow_prison::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_illidan_shadow_prison::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -1547,8 +1565,14 @@ class spell_illidan_shadow_prison_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_illidan_shadow_prison_aura::HandleOnEffectApply, EFFECT_1, SPELL_AURA_DAMAGE_IMMUNITY, AURA_EFFECT_HANDLE_REAL);
-        OnEffectRemove += AuraEffectRemoveFn(spell_illidan_shadow_prison_aura::HandleOnEffectRemove, EFFECT_1, SPELL_AURA_DAMAGE_IMMUNITY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_illidan_shadow_prison_aura::HandleOnEffectApply,
+            EFFECT_1,
+            SPELL_AURA_DAMAGE_IMMUNITY,
+            AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_illidan_shadow_prison_aura::HandleOnEffectRemove,
+            EFFECT_1,
+            SPELL_AURA_DAMAGE_IMMUNITY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -1558,7 +1582,7 @@ class spell_illidan_demon_transform1_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DEMON_TRANSFORM_2 });
+        return ValidateSpellInfo({SPELL_DEMON_TRANSFORM_2});
     }
 
     bool Load() override
@@ -1566,7 +1590,7 @@ class spell_illidan_demon_transform1_aura : public AuraScript
         return GetUnitOwner()->IsCreature();
     }
 
-    void OnPeriodic(AuraEffect const*  /*aurEff*/)
+    void OnPeriodic(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction();
         SetDuration(0);
@@ -1576,7 +1600,8 @@ class spell_illidan_demon_transform1_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_illidan_demon_transform1_aura::OnPeriodic, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_illidan_demon_transform1_aura::OnPeriodic, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -1586,7 +1611,7 @@ class spell_illidan_demon_transform2_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DEMON_FORM, SPELL_DEMON_TRANSFORM_3 });
+        return ValidateSpellInfo({SPELL_DEMON_FORM, SPELL_DEMON_TRANSFORM_3});
     }
 
     bool Load() override
@@ -1619,7 +1644,8 @@ class spell_illidan_demon_transform2_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_illidan_demon_transform2_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_illidan_demon_transform2_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -1629,7 +1655,7 @@ class spell_illidan_flame_burst : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_FLAME_BURST_EFFECT });
+        return ValidateSpellInfo({SPELL_FLAME_BURST_EFFECT});
     }
 
     void HandleScriptEffect(SpellEffIndex effIndex)
@@ -1641,7 +1667,8 @@ class spell_illidan_flame_burst : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_illidan_flame_burst::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_illidan_flame_burst::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -1651,7 +1678,7 @@ class spell_illidan_found_target : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CONSUME_SOUL, SPELL_FIND_TARGET });
+        return ValidateSpellInfo({SPELL_CONSUME_SOUL, SPELL_FIND_TARGET});
     }
 
     void HandleDummy(SpellEffIndex effIndex)
@@ -1677,7 +1704,7 @@ class spell_illidan_cage_trap : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CAGE_TRAP });
+        return ValidateSpellInfo({SPELL_CAGE_TRAP});
     }
 
     bool Load() override
@@ -1700,7 +1727,8 @@ class spell_illidan_cage_trap : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_illidan_cage_trap::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_illidan_cage_trap::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -1710,10 +1738,18 @@ class spell_illidan_cage_trap_stun_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CAGED_DEBUFF, SPELL_CAGED_SUMMON1, SPELL_CAGED_SUMMON1+1, SPELL_CAGED_SUMMON1+2, SPELL_CAGED_SUMMON1+3, SPELL_CAGED_SUMMON1+4, SPELL_CAGED_SUMMON1+5, SPELL_CAGED_SUMMON1+6, SPELL_CAGED_SUMMON8 });
+        return ValidateSpellInfo({SPELL_CAGED_DEBUFF,
+            SPELL_CAGED_SUMMON1,
+            SPELL_CAGED_SUMMON1 + 1,
+            SPELL_CAGED_SUMMON1 + 2,
+            SPELL_CAGED_SUMMON1 + 3,
+            SPELL_CAGED_SUMMON1 + 4,
+            SPELL_CAGED_SUMMON1 + 5,
+            SPELL_CAGED_SUMMON1 + 6,
+            SPELL_CAGED_SUMMON8});
     }
 
-    void OnPeriodic(AuraEffect const*  /*aurEff*/)
+    void OnPeriodic(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction();
         SetDuration(0);
@@ -1725,7 +1761,8 @@ class spell_illidan_cage_trap_stun_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_illidan_cage_trap_stun_aura::OnPeriodic, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_illidan_cage_trap_stun_aura::OnPeriodic, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -1739,7 +1776,8 @@ void AddSC_boss_illidan()
     RegisterBlackTempleCreatureAI(npc_flame_of_azzinoth);
     RegisterSpellScript(spell_illidan_draw_soul);
     RegisterSpellScript(spell_illidan_parasitic_shadowfiend_aura);
-    RegisterSpellAndAuraScriptPair(spell_illidan_parasitic_shadowfiend_trigger, spell_illidan_parasitic_shadowfiend_trigger_aura);
+    RegisterSpellAndAuraScriptPair(
+        spell_illidan_parasitic_shadowfiend_trigger, spell_illidan_parasitic_shadowfiend_trigger_aura);
     RegisterSpellScript(spell_illidan_glaive_throw);
     RegisterSpellScript(spell_illidan_tear_of_azzinoth_summon_channel_aura);
     RegisterSpellAndAuraScriptPair(spell_illidan_shadow_prison, spell_illidan_shadow_prison_aura);

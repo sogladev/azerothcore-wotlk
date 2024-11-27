@@ -23,40 +23,40 @@
 
 enum Emotes
 {
-    EMOTE_TARGET                = 0
+    EMOTE_TARGET = 0
 };
 
 enum Spells
 {
-    SPELL_CREEPING_PLAGUE       = 20512,
-    SPELL_DISMEMBER             = 96,
-    SPELL_GATHERING_SPEED       = 1834,
-    SPELL_FULL_SPEED            = 1557,
-    SPELL_THORNS                = 25640,
-    SPELL_BURU_TRANSFORM        = 24721,
-    SPELL_SUMMON_HATCHLING      = 1881,
-    SPELL_EXPLODE               = 19593,
-    SPELL_EXPLODE_2             = 5255,
-    SPELL_BURU_EGG_TRIGGER      = 26646,
-    SPELL_CREATURE_SPECIAL      = 7155, // from sniffs
+    SPELL_CREEPING_PLAGUE = 20512,
+    SPELL_DISMEMBER = 96,
+    SPELL_GATHERING_SPEED = 1834,
+    SPELL_FULL_SPEED = 1557,
+    SPELL_THORNS = 25640,
+    SPELL_BURU_TRANSFORM = 24721,
+    SPELL_SUMMON_HATCHLING = 1881,
+    SPELL_EXPLODE = 19593,
+    SPELL_EXPLODE_2 = 5255,
+    SPELL_BURU_EGG_TRIGGER = 26646,
+    SPELL_CREATURE_SPECIAL = 7155, // from sniffs
 };
 
 enum Events
 {
-    EVENT_DISMEMBER             = 1,
-    EVENT_GATHERING_SPEED       = 2,
-    EVENT_CREEPING_PLAGUE       = 3
+    EVENT_DISMEMBER = 1,
+    EVENT_GATHERING_SPEED = 2,
+    EVENT_CREEPING_PLAGUE = 3
 };
 
 enum Phases
 {
-    PHASE_EGG                   = 1,
-    PHASE_TRANSFORM             = 2
+    PHASE_EGG = 1,
+    PHASE_TRANSFORM = 2
 };
 
 struct boss_buru : public BossAI
 {
-    boss_buru(Creature* creature) : BossAI(creature, DATA_BURU) {}
+    boss_buru(Creature* creature) : BossAI(creature, DATA_BURU) { }
 
     void EnterEvadeMode(EvadeReason why) override
     {
@@ -130,9 +130,7 @@ struct boss_buru : public BossAI
     void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType, SpellSchoolMask) override
     {
         if (attacker && attacker->GetEntry() == NPC_BURU_EGG)
-        {
             me->LowerPlayerDamageReq(damage);
-        }
 
         if (me->HealthBelowPctDamaged(20, damage) && _phase == PHASE_EGG)
         {
@@ -179,6 +177,7 @@ struct boss_buru : public BossAI
 
         DoMeleeAttackIfReady();
     }
+
 private:
     uint8 _phase;
 };
@@ -198,9 +197,7 @@ struct npc_buru_egg : public ScriptedAI
         if (Creature* buru = _instance->GetCreature(DATA_BURU))
         {
             if (!buru->IsInCombat())
-            {
                 buru->AI()->AttackStart(attacker);
-            }
         }
     }
 
@@ -211,9 +208,7 @@ struct npc_buru_egg : public ScriptedAI
             if (Creature* buru = _instance->GetCreature(DATA_BURU))
             {
                 if (Unit* target = buru->AI()->SelectTarget(SelectTargetMethod::Random))
-                {
                     who->AI()->AttackStart(target);
-                }
             }
         }
     }

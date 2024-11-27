@@ -21,20 +21,20 @@
 
 enum voidReaver
 {
-    SAY_AGGRO                   = 0,
-    SAY_SLAY                    = 1,
-    SAY_DEATH                   = 2,
-    SAY_POUNDING                = 3,
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_POUNDING = 3,
 
-    SPELL_POUNDING              = 34162,
-    SPELL_ARCANE_ORB            = 34172,
-    SPELL_KNOCK_AWAY            = 25778,
-    SPELL_BERSERK               = 26662
+    SPELL_POUNDING = 34162,
+    SPELL_ARCANE_ORB = 34172,
+    SPELL_KNOCK_AWAY = 25778,
+    SPELL_BERSERK = 26662
 };
 
 enum Groups
 {
-    GROUP_ARCANE_ORB            = 1
+    GROUP_ARCANE_ORB = 1
 };
 
 struct boss_void_reaver : public BossAI
@@ -42,10 +42,7 @@ struct boss_void_reaver : public BossAI
     boss_void_reaver(Creature* creature) : BossAI(creature, DATA_REAVER)
     {
         callForHelpRange = 105.0f;
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
 
         me->ApplySpellImmune(0, IMMUNITY_DISPEL, DISPEL_POISON, true);
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_HEALTH_LEECH, true);
@@ -66,10 +63,7 @@ struct boss_void_reaver : public BossAI
         {
             Talk(SAY_SLAY);
             _recentlySpoken = true;
-            scheduler.Schedule(5s, [this](TaskContext)
-            {
-                _recentlySpoken = false;
-            });
+            scheduler.Schedule(5s, [this](TaskContext) { _recentlySpoken = false; });
         }
     }
 
@@ -84,31 +78,33 @@ struct boss_void_reaver : public BossAI
         BossAI::JustEngagedWith(who);
         Talk(SAY_AGGRO);
 
-        scheduler.Schedule(10min, [this](TaskContext)
-        {
-            DoCastSelf(SPELL_BERSERK);
-        }).Schedule(8300ms, [this](TaskContext context)
+        scheduler.Schedule(10min, [this](TaskContext) { DoCastSelf(SPELL_BERSERK); })
+            .Schedule(8300ms,
+                [this](TaskContext context)
         {
             Talk(SAY_POUNDING);
             DoCastSelf(SPELL_POUNDING);
             scheduler.DelayGroup(GROUP_ARCANE_ORB, 3s);
             context.Repeat(12100ms, 15800ms);
-        }).Schedule(3450ms, GROUP_ARCANE_ORB, [this](TaskContext context)
+        })
+            .Schedule(3450ms,
+                GROUP_ARCANE_ORB,
+                [this](TaskContext context)
         {
             if (DoCastRandomTarget(SPELL_ARCANE_ORB, 0, -20.0f) != SPELL_CAST_OK)
-            {
                 DoCastRandomTarget(SPELL_ARCANE_ORB, 0, 18.0f);
-            }
             context.Repeat(2400ms, 6300ms);
-        }).Schedule(14350ms, [this](TaskContext context)
+        })
+            .Schedule(14350ms,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_KNOCK_AWAY);
             context.Repeat(20550ms, 22550ms);
         });
     }
 
-    private:
-        bool _recentlySpoken;
+private:
+    bool _recentlySpoken;
 };
 
 void AddSC_boss_void_reaver()

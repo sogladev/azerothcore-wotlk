@@ -17,46 +17,46 @@
 
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "ruby_sanctum.h"
-#include "SpellScript.h"
 
 enum Texts
 {
-    SAY_AGGRO                   = 0,
-    SAY_CONFLAGRATION           = 1,
-    EMOTE_ENRAGED               = 2,
-    SAY_KILL                    = 3
+    SAY_AGGRO = 0,
+    SAY_CONFLAGRATION = 1,
+    EMOTE_ENRAGED = 2,
+    SAY_KILL = 3
 };
 
 enum Spells
 {
-    SPELL_CONFLAGRATION         = 74452,
-    SPELL_FLAME_BEACON          = 74453,
-    SPELL_CONFLAGRATION_MISSLE  = 74454,
-    SPELL_ENRAGE                = 78722,
-    SPELL_FLAME_BREATH          = 74403,
+    SPELL_CONFLAGRATION = 74452,
+    SPELL_FLAME_BEACON = 74453,
+    SPELL_CONFLAGRATION_MISSLE = 74454,
+    SPELL_ENRAGE = 78722,
+    SPELL_FLAME_BREATH = 74403,
 };
 
 enum Events
 {
-    EVENT_ENRAGE                = 1,
-    EVENT_FLIGHT                = 2,
-    EVENT_FLAME_BREATH          = 3,
-    EVENT_CONFLAGRATION         = 4,
-    EVENT_LAND_GROUND           = 5,
-    EVENT_AIR_MOVEMENT          = 6,
-    EVENT_LAND_BACK             = 7,
-    EVENT_KILL_TALK             = 8
+    EVENT_ENRAGE = 1,
+    EVENT_FLIGHT = 2,
+    EVENT_FLAME_BREATH = 3,
+    EVENT_CONFLAGRATION = 4,
+    EVENT_LAND_GROUND = 5,
+    EVENT_AIR_MOVEMENT = 6,
+    EVENT_LAND_BACK = 7,
+    EVENT_KILL_TALK = 8
 };
 
 enum Misc
 {
-    POINT_FLIGHT                = 1,
-    POINT_LAND                  = 2,
-    POINT_TAKEOFF               = 3,
+    POINT_FLIGHT = 1,
+    POINT_LAND = 2,
+    POINT_TAKEOFF = 3,
 
-    SOUND_ID_DEATH              = 17531
+    SOUND_ID_DEATH = 17531
 };
 
 class boss_saviana_ragefire : public CreatureScript
@@ -66,9 +66,7 @@ public:
 
     struct boss_saviana_ragefireAI : public BossAI
     {
-        boss_saviana_ragefireAI(Creature* creature) : BossAI(creature, DATA_SAVIANA_RAGEFIRE)
-        {
-        }
+        boss_saviana_ragefireAI(Creature* creature) : BossAI(creature, DATA_SAVIANA_RAGEFIRE) { }
 
         void Reset() override
         {
@@ -119,7 +117,7 @@ public:
             me->SetHover(false);
         }
 
-        void KilledUnit(Unit*  /*victim*/) override
+        void KilledUnit(Unit* /*victim*/) override
         {
             if (events.GetNextEventTime(EVENT_KILL_TALK) == 0)
             {
@@ -140,16 +138,17 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_FLIGHT:
-                    {
-                        me->SetReactState(REACT_PASSIVE);
-                        me->AttackStop();
-                        me->SetDisableGravity(true);
-                        me->GetMotionMaster()->MovePoint(POINT_TAKEOFF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 6.0f, false);
-                        events.ScheduleEvent(EVENT_FLIGHT, 50s);
-                        events.DelayEvents(15s);
-                        events.ScheduleEvent(EVENT_AIR_MOVEMENT, 2s);
-                        break;
-                    }
+                {
+                    me->SetReactState(REACT_PASSIVE);
+                    me->AttackStop();
+                    me->SetDisableGravity(true);
+                    me->GetMotionMaster()->MovePoint(
+                        POINT_TAKEOFF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 6.0f, false);
+                    events.ScheduleEvent(EVENT_FLIGHT, 50s);
+                    events.DelayEvents(15s);
+                    events.ScheduleEvent(EVENT_AIR_MOVEMENT, 2s);
+                    break;
+                }
                 case EVENT_CONFLAGRATION:
                     me->CastCustomSpell(SPELL_CONFLAGRATION, SPELLVALUE_MAX_TARGETS, RAID_MODE(3, 6, 3, 6), me, true);
                     break;
@@ -191,7 +190,7 @@ class spell_saviana_conflagration_init : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_FLAME_BEACON, SPELL_CONFLAGRATION_MISSLE });
+        return ValidateSpellInfo({SPELL_FLAME_BEACON, SPELL_CONFLAGRATION_MISSLE});
     }
 
     void HandleDummy(SpellEffIndex effIndex)
@@ -219,7 +218,8 @@ class spell_saviana_conflagration_throwback : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_saviana_conflagration_throwback::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_saviana_conflagration_throwback::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

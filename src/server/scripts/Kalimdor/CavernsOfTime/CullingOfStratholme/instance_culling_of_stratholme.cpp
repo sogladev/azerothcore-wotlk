@@ -285,8 +285,7 @@ public:
                 instance->SummonCreature(NPC_CHROMIE_MIDDLE, EventPos[EVENT_POS_CHROMIE]);
                 instance->SummonCreature(NPC_HOURGLASS, EventPos[EVENT_POS_HOURGLASS]);
 
-                if (_encounterState == COS_PROGRESS_CRATES_FOUND ||
-                        _encounterState == COS_PROGRESS_START_INTRO)
+                if (_encounterState == COS_PROGRESS_CRATES_FOUND || _encounterState == COS_PROGRESS_START_INTRO)
                 {
                     ChromieWhisper(0);
 
@@ -373,7 +372,7 @@ public:
             return saveStream.str();
         }
 
-        void Load(const char* in) override
+        void Load(char const* in) override
         {
             if (!in)
             {

@@ -23,9 +23,9 @@
 
 enum Misc
 {
-    RAND_VENDOR                    = 2,
-    WORLDSTATE_SHOW_TIMER          = 3104,
-    WORLDSTATE_TIME_TO_SACRIFICE   = 3106
+    RAND_VENDOR = 2,
+    WORLDSTATE_SHOW_TIMER = 3104,
+    WORLDSTATE_TIME_TO_SACRIFICE = 3106
 };
 
 // Chests spawn at bear/eagle/dragonhawk/lynx bosses
@@ -37,51 +37,45 @@ struct SHostageInfo
     Position pos;
 };
 
-static SHostageInfo HostageInfo[] =
-{
-    {23790, 186648, { -57.0f, 1343.0f, 40.77f, 3.2f } }, // bear
-    {23999, 187021, { 400.0f, 1414.0f, 74.36f, 3.3f } }, // eagle
-    {24001, 186672, { -35.0f, 1134.0f, 18.71f, 1.9f } }, // dragonhawk
-    {24024, 186667, { 413.0f, 1117.0f, 6.32f,  3.1f } }  // lynx
+static SHostageInfo HostageInfo[] = {
+    {23790, 186648, {-57.0f, 1343.0f, 40.77f, 3.2f}}, // bear
+    {23999, 187021, {400.0f, 1414.0f, 74.36f, 3.3f}}, // eagle
+    {24001, 186672, {-35.0f, 1134.0f, 18.71f, 1.9f}}, // dragonhawk
+    {24024, 186667, {413.0f, 1117.0f, 6.32f, 3.1f} }  // lynx
 };
 
 Position const HarrisonJonesLoc = {120.687f, 1674.0f, 42.0217f, 1.59044f};
 
-DoorData const doorData[] =
-{
-    { GO_ZULJIN_FIREWALL,      DATA_ZULJIN,  DOOR_TYPE_ROOM    },
-    { GO_DOOR_HALAZZI,         DATA_HALAZZI, DOOR_TYPE_PASSAGE },
-    { GO_LYNX_TEMPLE_ENTRANCE, DATA_HALAZZI, DOOR_TYPE_ROOM    },
-    { GO_DOOR_AKILZON,         DATA_AKILZON, DOOR_TYPE_ROOM    },
-    { GO_GATE_ZULJIN,          DATA_HEXLORD, DOOR_TYPE_PASSAGE },
-    { 0,                       0,            DOOR_TYPE_ROOM    } // END
+DoorData const doorData[] = {
+    {GO_ZULJIN_FIREWALL,      DATA_ZULJIN,  DOOR_TYPE_ROOM   },
+    {GO_DOOR_HALAZZI,         DATA_HALAZZI, DOOR_TYPE_PASSAGE},
+    {GO_LYNX_TEMPLE_ENTRANCE, DATA_HALAZZI, DOOR_TYPE_ROOM   },
+    {GO_DOOR_AKILZON,         DATA_AKILZON, DOOR_TYPE_ROOM   },
+    {GO_GATE_ZULJIN,          DATA_HEXLORD, DOOR_TYPE_PASSAGE},
+    {0,                       0,            DOOR_TYPE_ROOM   }  // END
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_JANALAI,        DATA_JANALAI        },
-    { NPC_SPIRIT_LYNX,    DATA_SPIRIT_LYNX    },
-    { NPC_HARRISON_JONES, DATA_HARRISON_JONES },
-    { 0,                  0                   }
+ObjectData const creatureData[] = {
+    {NPC_JANALAI,        DATA_JANALAI       },
+    {NPC_SPIRIT_LYNX,    DATA_SPIRIT_LYNX   },
+    {NPC_HARRISON_JONES, DATA_HARRISON_JONES},
+    {0,                  0                  }
 };
 
-ObjectData const gameObjectData[] =
-{
-    { GO_STRANGE_GONG, DATA_STRANGE_GONG },
-    { GO_MASSIVE_GATE, DATA_MASSIVE_GATE },
-    { GO_GATE_HEXLORD, DATA_HEXLORD_GATE },
-    { 0,               0                 }
+ObjectData const gameObjectData[] = {
+    {GO_STRANGE_GONG, DATA_STRANGE_GONG},
+    {GO_MASSIVE_GATE, DATA_MASSIVE_GATE},
+    {GO_GATE_HEXLORD, DATA_HEXLORD_GATE},
+    {0,               0                }
 };
 
-ObjectData const summonData[] =
-{
-    { NPC_AMANI_HATCHLING, DATA_JANALAI },
-    { 0,                   0            }
+ObjectData const summonData[] = {
+    {NPC_AMANI_HATCHLING, DATA_JANALAI},
+    {0,                   0           }
 };
 
-BossBoundaryData const boundaries =
-{
-    { DATA_HEXLORD,    new RectangleBoundary(80.50557f, 920.9858f, 155.88986f, 1015.27563f)}
+BossBoundaryData const boundaries = {
+    {DATA_HEXLORD, new RectangleBoundary(80.50557f, 920.9858f, 155.88986f, 1015.27563f)}
 };
 
 class instance_zulaman : public InstanceMapScript
@@ -91,7 +85,7 @@ public:
 
     struct instance_zulaman_InstanceMapScript : public InstanceScript
     {
-        instance_zulaman_InstanceMapScript(Map* map) : InstanceScript(map) {}
+        instance_zulaman_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         void Initialize() override
         {
@@ -139,7 +133,9 @@ public:
                     DoUpdateWorldState(WORLDSTATE_TIME_TO_SACRIFICE, timer);
                 }
 
-                scheduler.Schedule(1min, GROUP_TIMED_RUN, [this](TaskContext context)
+                scheduler.Schedule(1min,
+                    GROUP_TIMED_RUN,
+                    [this](TaskContext context)
                 {
                     if (uint32 timer = GetPersistentData(DATA_TIMED_RUN))
                     {
@@ -157,7 +153,7 @@ public:
 
         void CheckInstanceStatus()
         {
-            if (AllBossesDone({ DATA_NALORAKK, DATA_AKILZON, DATA_JANALAI, DATA_HALAZZI }))
+            if (AllBossesDone({DATA_NALORAKK, DATA_AKILZON, DATA_JANALAI, DATA_HALAZZI}))
                 HandleGameObject(ObjectGuid::Empty, true, GetGameObject(DATA_HEXLORD_GATE));
         }
 
@@ -216,7 +212,8 @@ public:
 
             if (state == DONE)
             {
-                if (GetPersistentData(DATA_TIMED_RUN) && AllBossesDone({ DATA_NALORAKK, DATA_AKILZON, DATA_JANALAI, DATA_HALAZZI }))
+                if (GetPersistentData(DATA_TIMED_RUN) &&
+                    AllBossesDone({DATA_NALORAKK, DATA_AKILZON, DATA_JANALAI, DATA_HALAZZI}))
                 {
                     StorePersistentData(DATA_TIMED_RUN, 0);
                     DoUpdateWorldState(WORLDSTATE_SHOW_TIMER, 0);
@@ -243,8 +240,8 @@ public:
             scheduler.Update(diff);
         }
 
-        private:
-            uint32 RandVendor[RAND_VENDOR];
+    private:
+        uint32 RandVendor[RAND_VENDOR];
     };
 
     InstanceScript* GetInstanceScript(InstanceMap* map) const override

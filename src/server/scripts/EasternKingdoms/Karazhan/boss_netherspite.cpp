@@ -25,52 +25,51 @@
 
 enum Emotes
 {
-    EMOTE_PHASE_BANISH      = 0,
-    EMOTE_PHASE_PORTAL      = 1
+    EMOTE_PHASE_BANISH = 0,
+    EMOTE_PHASE_PORTAL = 1
 };
 
 enum Spells
 {
-    SPELL_NETHERBURN_AURA   = 30522,
-    SPELL_VOIDZONE          = 37063,
-    SPELL_NETHER_INFUSION   = 38688,
-    SPELL_NETHERBREATH      = 38523,
-    SPELL_BANISH_VISUAL     = 39833,
-    SPELL_BANISH_ROOT       = 42716,
-    SPELL_EMPOWERMENT       = 38549,
-    SPELL_NETHERSPITE_ROAR  = 38684
+    SPELL_NETHERBURN_AURA = 30522,
+    SPELL_VOIDZONE = 37063,
+    SPELL_NETHER_INFUSION = 38688,
+    SPELL_NETHERBREATH = 38523,
+    SPELL_BANISH_VISUAL = 39833,
+    SPELL_BANISH_ROOT = 42716,
+    SPELL_EMPOWERMENT = 38549,
+    SPELL_NETHERSPITE_ROAR = 38684
 };
 
 enum Portals
 {
-    RED_PORTAL              = 0, // Perseverence
-    GREEN_PORTAL            = 1, // Serenity
-    BLUE_PORTAL             = 2  // Dominance
+    RED_PORTAL = 0,   // Perseverence
+    GREEN_PORTAL = 1, // Serenity
+    BLUE_PORTAL = 2   // Dominance
 };
 
 enum Groups
 {
-    PORTAL_PHASE            = 0,
-    BANISH_PHASE            = 1
+    PORTAL_PHASE = 0,
+    BANISH_PHASE = 1
 };
 
-const float PortalCoord[3][3] =
-{
+float const PortalCoord[3][3] = {
     {-11195.353516f, -1613.237183f, 278.237258f}, // Left side
     {-11137.846680f, -1685.607422f, 278.239258f}, // Right side
     {-11094.493164f, -1591.969238f, 279.949188f}  // Back side
 };
 
-const uint32 PortalID[3] =     {17369, 17367, 17368};
-const uint32 PortalVisual[3] = {30487, 30490, 30491};
-const uint32 PortalBeam[3] =   {30465, 30464, 30463};
-const uint32 PlayerBuff[3] =   {30421, 30422, 30423};
-const uint32 NetherBuff[3] =   {30466, 30467, 30468};
-const uint32 PlayerDebuff[3] = {38637, 38638, 38639};
+uint32 const PortalID[3] = {17369, 17367, 17368};
+uint32 const PortalVisual[3] = {30487, 30490, 30491};
+uint32 const PortalBeam[3] = {30465, 30464, 30463};
+uint32 const PlayerBuff[3] = {30421, 30422, 30423};
+uint32 const NetherBuff[3] = {30466, 30467, 30468};
+uint32 const PlayerDebuff[3] = {38637, 38638, 38639};
 
 struct boss_netherspite : public BossAI
 {
-    boss_netherspite(Creature* creature) : BossAI(creature, DATA_NETHERSPITE) {}
+    boss_netherspite(Creature* creature) : BossAI(creature, DATA_NETHERSPITE) { }
 
     bool IsBetween(WorldObject* u1, WorldObject* target, WorldObject* u2) // the in-line checker
     {
@@ -114,7 +113,13 @@ struct boss_netherspite : public BossAI
         pos[BLUE_PORTAL] = (r > 1 ? 1 : 2); // Blue Portal not on the left side (0)
         for (int i = 0; i < 3; ++i)
         {
-            if (Creature* portal = me->SummonCreature(PortalID[i], PortalCoord[pos[i]][0], PortalCoord[pos[i]][1], PortalCoord[pos[i]][2], 0, TEMPSUMMON_TIMED_DESPAWN, 60000))
+            if (Creature* portal = me->SummonCreature(PortalID[i],
+                    PortalCoord[pos[i]][0],
+                    PortalCoord[pos[i]][1],
+                    PortalCoord[pos[i]][2],
+                    0,
+                    TEMPSUMMON_TIMED_DESPAWN,
+                    60000))
             {
                 PortalGUID[i] = portal->GetGUID();
                 portal->AddAura(PortalVisual[i], portal);
@@ -142,21 +147,18 @@ struct boss_netherspite : public BossAI
                     {
                         Player* p = i->GetSource();
                         if (p && p->IsAlive() // alive
-                            && (!target || target->GetDistance2d(portal) > p->GetDistance2d(portal)) // closer than current best
-                            && !p->HasAura(PlayerDebuff[j]) // not exhausted
-                            && IsBetween(me, p, portal)) // on the beam
+                            && (!target ||
+                                   target->GetDistance2d(portal) > p->GetDistance2d(portal)) // closer than current best
+                            && !p->HasAura(PlayerDebuff[j])                                  // not exhausted
+                            && IsBetween(me, p, portal))                                     // on the beam
                             target = p;
                     }
                 }
                 // buff the target
                 if (target->IsPlayer())
-                {
                     target->AddAura(PlayerBuff[j], target);
-                }
                 else
-                {
                     target->AddAura(NetherBuff[j], target);
-                }
                 // cast visual beam on the chosen target if switched
                 // simple target switching isn't working -> using BeamerGUID to cast (workaround)
                 if (!current || target != current)
@@ -170,7 +172,13 @@ struct boss_netherspite : public BossAI
                         BeamerGUID[j].Clear();
                     }
                     // create new one and start beaming on the target
-                    if (Creature* beamer = portal->SummonCreature(PortalID[j], portal->GetPositionX(), portal->GetPositionY(), portal->GetPositionZ(), portal->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN, 60000))
+                    if (Creature* beamer = portal->SummonCreature(PortalID[j],
+                            portal->GetPositionX(),
+                            portal->GetPositionY(),
+                            portal->GetPositionZ(),
+                            portal->GetOrientation(),
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            60000))
                     {
                         beamer->CastSpell(target, PortalBeam[j], false);
                         BeamerGUID[j] = beamer->GetGUID();
@@ -178,9 +186,7 @@ struct boss_netherspite : public BossAI
                 }
                 // aggro target if Red Beam
                 if (j == RED_PORTAL && me->GetVictim() != target && target->IsPlayer())
-                {
                     me->GetThreatMgr().AddThreat(target, 100000.0f + DoGetThreat(me->GetVictim()));
-                }
             }
         }
     }
@@ -188,31 +194,40 @@ struct boss_netherspite : public BossAI
     void SwitchToPortalPhase(bool aggro = false)
     {
         if (!aggro)
-        {
             Talk(EMOTE_PHASE_PORTAL);
-        }
 
         scheduler.CancelGroup(BANISH_PHASE);
         me->RemoveAurasDueToSpell(SPELL_BANISH_ROOT);
         me->RemoveAurasDueToSpell(SPELL_BANISH_VISUAL);
         SummonPortals();
-        scheduler.Schedule(60s, [this](TaskContext /*context*/)
+        scheduler
+            .Schedule(60s,
+                [this](TaskContext /*context*/)
         {
             if (!me->IsNonMeleeSpellCast(false))
             {
                 SwitchToBanishPhase();
                 return;
             }
-        }).Schedule(10s, PORTAL_PHASE, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                PORTAL_PHASE,
+                [this](TaskContext context)
         {
             UpdatePortals();
             context.Repeat(1s);
-        }).Schedule(10s, PORTAL_PHASE, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                PORTAL_PHASE,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_EMPOWERMENT);
             me->AddAura(SPELL_NETHERBURN_AURA, me);
             context.Repeat(90s);
-        }).Schedule(15s, PORTAL_PHASE, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                PORTAL_PHASE,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_VOIDZONE, 1, 45.0f, true, true);
             context.Repeat(15s);
@@ -224,13 +239,9 @@ struct boss_netherspite : public BossAI
         for (int i = 0; i < 3; ++i)
         {
             if (Creature* portal = ObjectAccessor::GetCreature(*me, PortalGUID[i]))
-            {
                 portal->DisappearAndDie();
-            }
             if (Creature* portal = ObjectAccessor::GetCreature(*me, BeamerGUID[i]))
-            {
                 portal->DisappearAndDie();
-            }
 
             PortalGUID[i].Clear();
             BeamTarget[i].Clear();
@@ -248,29 +259,30 @@ struct boss_netherspite : public BossAI
 
         DestroyPortals();
 
-        scheduler.Schedule(30s, [this](TaskContext)
+        scheduler
+            .Schedule(30s,
+                [this](TaskContext)
         {
             SwitchToPortalPhase();
             DoResetThreatList();
             return;
-        }).Schedule(10s, BANISH_PHASE, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                BANISH_PHASE,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_NETHERBREATH, 0, 40.0f, true);
             context.Repeat(5s, 7s);
         });
 
         for (uint8 i = 0; i < 3; ++i)
-        {
             me->RemoveAurasDueToSpell(NetherBuff[i]);
-        }
     }
 
     void HandleDoors(bool open)
     {
         if (GameObject* door = ObjectAccessor::GetGameObject(*me, instance->GetGuidData(DATA_GO_MASSIVE_DOOR)))
-        {
             door->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
-        }
     }
 
     void JustEngagedWith(Unit* who) override
@@ -279,7 +291,8 @@ struct boss_netherspite : public BossAI
         HandleDoors(false);
         SwitchToPortalPhase(true);
         DoZoneInCombat();
-        scheduler.Schedule(9min, [this](TaskContext /*context*/)
+        scheduler.Schedule(9min,
+            [this](TaskContext /*context*/)
         {
             if (!berserk)
             {
@@ -327,7 +340,10 @@ class spell_nether_portal_perseverence : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_nether_portal_perseverence::HandleApply, EFFECT_2, SPELL_AURA_MOD_INCREASE_HEALTH, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        OnEffectApply += AuraEffectApplyFn(spell_nether_portal_perseverence::HandleApply,
+            EFFECT_2,
+            SPELL_AURA_MOD_INCREASE_HEALTH,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
     }
 };
 

@@ -32,7 +32,10 @@ public:
 
     struct instance_halls_of_stone_InstanceMapScript : public InstanceScript
     {
-        instance_halls_of_stone_InstanceMapScript(Map* map) : InstanceScript(map) { Initialize(); }
+        instance_halls_of_stone_InstanceMapScript(Map* map) : InstanceScript(map)
+        {
+            Initialize();
+        }
 
         uint32 Encounter[MAX_ENCOUNTER];
 
@@ -69,12 +72,8 @@ public:
         bool IsEncounterInProgress() const override
         {
             for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            {
                 if (Encounter[i] == IN_PROGRESS && i != BRANN_BRONZEBEARD)
-                {
                     return true;
-                }
-            }
             return false;
         }
 
@@ -182,7 +181,8 @@ public:
             return 0;
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const*  /*source*/, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {
@@ -255,11 +255,8 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << Encounter[0] << ' '
-                << Encounter[1] << ' '
-                << Encounter[2] << ' '
-                << Encounter[3] << ' '
-                << Encounter[4] << ' ';
+            data << Encounter[0] << ' ' << Encounter[1] << ' ' << Encounter[2] << ' ' << Encounter[3] << ' '
+                 << Encounter[4] << ' ';
         }
     };
 };

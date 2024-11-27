@@ -20,17 +20,8 @@
 #include "ObjectMgr.h"
 #include "Player.h"
 
-constexpr std::array<std::string_view, MAX_ITEM_QUALITY> itemQualityToString =
-{
-    "poor",
-    "normal",
-    "uncommon",
-    "rare",
-    "epic",
-    "legendary",
-    "artifact",
-    "all"
-};
+constexpr std::array<std::string_view, MAX_ITEM_QUALITY> itemQualityToString = {
+    "poor", "normal", "uncommon", "rare", "epic", "legendary", "artifact", "all"};
 
 using namespace Acore::ChatCommands;
 
@@ -41,9 +32,8 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable commandTable =
-        {
-            { "bags clear",  HandleBagsClearCommand, SEC_GAMEMASTER, Console::No },
+        static ChatCommandTable commandTable = {
+            {"bags clear", HandleBagsClearCommand, SEC_GAMEMASTER, Console::No},
         };
 
         return commandTable;
@@ -52,15 +42,11 @@ public:
     static bool HandleBagsClearCommand(ChatHandler* handler, std::string_view args)
     {
         if (args.empty())
-        {
             return false;
-        }
 
         Player* player = handler->GetSession()->GetPlayer();
         if (!player)
-        {
             return false;
-        }
 
         uint8 itemQuality = MAX_ITEM_QUALITY;
         for (uint8 i = ITEM_QUALITY_POOR; i < MAX_ITEM_QUALITY; ++i)
@@ -73,11 +59,9 @@ public:
         }
 
         if (itemQuality == MAX_ITEM_QUALITY)
-        {
             return false;
-        }
 
-        std::array<uint32, MAX_ITEM_QUALITY> removedItems = { };
+        std::array<uint32, MAX_ITEM_QUALITY> removedItems = {};
 
         // in inventory
         for (uint8 i = INVENTORY_SLOT_ITEM_START; i < INVENTORY_SLOT_ITEM_END; ++i)
@@ -133,9 +117,7 @@ public:
                     std::string_view itemQualityString = itemQualityToString[i];
 
                     if (!initialize)
-                    {
                         str << ", ";
-                    }
 
                     str << "|c";
                     str << std::hex << ItemQualityColors[i] << std::dec;

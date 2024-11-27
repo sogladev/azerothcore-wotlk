@@ -28,18 +28,82 @@
 // Ours
 enum AlchemistItemRequirements
 {
-    QUEST_ALCHEMIST_APPRENTICE      = 12541,
-    NPC_FINKLESTEIN                 = 28205,
+    QUEST_ALCHEMIST_APPRENTICE = 12541,
+    NPC_FINKLESTEIN = 28205,
 };
 
-const uint32 AA_ITEM_ENTRY[24] = {38336, 39669, 38342, 38340, 38344, 38369, 38396, 38398, 38338, 38386, 38341, 38384, 38397, 38381, 38337, 38393, 38339, 39668, 39670, 38346, 38379, 38345, 38343, 38370};
-const uint32 AA_AURA_ID[24]    = {51095, 53153, 51100, 51087, 51091, 51081, 51072, 51079, 51018, 51067, 51055, 51064, 51077, 51062, 51057, 51069, 51059, 53150, 53158, 51093, 51097, 51102, 51083, 51085};
-const char*  AA_ITEM_NAME[24]  = {"Crystallized Hogsnot", "Ghoul Drool", "Trollbane", "Amberseed", "Shrunken Dragon's Claw",
-                                  "Wasp's Wings", "Hairy Herring Head", "Icecrown Bottled Water", "Knotroot", "Muddy Mire Maggot", "Pickled Eagle Egg",
-                                  "Pulverized Gargoyle Teeth", "Putrid Pirate Perspiration", "Seasoned Slider Cider", "Speckled Guano", "Spiky Spider Egg",
-                                  "Withered Batwing", "Abomination Guts", "Blight Crystal", "Chilled Serpent Mucus", "Crushed Basilisk Crystals",
-                                  "Frozen Spider Ichor", "Prismatic Mojo", "Raptor Claw"
-                                 };
+uint32 const AA_ITEM_ENTRY[24] = {38336,
+    39669,
+    38342,
+    38340,
+    38344,
+    38369,
+    38396,
+    38398,
+    38338,
+    38386,
+    38341,
+    38384,
+    38397,
+    38381,
+    38337,
+    38393,
+    38339,
+    39668,
+    39670,
+    38346,
+    38379,
+    38345,
+    38343,
+    38370};
+uint32 const AA_AURA_ID[24] = {51095,
+    53153,
+    51100,
+    51087,
+    51091,
+    51081,
+    51072,
+    51079,
+    51018,
+    51067,
+    51055,
+    51064,
+    51077,
+    51062,
+    51057,
+    51069,
+    51059,
+    53150,
+    53158,
+    51093,
+    51097,
+    51102,
+    51083,
+    51085};
+char const* AA_ITEM_NAME[24] = {"Crystallized Hogsnot",
+    "Ghoul Drool",
+    "Trollbane",
+    "Amberseed",
+    "Shrunken Dragon's Claw",
+    "Wasp's Wings",
+    "Hairy Herring Head",
+    "Icecrown Bottled Water",
+    "Knotroot",
+    "Muddy Mire Maggot",
+    "Pickled Eagle Egg",
+    "Pulverized Gargoyle Teeth",
+    "Putrid Pirate Perspiration",
+    "Seasoned Slider Cider",
+    "Speckled Guano",
+    "Spiky Spider Egg",
+    "Withered Batwing",
+    "Abomination Guts",
+    "Blight Crystal",
+    "Chilled Serpent Mucus",
+    "Crushed Basilisk Crystals",
+    "Frozen Spider Ichor",
+    "Prismatic Mojo",
+    "Raptor Claw"};
 
 class npc_finklestein : public CreatureScript
 {
@@ -48,7 +112,7 @@ public:
 
     struct npc_finklesteinAI : public ScriptedAI
     {
-        npc_finklesteinAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_finklesteinAI(Creature* creature) : ScriptedAI(creature) { }
 
         std::map<ObjectGuid, uint32> questList;
 
@@ -126,7 +190,7 @@ public:
             // Decode Item Entry, Get Item Name, Generate Emotes
             //uint32 itemEntry = GetTaskItemEntry(itemCode);
             uint32 auraId = GetTaskAura(itemCode);
-            const char* itemName = GetTaskItemName(itemCode);
+            char const* itemName = GetTaskItemName(itemCode);
 
             switch (counter)
             {
@@ -163,12 +227,30 @@ public:
             }
         }
 
-        uint32 SelectRandomCode(uint32 counter)  { return (counter * 100 + urand(0, 23)); }
+        uint32 SelectRandomCode(uint32 counter)
+        {
+            return (counter * 100 + urand(0, 23));
+        }
 
-        uint32 GetTaskCounter(uint32 itemcode)   { return itemcode / 100; }
-        uint32 GetTaskAura(uint32 itemcode)      { return AA_AURA_ID[itemcode % 100]; }
-        uint32 GetTaskItemEntry(uint32 itemcode) { return AA_ITEM_ENTRY[itemcode % 100]; }
-        const char* GetTaskItemName(uint32 itemcode)  { return AA_ITEM_NAME[itemcode % 100]; }
+        uint32 GetTaskCounter(uint32 itemcode)
+        {
+            return itemcode / 100;
+        }
+
+        uint32 GetTaskAura(uint32 itemcode)
+        {
+            return AA_AURA_ID[itemcode % 100];
+        }
+
+        uint32 GetTaskItemEntry(uint32 itemcode)
+        {
+            return AA_ITEM_ENTRY[itemcode % 100];
+        }
+
+        char const* GetTaskItemName(uint32 itemcode)
+        {
+            return AA_ITEM_NAME[itemcode % 100];
+        }
     };
 
     bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
@@ -191,7 +273,11 @@ public:
         {
             if (creature->AI() && CAST_AI(npc_finklestein::npc_finklesteinAI, creature->AI()))
                 if (!CAST_AI(npc_finklestein::npc_finklesteinAI, creature->AI())->IsPlayerOnTask(player->GetGUID()))
-                    AddGossipItemFor(player, GOSSIP_ICON_CHAT, "I'm ready to begin. What is the first ingredient you require?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                    AddGossipItemFor(player,
+                        GOSSIP_ICON_CHAT,
+                        "I'm ready to begin. What is the first ingredient you require?",
+                        GOSSIP_SENDER_MAIN,
+                        GOSSIP_ACTION_INFO_DEF + 1);
 
             SendGossipMenuFor(player, player->GetGossipTextId(creature), creature->GetGUID());
         }
@@ -235,8 +321,8 @@ public:
 
 enum eFeedinDaGoolz
 {
-    NPC_DECAYING_GHOUL                          = 28565,
-    GO_BOWL                                     = 190656,
+    NPC_DECAYING_GHOUL = 28565,
+    GO_BOWL = 190656,
 };
 
 class npc_feedin_da_goolz : public CreatureScript
@@ -251,7 +337,11 @@ public:
 
     struct npc_feedin_da_goolzAI : public NullCreatureAI
     {
-        npc_feedin_da_goolzAI(Creature* creature) : NullCreatureAI(creature) { findTimer = 1; checkTimer = 0; }
+        npc_feedin_da_goolzAI(Creature* creature) : NullCreatureAI(creature)
+        {
+            findTimer = 1;
+            checkTimer = 0;
+        }
 
         uint32 findTimer;
         uint32 checkTimer;
@@ -268,7 +358,10 @@ public:
                     {
                         ghoul->SetReactState(REACT_DEFENSIVE);
                         float o = me->GetAngle(ghoul);
-                        ghoul->GetMotionMaster()->MovePoint(1, me->GetPositionX() + 2 * cos(o), me->GetPositionY() + 2 * std::sin(o), me->GetPositionZ());
+                        ghoul->GetMotionMaster()->MovePoint(1,
+                            me->GetPositionX() + 2 * cos(o),
+                            me->GetPositionY() + 2 * std::sin(o),
+                            me->GetPositionZ());
                         checkTimer = 1;
                         findTimer = 0;
                     }
@@ -317,55 +410,55 @@ public:
 
 enum overlordDrakuru
 {
-    SPELL_SHADOW_BOLT                   = 54113,
-    SPELL_SCOURGE_DISGUISE_EXPIRING     = 52010,
-    SPELL_THROW_BRIGHT_CRYSTAL          = 54087,
-    SPELL_TELEPORT_EFFECT               = 52096,
-    SPELL_SCOURGE_DISGUISE              = 51966,
-    SPELL_BLIGHT_FOG                    = 54104,
-    SPELL_THROW_PORTAL_CRYSTAL          = 54209,
-    SPELL_ARTHAS_PORTAL                 = 51807,
-    SPELL_TOUCH_OF_DEATH                = 54236,
-    SPELL_DRAKURU_DEATH                 = 54248,
-    SPELL_SUMMON_SKULL                  = 54253,
+    SPELL_SHADOW_BOLT = 54113,
+    SPELL_SCOURGE_DISGUISE_EXPIRING = 52010,
+    SPELL_THROW_BRIGHT_CRYSTAL = 54087,
+    SPELL_TELEPORT_EFFECT = 52096,
+    SPELL_SCOURGE_DISGUISE = 51966,
+    SPELL_BLIGHT_FOG = 54104,
+    SPELL_THROW_PORTAL_CRYSTAL = 54209,
+    SPELL_ARTHAS_PORTAL = 51807,
+    SPELL_TOUCH_OF_DEATH = 54236,
+    SPELL_DRAKURU_DEATH = 54248,
+    SPELL_SUMMON_SKULL = 54253,
 
-    QUEST_BETRAYAL                      = 12713,
+    QUEST_BETRAYAL = 12713,
 
-    NPC_BLIGHTBLOOD_TROLL               = 28931,
-    NPC_LICH_KING                       = 28498,
+    NPC_BLIGHTBLOOD_TROLL = 28931,
+    NPC_LICH_KING = 28498,
 
-    EVENT_BETRAYAL_1                    = 1,
-    EVENT_BETRAYAL_2                    = 2,
-    EVENT_BETRAYAL_3                    = 3,
-    EVENT_BETRAYAL_4                    = 4,
-    EVENT_BETRAYAL_5                    = 5,
-    EVENT_BETRAYAL_6                    = 6,
-    EVENT_BETRAYAL_7                    = 7,
-    EVENT_BETRAYAL_8                    = 8,
-    EVENT_BETRAYAL_9                    = 9,
-    EVENT_BETRAYAL_10                   = 10,
-    EVENT_BETRAYAL_11                   = 11,
-    EVENT_BETRAYAL_12                   = 12,
-    EVENT_BETRAYAL_13                   = 13,
-    EVENT_BETRAYAL_14                   = 14,
-    EVENT_BETRAYAL_SHADOW_BOLT          = 20,
-    EVENT_BETRAYAL_CRYSTAL              = 21,
-    EVENT_BETRAYAL_COMBAT_TALK          = 22,
+    EVENT_BETRAYAL_1 = 1,
+    EVENT_BETRAYAL_2 = 2,
+    EVENT_BETRAYAL_3 = 3,
+    EVENT_BETRAYAL_4 = 4,
+    EVENT_BETRAYAL_5 = 5,
+    EVENT_BETRAYAL_6 = 6,
+    EVENT_BETRAYAL_7 = 7,
+    EVENT_BETRAYAL_8 = 8,
+    EVENT_BETRAYAL_9 = 9,
+    EVENT_BETRAYAL_10 = 10,
+    EVENT_BETRAYAL_11 = 11,
+    EVENT_BETRAYAL_12 = 12,
+    EVENT_BETRAYAL_13 = 13,
+    EVENT_BETRAYAL_14 = 14,
+    EVENT_BETRAYAL_SHADOW_BOLT = 20,
+    EVENT_BETRAYAL_CRYSTAL = 21,
+    EVENT_BETRAYAL_COMBAT_TALK = 22,
 
-    SAY_DRAKURU_0                       = 0,
-    SAY_DRAKURU_1                       = 1,
-    SAY_DRAKURU_2                       = 2,
-    SAY_DRAKURU_3                       = 3,
-    SAY_DRAKURU_4                       = 4,
-    SAY_DRAKURU_5                       = 5,
-    SAY_DRAKURU_6                       = 6,
-    SAY_DRAKURU_7                       = 7,
-    SAY_LICH_7                          = 7,
-    SAY_LICH_8                          = 8,
-    SAY_LICH_9                          = 9,
-    SAY_LICH_10                         = 10,
-    SAY_LICH_11                         = 11,
-    SAY_LICH_12                         = 12,
+    SAY_DRAKURU_0 = 0,
+    SAY_DRAKURU_1 = 1,
+    SAY_DRAKURU_2 = 2,
+    SAY_DRAKURU_3 = 3,
+    SAY_DRAKURU_4 = 4,
+    SAY_DRAKURU_5 = 5,
+    SAY_DRAKURU_6 = 6,
+    SAY_DRAKURU_7 = 7,
+    SAY_LICH_7 = 7,
+    SAY_LICH_8 = 8,
+    SAY_LICH_9 = 9,
+    SAY_LICH_10 = 10,
+    SAY_LICH_11 = 11,
+    SAY_LICH_12 = 12,
 };
 
 class npc_overlord_drakuru_betrayal : public CreatureScript
@@ -380,9 +473,7 @@ public:
 
     struct npc_overlord_drakuru_betrayalAI : public ScriptedAI
     {
-        npc_overlord_drakuru_betrayalAI(Creature* creature) : ScriptedAI(creature), summons(me)
-        {
-        }
+        npc_overlord_drakuru_betrayalAI(Creature* creature) : ScriptedAI(creature), summons(me) { }
 
         EventMap events;
         SummonList summons;
@@ -431,7 +522,8 @@ public:
                     else
                         ScriptedAI::MoveInLineOfSight(who);
                 }
-                else if (who->ToPlayer()->GetQuestStatus(QUEST_BETRAYAL) == QUEST_STATUS_INCOMPLETE && who->HasAura(SPELL_SCOURGE_DISGUISE))
+                else if (who->ToPlayer()->GetQuestStatus(QUEST_BETRAYAL) == QUEST_STATUS_INCOMPLETE &&
+                         who->HasAura(SPELL_SCOURGE_DISGUISE))
                 {
                     me->SetVisible(true);
                     playerGUID = who->GetGUID();
@@ -452,7 +544,8 @@ public:
                 me->SetFacingToObject(cr);
                 lichGUID = cr->GetGUID();
                 float o = me->GetAngle(cr);
-                cr->GetMotionMaster()->MovePoint(0, me->GetPositionX() + cos(o) * 6.0f, me->GetPositionY() + std::sin(o) * 6.0f, me->GetPositionZ());
+                cr->GetMotionMaster()->MovePoint(
+                    0, me->GetPositionX() + cos(o) * 6.0f, me->GetPositionY() + std::sin(o) * 6.0f, me->GetPositionZ());
             }
         }
 
@@ -485,7 +578,7 @@ public:
                     aura->SetDuration(48000);
         }
 
-        void SpellHit(Unit*  /*caster*/, SpellInfo const* spellInfo) override
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spellInfo) override
         {
             if (spellInfo->Id == SPELL_TOUCH_OF_DEATH)
             {
@@ -528,7 +621,8 @@ public:
                     events.ScheduleEvent(EVENT_BETRAYAL_6, 8s);
                     break;
                 case EVENT_BETRAYAL_6:
-                    me->SummonCreature(NPC_LICH_KING, 6142.9f, -2011.6f, 590.86f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 41000);
+                    me->SummonCreature(
+                        NPC_LICH_KING, 6142.9f, -2011.6f, 590.86f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 41000);
                     events.ScheduleEvent(EVENT_BETRAYAL_7, 8s);
                     break;
                 case EVENT_BETRAYAL_7:
@@ -613,12 +707,12 @@ public:
 
 enum DrakuruShackles
 {
-    NPC_RAGECLAW                             = 29686,
-    QUEST_TROLLS_IS_GONE_CRAZY               = 12861,
-    SPELL_LEFT_CHAIN                         = 59951,
-    SPELL_RIGHT_CHAIN                        = 59952,
-    SPELL_UNLOCK_SHACKLE                     = 55083,
-    SPELL_FREE_RAGECLAW                      = 55223
+    NPC_RAGECLAW = 29686,
+    QUEST_TROLLS_IS_GONE_CRAZY = 12861,
+    SPELL_LEFT_CHAIN = 59951,
+    SPELL_RIGHT_CHAIN = 59952,
+    SPELL_UNLOCK_SHACKLE = 55083,
+    SPELL_FREE_RAGECLAW = 55223
 };
 
 class npc_drakuru_shackles : public CreatureScript
@@ -666,7 +760,7 @@ public:
             DoCast(rageclaw, SPELL_RIGHT_CHAIN, true);
         }
 
-        void UnlockRageclaw(Unit*  /*who*/, Creature* rageclaw)
+        void UnlockRageclaw(Unit* /*who*/, Creature* rageclaw)
         {
             // pointer check not needed
             DoCast(rageclaw, SPELL_FREE_RAGECLAW, true);
@@ -709,9 +803,9 @@ public:
 
 enum Rageclaw
 {
-    SPELL_UNSHACKLED                         = 55085,
-    SPELL_KNEEL                              = 39656,
-    SAY_RAGECLAW                             = 0
+    SPELL_UNSHACKLED = 55085,
+    SPELL_KNEEL = 39656,
+    SAY_RAGECLAW = 0
 };
 
 class npc_captured_rageclaw : public CreatureScript
@@ -792,15 +886,15 @@ public:
 
 enum CrusadeRecruit
 {
-    SPELL_QUEST_CREDIT                       = 50633,
-    QUEST_TROLL_PATROL_INTESTINAL_FORTITUDE  = 12509,
-    SAY_RECRUIT                              = 0
+    SPELL_QUEST_CREDIT = 50633,
+    QUEST_TROLL_PATROL_INTESTINAL_FORTITUDE = 12509,
+    SAY_RECRUIT = 0
 };
 
 enum CrusadeRecruitEvents
 {
-    EVENT_RECRUIT_1                          = 1,
-    EVENT_RECRUIT_2                          = 2
+    EVENT_RECRUIT_1 = 1,
+    EVENT_RECRUIT_2 = 2
 };
 
 class npc_crusade_recruit : public CreatureScript
@@ -835,7 +929,10 @@ public:
                         break;
                     case EVENT_RECRUIT_2:
                         me->SetWalk(true);
-                        me->GetMotionMaster()->MovePoint(0, me->GetPositionX() + (cos(_heading) * 10), me->GetPositionY() + (std::sin(_heading) * 10), me->GetPositionZ());
+                        me->GetMotionMaster()->MovePoint(0,
+                            me->GetPositionX() + (cos(_heading) * 10),
+                            me->GetPositionY() + (std::sin(_heading) * 10),
+                            me->GetPositionZ());
                         me->DespawnOrUnsummon(5000);
                         break;
                     default:
@@ -857,7 +954,7 @@ public:
 
     private:
         EventMap _events;
-        float    _heading; // Store creature heading
+        float _heading; // Store creature heading
     };
 
     CreatureAI* GetAI(Creature* creature) const override
@@ -873,9 +970,9 @@ public:
 
 enum ScourgeEnclosure
 {
-    QUEST_OUR_ONLY_HOPE                      = 12916,
-    NPC_GYMER_DUMMY                          = 29928, // From quest template
-    SPELL_GYMER_LOCK_EXPLOSION               = 55529
+    QUEST_OUR_ONLY_HOPE = 12916,
+    NPC_GYMER_DUMMY = 29928, // From quest template
+    SPELL_GYMER_LOCK_EXPLOSION = 55529
 };
 
 class go_scourge_enclosure : public GameObjectScript
@@ -902,11 +999,11 @@ public:
 
 enum StormCloud
 {
-    STORM_COULD         = 29939,
-    HEALING_WINDS       = 55549,
-    STORM_VISUAL        = 55708,
-    GYMERS_GRAB         = 55516,
-    RIDE_VEHICLE        = 43671
+    STORM_COULD = 29939,
+    HEALING_WINDS = 55549,
+    STORM_VISUAL = 55708,
+    GYMERS_GRAB = 55516,
+    RIDE_VEHICLE = 43671
 };
 
 class npc_storm_cloud : public CreatureScript

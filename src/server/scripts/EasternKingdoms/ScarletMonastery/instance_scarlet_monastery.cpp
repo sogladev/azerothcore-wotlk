@@ -24,35 +24,35 @@
 
 enum AshbringerEventMisc
 {
-    AURA_OF_ASHBRINGER              =   28282,
-    NPC_SCARLET_MYRIDON             =   4295,
-    NPC_SCARLET_DEFENDER            =   4298,
-    NPC_SCARLET_CENTURION           =   4301,
-    NPC_SCARLET_SORCERER            =   4294,
-    NPC_SCARLET_WIZARD              =   4300,
-    NPC_SCARLET_ABBOT               =   4303,
-    NPC_SCARLET_MONK                =   4540,
-    NPC_SCARLET_CHAMPION            =   4302,
-    NPC_SCARLET_CHAPLAIN            =   4299,
-    NPC_FAIRBANKS                   =   4542,
-    NPC_COMMANDER_MOGRAINE          =   3976,
-    NPC_INQUISITOR_WHITEMANE        =   3977,
-    DOOR_HIGH_INQUISITOR_ID         =   104600,
+    AURA_OF_ASHBRINGER = 28282,
+    NPC_SCARLET_MYRIDON = 4295,
+    NPC_SCARLET_DEFENDER = 4298,
+    NPC_SCARLET_CENTURION = 4301,
+    NPC_SCARLET_SORCERER = 4294,
+    NPC_SCARLET_WIZARD = 4300,
+    NPC_SCARLET_ABBOT = 4303,
+    NPC_SCARLET_MONK = 4540,
+    NPC_SCARLET_CHAMPION = 4302,
+    NPC_SCARLET_CHAPLAIN = 4299,
+    NPC_FAIRBANKS = 4542,
+    NPC_COMMANDER_MOGRAINE = 3976,
+    NPC_INQUISITOR_WHITEMANE = 3977,
+    DOOR_HIGH_INQUISITOR_ID = 104600,
 };
 
 enum DataTypes
 {
-    TYPE_MOGRAINE_AND_WHITE_EVENT   =   1,
+    TYPE_MOGRAINE_AND_WHITE_EVENT = 1,
 
-    DATA_MOGRAINE                   =   2,
-    DATA_WHITEMANE                  =   3,
-    DATA_DOOR_WHITEMANE             =   4,
+    DATA_MOGRAINE = 2,
+    DATA_WHITEMANE = 3,
+    DATA_DOOR_WHITEMANE = 4,
 
-    DATA_HORSEMAN_EVENT             =   5,
-    GAMEOBJECT_PUMPKIN_SHRINE       =   6,
+    DATA_HORSEMAN_EVENT = 5,
+    GAMEOBJECT_PUMPKIN_SHRINE = 6,
 
-    DATA_VORREL                     =   7,
-    DATA_ARCANIST_DOAN              =   8
+    DATA_VORREL = 7,
+    DATA_ARCANIST_DOAN = 8
 };
 
 class instance_scarlet_monastery : public InstanceMapScript
@@ -89,7 +89,8 @@ public:
                 player->GetCreatureListWithEntryInGrid(ScarletList, NPC_COMMANDER_MOGRAINE, 4000.0f);
                 player->GetCreatureListWithEntryInGrid(ScarletList, NPC_FAIRBANKS, 4000.0f);
                 if (!ScarletList.empty())
-                    for (std::list<Creature*>::iterator itr = ScarletList.begin(); itr != ScarletList.end(); itr++) (*itr)->SetFaction(FACTION_FRIENDLY);
+                    for (std::list<Creature*>::iterator itr = ScarletList.begin(); itr != ScarletList.end(); itr++)
+                        (*itr)->SetFaction(FACTION_FRIENDLY);
             }
         }
 
@@ -110,7 +111,8 @@ public:
                 player->GetCreatureListWithEntryInGrid(ScarletList, NPC_COMMANDER_MOGRAINE, 4000.0f);
                 player->GetCreatureListWithEntryInGrid(ScarletList, NPC_FAIRBANKS, 4000.0f);
                 if (!ScarletList.empty())
-                    for (std::list<Creature*>::iterator itr = ScarletList.begin(); itr != ScarletList.end(); itr++) (*itr)->SetFaction(FACTION_FRIENDLY);
+                    for (std::list<Creature*>::iterator itr = ScarletList.begin(); itr != ScarletList.end(); itr++)
+                        (*itr)->SetFaction(FACTION_FRIENDLY);
             }
         }
 
@@ -185,6 +187,7 @@ public:
                 return encounter;
             return 0;
         }
+
     private:
         ObjectGuid DoorHighInquisitorGUID;
         ObjectGuid MograineGUID;
@@ -206,50 +209,50 @@ enum ScarletMonasteryTrashMisc
 
 enum MograineEvents
 {
-    EVENT_SPELL_CRUSADER_STRIKE     =   1,
-    EVENT_SPELL_HAMMER_OF_JUSTICE   =   2,
-    EVENT_PULL_CATHEDRAL            =   3
+    EVENT_SPELL_CRUSADER_STRIKE = 1,
+    EVENT_SPELL_HAMMER_OF_JUSTICE = 2,
+    EVENT_PULL_CATHEDRAL = 3
 };
 
 enum WhitemaneEvents
 {
-    EVENT_SPELL_HOLY_SMITE          =   1,
-    EVENT_SPELL_POWER_WORLD_SHIELD  =   2,
-    EVENT_SPELL_HEAL                =   3
+    EVENT_SPELL_HOLY_SMITE = 1,
+    EVENT_SPELL_POWER_WORLD_SHIELD = 2,
+    EVENT_SPELL_HEAL = 3
 };
 
 enum Spells
 {
     //Mograine Spells
-    SPELL_CRUSADER_STRIKE           =   14518,
-    SPELL_HAMMER_OF_JUSTICE         =   5589,
-    SPELL_LAY_ON_HANDS              =   9257,
-    SPELL_RETRIBUTION_AURA          =   8990,
-    SPELL_PERMANENT_FEIGN_DEATH     =   29266,
+    SPELL_CRUSADER_STRIKE = 14518,
+    SPELL_HAMMER_OF_JUSTICE = 5589,
+    SPELL_LAY_ON_HANDS = 9257,
+    SPELL_RETRIBUTION_AURA = 8990,
+    SPELL_PERMANENT_FEIGN_DEATH = 29266,
 
     //Whitemanes Spells
-    SPELL_SCARLET_RESURRECTION      =   9232,
-    SPELL_DEEP_SLEEP                =   9256,
-    SPELL_DOMINATE_MIND             =   14515,
-    SPELL_HOLY_SMITE                =   9481,
-    SPELL_HEAL                      =   12039,
-    SPELL_POWER_WORD_SHIELD         =   22187
+    SPELL_SCARLET_RESURRECTION = 9232,
+    SPELL_DEEP_SLEEP = 9256,
+    SPELL_DOMINATE_MIND = 14515,
+    SPELL_HOLY_SMITE = 9481,
+    SPELL_HEAL = 12039,
+    SPELL_POWER_WORD_SHIELD = 22187
 };
 
 enum Says
 {
     //Mograine says
-    SAY_MO_AGGRO                    =   0,
-    SAY_MO_KILL                     =   1,
-    SAY_MO_RESURRECTED              =   2,
+    SAY_MO_AGGRO = 0,
+    SAY_MO_KILL = 1,
+    SAY_MO_RESURRECTED = 2,
 
     //Whitemane says
-    SAY_WH_INTRO                    =   0,
-    SAY_WH_KILL                     =   1,
-    SAY_WH_RESURRECT                =   2,
+    SAY_WH_INTRO = 0,
+    SAY_WH_KILL = 1,
+    SAY_WH_RESURRECT = 2,
 };
 
-float const CATHEDRAL_PULL_RANGE    = 80.0f; // Distance from the Cathedral doors to where Mograine is standing
+float const CATHEDRAL_PULL_RANGE = 80.0f; // Distance from the Cathedral doors to where Mograine is standing
 
 class npc_mograine : public CreatureScript
 {
@@ -280,7 +283,14 @@ public:
                     Talk(3);
                     return 10 * IN_MILLISECONDS;
                 case 4:
-                    me->SummonCreature(NPC_HIGHLORD_MOGRAINE, 1065.130737f, 1399.350586f, 30.763723f, 6.282961f, TEMPSUMMON_TIMED_DESPAWN, 400000)->SetName("Highlord Mograine");
+                    me->SummonCreature(NPC_HIGHLORD_MOGRAINE,
+                          1065.130737f,
+                          1399.350586f,
+                          30.763723f,
+                          6.282961f,
+                          TEMPSUMMON_TIMED_DESPAWN,
+                          400000)
+                        ->SetName("Highlord Mograine");
                     me->FindNearestCreature(NPC_HIGHLORD_MOGRAINE, 200.0f)->SetFaction(FACTION_FRIENDLY);
                     return 30 * IN_MILLISECONDS;
                 case 5:
@@ -333,10 +343,8 @@ public:
             GetCreatureListWithEntryInGrid(creatureList, me, NPC_SCARLET_WIZARD, CATHEDRAL_PULL_RANGE);
             GetCreatureListWithEntryInGrid(creatureList, me, NPC_SCARLET_CHAPLAIN, CATHEDRAL_PULL_RANGE);
             for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
-            {
                 if (Creature* creature = *itr)
                     creature->AI()->AttackStart(me->GetVictim());
-            }
         }
 
         void Reset() override
@@ -375,7 +383,8 @@ public:
         {
             Talk(SAY_MO_AGGRO);
             me->CastSpell(me, SPELL_RETRIBUTION_AURA, true);
-            events.ScheduleEvent(EVENT_PULL_CATHEDRAL, 1s); // Has to be done via event, otherwise mob aggroing Mograine DOES NOT aggro the room
+            events.ScheduleEvent(EVENT_PULL_CATHEDRAL,
+                1s); // Has to be done via event, otherwise mob aggroing Mograine DOES NOT aggro the room
             events.ScheduleEvent(EVENT_SPELL_CRUSADER_STRIKE, 1s, 5s);
             events.ScheduleEvent(EVENT_SPELL_HAMMER_OF_JUSTICE, 6s, 11s);
         }
@@ -564,7 +573,8 @@ public:
                         canResurrect = false;
                     }
                 }
-                else Wait_Timer -= diff;
+                else
+                    Wait_Timer -= diff;
             }
 
             //Cast Deep sleep when health is less than 50%
@@ -603,7 +613,8 @@ public:
 
                 Heal_Timer = 13000;
             }
-            else Heal_Timer -= diff;
+            else
+                Heal_Timer -= diff;
 
             events.Update(diff);
             if (me->HasUnitState(UNIT_STATE_CASTING))
@@ -675,6 +686,7 @@ public:
 
             SmartAI::MoveInLineOfSight(who);
         }
+
     private:
         bool SayAshbringer = false;
     };

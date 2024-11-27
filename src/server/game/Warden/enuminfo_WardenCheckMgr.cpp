@@ -15,53 +15,64 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "WardenCheckMgr.h"
 #include "Define.h"
 #include "SmartEnum.h"
+#include "WardenCheckMgr.h"
 #include <stdexcept>
 
 namespace Acore::Impl::EnumUtilsImpl
 {
 
-/**********************************************************************\
+    /**********************************************************************\
 |* data for enum 'WardenActions' in 'WardenCheckMgr.h' auto-generated *|
 \**********************************************************************/
-template <>
-AC_API_EXPORT EnumText EnumUtils<WardenActions>::ToString(WardenActions value)
-{
-    switch (value)
+    template <> AC_API_EXPORT EnumText EnumUtils<WardenActions>::ToString(WardenActions value)
     {
-        case WARDEN_ACTION_LOG: return { "WARDEN_ACTION_LOG", "Log", "" };
-        case WARDEN_ACTION_KICK: return { "WARDEN_ACTION_KICK", "Kick", "" };
-        case WARDEN_ACTION_BAN: return { "WARDEN_ACTION_BAN", "Ban", "" };
-        default: throw std::out_of_range("value");
+        switch (value)
+        {
+            case WARDEN_ACTION_LOG:
+                return {"WARDEN_ACTION_LOG", "Log", ""};
+            case WARDEN_ACTION_KICK:
+                return {"WARDEN_ACTION_KICK", "Kick", ""};
+            case WARDEN_ACTION_BAN:
+                return {"WARDEN_ACTION_BAN", "Ban", ""};
+            default:
+                throw std::out_of_range("value");
+        }
     }
-}
 
-template <>
-AC_API_EXPORT std::size_t EnumUtils<WardenActions>::Count() { return 3; }
-
-template <>
-AC_API_EXPORT WardenActions EnumUtils<WardenActions>::FromIndex(std::size_t index)
-{
-    switch (index)
+    template <> AC_API_EXPORT std::size_t EnumUtils<WardenActions>::Count()
     {
-        case 0: return WARDEN_ACTION_LOG;
-        case 1: return WARDEN_ACTION_KICK;
-        case 2: return WARDEN_ACTION_BAN;
-        default: throw std::out_of_range("index");
+        return 3;
     }
-}
 
-template <>
-AC_API_EXPORT std::size_t EnumUtils<WardenActions>::ToIndex(WardenActions value)
-{
-    switch (value)
+    template <> AC_API_EXPORT WardenActions EnumUtils<WardenActions>::FromIndex(std::size_t index)
     {
-        case WARDEN_ACTION_LOG: return 0;
-        case WARDEN_ACTION_KICK: return 1;
-        case WARDEN_ACTION_BAN: return 2;
-        default: throw std::out_of_range("value");
+        switch (index)
+        {
+            case 0:
+                return WARDEN_ACTION_LOG;
+            case 1:
+                return WARDEN_ACTION_KICK;
+            case 2:
+                return WARDEN_ACTION_BAN;
+            default:
+                throw std::out_of_range("index");
+        }
     }
-}
-}
+
+    template <> AC_API_EXPORT std::size_t EnumUtils<WardenActions>::ToIndex(WardenActions value)
+    {
+        switch (value)
+        {
+            case WARDEN_ACTION_LOG:
+                return 0;
+            case WARDEN_ACTION_KICK:
+                return 1;
+            case WARDEN_ACTION_BAN:
+                return 2;
+            default:
+                throw std::out_of_range("value");
+        }
+    }
+} // namespace Acore::Impl::EnumUtilsImpl

@@ -43,28 +43,26 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable listAurasCommandTable =
-        {
-            { "",         HandleListAllAurasCommand,    SEC_MODERATOR, Console::No  },
-            { "id",       HandleListAurasByIdCommand,   SEC_MODERATOR, Console::No  },
-            { "name",     HandleListAurasByNameCommand, SEC_MODERATOR, Console::No  },
+        static ChatCommandTable listAurasCommandTable = {
+            {"",     HandleListAllAurasCommand,    SEC_MODERATOR, Console::No},
+            {"id",   HandleListAurasByIdCommand,   SEC_MODERATOR, Console::No},
+            {"name", HandleListAurasByNameCommand, SEC_MODERATOR, Console::No},
         };
 
-        static ChatCommandTable listCommandTable =
-        {
-            { "creature", HandleListCreatureCommand,    SEC_MODERATOR, Console::Yes },
-            { "item",     HandleListItemCommand,        SEC_MODERATOR, Console::Yes },
-            { "object",   HandleListObjectCommand,      SEC_MODERATOR, Console::Yes },
-            { "auras",    listAurasCommandTable },
+        static ChatCommandTable listCommandTable = {
+            {"creature", HandleListCreatureCommand, SEC_MODERATOR, Console::Yes},
+            {"item", HandleListItemCommand, SEC_MODERATOR, Console::Yes},
+            {"object", HandleListObjectCommand, SEC_MODERATOR, Console::Yes},
+            {"auras", listAurasCommandTable},
         };
-        static ChatCommandTable commandTable =
-        {
-            { "list", listCommandTable }
+        static ChatCommandTable commandTable = {
+            {"list", listCommandTable}
         };
         return commandTable;
     }
 
-    static bool HandleListCreatureCommand(ChatHandler* handler, Variant<Hyperlink<creature_entry>, uint32> creatureId, Optional<uint32> countArg)
+    static bool HandleListCreatureCommand(
+        ChatHandler* handler, Variant<Hyperlink<creature_entry>, uint32> creatureId, Optional<uint32> countArg)
     {
         CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(creatureId);
         if (!cInfo)
@@ -81,30 +79,44 @@ public:
         QueryResult result;
 
         uint32 creatureCount = 0;
-        result = WorldDatabase.Query("SELECT COUNT(guid) FROM creature WHERE id1='{}' OR id2='{}' OR id3='{}'", uint32(creatureId), uint32(creatureId), uint32(creatureId));
+        result = WorldDatabase.Query("SELECT COUNT(guid) FROM creature WHERE id1='{}' OR id2='{}' OR id3='{}'",
+            uint32(creatureId),
+            uint32(creatureId),
+            uint32(creatureId));
         if (result)
             creatureCount = (*result)[0].Get<uint64>();
 
         if (handler->GetSession())
         {
             Player* player = handler->GetSession()->GetPlayer();
-            result = WorldDatabase.Query("SELECT guid, position_x, position_y, position_z, map, (POW(position_x - '{}', 2) + POW(position_y - '{}', 2) + POW(position_z - '{}', 2)) AS order_ FROM creature WHERE id1='{}' OR id2='{}' OR id3='{}' ORDER BY order_ ASC LIMIT {}",
-                                          player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), uint32(creatureId), uint32(creatureId), uint32(creatureId), count);
+            result = WorldDatabase.Query(
+                "SELECT guid, position_x, position_y, position_z, map, (POW(position_x - '{}', 2) + POW(position_y - '{}', 2) + POW(position_z - '{}', 2)) AS order_ FROM creature WHERE id1='{}' OR id2='{}' OR id3='{}' ORDER BY order_ ASC LIMIT {}",
+                player->GetPositionX(),
+                player->GetPositionY(),
+                player->GetPositionZ(),
+                uint32(creatureId),
+                uint32(creatureId),
+                uint32(creatureId),
+                count);
         }
         else
-            result = WorldDatabase.Query("SELECT guid, position_x, position_y, position_z, map FROM creature WHERE id1='{}' OR id2='{}' OR id3='{}' LIMIT {}",
-                                          uint32(creatureId), uint32(creatureId), uint32(creatureId), count);
+            result = WorldDatabase.Query(
+                "SELECT guid, position_x, position_y, position_z, map FROM creature WHERE id1='{}' OR id2='{}' OR id3='{}' LIMIT {}",
+                uint32(creatureId),
+                uint32(creatureId),
+                uint32(creatureId),
+                count);
 
         if (result)
         {
             do
             {
-                Field* fields               = result->Fetch();
-                ObjectGuid::LowType guid    = fields[0].Get<uint32>();
-                float x                     = fields[1].Get<float>();
-                float y                     = fields[2].Get<float>();
-                float z                     = fields[3].Get<float>();
-                uint16 mapId                = fields[4].Get<uint16>();
+                Field* fields = result->Fetch();
+                ObjectGuid::LowType guid = fields[0].Get<uint32>();
+                float x = fields[1].Get<float>();
+                float y = fields[2].Get<float>();
+                float z = fields[3].Get<float>();
+                uint16 mapId = fields[4].Get<uint16>();
                 bool liveFound = false;
 
                 // Get map (only support base map from console)
@@ -120,12 +132,31 @@ public:
                     auto const creBounds = thisMap->GetCreatureBySpawnIdStore().equal_range(guid);
                     if (creBounds.first != creBounds.second)
                     {
-                        for (std::unordered_multimap<uint32, Creature*>::const_iterator itr = creBounds.first; itr != creBounds.second;)
+                        for (std::unordered_multimap<uint32, Creature*>::const_iterator itr = creBounds.first;
+                             itr != creBounds.second;)
                         {
                             if (handler->GetSession())
-                                handler->PSendSysMessage(LANG_CREATURE_LIST_CHAT, guid, cInfo->Entry, guid, cInfo->Name, x, y, z, mapId, itr->second->GetGUID().ToString(), itr->second->IsAlive() ? "*" : " ");
+                                handler->PSendSysMessage(LANG_CREATURE_LIST_CHAT,
+                                    guid,
+                                    cInfo->Entry,
+                                    guid,
+                                    cInfo->Name,
+                                    x,
+                                    y,
+                                    z,
+                                    mapId,
+                                    itr->second->GetGUID().ToString(),
+                                    itr->second->IsAlive() ? "*" : " ");
                             else
-                                handler->PSendSysMessage(LANG_CREATURE_LIST_CONSOLE, guid, cInfo->Name, x, y, z, mapId, itr->second->GetGUID().ToString(), itr->second->IsAlive() ? "*" : " ");
+                                handler->PSendSysMessage(LANG_CREATURE_LIST_CONSOLE,
+                                    guid,
+                                    cInfo->Name,
+                                    x,
+                                    y,
+                                    z,
+                                    mapId,
+                                    itr->second->GetGUID().ToString(),
+                                    itr->second->IsAlive() ? "*" : " ");
                             ++itr;
                         }
                         liveFound = true;
@@ -135,12 +166,12 @@ public:
                 if (!liveFound)
                 {
                     if (handler->GetSession())
-                        handler->PSendSysMessage(LANG_CREATURE_LIST_CHAT, guid, cInfo->Entry, guid, cInfo->Name, x, y, z, mapId, "", "");
+                        handler->PSendSysMessage(
+                            LANG_CREATURE_LIST_CHAT, guid, cInfo->Entry, guid, cInfo->Name, x, y, z, mapId, "", "");
                     else
                         handler->PSendSysMessage(LANG_CREATURE_LIST_CONSOLE, guid, cInfo->Name, x, y, z, mapId, "", "");
                 }
-            }
-            while (result->NextRow());
+            } while (result->NextRow());
         }
 
         handler->PSendSysMessage(LANG_COMMAND_LISTCREATUREMESSAGE, uint32(creatureId), creatureCount);
@@ -148,19 +179,16 @@ public:
         return true;
     }
 
-    static bool HandleListItemCommand(ChatHandler* handler, Variant<Hyperlink<item>, uint32> itemArg, Optional<uint32> countArg)
+    static bool HandleListItemCommand(
+        ChatHandler* handler, Variant<Hyperlink<item>, uint32> itemArg, Optional<uint32> countArg)
     {
         uint32 itemId = 0;
         uint32 count = countArg.value_or(10);
 
         if (itemArg.holds_alternative<Hyperlink<item>>())
-        {
             itemId = itemArg.get<Hyperlink<item>>()->Item->ItemId;
-        }
         else
-        {
             itemId = itemArg.get<uint32>();
-        }
 
         if (!count || !itemId)
             return false;
@@ -170,7 +198,8 @@ public:
         // inventory case
         uint32 inventoryCount = 0;
 
-        CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_INVENTORY_COUNT_ITEM);
+        CharacterDatabasePreparedStatement* stmt =
+            CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_INVENTORY_COUNT_ITEM);
         stmt->SetData(0, itemId);
         result = CharacterDatabase.Query(stmt);
 
@@ -186,13 +215,13 @@ public:
         {
             do
             {
-                Field* fields           = result->Fetch();
-                uint32 itemGuid         = fields[0].Get<uint32>();
-                uint32 itemBag          = fields[1].Get<uint32>();
-                uint8 itemSlot          = fields[2].Get<uint8>();
-                uint32 ownerGuid        = fields[3].Get<uint32>();
-                uint32 ownerAccountId   = fields[4].Get<uint32>();
-                std::string ownerName   = fields[5].Get<std::string>();
+                Field* fields = result->Fetch();
+                uint32 itemGuid = fields[0].Get<uint32>();
+                uint32 itemBag = fields[1].Get<uint32>();
+                uint8 itemSlot = fields[2].Get<uint8>();
+                uint32 ownerGuid = fields[3].Get<uint32>();
+                uint32 ownerAccountId = fields[4].Get<uint32>();
+                std::string ownerName = fields[5].Get<std::string>();
 
                 char const* itemPos = nullptr;
                 if (Player::IsEquipmentPos(itemBag, itemSlot))
@@ -205,8 +234,7 @@ public:
                     itemPos = "";
 
                 handler->PSendSysMessage(LANG_ITEMLIST_SLOT, itemGuid, ownerName, ownerGuid, ownerAccountId, itemPos);
-            }
-            while (result->NextRow());
+            } while (result->NextRow());
 
             uint32 resultCount = uint32(result->GetRowCount());
 
@@ -240,20 +268,27 @@ public:
         {
             do
             {
-                Field* fields                   = result->Fetch();
-                ObjectGuid::LowType itemGuid    = fields[0].Get<uint32>();
-                ObjectGuid::LowType itemSender  = fields[1].Get<uint32>();
-                uint32 itemReceiver             = fields[2].Get<uint32>();
-                uint32 itemSenderAccountId      = fields[3].Get<uint32>();
-                std::string itemSenderName      = fields[4].Get<std::string>();
-                uint32 itemReceiverAccount      = fields[5].Get<uint32>();
-                std::string itemReceiverName    = fields[6].Get<std::string>();
+                Field* fields = result->Fetch();
+                ObjectGuid::LowType itemGuid = fields[0].Get<uint32>();
+                ObjectGuid::LowType itemSender = fields[1].Get<uint32>();
+                uint32 itemReceiver = fields[2].Get<uint32>();
+                uint32 itemSenderAccountId = fields[3].Get<uint32>();
+                std::string itemSenderName = fields[4].Get<std::string>();
+                uint32 itemReceiverAccount = fields[5].Get<uint32>();
+                std::string itemReceiverName = fields[6].Get<std::string>();
 
                 char const* itemPos = "[in mail]";
 
-                handler->PSendSysMessage(LANG_ITEMLIST_MAIL, itemGuid, itemSenderName, itemSender, itemSenderAccountId, itemReceiverName, itemReceiver, itemReceiverAccount, itemPos);
-            }
-            while (result->NextRow());
+                handler->PSendSysMessage(LANG_ITEMLIST_MAIL,
+                    itemGuid,
+                    itemSenderName,
+                    itemSender,
+                    itemSenderAccountId,
+                    itemReceiverName,
+                    itemReceiver,
+                    itemReceiverAccount,
+                    itemPos);
+            } while (result->NextRow());
 
             uint32 resultCount = uint32(result->GetRowCount());
 
@@ -287,17 +322,16 @@ public:
         {
             do
             {
-                Field* fields           = result->Fetch();
-                uint32 itemGuid         = fields[0].Get<uint32>();
-                uint32 owner            = fields[1].Get<uint32>();
-                uint32 ownerAccountId   = fields[2].Get<uint32>();
-                std::string ownerName   = fields[3].Get<std::string>();
+                Field* fields = result->Fetch();
+                uint32 itemGuid = fields[0].Get<uint32>();
+                uint32 owner = fields[1].Get<uint32>();
+                uint32 ownerAccountId = fields[2].Get<uint32>();
+                std::string ownerName = fields[3].Get<std::string>();
 
                 char const* itemPos = "[in auction]";
 
                 handler->PSendSysMessage(LANG_ITEMLIST_AUCTION, itemGuid, ownerName, owner, ownerAccountId, itemPos);
-            }
-            while (result->NextRow());
+            } while (result->NextRow());
         }
 
         // guild bank case
@@ -327,8 +361,7 @@ public:
                 char const* itemPos = "[in guild bank]";
 
                 handler->PSendSysMessage(LANG_ITEMLIST_GUILD, itemGuid, guildName, guildGuid, itemPos);
-            }
-            while (result->NextRow());
+            } while (result->NextRow());
 
             uint32 resultCount = uint32(result->GetRowCount());
 
@@ -344,12 +377,19 @@ public:
             return false;
         }
 
-        handler->PSendSysMessage(LANG_COMMAND_LISTITEMMESSAGE, itemId, inventoryCount + mailCount + auctionCount + guildCount, inventoryCount, mailCount, auctionCount, guildCount);
+        handler->PSendSysMessage(LANG_COMMAND_LISTITEMMESSAGE,
+            itemId,
+            inventoryCount + mailCount + auctionCount + guildCount,
+            inventoryCount,
+            mailCount,
+            auctionCount,
+            guildCount);
 
         return true;
     }
 
-    static bool HandleListObjectCommand(ChatHandler* handler, Variant<Hyperlink<gameobject_entry>, uint32> gameObjectId, Optional<uint32> countArg)
+    static bool HandleListObjectCommand(
+        ChatHandler* handler, Variant<Hyperlink<gameobject_entry>, uint32> gameObjectId, Optional<uint32> countArg)
     {
         GameObjectTemplate const* gInfo = sObjectMgr->GetGameObjectTemplate(gameObjectId);
         if (!gInfo)
@@ -373,24 +413,31 @@ public:
         if (handler->GetSession())
         {
             Player* player = handler->GetSession()->GetPlayer();
-            result = WorldDatabase.Query("SELECT guid, position_x, position_y, position_z, map, id, (POW(position_x - '{}', 2) + POW(position_y - '{}', 2) + POW(position_z - '{}', 2)) AS order_ FROM gameobject WHERE id = '{}' ORDER BY order_ ASC LIMIT {}",
-                                          player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), uint32(gameObjectId), count);
+            result = WorldDatabase.Query(
+                "SELECT guid, position_x, position_y, position_z, map, id, (POW(position_x - '{}', 2) + POW(position_y - '{}', 2) + POW(position_z - '{}', 2)) AS order_ FROM gameobject WHERE id = '{}' ORDER BY order_ ASC LIMIT {}",
+                player->GetPositionX(),
+                player->GetPositionY(),
+                player->GetPositionZ(),
+                uint32(gameObjectId),
+                count);
         }
         else
-            result = WorldDatabase.Query("SELECT guid, position_x, position_y, position_z, map, id FROM gameobject WHERE id = '{}' LIMIT {}",
-                                          uint32(gameObjectId), count);
+            result = WorldDatabase.Query(
+                "SELECT guid, position_x, position_y, position_z, map, id FROM gameobject WHERE id = '{}' LIMIT {}",
+                uint32(gameObjectId),
+                count);
 
         if (result)
         {
             do
             {
-                Field* fields               = result->Fetch();
-                ObjectGuid::LowType guid    = fields[0].Get<uint32>();
-                float x                     = fields[1].Get<float>();
-                float y                     = fields[2].Get<float>();
-                float z                     = fields[3].Get<float>();
-                uint16 mapId                = fields[4].Get<uint16>();
-                uint32 entry                = fields[5].Get<uint32>();
+                Field* fields = result->Fetch();
+                ObjectGuid::LowType guid = fields[0].Get<uint32>();
+                float x = fields[1].Get<float>();
+                float y = fields[2].Get<float>();
+                float z = fields[3].Get<float>();
+                uint16 mapId = fields[4].Get<uint16>();
+                uint32 entry = fields[5].Get<uint32>();
                 bool liveFound = false;
 
                 // Get map (only support base map from console)
@@ -406,12 +453,31 @@ public:
                     auto const goBounds = thisMap->GetGameObjectBySpawnIdStore().equal_range(guid);
                     if (goBounds.first != goBounds.second)
                     {
-                        for (std::unordered_multimap<uint32, GameObject*>::const_iterator itr = goBounds.first; itr != goBounds.second;)
+                        for (std::unordered_multimap<uint32, GameObject*>::const_iterator itr = goBounds.first;
+                             itr != goBounds.second;)
                         {
                             if (handler->GetSession())
-                                handler->PSendSysMessage(LANG_GO_LIST_CHAT, guid, entry, guid, gInfo->name, x, y, z, mapId, itr->second->GetGUID().ToString(), itr->second->isSpawned() ? "*" : " ");
+                                handler->PSendSysMessage(LANG_GO_LIST_CHAT,
+                                    guid,
+                                    entry,
+                                    guid,
+                                    gInfo->name,
+                                    x,
+                                    y,
+                                    z,
+                                    mapId,
+                                    itr->second->GetGUID().ToString(),
+                                    itr->second->isSpawned() ? "*" : " ");
                             else
-                                handler->PSendSysMessage(LANG_GO_LIST_CONSOLE, guid, gInfo->name, x, y, z, mapId, itr->second->GetGUID().ToString(), itr->second->isSpawned() ? "*" : " ");
+                                handler->PSendSysMessage(LANG_GO_LIST_CONSOLE,
+                                    guid,
+                                    gInfo->name,
+                                    x,
+                                    y,
+                                    z,
+                                    mapId,
+                                    itr->second->GetGUID().ToString(),
+                                    itr->second->isSpawned() ? "*" : " ");
                             ++itr;
                         }
                         liveFound = true;
@@ -421,12 +487,12 @@ public:
                 if (!liveFound)
                 {
                     if (handler->GetSession())
-                        handler->PSendSysMessage(LANG_GO_LIST_CHAT, guid, entry, guid, gInfo->name, x, y, z, mapId, "", "");
+                        handler->PSendSysMessage(
+                            LANG_GO_LIST_CHAT, guid, entry, guid, gInfo->name, x, y, z, mapId, "", "");
                     else
                         handler->PSendSysMessage(LANG_GO_LIST_CONSOLE, guid, gInfo->name, x, y, z, mapId, "", "");
                 }
-            }
-            while (result->NextRow());
+            } while (result->NextRow());
         }
 
         handler->PSendSysMessage(LANG_COMMAND_LISTOBJMESSAGE, uint32(gameObjectId), objectCount);
@@ -478,11 +544,19 @@ public:
             std::ostringstream ss_name;
             ss_name << "|cffffffff|Hspell:" << aura->GetId() << "|h[" << name << "]|h|r";
 
-            handler->PSendSysMessage(LANG_COMMAND_TARGET_AURADETAIL, aura->GetId(), (handler->GetSession() ? ss_name.str() : name),
-                                     aurApp->GetEffectMask(), aura->GetCharges(), aura->GetStackAmount(), aurApp->GetSlot(),
-                                     aura->GetDuration(), aura->GetMaxDuration(), (aura->IsPassive() ? passiveStr : ""),
-                                     (talent ? talentStr : ""), aura->GetCasterGUID().IsPlayer() ? "player" : "creature",
-                                     aura->GetCasterGUID().ToString());
+            handler->PSendSysMessage(LANG_COMMAND_TARGET_AURADETAIL,
+                aura->GetId(),
+                (handler->GetSession() ? ss_name.str() : name),
+                aurApp->GetEffectMask(),
+                aura->GetCharges(),
+                aura->GetStackAmount(),
+                aurApp->GetSlot(),
+                aura->GetDuration(),
+                aura->GetMaxDuration(),
+                (aura->IsPassive() ? passiveStr : ""),
+                (talent ? talentStr : ""),
+                aura->GetCasterGUID().IsPlayer() ? "player" : "creature",
+                aura->GetCasterGUID().ToString());
         }
 
         for (uint16 i = 0; i < TOTAL_AURAS; ++i)
@@ -504,14 +578,16 @@ public:
                     handler->PSendSysMessage(LANG_COMMAND_TARGET_LISTAURATYPE, auraList.size(), i);
                 }
 
-                handler->PSendSysMessage(LANG_COMMAND_TARGET_AURASIMPLE, effect->GetId(), effect->GetEffIndex(), effect->GetAmount());
+                handler->PSendSysMessage(
+                    LANG_COMMAND_TARGET_AURASIMPLE, effect->GetId(), effect->GetEffIndex(), effect->GetAmount());
             }
         }
 
         return true;
     }
 
-    static bool ShouldListAura(SpellInfo const* spellInfo, Optional<uint32> spellId, std::wstring namePart, uint8 locale)
+    static bool ShouldListAura(
+        SpellInfo const* spellInfo, Optional<uint32> spellId, std::wstring namePart, uint8 locale)
     {
         if (spellId)
             return spellInfo->Id == spellId;

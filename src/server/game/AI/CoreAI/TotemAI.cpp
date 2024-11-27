@@ -43,17 +43,11 @@ TotemAI::TotemAI(Creature* c) : CreatureAI(c)
     ASSERT(c->IsTotem());
 }
 
-void TotemAI::SpellHit(Unit* /*caster*/, SpellInfo const* /*spellInfo*/)
-{
-}
+void TotemAI::SpellHit(Unit* /*caster*/, SpellInfo const* /*spellInfo*/) { }
 
-void TotemAI::DoAction(int32 /*param*/)
-{
-}
+void TotemAI::DoAction(int32 /*param*/) { }
 
-void TotemAI::MoveInLineOfSight(Unit* /*who*/)
-{
-}
+void TotemAI::MoveInLineOfSight(Unit* /*who*/) { }
 
 void TotemAI::EnterEvadeMode(EvadeReason /*why*/)
 {
@@ -66,18 +60,14 @@ void TotemAI::UpdateAI(uint32 /*diff*/)
         return;
 
     if (!me->IsAlive())
-    {
         return;
-    }
 
     if (me->IsNonMeleeSpellCast(false))
     {
         if (Unit* victim = ObjectAccessor::GetUnit(*me, i_victimGuid))
         {
             if (!victim || !victim->IsAlive())
-            {
                 me->InterruptNonMeleeSpells(false);
-            }
         }
 
         return;
@@ -97,9 +87,8 @@ void TotemAI::UpdateAI(uint32 /*diff*/)
     Unit* victim = i_victimGuid ? ObjectAccessor::GetUnit(*me, i_victimGuid) : nullptr;
 
     // Search victim if no, not attackable, or out of range, or friendly (possible in case duel end)
-    if (!victim ||
-            !victim->isTargetableForAttack(true, me) || !me->IsWithinDistInMap(victim, max_range) ||
-            me->IsFriendlyTo(victim) || !me->CanSeeOrDetect(victim))
+    if (!victim || !victim->isTargetableForAttack(true, me) || !me->IsWithinDistInMap(victim, max_range) ||
+        me->IsFriendlyTo(victim) || !me->CanSeeOrDetect(victim))
     {
         victim = nullptr;
         Acore::NearestAttackableUnitInObjectRangeCheck u_check(me, me, max_range);
@@ -108,9 +97,7 @@ void TotemAI::UpdateAI(uint32 /*diff*/)
     }
 
     if (!victim && me->GetCharmerOrOwnerOrSelf()->IsInCombat())
-    {
         victim = me->GetCharmerOrOwnerOrSelf()->getAttackerForHelper();
-    }
 
     // If have target
     if (victim)
@@ -119,7 +106,7 @@ void TotemAI::UpdateAI(uint32 /*diff*/)
         i_victimGuid = victim->GetGUID();
 
         // attack
-        me->SetInFront(victim);                         // client change orientation by self
+        me->SetInFront(victim); // client change orientation by self
         me->CastSpell(victim, me->ToTotem()->GetSpell(), false);
     }
     else

@@ -74,33 +74,33 @@ public:
 
             switch (me->GetAreaId())
             {
-                case 199:                                   //felstone
+                case 199: //felstone
                     if (player->GetQuestStatus(5216) == QUEST_STATUS_INCOMPLETE ||
-                            player->GetQuestStatus(5229) == QUEST_STATUS_INCOMPLETE)
+                        player->GetQuestStatus(5229) == QUEST_STATUS_INCOMPLETE)
                     {
                         me->SummonCreature(11075, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
                     }
                     break;
-                case 200:                                   //dalson
+                case 200: //dalson
                     if (player->GetQuestStatus(5219) == QUEST_STATUS_INCOMPLETE ||
-                            player->GetQuestStatus(5231) == QUEST_STATUS_INCOMPLETE)
+                        player->GetQuestStatus(5231) == QUEST_STATUS_INCOMPLETE)
                     {
                         me->SummonCreature(11077, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
                     }
                     break;
-                case 201:                                   //gahrron
+                case 201: //gahrron
                     if (player->GetQuestStatus(5225) == QUEST_STATUS_INCOMPLETE ||
-                            player->GetQuestStatus(5235) == QUEST_STATUS_INCOMPLETE)
+                        player->GetQuestStatus(5235) == QUEST_STATUS_INCOMPLETE)
                     {
                         me->SummonCreature(11078, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
                     }
                     break;
-                case 202:                                   //writhing
+                case 202: //writhing
                     if (player->GetQuestStatus(5222) == QUEST_STATUS_INCOMPLETE ||
-                            player->GetQuestStatus(5233) == QUEST_STATUS_INCOMPLETE)
+                        player->GetQuestStatus(5233) == QUEST_STATUS_INCOMPLETE)
                     {
                         me->SummonCreature(11076, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                         DoDie();
@@ -117,7 +117,7 @@ public:
 
 enum AndorhalTower
 {
-    GO_BEACON_TORCH                             = 176093
+    GO_BEACON_TORCH = 176093
 };
 
 class npc_andorhal_tower : public CreatureScript

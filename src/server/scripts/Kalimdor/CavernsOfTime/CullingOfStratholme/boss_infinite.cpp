@@ -21,24 +21,24 @@
 
 enum Spells
 {
-    SPELL_CORRUPTING_BLIGHT                     = 60588,
-    SPELL_VOID_STRIKE                           = 60590,
-    SPELL_CORRUPTION_OF_TIME_AURA               = 60451,
-    SPELL_CORRUPTION_OF_TIME_CHANNEL            = 60422,
+    SPELL_CORRUPTING_BLIGHT = 60588,
+    SPELL_VOID_STRIKE = 60590,
+    SPELL_CORRUPTION_OF_TIME_AURA = 60451,
+    SPELL_CORRUPTION_OF_TIME_CHANNEL = 60422,
 };
 
 enum Events
 {
-    EVENT_SPELL_CORRUPTING_BLIGHT               = 1,
-    EVENT_SPELL_VOID_STRIKE                     = 2,
+    EVENT_SPELL_CORRUPTING_BLIGHT = 1,
+    EVENT_SPELL_VOID_STRIKE = 2,
 };
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_DEATH                                   = 1,
-    SAY_FAIL                                    = 2,
-    SAY_THANKS                                  = 0
+    SAY_AGGRO = 0,
+    SAY_DEATH = 1,
+    SAY_FAIL = 2,
+    SAY_THANKS = 0
 };
 
 class boss_infinite_corruptor : public CreatureScript
@@ -53,9 +53,7 @@ public:
 
     struct boss_infinite_corruptorAI : public ScriptedAI
     {
-        boss_infinite_corruptorAI(Creature* c) : ScriptedAI(c), summons(me)
-        {
-        }
+        boss_infinite_corruptorAI(Creature* c) : ScriptedAI(c), summons(me) { }
 
         EventMap events;
         SummonList summons;
@@ -74,7 +72,10 @@ public:
             beamTimer = 1;
         }
 
-        void JustSummoned(Creature* cr) override { summons.Summon(cr); }
+        void JustSummoned(Creature* cr) override
+        {
+            summons.Summon(cr);
+        }
 
         void JustEngagedWith(Unit* /*who*/) override
         {

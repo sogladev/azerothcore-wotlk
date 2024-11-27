@@ -31,7 +31,7 @@ public:
 
     struct npc_steam_powered_auctioneerAI : public ScriptedAI
     {
-        npc_steam_powered_auctioneerAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_steam_powered_auctioneerAI(Creature* creature) : ScriptedAI(creature) { }
 
         bool CanBeSeen(Player const* player) override
         {
@@ -55,7 +55,7 @@ public:
 
     struct npc_mei_francis_mountAI : public ScriptedAI
     {
-        npc_mei_francis_mountAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_mei_francis_mountAI(Creature* creature) : ScriptedAI(creature) { }
 
         bool CanBeSeen(Player const* player) override
         {
@@ -78,57 +78,57 @@ public:
 
 enum DisguiseEvent
 {
-    ACTION_SHANDY_INTRO         = 0,
-    ACTION_WATER                = 1,
-    ACTION_SHIRTS               = 2,
-    ACTION_PANTS                = 3,
-    ACTION_UNMENTIONABLES       = 4,
+    ACTION_SHANDY_INTRO = 0,
+    ACTION_WATER = 1,
+    ACTION_SHIRTS = 2,
+    ACTION_PANTS = 3,
+    ACTION_UNMENTIONABLES = 4,
 
-    EVENT_INTRO_DH1             = 1,
-    EVENT_INTRO_DH2             = 2,
-    EVENT_INTRO_DH3             = 3,
-    EVENT_INTRO_DH4             = 4,
-    EVENT_INTRO_DH5             = 5,
-    EVENT_INTRO_DH6             = 6,
-    EVENT_OUTRO_DH              = 7,
+    EVENT_INTRO_DH1 = 1,
+    EVENT_INTRO_DH2 = 2,
+    EVENT_INTRO_DH3 = 3,
+    EVENT_INTRO_DH4 = 4,
+    EVENT_INTRO_DH5 = 5,
+    EVENT_INTRO_DH6 = 6,
+    EVENT_OUTRO_DH = 7,
 
-    SAY_SHANDY1                 = 0,
-    SAY_SHANDY2                 = 1,
-    SAY_SHANDY3                 = 2,
-    SAY_SHANDY_WATER            = 3, // shirts = 4, pants = 5, unmentionables = 6
-    SAY_SHANDY4                 = 7,
-    SAY_SHANDY5                 = 8,
-    SAY_SHANDY6                 = 9,
+    SAY_SHANDY1 = 0,
+    SAY_SHANDY2 = 1,
+    SAY_SHANDY3 = 2,
+    SAY_SHANDY_WATER = 3, // shirts = 4, pants = 5, unmentionables = 6
+    SAY_SHANDY4 = 7,
+    SAY_SHANDY5 = 8,
+    SAY_SHANDY6 = 9,
 };
 
 enum DisguiseMisc
 {
-    QUEST_SUITABLE_DISGUISE_A       = 20438,
-    QUEST_SUITABLE_DISGUISE_H       = 24556,
+    QUEST_SUITABLE_DISGUISE_A = 20438,
+    QUEST_SUITABLE_DISGUISE_H = 24556,
 
-    SPELL_EVOCATION_VISUAL          = 69659,
+    SPELL_EVOCATION_VISUAL = 69659,
 
-    NPC_AQUANOS_ENTRY               = 36851,
+    NPC_AQUANOS_ENTRY = 36851,
 
-    GOSSIP_MENU_AQUANOS             = 10854,
-    GOSSIP_AQUANOS_ALLIANCE         = 0,
-    GOSSIP_AQUANOS_HORDE            = 1,
+    GOSSIP_MENU_AQUANOS = 10854,
+    GOSSIP_AQUANOS_ALLIANCE = 0,
+    GOSSIP_AQUANOS_HORDE = 1,
 };
 
 enum spells
 {
     // Sewers Warrior Spells
-    SPELL_WARRIOR_BATTLESHOUT       = 9128,
-    SPELL_WARRIOR_DISARM            = 6713,
-    SPELL_WARRIOR_SHOUT             = 19134,
-    SPELL_WARRIOR_HAMSTRING         = 9080,
+    SPELL_WARRIOR_BATTLESHOUT = 9128,
+    SPELL_WARRIOR_DISARM = 6713,
+    SPELL_WARRIOR_SHOUT = 19134,
+    SPELL_WARRIOR_HAMSTRING = 9080,
 
     // Sewers Mage Spells
-    SPELL_BLINK                     = 14514,
-    SPELL_BLIZZARD                  = 44178,
-    SPELL_COC                       = 12611,
-    SPELL_FROST_NOVA                = 15532,
-    SPELL_FROSTFIRE                 = 44614
+    SPELL_BLINK = 14514,
+    SPELL_BLIZZARD = 44178,
+    SPELL_COC = 12611,
+    SPELL_FROST_NOVA = 15532,
+    SPELL_FROSTFIRE = 44614
 };
 
 class npc_shandy_dalaran : public CreatureScript
@@ -241,12 +241,14 @@ public:
             player->PrepareQuestMenu(creature->GetGUID());
 
         if (player->GetQuestStatus(QUEST_SUITABLE_DISGUISE_A) == QUEST_STATUS_INCOMPLETE ||
-                player->GetQuestStatus(QUEST_SUITABLE_DISGUISE_H) == QUEST_STATUS_INCOMPLETE)
+            player->GetQuestStatus(QUEST_SUITABLE_DISGUISE_H) == QUEST_STATUS_INCOMPLETE)
         {
             if (player->GetTeamId() == TEAM_ALLIANCE)
-                AddGossipItemFor(player, GOSSIP_MENU_AQUANOS, GOSSIP_AQUANOS_ALLIANCE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+                AddGossipItemFor(
+                    player, GOSSIP_MENU_AQUANOS, GOSSIP_AQUANOS_ALLIANCE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
             else
-                AddGossipItemFor(player, GOSSIP_MENU_AQUANOS, GOSSIP_AQUANOS_HORDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+                AddGossipItemFor(
+                    player, GOSSIP_MENU_AQUANOS, GOSSIP_AQUANOS_HORDE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
         }
 
         SendGossipMenuFor(player, player->GetGossipTextId(creature), creature->GetGUID());
@@ -271,44 +273,43 @@ public:
         return new npc_shandy_dalaranAI(creature);
     }
 };
+
 enum ArchmageLandalockQuests
 {
-    QUEST_SARTHARION_MUST_DIE               = 24579,
-    QUEST_ANUBREKHAN_MUST_DIE               = 24580,
-    QUEST_NOTH_THE_PLAGUEBINGER_MUST_DIE    = 24581,
-    QUEST_INSTRUCTOR_RAZUVIOUS_MUST_DIE     = 24582,
-    QUEST_PATCHWERK_MUST_DIE                = 24583,
-    QUEST_MALYGOS_MUST_DIE                  = 24584,
-    QUEST_FLAME_LEVIATHAN_MUST_DIE          = 24585,
-    QUEST_RAZORSCALE_MUST_DIE               = 24586,
+    QUEST_SARTHARION_MUST_DIE = 24579,
+    QUEST_ANUBREKHAN_MUST_DIE = 24580,
+    QUEST_NOTH_THE_PLAGUEBINGER_MUST_DIE = 24581,
+    QUEST_INSTRUCTOR_RAZUVIOUS_MUST_DIE = 24582,
+    QUEST_PATCHWERK_MUST_DIE = 24583,
+    QUEST_MALYGOS_MUST_DIE = 24584,
+    QUEST_FLAME_LEVIATHAN_MUST_DIE = 24585,
+    QUEST_RAZORSCALE_MUST_DIE = 24586,
     QUEST_IGNIS_THE_FURNACE_MASTER_MUST_DIE = 24587,
-    QUEST_XT_002_DECONSTRUCTOR_MUST_DIE     = 24588,
-    QUEST_LORD_JARAXXUS_MUST_DIE            = 24589,
-    QUEST_LORD_MARROWGAR_MUST_DIE           = 24590
+    QUEST_XT_002_DECONSTRUCTOR_MUST_DIE = 24588,
+    QUEST_LORD_JARAXXUS_MUST_DIE = 24589,
+    QUEST_LORD_MARROWGAR_MUST_DIE = 24590
 };
 
 enum ArchmageLandalockImages
 {
-    NPC_SARTHARION_IMAGE                = 37849,
-    NPC_ANUBREKHAN_IMAGE                = 37850,
-    NPC_NOTH_THE_PLAGUEBINGER_IMAGE     = 37851,
-    NPC_INSTRUCTOR_RAZUVIOUS_IMAGE      = 37853,
-    NPC_PATCHWERK_IMAGE                 = 37854,
-    NPC_MALYGOS_IMAGE                   = 37855,
-    NPC_FLAME_LEVIATHAN_IMAGE           = 37856,
-    NPC_RAZORSCALE_IMAGE                = 37858,
-    NPC_IGNIS_THE_FURNACE_MASTER_IMAGE  = 37859,
-    NPC_XT_002_DECONSTRUCTOR_IMAGE      = 37861,
-    NPC_LORD_JARAXXUS_IMAGE             = 37862,
-    NPC_LORD_MARROWGAR_IMAGE            = 37864
+    NPC_SARTHARION_IMAGE = 37849,
+    NPC_ANUBREKHAN_IMAGE = 37850,
+    NPC_NOTH_THE_PLAGUEBINGER_IMAGE = 37851,
+    NPC_INSTRUCTOR_RAZUVIOUS_IMAGE = 37853,
+    NPC_PATCHWERK_IMAGE = 37854,
+    NPC_MALYGOS_IMAGE = 37855,
+    NPC_FLAME_LEVIATHAN_IMAGE = 37856,
+    NPC_RAZORSCALE_IMAGE = 37858,
+    NPC_IGNIS_THE_FURNACE_MASTER_IMAGE = 37859,
+    NPC_XT_002_DECONSTRUCTOR_IMAGE = 37861,
+    NPC_LORD_JARAXXUS_IMAGE = 37862,
+    NPC_LORD_MARROWGAR_IMAGE = 37864
 };
 
 class npc_archmage_landalock : public CreatureScript
 {
 public:
-    npc_archmage_landalock() : CreatureScript("npc_archmage_landalock")
-    {
-    }
+    npc_archmage_landalock() : CreatureScript("npc_archmage_landalock") { }
 
     CreatureAI* GetAI(Creature* creature) const override
     {
@@ -385,13 +386,15 @@ public:
                             image->DespawnOrUnsummon();
 
                         float z = 653.622f;
-                        if (newEntry == NPC_MALYGOS_IMAGE || newEntry == NPC_RAZORSCALE_IMAGE || newEntry == NPC_SARTHARION_IMAGE)
+                        if (newEntry == NPC_MALYGOS_IMAGE || newEntry == NPC_RAZORSCALE_IMAGE ||
+                            newEntry == NPC_SARTHARION_IMAGE)
                             z += 3.0f;
                         me->SummonCreature(newEntry, 5703.077f, 583.9757f, z, 3.926991f);
                     }
                 }
             }
         }
+
     private:
         uint32 _switchImageTimer;
         ObjectGuid _summonGUID;
@@ -405,21 +408,21 @@ public:
 
 enum Spells
 {
-    SPELL_TRESPASSER_A                     = 54028,
-    SPELL_TRESPASSER_H                     = 54029,
+    SPELL_TRESPASSER_A = 54028,
+    SPELL_TRESPASSER_H = 54029,
 
-    SPELL_SUNREAVER_DISGUISE_FEMALE        = 70973,
-    SPELL_SUNREAVER_DISGUISE_MALE          = 70974,
-    SPELL_SILVER_COVENANT_DISGUISE_FEMALE  = 70971,
-    SPELL_SILVER_COVENANT_DISGUISE_MALE    = 70972,
+    SPELL_SUNREAVER_DISGUISE_FEMALE = 70973,
+    SPELL_SUNREAVER_DISGUISE_MALE = 70974,
+    SPELL_SILVER_COVENANT_DISGUISE_FEMALE = 70971,
+    SPELL_SILVER_COVENANT_DISGUISE_MALE = 70972,
 };
 
 enum NPCs // All outdoor guards are within 35.0f of these NPCs
 {
-    NPC_APPLEBOUGH_A                       = 29547,
-    NPC_SWEETBERRY_H                       = 29715,
-    NPC_SILVER_COVENANT_GUARDIAN_MAGE      = 29254,
-    NPC_SUNREAVER_GUARDIAN_MAGE            = 29255,
+    NPC_APPLEBOUGH_A = 29547,
+    NPC_SWEETBERRY_H = 29715,
+    NPC_SILVER_COVENANT_GUARDIAN_MAGE = 29254,
+    NPC_SUNREAVER_GUARDIAN_MAGE = 29255,
 };
 
 class npc_mageguard_dalaran : public CreatureScript
@@ -436,11 +439,11 @@ public:
             creature->ApplySpellImmune(0, IMMUNITY_DAMAGE, SPELL_SCHOOL_MASK_MAGIC, true);
         }
 
-        void Reset() override {}
+        void Reset() override { }
 
-        void JustEngagedWith(Unit* /*who*/) override {}
+        void JustEngagedWith(Unit* /*who*/) override { }
 
-        void AttackStart(Unit* /*who*/) override {}
+        void AttackStart(Unit* /*who*/) override { }
 
         void MoveInLineOfSight(Unit* who) override
         {
@@ -452,36 +455,38 @@ public:
 
             Player* player = who->GetCharmerOrOwnerPlayerOrPlayerItself();
 
-            if (!player || player->IsGameMaster() || player->IsBeingTeleported() || (player->GetPositionZ() > 670 && player->GetVehicle()) ||
-                    // If player has Disguise aura for quest A Meeting With The Magister or An Audience With The Arcanist, do not teleport it away but let it pass
-                    player->HasAura(SPELL_SUNREAVER_DISGUISE_FEMALE) || player->HasAura(SPELL_SUNREAVER_DISGUISE_MALE) ||
-                    player->HasAura(SPELL_SILVER_COVENANT_DISGUISE_FEMALE) || player->HasAura(SPELL_SILVER_COVENANT_DISGUISE_MALE))
+            if (!player || player->IsGameMaster() || player->IsBeingTeleported() ||
+                (player->GetPositionZ() > 670 && player->GetVehicle()) ||
+                // If player has Disguise aura for quest A Meeting With The Magister or An Audience With The Arcanist, do not teleport it away but let it pass
+                player->HasAura(SPELL_SUNREAVER_DISGUISE_FEMALE) || player->HasAura(SPELL_SUNREAVER_DISGUISE_MALE) ||
+                player->HasAura(SPELL_SILVER_COVENANT_DISGUISE_FEMALE) ||
+                player->HasAura(SPELL_SILVER_COVENANT_DISGUISE_MALE))
                 return;
 
             switch (me->GetEntry())
             {
                 case NPC_SILVER_COVENANT_GUARDIAN_MAGE:
-                    if (player->GetTeamId() == TEAM_HORDE)              // Horde unit found in Alliance area
+                    if (player->GetTeamId() == TEAM_HORDE) // Horde unit found in Alliance area
                     {
                         if (GetClosestCreatureWithEntry(me, NPC_APPLEBOUGH_A, 32.0f))
                         {
                             if (me->isInBackInMap(who, 12.0f))   // In my line of sight, "outdoors", and behind me
                                 DoCast(who, SPELL_TRESPASSER_A); // Teleport the Horde unit out
                         }
-                        else                                      // In my line of sight, and "indoors"
-                            DoCast(who, SPELL_TRESPASSER_A);     // Teleport the Horde unit out
+                        else                                 // In my line of sight, and "indoors"
+                            DoCast(who, SPELL_TRESPASSER_A); // Teleport the Horde unit out
                     }
                     break;
                 case NPC_SUNREAVER_GUARDIAN_MAGE:
-                    if (player->GetTeamId() == TEAM_ALLIANCE)           // Alliance unit found in Horde area
+                    if (player->GetTeamId() == TEAM_ALLIANCE) // Alliance unit found in Horde area
                     {
                         if (GetClosestCreatureWithEntry(me, NPC_SWEETBERRY_H, 32.0f))
                         {
                             if (me->isInBackInMap(who, 12.0f))   // In my line of sight, "outdoors", and behind me
                                 DoCast(who, SPELL_TRESPASSER_H); // Teleport the Alliance unit out
                         }
-                        else                                      // In my line of sight, and "indoors"
-                            DoCast(who, SPELL_TRESPASSER_H);     // Teleport the Alliance unit out
+                        else                                 // In my line of sight, and "indoors"
+                            DoCast(who, SPELL_TRESPASSER_H); // Teleport the Alliance unit out
                     }
                     break;
             }
@@ -489,7 +494,7 @@ public:
             return;
         }
 
-        void UpdateAI(uint32 /*diff*/) override {}
+        void UpdateAI(uint32 /*diff*/) override { }
     };
 
     CreatureAI* GetAI(Creature* creature) const override
@@ -500,22 +505,22 @@ public:
 
 enum MinigobData
 {
-    ZONE_DALARAN            = 4395,
+    ZONE_DALARAN = 4395,
 
-    SPELL_MANABONKED        = 61834,
-    SPELL_TELEPORT_VISUAL   = 51347,
-    SPELL_IMPROVED_BLINK    = 61995,
+    SPELL_MANABONKED = 61834,
+    SPELL_TELEPORT_VISUAL = 51347,
+    SPELL_IMPROVED_BLINK = 61995,
 
-    EVENT_SELECT_TARGET     = 1,
-    EVENT_POLYMORPH         = 2,
-    EVENT_LAUGH             = 3,
-    EVENT_MOVE              = 4,
-    EVENT_DESPAWN_VISUAL    = 5,
-    EVENT_DESPAWN           = 6,
+    EVENT_SELECT_TARGET = 1,
+    EVENT_POLYMORPH = 2,
+    EVENT_LAUGH = 3,
+    EVENT_MOVE = 4,
+    EVENT_DESPAWN_VISUAL = 5,
+    EVENT_DESPAWN = 6,
 
-    MAIL_MINIGOB_ENTRY      = 264,
-    MAIL_DELIVER_DELAY_MIN  = 5 * MINUTE,
-    MAIL_DELIVER_DELAY_MAX  = 15 * MINUTE
+    MAIL_MINIGOB_ENTRY = 264,
+    MAIL_DELIVER_DELAY_MIN = 5 * MINUTE,
+    MAIL_DELIVER_DELAY_MAX = 15 * MINUTE
 };
 
 struct npc_minigob_manabonk : public ScriptedAI
@@ -537,10 +542,11 @@ struct npc_minigob_manabonk : public ScriptedAI
         playerInDalaranList.clear();
 
         me->GetMap()->DoForAllPlayers([&](Player* player)
-            {
-                if (player->GetZoneId() == ZONE_DALARAN && !player->IsFlying() && !player->IsMounted() && !player->IsGameMaster())
-                    playerInDalaranList.push_back(player);
-            });
+        {
+            if (player->GetZoneId() == ZONE_DALARAN && !player->IsFlying() && !player->IsMounted() &&
+                !player->IsGameMaster())
+                playerInDalaranList.push_back(player);
+        });
 
         if (playerInDalaranList.empty())
             return nullptr;
@@ -551,7 +557,12 @@ struct npc_minigob_manabonk : public ScriptedAI
     {
         CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
         int16 deliverDelay = irand(MAIL_DELIVER_DELAY_MIN, MAIL_DELIVER_DELAY_MAX);
-        MailDraft(MAIL_MINIGOB_ENTRY, true).SendMailTo(trans, MailReceiver(player), MailSender(MAIL_CREATURE, me->GetEntry()), MAIL_CHECK_MASK_NONE, deliverDelay);
+        MailDraft(MAIL_MINIGOB_ENTRY, true)
+            .SendMailTo(trans,
+                MailReceiver(player),
+                MailSender(MAIL_CREATURE, me->GetEntry()),
+                MAIL_CHECK_MASK_NONE,
+                deliverDelay);
         CharacterDatabase.CommitTransaction(trans);
     }
 
@@ -573,7 +584,8 @@ struct npc_minigob_manabonk : public ScriptedAI
                     {
                         playerGUID = player->GetGUID();
                         Position pos = player->GetPosition();
-                        me->NearTeleportTo(pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation());
+                        me->NearTeleportTo(
+                            pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation());
                         me->GetMotionMaster()->MoveRandom(10);
                     }
                     events.ScheduleEvent(EVENT_POLYMORPH, 30s);
@@ -594,10 +606,11 @@ struct npc_minigob_manabonk : public ScriptedAI
                     events.ScheduleEvent(EVENT_MOVE, 4s);
                     break;
                 case EVENT_MOVE:
-                    {
-                        Position pos = me->GetRandomNearPosition((urand(15, 40)));
-                        me->GetMotionMaster()->MovePoint(0, pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), true);
-                    }
+                {
+                    Position pos = me->GetRandomNearPosition((urand(15, 40)));
+                    me->GetMotionMaster()->MovePoint(
+                        0, pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), true);
+                }
                     events.ScheduleEvent(EVENT_DESPAWN_VISUAL, 3s);
                     events.ScheduleEvent(EVENT_DESPAWN, 4s);
                     break;
@@ -612,6 +625,7 @@ struct npc_minigob_manabonk : public ScriptedAI
             }
         }
     }
+
 private:
     ObjectGuid playerGUID;
 };
@@ -619,7 +633,7 @@ private:
 class npc_dalaran_mage : public CreatureScript
 {
 public:
-    npc_dalaran_mage() : CreatureScript("npc_dalaran_mage") {}
+    npc_dalaran_mage() : CreatureScript("npc_dalaran_mage") { }
 
     CreatureAI* GetAI(Creature* creature) const override
     {
@@ -628,9 +642,7 @@ public:
 
     struct npc_dalaran_mageAI : public ScriptedAI
     {
-        npc_dalaran_mageAI(Creature* creature) : ScriptedAI(creature)
-        {
-        }
+        npc_dalaran_mageAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 CoC_Timer;
         uint32 frostnova_timer;
@@ -655,9 +667,7 @@ public:
             me->AddAura(1908, me);
         }
 
-        void JustEngagedWith(Unit* /*who*/) override
-        {
-        }
+        void JustEngagedWith(Unit* /*who*/) override { }
 
         void UpdateAI(uint32 diff) override
         {
@@ -723,7 +733,7 @@ public:
 class npc_dalaran_warrior : public CreatureScript
 {
 public:
-    npc_dalaran_warrior() : CreatureScript("npc_dalaran_warrior") {}
+    npc_dalaran_warrior() : CreatureScript("npc_dalaran_warrior") { }
 
     CreatureAI* GetAI(Creature* creature) const override
     {
@@ -760,6 +770,7 @@ public:
             me->AddAura(1908, me);
             Battleshout_timer = 1000;
         }
+
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
@@ -806,14 +817,12 @@ enum ToyPlane
 {
     NPC_DND_DALARAN_TOY_STORE_PLANE_STRING_HOOK = 29807,
 
-    SPELL_TOY_PLANE_CABLE   = 55281,
+    SPELL_TOY_PLANE_CABLE = 55281,
 };
 
 struct npc_cosmetic_toy_plane : public ScriptedAI
 {
-    npc_cosmetic_toy_plane(Creature* creature) : ScriptedAI(creature)
-    {
-    }
+    npc_cosmetic_toy_plane(Creature* creature) : ScriptedAI(creature) { }
 
     void Reset() override
     {
@@ -828,13 +837,14 @@ struct npc_cosmetic_toy_plane : public ScriptedAI
         init.SetVelocity(2.7f);
         init.Launch();
 
-        scheduler.Schedule(420ms, [this](TaskContext context)
-            {
-                if (Creature* cr = me->FindNearestCreature(NPC_DND_DALARAN_TOY_STORE_PLANE_STRING_HOOK, 42.0f))
-                    DoCast(cr, SPELL_TOY_PLANE_CABLE, true);
-                else
-                    context.Repeat();
-            });
+        scheduler.Schedule(420ms,
+            [this](TaskContext context)
+        {
+            if (Creature* cr = me->FindNearestCreature(NPC_DND_DALARAN_TOY_STORE_PLANE_STRING_HOOK, 42.0f))
+                DoCast(cr, SPELL_TOY_PLANE_CABLE, true);
+            else
+                context.Repeat();
+        });
     }
 
     void UpdateAI(uint32 diff) override
@@ -847,13 +857,13 @@ private:
         // cyclic movementspine unfortunately includes spawn into loop
         // which results in an imperfect loop right now
         // CO1 SPAWN(5809.888,  683.5779,  653.6859)
-        G3D::Vector3(5813.709,  682.51855, 653.6033),
-        G3D::Vector3(5816.815,  684.8459,  653.5755),
+        G3D::Vector3(5813.709, 682.51855, 653.6033),
+        G3D::Vector3(5816.815, 684.8459, 653.5755),
         G3D::Vector3(5817.1997, 688.83527, 653.631),
-        G3D::Vector3(5814.235,  691.6307,  653.6587),
+        G3D::Vector3(5814.235, 691.6307, 653.6587),
         G3D::Vector3(5809.9287, 690.98224, 653.7697),
-        G3D::Vector3(5808.225,  687.1498,  653.6322),
-        G3D::Vector3(5809.8423, 683.6158,  653.6862),
+        G3D::Vector3(5808.225, 687.1498, 653.6322),
+        G3D::Vector3(5809.8423, 683.6158, 653.6862),
     };
 };
 

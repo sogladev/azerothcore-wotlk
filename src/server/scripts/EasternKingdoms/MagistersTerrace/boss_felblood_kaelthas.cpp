@@ -16,52 +16,52 @@
  */
 
 #include "CreatureScript.h"
-#include "ScriptedCreature.h"
-#include "SpellScriptLoader.h"
-#include "magisters_terrace.h"
 #include "MapReference.h"
 #include "Player.h"
+#include "ScriptedCreature.h"
 #include "SpellScript.h"
+#include "SpellScriptLoader.h"
+#include "magisters_terrace.h"
 
 enum Says
 {
-    SAY_AGGRO                   = 0,
-    SAY_PHOENIX                 = 1,
-    SAY_FLAMESTRIKE             = 2,
-    SAY_GRAVITY_LAPSE           = 3,
-    SAY_TIRED                   = 4,
-    SAY_RECAST_GRAVITY          = 5,
-    SAY_DEATH                   = 6
+    SAY_AGGRO = 0,
+    SAY_PHOENIX = 1,
+    SAY_FLAMESTRIKE = 2,
+    SAY_GRAVITY_LAPSE = 3,
+    SAY_TIRED = 4,
+    SAY_RECAST_GRAVITY = 5,
+    SAY_DEATH = 6
 };
 
 enum Spells
 {
     // Phase 1
-    SPELL_FIREBALL                  = 44189,
-    SPELL_FLAMESTRIKE_SUMMON        = 44192,
-    SPELL_PHOENIX                   = 44194,
-    SPELL_SHOCK_BARRIER             = 46165,
-    SPELL_PYROBLAST                 = 36819,
+    SPELL_FIREBALL = 44189,
+    SPELL_FLAMESTRIKE_SUMMON = 44192,
+    SPELL_PHOENIX = 44194,
+    SPELL_SHOCK_BARRIER = 46165,
+    SPELL_PYROBLAST = 36819,
 
     // Phase 2
-    SPELL_SUMMON_ARCANE_SPHERE      = 44265,
-    SPELL_TELEPORT_CENTER           = 44218,
-    SPELL_GRAVITY_LAPSE_INITIAL     = 44224,
-    SPELL_GRAVITY_LAPSE_PLAYER      = 44219, // Till 44223, 5 players
-    SPELL_GRAVITY_LAPSE_FLY         = 44227,
-    SPELL_GRAVITY_LAPSE_DOT         = 44226,
-    SPELL_GRAVITY_LAPSE_CHANNEL     = 44251,
-    SPELL_POWER_FEEDBACK            = 44233
+    SPELL_SUMMON_ARCANE_SPHERE = 44265,
+    SPELL_TELEPORT_CENTER = 44218,
+    SPELL_GRAVITY_LAPSE_INITIAL = 44224,
+    SPELL_GRAVITY_LAPSE_PLAYER = 44219, // Till 44223, 5 players
+    SPELL_GRAVITY_LAPSE_FLY = 44227,
+    SPELL_GRAVITY_LAPSE_DOT = 44226,
+    SPELL_GRAVITY_LAPSE_CHANNEL = 44251,
+    SPELL_POWER_FEEDBACK = 44233
 };
 
 enum Misc
 {
-    ACTION_TELEPORT_PLAYERS     = 1,
-    ACTION_KNOCKUP              = 2,
-    ACTION_ALLOW_FLY            = 3,
-    ACTION_REMOVE_FLY           = 4,
+    ACTION_TELEPORT_PLAYERS = 1,
+    ACTION_KNOCKUP = 2,
+    ACTION_ALLOW_FLY = 3,
+    ACTION_REMOVE_FLY = 4,
 
-    CREATURE_ARCANE_SPHERE      = 24708
+    CREATURE_ARCANE_SPHERE = 24708
 };
 
 struct boss_felblood_kaelthas : public BossAI
@@ -78,7 +78,9 @@ struct boss_felblood_kaelthas : public BossAI
         _gravityLapseCounter = 0;
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, false);
         me->SetImmuneToAll(false);
-        ScheduleHealthCheckEvent(50, [&]{
+        ScheduleHealthCheckEvent(50,
+            [&]
+        {
             me->CastStop();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
             DoCastSelf(SPELL_TELEPORT_CENTER, true);
@@ -87,13 +89,18 @@ struct boss_felblood_kaelthas : public BossAI
             me->StopMoving();
             me->GetMotionMaster()->Clear();
             me->GetMotionMaster()->MoveIdle();
-            ScheduleTimedEvent(5s, [&]{
-                summons.DoForAllSummons([&](WorldObject* summon){
+            ScheduleTimedEvent(5s,
+                [&]
+            {
+                summons.DoForAllSummons([&](WorldObject* summon)
+                {
                     if (Unit* player = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true))
                         if (Creature* summonedCreature = summon->ToCreature())
                             summonedCreature->GetMotionMaster()->MoveChase(player);
                 });
-            }, 10s, 15s);
+            },
+                10s,
+                15s);
             GravityLapseSequence(true);
         });
     }
@@ -108,23 +115,23 @@ struct boss_felblood_kaelthas : public BossAI
     {
         Talk(firstTime ? SAY_GRAVITY_LAPSE : SAY_RECAST_GRAVITY);
         DoCastSelf(SPELL_GRAVITY_LAPSE_INITIAL);
-        scheduler.Schedule(2s, [this](TaskContext){
-            LapseAction(ACTION_TELEPORT_PLAYERS);
-        }).Schedule(3s, [this](TaskContext){
-            LapseAction(ACTION_KNOCKUP);
-        }).Schedule(4s, [this](TaskContext){
+        scheduler.Schedule(2s, [this](TaskContext) { LapseAction(ACTION_TELEPORT_PLAYERS); })
+            .Schedule(3s, [this](TaskContext) { LapseAction(ACTION_KNOCKUP); })
+            .Schedule(4s,
+                [this](TaskContext)
+        {
             LapseAction(ACTION_ALLOW_FLY);
             for (uint8 i = 0; i < 3; ++i)
                 DoCastSelf(SPELL_SUMMON_ARCANE_SPHERE, true);
             DoCastSelf(SPELL_GRAVITY_LAPSE_CHANNEL);
-            scheduler.Schedule(30s, [this](TaskContext){
+            scheduler.Schedule(30s,
+                [this](TaskContext)
+            {
                 LapseAction(ACTION_REMOVE_FLY);
                 me->InterruptNonMeleeSpells(false);
                 Talk(SAY_TIRED);
                 DoCastSelf(SPELL_POWER_FEEDBACK);
-                scheduler.Schedule(10s, [this](TaskContext){
-                    GravityLapseSequence(false);
-                });
+                scheduler.Schedule(10s, [this](TaskContext) { GravityLapseSequence(false); });
             });
         });
     }
@@ -146,23 +153,30 @@ struct boss_felblood_kaelthas : public BossAI
     {
         BossAI::JustEngagedWith(who);
 
-        ScheduleTimedEvent(0ms, [&]{
-            DoCastVictim(SPELL_FIREBALL);
-        }, 3000ms, 4500ms);
-        ScheduleTimedEvent(15s, [&]{
+        ScheduleTimedEvent(0ms, [&] { DoCastVictim(SPELL_FIREBALL); }, 3000ms, 4500ms);
+        ScheduleTimedEvent(15s,
+            [&]
+        {
             Talk(SAY_PHOENIX);
             DoCastSelf(SPELL_PHOENIX);
-        }, 60s);
-        ScheduleTimedEvent(22s, [&]{
+        },
+            60s);
+        ScheduleTimedEvent(22s,
+            [&]
+        {
             DoCastRandomTarget(SPELL_FLAMESTRIKE_SUMMON, 0, 100.0f);
             Talk(SAY_FLAMESTRIKE);
-        }, 25s);
+        },
+            25s);
 
         if (IsHeroic())
-            ScheduleTimedEvent(50s, [&]{
+            ScheduleTimedEvent(50s,
+                [&]
+            {
                 DoCastSelf(SPELL_SHOCK_BARRIER, true);
                 me->CastCustomSpell(SPELL_PYROBLAST, SPELLVALUE_MAX_TARGETS, 1, (Unit*)nullptr, false);
-            }, 50s);
+            },
+                50s);
     }
 
     void MoveInLineOfSight(Unit* who) override
@@ -171,7 +185,9 @@ struct boss_felblood_kaelthas : public BossAI
         {
             Talk(SAY_AGGRO);
             _hasDoneIntro = true;
-            _OOCScheduler.Schedule(35s, [this](TaskContext){
+            _OOCScheduler.Schedule(35s,
+                [this](TaskContext)
+            {
                 me->SetReactState(REACT_AGGRESSIVE);
                 me->SetImmuneToAll(false);
                 me->SetInCombatWithZone();
@@ -180,7 +196,8 @@ struct boss_felblood_kaelthas : public BossAI
         BossAI::MoveInLineOfSight(who);
     }
 
-    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
+    void DamageTaken(
+        Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
     {
         if (damage >= me->GetHealth())
         {
@@ -196,9 +213,7 @@ struct boss_felblood_kaelthas : public BossAI
                 me->SetReactState(REACT_PASSIVE);
                 LapseAction(ACTION_REMOVE_FLY);
                 scheduler.CancelAll();
-                _OOCScheduler.Schedule(6s, [this](TaskContext){
-                    me->KillSelf();
-                });
+                _OOCScheduler.Schedule(6s, [this](TaskContext) { me->KillSelf(); });
                 Talk(SAY_DEATH);
             }
         }
@@ -230,6 +245,7 @@ struct boss_felblood_kaelthas : public BossAI
         _OOCScheduler.Update(diff);
         BossAI::UpdateAI(diff);
     }
+
 private:
     TaskScheduler _OOCScheduler;
     bool _hasDoneIntro;

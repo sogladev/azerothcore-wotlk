@@ -22,20 +22,18 @@
 #include "SpellScriptLoader.h"
 #include "ahnkahet.h"
 
-ObjectData const creatureData[] =
-{
-    { NPC_PRINCE_TALDARAM,     DATA_PRINCE_TALDARAM     },
-    { NPC_JEDOGA_SHADOWSEEKER, DATA_JEDOGA_SHADOWSEEKER },
-    { NPC_ELDER_NADOX,         DATA_ELDER_NADOX         },
-    { NPC_HERALD_VOLAZJ,       DATA_HERALD_VOLAZJ       },
-    { NPC_AMANITAR,            DATA_AMANITAR            },
-    { 0,                       0                        }
+ObjectData const creatureData[] = {
+    {NPC_PRINCE_TALDARAM,     DATA_PRINCE_TALDARAM    },
+    {NPC_JEDOGA_SHADOWSEEKER, DATA_JEDOGA_SHADOWSEEKER},
+    {NPC_ELDER_NADOX,         DATA_ELDER_NADOX        },
+    {NPC_HERALD_VOLAZJ,       DATA_HERALD_VOLAZJ      },
+    {NPC_AMANITAR,            DATA_AMANITAR           },
+    {0,                       0                       }
 };
 
-DoorData const doorData[] =
-{
-    { GO_TELDARAM_DOOR, DATA_PRINCE_TALDARAM, DOOR_TYPE_PASSAGE },
-    { 0,                0,                    DOOR_TYPE_ROOM    }
+DoorData const doorData[] = {
+    {GO_TELDARAM_DOOR, DATA_PRINCE_TALDARAM, DOOR_TYPE_PASSAGE},
+    {0,                0,                    DOOR_TYPE_ROOM   }
 };
 
 class instance_ahnkahet : public InstanceMapScript
@@ -67,7 +65,8 @@ public:
                 case GO_TELDARAM_SPHERE1:
                 case GO_TELDARAM_SPHERE2:
                 {
-                    if (GetPersistentData(go->GetEntry() == GO_TELDARAM_SPHERE1 ? 0 : 1) == DONE || GetBossState(DATA_PRINCE_TALDARAM) == DONE)
+                    if (GetPersistentData(go->GetEntry() == GO_TELDARAM_SPHERE1 ? 0 : 1) == DONE ||
+                        GetBossState(DATA_PRINCE_TALDARAM) == DONE)
                     {
                         go->SetGoState(GO_STATE_ACTIVE);
                         go->SetGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
@@ -116,7 +115,7 @@ public:
         bool IsAllSpheresActivated() const
         {
             return GetBossState(DATA_PRINCE_TALDARAM) == DONE ||
-                (GetPersistentData(DATA_TELDRAM_SPHERE1) == DONE && GetPersistentData(DATA_TELDRAM_SPHERE2) == DONE);
+                   (GetPersistentData(DATA_TELDRAM_SPHERE1) == DONE && GetPersistentData(DATA_TELDRAM_SPHERE2) == DONE);
         }
     };
 
@@ -132,14 +131,15 @@ class spell_shadow_sickle_periodic_damage : public AuraScript
 {
     PrepareAuraScript(spell_shadow_sickle_periodic_damage);
 
-    void HandlePeriodic(AuraEffect const*  /*aurEff*/)
+    void HandlePeriodic(AuraEffect const* /*aurEff*/)
     {
         GetCaster()->CastSpell(nullptr, SPELL_SHADOW_SICKLE);
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_shadow_sickle_periodic_damage::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_shadow_sickle_periodic_damage::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 

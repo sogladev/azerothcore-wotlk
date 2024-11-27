@@ -28,8 +28,8 @@
 
 enum q10935Exorcism
 {
-    SPELL_HOLY_FIRE             = 39323,
-    SPELL_HEAL_BARADA           = 39322
+    SPELL_HOLY_FIRE = 39323,
+    SPELL_HEAL_BARADA = 39322
 };
 
 class spell_q10935_the_exorcism_of_colonel_jules : public SpellScript
@@ -38,7 +38,7 @@ class spell_q10935_the_exorcism_of_colonel_jules : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_HOLY_FIRE, SPELL_HEAL_BARADA });
+        return ValidateSpellInfo({SPELL_HOLY_FIRE, SPELL_HEAL_BARADA});
     }
 
     void HandleDummy(SpellEffIndex effIndex)
@@ -56,7 +56,8 @@ class spell_q10935_the_exorcism_of_colonel_jules : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_q10935_the_exorcism_of_colonel_jules::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_q10935_the_exorcism_of_colonel_jules::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
 
@@ -67,10 +68,10 @@ class spell_q10935_the_exorcism_of_colonel_jules : public SpellScript
 
 enum Aeranas
 {
-    SAY_SUMMON                  = 0,
-    SAY_FREE                    = 1,
-    SPELL_ENVELOPING_WINDS      = 15535,
-    SPELL_SHOCK                 = 12553
+    SAY_SUMMON = 0,
+    SAY_FREE = 1,
+    SPELL_ENVELOPING_WINDS = 15535,
+    SPELL_SHOCK = 12553
 };
 
 class npc_aeranas : public CreatureScript
@@ -103,7 +104,8 @@ public:
                     me->SetFaction(FACTION_MONSTER_2);
                     faction_Timer = 0;
                 }
-                else faction_Timer -= diff;
+                else
+                    faction_Timer -= diff;
             }
 
             if (!UpdateVictim())
@@ -125,14 +127,16 @@ public:
                 DoCastVictim(SPELL_SHOCK);
                 shock_Timer = 10000;
             }
-            else shock_Timer -= diff;
+            else
+                shock_Timer -= diff;
 
             if (envelopingWinds_Timer <= diff)
             {
                 DoCastVictim(SPELL_ENVELOPING_WINDS);
                 envelopingWinds_Timer = 25000;
             }
-            else envelopingWinds_Timer -= diff;
+            else
+                envelopingWinds_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -155,11 +159,11 @@ public:
 
 enum AncestralWolf
 {
-    EMOTE_WOLF_LIFT_HEAD        = 0,
-    EMOTE_WOLF_HOWL             = 1,
-    SAY_WOLF_WELCOME            = 0,
-    SPELL_GUIDED_BY_THE_SPIRITS       = 29938,
-    NPC_RYGA                    = 17123
+    EMOTE_WOLF_LIFT_HEAD = 0,
+    EMOTE_WOLF_HOWL = 1,
+    SAY_WOLF_WELCOME = 0,
+    SPELL_GUIDED_BY_THE_SPIRITS = 29938,
+    NPC_RYGA = 17123
 };
 
 class npc_ancestral_wolf : public CreatureScript
@@ -269,16 +273,16 @@ public:
 
 enum WoundedBloodElf
 {
-    SAY_ELF_START               = 0,
-    SAY_ELF_SUMMON1             = 1,
-    SAY_ELF_RESTING             = 2,
-    SAY_ELF_SUMMON2             = 3,
-    SAY_ELF_COMPLETE            = 4,
-    SAY_ELF_AGGRO               = 5,
-    QUEST_ROAD_TO_FALCON_WATCH  = 9375,
-    NPC_HAALESHI_WINDWALKER     = 16966,
-    NPC_HAALESHI_TALONGUARD     = 16967,
-    ARAKKOA_CAGE                = 181664
+    SAY_ELF_START = 0,
+    SAY_ELF_SUMMON1 = 1,
+    SAY_ELF_RESTING = 2,
+    SAY_ELF_SUMMON2 = 3,
+    SAY_ELF_COMPLETE = 4,
+    SAY_ELF_AGGRO = 5,
+    QUEST_ROAD_TO_FALCON_WATCH = 9375,
+    NPC_HAALESHI_WINDWALKER = 16966,
+    NPC_HAALESHI_TALONGUARD = 16967,
+    ARAKKOA_CAGE = 181664
 };
 
 class npc_wounded_blood_elf : public CreatureScript
@@ -332,8 +336,10 @@ public:
                 case 9:
                     Talk(SAY_ELF_SUMMON1, player);
                     // Spawn two Haal'eshi Talonguard
-                    DoSpawnCreature(NPC_HAALESHI_TALONGUARD, -15, -15, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                    DoSpawnCreature(NPC_HAALESHI_TALONGUARD, -17, -17, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                    DoSpawnCreature(
+                        NPC_HAALESHI_TALONGUARD, -15, -15, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                    DoSpawnCreature(
+                        NPC_HAALESHI_TALONGUARD, -17, -17, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                     break;
                 case 13:
                     Talk(SAY_ELF_RESTING, player);
@@ -341,8 +347,10 @@ public:
                 case 14:
                     Talk(SAY_ELF_SUMMON2, player);
                     // Spawn two Haal'eshi Windwalker
-                    DoSpawnCreature(NPC_HAALESHI_WINDWALKER, -15, -15, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
-                    DoSpawnCreature(NPC_HAALESHI_WINDWALKER, -17, -17, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                    DoSpawnCreature(
+                        NPC_HAALESHI_WINDWALKER, -15, -15, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
+                    DoSpawnCreature(
+                        NPC_HAALESHI_WINDWALKER, -17, -17, 0, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                     break;
                 case 27:
                     Talk(SAY_ELF_COMPLETE, player);
@@ -365,9 +373,9 @@ public:
 
 enum FelGuard
 {
-    SPELL_SUMMON_POO            = 37688,
-    NPC_DERANGED_HELBOAR        = 16863,
-    QUEST_SHIZZ_WORK            = 10629,
+    SPELL_SUMMON_POO = 37688,
+    NPC_DERANGED_HELBOAR = 16863,
+    QUEST_SHIZZ_WORK = 10629,
 };
 
 class npc_fel_guard_hound : public CreatureScript
@@ -406,22 +414,24 @@ public:
             {
                 if (Creature* helboar = me->FindNearestCreature(NPC_DERANGED_HELBOAR, 10.0f, false))
                 {
-                    if (helboar->GetGUID() != helboarGUID && me->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE && !me->FindCurrentSpellBySpellId(SPELL_SUMMON_POO))
+                    if (helboar->GetGUID() != helboarGUID &&
+                        me->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE &&
+                        !me->FindCurrentSpellBySpellId(SPELL_SUMMON_POO))
                     {
                         helboarGUID = helboar->GetGUID();
-                        me->GetMotionMaster()->MovePoint(1, helboar->GetPositionX(), helboar->GetPositionY(), helboar->GetPositionZ());
+                        me->GetMotionMaster()->MovePoint(
+                            1, helboar->GetPositionX(), helboar->GetPositionY(), helboar->GetPositionZ());
                     }
                 }
                 if (Player* owner = me->GetCharmerOrOwnerPlayerOrPlayerItself())
                 {
                     if (!owner->HasQuest(QUEST_SHIZZ_WORK))
-                    {
                         me->DespawnOrUnsummon();
-                    }
                 }
                 checkTimer = 5000;
             }
-            else checkTimer -= diff;
+            else
+                checkTimer -= diff;
 
             if (!UpdateVictim())
                 return;
@@ -474,7 +484,8 @@ struct npc_magister_aledis : public ScriptedAI
         me->SetImmuneToPC(true);
     }
 
-    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damageType*/, SpellSchoolMask /*spellInfo = nullptr*/) override
+    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damageType*/,
+        SpellSchoolMask /*spellInfo = nullptr*/) override
     {
         if (damage > me->GetHealth() || me->HealthBelowPctDamaged(20, damage))
         {
@@ -509,9 +520,7 @@ struct npc_magister_aledis : public ScriptedAI
                     me->SetImmuneToPC(false);
                     me->SetFaction(FACTION_MONSTER);
                     if (Player* player = ObjectAccessor::GetPlayer(*me, _playerGUID))
-                    {
                         AttackStart(player);
-                    }
                     _events.ScheduleEvent(EVENT_FIREBALL, 1ms);
                     _events.ScheduleEvent(EVENT_FROSTNOVA, 5s);
                     break;
@@ -530,9 +539,7 @@ struct npc_magister_aledis : public ScriptedAI
         }
 
         if (UpdateVictim())
-        {
             DoMeleeAttackIfReady();
-        }
     }
 
     void sGossipSelect(Player* player, uint32 /*sender*/, uint32 /*action*/) override
@@ -549,7 +556,7 @@ private:
 
 enum Beacon
 {
-    NPC_STONESCHYE_WHELP        = 16927,
+    NPC_STONESCHYE_WHELP = 16927,
 };
 
 class go_beacon : public GameObjectScript
@@ -563,7 +570,7 @@ public:
 
         std::list<Creature*> creatureList;
 
-        void OnStateChanged(uint32 state, Unit*  /*unit*/) override
+        void OnStateChanged(uint32 state, Unit* /*unit*/) override
         {
             if (state == GO_ACTIVATED)
             {
@@ -571,7 +578,8 @@ public:
                 {
                     for (Creature* whelp : creatureList)
                     {
-                        if (whelp->IsAlive() && !whelp->IsInCombat() && whelp->GetMotionMaster()->GetCurrentMovementGeneratorType() != HOME_MOTION_TYPE)
+                        if (whelp->IsAlive() && !whelp->IsInCombat() &&
+                            whelp->GetMotionMaster()->GetCurrentMovementGeneratorType() != HOME_MOTION_TYPE)
                         {
                             whelp->GetMotionMaster()->MovePoint(0, me->GetNearPosition(4.0f, whelp->GetOrientation()));
                         }
@@ -583,7 +591,8 @@ public:
                 {
                     for (Creature* whelp : creatureList)
                     {
-                        if (whelp->IsAlive() && !whelp->IsInCombat() && whelp->GetMotionMaster()->GetCurrentMovementGeneratorType() != HOME_MOTION_TYPE)
+                        if (whelp->IsAlive() && !whelp->IsInCombat() &&
+                            whelp->GetMotionMaster()->GetCurrentMovementGeneratorType() != HOME_MOTION_TYPE)
                         {
                             whelp->GetMotionMaster()->MoveTargetedHome();
                         }
@@ -611,14 +620,16 @@ struct go_magtheridons_head : public GameObjectAI
     {
         me->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE); // spawn head on spike
         me->SetGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
-        sWorldState->HandleExternalEvent(WORLD_STATE_CUSTOM_EVENT_ON_MAGTHERIDON_HEAD_SPAWN, me->GetPositionX() > 0.f ? TEAM_HORDE : TEAM_ALLIANCE);
+        sWorldState->HandleExternalEvent(
+            WORLD_STATE_CUSTOM_EVENT_ON_MAGTHERIDON_HEAD_SPAWN, me->GetPositionX() > 0.f ? TEAM_HORDE : TEAM_ALLIANCE);
     }
 
     void OnStateChanged(uint32 state, Unit* /*unit*/) override
     {
         if (state == GO_JUST_DEACTIVATED)
         {
-            sWorldState->HandleExternalEvent(WORLD_STATE_CUSTOM_EVENT_ON_MAGTHERIDON_HEAD_DESPAWN, me->GetPositionX() > 0.f ? TEAM_HORDE : TEAM_ALLIANCE);
+            sWorldState->HandleExternalEvent(WORLD_STATE_CUSTOM_EVENT_ON_MAGTHERIDON_HEAD_DESPAWN,
+                me->GetPositionX() > 0.f ? TEAM_HORDE : TEAM_ALLIANCE);
         }
     }
 };

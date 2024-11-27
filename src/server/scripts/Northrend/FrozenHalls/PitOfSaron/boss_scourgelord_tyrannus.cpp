@@ -22,25 +22,25 @@
 
 enum Texts
 {
-    SAY_AGGRO                           = 2,
-    SAY_SLAY                            = 3,
-    SAY_DEATH                           = 4,
-    SAY_MARK                            = 5,
-    EMOTE_MARK                          = 6,
-    SAY_DARK_MIGHT                      = 7,
-    EMOTE_DARK_MIGHT                    = 8,
+    SAY_AGGRO = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4,
+    SAY_MARK = 5,
+    EMOTE_MARK = 6,
+    SAY_DARK_MIGHT = 7,
+    EMOTE_DARK_MIGHT = 8,
 };
 
 enum Spells
 {
-    SPELL_OVERLORDS_BRAND               = 69172,
-    SPELL_OVERLORDS_BRAND_HEAL          = 69190,
-    SPELL_OVERLORDS_BRAND_DAMAGE        = 69189,
-    SPELL_FORCEFUL_SMASH                = 69155,
-    SPELL_UNHOLY_POWER                  = 69167,
-    RIMEFANG_SPELL_ICY_BLAST            = 69232,
-    SPELL_MARK_OF_RIMEFANG              = 69275,
-    RIMEFANG_SPELL_HOARFROST            = 69246,
+    SPELL_OVERLORDS_BRAND = 69172,
+    SPELL_OVERLORDS_BRAND_HEAL = 69190,
+    SPELL_OVERLORDS_BRAND_DAMAGE = 69189,
+    SPELL_FORCEFUL_SMASH = 69155,
+    SPELL_UNHOLY_POWER = 69167,
+    RIMEFANG_SPELL_ICY_BLAST = 69232,
+    SPELL_MARK_OF_RIMEFANG = 69275,
+    RIMEFANG_SPELL_HOARFROST = 69246,
 };
 
 enum Events
@@ -64,9 +64,7 @@ public:
             pInstance = me->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             if (Creature* c = pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_RIMEFANG_GUID)))
-            {
                 c->SetCanFly(true);
-            }
         }
 
         InstanceScript* pInstance;
@@ -137,7 +135,8 @@ public:
             {
                 float x, y, z;
                 me->GetVictim()->GetPosition(x, y, z);
-                if (TSDistCheckPos.GetExactDist(x, y, z) > 100.0f || z > TSDistCheckPos.GetPositionZ() + 20.0f || z < TSDistCheckPos.GetPositionZ() - 20.0f)
+                if (TSDistCheckPos.GetExactDist(x, y, z) > 100.0f || z > TSDistCheckPos.GetPositionZ() + 20.0f ||
+                    z < TSDistCheckPos.GetPositionZ() - 20.0f)
                 {
                     me->SetHealth(me->GetMaxHealth());
                     EnterEvadeMode();

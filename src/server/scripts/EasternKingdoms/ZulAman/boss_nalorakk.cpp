@@ -24,19 +24,19 @@
 
 enum Spells
 {
-    SPELL_BERSERK           = 45078,
+    SPELL_BERSERK = 45078,
 
     // Troll form
-    SPELL_BRUTALSWIPE       = 42384,
-    SPELL_MANGLE            = 42389,
-    SPELL_MANGLEEFFECT      = 44955,
-    SPELL_SURGE             = 42402,
-    SPELL_BEARFORM          = 42377,
+    SPELL_BRUTALSWIPE = 42384,
+    SPELL_MANGLE = 42389,
+    SPELL_MANGLEEFFECT = 44955,
+    SPELL_SURGE = 42402,
+    SPELL_BEARFORM = 42377,
 
     // Bear form
-    SPELL_LACERATINGSLASH   = 42395,
-    SPELL_RENDFLESH         = 42397,
-    SPELL_DEAFENINGROAR     = 42398
+    SPELL_LACERATINGSLASH = 42395,
+    SPELL_RENDFLESH = 42397,
+    SPELL_DEAFENINGROAR = 42398
 };
 
 enum Talks
@@ -61,21 +61,21 @@ enum Talks
 
 enum Phases
 {
-    PHASE_SEND_GUARDS_1         = 0,
-    PHASE_SEND_GUARDS_2         = 1,
-    PHASE_SEND_GUARDS_3         = 2,
-    PHASE_SEND_GUARDS_4         = 3,
-    PHASE_SEND_GUARDS_5         = 4,
-    PHASE_START_COMBAT          = 5
+    PHASE_SEND_GUARDS_1 = 0,
+    PHASE_SEND_GUARDS_2 = 1,
+    PHASE_SEND_GUARDS_3 = 2,
+    PHASE_SEND_GUARDS_4 = 3,
+    PHASE_SEND_GUARDS_5 = 4,
+    PHASE_START_COMBAT = 5
 };
 
 enum NalorakkGroups
 {
-    GROUP_CHECK_DEAD            = 1,
-    GROUP_MOVE                  = 2,
-    GROUP_BERSERK               = 3,
-    GROUP_HUMAN                 = 4,
-    GROUP_BEAR                  = 5
+    GROUP_CHECK_DEAD = 1,
+    GROUP_MOVE = 2,
+    GROUP_BERSERK = 3,
+    GROUP_HUMAN = 4,
+    GROUP_BEAR = 5
 };
 
 struct boss_nalorakk : public BossAI
@@ -119,16 +119,19 @@ struct boss_nalorakk : public BossAI
                     me->GetCreaturesWithEntryInRange(_waveList, 10.0f, NPC_AMANISHI_TRIBESMAN);
                     GroupedAttack(_waveList);
                     Talk(SAY_WAVE1);
-                    _introScheduler.Schedule(5s, GROUP_CHECK_DEAD, [this](TaskContext context)
+                    _introScheduler.Schedule(5s,
+                        GROUP_CHECK_DEAD,
+                        [this](TaskContext context)
                     {
                         if (CheckFullyDeadGroup(_waveList))
                             if (_phase == PHASE_SEND_GUARDS_1)
                             {
                                 _introScheduler.CancelGroup(GROUP_CHECK_DEAD);
                                 _waveList.clear();
-                                me->GetMotionMaster()->MovePath(me->GetEntry()*100+1, false);
+                                me->GetMotionMaster()->MovePath(me->GetEntry() * 100 + 1, false);
                                 Talk(SAY_RUN_AWAY);
-                                _introScheduler.Schedule(5s, [this](TaskContext)
+                                _introScheduler.Schedule(5s,
+                                    [this](TaskContext)
                                 {
                                     me->SetFacingTo(6.25f);
                                     _active = true;
@@ -144,7 +147,9 @@ struct boss_nalorakk : public BossAI
                     me->GetCreaturesWithEntryInRange(_waveList, 10.0f, NPC_AMANISHI_MEDICINE_MAN);
                     GroupedAttack(_waveList);
                     Talk(SAY_WAVE2);
-                    _introScheduler.Schedule(5s, GROUP_CHECK_DEAD, [this](TaskContext context)
+                    _introScheduler.Schedule(5s,
+                        GROUP_CHECK_DEAD,
+                        [this](TaskContext context)
                     {
                         if (CheckFullyDeadGroup(_waveList))
                             if (_phase == PHASE_SEND_GUARDS_2)
@@ -152,8 +157,9 @@ struct boss_nalorakk : public BossAI
                                 _introScheduler.CancelGroup(GROUP_CHECK_DEAD);
                                 _waveList.clear();
                                 Talk(SAY_RUN_AWAY);
-                                me->GetMotionMaster()->MovePath(me->GetEntry()*100+2, false);
-                                _introScheduler.Schedule(6s, [this](TaskContext)
+                                me->GetMotionMaster()->MovePath(me->GetEntry() * 100 + 2, false);
+                                _introScheduler.Schedule(6s,
+                                    [this](TaskContext)
                                 {
                                     me->SetFacingTo(1.54f);
                                     _active = true;
@@ -167,7 +173,9 @@ struct boss_nalorakk : public BossAI
                     me->GetCreaturesWithEntryInRange(_waveList, 10.0f, NPC_AMANISHI_WARBRINGER);
                     GroupedAttack(_waveList);
                     Talk(SAY_WAVE3);
-                    _introScheduler.Schedule(5s, GROUP_CHECK_DEAD, [this](TaskContext context)
+                    _introScheduler.Schedule(5s,
+                        GROUP_CHECK_DEAD,
+                        [this](TaskContext context)
                     {
                         if (CheckFullyDeadGroup(_waveList))
                             if (_phase == PHASE_SEND_GUARDS_3)
@@ -176,7 +184,8 @@ struct boss_nalorakk : public BossAI
                                 _waveList.clear();
                                 Talk(SAY_RUN_AWAY);
                                 me->GetMotionMaster()->MovePath(me->GetEntry() * 100 + 3, false);
-                                _introScheduler.Schedule(6s, [this](TaskContext)
+                                _introScheduler.Schedule(6s,
+                                    [this](TaskContext)
                                 {
                                     me->SetFacingTo(1.54f);
                                     _active = true;
@@ -207,16 +216,28 @@ struct boss_nalorakk : public BossAI
     {
         BossAI::JustEngagedWith(who);
         Talk(SAY_AGGRO);
-        scheduler.Schedule(15s, 20s, GROUP_HUMAN, [this](TaskContext context)
+        scheduler
+            .Schedule(15s,
+                20s,
+                GROUP_HUMAN,
+                [this](TaskContext context)
         {
             Talk(SAY_SURGE);
             DoCastRandomTarget(SPELL_SURGE, 0, 45.0f, false, false, false);
             context.Repeat();
-        }).Schedule(7s, 12s, GROUP_HUMAN, [this](TaskContext context)
+        })
+            .Schedule(7s,
+                12s,
+                GROUP_HUMAN,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_BRUTALSWIPE);
             context.Repeat();
-        }).Schedule(10s, 15s, GROUP_HUMAN, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                15s,
+                GROUP_HUMAN,
+                [this](TaskContext context)
         {
             if (me->GetVictim() && !me->GetVictim()->HasAura(SPELL_MANGLE))
             {
@@ -225,14 +246,14 @@ struct boss_nalorakk : public BossAI
             }
             else
                 context.Repeat();
-        }).Schedule(10min, GROUP_BERSERK, [this](TaskContext)
+        })
+            .Schedule(10min,
+                GROUP_BERSERK,
+                [this](TaskContext)
         {
             Talk(SAY_BERSERK);
             DoCastSelf(SPELL_BERSERK, true);
-        }).Schedule(45s, 50s, GROUP_HUMAN, [this](TaskContext)
-        {
-            ShapeShift(_bearForm);
-        });
+        }).Schedule(45s, 50s, GROUP_HUMAN, [this](TaskContext) { ShapeShift(_bearForm); });
     }
 
     void ShapeShift(bool currentlyInBearForm)
@@ -245,27 +266,39 @@ struct boss_nalorakk : public BossAI
 
             me->SetCanDualWield(true);
 
-            scheduler.Schedule(15s, 20s, GROUP_HUMAN, [this](TaskContext context)
+            scheduler
+                .Schedule(15s,
+                    20s,
+                    GROUP_HUMAN,
+                    [this](TaskContext context)
             {
                 Talk(SAY_SURGE);
                 DoCastRandomTarget(SPELL_SURGE, 0, 45.0f, false, false, false);
                 context.Repeat();
-            }).Schedule(7s, 12s, GROUP_HUMAN, [this](TaskContext context)
+            })
+                .Schedule(7s,
+                    12s,
+                    GROUP_HUMAN,
+                    [this](TaskContext context)
             {
                 DoCastVictim(SPELL_BRUTALSWIPE);
                 context.Repeat();
-            }).Schedule(10s, 15s, GROUP_HUMAN, [this](TaskContext context)
+            })
+                .Schedule(10s,
+                    15s,
+                    GROUP_HUMAN,
+                    [this](TaskContext context)
             {
                 DoCastVictim(SPELL_MANGLE);
                 context.Repeat();
-            }).Schedule(10min, GROUP_BERSERK, [this](TaskContext)
+            })
+                .Schedule(10min,
+                    GROUP_BERSERK,
+                    [this](TaskContext)
             {
                 Talk(SAY_BERSERK);
                 DoCastSelf(SPELL_BERSERK, true);
-            }).Schedule(45s, 50s, GROUP_HUMAN, [this](TaskContext)
-            {
-                ShapeShift(_bearForm);
-            });
+            }).Schedule(45s, 50s, GROUP_HUMAN, [this](TaskContext) { ShapeShift(_bearForm); });
         }
         else
         {
@@ -277,31 +310,36 @@ struct boss_nalorakk : public BossAI
 
             me->SetCanDualWield(false);
 
-            scheduler.Schedule(2s, GROUP_BEAR, [this](TaskContext context)
+            scheduler
+                .Schedule(2s,
+                    GROUP_BEAR,
+                    [this](TaskContext context)
             {
                 DoCastVictim(SPELL_LACERATINGSLASH);
                 context.Repeat(18s, 23s);
-            }).Schedule(3s, GROUP_BEAR, [this](TaskContext context)
+            })
+                .Schedule(3s,
+                    GROUP_BEAR,
+                    [this](TaskContext context)
             {
                 DoCastVictim(SPELL_RENDFLESH);
                 context.Repeat(5s, 10s);
-            }).Schedule(5s, 10s, GROUP_BEAR, [this](TaskContext context)
+            })
+                .Schedule(5s,
+                    10s,
+                    GROUP_BEAR,
+                    [this](TaskContext context)
             {
                 DoCastSelf(SPELL_DEAFENINGROAR);
                 context.Repeat(15s, 20s);
-            }).Schedule(30s, GROUP_BEAR, [this](TaskContext)
-            {
-                ShapeShift(_bearForm);
-            });
+            }).Schedule(30s, GROUP_BEAR, [this](TaskContext) { ShapeShift(_bearForm); });
         }
     }
 
-    void GroupedAttack(std::list<Creature* > attackerList)
+    void GroupedAttack(std::list<Creature*> attackerList)
     {
         for (Creature* attacker : attackerList)
-        {
             attacker->SetInCombatWithZone();
-        }
     }
 
     void UpdateAI(uint32 diff) override
@@ -310,15 +348,11 @@ struct boss_nalorakk : public BossAI
         BossAI::UpdateAI(diff);
     }
 
-    bool CheckFullyDeadGroup(std::list<Creature* > groupToCheck)
+    bool CheckFullyDeadGroup(std::list<Creature*> groupToCheck)
     {
         for (Creature* member : groupToCheck)
-        {
             if (member->IsAlive())
-            {
                 return false;
-            }
-        }
         return true;
     }
 
@@ -334,7 +368,7 @@ private:
     bool _active;
     bool _bearForm;
     TaskScheduler _introScheduler;
-    std::list<Creature *> _waveList;
+    std::list<Creature*> _waveList;
 };
 
 void AddSC_boss_nalorakk()

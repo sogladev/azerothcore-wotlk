@@ -22,34 +22,34 @@
 
 enum Spells
 {
-    SPELL_CARRION_SWARM_N                       = 52720,
-    SPELL_CARRION_SWARM_H                       = 58852,
-    SPELL_MIND_BLAST_N                          = 52722,
-    SPELL_MIND_BLAST_H                          = 58850,
-    SPELL_SLEEP_N                               = 52721,
-    SPELL_SLEEP_H                               = 58849,
-    SPELL_VAMPIRIC_TOUCH                        = 52723,
+    SPELL_CARRION_SWARM_N = 52720,
+    SPELL_CARRION_SWARM_H = 58852,
+    SPELL_MIND_BLAST_N = 52722,
+    SPELL_MIND_BLAST_H = 58850,
+    SPELL_SLEEP_N = 52721,
+    SPELL_SLEEP_H = 58849,
+    SPELL_VAMPIRIC_TOUCH = 52723,
 };
 
 enum Events
 {
-    EVENT_SPELL_CARRION_SWARM                   = 1,
-    EVENT_SPELL_MIND_BLAST                      = 2,
-    EVENT_SPELL_SLEEP                           = 3,
-    EVENT_SPELL_VAMPIRIC_TOUCH                  = 4,
+    EVENT_SPELL_CARRION_SWARM = 1,
+    EVENT_SPELL_MIND_BLAST = 2,
+    EVENT_SPELL_SLEEP = 3,
+    EVENT_SPELL_VAMPIRIC_TOUCH = 4,
 };
 
 enum Yells
 {
-    SAY_AGGRO                                   = 2,
-    SAY_KILL                                    = 3,
-    SAY_SLAY                                    = 4,
-    SAY_SLEEP                                   = 5,
-    SAY_30HEALTH                                = 6,
-    SAY_15HEALTH                                = 7,
-    SAY_ESCAPE_SPEECH_1                         = 8,
-    SAY_ESCAPE_SPEECH_2                         = 9,
-    SAY_OUTRO                                   = 10
+    SAY_AGGRO = 2,
+    SAY_KILL = 3,
+    SAY_SLAY = 4,
+    SAY_SLEEP = 5,
+    SAY_30HEALTH = 6,
+    SAY_15HEALTH = 7,
+    SAY_ESCAPE_SPEECH_1 = 8,
+    SAY_ESCAPE_SPEECH_2 = 9,
+    SAY_OUTRO = 10
 };
 
 class boss_mal_ganis : public CreatureScript
@@ -93,11 +93,9 @@ public:
             events.ScheduleEvent(EVENT_SPELL_VAMPIRIC_TOUCH, 15000);
         }
 
-        void JustDied(Unit* /*killer*/) override
-        {
-        }
+        void JustDied(Unit* /*killer*/) override { }
 
-        void KilledUnit(Unit*  /*victim*/) override
+        void KilledUnit(Unit* /*victim*/) override
         {
             if (!urand(0, 1))
                 return;

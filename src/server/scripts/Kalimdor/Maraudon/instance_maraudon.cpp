@@ -26,9 +26,7 @@ public:
 
     struct instance_maraudon_InstanceMapScript : public InstanceScript
     {
-        instance_maraudon_InstanceMapScript(Map* map) : InstanceScript(map)
-        {
-        }
+        instance_maraudon_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         void Initialize() override
         {

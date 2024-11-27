@@ -24,40 +24,40 @@
 
 enum LokenSpells
 {
-    SPELL_ARC_LIGHTNING             = 52921,
-    SPELL_LIGHTNING_NOVA_N          = 52960,
-    SPELL_LIGHTNING_NOVA_H          = 59835,
-    SPELL_LIGHTNING_NOVA_VISUAL     = 56502,
-    SPELL_LIGHTNING_NOVA_THUNDERS   = 52663,
+    SPELL_ARC_LIGHTNING = 52921,
+    SPELL_LIGHTNING_NOVA_N = 52960,
+    SPELL_LIGHTNING_NOVA_H = 59835,
+    SPELL_LIGHTNING_NOVA_VISUAL = 56502,
+    SPELL_LIGHTNING_NOVA_THUNDERS = 52663,
 
-    SPELL_PULSING_SHOCKWAVE_N       = 52961,
-    SPELL_PULSING_SHOCKWAVE_H       = 59836,
+    SPELL_PULSING_SHOCKWAVE_N = 52961,
+    SPELL_PULSING_SHOCKWAVE_H = 59836,
 
     // Achievement
-    ACHIEVEMENT_TIMELY_DEATH        = 20384
+    ACHIEVEMENT_TIMELY_DEATH = 20384
 };
 
 enum Yells
 {
-    SAY_INTRO_1                     = 0,
-    SAY_INTRO_2                     = 1,
-    SAY_AGGRO                       = 2,
-    SAY_NOVA                        = 3,
-    SAY_SLAY                        = 4,
-    SAY_75HEALTH                    = 5,
-    SAY_50HEALTH                    = 6,
-    SAY_25HEALTH                    = 7,
-    SAY_DEATH                       = 8,
-    EMOTE_NOVA                      = 9
+    SAY_INTRO_1 = 0,
+    SAY_INTRO_2 = 1,
+    SAY_AGGRO = 2,
+    SAY_NOVA = 3,
+    SAY_SLAY = 4,
+    SAY_75HEALTH = 5,
+    SAY_50HEALTH = 6,
+    SAY_25HEALTH = 7,
+    SAY_DEATH = 8,
+    EMOTE_NOVA = 9
 };
 
 enum LokenEvents
 {
-    EVENT_LIGHTNING_NOVA            = 1,
-    EVENT_SHOCKWAVE                 = 2,
-    EVENT_ARC_LIGHTNING             = 3,
-    EVENT_CHECK_HEALTH              = 4,
-    EVENT_AURA_REMOVE               = 5
+    EVENT_LIGHTNING_NOVA = 1,
+    EVENT_SHOCKWAVE = 2,
+    EVENT_ARC_LIGHTNING = 3,
+    EVENT_CHECK_HEALTH = 4,
+    EVENT_AURA_REMOVE = 5
 };
 
 class boss_loken : public CreatureScript
@@ -233,10 +233,12 @@ public:
                     events.DelayEvents(5s);
                     events.ScheduleEvent(EVENT_AURA_REMOVE, me->GetMap()->IsHeroic() ? 4s : 5s);
 
-                    me->CastSpell(me, me->GetMap()->IsHeroic() ? SPELL_LIGHTNING_NOVA_H : SPELL_LIGHTNING_NOVA_N, false);
+                    me->CastSpell(
+                        me, me->GetMap()->IsHeroic() ? SPELL_LIGHTNING_NOVA_H : SPELL_LIGHTNING_NOVA_N, false);
                     break;
                 case EVENT_SHOCKWAVE:
-                    me->CastSpell(me, me->GetMap()->IsHeroic() ? SPELL_PULSING_SHOCKWAVE_H : SPELL_PULSING_SHOCKWAVE_N, false);
+                    me->CastSpell(
+                        me, me->GetMap()->IsHeroic() ? SPELL_PULSING_SHOCKWAVE_H : SPELL_PULSING_SHOCKWAVE_N, false);
                     break;
                 case EVENT_ARC_LIGHTNING:
                     if (Unit* target = SelectTargetFromPlayerList(100, SPELL_ARC_LIGHTNING))
@@ -270,7 +272,8 @@ class spell_loken_pulsing_shockwave : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_loken_pulsing_shockwave::CalculateDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_loken_pulsing_shockwave::CalculateDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
     }
 };
 

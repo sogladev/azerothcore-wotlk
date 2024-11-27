@@ -20,10 +20,11 @@
 #include "ScriptedCreature.h"
 #include "forge_of_souls.h"
 
-BossBoundaryData const boundaries =
-{
-    { DATA_BRONJAHM,    new CircleBoundary(Position(5297.3f, 2506.45f), 100.96)                                                                                   },
-    { DATA_DEVOURER,    new ParallelogramBoundary(Position(5663.56f, 2570.53f), Position(5724.39f, 2520.45f), Position(5570.36f, 2461.42f)) }
+BossBoundaryData const boundaries = {
+    {DATA_BRONJAHM, new CircleBoundary(Position(5297.3f, 2506.45f), 100.96)},
+    {DATA_DEVOURER,
+     new ParallelogramBoundary(
+            Position(5663.56f, 2570.53f), Position(5724.39f, 2520.45f), Position(5570.36f, 2461.42f))}
 };
 
 class instance_forge_of_souls : public InstanceMapScript
@@ -64,7 +65,8 @@ public:
         bool IsEncounterInProgress() const override
         {
             for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-                if (m_auiEncounter[i] == IN_PROGRESS) return true;
+                if (m_auiEncounter[i] == IN_PROGRESS)
+                    return true;
 
             return false;
         }
@@ -72,7 +74,8 @@ public:
         void OnPlayerEnter(Player* /*plr*/) override
         {
             // this will happen only after crash and loading the instance from db
-            if (m_auiEncounter[0] == DONE && m_auiEncounter[1] == DONE && (!NPC_LeaderSecondGUID || !instance->GetCreature(NPC_LeaderSecondGUID)))
+            if (m_auiEncounter[0] == DONE && m_auiEncounter[1] == DONE &&
+                (!NPC_LeaderSecondGUID || !instance->GetCreature(NPC_LeaderSecondGUID)))
             {
                 Position pos = {5658.15f, 2502.564f, 708.83f, 0.885207f};
                 instance->SummonCreature(NPC_SYLVANAS_PART2, pos);
@@ -140,11 +143,15 @@ public:
                     if (Creature* boss = instance->GetCreature(NPC_DevourerGUID))
                     {
                         float angle = boss->GetAngle(leader);
-                        leader->GetMotionMaster()->MovePoint(1, boss->GetPositionX() + 10.0f * cos(angle), boss->GetPositionY() + 10.0f * std::sin(angle), boss->GetPositionZ());
+                        leader->GetMotionMaster()->MovePoint(1,
+                            boss->GetPositionX() + 10.0f * cos(angle),
+                            boss->GetPositionY() + 10.0f * std::sin(angle),
+                            boss->GetPositionZ());
                     }
 
             for (int8 i = 0; outroPositions[i].entry[teamIdInInstance] != 0; ++i)
-                if (Creature* summon = instance->SummonCreature(outroPositions[i].entry[teamIdInInstance], outroPositions[i].startPosition))
+                if (Creature* summon = instance->SummonCreature(
+                        outroPositions[i].entry[teamIdInInstance], outroPositions[i].startPosition))
                     summon->GetMotionMaster()->MovePath(outroPositions[i].pathId, false);
         }
 
@@ -177,7 +184,8 @@ public:
             return ObjectGuid::Empty;
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const*  /*source*/, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {
@@ -187,7 +195,7 @@ public:
                         std::list<Creature*> L;
                         uint8 count = 0;
                         c->GetCreaturesWithEntryInRange(L, 200.0f, 36535); // find all Corrupted Soul Fragment (36535)
-                        for( std::list<Creature*>::const_iterator itr = L.begin(); itr != L.end(); ++itr )
+                        for (std::list<Creature*>::const_iterator itr = L.begin(); itr != L.end(); ++itr)
                             if ((*itr)->IsAlive())
                                 ++count;
                         return (count >= 4);

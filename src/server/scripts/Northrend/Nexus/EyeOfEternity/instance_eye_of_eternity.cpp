@@ -45,7 +45,10 @@ public:
 
     struct instance_eye_of_eternity_InstanceMapScript : public InstanceScript
     {
-        instance_eye_of_eternity_InstanceMapScript(Map* pMap) : InstanceScript(pMap) { Initialize(); }
+        instance_eye_of_eternity_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
+        {
+            Initialize();
+        }
 
         uint32 EncounterStatus;
         std::string str_data;
@@ -84,12 +87,19 @@ public:
                     if (!pPlayer->IsAlive())
                         return;
 
-                    if (Creature* c = pPlayer->SummonCreature(NPC_WYRMREST_SKYTALON, pPlayer->GetPositionX(), pPlayer->GetPositionY(), pPlayer->GetPositionZ() - 20.0f, 0.0f, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                    if (Creature* c = pPlayer->SummonCreature(NPC_WYRMREST_SKYTALON,
+                            pPlayer->GetPositionX(),
+                            pPlayer->GetPositionY(),
+                            pPlayer->GetPositionZ() - 20.0f,
+                            0.0f,
+                            TEMPSUMMON_MANUAL_DESPAWN,
+                            0))
                     {
                         c->SetCanFly(true);
                         c->SetFaction(pPlayer->GetFaction());
                         //pPlayer->CastCustomSpell(60683, SPELLVALUE_BASE_POINT0, 1, c, true);
-                        c->m_Events.AddEvent(new EoEDrakeEnterVehicleEvent(*c, pPlayer->GetGUID()), c->m_Events.CalculateTime(500));
+                        c->m_Events.AddEvent(
+                            new EoEDrakeEnterVehicleEvent(*c, pPlayer->GetGUID()), c->m_Events.CalculateTime(500));
                     }
                 }
             }
@@ -152,14 +162,21 @@ public:
                             }
                             break;
                         case IN_PROGRESS:
-                            bPokeAchiev = (instance->GetPlayersCountExceptGMs() < (instance->GetSpawnMode() == 0 ? (uint32)9 : (uint32)21));
+                            bPokeAchiev = (instance->GetPlayersCountExceptGMs() <
+                                           (instance->GetSpawnMode() == 0 ? (uint32)9 : (uint32)21));
                             break;
                         case DONE:
                             bPokeAchiev = false;
                             if (GameObject* go = instance->GetGameObject(GO_ExitPortalGUID))
                                 go->SetPhaseMask(1, true);
                             if (Creature* c = instance->GetCreature(NPC_MalygosGUID))
-                                if (c->SummonCreature(NPC_ALEXSTRASZA, 798.0f, 1268.0f, 299.0f, 2.45f, TEMPSUMMON_TIMED_DESPAWN, 604800000))
+                                if (c->SummonCreature(NPC_ALEXSTRASZA,
+                                        798.0f,
+                                        1268.0f,
+                                        299.0f,
+                                        2.45f,
+                                        TEMPSUMMON_TIMED_DESPAWN,
+                                        604800000))
                                     break;
                     }
                     if (data == DONE)
@@ -169,7 +186,8 @@ public:
                     if (GameObject* go = instance->GetGameObject(GO_IrisGUID))
                     {
                         HandleGameObject(GO_IrisGUID, true, go);
-                        if (Creature* c = go->SummonCreature(NPC_WORLD_TRIGGER_LAOI, *go, TEMPSUMMON_TIMED_DESPAWN, 10000))
+                        if (Creature* c =
+                                go->SummonCreature(NPC_WORLD_TRIGGER_LAOI, *go, TEMPSUMMON_TIMED_DESPAWN, 10000))
                             c->CastSpell(c, SPELL_IRIS_ACTIVATED, true);
                     }
                     break;
@@ -201,7 +219,8 @@ public:
                     if (GameObject* go = instance->GetGameObject(GO_PlatformGUID))
                         if (Creature* c = instance->GetCreature(NPC_MalygosGUID))
                         {
-                            go->ModifyHealth(-6500000, c); // We have HP 6 million in the database... So we have to do at least that
+                            go->ModifyHealth(
+                                -6500000, c); // We have HP 6 million in the database... So we have to do at least that
                             go->EnableCollision(false);
                         }
                     break;
@@ -231,7 +250,8 @@ public:
             data << EncounterStatus;
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* source, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* source, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {

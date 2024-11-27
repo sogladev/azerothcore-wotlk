@@ -25,8 +25,7 @@ Battleground* ScriptMgr::CreateBattleground(BattlegroundTypeId /*typeId*/)
     return nullptr;
 }
 
-BattlegroundScript::BattlegroundScript(const char* name)
-    : ScriptObject(name)
+BattlegroundScript::BattlegroundScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<BattlegroundScript>::AddScript(this);
 }

@@ -41,19 +41,19 @@ EndContentData */
 
 enum LordGregorLescovar
 {
-    SAY_GUARD_2    = 0,
+    SAY_GUARD_2 = 0,
     SAY_LESCOVAR_2 = 0,
     SAY_LESCOVAR_3 = 1,
     SAY_LESCOVAR_4 = 2,
-    SAY_MARZON_1   = 0,
-    SAY_MARZON_2   = 1,
-    SAY_TYRION_2   = 1,
+    SAY_MARZON_1 = 0,
+    SAY_MARZON_2 = 1,
+    SAY_TYRION_2 = 1,
 
     NPC_STORMWIND_ROYAL = 1756,
-    NPC_MARZON_BLADE    = 1755,
-    NPC_TYRION          = 7766,
+    NPC_MARZON_BLADE = 1755,
+    NPC_TYRION = 7766,
 
-    QUEST_THE_ATTACK    = 434
+    QUEST_THE_ATTACK = 434
 };
 
 class npc_lord_gregor_lescovar : public CreatureScript
@@ -115,7 +115,13 @@ public:
                     break;
                 case 16:
                     SetEscortPaused(true);
-                    if (Creature* pMarzon = me->SummonCreature(NPC_MARZON_BLADE, -8411.360352f, 480.069733f, 123.760895f, 4.941504f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1000))
+                    if (Creature* pMarzon = me->SummonCreature(NPC_MARZON_BLADE,
+                            -8411.360352f,
+                            480.069733f,
+                            123.760895f,
+                            4.941504f,
+                            TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                            1000))
                     {
                         pMarzon->GetMotionMaster()->MovePoint(0, -8408.000977f, 468.611450f, 123.759903f);
                         MarzonGUID = pMarzon->GetGUID();
@@ -125,6 +131,7 @@ public:
                     break;
             }
         }
+
         //TO-DO: We don't have movemaps, also we can't make 2 npcs walks to one point propperly (and we can not use escort ai, because they are 2 different spawns and with same entry), because of it we make them, disappear.
         void DoGuardsDisappearAndDie()
         {
@@ -133,10 +140,8 @@ public:
             if (!GuardList.empty())
             {
                 for (std::list<Creature*>::const_iterator itr = GuardList.begin(); itr != GuardList.end(); ++itr)
-                {
                     if (Creature* pGuard = *itr)
                         pGuard->DisappearAndDie();
-                }
             }
         }
 
@@ -193,7 +198,8 @@ public:
                             break;
                     }
                 }
-                else uiTimer -= uiDiff;
+                else
+                    uiTimer -= uiDiff;
             }
             npc_escortAI::UpdateAI(uiDiff);
 
@@ -297,16 +303,16 @@ public:
 
 enum TyrionSpybot
 {
-    SAY_QUEST_ACCEPT_ATTACK  = 0,
-    SAY_SPYBOT_1             = 1,
-    SAY_SPYBOT_2             = 2,
-    SAY_SPYBOT_3             = 3,
-    SAY_SPYBOT_4             = 4,
-    SAY_TYRION_1             = 0,
-    SAY_GUARD_1              = 1,
-    SAY_LESCOVAR_1           = 3,
+    SAY_QUEST_ACCEPT_ATTACK = 0,
+    SAY_SPYBOT_1 = 1,
+    SAY_SPYBOT_2 = 2,
+    SAY_SPYBOT_3 = 3,
+    SAY_SPYBOT_4 = 4,
+    SAY_TYRION_1 = 0,
+    SAY_GUARD_1 = 1,
+    SAY_LESCOVAR_1 = 3,
 
-    NPC_PRIESTESS_TYRIONA    = 7779,
+    NPC_PRIESTESS_TYRIONA = 7779,
     NPC_LORD_GREGOR_LESCOVAR = 1754,
 };
 
@@ -421,8 +427,10 @@ public:
                             {
                                 if (Player* player = GetPlayerForEscort())
                                 {
-                                    CAST_AI(npc_lord_gregor_lescovar::npc_lord_gregor_lescovarAI, pLescovar->AI())->Start(false, false, player->GetGUID());
-                                    CAST_AI(npc_lord_gregor_lescovar::npc_lord_gregor_lescovarAI, pLescovar->AI())->SetMaxPlayerDistance(200.0f);
+                                    CAST_AI(npc_lord_gregor_lescovar::npc_lord_gregor_lescovarAI, pLescovar->AI())
+                                        ->Start(false, false, player->GetGUID());
+                                    CAST_AI(npc_lord_gregor_lescovar::npc_lord_gregor_lescovarAI, pLescovar->AI())
+                                        ->SetMaxPlayerDistance(200.0f);
                                 }
                             }
                             me->DisappearAndDie();
@@ -431,7 +439,8 @@ public:
                             break;
                     }
                 }
-                else uiTimer -= uiDiff;
+                else
+                    uiTimer -= uiDiff;
             }
             npc_escortAI::UpdateAI(uiDiff);
 

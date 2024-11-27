@@ -36,4 +36,4 @@ namespace AuthHelper
     {
         return sRealmList->GetBuildInfo(build) != nullptr;
     }
-};
+}; // namespace AuthHelper

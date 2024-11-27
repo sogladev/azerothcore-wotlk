@@ -22,6 +22,7 @@
 #include "ScriptedGossip.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
+
 /* ScriptData
 SDName: Thousand Needles
 SD%Complete: 100
@@ -43,22 +44,21 @@ EndContentData */
 
 enum Lakota
 {
-    SAY_LAKO_START              = 0,
-    SAY_LAKO_LOOK_OUT           = 1,
-    SAY_LAKO_HERE_COME          = 2,
-    SAY_LAKO_MORE               = 3,
-    SAY_LAKO_END                = 4,
+    SAY_LAKO_START = 0,
+    SAY_LAKO_LOOK_OUT = 1,
+    SAY_LAKO_HERE_COME = 2,
+    SAY_LAKO_MORE = 3,
+    SAY_LAKO_END = 4,
 
-    QUEST_FREE_AT_LAST          = 4904,
-    NPC_GRIM_BANDIT             = 10758,
+    QUEST_FREE_AT_LAST = 4904,
+    NPC_GRIM_BANDIT = 10758,
 
-    ID_AMBUSH_1                 = 0,
-    ID_AMBUSH_2                 = 2,
-    ID_AMBUSH_3                 = 4
+    ID_AMBUSH_1 = 0,
+    ID_AMBUSH_2 = 2,
+    ID_AMBUSH_3 = 4
 };
 
-Position const BanditLoc[6] =
-{
+Position const BanditLoc[6] = {
     {-4905.479492f, -2062.732666f, 84.352f, 0.0f},
     {-4915.201172f, -2073.528320f, 84.733f, 0.0f},
     {-4878.883301f, -1986.947876f, 91.966f, 0.0f},
@@ -72,7 +72,7 @@ class npc_lakota_windsong : public CreatureScript
 public:
     npc_lakota_windsong() : CreatureScript("npc_lakota_windsong") { }
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
     {
         if (quest->GetQuestId() == QUEST_FREE_AT_LAST)
         {
@@ -134,16 +134,15 @@ public:
 
 enum Packa
 {
-    SAY_START           = 0,
-    SAY_WYVERN          = 1,
-    SAY_COMPLETE        = 2,
+    SAY_START = 0,
+    SAY_WYVERN = 1,
+    SAY_COMPLETE = 2,
 
-    QUEST_HOMEWARD      = 4770,
-    NPC_WYVERN          = 4107
+    QUEST_HOMEWARD = 4770,
+    NPC_WYVERN = 4107
 };
 
-Position const WyvernLoc[3] =
-{
+Position const WyvernLoc[3] = {
     {-4990.606f, -906.057f, -5.343f, 0.0f},
     {-4970.241f, -927.378f, -4.951f, 0.0f},
     {-4985.364f, -952.528f, -5.199f, 0.0f}
@@ -154,14 +153,15 @@ class npc_paoka_swiftmountain : public CreatureScript
 public:
     npc_paoka_swiftmountain() : CreatureScript("npc_paoka_swiftmountain") { }
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
     {
         if (quest->GetQuestId() == QUEST_HOMEWARD)
         {
             creature->AI()->Talk(SAY_START, player);
             creature->SetFaction(FACTION_ESCORTEE_H_NEUTRAL_ACTIVE); // guessed
 
-            if (npc_paoka_swiftmountainAI* pEscortAI = CAST_AI(npc_paoka_swiftmountain::npc_paoka_swiftmountainAI, creature->AI()))
+            if (npc_paoka_swiftmountainAI* pEscortAI =
+                    CAST_AI(npc_paoka_swiftmountain::npc_paoka_swiftmountainAI, creature->AI()))
                 pEscortAI->Start(false, false, player->GetGUID(), quest);
         }
         return true;
@@ -212,9 +212,9 @@ public:
 
 enum Plucky
 {
-    QUEST_SCOOP             = 1950,
-    SPELL_PLUCKY_HUMAN      = 9192,
-    SPELL_PLUCKY_CHICKEN    = 9220
+    QUEST_SCOOP = 1950,
+    SPELL_PLUCKY_HUMAN = 9192,
+    SPELL_PLUCKY_CHICKEN = 9220
 };
 
 class npc_plucky : public CreatureScript
@@ -227,7 +227,7 @@ public:
         ClearGossipMenuFor(player);
         switch (action)
         {
-            case GOSSIP_ACTION_INFO_DEF+1:
+            case GOSSIP_ACTION_INFO_DEF + 1:
                 CloseGossipMenuFor(player);
                 player->CompleteQuest(QUEST_SCOOP);
                 break;
@@ -252,7 +252,10 @@ public:
 
     struct npc_pluckyAI : public ScriptedAI
     {
-        npc_pluckyAI(Creature* creature) : ScriptedAI(creature) { NormFaction = creature->GetFaction(); }
+        npc_pluckyAI(Creature* creature) : ScriptedAI(creature)
+        {
+            NormFaction = creature->GetFaction();
+        }
 
         uint32 NormFaction;
         uint32 ResetTimer;
@@ -323,7 +326,7 @@ public:
 
 enum PantherCage
 {
-    NPC_ENRAGED_PANTHER        = 10992,
+    NPC_ENRAGED_PANTHER = 10992,
     QUEST_HYPERCAPACITOR_GIZMO = 5151
 };
 

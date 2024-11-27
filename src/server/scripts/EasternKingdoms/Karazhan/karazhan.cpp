@@ -25,6 +25,7 @@
 #include "SpellAuraEffects.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
+
 /* ScriptData
 SDName: Karazhan
 SD%Complete: 100
@@ -41,23 +42,23 @@ EndContentData */
 enum Spells
 {
     // Barnes
-    SPELL_SPOTLIGHT             = 25824,
-    SPELL_TUXEDO                = 32616,
+    SPELL_SPOTLIGHT = 25824,
+    SPELL_TUXEDO = 32616,
 
     // Berthold
-    SPELL_TELEPORT              = 39567,
+    SPELL_TELEPORT = 39567,
 
     // Image of Medivh
-    SPELL_FIRE_BALL             = 30967,
-    SPELL_UBER_FIREBALL         = 30971,
-    SPELL_CONFLAGRATION_BLAST   = 30977,
-    SPELL_MANA_SHIELD           = 31635
+    SPELL_FIRE_BALL = 30967,
+    SPELL_UBER_FIREBALL = 30971,
+    SPELL_CONFLAGRATION_BLAST = 30977,
+    SPELL_MANA_SHIELD = 31635
 };
 
 enum Creatures
 {
-    NPC_ARCANAGOS               = 17652,
-    NPC_SPOTLIGHT               = 19525
+    NPC_ARCANAGOS = 17652,
+    NPC_SPOTLIGHT = 19525
 };
 
 /*######
@@ -74,10 +75,10 @@ enum Misc
 
 enum NPCTexts
 {
-    BARNES_TEXT_NOT_READY   = 8969,
-    BARNES_TEXT_IS_READY    = 8970,
-    BARNES_TEXT_IS_READY2   = 8971,
-    BARNES_TEXT_WIPED       = 8975
+    BARNES_TEXT_NOT_READY = 8969,
+    BARNES_TEXT_IS_READY = 8970,
+    BARNES_TEXT_IS_READY2 = 8971,
+    BARNES_TEXT_WIPED = 8975
 };
 
 #define OZ_GM_GOSSIP1       "[GM] Change event to EVENT_OZ"
@@ -90,39 +91,35 @@ struct Dialogue
     uint32 timer;
 };
 
-static Dialogue OzDialogue[] =
-{
-    {0, 6000},
+static Dialogue OzDialogue[] = {
+    {0, 6000 },
     {1, 18000},
-    {2, 9000},
+    {2, 9000 },
     {3, 15000}
 };
 
-static Dialogue HoodDialogue[] =
-{
-    {4, 6000},
+static Dialogue HoodDialogue[] = {
+    {4, 6000 },
     {5, 10000},
     {6, 14000},
     {7, 15000}
 };
 
-static Dialogue RAJDialogue[] =
-{
-    {8, 5000},
-    {9, 7000},
+static Dialogue RAJDialogue[] = {
+    {8,  5000 },
+    {9,  7000 },
     {10, 14000},
     {11, 14000}
 };
 
 // Entries and spawn locations for creatures in Oz event
-float Spawns[6][2] =
-{
-    {17535, -10896},                                        // Dorothee
-    {17546, -10891},                                        // Roar
-    {17547, -10884},                                        // Tinhead
-    {17543, -10902},                                        // Strawman
-    {17603, -10892},                                        // Grandmother
-    {17534, -10900},                                        // Julianne
+float Spawns[6][2] = {
+    {17535, -10896}, // Dorothee
+    {17546, -10891}, // Roar
+    {17547, -10884}, // Tinhead
+    {17543, -10902}, // Strawman
+    {17603, -10892}, // Grandmother
+    {17534, -10900}, // Julianne
 };
 
 #define SPAWN_Z             90.5f
@@ -190,8 +187,12 @@ public:
                     SetEscortPaused(true);
 
                     if (Creature* spotlight = me->SummonCreature(NPC_SPOTLIGHT,
-                                              me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0.0f,
-                                              TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000))
+                            me->GetPositionX(),
+                            me->GetPositionY(),
+                            me->GetPositionZ(),
+                            0.0f,
+                            TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,
+                            60000))
                     {
                         spotlight->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                         spotlight->CastSpell(spotlight, SPELL_SPOTLIGHT, false);
@@ -199,7 +200,8 @@ public:
                     }
                     break;
                 case 8:
-                    if (m_uiEventId != EVENT_HOOD) // in red riding hood door should close when gossip with grandma is over
+                    if (m_uiEventId !=
+                        EVENT_HOOD) // in red riding hood door should close when gossip with grandma is over
                     {
                         instance->DoUseDoorOrButton(instance->GetGuidData(DATA_GO_STAGEDOORLEFT));
                     }
@@ -271,7 +273,13 @@ public:
                 uint32 entry = ((uint32)Spawns[index][0]);
                 float PosX = Spawns[index][1];
 
-                if (Creature* creature = me->SummonCreature(entry, PosX, SPAWN_Y, SPAWN_Z, SPAWN_O, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR * 2 * IN_MILLISECONDS))
+                if (Creature* creature = me->SummonCreature(entry,
+                        PosX,
+                        SPAWN_Y,
+                        SPAWN_Z,
+                        SPAWN_O,
+                        TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,
+                        HOUR * 2 * IN_MILLISECONDS))
                     creature->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
             }
 
@@ -298,7 +306,8 @@ public:
                     Talk(TalkCount);
                     ++TalkCount;
                 }
-                else TalkTimer -= diff;
+                else
+                    TalkTimer -= diff;
             }
         }
     };
@@ -310,23 +319,24 @@ public:
 
         switch (action)
         {
-            case GOSSIP_ACTION_INFO_DEF+1:
-                AddGossipItemFor(player, OZ_GOSSIP2_MID, OZ_GOSSIP2_OID, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+            case GOSSIP_ACTION_INFO_DEF + 1:
+                AddGossipItemFor(
+                    player, OZ_GOSSIP2_MID, OZ_GOSSIP2_OID, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                 SendGossipMenuFor(player, BARNES_TEXT_IS_READY2, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+2:
+            case GOSSIP_ACTION_INFO_DEF + 2:
                 CloseGossipMenuFor(player);
                 pBarnesAI->StartEvent();
                 break;
-            case GOSSIP_ACTION_INFO_DEF+3:
+            case GOSSIP_ACTION_INFO_DEF + 3:
                 CloseGossipMenuFor(player);
                 pBarnesAI->m_uiEventId = EVENT_OZ;
                 break;
-            case GOSSIP_ACTION_INFO_DEF+4:
+            case GOSSIP_ACTION_INFO_DEF + 4:
                 CloseGossipMenuFor(player);
                 pBarnesAI->m_uiEventId = EVENT_HOOD;
                 break;
-            case GOSSIP_ACTION_INFO_DEF+5:
+            case GOSSIP_ACTION_INFO_DEF + 5:
                 CloseGossipMenuFor(player);
                 pBarnesAI->m_uiEventId = EVENT_RAJ;
                 break;
@@ -340,25 +350,25 @@ public:
         if (InstanceScript* instance = creature->GetInstanceScript())
         {
             // Check for death of Moroes and if opera event is not done already
-            if (instance->GetBossState(DATA_MOROES) == DONE &&  instance->GetBossState(DATA_OPERA_PERFORMANCE) != DONE)
+            if (instance->GetBossState(DATA_MOROES) == DONE && instance->GetBossState(DATA_OPERA_PERFORMANCE) != DONE)
             {
-                AddGossipItemFor(player, OZ_GOSSIP1_MID, OZ_GOSSIP1_OID, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                AddGossipItemFor(
+                    player, OZ_GOSSIP1_MID, OZ_GOSSIP1_OID, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
 
                 if (player->IsGameMaster())
                 {
-                    AddGossipItemFor(player, GOSSIP_ICON_DOT, OZ_GM_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                    AddGossipItemFor(player, GOSSIP_ICON_DOT, OZ_GM_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-                    AddGossipItemFor(player, GOSSIP_ICON_DOT, OZ_GM_GOSSIP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                    AddGossipItemFor(
+                        player, GOSSIP_ICON_DOT, OZ_GM_GOSSIP1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    AddGossipItemFor(
+                        player, GOSSIP_ICON_DOT, OZ_GM_GOSSIP2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                    AddGossipItemFor(
+                        player, GOSSIP_ICON_DOT, OZ_GM_GOSSIP3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
                 }
 
                 if (instance->GetBossState(DATA_OPERA_PERFORMANCE) != FAIL)
-                {
                     SendGossipMenuFor(player, BARNES_TEXT_IS_READY, creature->GetGUID());
-                }
                 else
-                {
                     SendGossipMenuFor(player, BARNES_TEXT_WIPED, creature->GetGUID());
-                }
 
                 return true;
             }
@@ -380,15 +390,15 @@ public:
 
 enum MedivhTexts
 {
-    SAY_DIALOG_MEDIVH_1    = 0,
+    SAY_DIALOG_MEDIVH_1 = 0,
     SAY_DIALOG_ARCANAGOS_2 = 0,
-    SAY_DIALOG_MEDIVH_3    = 1,
+    SAY_DIALOG_MEDIVH_3 = 1,
     SAY_DIALOG_ARCANAGOS_4 = 1,
-    SAY_DIALOG_MEDIVH_5    = 2,
+    SAY_DIALOG_MEDIVH_5 = 2,
     SAY_DIALOG_ARCANAGOS_6 = 2,
-    EMOTE_DIALOG_MEDIVH_7  = 3,
+    EMOTE_DIALOG_MEDIVH_7 = 3,
     SAY_DIALOG_ARCANAGOS_8 = 3,
-    SAY_DIALOG_MEDIVH_9    = 4
+    SAY_DIALOG_MEDIVH_9 = 4
 };
 
 //static float MedivPos[4] = {-11161.49f, -1902.24f, 91.48f, 1.94f};
@@ -432,7 +442,13 @@ public:
 
             if (instance && !instance->GetGuidData(DATA_IMAGE_OF_MEDIVH))
             {
-                Creature* Arcanagos = me->SummonCreature(NPC_ARCANAGOS, ArcanagosPos[0], ArcanagosPos[1], ArcanagosPos[2], 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                Creature* Arcanagos = me->SummonCreature(NPC_ARCANAGOS,
+                    ArcanagosPos[0],
+                    ArcanagosPos[1],
+                    ArcanagosPos[2],
+                    0,
+                    TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                    20000);
                 if (!Arcanagos)
                 {
                     me->DespawnOrUnsummon();
@@ -452,7 +468,7 @@ public:
                 me->DespawnOrUnsummon();
         }
 
-        void JustEngagedWith(Unit* /*who*/) override {}
+        void JustEngagedWith(Unit* /*who*/) override { }
 
         uint32 NextStep(uint32 nextStep)
         {
@@ -542,7 +558,8 @@ public:
                 if (EventStarted)
                     YellTimer = NextStep(Step++);
             }
-            else YellTimer -= diff;
+            else
+                YellTimer -= diff;
 
             if (Step >= 7 && Step <= 8)
             {
@@ -598,13 +615,15 @@ class spell_karazhan_temptation : public AuraScript
 
         if (eventInfo.GetActionTarget())
         {
-            GetTarget()->CastSpell(eventInfo.GetActionTarget(), GetSpellInfo()->Effects[aurEff->GetEffIndex()].TriggerSpell, true);
+            GetTarget()->CastSpell(
+                eventInfo.GetActionTarget(), GetSpellInfo()->Effects[aurEff->GetEffIndex()].TriggerSpell, true);
         }
     }
 
     void Register() override
     {
-        OnEffectProc += AuraEffectProcFn(spell_karazhan_temptation::HandleProc, EFFECT_0, SPELL_AURA_PROC_TRIGGER_SPELL);
+        OnEffectProc +=
+            AuraEffectProcFn(spell_karazhan_temptation::HandleProc, EFFECT_0, SPELL_AURA_PROC_TRIGGER_SPELL);
     }
 };
 

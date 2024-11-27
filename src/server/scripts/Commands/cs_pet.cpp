@@ -34,16 +34,14 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable petCommandTable =
-        {
-            { "create",  HandlePetCreateCommand,  SEC_GAMEMASTER, Console::No },
-            { "learn",   HandlePetLearnCommand,   SEC_GAMEMASTER, Console::No },
-            { "unlearn", HandlePetUnlearnCommand, SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable petCommandTable = {
+            {"create",  HandlePetCreateCommand,  SEC_GAMEMASTER, Console::No},
+            {"learn",   HandlePetLearnCommand,   SEC_GAMEMASTER, Console::No},
+            {"unlearn", HandlePetUnlearnCommand, SEC_GAMEMASTER, Console::No}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "pet", petCommandTable }
+        static ChatCommandTable commandTable = {
+            {"pet", petCommandTable}
         };
 
         return commandTable;
@@ -147,13 +145,9 @@ public:
         }
 
         if (pet->HasSpell(spell->Id))
-        {
             pet->removeSpell(spell->Id, false);
-        }
         else
-        {
             handler->PSendSysMessage("Pet doesn't have that spell");
-        }
 
         return true;
     }

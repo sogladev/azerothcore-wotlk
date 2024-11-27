@@ -47,27 +47,23 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable deserterInstanceCommandTable =
-        {
-            { "add",        HandleDeserterInstanceAdd,       SEC_ADMINISTRATOR, Console::Yes },
-            { "remove all", HandleDeserterInstanceRemoveAll, SEC_ADMINISTRATOR, Console::Yes },
-            { "remove",     HandleDeserterInstanceRemove,    SEC_ADMINISTRATOR, Console::Yes }
+        static ChatCommandTable deserterInstanceCommandTable = {
+            {"add",        HandleDeserterInstanceAdd,       SEC_ADMINISTRATOR, Console::Yes},
+            {"remove all", HandleDeserterInstanceRemoveAll, SEC_ADMINISTRATOR, Console::Yes},
+            {"remove",     HandleDeserterInstanceRemove,    SEC_ADMINISTRATOR, Console::Yes}
         };
-        static ChatCommandTable deserterBGCommandTable =
-        {
-            { "add",        HandleDeserterBGAdd,       SEC_ADMINISTRATOR, Console::Yes },
-            { "remove all", HandleDeserterBGRemoveAll, SEC_ADMINISTRATOR, Console::Yes },
-            { "remove",     HandleDeserterBGRemove,    SEC_ADMINISTRATOR, Console::Yes }
+        static ChatCommandTable deserterBGCommandTable = {
+            {"add",        HandleDeserterBGAdd,       SEC_ADMINISTRATOR, Console::Yes},
+            {"remove all", HandleDeserterBGRemoveAll, SEC_ADMINISTRATOR, Console::Yes},
+            {"remove",     HandleDeserterBGRemove,    SEC_ADMINISTRATOR, Console::Yes}
         };
 
-        static ChatCommandTable deserterCommandTable =
-        {
-            { "instance", deserterInstanceCommandTable },
-            { "bg",       deserterBGCommandTable }
+        static ChatCommandTable deserterCommandTable = {
+            {"instance", deserterInstanceCommandTable},
+            {"bg",       deserterBGCommandTable      }
         };
-        static ChatCommandTable commandTable =
-        {
-            { "deserter", deserterCommandTable }
+        static ChatCommandTable commandTable = {
+            {"deserter", deserterCommandTable}
         };
         return commandTable;
     }
@@ -95,7 +91,8 @@ public:
     * .deserter bg add Tester 1h30m (using player of name 'Tester')
     * @endcode
     */
-    static bool HandleDeserterAdd(ChatHandler* handler, Optional<std::string> playerName, Optional<std::string> time, bool isInstance)
+    static bool HandleDeserterAdd(
+        ChatHandler* handler, Optional<std::string> playerName, Optional<std::string> time, bool isInstance)
     {
         Player* target = handler->getSelectedPlayerOrSelf();
         ObjectGuid guid;
@@ -129,25 +126,19 @@ public:
         if (!playerName || playerName->empty())
         {
             if (!handler->GetSession())
-            {
                 return false;
-            }
 
             playerName = target->GetName();
             guid = target->GetGUID();
         }
 
         if (!time)
-        {
             time = isInstance ? "30m" : "15m";
-        }
 
         int32 duration = TimeStringToSecs(*time);
 
         if (duration == 0)
-        {
             duration = Acore::StringTo<int32>(*time).value_or(0);
-        }
 
         if (duration == 0)
         {
@@ -162,7 +153,9 @@ public:
             Aura* aura = target->GetAura(deserterSpell);
             if (aura && aura->GetDuration() >= duration * IN_MILLISECONDS)
             {
-                handler->PSendSysMessage("Player {} already has a longer {} Deserter active.", handler->playerLink(*playerName), isInstance ? "Instance" : "Battleground");
+                handler->PSendSysMessage("Player {} already has a longer {} Deserter active.",
+                    handler->playerLink(*playerName),
+                    isInstance ? "Instance" : "Battleground");
                 return true;
             }
 
@@ -177,17 +170,23 @@ public:
         else
         {
             int32 remainTime = 0;
-            if (QueryResult result = CharacterDatabase.Query("SELECT remainTime FROM character_aura WHERE guid = {} AND spell = {}", guid.GetCounter(), deserterSpell))
+            if (QueryResult result =
+                    CharacterDatabase.Query("SELECT remainTime FROM character_aura WHERE guid = {} AND spell = {}",
+                        guid.GetCounter(),
+                        deserterSpell))
             {
                 Field* fields = result->Fetch();
                 remainTime = fields[0].Get<int32>();
 
                 if (remainTime < 0 || remainTime >= duration * IN_MILLISECONDS)
                 {
-                    handler->PSendSysMessage("Player {} already has a longer {} Deserter active.", handler->playerLink(*playerName), isInstance ? "Instance" : "Battleground");
+                    handler->PSendSysMessage("Player {} already has a longer {} Deserter active.",
+                        handler->playerLink(*playerName),
+                        isInstance ? "Instance" : "Battleground");
                     return true;
                 }
-                CharacterDatabase.Query("DELETE FROM character_aura WHERE guid = {} AND spell = {}", guid.GetCounter(), deserterSpell);
+                CharacterDatabase.Query(
+                    "DELETE FROM character_aura WHERE guid = {} AND spell = {}", guid.GetCounter(), deserterSpell);
             }
 
             uint8 index = 0;
@@ -211,7 +210,10 @@ public:
             CharacterDatabase.Execute(stmt);
         }
 
-        handler->PSendSysMessage("{} of {} Deserter has been added to player {}.", secsToTimeString(duration), isInstance ? "Instance" : "Battleground", handler->playerLink(*playerName));
+        handler->PSendSysMessage("{} of {} Deserter has been added to player {}.",
+            secsToTimeString(duration),
+            isInstance ? "Instance" : "Battleground",
+            handler->playerLink(*playerName));
         return true;
     }
 
@@ -240,9 +242,7 @@ public:
     static bool HandleDeserterRemove(ChatHandler* handler, Optional<PlayerIdentifier> player, bool isInstance)
     {
         if (!player)
-        {
             player = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!player)
         {
@@ -262,29 +262,40 @@ public:
                 target->RemoveAura(deserterSpell);
             }
         }
-        else
+        else if (QueryResult result =
+                     CharacterDatabase.Query("SELECT remainTime FROM character_aura WHERE guid = {} AND spell = {}",
+                         player->GetGUID().GetCounter(),
+                         deserterSpell))
         {
-            if (QueryResult result = CharacterDatabase.Query("SELECT remainTime FROM character_aura WHERE guid = {} AND spell = {}", player->GetGUID().GetCounter(), deserterSpell))
-            {
-                Field* fields = result->Fetch();
-                duration = fields[0].Get<int32>();
-                CharacterDatabase.Execute("DELETE FROM character_aura WHERE guid = {} AND spell = {}", player->GetGUID().GetCounter(), deserterSpell);
-            }
+            Field* fields = result->Fetch();
+            duration = fields[0].Get<int32>();
+            CharacterDatabase.Execute("DELETE FROM character_aura WHERE guid = {} AND spell = {}",
+                player->GetGUID().GetCounter(),
+                deserterSpell);
         }
 
         if (duration == 0)
         {
-            handler->SendErrorMessage("Player {} does not have {} Deserter.", handler->playerLink(player->GetName()), isInstance ? "Instance" : "Battleground");
+            handler->SendErrorMessage("Player {} does not have {} Deserter.",
+                handler->playerLink(player->GetName()),
+                isInstance ? "Instance" : "Battleground");
             return true;
         }
 
         if (duration < 0)
         {
-            handler->SendErrorMessage("Permanent {} Deserter has been removed from player {} (GUID {}).", isInstance ? "Instance" : "Battleground", handler->playerLink(player->GetName()), player->GetGUID().ToString());
+            handler->SendErrorMessage("Permanent {} Deserter has been removed from player {} (GUID {}).",
+                isInstance ? "Instance" : "Battleground",
+                handler->playerLink(player->GetName()),
+                player->GetGUID().ToString());
             return true;
         }
 
-        handler->PSendSysMessage("{} of {} Deserter has been removed from player {} (GUID {}).", secsToTimeString(duration / IN_MILLISECONDS), isInstance ? "Instance" : "Battleground", handler->playerLink(player->GetName()), player->GetGUID().ToString());
+        handler->PSendSysMessage("{} of {} Deserter has been removed from player {} (GUID {}).",
+            secsToTimeString(duration / IN_MILLISECONDS),
+            isInstance ? "Instance" : "Battleground",
+            handler->playerLink(player->GetName()),
+            player->GetGUID().ToString());
         return true;
     }
 
@@ -323,9 +334,7 @@ public:
         {
             remainTime = TimeStringToSecs(*maxTime);
             if (remainTime == 0)
-            {
                 remainTime = Acore::StringTo<int32>(*maxTime).value_or(0);
-            }
         }
 
         // Optimization. Do not execute any further functions or Queries if remainTime is 0.
@@ -338,7 +347,10 @@ public:
         QueryResult result;
         if (remainTime > 0)
         {
-            result = CharacterDatabase.Query("SELECT COUNT(guid) FROM character_aura WHERE spell = {} AND remainTime <= {}", deserterSpell, remainTime * IN_MILLISECONDS);
+            result =
+                CharacterDatabase.Query("SELECT COUNT(guid) FROM character_aura WHERE spell = {} AND remainTime <= {}",
+                    deserterSpell,
+                    remainTime * IN_MILLISECONDS);
         }
         else
         {
@@ -346,9 +358,7 @@ public:
         }
 
         if (result)
-        {
             deserterCount = (*result)[0].Get<uint64>();
-        }
 
         // Optimization. Only execute these if there even is a result.
         if (deserterCount > 0)
@@ -356,7 +366,9 @@ public:
             countOnline = false;
             if (remainTime > 0)
             {
-                CharacterDatabase.Execute("DELETE FROM character_aura WHERE spell = {} AND remainTime <= {}", deserterSpell, remainTime * IN_MILLISECONDS);
+                CharacterDatabase.Execute("DELETE FROM character_aura WHERE spell = {} AND remainTime <= {}",
+                    deserterSpell,
+                    remainTime * IN_MILLISECONDS);
             }
             else
             {
@@ -366,7 +378,9 @@ public:
 
         std::shared_lock<std::shared_mutex> lock(*HashMapHolder<Player>::GetLock());
         HashMapHolder<Player>::MapType const& onlinePlayerList = ObjectAccessor::GetPlayers();
-        for (HashMapHolder<Player>::MapType::const_iterator itr = onlinePlayerList.begin(); itr != onlinePlayerList.end(); ++itr)
+        for (HashMapHolder<Player>::MapType::const_iterator itr = onlinePlayerList.begin();
+             itr != onlinePlayerList.end();
+             ++itr)
         {
             Player* player = itr->second;
             Aura* aura = player->GetAura(deserterSpell);
@@ -380,22 +394,26 @@ public:
 
         std::string remainTimeStr = secsToTimeString(remainTime);
         if (remainTime < 0)
-        {
             remainTimeStr = "infinity";
-        }
 
         if (deserterCount == 0)
         {
-            handler->PSendSysMessage("No player on this realm has {} Deserter with a duration of {} or less.", isInstance ? "Instance" : "Battleground", remainTimeStr);
+            handler->PSendSysMessage("No player on this realm has {} Deserter with a duration of {} or less.",
+                isInstance ? "Instance" : "Battleground",
+                remainTimeStr);
             return true;
         }
 
-        handler->PSendSysMessage("{} Deserter has been removed from {} player(s) with a duration of {} or less.", isInstance ? "Instance" : "Battleground", deserterCount, remainTimeStr);
+        handler->PSendSysMessage("{} Deserter has been removed from {} player(s) with a duration of {} or less.",
+            isInstance ? "Instance" : "Battleground",
+            deserterCount,
+            remainTimeStr);
         return true;
     }
 
     /// @sa HandleDeserterAdd()
-    static bool HandleDeserterInstanceAdd(ChatHandler* handler, Optional<std::string> playerName, Optional<std::string> time)
+    static bool HandleDeserterInstanceAdd(
+        ChatHandler* handler, Optional<std::string> playerName, Optional<std::string> time)
     {
         return HandleDeserterAdd(handler, playerName, time, true);
     }

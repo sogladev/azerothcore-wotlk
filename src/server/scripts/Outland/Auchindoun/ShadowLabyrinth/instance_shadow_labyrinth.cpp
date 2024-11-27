@@ -17,21 +17,19 @@
 
 #include "InstanceMapScript.h"
 #include "InstanceScript.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "shadow_labyrinth.h"
-#include "SpellScript.h"
 
-DoorData const doorData[] =
-{
-    { GO_REFECTORY_DOOR,      DATA_BLACKHEARTTHEINCITEREVENT, DOOR_TYPE_PASSAGE },
-    { GO_SCREAMING_HALL_DOOR, DATA_GRANDMASTER_VORPIL,        DOOR_TYPE_PASSAGE },
-    { 0,                      0,                              DOOR_TYPE_ROOM    }  // END
+DoorData const doorData[] = {
+    {GO_REFECTORY_DOOR,      DATA_BLACKHEARTTHEINCITEREVENT, DOOR_TYPE_PASSAGE},
+    {GO_SCREAMING_HALL_DOOR, DATA_GRANDMASTER_VORPIL,        DOOR_TYPE_PASSAGE},
+    {0,                      0,                              DOOR_TYPE_ROOM   }  // END
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_HELLMAW, TYPE_HELLMAW },
-    { 0,           0            },
+ObjectData const creatureData[] = {
+    {NPC_HELLMAW, TYPE_HELLMAW},
+    {0,           0           },
 };
 
 class instance_shadow_labyrinth : public InstanceMapScript
@@ -68,9 +66,7 @@ public:
             if (creature->GetEntry() == NPC_CABAL_RITUALIST)
             {
                 if (creature->IsAlive())
-                {
                     ++_ritualistsAliveCount;
-                }
             }
         }
 
@@ -84,9 +80,7 @@ public:
                 {
                     StorePersistentData(TYPE_RITUALISTS, DONE);
                     if (Creature* hellmaw = GetCreature(TYPE_HELLMAW))
-                    {
                         hellmaw->AI()->DoAction(1);
-                    }
                 }
             }
         }
@@ -113,16 +107,14 @@ class spell_mark_of_malice : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_MARK_OF_MALICE_TRIGGERED });
+        return ValidateSpellInfo({SPELL_MARK_OF_MALICE_TRIGGERED});
     }
 
     void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& /*eventInfo*/)
     {
         PreventDefaultAction();
         if (GetCharges() > 1)
-        {
             return;
-        }
 
         GetTarget()->CastSpell(GetTarget(), SPELL_MARK_OF_MALICE_TRIGGERED, true);
     }

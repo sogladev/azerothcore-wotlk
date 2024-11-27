@@ -29,11 +29,11 @@
 // Ours
 enum fumping
 {
-    SPELL_SUMMON_SAND_GNOME1            = 39240,
-    SPELL_SUMMON_SAND_GNOME3            = 39247,
-    SPELL_SUMMON_MATURE_BONE_SIFTER1    = 39241,
-    SPELL_SUMMON_MATURE_BONE_SIFTER3    = 39245,
-    SPELL_SUMMON_HAISHULUD              = 39248,
+    SPELL_SUMMON_SAND_GNOME1 = 39240,
+    SPELL_SUMMON_SAND_GNOME3 = 39247,
+    SPELL_SUMMON_MATURE_BONE_SIFTER1 = 39241,
+    SPELL_SUMMON_MATURE_BONE_SIFTER3 = 39245,
+    SPELL_SUMMON_HAISHULUD = 39248,
 };
 
 class spell_q10930_big_bone_worm : public SpellScript
@@ -42,13 +42,14 @@ class spell_q10930_big_bone_worm : public SpellScript
 
     void SetDest(SpellDestination& dest)
     {
-        Position const offset = { 0.5f, 0.5f, 5.0f, 0.0f };
+        Position const offset = {0.5f, 0.5f, 5.0f, 0.0f};
         dest.RelocateOffset(offset);
     }
 
     void Register() override
     {
-        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_q10930_big_bone_worm::SetDest, EFFECT_1, TARGET_DEST_CASTER);
+        OnDestinationTargetSelect +=
+            SpellDestinationTargetSelectFn(spell_q10930_big_bone_worm::SetDest, EFFECT_1, TARGET_DEST_CASTER);
     }
 };
 
@@ -58,7 +59,8 @@ class spell_q10930_big_bone_worm_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_HAISHULUD, SPELL_SUMMON_MATURE_BONE_SIFTER1, SPELL_SUMMON_MATURE_BONE_SIFTER3 });
+        return ValidateSpellInfo(
+            {SPELL_SUMMON_HAISHULUD, SPELL_SUMMON_MATURE_BONE_SIFTER1, SPELL_SUMMON_MATURE_BONE_SIFTER3});
     }
 
     void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -66,12 +68,15 @@ class spell_q10930_big_bone_worm_aura : public AuraScript
         if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
             return;
 
-        GetUnitOwner()->CastSpell(GetUnitOwner(), RAND(SPELL_SUMMON_HAISHULUD, SPELL_SUMMON_MATURE_BONE_SIFTER1, SPELL_SUMMON_MATURE_BONE_SIFTER3), true);
+        GetUnitOwner()->CastSpell(GetUnitOwner(),
+            RAND(SPELL_SUMMON_HAISHULUD, SPELL_SUMMON_MATURE_BONE_SIFTER1, SPELL_SUMMON_MATURE_BONE_SIFTER3),
+            true);
     }
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_q10930_big_bone_worm_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_q10930_big_bone_worm_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -81,13 +86,14 @@ class spell_q10929_fumping : public SpellScript
 
     void SetDest(SpellDestination& dest)
     {
-        Position const offset = { 0.5f, 0.5f, 5.0f, 0.0f };
+        Position const offset = {0.5f, 0.5f, 5.0f, 0.0f};
         dest.RelocateOffset(offset);
     }
 
     void Register() override
     {
-        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_q10929_fumping::SetDest, EFFECT_1, TARGET_DEST_CASTER);
+        OnDestinationTargetSelect +=
+            SpellDestinationTargetSelectFn(spell_q10929_fumping::SetDest, EFFECT_1, TARGET_DEST_CASTER);
     }
 };
 
@@ -97,7 +103,10 @@ class spell_q10929_fumping_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_SAND_GNOME1, SPELL_SUMMON_SAND_GNOME3, SPELL_SUMMON_MATURE_BONE_SIFTER1, SPELL_SUMMON_MATURE_BONE_SIFTER3 });
+        return ValidateSpellInfo({SPELL_SUMMON_SAND_GNOME1,
+            SPELL_SUMMON_SAND_GNOME3,
+            SPELL_SUMMON_MATURE_BONE_SIFTER1,
+            SPELL_SUMMON_MATURE_BONE_SIFTER3});
     }
 
     void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -105,25 +114,31 @@ class spell_q10929_fumping_aura : public AuraScript
         if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
             return;
 
-        GetUnitOwner()->CastSpell(GetUnitOwner(), RAND(SPELL_SUMMON_SAND_GNOME1, SPELL_SUMMON_SAND_GNOME3, SPELL_SUMMON_MATURE_BONE_SIFTER1, SPELL_SUMMON_MATURE_BONE_SIFTER3), true);
+        GetUnitOwner()->CastSpell(GetUnitOwner(),
+            RAND(SPELL_SUMMON_SAND_GNOME1,
+                SPELL_SUMMON_SAND_GNOME3,
+                SPELL_SUMMON_MATURE_BONE_SIFTER1,
+                SPELL_SUMMON_MATURE_BONE_SIFTER3),
+            true);
     }
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_q10929_fumping_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_q10929_fumping_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
 enum q10036Torgos
 {
-    NPC_TORGOS                  = 18707
+    NPC_TORGOS = 18707
 };
 
 class spell_q10036_torgos : public SpellScript
 {
     PrepareSpellScript(spell_q10036_torgos);
 
-    void HandleSendEvent(SpellEffIndex  /*effIndex*/)
+    void HandleSendEvent(SpellEffIndex /*effIndex*/)
     {
         if (Creature* torgos = GetCaster()->FindNearestCreature(NPC_TORGOS, 100.0f, true))
             torgos->GetAI()->AttackStart(GetCaster());
@@ -137,11 +152,11 @@ class spell_q10036_torgos : public SpellScript
 
 enum eQ10923EvilDrawsNear
 {
-    SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL1      = 39256,
-    SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL2      = 39257,
-    SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL_AURA  = 39259,
+    SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL1 = 39256,
+    SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL2 = 39257,
+    SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL_AURA = 39259,
 
-    NPC_AUCHENAI_DEATH_SPIRIT               = 21967
+    NPC_AUCHENAI_DEATH_SPIRIT = 21967
 };
 
 class spell_q10923_evil_draws_near_summon : public SpellScript
@@ -150,10 +165,10 @@ class spell_q10923_evil_draws_near_summon : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL_AURA });
+        return ValidateSpellInfo({SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL_AURA});
     }
 
-    void HandleSendEvent(SpellEffIndex  /*effIndex*/)
+    void HandleSendEvent(SpellEffIndex /*effIndex*/)
     {
         if (Creature* auchenai = GetCaster()->FindNearestCreature(NPC_AUCHENAI_DEATH_SPIRIT, 10.0f, true))
             auchenai->CastSpell(auchenai, SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL_AURA, true);
@@ -161,7 +176,8 @@ class spell_q10923_evil_draws_near_summon : public SpellScript
 
     void Register() override
     {
-        OnEffectLaunch += SpellEffectFn(spell_q10923_evil_draws_near_summon::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
+        OnEffectLaunch +=
+            SpellEffectFn(spell_q10923_evil_draws_near_summon::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
     }
 };
 
@@ -171,18 +187,20 @@ class spell_q10923_evil_draws_near_periodic_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL1, SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL2 });
+        return ValidateSpellInfo({SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL1, SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL2});
     }
 
-    void HandlePeriodic(AuraEffect const*  /*aurEff*/)
+    void HandlePeriodic(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction();
-        GetUnitOwner()->CastSpell(GetUnitOwner(), RAND(SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL1, SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL2), true);
+        GetUnitOwner()->CastSpell(
+            GetUnitOwner(), RAND(SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL1, SPELL_DUSTIN_UNDEAD_DRAGON_VISUAL2), true);
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_q10923_evil_draws_near_periodic_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_q10923_evil_draws_near_periodic_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -193,13 +211,14 @@ class spell_q10923_evil_draws_near_visual : public SpellScript
     void SetDest(SpellDestination& dest)
     {
         // Adjust effect summon position
-        Position const offset = { 0.0f, 0.0f, 20.0f, 0.0f };
+        Position const offset = {0.0f, 0.0f, 20.0f, 0.0f};
         dest.RelocateOffset(offset);
     }
 
     void Register() override
     {
-        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_q10923_evil_draws_near_visual::SetDest, EFFECT_0, TARGET_DEST_CASTER_RADIUS);
+        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(
+            spell_q10923_evil_draws_near_visual::SetDest, EFFECT_0, TARGET_DEST_CASTER_RADIUS);
     }
 };
 
@@ -210,14 +229,15 @@ class spell_q10898_skywing : public SpellScript
     void SetDest(SpellDestination& dest)
     {
         // Adjust effect summon position
-        Position const offset = { frand(-7.0f, 7.0f), frand(-7.0f, 7.0f), 11.0f, 0.0f };
+        Position const offset = {frand(-7.0f, 7.0f), frand(-7.0f, 7.0f), 11.0f, 0.0f};
         dest.Relocate(*GetCaster());
         dest.RelocateOffset(offset);
     }
 
     void Register() override
     {
-        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_q10898_skywing::SetDest, EFFECT_0, TARGET_DEST_CASTER_RANDOM);
+        OnDestinationTargetSelect +=
+            SpellDestinationTargetSelectFn(spell_q10898_skywing::SetDest, EFFECT_0, TARGET_DEST_CASTER_RANDOM);
     }
 };
 
@@ -228,12 +248,12 @@ class spell_q10898_skywing : public SpellScript
 
 enum UnkorTheRuthless
 {
-    SAY_SUBMIT                      = 0,
+    SAY_SUBMIT = 0,
 
-    FACTION_HOSTILE                 = 45,
-    QUEST_DONTKILLTHEFATONE         = 9889,
+    FACTION_HOSTILE = 45,
+    QUEST_DONTKILLTHEFATONE = 9889,
 
-    SPELL_PULVERIZE                 = 2676
+    SPELL_PULVERIZE = 2676
 };
 
 class npc_unkor_the_ruthless : public CreatureScript
@@ -290,8 +310,8 @@ public:
                     {
                         Player* groupie = itr->GetSource();
                         if (groupie && groupie->IsInMap(player) &&
-                                groupie->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE &&
-                                groupie->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10)
+                            groupie->GetQuestStatus(QUEST_DONTKILLTHEFATONE) == QUEST_STATUS_INCOMPLETE &&
+                            groupie->GetReqKillOrCastCurrentCount(QUEST_DONTKILLTHEFATONE, 18260) == 10)
                         {
                             groupie->AreaExploredOrEventHappens(QUEST_DONTKILLTHEFATONE);
                             if (!CanDoQuest)
@@ -317,15 +337,13 @@ public:
                     //DoCast(me, SPELL_QUID9889);        //not using spell for now
                     DoNice();
                 }
-                else
+                else if (UnkorUnfriendly_Timer <= diff)
                 {
-                    if (UnkorUnfriendly_Timer <= diff)
-                    {
-                        EnterEvadeMode();
-                        return;
-                    }
-                    else UnkorUnfriendly_Timer -= diff;
+                    EnterEvadeMode();
+                    return;
                 }
+                else
+                    UnkorUnfriendly_Timer -= diff;
             }
 
             if (!UpdateVictim())
@@ -336,7 +354,8 @@ public:
                 DoCast(me, SPELL_PULVERIZE);
                 Pulverize_Timer = 9000;
             }
-            else Pulverize_Timer -= diff;
+            else
+                Pulverize_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -348,23 +367,23 @@ public:
 ######*/
 enum IslaStarmaneData
 {
-    SAY_PROGRESS_1  = 0,
-    SAY_PROGRESS_2  = 1,
-    SAY_PROGRESS_3  = 2,
-    SAY_PROGRESS_4  = 3,
+    SAY_PROGRESS_1 = 0,
+    SAY_PROGRESS_2 = 1,
+    SAY_PROGRESS_3 = 2,
+    SAY_PROGRESS_4 = 3,
 
-    QUEST_EFTW_H    = 10052,
-    QUEST_EFTW_A    = 10051,
-    GO_CAGE         = 182794,
-    SPELL_CAT       = 32447,
+    QUEST_EFTW_H = 10052,
+    QUEST_EFTW_A = 10051,
+    GO_CAGE = 182794,
+    SPELL_CAT = 32447,
 
-    EVENT_SPELL_WRATH               = 1,
-    EVENT_SPELL_MOONFIRE            = 2,
-    EVENT_SPELL_ENTANGLING_ROOTS    = 3,
+    EVENT_SPELL_WRATH = 1,
+    EVENT_SPELL_MOONFIRE = 2,
+    EVENT_SPELL_ENTANGLING_ROOTS = 3,
 
-    SPELL_WRATH                     = 9739,
-    SPELL_MOONFIRE                  = 15798,
-    SPELL_ENTANGLING_ROOTS          = 33844
+    SPELL_WRATH = 9739,
+    SPELL_MOONFIRE = 15798,
+    SPELL_ENTANGLING_ROOTS = 33844
 };
 
 class npc_isla_starmane : public CreatureScript
@@ -493,21 +512,21 @@ public:
 
 enum SkullPile : uint32
 {
-    QUEST_ADVERSARIAL_BLOOD                     = 11885,
+    QUEST_ADVERSARIAL_BLOOD = 11885,
 
-    GOSSIP_MENU_SKULL_PILE                      = 8660,
-    GOSSIP_MENU_TEXT_SKULL_PILE                 = 10888,
-    GOSSIP_MENU_TEXT_SKULL_PILE_QUEST           = 11057,
+    GOSSIP_MENU_SKULL_PILE = 8660,
+    GOSSIP_MENU_TEXT_SKULL_PILE = 10888,
+    GOSSIP_MENU_TEXT_SKULL_PILE_QUEST = 11057,
 
-    GOSSIP_OPTION_SUMMON_GEZZARAK_THE_HUNTRESS  = 0,
-    GOSSIP_OPTION_SUMMON_DARKSCREECHER_AKKARAI  = 1,
-    GOSSIP_OPTION_SUMMON_KARROG                 = 2,
-    GOSSIP_OPTION_SUMMON_VAKKIZ_THE_WINDRAGER   = 3,
+    GOSSIP_OPTION_SUMMON_GEZZARAK_THE_HUNTRESS = 0,
+    GOSSIP_OPTION_SUMMON_DARKSCREECHER_AKKARAI = 1,
+    GOSSIP_OPTION_SUMMON_KARROG = 2,
+    GOSSIP_OPTION_SUMMON_VAKKIZ_THE_WINDRAGER = 3,
 
-    SPELL_SUMMON_GEZZARAK_THE_HUNTRESS          = 40632,
-    SPELL_SUMMON_DARKSCREECHER_AKKARAI          = 40642,
-    SPELL_SUMMON_KARROG                         = 40640,
-    SPELL_SUMMON_VAKKIZ_THE_WINDRAGER           = 40644,
+    SPELL_SUMMON_GEZZARAK_THE_HUNTRESS = 40632,
+    SPELL_SUMMON_DARKSCREECHER_AKKARAI = 40642,
+    SPELL_SUMMON_KARROG = 40640,
+    SPELL_SUMMON_VAKKIZ_THE_WINDRAGER = 40644,
 };
 
 class go_skull_pile : public GameObjectScript
@@ -529,12 +548,29 @@ public:
 
     bool OnGossipHello(Player* player, GameObject* go) override
     {
-        if ((player->GetQuestStatus(QUEST_ADVERSARIAL_BLOOD) == QUEST_STATUS_INCOMPLETE) || player->GetQuestRewardStatus(QUEST_ADVERSARIAL_BLOOD))
+        if ((player->GetQuestStatus(QUEST_ADVERSARIAL_BLOOD) == QUEST_STATUS_INCOMPLETE) ||
+            player->GetQuestRewardStatus(QUEST_ADVERSARIAL_BLOOD))
         {
-            AddGossipItemFor(player, GOSSIP_MENU_SKULL_PILE, GOSSIP_OPTION_SUMMON_GEZZARAK_THE_HUNTRESS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-            AddGossipItemFor(player, GOSSIP_MENU_SKULL_PILE, GOSSIP_OPTION_SUMMON_DARKSCREECHER_AKKARAI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            AddGossipItemFor(player, GOSSIP_MENU_SKULL_PILE, GOSSIP_OPTION_SUMMON_KARROG, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            AddGossipItemFor(player, GOSSIP_MENU_SKULL_PILE, GOSSIP_OPTION_SUMMON_VAKKIZ_THE_WINDRAGER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+            AddGossipItemFor(player,
+                GOSSIP_MENU_SKULL_PILE,
+                GOSSIP_OPTION_SUMMON_GEZZARAK_THE_HUNTRESS,
+                GOSSIP_SENDER_MAIN,
+                GOSSIP_ACTION_INFO_DEF + 1);
+            AddGossipItemFor(player,
+                GOSSIP_MENU_SKULL_PILE,
+                GOSSIP_OPTION_SUMMON_DARKSCREECHER_AKKARAI,
+                GOSSIP_SENDER_MAIN,
+                GOSSIP_ACTION_INFO_DEF + 2);
+            AddGossipItemFor(player,
+                GOSSIP_MENU_SKULL_PILE,
+                GOSSIP_OPTION_SUMMON_KARROG,
+                GOSSIP_SENDER_MAIN,
+                GOSSIP_ACTION_INFO_DEF + 3);
+            AddGossipItemFor(player,
+                GOSSIP_MENU_SKULL_PILE,
+                GOSSIP_OPTION_SUMMON_VAKKIZ_THE_WINDRAGER,
+                GOSSIP_SENDER_MAIN,
+                GOSSIP_ACTION_INFO_DEF + 4);
 
             SendGossipMenuFor(player, GOSSIP_MENU_TEXT_SKULL_PILE_QUEST, go->GetGUID());
         }
@@ -565,10 +601,9 @@ public:
                 break;
         }
         if (_result == SPELL_CAST_OK)
-        {
             go->DespawnOrUnsummon();
-        }
     }
+
 private:
     SpellCastResult _result;
 };
@@ -579,7 +614,7 @@ private:
 
 enum Slim
 {
-    FACTION_CONSORTIUM  = 933
+    FACTION_CONSORTIUM = 933
 };
 
 class npc_slim : public CreatureScript
@@ -600,7 +635,8 @@ public:
     {
         if (creature->IsVendor() && player->GetReputationRank(FACTION_CONSORTIUM) >= REP_FRIENDLY)
         {
-            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+            AddGossipItemFor(
+                player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
             SendGossipMenuFor(player, 9896, creature->GetGUID());
         }
         else

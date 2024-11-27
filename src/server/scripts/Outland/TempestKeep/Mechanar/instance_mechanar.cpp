@@ -19,18 +19,17 @@
 #include "InstanceScript.h"
 #include "mechanar.h"
 
-static DoorData const doorData[] =
-{
-    { GO_DOOR_MOARG_1,          DATA_GATEWATCHER_IRON_HAND,     DOOR_TYPE_PASSAGE },
-    { GO_DOOR_MOARG_2,          DATA_GATEWATCHER_GYROKILL,      DOOR_TYPE_PASSAGE },
-    { GO_DOOR_NETHERMANCER,     DATA_NETHERMANCER_SEPRETHREA,   DOOR_TYPE_ROOM },
-    { 0,                        0,                              DOOR_TYPE_ROOM }
+static DoorData const doorData[] = {
+    {GO_DOOR_MOARG_1,      DATA_GATEWATCHER_IRON_HAND,   DOOR_TYPE_PASSAGE},
+    {GO_DOOR_MOARG_2,      DATA_GATEWATCHER_GYROKILL,    DOOR_TYPE_PASSAGE},
+    {GO_DOOR_NETHERMANCER, DATA_NETHERMANCER_SEPRETHREA, DOOR_TYPE_ROOM   },
+    {0,                    0,                            DOOR_TYPE_ROOM   }
 };
 
 class instance_mechanar : public InstanceMapScript
 {
 public:
-    instance_mechanar(): InstanceMapScript("instance_mechanar", 554) { }
+    instance_mechanar() : InstanceMapScript("instance_mechanar", 554) { }
 
     struct instance_mechanar_InstanceMapScript : public InstanceScript
     {
@@ -40,7 +39,6 @@ public:
             SetBossNumber(MAX_ENCOUNTER);
             SetPersistentDataCount(MAX_DATA_INDEXES);
             LoadDoorData(doorData);
-
         }
 
         void OnGameObjectCreate(GameObject* gameObject) override

@@ -39,48 +39,48 @@ enum EchoOfMedivhGossipOptions
 
 enum KarazhanChessSpells
 {
-    SPELL_MOVE_1                        = 37146, // 8y
-    SPELL_MOVE_2                        = 37144, // 15y
-    SPELL_MOVE_3                        = 37148, // 20y
-    SPELL_MOVE_4                        = 37151, // 8y
-    SPELL_MOVE_5                        = 37152, // 8y
-    SPELL_MOVE_6                        = 37153, // 8y
+    SPELL_MOVE_1 = 37146, // 8y
+    SPELL_MOVE_2 = 37144, // 15y
+    SPELL_MOVE_3 = 37148, // 20y
+    SPELL_MOVE_4 = 37151, // 8y
+    SPELL_MOVE_5 = 37152, // 8y
+    SPELL_MOVE_6 = 37153, // 8y
 
-    SPELL_MOVE_GENERIC                  = 30012, // Unlimited
+    SPELL_MOVE_GENERIC = 30012, // Unlimited
 
-    SPELL_CHANGE_FACING                 = 30284,
-    SPELL_MOVE_MARKER                   = 32261,
-    SPELL_MOVE_COOLDOWN                 = 30543,
-    SPELL_CONTROL_PIECE                 = 30019,
-    SPELL_RECENTLY_INGAME               = 30529,
+    SPELL_CHANGE_FACING = 30284,
+    SPELL_MOVE_MARKER = 32261,
+    SPELL_MOVE_COOLDOWN = 30543,
+    SPELL_CONTROL_PIECE = 30019,
+    SPELL_RECENTLY_INGAME = 30529,
 
-    SPELL_FURY_OF_MEDIVH_FIRE           = 39345,
-    SPELL_MELEE_ATTACK_TIMER            = 32226,
-    SPELL_MELEE_ATTACK_TIMER_TRIGGER    = 32225,
-    SPELL_MELEE_DAMAGE                  = 32247
+    SPELL_FURY_OF_MEDIVH_FIRE = 39345,
+    SPELL_MELEE_ATTACK_TIMER = 32226,
+    SPELL_MELEE_ATTACK_TIMER_TRIGGER = 32225,
+    SPELL_MELEE_DAMAGE = 32247
 };
 
 enum KarazhanChessNPCs
 {
-    NPC_CHESS_MOVE_TRIGGER      = 22519
+    NPC_CHESS_MOVE_TRIGGER = 22519
 };
 
 enum KarazhanChessTeam
 {
-    DEAD_ALLIANCE   = 0,
-    DEAD_HORDE      = 1,
+    DEAD_ALLIANCE = 0,
+    DEAD_HORDE = 1,
 };
 
 enum KarazhanChessOrientationType : uint8
 {
-    ORI_SE  = 0,    // Horde start
-    ORI_S   = 1,
-    ORI_SW  = 2,
-    ORI_W   = 3,
-    ORI_NW  = 4,    // Alliance start
-    ORI_N   = 5,
-    ORI_NE  = 6,
-    ORI_E   = 7,
+    ORI_SE = 0, // Horde start
+    ORI_S = 1,
+    ORI_SW = 2,
+    ORI_W = 3,
+    ORI_NW = 4, // Alliance start
+    ORI_N = 5,
+    ORI_NE = 6,
+    ORI_E = 7,
 
     MAX_ORI
 };
@@ -88,57 +88,57 @@ enum KarazhanChessOrientationType : uint8
 enum KarazhanChessPiecesSpells
 {
     //ability 1
-    SPELL_KING_H_1    = 37472,    //Bloodlust
-    SPELL_KING_A_1    = 37471,    //Heroism
-    SPELL_QUEEN_H_1   = 37463,    //Fireball
-    SPELL_QUEEN_A_1   = 37462,    //Elemental Blast
-    SPELL_BISHOP_H_1  = 37461,    //Shadow Spear
-    SPELL_BISHOP_A_1  = 37459,    //Holy Lance
-    SPELL_KNIGHT_H_1  = 37502,    //Howl
-    SPELL_KNIGHT_A_1  = 37453,    //Smash
-    SPELL_ROOK_H_1    = 37428,    //Hellfire
-    SPELL_ROOK_A_1    = 37427,    //Geyser
-    SPELL_PAWN_H_1    = 37416,    //Weapon Deflection
-    SPELL_PAWN_A_1    = 37414,    //Shield Block
+    SPELL_KING_H_1 = 37472,   //Bloodlust
+    SPELL_KING_A_1 = 37471,   //Heroism
+    SPELL_QUEEN_H_1 = 37463,  //Fireball
+    SPELL_QUEEN_A_1 = 37462,  //Elemental Blast
+    SPELL_BISHOP_H_1 = 37461, //Shadow Spear
+    SPELL_BISHOP_A_1 = 37459, //Holy Lance
+    SPELL_KNIGHT_H_1 = 37502, //Howl
+    SPELL_KNIGHT_A_1 = 37453, //Smash
+    SPELL_ROOK_H_1 = 37428,   //Hellfire
+    SPELL_ROOK_A_1 = 37427,   //Geyser
+    SPELL_PAWN_H_1 = 37416,   //Weapon Deflection
+    SPELL_PAWN_A_1 = 37414,   //Shield Block
 
     //ability 2
-    SPELL_KING_H_2    = 37476,    //Cleave
-    SPELL_KING_A_2    = 37474,    //Sweep
-    SPELL_QUEEN_H_2   = 37469,    //Poison Cloud
-    SPELL_QUEEN_A_2   = 37465,    //Rain of Fire
-    SPELL_BISHOP_H_2  = 37456,    //Shadow Mend
-    SPELL_BISHOP_A_2  = 37455,    //Healing
-    SPELL_KNIGHT_H_2  = 37454,    //Bite
-    SPELL_KNIGHT_A_2  = 37498,    //Stomp
-    SPELL_ROOK_H_2    = 37434,    //Fire Shield
-    SPELL_ROOK_A_2    = 37432,    //Water Shield
-    SPELL_PAWN_H_2    = 37413,    //Vicious Strike
-    SPELL_PAWN_A_2    = 37406     //Heroic Blow
+    SPELL_KING_H_2 = 37476,   //Cleave
+    SPELL_KING_A_2 = 37474,   //Sweep
+    SPELL_QUEEN_H_2 = 37469,  //Poison Cloud
+    SPELL_QUEEN_A_2 = 37465,  //Rain of Fire
+    SPELL_BISHOP_H_2 = 37456, //Shadow Mend
+    SPELL_BISHOP_A_2 = 37455, //Healing
+    SPELL_KNIGHT_H_2 = 37454, //Bite
+    SPELL_KNIGHT_A_2 = 37498, //Stomp
+    SPELL_ROOK_H_2 = 37434,   //Fire Shield
+    SPELL_ROOK_A_2 = 37432,   //Water Shield
+    SPELL_PAWN_H_2 = 37413,   //Vicious Strike
+    SPELL_PAWN_A_2 = 37406    //Heroic Blow
 };
 
 enum ChessEventTalks
 {
-    TALK_EVENT_BEGIN            = 0,
+    TALK_EVENT_BEGIN = 0,
 
-    TALK_MEDIHV_CHEAT           = 1,
-    TALK_MEDIHV_CHEAT_EMOTE     = 2,
+    TALK_MEDIHV_CHEAT = 1,
+    TALK_MEDIHV_CHEAT_EMOTE = 2,
 
-    TALK_PLAYER_LOOSE_PAWN      = 3,
-    TALK_PLAYER_LOOSE_ROOK      = 4,
-    TALK_PLAYER_LOOSE_KNIGHT    = 5,
-    TALK_PLAYER_LOOSE_BISHOP    = 6,
-    TALK_PLAYER_LOOSE_QUEEN     = 7,
-    TALK_PLAYER_LOOSE_KING      = 8,
+    TALK_PLAYER_LOOSE_PAWN = 3,
+    TALK_PLAYER_LOOSE_ROOK = 4,
+    TALK_PLAYER_LOOSE_KNIGHT = 5,
+    TALK_PLAYER_LOOSE_BISHOP = 6,
+    TALK_PLAYER_LOOSE_QUEEN = 7,
+    TALK_PLAYER_LOOSE_KING = 8,
 
-    TALK_MEDIVH_LOOSE_PAWN      = 9,
-    TALK_MEDIVH_LOOSE_ROOK      = 10,
-    TALK_MEDIVH_LOOSE_KNIGHT    = 11,
-    TALK_MEDIVH_LOOSE_BISHOP    = 12,
-    TALK_MEDIVH_LOOSE_QUEEN     = 13,
-    TALK_MEDIVH_LOOSE_KING      = 14,
+    TALK_MEDIVH_LOOSE_PAWN = 9,
+    TALK_MEDIVH_LOOSE_ROOK = 10,
+    TALK_MEDIVH_LOOSE_KNIGHT = 11,
+    TALK_MEDIVH_LOOSE_BISHOP = 12,
+    TALK_MEDIVH_LOOSE_QUEEN = 13,
+    TALK_MEDIVH_LOOSE_KING = 14,
 
-    TALK_CHECKMATE              = 15,
-    TALK_EVENT_ENDED            = 16
+    TALK_CHECKMATE = 15,
+    TALK_EVENT_ENDED = 16
 };
 
 static constexpr uint8 MAX_ROW = 8;
@@ -175,7 +175,8 @@ struct BoardCell
 };
 
 //                                                  ORI_SE      ORI_S      ORI_SW     ORI_W     ORI_NW      ORI_N      ORI_NE      ORI_E
-static std::array<float, MAX_ORI> orientations = { 3.809080f, 3.022091f, 2.235102f, 1.448113f, 0.661124f, 6.1724616f, 5.385472f, 4.598483f };
+static std::array<float, MAX_ORI> orientations = {
+    3.809080f, 3.022091f, 2.235102f, 1.448113f, 0.661124f, 6.1724616f, 5.385472f, 4.598483f};
 
 static bool IsFriendly(Creature* piece, Creature* target)
 {
@@ -184,8 +185,8 @@ static bool IsFriendly(Creature* piece, Creature* target)
 
 enum ChessPieceSearchType
 {
-    CHESS_PIECE_SEARCH_TYPE_CLOSEST     = 1,
-    CHESS_PIECE_SEARCH_TYPE_RANDOM      = 2
+    CHESS_PIECE_SEARCH_TYPE_CLOSEST = 1,
+    CHESS_PIECE_SEARCH_TYPE_RANDOM = 2
 };
 
 struct npc_echo_of_medivh : public ScriptedAI
@@ -198,12 +199,8 @@ struct npc_echo_of_medivh : public ScriptedAI
     void Reset() override
     {
         for (uint8 row = 0; row < MAX_ROW; ++row)
-        {
             for (uint8 col = 0; col < MAX_COL; ++col)
-            {
                 _boards[row][col].Reset();
-            }
-        }
 
         _summons.DespawnAll();
 
@@ -230,9 +227,7 @@ struct npc_echo_of_medivh : public ScriptedAI
                 if (ObjectGuid guid = _boards[row][col].pieceGUID)
                 {
                     if (Creature* piece = ObjectAccessor::GetCreature(*me, guid))
-                    {
                         piece->RemoveAurasDueToSpell(SPELL_HAND_OF_MEDIVH);
-                    }
                 }
             }
         }
@@ -250,7 +245,13 @@ struct npc_echo_of_medivh : public ScriptedAI
             {
                 BoardCell& cell = _boards[row][col];
 
-                if (Creature* trigger = me->SummonCreature(NPC_CHESS_MOVE_TRIGGER, (-11108.099609f + (3.49f * col) + (4.4f * row)), (-1872.910034f - (4.4f * col) + (3.45f * row)), 220.667f, 0, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                if (Creature* trigger = me->SummonCreature(NPC_CHESS_MOVE_TRIGGER,
+                        (-11108.099609f + (3.49f * col) + (4.4f * row)),
+                        (-1872.910034f - (4.4f * col) + (3.45f * row)),
+                        220.667f,
+                        0,
+                        TEMPSUMMON_MANUAL_DESPAWN,
+                        0))
                 {
                     cell.SetData(trigger->GetGUID(), row, col);
                     HandleCellInitialData(row, col, trigger, cell);
@@ -272,35 +273,25 @@ struct npc_echo_of_medivh : public ScriptedAI
                     case 0:
                     case 7: // Rook
                         if (Creature* rook = trigger->FindNearestCreature(NPC_ROOK_A, 4.0f, true))
-                        {
                             cell.SetPiece(rook);
-                        }
                         break;
                     case 1:
                     case 6: // Knight
                         if (Creature* knight = trigger->FindNearestCreature(NPC_KNIGHT_A, 4.0f, true))
-                        {
                             cell.SetPiece(knight);
-                        }
                         break;
                     case 2:
                     case 5: // Bishop
                         if (Creature* bishop = trigger->FindNearestCreature(NPC_BISHOP_A, 4.0f, true))
-                        {
                             cell.SetPiece(bishop);
-                        }
                         break;
                     case 3: // Queen
                         if (Creature* queen = trigger->FindNearestCreature(NPC_QUEEN_A, 4.0f, true))
-                        {
                             cell.SetPiece(queen);
-                        }
                         break;
                     case 4: // King
                         if (Creature* king = trigger->FindNearestCreature(NPC_KING_A, 4.0f, true))
-                        {
                             cell.SetPiece(king);
-                        }
                         break;
                 }
                 break;
@@ -308,16 +299,12 @@ struct npc_echo_of_medivh : public ScriptedAI
             case 1: // Alliance second row
                 // All pawns
                 if (Creature* pawn = trigger->FindNearestCreature(NPC_PAWN_A, 4.0f, true))
-                {
                     cell.SetPiece(pawn);
-                }
                 break;
             case 6: // Horde second row
                 // All pawns
                 if (Creature* pawn = trigger->FindNearestCreature(NPC_PAWN_H, 4.0f, true))
-                {
                     cell.SetPiece(pawn);
-                }
                 break;
             case 7: // Horde first row
             {
@@ -326,35 +313,25 @@ struct npc_echo_of_medivh : public ScriptedAI
                     case 0:
                     case 7: // Rook
                         if (Creature* rook = trigger->FindNearestCreature(NPC_ROOK_H, 4.0f, true))
-                        {
                             cell.SetPiece(rook);
-                        }
                         break;
                     case 1:
                     case 6: // Knight
                         if (Creature* knight = trigger->FindNearestCreature(NPC_KNIGHT_H, 4.0f, true))
-                        {
                             cell.SetPiece(knight);
-                        }
                         break;
                     case 2:
                     case 5: // Bishop
                         if (Creature* bishop = trigger->FindNearestCreature(NPC_BISHOP_H, 4.0f, true))
-                        {
                             cell.SetPiece(bishop);
-                        }
                         break;
                     case 3: // Queen
                         if (Creature* queen = trigger->FindNearestCreature(NPC_QUEEN_H, 4.0f, true))
-                        {
                             cell.SetPiece(queen);
-                        }
                         break;
                     case 4: // King
                         if (Creature* king = trigger->FindNearestCreature(NPC_KING_H, 4.0f, true))
-                        {
                             cell.SetPiece(king);
-                        }
                         break;
                     default:
                         break;
@@ -404,28 +381,28 @@ struct npc_echo_of_medivh : public ScriptedAI
                 switch (orientation)
                 {
                     case ORI_SE:
-                        orientations = { ORI_NE, ORI_E, ORI_S, ORI_SW };
+                        orientations = {ORI_NE, ORI_E, ORI_S, ORI_SW};
                         break;
                     case ORI_S:
-                        orientations = { ORI_E, ORI_SE, ORI_SW, ORI_W };
+                        orientations = {ORI_E, ORI_SE, ORI_SW, ORI_W};
                         break;
                     case ORI_SW:
-                        orientations = { ORI_SE, ORI_S, ORI_W, ORI_NW };
+                        orientations = {ORI_SE, ORI_S, ORI_W, ORI_NW};
                         break;
                     case ORI_W:
-                        orientations = { ORI_NE, ORI_SW, ORI_NW, ORI_N };
+                        orientations = {ORI_NE, ORI_SW, ORI_NW, ORI_N};
                         break;
                     case ORI_NW:
-                        orientations = { ORI_SW, ORI_W, ORI_N, ORI_NE };
+                        orientations = {ORI_SW, ORI_W, ORI_N, ORI_NE};
                         break;
                     case ORI_N:
-                        orientations = { ORI_W, ORI_NW, ORI_NE, ORI_E };
+                        orientations = {ORI_W, ORI_NW, ORI_NE, ORI_E};
                         break;
                     case ORI_NE:
-                        orientations = { ORI_NW, ORI_N, ORI_E, ORI_SE };
+                        orientations = {ORI_NW, ORI_N, ORI_E, ORI_SE};
                         break;
                     case ORI_E:
-                        orientations = { ORI_N, ORI_NE, ORI_SE, ORI_S };
+                        orientations = {ORI_N, ORI_NE, ORI_SE, ORI_S};
                         break;
                     default:
                         break;
@@ -533,12 +510,8 @@ struct npc_echo_of_medivh : public ScriptedAI
         for (uint8 row = 0; row < MAX_ROW; ++row)
         {
             for (uint8 col = 0; col < MAX_COL; ++col)
-            {
                 if (_boards[row][col].pieceGUID == piece->GetGUID())
-                {
                     _boards[row][col].Reset();
-                }
-            }
         }
 
         if (_instance->GetData(CHESS_EVENT_TEAM) == TEAM_HORDE)
@@ -579,9 +552,7 @@ struct npc_echo_of_medivh : public ScriptedAI
             {
                 uint8 talkIndex = TALK_PLAYER_LOOSE_PAWN;
                 if (piece->GetFaction() == CHESS_FACTION_ALLIANCE)
-                {
                     talkIndex = TALK_MEDIVH_LOOSE_PAWN;
-                }
 
                 switch (piece->GetEntry())
                 {
@@ -648,9 +619,7 @@ struct npc_echo_of_medivh : public ScriptedAI
             {
                 uint8 talkIndex = TALK_PLAYER_LOOSE_PAWN;
                 if (piece->GetFaction() == CHESS_FACTION_HORDE)
-                {
                     talkIndex = TALK_MEDIVH_LOOSE_PAWN;
-                }
 
                 switch (piece->GetEntry())
                 {
@@ -694,9 +663,7 @@ struct npc_echo_of_medivh : public ScriptedAI
 
             uint8 talkIndex = TALK_PLAYER_LOOSE_PAWN;
             if (piece->GetFaction() == CHESS_FACTION_HORDE)
-            {
                 talkIndex = TALK_MEDIVH_LOOSE_PAWN;
-            }
 
             switch (piece->GetEntry())
             {
@@ -755,29 +722,21 @@ struct npc_echo_of_medivh : public ScriptedAI
                 }
 
                 if (foundNew && foundOld)
-                {
                     break;
-                }
             }
 
             if (foundNew && foundOld)
-            {
                 break;
-            }
         }
 
         if (targetRow == -1 || targetCol == -1)
-        {
             return -1;
-        }
 
         int8 deltaRow = targetRow - pieceRow;
         int8 deltaCol = targetCol - pieceCol;
 
         if (!deltaRow && !deltaCol)
-        {
             return -1;
-        }
 
         switch (deltaRow)
         {
@@ -868,9 +827,7 @@ struct npc_echo_of_medivh : public ScriptedAI
                     {
                         //is there already a piece on this cell ?
                         if (cell.pieceGUID)
-                        {
                             return -1;
-                        }
 
                         newCol = col;
                         newRow = row;
@@ -890,21 +847,15 @@ struct npc_echo_of_medivh : public ScriptedAI
                 }
 
                 if (foundNew && foundOld)
-                {
                     break;
-                }
             }
 
             if (foundNew && foundOld)
-            {
                 break;
-            }
         }
 
         if (newCol == -1 || newRow == -1)
-        {
             return -1;
-        }
 
         if (!moveByAI && foundProperCell)
         {
@@ -922,23 +873,17 @@ struct npc_echo_of_medivh : public ScriptedAI
                 case NPC_KING_H:
                 case NPC_KING_A:
                     if (deltaRow > 1 || deltaCol > 1)
-                    {
                         foundProperCell = false;
-                    }
                     break;
                 case NPC_QUEEN_H:
                 case NPC_QUEEN_A:
                     if (deltaRow > 3 || deltaCol > 3)
-                    {
                         foundProperCell = false;
-                    }
                     break;
                 case NPC_KNIGHT_H:
                 case NPC_KNIGHT_A:
                     if (deltaRow > 2 || deltaCol > 2)
-                    {
                         foundProperCell = false;
-                    }
                     break;
                 default:
                     break;
@@ -954,9 +899,7 @@ struct npc_echo_of_medivh : public ScriptedAI
                 _boards[newRow][newCol].SetPiece(piece);
 
                 if (oldRow != MAX_ROW && oldCol != MAX_COL)
-                {
                     _boards[oldRow][oldCol].Reset();
-                }
             }
 
             return orientation;
@@ -990,45 +933,35 @@ struct npc_echo_of_medivh : public ScriptedAI
             }
 
             if (found)
-            {
                 break;
-            }
         }
 
         //! Change orientation at edges
         if (orientation == ORI_SE && pieceRow == 0)
         {
             if (Creature* trigger = ObjectAccessor::GetCreature(*me, _boards[pieceRow + 1][pieceCol].triggerGUID))
-            {
                 CastChangeFacing(piece, trigger);
-            }
 
             return true;
         }
         else if (orientation == ORI_NW && pieceRow == 7)
         {
             if (Creature* trigger = ObjectAccessor::GetCreature(*me, _boards[pieceRow - 1][pieceCol].triggerGUID))
-            {
                 CastChangeFacing(piece, trigger);
-            }
 
             return true;
         }
         else if (orientation == ORI_SW && pieceCol == 0)
         {
             if (Creature* trigger = ObjectAccessor::GetCreature(*me, _boards[pieceRow][pieceCol + 1].triggerGUID))
-            {
                 CastChangeFacing(piece, trigger);
-            }
 
             return true;
         }
         else if (orientation == ORI_NE && pieceCol == 7)
         {
             if (Creature* trigger = ObjectAccessor::GetCreature(*me, _boards[pieceRow][pieceCol - 1].triggerGUID))
-            {
                 CastChangeFacing(piece, trigger);
-            }
 
             return true;
         }
@@ -1066,33 +999,21 @@ struct npc_echo_of_medivh : public ScriptedAI
                 {
                     case 0:
                         if ((me->GetEntry() == NPC_QUEEN_A || me->GetEntry() == NPC_QUEEN_H))
-                        {
                             randomCol -= irand(1, 2);
-                        }
                         else
-                        {
                             randomCol -= 1;
-                        }
                         break;
                     case 1:
                         if ((me->GetEntry() == NPC_QUEEN_A || me->GetEntry() == NPC_QUEEN_H))
-                        {
                             randomCol += irand(1, 2);
-                        }
                         else
-                        {
                             randomCol += 1;
-                        }
                         break;
                     case 2:
                         if ((me->GetEntry() == NPC_QUEEN_A || me->GetEntry() == NPC_QUEEN_H))
-                        {
                             randomRow += (orientation == ORI_SE) ? irand(-2, 0) : irand(0, 2);
-                        }
                         else if ((me->GetEntry() == NPC_KNIGHT_A || me->GetEntry() == NPC_KNIGHT_H) && urand(0, 1))
-                        {
                             randomRow += (orientation == ORI_SE) ? -1 : 1;
-                        }
                         break;
                 }
 
@@ -1119,33 +1040,21 @@ struct npc_echo_of_medivh : public ScriptedAI
                 {
                     case 0:
                         if ((me->GetEntry() == NPC_QUEEN_A || me->GetEntry() == NPC_QUEEN_H))
-                        {
                             randomRow -= irand(1, 2);
-                        }
                         else
-                        {
                             randomRow -= 1;
-                        }
                         break;
                     case 1:
                         if ((me->GetEntry() == NPC_QUEEN_A || me->GetEntry() == NPC_QUEEN_H))
-                        {
                             randomRow += irand(1, 2);
-                        }
                         else
-                        {
                             randomRow += 1;
-                        }
                         break;
                     case 2:
                         if ((me->GetEntry() == NPC_QUEEN_A || me->GetEntry() == NPC_QUEEN_H))
-                        {
                             randomCol += (orientation == ORI_SW) ? irand(-2, 0) : irand(0, 2);
-                        }
                         else if ((me->GetEntry() == NPC_KNIGHT_A || me->GetEntry() == NPC_KNIGHT_H) && urand(0, 1))
-                        {
                             randomCol += (orientation == ORI_SW) ? -1 : 1;
-                        }
                         break;
                 }
 
@@ -1181,16 +1090,12 @@ struct npc_echo_of_medivh : public ScriptedAI
                 if (_instance->GetData(CHESS_EVENT_TEAM) == TEAM_ALLIANCE)
                 {
                     if (Creature* king = me->FindNearestCreature(NPC_KING_H, 80.0f, true))
-                    {
                         king->SetHealth(king->GetMaxHealth());
-                    }
                 }
                 else if (_instance->GetData(CHESS_EVENT_TEAM) == TEAM_HORDE)
                 {
                     if (Creature* king = me->FindNearestCreature(NPC_KING_A, 80.0f, true))
-                    {
                         king->SetHealth(king->GetMaxHealth());
-                    }
                 }
 
                 break;
@@ -1204,26 +1109,18 @@ struct npc_echo_of_medivh : public ScriptedAI
                     {
                         BoardCell const& cell = _boards[row][col];
                         if (!cell.pieceGUID || IsMedivhPiece(cell.pieceEntry))
-                        {
                             continue;
-                        }
 
                         if (Creature* trigger = ObjectAccessor::GetCreature(*me, cell.triggerGUID))
-                        {
                             targetList.push_back(trigger);
-                        }
                     }
                 }
 
                 if (targetList.size() > 3)
-                {
                     Acore::Containers::RandomResize(targetList, 3);
-                }
 
                 for (Creature* target : targetList)
-                {
                     DoCast(target, SPELL_FURY_OF_MEDIVH_FIRE, true);
-                }
 
                 break;
             }
@@ -1236,27 +1133,19 @@ struct npc_echo_of_medivh : public ScriptedAI
                     {
                         BoardCell const& cell = _boards[row][col];
                         if (!cell.pieceGUID || !IsMedivhPiece(cell.pieceEntry))
-                        {
                             continue;
-                        }
 
                         if (Creature* piece = ObjectAccessor::GetCreature(*me, cell.pieceGUID))
-                        {
                             targetList.push_back(piece);
-                        }
                     }
                 }
 
                 uint8 resizeMax = urand(1, 4);
                 if (targetList.size() > resizeMax)
-                {
                     Acore::Containers::RandomResize(targetList, resizeMax);
-                }
 
                 for (Creature* target : targetList)
-                {
                     DoCast(target, SPELL_HAND_OF_MEDIVH, true);
-                }
 
                 break;
             }
@@ -1265,12 +1154,11 @@ struct npc_echo_of_medivh : public ScriptedAI
         Talk(TALK_MEDIHV_CHEAT_EMOTE);
     }
 
-    Creature* GetPiece(Creature* sourcePiece, uint8 searchType, float distance, bool hostile, uint32 minHPDiff, bool checkFront)
+    Creature* GetPiece(
+        Creature* sourcePiece, uint8 searchType, float distance, bool hostile, uint32 minHPDiff, bool checkFront)
     {
         if (!sourcePiece)
-        {
             return nullptr;
-        }
 
         Creature* target = nullptr;
         std::vector<Creature*> targets;
@@ -1282,21 +1170,15 @@ struct npc_echo_of_medivh : public ScriptedAI
                 if (Creature* piece = ObjectAccessor::GetCreature(*me, _boards[row][col].pieceGUID))
                 {
                     if (IsFriendly(piece, sourcePiece) == hostile)
-                    {
                         continue;
-                    }
 
                     if (checkFront && !sourcePiece->HasInArc(float(M_PI) / 3.0f, piece))
-                    {
                         continue;
-                    }
 
                     if (minHPDiff)
                     {
                         if (piece->GetMaxHealth() - piece->GetHealth() <= minHPDiff)
-                        {
                             continue;
-                        }
 
                         minHPDiff = piece->GetMaxHealth() - piece->GetHealth();
                     }
@@ -1319,9 +1201,7 @@ struct npc_echo_of_medivh : public ScriptedAI
         }
 
         if (!targets.empty())
-        {
             target = Acore::Containers::SelectRandomContainerElement(targets);
-        }
 
         return target;
     }
@@ -1352,14 +1232,26 @@ struct npc_echo_of_medivh : public ScriptedAI
         switch (chessPhase)
         {
             case CHESS_PHASE_NOT_STARTED:
-                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "We want to play a game against you!", GOSSIP_SENDER_MAIN, MEDIVH_GOSSIP_START_PVE);
+                AddGossipItemFor(player,
+                    GOSSIP_ICON_CHAT,
+                    "We want to play a game against you!",
+                    GOSSIP_SENDER_MAIN,
+                    MEDIVH_GOSSIP_START_PVE);
                 break;
             case CHESS_PHASE_INPROGRESS_PVE:
             case CHESS_PHASE_INPROGRESS_PVP:
-                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Restart", GOSSIP_SENDER_MAIN, MEDIVH_GOSSIP_RESTART); // We want to player another game against you
+                AddGossipItemFor(player,
+                    GOSSIP_ICON_CHAT,
+                    "Restart",
+                    GOSSIP_SENDER_MAIN,
+                    MEDIVH_GOSSIP_RESTART); // We want to player another game against you
                 break;
             case CHESS_PHASE_PVE_FINISHED:
-                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "PvP", GOSSIP_SENDER_MAIN, MEDIVH_GOSSIP_START_PVP); // We'd like to fight each other
+                AddGossipItemFor(player,
+                    GOSSIP_ICON_CHAT,
+                    "PvP",
+                    GOSSIP_SENDER_MAIN,
+                    MEDIVH_GOSSIP_START_PVP); // We'd like to fight each other
                 break;
         }
 
@@ -1369,7 +1261,8 @@ struct npc_echo_of_medivh : public ScriptedAI
     void sGossipSelect(Player* player, uint32 /*sender*/, uint32 gossipListId) override
     {
         uint32 chessPhase = _instance->GetData(DATA_CHESS_GAME_PHASE);
-        _instance->SetData(CHESS_EVENT_TEAM, chessPhase < CHESS_PHASE_PVE_FINISHED ? player->GetTeamId() : TEAM_NEUTRAL);
+        _instance->SetData(
+            CHESS_EVENT_TEAM, chessPhase < CHESS_PHASE_PVE_FINISHED ? player->GetTeamId() : TEAM_NEUTRAL);
 
         CloseGossipMenuFor(player);
 
@@ -1454,34 +1347,27 @@ struct npc_chesspiece : public ScriptedAI
         DoCastSelf(SPELL_MELEE_ATTACK_TIMER, true);
 
         for (uint8 i = SPELL_SCHOOL_NORMAL; i < MAX_SPELL_SCHOOL; ++i)
-        {
             me->SetResistance(SpellSchools(i), 0);
-        }
     }
 
-    void EnterEvadeMode(EvadeReason /*why*/) override
-    {
-    }
+    void EnterEvadeMode(EvadeReason /*why*/) override { }
 
     void MovementInform(uint32 movementType, uint32 /*pointId*/) override
     {
         if (movementType != POINT_MOTION_TYPE)
-        {
             return;
-        }
 
         if (!me->IsCharmed())
         {
             me->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
 
             if (!_nextMoveTimer)
-            {
                 _nextMoveTimer = urand(10 * IN_MILLISECONDS, 20 * IN_MILLISECONDS);
-            }
 
             if (Creature* medivh = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_ECHO_OF_MEDIVH)))
             {
-                if (Creature* target = CAST_AI(npc_echo_of_medivh, medivh->AI())->GetHostileTargetForChangeFacing(me, _currentOrientation))
+                if (Creature* target = CAST_AI(npc_echo_of_medivh, medivh->AI())
+                                           ->GetHostileTargetForChangeFacing(me, _currentOrientation))
                 {
                     CastChangeFacing(me, target);
                 }
@@ -1489,9 +1375,7 @@ struct npc_chesspiece : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit* /*victim*/) override
-    {
-    }
+    void AttackStart(Unit* /*victim*/) override { }
 
     KarazhanChessOrientationType GetDefaultOrientationForTeam()
     {
@@ -1573,25 +1457,15 @@ struct npc_chesspiece : public ScriptedAI
         if (apply)
         {
             if (_instance->GetData(CHESS_EVENT_TEAM) == TEAM_ALLIANCE)
-            {
                 me->SetFaction(CHESS_FACTION_ALLIANCE);
-            }
             else if (_instance->GetData(CHESS_EVENT_TEAM) == TEAM_HORDE)
-            {
                 me->SetFaction(CHESS_FACTION_HORDE);
-            }
             else if (uint32 oldFaction = me->GetOldFactionId())
-            {
                 me->SetFaction(oldFaction);
-            }
             else if (FactionTemplateEntry const* factionTemplateEntry = me->GetFactionTemplateEntry())
-            {
                 me->SetFaction(factionTemplateEntry->faction);
-            }
             else
-            {
                 me->SetFaction(CHESS_FACTION_BOTH);
-            }
         }
         else
         {
@@ -1635,18 +1509,18 @@ struct npc_chesspiece : public ScriptedAI
     void JustDied(Unit* /*killer*/) override
     {
         if (Creature* medivh = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_ECHO_OF_MEDIVH)))
-        {
             CAST_AI(npc_echo_of_medivh, medivh->AI())->HandlePieceJustDied(me);
-        }
 
         me->RemoveCharmedBy(me->GetCharmer());
     }
 
-    Creature* GetEnemyPiece(float maxDistance, uint8 searchType = CHESS_PIECE_SEARCH_TYPE_CLOSEST, bool checkFront = true)
+    Creature* GetEnemyPiece(
+        float maxDistance, uint8 searchType = CHESS_PIECE_SEARCH_TYPE_CLOSEST, bool checkFront = true)
     {
         if (Creature* medivh = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_ECHO_OF_MEDIVH)))
         {
-            return CAST_AI(npc_echo_of_medivh, medivh->AI())->GetPiece(me, searchType, maxDistance, true, 0, checkFront);
+            return CAST_AI(npc_echo_of_medivh, medivh->AI())
+                ->GetPiece(me, searchType, maxDistance, true, 0, checkFront);
         }
 
         return nullptr;
@@ -1656,7 +1530,8 @@ struct npc_chesspiece : public ScriptedAI
     {
         if (Creature* medivh = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_ECHO_OF_MEDIVH)))
         {
-            return CAST_AI(npc_echo_of_medivh, medivh->AI())->GetPiece(me, CHESS_PIECE_SEARCH_TYPE_RANDOM, maxDistance, false, minHPDiff, false);
+            return CAST_AI(npc_echo_of_medivh, medivh->AI())
+                ->GetPiece(me, CHESS_PIECE_SEARCH_TYPE_RANDOM, maxDistance, false, minHPDiff, false);
         }
 
         return nullptr;
@@ -1665,15 +1540,11 @@ struct npc_chesspiece : public ScriptedAI
     void UpdateAI(uint32 diff) override
     {
         if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE) || me->IsNonMeleeSpellCast(false))
-        {
             return;
-        }
 
         uint32 chessPhase = _instance->GetData(DATA_CHESS_GAME_PHASE);
         if (chessPhase != CHESS_PHASE_INPROGRESS_PVE && chessPhase != CHESS_PHASE_INPROGRESS_PVP)
-        {
             return;
-        }
 
         if (!me->IsCharmed())
         {
@@ -1696,16 +1567,13 @@ struct npc_chesspiece : public ScriptedAI
                 {
                     if (_nextMoveTimer <= diff)
                     {
-                        if (Creature* medivh = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_ECHO_OF_MEDIVH)))
+                        if (Creature* medivh =
+                                ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_ECHO_OF_MEDIVH)))
                         {
                             if (CAST_AI(npc_echo_of_medivh, medivh->AI())->HandlePieceMoveByAI(me, _currentOrientation))
-                            {
                                 _nextMoveTimer = 0;
-                            }
                             else
-                            {
                                 _nextMoveTimer = 1 * IN_MILLISECONDS; //! Re-check after a second
-                            }
                         }
                     }
                     else
@@ -1719,7 +1587,9 @@ struct npc_chesspiece : public ScriptedAI
             {
                 if (_combatSpellTimer <= diff)
                 {
-                    _combatSpellTimer = _combatSpellTimerBase + (_teamControlledByRaid ? urand(6 * IN_MILLISECONDS, 12 * IN_MILLISECONDS) : urand(3 * IN_MILLISECONDS, 6 * IN_MILLISECONDS));
+                    _combatSpellTimer = _combatSpellTimerBase +
+                                        (_teamControlledByRaid ? urand(6 * IN_MILLISECONDS, 12 * IN_MILLISECONDS)
+                                                               : urand(3 * IN_MILLISECONDS, 6 * IN_MILLISECONDS));
 
                     switch (me->GetEntry())
                     {
@@ -1734,9 +1604,7 @@ struct npc_chesspiece : public ScriptedAI
                             break;
                         case NPC_QUEEN_A:
                             if (Creature* victim = GetEnemyPiece(20.0f))
-                            {
                                 DoCast(victim, SPELL_QUEEN_A_1); //! Elemental Blast
-                            }
                             break;
                         case NPC_BISHOP_A:
                             DoCastAOE(SPELL_BISHOP_A_1); //! Holy Lance
@@ -1755,9 +1623,7 @@ struct npc_chesspiece : public ScriptedAI
                             break;
                         case NPC_QUEEN_H:
                             if (Creature* victim = GetEnemyPiece(20.0f))
-                            {
                                 DoCast(victim, SPELL_QUEEN_H_1); //! Fireball
-                            }
                             break;
                         case NPC_KNIGHT_H:
                             DoCastAOE(SPELL_KNIGHT_H_1); //! Howl
@@ -1779,7 +1645,9 @@ struct npc_chesspiece : public ScriptedAI
             {
                 if (_combatSpellTimer2 <= diff)
                 {
-                    _combatSpellTimer2 = _combatSpellTimerBase2 + (_teamControlledByRaid ? urand(6 * IN_MILLISECONDS, 12 * IN_MILLISECONDS) : urand(3 * IN_MILLISECONDS, 6 * IN_MILLISECONDS));
+                    _combatSpellTimer2 = _combatSpellTimerBase2 +
+                                         (_teamControlledByRaid ? urand(6 * IN_MILLISECONDS, 12 * IN_MILLISECONDS)
+                                                                : urand(3 * IN_MILLISECONDS, 6 * IN_MILLISECONDS));
 
                     switch (me->GetEntry())
                     {
@@ -1794,15 +1662,11 @@ struct npc_chesspiece : public ScriptedAI
                             break;
                         case NPC_QUEEN_A:
                             if (Creature* victim = GetEnemyPiece(25.0f, CHESS_PIECE_SEARCH_TYPE_RANDOM, false))
-                            {
                                 DoCast(victim, SPELL_QUEEN_A_2); //! Rain of Fire
-                            }
                             break;
                         case NPC_BISHOP_A:
                             if (Creature* target = GetLowestHpFriendlyPiece(25.0f, 5000))
-                            {
                                 DoCast(target, SPELL_BISHOP_A_2);
-                            }
                             break;
                         case NPC_ROOK_A:
                             DoCast(SPELL_ROOK_A_2); //! Water Shield
@@ -1815,15 +1679,11 @@ struct npc_chesspiece : public ScriptedAI
                             break;
                         case NPC_QUEEN_H:
                             if (Creature* victim = GetEnemyPiece(25.0f, CHESS_PIECE_SEARCH_TYPE_RANDOM, false))
-                            {
                                 DoCast(victim, SPELL_QUEEN_H_2); //! Poison Cloud
-                            }
                             break;
                         case NPC_BISHOP_H:
                             if (Unit* target = GetLowestHpFriendlyPiece(25.0f, 5000))
-                            {
                                 DoCast(target, SPELL_BISHOP_H_2);
-                            }
                             break;
                         case NPC_KNIGHT_H:
                             DoCastAOE(SPELL_KNIGHT_H_2); //! Bite
@@ -1885,17 +1745,13 @@ struct npc_chesspiece : public ScriptedAI
         if (spellInfo->Id == SPELL_MELEE_ATTACK_TIMER_TRIGGER)
         {
             if (Creature* victim = GetEnemyPiece(10.0f))
-            {
                 DoCast(victim, SPELL_MELEE_DAMAGE, true);
-            }
 
             return;
         }
 
         if (target->GetEntry() != NPC_CHESS_MOVE_TRIGGER || me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
-        {
             return;
-        }
 
         switch (spellInfo->Id)
         {
@@ -1908,12 +1764,14 @@ struct npc_chesspiece : public ScriptedAI
             case SPELL_MOVE_GENERIC:
                 if (Creature* medivh = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_ECHO_OF_MEDIVH)))
                 {
-                    int8 result = CAST_AI(npc_echo_of_medivh, medivh->AI())->HandlePieceMove(me, target->GetGUID(), spellInfo->Id == SPELL_MOVE_GENERIC);
+                    int8 result = CAST_AI(npc_echo_of_medivh, medivh->AI())
+                                      ->HandlePieceMove(me, target->GetGUID(), spellInfo->Id == SPELL_MOVE_GENERIC);
                     if (result != -1)
                     {
                         DoCast(SPELL_MOVE_COOLDOWN);
                         me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
-                        me->GetMotionMaster()->MovePoint(0, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ());
+                        me->GetMotionMaster()->MovePoint(
+                            0, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ());
                         target->CastSpell(target, SPELL_MOVE_MARKER, false);
                         _currentOrientation = KarazhanChessOrientationType(result);
                     }
@@ -1929,9 +1787,7 @@ struct npc_chesspiece : public ScriptedAI
                         _currentOrientation = KarazhanChessOrientationType(result);
                         me->SetFacingTo(orientations[_currentOrientation]);
                         if (!_nextMoveTimer)
-                        {
                             _nextMoveTimer = urand(10 * IN_MILLISECONDS, 20 * IN_MILLISECONDS);
-                        }
                     }
                 }
                 break;
@@ -1943,13 +1799,15 @@ struct npc_chesspiece : public ScriptedAI
     void sGossipHello(Player* player) override
     {
         uint32 chessPhase = _instance->GetData(DATA_CHESS_GAME_PHASE);
-        if (_instance->GetData(CHESS_EVENT_TEAM) == TEAM_ALLIANCE && me->GetFaction() != CHESS_FACTION_ALLIANCE && chessPhase < CHESS_PHASE_PVE_FINISHED)
+        if (_instance->GetData(CHESS_EVENT_TEAM) == TEAM_ALLIANCE && me->GetFaction() != CHESS_FACTION_ALLIANCE &&
+            chessPhase < CHESS_PHASE_PVE_FINISHED)
         {
             SendGossipMenuFor(player, player->GetGossipTextId(me), me->GetGUID());
             return;
         }
 
-        if (_instance->GetData(CHESS_EVENT_TEAM) == TEAM_HORDE && me->GetFaction() != CHESS_FACTION_HORDE && chessPhase < CHESS_PHASE_PVE_FINISHED)
+        if (_instance->GetData(CHESS_EVENT_TEAM) == TEAM_HORDE && me->GetFaction() != CHESS_FACTION_HORDE &&
+            chessPhase < CHESS_PHASE_PVE_FINISHED)
         {
             SendGossipMenuFor(player, player->GetGossipTextId(me), me->GetGUID());
             return;
@@ -1969,13 +1827,12 @@ struct npc_chesspiece : public ScriptedAI
             case NPC_ROOK_H:
             case NPC_ROOK_A:
                 if (chessPhase != CHESS_PHASE_INPROGRESS_PVE && chessPhase != CHESS_PHASE_INPROGRESS_PVP)
-                {
                     ok = false;
-                }
                 break;
             case NPC_KING_H:
             case NPC_KING_A:
-                if (chessPhase != CHESS_PHASE_INPROGRESS_PVE && chessPhase != CHESS_PHASE_INPROGRESS_PVP && chessPhase != CHESS_PHASE_PVE_WARMUP && chessPhase != CHESS_PHASE_PVP_WARMUP)
+                if (chessPhase != CHESS_PHASE_INPROGRESS_PVE && chessPhase != CHESS_PHASE_INPROGRESS_PVP &&
+                    chessPhase != CHESS_PHASE_PVE_WARMUP && chessPhase != CHESS_PHASE_PVP_WARMUP)
                 {
                     ok = false;
                 }
@@ -1987,7 +1844,8 @@ struct npc_chesspiece : public ScriptedAI
 
         if (ok && !player->HasAura(SPELL_RECENTLY_INGAME))
         {
-            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Control " + me->GetName(), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            AddGossipItemFor(
+                player, GOSSIP_ICON_CHAT, "Control " + me->GetName(), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         }
 
         SendGossipMenuFor(player, player->GetGossipTextId(me), me->GetGUID());
@@ -2013,13 +1871,9 @@ struct npc_chesspiece : public ScriptedAI
                 {
                     uint32 chessPhase = _instance->GetData(DATA_CHESS_GAME_PHASE);
                     if (chessPhase == CHESS_PHASE_PVE_WARMUP)
-                    {
                         _instance->SetData(DATA_CHESS_GAME_PHASE, CHESS_PHASE_INPROGRESS_PVE);
-                    }
                     else if (chessPhase == CHESS_PHASE_PVP_WARMUP)
-                    {
                         _instance->SetData(DATA_CHESS_GAME_PHASE, CHESS_PHASE_INPROGRESS_PVP);
-                    }
                     break;
                 }
                 default:
@@ -2064,17 +1918,16 @@ class spell_control_piece : public AuraScript
 {
     PrepareAuraScript(spell_control_piece)
 
-    void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+        void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (Player* player = GetTarget()->ToPlayer())
-        {
             player->StopCastingBindSight();
-        }
     }
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_control_piece::HandleEffectRemove, EFFECT_1, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_control_piece::HandleEffectRemove, EFFECT_1, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

@@ -21,17 +21,17 @@
 
 enum Say
 {
-    SAY_AGGRO                       = 0,
-    SAY_SLAY                        = 1,
-    SAY_SAW_BLADE                   = 2,
-    SAY_DEATH                       = 3
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_SAW_BLADE = 2,
+    SAY_DEATH = 3
 };
 
 enum Spells
 {
-    SPELL_STREAM_OF_MACHINE_FLUID   = 35311,
-    SPELL_SAW_BLADE                 = 35318,
-    SPELL_SHADOW_POWER              = 35322
+    SPELL_STREAM_OF_MACHINE_FLUID = 35311,
+    SPELL_SAW_BLADE = 35318,
+    SPELL_SHADOW_POWER = 35322
 };
 
 struct boss_gatewatcher_gyrokill : public BossAI
@@ -48,16 +48,22 @@ struct boss_gatewatcher_gyrokill : public BossAI
     {
         _JustEngagedWith();
 
-        scheduler.Schedule(10s, [this](TaskContext context)
+        scheduler
+            .Schedule(10s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_STREAM_OF_MACHINE_FLUID);
             context.Repeat(12s, 14s);
-        }).Schedule(20s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_SAW_BLADE, 0, 50.0f);
             Talk(SAY_SAW_BLADE);
             context.Repeat(25s);
-        }).Schedule(30s, [this](TaskContext context)
+        })
+            .Schedule(30s,
+                [this](TaskContext context)
         {
             me->CastSpell(me, SPELL_SHADOW_POWER, false);
             context.Repeat(25s);
@@ -69,9 +75,7 @@ struct boss_gatewatcher_gyrokill : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 };
 

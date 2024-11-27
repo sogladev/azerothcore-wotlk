@@ -27,31 +27,31 @@
 enum AuriayaSpells
 {
     // BASIC
-    SPELL_TERRIFYING_SCREECH            = 64386,
-    SPELL_SENTINEL_BLAST_10             = 64389,
-    SPELL_SENTINEL_BLAST_25             = 64678,
-    SPELL_SONIC_SCREECH_10              = 64422,
-    SPELL_SONIC_SCREECH_25              = 64688,
-    SPELL_GUARDIAN_SWARM                = 64396,
-    SPELL_ENRAGE                        = 47008,
-    SPELL_ACTIVATE_FERAL_DEFENDER       = 64449,
+    SPELL_TERRIFYING_SCREECH = 64386,
+    SPELL_SENTINEL_BLAST_10 = 64389,
+    SPELL_SENTINEL_BLAST_25 = 64678,
+    SPELL_SONIC_SCREECH_10 = 64422,
+    SPELL_SONIC_SCREECH_25 = 64688,
+    SPELL_GUARDIAN_SWARM = 64396,
+    SPELL_ENRAGE = 47008,
+    SPELL_ACTIVATE_FERAL_DEFENDER = 64449,
 
     // Sanctum Sentry
-    SPELL_SAVAGE_POUNCE_10              = 64666,
-    SPELL_SAVAGE_POUNCE_25              = 64374,
-    SPELL_RIP_FLESH_10                  = 64375,
-    SPELL_RIP_FLESH_25                  = 64667,
-    SPELL_STRENGTH_OF_THE_PACK          = 64369,
+    SPELL_SAVAGE_POUNCE_10 = 64666,
+    SPELL_SAVAGE_POUNCE_25 = 64374,
+    SPELL_RIP_FLESH_10 = 64375,
+    SPELL_RIP_FLESH_25 = 64667,
+    SPELL_STRENGTH_OF_THE_PACK = 64369,
 
     // Feral Defender
-    SPELL_FERAL_ESSENCE                 = 64455,
-    SPELL_FERAL_POUNCE_10               = 64478,
-    SPELL_FERAL_POUNCE_25               = 64669,
-    SPELL_FERAL_RUSH_10                 = 64496,
-    SPELL_FERAL_RUSH_25                 = 64674,
+    SPELL_FERAL_ESSENCE = 64455,
+    SPELL_FERAL_POUNCE_10 = 64478,
+    SPELL_FERAL_POUNCE_25 = 64669,
+    SPELL_FERAL_RUSH_10 = 64496,
+    SPELL_FERAL_RUSH_25 = 64674,
     //SPELL_SEEPING_FERAL_ESSENCE_SUMMON    = 64457,
-    SPELL_SEEPING_FERAL_ESSENCE_10      = 64458,
-    SPELL_SEEPING_FERAL_ESSENCE_25      = 64676,
+    SPELL_SEEPING_FERAL_ESSENCE_10 = 64458,
+    SPELL_SEEPING_FERAL_ESSENCE_25 = 64676,
 };
 
 #define SPELL_SONIC_SCREECH             RAID_MODE(SPELL_SONIC_SCREECH_10, SPELL_SONIC_SCREECH_25)
@@ -60,47 +60,48 @@ enum AuriayaSpells
 #define SPELL_RIP_FLESH                 RAID_MODE(SPELL_RIP_FLESH_10, SPELL_RIP_FLESH_25)
 #define SPELL_FERAL_POUNCE              RAID_MODE(SPELL_FERAL_POUNCE_10, SPELL_FERAL_POUNCE_25)
 #define SPELL_FERAL_RUSH                RAID_MODE(SPELL_FERAL_RUSH_10, SPELL_FERAL_RUSH_25)
+
 //#define SPELL_SEEPING_FERAL_ESSENCE     RAID_MODE(SPELL_SEEPING_FERAL_ESSENCE_10, SPELL_SEEPING_FERAL_ESSENCE_25)
 
 enum AuriayaNPC
 {
-    NPC_FERAL_DEFENDER                  = 34035,
-    NPC_SANCTUM_SENTRY                  = 34014,
-    NPC_SEEPING_FERAL_ESSENCE           = 34098,
+    NPC_FERAL_DEFENDER = 34035,
+    NPC_SANCTUM_SENTRY = 34014,
+    NPC_SEEPING_FERAL_ESSENCE = 34098,
 };
 
 enum AuriayaEvents
 {
-    EVENT_SUMMON_FERAL_DEFENDER         = 1,
-    EVENT_TERRIFYING_SCREECH            = 2,
-    EVENT_SONIC_SCREECH                 = 3,
-    EVENT_GUARDIAN_SWARM                = 4,
-    EVENT_SENTINEL_BLAST                = 5,
-    EVENT_REMOVE_IMMUNE                 = 6,
+    EVENT_SUMMON_FERAL_DEFENDER = 1,
+    EVENT_TERRIFYING_SCREECH = 2,
+    EVENT_SONIC_SCREECH = 3,
+    EVENT_GUARDIAN_SWARM = 4,
+    EVENT_SENTINEL_BLAST = 5,
+    EVENT_REMOVE_IMMUNE = 6,
 
-    EVENT_RESPAWN_FERAL_DEFENDER        = 9,
-    EVENT_ENRAGE                        = 10,
+    EVENT_RESPAWN_FERAL_DEFENDER = 9,
+    EVENT_ENRAGE = 10,
 };
 
 enum Texts
 {
-    SAY_AGGRO       = 0,
-    SAY_SLAY        = 1,
-    SAY_BERSERK     = 2,
-    EMOTE_DEATH     = 3,
-    EMOTE_FEAR      = 4,
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_BERSERK = 2,
+    EMOTE_DEATH = 3,
+    EMOTE_FEAR = 4,
     EMOTE_DEFFENDER = 5,
 };
 
 enum Misc
 {
-    ACTION_FERAL_RESPAWN                = 1,
-    ACTION_FERAL_DEATH                  = 2,
-    ACTION_DESPAWN_ADDS                 = 3,
-    ACTION_FERAL_DEATH_WITH_STACK       = 4,
+    ACTION_FERAL_RESPAWN = 1,
+    ACTION_FERAL_DEATH = 2,
+    ACTION_DESPAWN_ADDS = 3,
+    ACTION_FERAL_DEATH_WITH_STACK = 4,
 
-    DATA_CRAZY_CAT                      = 10,
-    DATA_NINE_LIVES                     = 11,
+    DATA_CRAZY_CAT = 10,
+    DATA_NINE_LIVES = 11,
 };
 
 class boss_auriaya : public CreatureScript
@@ -141,7 +142,10 @@ public:
                 m_pInstance->SetData(TYPE_AURIAYA, NOT_STARTED);
 
             for (uint8 i = 0; i < RAID_MODE(2, 4); ++i)
-                me->SummonCreature(NPC_SANCTUM_SENTRY, me->GetPositionX() + urand(4, 12), me->GetPositionY() + urand(4, 12), me->GetPositionZ());
+                me->SummonCreature(NPC_SANCTUM_SENTRY,
+                    me->GetPositionX() + urand(4, 12),
+                    me->GetPositionY() + urand(4, 12),
+                    me->GetPositionZ());
 
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, false);
         }
@@ -172,9 +176,12 @@ public:
                 _feralDied = true;
         }
 
-        void JustReachedHome() override { me->setActive(false); }
+        void JustReachedHome() override
+        {
+            me->setActive(false);
+        }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             if (m_pInstance)
                 m_pInstance->SetData(TYPE_AURIAYA, IN_PROGRESS);
@@ -258,11 +265,11 @@ public:
                     events.DelayEvents(5000, 0);
                     break;
                 case EVENT_RESPAWN_FERAL_DEFENDER:
-                    {
-                        EntryCheckPredicate pred(NPC_FERAL_DEFENDER);
-                        summons.DoAction(ACTION_FERAL_RESPAWN, pred);
-                        break;
-                    }
+                {
+                    EntryCheckPredicate pred(NPC_FERAL_DEFENDER);
+                    summons.DoAction(ACTION_FERAL_RESPAWN, pred);
+                    break;
+                }
                 case EVENT_ENRAGE:
                     Talk(SAY_BERSERK);
                     me->CastSpell(me, SPELL_ENRAGE, true);
@@ -375,7 +382,8 @@ public:
 
             if (_feralEssenceStack)
             {
-                if (Creature* cr = me->SummonCreature(NPC_SEEPING_FERAL_ESSENCE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0.0f))
+                if (Creature* cr = me->SummonCreature(
+                        NPC_SEEPING_FERAL_ESSENCE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0.0f))
                     summons.Summon(cr);
 
                 --_feralEssenceStack;
@@ -443,16 +451,17 @@ class spell_auriaya_sentinel_blast : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_auriaya_sentinel_blast::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_auriaya_sentinel_blast::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
 class achievement_auriaya_crazy_cat_lady : public AchievementCriteriaScript
 {
 public:
-    achievement_auriaya_crazy_cat_lady() : AchievementCriteriaScript("achievement_auriaya_crazy_cat_lady") {}
+    achievement_auriaya_crazy_cat_lady() : AchievementCriteriaScript("achievement_auriaya_crazy_cat_lady") { }
 
-    bool OnCheck(Player*  /*player*/, Unit* target, uint32 /*criteria_id*/) override
+    bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {
         if (target)
             if (InstanceScript* instance = target->GetInstanceScript())
@@ -466,9 +475,9 @@ public:
 class achievement_auriaya_nine_lives : public AchievementCriteriaScript
 {
 public:
-    achievement_auriaya_nine_lives() : AchievementCriteriaScript("achievement_auriaya_nine_lives") {}
+    achievement_auriaya_nine_lives() : AchievementCriteriaScript("achievement_auriaya_nine_lives") { }
 
-    bool OnCheck(Player*  /*player*/, Unit* target, uint32 /*criteria_id*/) override
+    bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {
         if (target)
             if (InstanceScript* instance = target->GetInstanceScript())

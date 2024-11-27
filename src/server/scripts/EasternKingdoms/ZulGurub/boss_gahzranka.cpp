@@ -23,21 +23,21 @@
 
 enum Spells
 {
-    SPELL_FROSTBREATH               = 16099,
-    SPELL_MASSIVEGEYSER             = 22421,
-    SPELL_SLAM                      = 24326,
-    SPELL_THRASH                    = 3417, // Triggers 3391
-    SPELL_SPLASH                    = 24593
+    SPELL_FROSTBREATH = 16099,
+    SPELL_MASSIVEGEYSER = 22421,
+    SPELL_SLAM = 24326,
+    SPELL_THRASH = 3417, // Triggers 3391
+    SPELL_SPLASH = 24593
 };
 
 enum Misc
 {
-    GAMEOBJECT_MUDSKUNK_LURE        = 180346
+    GAMEOBJECT_MUDSKUNK_LURE = 180346
 };
 
 struct boss_gahzranka : public BossAI
 {
-    boss_gahzranka(Creature* creature) : BossAI(creature, DATA_GAHZRANKA) {}
+    boss_gahzranka(Creature* creature) : BossAI(creature, DATA_GAHZRANKA) { }
 
     void IsSummonedBy(WorldObject* /*summoner*/) override
     {
@@ -49,20 +49,11 @@ struct boss_gahzranka : public BossAI
         _JustEngagedWith();
         me->AddAura(SPELL_THRASH, me);
 
-        ScheduleTimedEvent(8s, [&]
-        {
-            DoCastVictim(SPELL_FROSTBREATH);
-        }, 8s, 20s);
+        ScheduleTimedEvent(8s, [&] { DoCastVictim(SPELL_FROSTBREATH); }, 8s, 20s);
 
-        ScheduleTimedEvent(25s, [&]
-        {
-            DoCastVictim(SPELL_MASSIVEGEYSER);
-        }, 22s, 32s);
+        ScheduleTimedEvent(25s, [&] { DoCastVictim(SPELL_MASSIVEGEYSER); }, 22s, 32s);
 
-        ScheduleTimedEvent(15s, [&]
-        {
-            DoCastVictim(SPELL_SLAM, true);
-        }, 12s, 20s);
+        ScheduleTimedEvent(15s, [&] { DoCastVictim(SPELL_SLAM, true); }, 12s, 20s);
     }
 };
 
@@ -86,7 +77,8 @@ class spell_gahzranka_slam : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_gahzranka_slam::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_gahzranka_slam::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
         OnEffectHitTarget += SpellEffectFn(spell_gahzranka_slam::HandleWipeThreat, EFFECT_1, SPELL_EFFECT_KNOCK_BACK);
     }
 
@@ -106,21 +98,40 @@ class spell_pagles_point_cast : public SpellScript
             {
                 if (!instanceScript->GetData(DATA_GAHZRANKA) && !caster->FindNearestCreature(NPC_GAHZRANKA, 50.0f))
                 {
-                    caster->m_Events.AddEventAtOffset([caster]()
+                    caster->m_Events.AddEventAtOffset(
+                        [caster]()
                     {
-                        if (GameObject* lure = caster->SummonGameObject(GAMEOBJECT_MUDSKUNK_LURE, -11688.5f, -1737.74f, 10.409842f, 1.f, 0.f, 0.f, 0.f, 0.f, 30 * IN_MILLISECONDS))
+                        if (GameObject* lure = caster->SummonGameObject(GAMEOBJECT_MUDSKUNK_LURE,
+                                -11688.5f,
+                                -1737.74f,
+                                10.409842f,
+                                1.f,
+                                0.f,
+                                0.f,
+                                0.f,
+                                0.f,
+                                30 * IN_MILLISECONDS))
                         {
                             lure->DespawnOrUnsummon(5s);
-                            caster->m_Events.AddEventAtOffset([caster]()
+                            caster->m_Events.AddEventAtOffset(
+                                [caster]()
                             {
                                 if (!caster->FindNearestCreature(NPC_GAHZRANKA, 50.0f))
                                 {
                                     caster->CastSpell(caster, SPELL_SPLASH, true);
-                                    caster->SummonCreature(NPC_GAHZRANKA, -11688.5f, -1723.74f, -5.78f, 0.f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5 * DAY * IN_MILLISECONDS);
+                                    caster->SummonCreature(NPC_GAHZRANKA,
+                                        -11688.5f,
+                                        -1723.74f,
+                                        -5.78f,
+                                        0.f,
+                                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                                        5 * DAY * IN_MILLISECONDS);
                                 }
-                            }, 5s);
+                            },
+                                5s);
                         }
-                    }, 2s);
+                    },
+                        2s);
                 }
             }
         }

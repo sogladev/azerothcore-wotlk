@@ -40,21 +40,21 @@ EndContentData */
 
 enum eEris
 {
-    QUEST_BALANCE_OF_LIGHT_AND_SHADOW   = 7622,
-    ITEM_EYE_OF_DIVINITY                = 18646,
+    QUEST_BALANCE_OF_LIGHT_AND_SHADOW = 7622,
+    ITEM_EYE_OF_DIVINITY = 18646,
 
-    NPC_INJURED_PEASANT                 = 14484,
-    NPC_PLAGUED_PEASANT                 = 14485,
-    NPC_SCOURGE_ARCHER                  = 14489,
+    NPC_INJURED_PEASANT = 14484,
+    NPC_PLAGUED_PEASANT = 14485,
+    NPC_SCOURGE_ARCHER = 14489,
 
-    EVENT_SUMMON_PEASANTS               = 1,
-    EVENT_CHECK_PLAYER                  = 2,
-    EVENT_SUMMON_ARCHERS                = 3,
+    EVENT_SUMMON_PEASANTS = 1,
+    EVENT_CHECK_PLAYER = 2,
+    EVENT_SUMMON_ARCHERS = 3,
 
-    SPELL_SHOOT                         = 23073,
-    SPELL_DEATHS_DOOR                   = 23127,
-    SPELL_SEETHING_PLAGUE               = 23072,
-    SPELL_ERIS_BLESSING                 = 23108,
+    SPELL_SHOOT = 23073,
+    SPELL_DEATHS_DOOR = 23127,
+    SPELL_SEETHING_PLAGUE = 23072,
+    SPELL_ERIS_BLESSING = 23108,
 };
 
 class npc_eris_hevenfire : public CreatureScript
@@ -80,7 +80,7 @@ public:
 
     struct npc_eris_hevenfireAI : public ScriptedAI
     {
-        npc_eris_hevenfireAI(Creature* c) : ScriptedAI(c), summons(me) {}
+        npc_eris_hevenfireAI(Creature* c) : ScriptedAI(c), summons(me) { }
 
         SummonList summons;
         EventMap events;
@@ -150,7 +150,13 @@ public:
                 float y = -3049 + frand(-6.0f, 6.0f);
                 float z = 165.25;
                 float o = 2.0;
-                me->SummonCreature(roll_chance_i(5) ? NPC_PLAGUED_PEASANT : NPC_INJURED_PEASANT, x, y, z, o, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 2 * MINUTE * IN_MILLISECONDS);
+                me->SummonCreature(roll_chance_i(5) ? NPC_PLAGUED_PEASANT : NPC_INJURED_PEASANT,
+                    x,
+                    y,
+                    z,
+                    o,
+                    TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,
+                    2 * MINUTE * IN_MILLISECONDS);
             }
         }
 
@@ -216,16 +222,16 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_CHECK_PLAYER:
+                {
+                    Player* player = ObjectAccessor::GetPlayer(*me, _playerGUID);
+                    if (!player || me->GetDistance2d(player) > 100.0f)
                     {
-                        Player* player = ObjectAccessor::GetPlayer(*me, _playerGUID);
-                        if (!player || me->GetDistance2d(player) > 100.0f)
-                        {
-                            EnterEvadeMode();
-                            return;
-                        }
-                        events.RepeatEvent(2000);
-                        break;
+                        EnterEvadeMode();
+                        return;
                     }
+                    events.RepeatEvent(2000);
+                    break;
+                }
                 case EVENT_SUMMON_ARCHERS:
                     SummonArchers();
                     break;
@@ -247,12 +253,16 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return new npc_balance_of_light_and_shadowAI (creature);
+        return new npc_balance_of_light_and_shadowAI(creature);
     }
 
     struct npc_balance_of_light_and_shadowAI : public NullCreatureAI
     {
-        npc_balance_of_light_and_shadowAI(Creature* creature) : NullCreatureAI(creature) { timer = 0; _targetGUID.Clear(); }
+        npc_balance_of_light_and_shadowAI(Creature* creature) : NullCreatureAI(creature)
+        {
+            timer = 0;
+            _targetGUID.Clear();
+        }
 
         bool CanBeSeen(Player const* player) override
         {
@@ -269,7 +279,7 @@ public:
                 me->CastSpell(me, SPELL_DEATHS_DOOR, true);
         }
 
-        void MovementInform(uint32 type, uint32  /*pointId*/) override
+        void MovementInform(uint32 type, uint32 /*pointId*/) override
         {
             if (type != POINT_MOTION_TYPE)
                 return;
@@ -336,7 +346,8 @@ public:
             player->PrepareQuestMenu(creature->GetGUID());
 
         if (creature->IsVendor() && player->GetQuestRewardStatus(6164))
-            AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+            AddGossipItemFor(
+                player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
         SendGossipMenuFor(player, player->GetGossipTextId(creature), creature->GetGUID());
         return true;

@@ -21,37 +21,32 @@
 #include "ScriptedCreature.h"
 #include "stratholme.h"
 
-const Position BlackGuardPos[10] =
-{
+Position const BlackGuardPos[10] = {
     {4032.73f + 0.0f, -3378.26f + 0.0f, 119.76f, 4.67f},
     {4032.73f + 2.0f, -3378.26f + 2.0f, 119.76f, 4.67f},
     {4032.73f + 2.0f, -3378.26f - 2.0f, 119.76f, 4.67f},
     {4032.73f - 2.0f, -3378.26f + 2.0f, 119.76f, 4.67f},
     {4032.73f - 2.0f, -3378.26f - 2.0f, 119.76f, 4.67f},
 
-    {4032.73f + 0.0f, -3407.38f + 0.0f, 115.56f, 0.0f},
-    {4032.73f + 2.0f, -3407.38f + 2.0f, 115.56f, 0.0f},
-    {4032.73f + 2.0f, -3407.38f - 2.0f, 115.56f, 0.0f},
-    {4032.73f - 2.0f, -3407.38f + 2.0f, 115.56f, 0.0f},
-    {4032.73f - 2.0f, -3407.38f - 2.0f, 115.56f, 0.0f}
+    {4032.73f + 0.0f, -3407.38f + 0.0f, 115.56f, 0.0f },
+    {4032.73f + 2.0f, -3407.38f + 2.0f, 115.56f, 0.0f },
+    {4032.73f + 2.0f, -3407.38f - 2.0f, 115.56f, 0.0f },
+    {4032.73f - 2.0f, -3407.38f + 2.0f, 115.56f, 0.0f },
+    {4032.73f - 2.0f, -3407.38f - 2.0f, 115.56f, 0.0f }
 };
 
 // Creatures to be spawned during the trap events
-static const uint32 aPlaguedCritters[] =
-{
-    NPC_PLAGUED_RAT, NPC_PLAGUED_MAGGOT, NPC_PLAGUED_INSECT
-};
+static uint32 const aPlaguedCritters[] = {NPC_PLAGUED_RAT, NPC_PLAGUED_MAGGOT, NPC_PLAGUED_INSECT};
 
 // Positions of the two Gate Traps
-static const Position aGateTrap[] =
-{
-    {3612.29f, -3335.39f, 124.077f, 3.14159f},  // Scarlet side
-    {3919.88f, -3547.34f, 134.269f, 2.94961f}   // Undead side
+static Position const aGateTrap[] = {
+    {3612.29f, -3335.39f, 124.077f, 3.14159f}, // Scarlet side
+    {3919.88f, -3547.34f, 134.269f, 2.94961f}  // Undead side
 };
 
-Position const MindlessUndeadPos = { 3941.75f, -3393.06f, 119.70f, 0.0f };
-Position const BarthilasPos = { 4068.74f, -3535.97f, 122.825f, 2.478367567062377929f };
-Position const SlaughterPos = { 4032.20f, -3378.06f, 119.75f, 4.67f };
+Position const MindlessUndeadPos = {3941.75f, -3393.06f, 119.70f, 0.0f};
+Position const BarthilasPos = {4068.74f, -3535.97f, 122.825f, 2.478367567062377929f};
+Position const SlaughterPos = {4032.20f, -3378.06f, 119.75f, 4.67f};
 
 // uint32 m_uiGateTrapTimers[2][3] = { {0,0,0}, {0,0,0} };
 
@@ -143,9 +138,7 @@ public:
                         gate->SetGoState(GO_STATE_ACTIVE);
             }
             if (_slaughterProgress == 3)
-            {
                 events.ScheduleEvent(EVENT_SPAWN_BLACK_GUARD, 20000);
-            }
             if (_slaughterProgress == 4)
             {
                 if (Creature* baron = instance->GetCreature(_baronRivendareGUID))
@@ -281,7 +274,8 @@ public:
             for (uint8 i = 0; i < 30; ++i)
             {
                 float x, y, z;
-                const Position pPos = { player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), player->GetOrientation() };
+                Position const pPos = {
+                    player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), player->GetOrientation()};
                 player->GetRandomPoint(pPos, 8.0f, x, y, z);
                 z = player->GetPositionZ() + 1;
                 player->SummonCreature(uiEntry, x, y, z, 0, TEMPSUMMON_DEAD_DESPAWN, 0)->AI()->AttackStart(player);
@@ -359,7 +353,10 @@ public:
                         {
                             if (barthilas->IsAlive())
                             {
-                                barthilas->NearTeleportTo(BarthilasPos.GetPositionX(), BarthilasPos.GetPositionY(), BarthilasPos.GetPositionZ(), BarthilasPos.GetOrientation());
+                                barthilas->NearTeleportTo(BarthilasPos.GetPositionX(),
+                                    BarthilasPos.GetPositionY(),
+                                    BarthilasPos.GetPositionZ(),
+                                    BarthilasPos.GetOrientation());
                                 barthilas->SetHomePosition(BarthilasPos);
                             }
                         }
@@ -382,26 +379,17 @@ public:
             data >> _postboxesOpened;
             data >> _barthilasrunProgress;
             if (_baronRunTime)
-            {
                 events.ScheduleEvent(EVENT_BARON_TIME, 60000);
-            }
 
             if (_slaughterProgress > 0 && _slaughterProgress < 4)
-            {
                 events.ScheduleEvent(EVENT_FORCE_SLAUGHTER_EVENT, 5000);
-            }
         }
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << _baronRunProgress << ' '
-                << _baronRunTime << ' '
-                << _zigguratState1 << ' '
-                << _zigguratState2 << ' '
-                << _zigguratState3 << ' '
-                << _slaughterProgress << ' '
-                << _postboxesOpened << ' '
-                << _barthilasrunProgress;
+            data << _baronRunProgress << ' ' << _baronRunTime << ' ' << _zigguratState1 << ' ' << _zigguratState2 << ' '
+                 << _zigguratState3 << ' ' << _slaughterProgress << ' ' << _postboxesOpened << ' '
+                 << _barthilasrunProgress;
         }
 
         uint32 GetData(uint32 type) const override
@@ -440,7 +428,8 @@ public:
                     if (Player* player = itr->GetSource())
                     {
                         // should pet also trigger the trap? could not find any source for it
-                        if (!player->IsGameMaster() && player->IsWithinDist2d(aGateTrap[i].m_positionX, aGateTrap[i].m_positionY, 5.5f))
+                        if (!player->IsGameMaster() &&
+                            player->IsWithinDist2d(aGateTrap[i].m_positionX, aGateTrap[i].m_positionY, 5.5f))
                         {
                             // Check if timer was not already set by another player/pet a few milliseconds before
                             if (_gateTrapsCooldown[i])
@@ -479,8 +468,8 @@ public:
                 }
             }
 
-            const int GATE1 = 0;
-            const int GATE2 = 1;
+            int const GATE1 = 0;
+            int const GATE2 = 1;
 
             switch (events.ExecuteEvent())
             {
@@ -600,7 +589,7 @@ public:
         uint32 _zigguratState3;
         uint32 _slaughterProgress;
         uint32 _slaughterNPCs;
-        uint32 _barthilasrunProgress{};
+        uint32 _barthilasrunProgress {};
         uint32 _postboxesOpened;
         EventMap events;
 
@@ -621,13 +610,9 @@ public:
         void gate_delay(int gate)
         {
             if (_trapGatesGUIDs[2 * gate])
-            {
                 DoUseDoorOrButton(_trapGatesGUIDs[2 * gate]);
-            }
             if (_trapGatesGUIDs[2 * gate + 1])
-            {
                 DoUseDoorOrButton(_trapGatesGUIDs[2 * gate + 1]);
-            }
         }
 
         void gate_critter_delay(int gate)
@@ -635,9 +620,7 @@ public:
             if (_trappedPlayerGUID)
             {
                 if (Player* pPlayer = ObjectAccessor::GetPlayer(instance, _trappedPlayerGUID))
-                {
                     DoSpawnPlaguedCritters(gate, pPlayer);
-                }
             }
         }
     };

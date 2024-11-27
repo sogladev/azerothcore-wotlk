@@ -19,20 +19,17 @@
 #include "InstanceScript.h"
 #include "magtheridons_lair.h"
 
-BossBoundaryData const boundaries =
-{
-    { DATA_MAGTHERIDON, new CircleBoundary(Position(-18.70f, 2.24f), 52.30) }
+BossBoundaryData const boundaries = {
+    {DATA_MAGTHERIDON, new CircleBoundary(Position(-18.70f, 2.24f), 52.30)}
 };
 
-DoorData const doorData[] =
-{
-    { GO_MAGTHERIDON_DOORS,     DATA_MAGTHERIDON,           DOOR_TYPE_ROOM },
-    { 0,                        0,                          DOOR_TYPE_ROOM } // END
+DoorData const doorData[] = {
+    {GO_MAGTHERIDON_DOORS, DATA_MAGTHERIDON, DOOR_TYPE_ROOM},
+    {0,                    0,                DOOR_TYPE_ROOM}  // END
 };
 
-MinionData const minionData[] =
-{
-    { NPC_HELLFIRE_CHANNELER,   DATA_MAGTHERIDON }
+MinionData const minionData[] = {
+    {NPC_HELLFIRE_CHANNELER, DATA_MAGTHERIDON}
 };
 
 class instance_magtheridons_lair : public InstanceMapScript

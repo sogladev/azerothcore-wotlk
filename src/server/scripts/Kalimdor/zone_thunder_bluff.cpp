@@ -26,11 +26,11 @@
 // NPC 3057: Cairne Bloodhoof <High Chieftain>
 enum CairneBloodhoof
 {
-    SPELL_BERSERKER_CHARGE  = 16636,
-    SPELL_CLEAVE            = 16044,
-    SPELL_MORTAL_STRIKE     = 16856,
-    SPELL_THUNDERCLAP       = 23931,
-    SPELL_UPPERCUT          = 22916,
+    SPELL_BERSERKER_CHARGE = 16636,
+    SPELL_CLEAVE = 16044,
+    SPELL_MORTAL_STRIKE = 16856,
+    SPELL_THUNDERCLAP = 23931,
+    SPELL_UPPERCUT = 22916,
     SPELL_CAIRNES_HOOFPRINT = 23123
 };
 
@@ -47,33 +47,27 @@ public:
         void Reset() override
         {
             _berserkerChargeTimer = 30000;
-            _cleaveTimer          = 5000;
-            _mortalStrikeTimer    = 10000;
-            _thunderclapTimer     = 15000;
-            _uppercutTimer        = 10000;
+            _cleaveTimer = 5000;
+            _mortalStrikeTimer = 10000;
+            _thunderclapTimer = 15000;
+            _uppercutTimer = 10000;
         }
 
         void sGossipSelect(Player* player, uint32 /*sender*/, uint32 action) override
         {
             if (action == 0)
-            {
                 player->CastSpell(player, SPELL_CAIRNES_HOOFPRINT, false);
-            }
         }
 
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             if (_berserkerChargeTimer <= diff)
             {
                 if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
-                {
                     DoCast(target, SPELL_BERSERKER_CHARGE);
-                }
                 _berserkerChargeTimer = 25000;
             }
             else
@@ -123,6 +117,7 @@ public:
 
             DoMeleeAttackIfReady();
         }
+
     private:
         uint32 _berserkerChargeTimer;
         uint32 _cleaveTimer;

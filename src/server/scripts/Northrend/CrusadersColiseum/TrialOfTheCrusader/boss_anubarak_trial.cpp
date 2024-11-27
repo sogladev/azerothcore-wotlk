@@ -26,46 +26,45 @@
 
 enum AnubTexts
 {
-    SAY_INTRO               = 0,
-    SAY_AGGRO               = 1,
-    EMOTE_SUBMERGE          = 2,
-    EMOTE_BURROWER          = 3,
-    SAY_EMERGE              = 4,
-    SAY_LEECHING_SWARM      = 5,
-    EMOTE_LEECHING_SWARM    = 6,
-    SAY_KILL_PLAYER         = 7,
-    SAY_DEATH               = 8,
+    SAY_INTRO = 0,
+    SAY_AGGRO = 1,
+    EMOTE_SUBMERGE = 2,
+    EMOTE_BURROWER = 3,
+    SAY_EMERGE = 4,
+    SAY_LEECHING_SWARM = 5,
+    EMOTE_LEECHING_SWARM = 6,
+    SAY_KILL_PLAYER = 7,
+    SAY_DEATH = 8,
 
-    EMOTE_SPIKE             = 0,
+    EMOTE_SPIKE = 0,
 };
 
 enum AnubNPCs
 {
-    NPC_FROST_SPHERE                            = 34606,
-    NPC_BURROW                                  = 34862,
-    NPC_BURROWER                                = 34607,
-    NPC_SCARAB                                  = 34605,
-    NPC_SPIKE                                   = 34660,
+    NPC_FROST_SPHERE = 34606,
+    NPC_BURROW = 34862,
+    NPC_BURROWER = 34607,
+    NPC_SCARAB = 34605,
+    NPC_SPIKE = 34660,
 };
 
-const Position AnubLocs[] =
-{
+Position const AnubLocs[] = {
     // scarab's beginning pos
-    {722.65f, 135.41f, 142.16f, M_PI},
+    {722.65f,     135.41f,     142.16f,     M_PI},
 
     // churning ground spawns
-    {694.886353f, 102.484665f, 142.119614f, 0},
-    {731.987244f, 83.3824690f, 142.119614f, 0},
-    {694.500671f, 185.363968f, 142.117905f, 0},
-    {740.184509f, 193.443390f, 142.117584f, 0},
+    {694.886353f, 102.484665f, 142.119614f, 0   },
+    {731.987244f, 83.3824690f, 142.119614f, 0   },
+    {694.500671f, 185.363968f, 142.117905f, 0   },
+    {740.184509f, 193.443390f, 142.117584f, 0   },
 
     // sphere spawns
-    { 786.6439f, 108.2498f, 155.6701f, 0 },
-    { 806.8429f, 150.5902f, 155.6701f, 0 },
-    { 759.1386f, 163.9654f, 155.6701f, 0 },
-    { 744.3701f, 119.5211f, 155.6701f, 0 },
-    { 710.0211f, 120.8152f, 155.6701f, 0 },
-    { 706.6383f, 161.5266f, 155.6701f, 0 },
+    {786.6439f,   108.2498f,   155.6701f,   0   },
+    {806.8429f,   150.5902f,   155.6701f,   0   },
+    {759.1386f,   163.9654f,   155.6701f,   0   },
+    {744.3701f,   119.5211f,   155.6701f,   0   },
+    {710.0211f,   120.8152f,   155.6701f,   0   },
+    {706.6383f,   161.5266f,   155.6701f,   0   },
 };
 
 class HideNpcEvent : public BasicEvent
@@ -86,46 +85,46 @@ private:
 enum AnubSpells
 {
     // Anub'arak
-    SPELL_SUBMERGE                              = 65981,
-    SPELL_EMERGE                                = 65982,
-    SPELL_BERSERK                               = 26662,
-    SPELL_CLEAR_ALL_DEBUFFS                     = 34098,
+    SPELL_SUBMERGE = 65981,
+    SPELL_EMERGE = 65982,
+    SPELL_BERSERK = 26662,
+    SPELL_CLEAR_ALL_DEBUFFS = 34098,
 
-    SPELL_FREEZING_SLASH                        = 66012,
-    SPELL_PENETRATING_COLD                      = 66013,
-    SPELL_SUMMON_SCARAB                         = 66339,
-    SPELL_SUMMON_BURROWER                       = 66332,
-    SPELL_LEECHING_SWARM                        = 66118,
+    SPELL_FREEZING_SLASH = 66012,
+    SPELL_PENETRATING_COLD = 66013,
+    SPELL_SUMMON_SCARAB = 66339,
+    SPELL_SUMMON_BURROWER = 66332,
+    SPELL_LEECHING_SWARM = 66118,
 
     // Anub'arak Pursue
-    SPELL_MARK                                  = 67574,
-    SPELL_SUMMON_SPIKE                          = 66169,
-    SPELL_SPIKE_SPEED1                          = 65920,
-    SPELL_SPIKE_TRAIL                           = 65921,
-    SPELL_SPIKE_SPEED2                          = 65922,
-    SPELL_SPIKE_SPEED3                          = 65923,
-    SPELL_SPIKE_FAIL                            = 66181,
-    SPELL_SPIKE_TELE                            = 66170,
-    SPELL_IMPALE                                = 65919,
+    SPELL_MARK = 67574,
+    SPELL_SUMMON_SPIKE = 66169,
+    SPELL_SPIKE_SPEED1 = 65920,
+    SPELL_SPIKE_TRAIL = 65921,
+    SPELL_SPIKE_SPEED2 = 65922,
+    SPELL_SPIKE_SPEED3 = 65923,
+    SPELL_SPIKE_FAIL = 66181,
+    SPELL_SPIKE_TELE = 66170,
+    SPELL_IMPALE = 65919,
 
     // Scarab
-    SPELL_DETERMINATION                         = 66092,
-    SPELL_ACID_MANDIBLE                         = 65774,
+    SPELL_DETERMINATION = 66092,
+    SPELL_ACID_MANDIBLE = 65774,
 
     // Burrow
-    SPELL_CHURNING_GROUND                       = 66969,
+    SPELL_CHURNING_GROUND = 66969,
 
     // Frost Sphere
-    SPELL_FROST_SPHERE                          = 67539,
-    SPELL_PERMAFROST                            = 66193,
-    SPELL_PERMAFROST_VISUAL                     = 65882,
+    SPELL_FROST_SPHERE = 67539,
+    SPELL_PERMAFROST = 66193,
+    SPELL_PERMAFROST_VISUAL = 65882,
 
     // Burrower
-    SPELL_SPIDER_FRENZY                         = 66128,
-    SPELL_EXPOSE_WEAKNESS                       = 67720,
-    SPELL_SHADOW_STRIKE                         = 66134,
-    SPELL_SUBMERGE_EFFECT                       = 53421,
-    SPELL_EMERGE_EFFECT                         = 66947,
+    SPELL_SPIDER_FRENZY = 66128,
+    SPELL_EXPOSE_WEAKNESS = 67720,
+    SPELL_SHADOW_STRIKE = 66134,
+    SPELL_SUBMERGE_EFFECT = 53421,
+    SPELL_EMERGE_EFFECT = 66947,
 };
 
 enum AnubEvents
@@ -146,7 +145,7 @@ enum AnubEvents
 class boss_anubarak_trial : public CreatureScript
 {
 public:
-    boss_anubarak_trial() : CreatureScript("boss_anubarak_trial") {}
+    boss_anubarak_trial() : CreatureScript("boss_anubarak_trial") { }
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
@@ -178,11 +177,17 @@ public:
             me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
             me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
             summons.DespawnAll();
-            for( uint8 i = 0; i < 10; ++i )
+            for (uint8 i = 0; i < 10; ++i)
             {
                 float angle = rand_norm() * 2 * M_PI;
                 float dist = rand_norm() * 40.0f;
-                if (Creature* c = me->SummonCreature(NPC_SCARAB, AnubLocs[0].GetPositionX() + cos(angle) * dist, AnubLocs[0].GetPositionY() + std::sin(angle) * dist, AnubLocs[0].GetPositionZ(), 0.0f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
+                if (Creature* c = me->SummonCreature(NPC_SCARAB,
+                        AnubLocs[0].GetPositionX() + cos(angle) * dist,
+                        AnubLocs[0].GetPositionY() + std::sin(angle) * dist,
+                        AnubLocs[0].GetPositionZ(),
+                        0.0f,
+                        TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                        5000))
                 {
                     c->SetFaction(FACTION_PREY);
                     c->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
@@ -223,10 +228,10 @@ public:
                         c->AI()->DoAction(1);
                     }
             summons.clear();
-            for( uint8 i = 0; i < 4; ++i )
+            for (uint8 i = 0; i < 4; ++i)
                 if (Creature* c = me->SummonCreature(NPC_BURROW, AnubLocs[i + 1]))
                     BurrowGUID[i] = c->GetGUID();
-            for( uint8 i = 0; i < 6; ++i )
+            for (uint8 i = 0; i < 6; ++i)
                 if (Creature* c = me->SummonCreature(NPC_FROST_SPHERE, AnubLocs[i + 5]))
                     SphereGUID[i] = c->GetGUID();
 
@@ -251,7 +256,8 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            if (!bPhase3 && HealthBelowPct(30) && !me->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE) && !me->HasAura(SPELL_SUBMERGE) && !me->HasAura(SPELL_EMERGE))
+            if (!bPhase3 && HealthBelowPct(30) && !me->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE) &&
+                !me->HasAura(SPELL_SUBMERGE) && !me->HasAura(SPELL_EMERGE))
             {
                 bPhase3 = true;
                 events.CancelEvent(EVENT_SUBMERGE);
@@ -270,94 +276,94 @@ public:
                 case 0:
                     break;
                 case EVENT_ENRAGE:
-                    {
-                        me->CastSpell(me, SPELL_BERSERK, true);
-                    }
-                    break;
+                {
+                    me->CastSpell(me, SPELL_BERSERK, true);
+                }
+                break;
                 case EVENT_RESPAWN_SPHERE:
+                {
+                    uint8 StartAt = urand(0, 5);
+                    uint8 i = StartAt;
+                    do
                     {
-                        uint8 StartAt = urand(0, 5);
-                        uint8 i = StartAt;
-                        do
-                        {
-                            if (Creature* c = ObjectAccessor::GetCreature(*me, SphereGUID[i]))
-                                if (!c->HasAura(SPELL_FROST_SPHERE))
-                                {
-                                    if (Creature* c = me->SummonCreature(NPC_FROST_SPHERE, AnubLocs[i + 5]))
-                                        SphereGUID[i] = c->GetGUID();
-                                    break;
-                                }
-                            i = (i + 1) % 6;
-                        } while( i != StartAt );
-                        events.Repeat(4s);
-                    }
-                    break;
+                        if (Creature* c = ObjectAccessor::GetCreature(*me, SphereGUID[i]))
+                            if (!c->HasAura(SPELL_FROST_SPHERE))
+                            {
+                                if (Creature* c = me->SummonCreature(NPC_FROST_SPHERE, AnubLocs[i + 5]))
+                                    SphereGUID[i] = c->GetGUID();
+                                break;
+                            }
+                        i = (i + 1) % 6;
+                    } while (i != StartAt);
+                    events.Repeat(4s);
+                }
+                break;
                 case EVENT_SPELL_FREEZING_SLASH:
-                    {
-                        if (me->GetVictim())
-                            me->CastSpell(me->GetVictim(), SPELL_FREEZING_SLASH, false);
-                        events.Repeat(15s, 20s);
-                    }
-                    break;
+                {
+                    if (me->GetVictim())
+                        me->CastSpell(me->GetVictim(), SPELL_FREEZING_SLASH, false);
+                    events.Repeat(15s, 20s);
+                }
+                break;
                 case EVENT_SPELL_PENETRATING_COLD:
-                    {
-                        me->CastCustomSpell(SPELL_PENETRATING_COLD, SPELLVALUE_MAX_TARGETS, RAID_MODE(2, 5, 2, 5));
-                        events.Repeat(18s);
-                    }
-                    break;
+                {
+                    me->CastCustomSpell(SPELL_PENETRATING_COLD, SPELLVALUE_MAX_TARGETS, RAID_MODE(2, 5, 2, 5));
+                    events.Repeat(18s);
+                }
+                break;
                 case EVENT_SUMMON_NERUBIAN:
-                    {
-                        me->CastCustomSpell(SPELL_SUMMON_BURROWER, SPELLVALUE_MAX_TARGETS, RAID_MODE(1, 2, 2, 4));
-                        events.Repeat(45s);
-                    }
-                    break;
+                {
+                    me->CastCustomSpell(SPELL_SUMMON_BURROWER, SPELLVALUE_MAX_TARGETS, RAID_MODE(1, 2, 2, 4));
+                    events.Repeat(45s);
+                }
+                break;
                 case EVENT_SUBMERGE:
-                    {
-                        me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
-                        bool berserk = me->HasAura(SPELL_BERSERK);
-                        DoCastSelf(SPELL_CLEAR_ALL_DEBUFFS, true);
-                        if (berserk)
-                            me->CastSpell(me, SPELL_BERSERK, true);
-                        Talk(EMOTE_SUBMERGE);
-                        Talk(EMOTE_BURROWER);
-                        me->CastSpell(me, SPELL_SUBMERGE, false);
-                        events.CancelEvent(EVENT_SUMMON_NERUBIAN);
-                        events.CancelEvent(EVENT_SPELL_FREEZING_SLASH);
-                        events.CancelEvent(EVENT_SPELL_PENETRATING_COLD);
-                        events.RescheduleEvent(EVENT_EMERGE, 1min);
-                        events.RescheduleEvent(EVENT_SPELL_SUMMON_SPIKE, 2500ms);
-                        events.RescheduleEvent(EVENT_SUMMON_SCARAB, 3s);
-                    }
-                    break;
+                {
+                    me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
+                    bool berserk = me->HasAura(SPELL_BERSERK);
+                    DoCastSelf(SPELL_CLEAR_ALL_DEBUFFS, true);
+                    if (berserk)
+                        me->CastSpell(me, SPELL_BERSERK, true);
+                    Talk(EMOTE_SUBMERGE);
+                    Talk(EMOTE_BURROWER);
+                    me->CastSpell(me, SPELL_SUBMERGE, false);
+                    events.CancelEvent(EVENT_SUMMON_NERUBIAN);
+                    events.CancelEvent(EVENT_SPELL_FREEZING_SLASH);
+                    events.CancelEvent(EVENT_SPELL_PENETRATING_COLD);
+                    events.RescheduleEvent(EVENT_EMERGE, 1min);
+                    events.RescheduleEvent(EVENT_SPELL_SUMMON_SPIKE, 2500ms);
+                    events.RescheduleEvent(EVENT_SUMMON_SCARAB, 3s);
+                }
+                break;
                 case EVENT_SUMMON_SCARAB:
-                    {
-                        uint8 i = urand(0, 3);
-                        if (Creature* c = ObjectAccessor::GetCreature(*me, BurrowGUID[i]))
-                            me->CastSpell(c, SPELL_SUMMON_SCARAB, true);
-                        events.Repeat(4s);
-                    }
-                    break;
+                {
+                    uint8 i = urand(0, 3);
+                    if (Creature* c = ObjectAccessor::GetCreature(*me, BurrowGUID[i]))
+                        me->CastSpell(c, SPELL_SUMMON_SCARAB, true);
+                    events.Repeat(4s);
+                }
+                break;
                 case EVENT_EMERGE:
-                    {
-                        me->CastSpell(me, SPELL_SPIKE_TELE, true);
-                        summons.DespawnEntry(NPC_SPIKE);
-                        events.CancelEvent(EVENT_SUMMON_SCARAB);
-                        events.RescheduleEvent(EVENT_EMERGE_2, 2s);
-                    }
-                    break;
+                {
+                    me->CastSpell(me, SPELL_SPIKE_TELE, true);
+                    summons.DespawnEntry(NPC_SPIKE);
+                    events.CancelEvent(EVENT_SUMMON_SCARAB);
+                    events.RescheduleEvent(EVENT_EMERGE_2, 2s);
+                }
+                break;
                 case EVENT_EMERGE_2:
-                    {
-                        Talk(SAY_EMERGE);
-                        me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
-                        me->setAttackTimer(BASE_ATTACK, 3000);
-                        me->RemoveAura(SPELL_SUBMERGE);
-                        me->CastSpell(me, SPELL_EMERGE, false);
-                        events.RescheduleEvent(EVENT_SUMMON_NERUBIAN, 5s, 8s);
-                        events.RescheduleEvent(EVENT_SPELL_FREEZING_SLASH, 7s, 15s);
-                        events.RescheduleEvent(EVENT_SPELL_PENETRATING_COLD, 15s, 20s);
-                        events.RescheduleEvent(EVENT_SUBMERGE, 80s);
-                    }
-                    break;
+                {
+                    Talk(SAY_EMERGE);
+                    me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
+                    me->setAttackTimer(BASE_ATTACK, 3000);
+                    me->RemoveAura(SPELL_SUBMERGE);
+                    me->CastSpell(me, SPELL_EMERGE, false);
+                    events.RescheduleEvent(EVENT_SUMMON_NERUBIAN, 5s, 8s);
+                    events.RescheduleEvent(EVENT_SPELL_FREEZING_SLASH, 7s, 15s);
+                    events.RescheduleEvent(EVENT_SPELL_PENETRATING_COLD, 15s, 20s);
+                    events.RescheduleEvent(EVENT_SUBMERGE, 80s);
+                }
+                break;
                 case EVENT_SPELL_SUMMON_SPIKE:
                     me->CastSpell(me, SPELL_SUMMON_SPIKE, true);
                     break;
@@ -426,7 +432,7 @@ public:
 class npc_swarm_scarab : public CreatureScript
 {
 public:
-    npc_swarm_scarab() : CreatureScript("npc_swarm_scarab") {}
+    npc_swarm_scarab() : CreatureScript("npc_swarm_scarab") { }
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
@@ -435,7 +441,7 @@ public:
 
     struct npc_swarm_scarabAI : public ScriptedAI
     {
-        npc_swarm_scarabAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+        npc_swarm_scarabAI(Creature* pCreature) : ScriptedAI(pCreature) { }
 
         int32 determinationTimer;
         int32 despawnTimer;
@@ -474,7 +480,7 @@ public:
         {
             if (despawnTimer)
             {
-                if (despawnTimer <= (int32)diff )
+                if (despawnTimer <= (int32)diff)
                 {
                     despawnTimer = 0;
                     me->DisappearAndDie();
@@ -488,7 +494,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (determinationTimer <= (int32)diff )
+            if (determinationTimer <= (int32)diff)
             {
                 me->CastSpell(me, SPELL_DETERMINATION, false);
                 determinationTimer = urand(20000, 60000);
@@ -499,9 +505,11 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
-            me->CastSpell(me, RAID_MODE(SPELL_TRAITOR_KING_10, SPELL_TRAITOR_KING_25, SPELL_TRAITOR_KING_10, SPELL_TRAITOR_KING_25), true);
+            me->CastSpell(me,
+                RAID_MODE(SPELL_TRAITOR_KING_10, SPELL_TRAITOR_KING_25, SPELL_TRAITOR_KING_10, SPELL_TRAITOR_KING_25),
+                true);
             me->m_Events.AddEvent(new HideNpcEvent(*me), me->m_Events.CalculateTime(5000));
         }
 
@@ -556,7 +564,7 @@ public:
 
         void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
         {
-            if (me->GetHealth() <= damage )
+            if (me->GetHealth() <= damage)
             {
                 damage = 0;
                 if (!me->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE))
@@ -569,7 +577,7 @@ public:
             }
         }
 
-        void SpellHit(Unit*  /*caster*/, SpellInfo const* spell) override
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spell) override
         {
             if (spell->Id == SPELL_SPIKE_FAIL)
             {
@@ -652,7 +660,10 @@ public:
                     o -= M_PI;
                 else
                     o += M_PI;
-                me->NearTeleportTo(target->GetPositionX() + cos(o) * 5.0f, target->GetPositionY() + std::sin(o) * 5.0f, target->GetPositionZ() + 0.6f, target->GetOrientation());
+                me->NearTeleportTo(target->GetPositionX() + cos(o) * 5.0f,
+                    target->GetPositionY() + std::sin(o) * 5.0f,
+                    target->GetPositionZ() + 0.6f,
+                    target->GetOrientation());
                 AttackStart(target);
                 me->GetMotionMaster()->MoveChase(target);
                 events.DelayEvents(3000);
@@ -679,7 +690,8 @@ public:
                     events.Repeat(30s, 45s);
                     break;
                 case EVENT_SUBMERGE:
-                    if (HealthBelowPct(80) && !me->HasAura(RAID_MODE(66193, 67855, 67856, 67857))) // not having permafrost - allow submerge
+                    if (HealthBelowPct(80) &&
+                        !me->HasAura(RAID_MODE(66193, 67855, 67856, 67857))) // not having permafrost - allow submerge
                     {
                         me->GetMotionMaster()->MoveIdle();
                         me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
@@ -708,7 +720,7 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
             me->m_Events.AddEvent(new HideNpcEvent(*me), me->m_Events.CalculateTime(5000));
         }
@@ -794,7 +806,9 @@ public:
             if (TargetGUID)
             {
                 Unit* target = ObjectAccessor::GetPlayer(*me, TargetGUID);
-                if (!target || !target->HasAura(SPELL_MARK) || !me->IsValidAttackTarget(target) || me->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE || !me->HasUnitState(UNIT_STATE_CHASE_MOVE))
+                if (!target || !target->HasAura(SPELL_MARK) || !me->IsValidAttackTarget(target) ||
+                    me->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE ||
+                    !me->HasUnitState(UNIT_STATE_CHASE_MOVE))
                 {
                     SelectNewTarget(true);
                     return;
@@ -835,10 +849,10 @@ class spell_pursuing_spikes_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SPIKE_FAIL, SPELL_IMPALE });
+        return ValidateSpellInfo({SPELL_SPIKE_FAIL, SPELL_IMPALE});
     }
 
-    void HandleEffectPeriodic(AuraEffect const*   /*aurEff*/)
+    void HandleEffectPeriodic(AuraEffect const* /*aurEff*/)
     {
         if (Unit* target = GetTarget())
         {
@@ -857,15 +871,16 @@ class spell_pursuing_spikes_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_pursuing_spikes_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_pursuing_spikes_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
 // 66118 Leeching Swarm
 enum eLeechingSwarmSpells
 {
-    SPELL_LEECHING_SWARM_DMG    = 66240,
-    SPELL_LEECHING_SWARM_HEAL   = 66125,
+    SPELL_LEECHING_SWARM_DMG = 66240,
+    SPELL_LEECHING_SWARM_HEAL = 66125,
 };
 
 class spell_gen_leeching_swarm_aura : public AuraScript
@@ -874,7 +889,7 @@ class spell_gen_leeching_swarm_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_LEECHING_SWARM_DMG, SPELL_LEECHING_SWARM_HEAL });
+        return ValidateSpellInfo({SPELL_LEECHING_SWARM_DMG, SPELL_LEECHING_SWARM_HEAL});
     }
 
     void HandleEffectPeriodic(AuraEffect const* aurEff)
@@ -892,7 +907,8 @@ class spell_gen_leeching_swarm_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_gen_leeching_swarm_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_gen_leeching_swarm_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -902,7 +918,7 @@ class spell_gen_leeching_swarm_dmg : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_LEECHING_SWARM_HEAL });
+        return ValidateSpellInfo({SPELL_LEECHING_SWARM_HEAL});
     }
 
     void HandleAfterHit()

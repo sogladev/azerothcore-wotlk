@@ -37,10 +37,13 @@ struct SkillPerfectItemEntry
     // itemid of the resulting perfect item
     uint32 perfectItemType;
 
-    SkillPerfectItemEntry()
-        : requiredSpecialization(0), perfectCreateChance(0.0f), perfectItemType(0) { }
-    SkillPerfectItemEntry(uint32 rS, float pCC, uint32 pIT)
-        : requiredSpecialization(rS), perfectCreateChance(pCC), perfectItemType(pIT) { }
+    SkillPerfectItemEntry() : requiredSpecialization(0), perfectCreateChance(0.0f), perfectItemType(0) { }
+
+    SkillPerfectItemEntry(uint32 rS, float pCC, uint32 pIT) :
+        requiredSpecialization(rS),
+        perfectCreateChance(pCC),
+        perfectItemType(pIT)
+    { }
 };
 
 // map to store perfection info. key = spellId of the creation spell, value is the perfectitementry as specified above
@@ -56,11 +59,13 @@ void LoadSkillPerfectItemTable()
     SkillPerfectItemStore.clear(); // reload capability
 
     //                                                  0               1                      2                  3
-    QueryResult result = WorldDatabase.Query("SELECT spellId, requiredSpecialization, perfectCreateChance, perfectItemType FROM skill_perfect_item_template");
+    QueryResult result = WorldDatabase.Query(
+        "SELECT spellId, requiredSpecialization, perfectCreateChance, perfectItemType FROM skill_perfect_item_template");
 
     if (!result)
     {
-        LOG_WARN("server.loading", ">> Loaded 0 spell perfection definitions. DB table `skill_perfect_item_template` is empty.");
+        LOG_WARN("server.loading",
+            ">> Loaded 0 spell perfection definitions. DB table `skill_perfect_item_template` is empty.");
         LOG_INFO("server.loading", " ");
         return;
     }
@@ -75,28 +80,38 @@ void LoadSkillPerfectItemTable()
 
         if (!sSpellMgr->GetSpellInfo(spellId))
         {
-            LOG_ERROR("sql.sql", "Skill perfection data for spell {} has non-existent spell id in `skill_perfect_item_template`!", spellId);
+            LOG_ERROR("sql.sql",
+                "Skill perfection data for spell {} has non-existent spell id in `skill_perfect_item_template`!",
+                spellId);
             continue;
         }
 
         uint32 requiredSpecialization = fields[1].Get<uint32>();
         if (!sSpellMgr->GetSpellInfo(requiredSpecialization))
         {
-            LOG_ERROR("sql.sql", "Skill perfection data for spell {} has non-existent required specialization spell id {} in `skill_perfect_item_template`!", spellId, requiredSpecialization);
+            LOG_ERROR("sql.sql",
+                "Skill perfection data for spell {} has non-existent required specialization spell id {} in `skill_perfect_item_template`!",
+                spellId,
+                requiredSpecialization);
             continue;
         }
 
         float perfectCreateChance = fields[2].Get<float>();
         if (perfectCreateChance <= 0.0f)
         {
-            LOG_ERROR("sql.sql", "Skill perfection data for spell {} has impossibly low proc chance in `skill_perfect_item_template`!", spellId);
+            LOG_ERROR("sql.sql",
+                "Skill perfection data for spell {} has impossibly low proc chance in `skill_perfect_item_template`!",
+                spellId);
             continue;
         }
 
         uint32 perfectItemType = fields[3].Get<uint32>();
         if (!sObjectMgr->GetItemTemplate(perfectItemType))
         {
-            LOG_ERROR("sql.sql", "Skill perfection data for spell {} references non-existent perfect item id {} in `skill_perfect_item_template`!", spellId, perfectItemType);
+            LOG_ERROR("sql.sql",
+                "Skill perfection data for spell {} references non-existent perfect item id {} in `skill_perfect_item_template`!",
+                spellId,
+                perfectItemType);
             continue;
         }
 
@@ -109,7 +124,8 @@ void LoadSkillPerfectItemTable()
         ++count;
     } while (result->NextRow());
 
-    LOG_INFO("server.loading", ">> Loaded {} spell perfection definitions in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
+    LOG_INFO(
+        "server.loading", ">> Loaded {} spell perfection definitions in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
     LOG_INFO("server.loading", " ");
 }
 
@@ -122,11 +138,13 @@ struct SkillExtraItemEntry
     // maximum number of extra items created per crafting
     int32 newMaxOrEntry;
 
-    SkillExtraItemEntry()
-        : requiredSpecialization(0), additionalCreateChance(0.0f), newMaxOrEntry(0) {}
+    SkillExtraItemEntry() : requiredSpecialization(0), additionalCreateChance(0.0f), newMaxOrEntry(0) { }
 
-    SkillExtraItemEntry(uint32 rS, float aCC, int32 nMOE)
-        : requiredSpecialization(rS), additionalCreateChance(aCC), newMaxOrEntry(nMOE) {}
+    SkillExtraItemEntry(uint32 rS, float aCC, int32 nMOE) :
+        requiredSpecialization(rS),
+        additionalCreateChance(aCC),
+        newMaxOrEntry(nMOE)
+    { }
 };
 
 // map to store the extra item creation info, the key is the spellId of the creation spell, the mapped value is the assigned SkillExtraItemEntry
@@ -139,14 +157,16 @@ void LoadSkillExtraItemTable()
 {
     uint32 oldMSTime = getMSTime();
 
-    SkillExtraItemStore.clear();                            // need for reload
+    SkillExtraItemStore.clear(); // need for reload
 
     //                                                  0               1                       2                    3
-    QueryResult result = WorldDatabase.Query("SELECT spellId, requiredSpecialization, additionalCreateChance, additionalMaxNum FROM skill_extra_item_template");
+    QueryResult result = WorldDatabase.Query(
+        "SELECT spellId, requiredSpecialization, additionalCreateChance, additionalMaxNum FROM skill_extra_item_template");
 
     if (!result)
     {
-        LOG_WARN("server.loading", ">> Loaded 0 spell specialization definitions. DB table `skill_extra_item_template` is empty.");
+        LOG_WARN("server.loading",
+            ">> Loaded 0 spell specialization definitions. DB table `skill_extra_item_template` is empty.");
         LOG_INFO("server.loading", " ");
         return;
     }
@@ -161,28 +181,37 @@ void LoadSkillExtraItemTable()
 
         if (!sSpellMgr->GetSpellInfo(spellId))
         {
-            LOG_ERROR("sql.sql", "Skill specialization {} has non-existent spell id in `skill_extra_item_template`!", spellId);
+            LOG_ERROR("sql.sql",
+                "Skill specialization {} has non-existent spell id in `skill_extra_item_template`!",
+                spellId);
             continue;
         }
 
         uint32 requiredSpecialization = fields[1].Get<uint32>();
         if (!sSpellMgr->GetSpellInfo(requiredSpecialization))
         {
-            LOG_ERROR("sql.sql", "Skill specialization {} have not existed required specialization spell id {} in `skill_extra_item_template`!", spellId, requiredSpecialization);
+            LOG_ERROR("sql.sql",
+                "Skill specialization {} have not existed required specialization spell id {} in `skill_extra_item_template`!",
+                spellId,
+                requiredSpecialization);
             continue;
         }
 
         float additionalCreateChance = fields[2].Get<float>();
         if (additionalCreateChance <= 0.0f)
         {
-            LOG_ERROR("sql.sql", "Skill specialization {} has too low additional create chance in `skill_extra_item_template`!", spellId);
+            LOG_ERROR("sql.sql",
+                "Skill specialization {} has too low additional create chance in `skill_extra_item_template`!",
+                spellId);
             continue;
         }
 
         int32 newMaxOrEntry = fields[3].Get<int32>();
         if (!newMaxOrEntry)
         {
-            LOG_ERROR("sql.sql", "Skill specialization {} has 0 max number of extra items in `skill_extra_item_template`!", spellId);
+            LOG_ERROR("sql.sql",
+                "Skill specialization {} has 0 max number of extra items in `skill_extra_item_template`!",
+                spellId);
             continue;
         }
 
@@ -190,12 +219,15 @@ void LoadSkillExtraItemTable()
 
         skillExtraItemEntry.requiredSpecialization = requiredSpecialization;
         skillExtraItemEntry.additionalCreateChance = additionalCreateChance;
-        skillExtraItemEntry.newMaxOrEntry          = newMaxOrEntry;
+        skillExtraItemEntry.newMaxOrEntry = newMaxOrEntry;
 
         ++count;
     } while (result->NextRow());
 
-    LOG_INFO("server.loading", ">> Loaded {} spell specialization definitions in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
+    LOG_INFO("server.loading",
+        ">> Loaded {} spell specialization definitions in {} ms",
+        count,
+        GetMSTimeDiffToNow(oldMSTime));
     LOG_INFO("server.loading", " ");
 }
 

@@ -26,9 +26,9 @@ enum ApprenticeAnglerQuestEnum
 class QuestApprenticeAnglerPlayerScript : public PlayerScript
 {
 public:
-    QuestApprenticeAnglerPlayerScript() : PlayerScript("QuestApprenticeAnglerPlayerScript", {PLAYERHOOK_ON_PLAYER_COMPLETE_QUEST})
-    {
-    }
+    QuestApprenticeAnglerPlayerScript() :
+        PlayerScript("QuestApprenticeAnglerPlayerScript", {PLAYERHOOK_ON_PLAYER_COMPLETE_QUEST})
+    { }
 
     void OnPlayerCompleteQuest(Player* player, Quest const* quest) override
     {

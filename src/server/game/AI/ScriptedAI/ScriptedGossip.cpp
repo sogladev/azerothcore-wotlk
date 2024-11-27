@@ -31,13 +31,15 @@ void AddGossipItemFor(Player* player, uint32 icon, std::string const& text, uint
 }
 
 // Using provided texts, not from DB
-void AddGossipItemFor(Player* player, uint32 icon, std::string const& text, uint32 sender, uint32 action, std::string const& popupText, uint32 popupMoney, bool coded)
+void AddGossipItemFor(Player* player, uint32 icon, std::string const& text, uint32 sender, uint32 action,
+    std::string const& popupText, uint32 popupMoney, bool coded)
 {
     player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, icon, text, sender, action, popupText, popupMoney, coded);
 }
 
 // Uses gossip item info from DB
-void AddGossipItemFor(Player* player, uint32 gossipMenuID, uint32 gossipMenuItemID, uint32 sender, uint32 action, uint32 boxMoney /*= 0*/)
+void AddGossipItemFor(
+    Player* player, uint32 gossipMenuID, uint32 gossipMenuItemID, uint32 sender, uint32 action, uint32 boxMoney /*= 0*/)
 {
     player->PlayerTalkClass->GetGossipMenu().AddMenuItem(gossipMenuID, gossipMenuItemID, sender, action, boxMoney);
 }

@@ -27,9 +27,7 @@
 #include "WorldPacket.h"
 #include "WorldSession.h"
 
-WardenMac::WardenMac() : Warden()
-{
-}
+WardenMac::WardenMac() : Warden() { }
 
 WardenMac::~WardenMac() = default;
 
@@ -47,7 +45,8 @@ void WardenMac::Init(WorldSession* pClient, SessionKey const& K)
     New Client Key: <?>
     New Cerver Key: <?>
     */
-    uint8 mod_seed[16] = { 0x4D, 0x80, 0x8D, 0x2C, 0x77, 0xD9, 0x05, 0xC4, 0x1A, 0x63, 0x80, 0xEC, 0x08, 0x58, 0x6A, 0xFE };
+    uint8 mod_seed[16] = {
+        0x4D, 0x80, 0x8D, 0x2C, 0x77, 0xD9, 0x05, 0xC4, 0x1A, 0x63, 0x80, 0xEC, 0x08, 0x58, 0x6A, 0xFE};
 
     memcpy(_seed, mod_seed, 16);
 
@@ -56,7 +55,7 @@ void WardenMac::Init(WorldSession* pClient, SessionKey const& K)
 
     LOG_DEBUG("warden", "Server side warden for client {} initializing...", pClient->GetAccountId());
     LOG_DEBUG("warden", "C->S Key: {}", Acore::Impl::ByteArrayToHexStr(_inputKey, 16));
-    LOG_DEBUG("warden", "S->C Key: {}", Acore::Impl::ByteArrayToHexStr(_outputKey, 16 ));
+    LOG_DEBUG("warden", "S->C Key: {}", Acore::Impl::ByteArrayToHexStr(_outputKey, 16));
     LOG_DEBUG("warden", "  Seed: {}", Acore::Impl::ByteArrayToHexStr(_seed, 16));
     LOG_DEBUG("warden", "Loading Module...");
 
@@ -90,7 +89,7 @@ void WardenMac::RequestHash()
     LOG_DEBUG("warden", "Request hash");
 
     // Create packet structure
-    WardenHashRequest Request{};
+    WardenHashRequest Request {};
     Request.Command = WARDEN_SMSG_HASH_REQUEST;
     memcpy(Request.Seed, _seed, 16);
 
@@ -123,12 +122,11 @@ void WardenMac::HandleHashResult(ByteBuffer& buff)
     // test
     int keyIn[4];
 
-    keyData mod_seed = { { { { 0x4D, 0x80, 0x8D, 0x2C, 0x77, 0xD9, 0x05, 0xC4, 0x1A, 0x63, 0x80, 0xEC, 0x08, 0x58, 0x6A, 0xFE } } } };
+    keyData mod_seed = {
+        {{{0x4D, 0x80, 0x8D, 0x2C, 0x77, 0xD9, 0x05, 0xC4, 0x1A, 0x63, 0x80, 0xEC, 0x08, 0x58, 0x6A, 0xFE}}}};
 
     for (int i = 0; i < 4; ++i)
-    {
         keyIn[i] = mod_seed.ints.ints[i];
-    }
 
     int keyOut[4];
     int keyIn1, keyIn2;
@@ -228,11 +226,11 @@ void WardenMac::HandleData(ByteBuffer& buff)
 
     Acore::Crypto::SHA1 sha1;
     sha1.UpdateData(str);
-    uint32 magic = 0xFEEDFACE;                              // unsure
+    uint32 magic = 0xFEEDFACE; // unsure
     sha1.UpdateData((uint8*)&magic, 4);
     sha1.Finalize();
 
-    Acore::Crypto::SHA1::Digest sha1Hash{};
+    Acore::Crypto::SHA1::Digest sha1Hash {};
     buff.read(sha1Hash.data(), sha1Hash.size());
 
     if (sha1Hash != sha1.GetDigest())
@@ -242,7 +240,7 @@ void WardenMac::HandleData(ByteBuffer& buff)
     }
 
     auto ourMD5Hash = Acore::Crypto::MD5::GetDigestOf(str);
-    Acore::Crypto::MD5::Digest theirsMD5Hash{};
+    Acore::Crypto::MD5::Digest theirsMD5Hash {};
     buff.read(theirsMD5Hash);
 
     if (ourMD5Hash != theirsMD5Hash)

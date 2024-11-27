@@ -29,11 +29,9 @@
 #include "Player.h"
 #include "Transport.h"
 
-template<class T>
-void HashMapHolder<T>::Insert(T* o)
+template <class T> void HashMapHolder<T>::Insert(T* o)
 {
-    static_assert(std::is_same<Player, T>::value
-        || std::is_same<MotionTransport, T>::value,
+    static_assert(std::is_same<Player, T>::value || std::is_same<MotionTransport, T>::value,
         "Only Player and Motion Transport can be registered in global HashMapHolder");
 
     std::unique_lock<std::shared_mutex> lock(*GetLock());
@@ -41,16 +39,14 @@ void HashMapHolder<T>::Insert(T* o)
     GetContainer()[o->GetGUID()] = o;
 }
 
-template<class T>
-void HashMapHolder<T>::Remove(T* o)
+template <class T> void HashMapHolder<T>::Remove(T* o)
 {
     std::unique_lock<std::shared_mutex> lock(*GetLock());
 
     GetContainer().erase(o->GetGUID());
 }
 
-template<class T>
-T* HashMapHolder<T>::Find(ObjectGuid guid)
+template <class T> T* HashMapHolder<T>::Find(ObjectGuid guid)
 {
     std::shared_lock<std::shared_mutex> lock(*GetLock());
 
@@ -58,15 +54,13 @@ T* HashMapHolder<T>::Find(ObjectGuid guid)
     return (itr != GetContainer().end()) ? itr->second : nullptr;
 }
 
-template<class T>
-auto HashMapHolder<T>::GetContainer() -> MapType&
+template <class T> auto HashMapHolder<T>::GetContainer() -> MapType&
 {
     static MapType _objectMap;
     return _objectMap;
 }
 
-template<class T>
-std::shared_mutex* HashMapHolder<T>::GetLock()
+template <class T> std::shared_mutex* HashMapHolder<T>::GetLock()
 {
     static std::shared_mutex _lock;
     return &_lock;
@@ -219,7 +213,7 @@ Pet* ObjectAccessor::GetPet(WorldObject const& u, ObjectGuid const guid)
 
 Player* ObjectAccessor::GetPlayer(Map const* m, ObjectGuid const guid)
 {
-    if (Player * player = HashMapHolder<Player>::Find(guid))
+    if (Player* player = HashMapHolder<Player>::Find(guid))
         if (player->IsInWorld() && player->GetMap() == m)
             return player;
 
@@ -290,14 +284,10 @@ Creature* ObjectAccessor::GetSpawnedCreatureByDBGUID(uint32 mapId, uint64 guid)
         auto bounds = map->GetCreatureBySpawnIdStore().equal_range(guid);
 
         if (bounds.first == bounds.second)
-        {
             return nullptr;
-        }
 
         if (Creature* creature = bounds.first->second)
-        {
             return creature;
-        }
     }
 
     return nullptr;
@@ -316,28 +306,22 @@ GameObject* ObjectAccessor::GetSpawnedGameObjectByDBGUID(uint32 mapId, uint64 gu
         auto bounds = map->GetGameObjectBySpawnIdStore().equal_range(guid);
 
         if (bounds.first == bounds.second)
-        {
             return nullptr;
-        }
 
         if (GameObject* go = bounds.first->second)
-        {
             return go;
-        }
     }
 
     return nullptr;
 }
 
-template<>
-void ObjectAccessor::AddObject(Player* player)
+template <> void ObjectAccessor::AddObject(Player* player)
 {
     HashMapHolder<Player>::Insert(player);
     PlayerNameMapHolder::Insert(player);
 }
 
-template<>
-void ObjectAccessor::RemoveObject(Player* player)
+template <> void ObjectAccessor::RemoveObject(Player* player)
 {
     HashMapHolder<Player>::Remove(player);
     PlayerNameMapHolder::Remove(player);

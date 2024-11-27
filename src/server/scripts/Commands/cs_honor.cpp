@@ -37,21 +37,18 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable honorAddCommandTable =
-        {
-            { "kill", HandleHonorAddKillCommand, SEC_GAMEMASTER, Console::No },
-            { "",     HandleHonorAddCommand,     SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable honorAddCommandTable = {
+            {"kill", HandleHonorAddKillCommand, SEC_GAMEMASTER, Console::No},
+            {"",     HandleHonorAddCommand,     SEC_GAMEMASTER, Console::No}
         };
 
-        static ChatCommandTable honorCommandTable =
-        {
-            { "add",    honorAddCommandTable },
-            { "update", HandleHonorUpdateCommand, SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable honorCommandTable = {
+            {"add", honorAddCommandTable},
+            {"update", HandleHonorUpdateCommand, SEC_GAMEMASTER, Console::No}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "honor", honorCommandTable }
+        static ChatCommandTable commandTable = {
+            {"honor", honorCommandTable}
         };
         return commandTable;
     }

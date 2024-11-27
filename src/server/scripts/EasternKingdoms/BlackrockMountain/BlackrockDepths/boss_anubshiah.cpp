@@ -21,11 +21,11 @@
 
 enum Spells
 {
-    SPELL_SHADOWBOLT         = 15472,
-    SPELL_CURSE_TONGUES      = 15470,
-    SPELL_CURSE_WEAKNESS     = 12493,
-    SPELL_DEMON_ARMOR        = 13787,
-    SPELL_ENVELOPING_WEB     = 15471
+    SPELL_SHADOWBOLT = 15472,
+    SPELL_CURSE_TONGUES = 15470,
+    SPELL_CURSE_WEAKNESS = 12493,
+    SPELL_DEMON_ARMOR = 13787,
+    SPELL_ENVELOPING_WEB = 15471
 };
 
 enum Timers
@@ -49,7 +49,7 @@ public:
 
     struct boss_anubshiahAI : public BossAI
     {
-        boss_anubshiahAI(Creature* creature) :  BossAI(creature, DATA_ANUBSHIAH) { }
+        boss_anubshiahAI(Creature* creature) : BossAI(creature, DATA_ANUBSHIAH) { }
 
         void JustEngagedWith(Unit* /*who*/) override
         {
@@ -65,48 +65,43 @@ public:
         {
             //Return since we have no target
             if (!UpdateVictim())
-            {
                 return;
-            }
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
             while (uint32 eventId = events.ExecuteEvent())
             {
                 switch (eventId)
                 {
-                case SPELL_SHADOWBOLT:
-                    DoCastVictim(SPELL_SHADOWBOLT);
-                    events.ScheduleEvent(SPELL_SHADOWBOLT, urand(TIMER_SHADOWBOLT - 2000, TIMER_SHADOWBOLT + 2000));
-                    break;
-                case SPELL_CURSE_TONGUES:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
-                    {
-                        DoCast(target, SPELL_CURSE_TONGUES);
-                    }
-                    events.ScheduleEvent(SPELL_CURSE_TONGUES, urand(TIMER_CURSE_TONGUES - 2000, TIMER_CURSE_TONGUES + 2000));
-                    break;
-                case SPELL_CURSE_WEAKNESS:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
-                    {
-                        DoCast(target, SPELL_CURSE_WEAKNESS);
-                    }
-                    events.ScheduleEvent(SPELL_CURSE_WEAKNESS, urand(TIMER_CURSE_WEAKNESS - 2000, TIMER_CURSE_WEAKNESS + 2000));
-                    break;
-                case SPELL_DEMON_ARMOR:
-                    DoCast(me, SPELL_DEMON_ARMOR);
-                    events.ScheduleEvent(SPELL_DEMON_ARMOR, TIMER_DEMON_ARMOR);
-                    break;
-                case SPELL_ENVELOPING_WEB:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
-                        DoCast(target, SPELL_ENVELOPING_WEB);
-                    events.ScheduleEvent(SPELL_ENVELOPING_WEB, urand(TIMER_ENVELOPING_WEB - 2000, TIMER_ENVELOPING_WEB + 2000));
-                    break;
-                default:
-                    break;
+                    case SPELL_SHADOWBOLT:
+                        DoCastVictim(SPELL_SHADOWBOLT);
+                        events.ScheduleEvent(SPELL_SHADOWBOLT, urand(TIMER_SHADOWBOLT - 2000, TIMER_SHADOWBOLT + 2000));
+                        break;
+                    case SPELL_CURSE_TONGUES:
+                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
+                            DoCast(target, SPELL_CURSE_TONGUES);
+                        events.ScheduleEvent(
+                            SPELL_CURSE_TONGUES, urand(TIMER_CURSE_TONGUES - 2000, TIMER_CURSE_TONGUES + 2000));
+                        break;
+                    case SPELL_CURSE_WEAKNESS:
+                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
+                            DoCast(target, SPELL_CURSE_WEAKNESS);
+                        events.ScheduleEvent(
+                            SPELL_CURSE_WEAKNESS, urand(TIMER_CURSE_WEAKNESS - 2000, TIMER_CURSE_WEAKNESS + 2000));
+                        break;
+                    case SPELL_DEMON_ARMOR:
+                        DoCast(me, SPELL_DEMON_ARMOR);
+                        events.ScheduleEvent(SPELL_DEMON_ARMOR, TIMER_DEMON_ARMOR);
+                        break;
+                    case SPELL_ENVELOPING_WEB:
+                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
+                            DoCast(target, SPELL_ENVELOPING_WEB);
+                        events.ScheduleEvent(
+                            SPELL_ENVELOPING_WEB, urand(TIMER_ENVELOPING_WEB - 2000, TIMER_ENVELOPING_WEB + 2000));
+                        break;
+                    default:
+                        break;
                 }
             }
             DoMeleeAttackIfReady();

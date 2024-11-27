@@ -47,9 +47,7 @@ public:
             {
                 case NPC_EMI_SHORTFUSE:
                     if (_encounters[TYPE_GRUBBIS] == DONE)
-                    {
                         creature->DespawnOrUnsummon();
-                    }
                     break;
             }
         }
@@ -71,9 +69,9 @@ public:
         {
             switch (type)
             {
-            case TYPE_GRUBBIS:
-                _encounters[type] = data;
-                break;
+                case TYPE_GRUBBIS:
+                    _encounters[type] = data;
+                    break;
             }
 
             if (data == DONE)
@@ -97,7 +95,7 @@ public:
 
 enum eKernobee
 {
-    QUEST_A_FINE_MESS           = 2904,
+    QUEST_A_FINE_MESS = 2904,
 };
 
 class npc_kernobee : public CreatureScript
@@ -110,7 +108,7 @@ public:
         return GetGnomereganAI<npc_kernobeeAI>(creature);
     }
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
     {
         if (quest->GetQuestId() == QUEST_A_FINE_MESS)
         {
@@ -165,7 +163,8 @@ class spell_gnomeregan_radiation_bolt : public SpellScript
 
     void Register() override
     {
-        OnEffectHit += SpellEffectFn(spell_gnomeregan_radiation_bolt::HandleTriggerSpell, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
+        OnEffectHit +=
+            SpellEffectFn(spell_gnomeregan_radiation_bolt::HandleTriggerSpell, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
     }
 };
 

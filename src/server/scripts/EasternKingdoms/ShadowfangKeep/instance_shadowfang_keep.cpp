@@ -17,11 +17,11 @@
 
 #include "InstanceMapScript.h"
 #include "InstanceScript.h"
+#include "SpellAuraEffects.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "TemporarySummon.h"
 #include "shadowfang_keep.h"
-#include "SpellAuraEffects.h"
-#include "SpellScript.h"
 
 enum Spells
 {
@@ -62,9 +62,7 @@ public:
                     break;
                 case NPC_CRAZED_APOTHECARY:
                     if (Creature* hummel = instance->GetCreature(_apothecaryHummel))
-                    {
                         hummel->AI()->JustSummoned(creature);
-                    }
                     break;
                 default:
                     break;
@@ -103,12 +101,8 @@ public:
                     break;
                 case DATA_SPAWN_VALENTINE_ADDS:
                     for (ObjectGuid guid : _crazedApothecaryGeneratorGUIDs)
-                    {
                         if (Creature* generator = instance->GetCreature(guid))
-                        {
                             generator->CastSpell(nullptr, SPELL_SUMMON_VALENTINE_ADD);
-                        }
-                    }
                     break;
                 default:
                     break;
@@ -159,16 +153,19 @@ class spell_shadowfang_keep_haunting_spirits_aura : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcPeriodic += AuraEffectCalcPeriodicFn(spell_shadowfang_keep_haunting_spirits_aura::CalcPeriodic, EFFECT_0, SPELL_AURA_DUMMY);
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_shadowfang_keep_haunting_spirits_aura::HandleDummyTick, EFFECT_0, SPELL_AURA_DUMMY);
-        OnEffectUpdatePeriodic += AuraEffectUpdatePeriodicFn(spell_shadowfang_keep_haunting_spirits_aura::HandleUpdatePeriodic, EFFECT_0, SPELL_AURA_DUMMY);
+        DoEffectCalcPeriodic += AuraEffectCalcPeriodicFn(
+            spell_shadowfang_keep_haunting_spirits_aura::CalcPeriodic, EFFECT_0, SPELL_AURA_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_shadowfang_keep_haunting_spirits_aura::HandleDummyTick, EFFECT_0, SPELL_AURA_DUMMY);
+        OnEffectUpdatePeriodic += AuraEffectUpdatePeriodicFn(
+            spell_shadowfang_keep_haunting_spirits_aura::HandleUpdatePeriodic, EFFECT_0, SPELL_AURA_DUMMY);
     }
 };
 
 enum ForsakenSpells
 {
-    SPELL_FORSAKEN_SKILL_SWORD          = 7038,
-    SPELL_FORSAKEN_SKILL_SHADOW         = 7053
+    SPELL_FORSAKEN_SKILL_SWORD = 7038,
+    SPELL_FORSAKEN_SKILL_SHADOW = 7053
 };
 
 class spell_shadowfang_keep_forsaken_skills_aura : public AuraScript
@@ -177,25 +174,24 @@ class spell_shadowfang_keep_forsaken_skills_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo(
-            {
-                SPELL_FORSAKEN_SKILL_SWORD,
-                SPELL_FORSAKEN_SKILL_SWORD+1,
-                SPELL_FORSAKEN_SKILL_SWORD+2,
-                SPELL_FORSAKEN_SKILL_SWORD+3,
-                SPELL_FORSAKEN_SKILL_SWORD+4,
-                SPELL_FORSAKEN_SKILL_SWORD+5,
-                SPELL_FORSAKEN_SKILL_SWORD+6,
-                SPELL_FORSAKEN_SKILL_SWORD+7,
-                SPELL_FORSAKEN_SKILL_SWORD+8,
-                SPELL_FORSAKEN_SKILL_SWORD+9,
-                SPELL_FORSAKEN_SKILL_SWORD+10,
-                SPELL_FORSAKEN_SKILL_SWORD+11,
-                SPELL_FORSAKEN_SKILL_SWORD+12,
-                SPELL_FORSAKEN_SKILL_SWORD+13,
-                // SPELL_FORSAKEN_SKILL_SHADOW-1, // not used
-                SPELL_FORSAKEN_SKILL_SHADOW,
-            });
+        return ValidateSpellInfo({
+            SPELL_FORSAKEN_SKILL_SWORD,
+            SPELL_FORSAKEN_SKILL_SWORD + 1,
+            SPELL_FORSAKEN_SKILL_SWORD + 2,
+            SPELL_FORSAKEN_SKILL_SWORD + 3,
+            SPELL_FORSAKEN_SKILL_SWORD + 4,
+            SPELL_FORSAKEN_SKILL_SWORD + 5,
+            SPELL_FORSAKEN_SKILL_SWORD + 6,
+            SPELL_FORSAKEN_SKILL_SWORD + 7,
+            SPELL_FORSAKEN_SKILL_SWORD + 8,
+            SPELL_FORSAKEN_SKILL_SWORD + 9,
+            SPELL_FORSAKEN_SKILL_SWORD + 10,
+            SPELL_FORSAKEN_SKILL_SWORD + 11,
+            SPELL_FORSAKEN_SKILL_SWORD + 12,
+            SPELL_FORSAKEN_SKILL_SWORD + 13,
+            // SPELL_FORSAKEN_SKILL_SHADOW-1, // not used
+            SPELL_FORSAKEN_SKILL_SHADOW,
+        });
     }
 
     bool Load() override
@@ -212,7 +208,7 @@ class spell_shadowfang_keep_forsaken_skills_aura : public AuraScript
         GetUnitOwner()->CastSpell(GetUnitOwner(), _forsakenSpell, true);
     }
 
-    void HandleDummyTick(AuraEffect const*  /*aurEff*/)
+    void HandleDummyTick(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction();
         GetUnitOwner()->RemoveAurasDueToSpell(_forsakenSpell);
@@ -224,8 +220,12 @@ class spell_shadowfang_keep_forsaken_skills_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_shadowfang_keep_forsaken_skills_aura::OnApply, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_shadowfang_keep_forsaken_skills_aura::HandleDummyTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectApply += AuraEffectApplyFn(spell_shadowfang_keep_forsaken_skills_aura::OnApply,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_shadowfang_keep_forsaken_skills_aura::HandleDummyTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 
 private:

@@ -28,73 +28,73 @@
 
 enum MountSpells
 {
-    SPELL_PLAYER_VEHICLE_DEFEND             = 66482,
-    SPELL_MINIONS_DEFEND                    = 64100,
-    SPELL_BOSS_DEFEND                       = 62719,
-    SPELL_BOSS_DEFEND_PERIODIC              = 64553,
-    SPELL_SHIELD_LEVEL_1_VISUAL             = 63130,
-    SPELL_SHIELD_LEVEL_2_VISUAL             = 63131,
-    SPELL_SHIELD_LEVEL_3_VISUAL             = 63132,
+    SPELL_PLAYER_VEHICLE_DEFEND = 66482,
+    SPELL_MINIONS_DEFEND = 64100,
+    SPELL_BOSS_DEFEND = 62719,
+    SPELL_BOSS_DEFEND_PERIODIC = 64553,
+    SPELL_SHIELD_LEVEL_1_VISUAL = 63130,
+    SPELL_SHIELD_LEVEL_2_VISUAL = 63131,
+    SPELL_SHIELD_LEVEL_3_VISUAL = 63132,
 
-    SPELL_PLAYER_VEHICLE_SHIELD_BREAKER     = 62575,
-    SPELL_PLAYER_SHIELD_BREAKER_DAMAGE      = 62626,
-    SPELL_NPC_SHIELD_BREAKER                = 68504,
+    SPELL_PLAYER_VEHICLE_SHIELD_BREAKER = 62575,
+    SPELL_PLAYER_SHIELD_BREAKER_DAMAGE = 62626,
+    SPELL_NPC_SHIELD_BREAKER = 68504,
 
-    SPELL_PLAYER_VEHICLE_CHARGE             = 68284,
-    SPELL_CHARGE_DAMAGE_20000               = 68498,
-    SPELL_MINIONS_CHARGE                    = 63010,
-    SPELL_BOSS_CHARGE                       = 68301, // triggers SPELL_MINIONS_CHARGE (should be with custom damage?)
+    SPELL_PLAYER_VEHICLE_CHARGE = 68284,
+    SPELL_CHARGE_DAMAGE_20000 = 68498,
+    SPELL_MINIONS_CHARGE = 63010,
+    SPELL_BOSS_CHARGE = 68301, // triggers SPELL_MINIONS_CHARGE (should be with custom damage?)
 
-    SPELL_PLAYER_VEHICLE_THRUST             = 68505,
+    SPELL_PLAYER_VEHICLE_THRUST = 68505,
 
-    SPELL_TRAMPLE_AURA                      = 67865,
-    SPELL_TRAMPLE_TRIGGERED_DUMMY           = 67866,
-    SPELL_TRAMPLE_STUN                      = 67867,
+    SPELL_TRAMPLE_AURA = 67865,
+    SPELL_TRAMPLE_TRIGGERED_DUMMY = 67866,
+    SPELL_TRAMPLE_STUN = 67867,
 };
 
 enum ChampionSpells
 {
     // Mage (Ambrose Boltspark, Eressea Dawnsinger)
-    SPELL_FIREBALL_N                        = 66042,
-    SPELL_FIREBALL_H                        = 68310,
-    SPELL_BLAST_WAVE_N                      = 66044,
-    SPELL_BLAST_WAVE_H                      = 68312,
-    SPELL_HASTE                             = 66045,
-    SPELL_POLYMORPH_N                       = 66043,
-    SPELL_POLYMORPH_H                       = 68311,
+    SPELL_FIREBALL_N = 66042,
+    SPELL_FIREBALL_H = 68310,
+    SPELL_BLAST_WAVE_N = 66044,
+    SPELL_BLAST_WAVE_H = 68312,
+    SPELL_HASTE = 66045,
+    SPELL_POLYMORPH_N = 66043,
+    SPELL_POLYMORPH_H = 68311,
 
     // Shaman (Colosos, Runok Wildmane)
-    SPELL_CHAIN_LIGHTNING_N                 = 67529,
-    SPELL_CHAIN_LIGHTNING_H                 = 68319,
-    SPELL_EARTH_SHIELD                      = 67530,
-    SPELL_HEALING_WAVE_N                    = 67528,
-    SPELL_HEALING_WAVE_H                    = 68318,
-    SPELL_HEX_OF_MENDING                    = 67534,
+    SPELL_CHAIN_LIGHTNING_N = 67529,
+    SPELL_CHAIN_LIGHTNING_H = 68319,
+    SPELL_EARTH_SHIELD = 67530,
+    SPELL_HEALING_WAVE_N = 67528,
+    SPELL_HEALING_WAVE_H = 68318,
+    SPELL_HEX_OF_MENDING = 67534,
 
     // Hunter (Jaelyne Evensong, Zul'tore)
-    SPELL_DISENGAGE                         = 68339,
-    SPELL_LIGHTNING_ARROWS                  = 66083,
-    SPELL_MULTI_SHOT                        = 66081,
-    SPELL_SHOOT_N                           = 65868,
-    SPELL_SHOOT_H                           = 67988,
+    SPELL_DISENGAGE = 68339,
+    SPELL_LIGHTNING_ARROWS = 66083,
+    SPELL_MULTI_SHOT = 66081,
+    SPELL_SHOOT_N = 65868,
+    SPELL_SHOOT_H = 67988,
 
     // Rogue (Lana Stouthammer Evensong, Deathstalker Visceri)
-    SPELL_EVISCERATE_N                      = 67709,
-    SPELL_EVISCERATE_H                      = 68317,
-    SPELL_FAN_OF_KNIVES                     = 67706,
-    SPELL_POISON_BOTTLE                     = 67701,
+    SPELL_EVISCERATE_N = 67709,
+    SPELL_EVISCERATE_H = 68317,
+    SPELL_FAN_OF_KNIVES = 67706,
+    SPELL_POISON_BOTTLE = 67701,
 
     // Warrior (Marshal Jacob Alerius, Mokra the Skullcrusher)
-    SPELL_MORTAL_STRIKE_N                   = 68783,
-    SPELL_MORTAL_STRIKE_H                   = 68784,
-    SPELL_BLADESTORM                        = 63784,
-    SPELL_INTERCEPT                         = 67540,
-    SPELL_ROLLING_THROW                     = 67546, // not implemented yet!
+    SPELL_MORTAL_STRIKE_N = 68783,
+    SPELL_MORTAL_STRIKE_H = 68784,
+    SPELL_BLADESTORM = 63784,
+    SPELL_INTERCEPT = 67540,
+    SPELL_ROLLING_THROW = 67546, // not implemented yet!
 };
 
 enum Texts
 {
-    SAY_TRAMPLED                            = 0,
+    SAY_TRAMPLED = 0,
 };
 
 #define SPELL_FIREBALL                      DUNGEON_MODE(SPELL_FIREBALL_N, SPELL_FIREBALL_H)
@@ -156,7 +156,8 @@ public:
     {
         npc_toc5_player_vehicleAI(Creature* pCreature) : NullCreatureAI(pCreature)
         {
-            conditions = sConditionMgr->GetConditionsForNotGroupedEntry(CONDITION_SOURCE_TYPE_CREATURE_TEMPLATE_VEHICLE, me->GetEntry());
+            conditions = sConditionMgr->GetConditionsForNotGroupedEntry(
+                CONDITION_SOURCE_TYPE_CREATURE_TEMPLATE_VEHICLE, me->GetEntry());
             m_ConditionsTimer = 1000;
         }
 
@@ -189,7 +190,7 @@ public:
         }
 
         // just in case, should be done in spell_gen_defend
-        void PassengerBoarded(Unit* who, int8  /*seat*/, bool apply) override
+        void PassengerBoarded(Unit* who, int8 /*seat*/, bool apply) override
         {
             if (me->IsDuringRemoveFromWorld())
                 return;
@@ -204,7 +205,8 @@ public:
         }
 
         //void EnterEvadeMode() { CreatureAI::EnterEvadeMode(); }
-        void MoveInLineOfSight(Unit*  /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
+
         void UpdateAI(uint32 diff) override
         {
             if (m_ConditionsTimer <= diff)
@@ -218,8 +220,10 @@ public:
             else
                 m_ConditionsTimer -= diff;
         }
-        void AttackStart(Unit*  /*who*/) override {}
-        void JustEngagedWith(Unit*  /*who*/) override {}
+
+        void AttackStart(Unit* /*who*/) override { }
+
+        void JustEngagedWith(Unit* /*who*/) override { }
     };
 };
 
@@ -261,7 +265,7 @@ public:
 
         void UpdateAI(uint32 diff) override
         {
-            if (ShieldTimer <= (int32)diff )
+            if (ShieldTimer <= (int32)diff)
             {
                 me->CastSpell(me, SPELL_MINIONS_DEFEND, true);
                 ShieldTimer = 5000;
@@ -282,60 +286,60 @@ public:
                 case 0:
                     break;
                 case EVENT_MOUNT_CHARGE:
-                    {
-                        GuidVector LIST;
-                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                        for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
-                            if (Player* plr = itr->GetSource())
-                            {
-                                if (me->GetExactDist(plr) < 8.0f || me->GetExactDist(plr) > 25.0f || plr->isDead())
-                                    continue;
-                                if (!plr->GetVehicle())
-                                    LIST.push_back(plr->GetGUID());
-                                else if (Vehicle* v = plr->GetVehicle())
-                                {
-                                    if (Unit* mount = v->GetBase())
-                                        LIST.push_back(mount->GetGUID());
-                                }
-                            }
-                        if (!LIST.empty())
+                {
+                    GuidVector LIST;
+                    Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
+                        if (Player* plr = itr->GetSource())
                         {
-                            uint8 rnd = LIST.size() > 1 ? urand(0, LIST.size() - 1) : 0;
-                            if (Unit* target = ObjectAccessor::GetUnit(*me, LIST.at(rnd)))
+                            if (me->GetExactDist(plr) < 8.0f || me->GetExactDist(plr) > 25.0f || plr->isDead())
+                                continue;
+                            if (!plr->GetVehicle())
+                                LIST.push_back(plr->GetGUID());
+                            else if (Vehicle* v = plr->GetVehicle())
                             {
-                                me->GetThreatMgr().ResetAllThreat();
-                                me->AddThreat(target, 10000.0f);
-                                AttackStart(target);
-                                me->CastSpell(target, SPELL_MINIONS_CHARGE, false);
+                                if (Unit* mount = v->GetBase())
+                                    LIST.push_back(mount->GetGUID());
                             }
                         }
-                        events.Repeat(4500ms, 6000ms);
+                    if (!LIST.empty())
+                    {
+                        uint8 rnd = LIST.size() > 1 ? urand(0, LIST.size() - 1) : 0;
+                        if (Unit* target = ObjectAccessor::GetUnit(*me, LIST.at(rnd)))
+                        {
+                            me->GetThreatMgr().ResetAllThreat();
+                            me->AddThreat(target, 10000.0f);
+                            AttackStart(target);
+                            me->CastSpell(target, SPELL_MINIONS_CHARGE, false);
+                        }
                     }
-                    break;
+                    events.Repeat(4500ms, 6000ms);
+                }
+                break;
                 case EVENT_SHIELD_BREAKER:
-                    {
-                        GuidVector LIST;
-                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                        for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
-                            if (Player* plr = itr->GetSource())
-                            {
-                                if (me->GetExactDist(plr) < 10.0f || me->GetExactDist(plr) > 30.0f )
-                                    continue;
-                                if (Vehicle* v = plr->GetVehicle())
-                                    if (Unit* mount = v->GetBase())
-                                        LIST.push_back(mount->GetGUID());
-                            }
-                        if (!LIST.empty())
+                {
+                    GuidVector LIST;
+                    Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
+                        if (Player* plr = itr->GetSource())
                         {
-                            uint8 rnd = LIST.size() > 1 ? urand(0, LIST.size() - 1) : 0;
-                            if (Unit* target = ObjectAccessor::GetCreature(*me, LIST.at(rnd)))
-                                me->CastSpell(target, SPELL_NPC_SHIELD_BREAKER, false);
+                            if (me->GetExactDist(plr) < 10.0f || me->GetExactDist(plr) > 30.0f)
+                                continue;
+                            if (Vehicle* v = plr->GetVehicle())
+                                if (Unit* mount = v->GetBase())
+                                    LIST.push_back(mount->GetGUID());
                         }
-                        events.Repeat(6s, 8s);
+                    if (!LIST.empty())
+                    {
+                        uint8 rnd = LIST.size() > 1 ? urand(0, LIST.size() - 1) : 0;
+                        if (Unit* target = ObjectAccessor::GetCreature(*me, LIST.at(rnd)))
+                            me->CastSpell(target, SPELL_NPC_SHIELD_BREAKER, false);
                     }
-                    break;
+                    events.Repeat(6s, 8s);
+                }
+                break;
                 case EVENT_THRUST:
-                    if (me->GetVictim() && me->GetExactDist(me->GetVictim()) <= 5.5f )
+                    if (me->GetVictim() && me->GetExactDist(me->GetVictim()) <= 5.5f)
                         me->CastSpell(me->GetVictim(), SPELL_PLAYER_VEHICLE_THRUST, false);
                     events.Repeat(3s, 5s);
                     break;
@@ -403,7 +407,7 @@ public:
 
         void Reset() override
         {
-            if (pInstance && pInstance->GetData(DATA_INSTANCE_PROGRESS) == INSTANCE_PROGRESS_CHAMPIONS_UNMOUNTED )
+            if (pInstance && pInstance->GetData(DATA_INSTANCE_PROGRESS) == INSTANCE_PROGRESS_CHAMPIONS_UNMOUNTED)
             {
                 DoAction(1);
                 DoAction(2);
@@ -416,7 +420,7 @@ public:
 
         void JustEngagedWith(Unit* /*who*/) override
         {
-            if (pInstance && pInstance->GetData(DATA_INSTANCE_PROGRESS) == INSTANCE_PROGRESS_CHAMPIONS_UNMOUNTED )
+            if (pInstance && pInstance->GetData(DATA_INSTANCE_PROGRESS) == INSTANCE_PROGRESS_CHAMPIONS_UNMOUNTED)
                 me->CallForHelp(100.0f);
         }
 
@@ -434,7 +438,7 @@ public:
                     events.RescheduleEvent(EVEMT_MAGE_SPELL_POLYMORPH, 8s);
                     break;
                 case NPC_COLOSOS: // Colosos
-                case NPC_RUNOK: // Runok Wildmane
+                case NPC_RUNOK:   // Runok Wildmane
                     events.RescheduleEvent(EVENT_SHAMAN_SPELL_CHAIN_LIGHTNING, 16s);
                     events.RescheduleEvent(EVENT_SHAMAN_SPELL_EARTH_SHIELD, 30s, 35s);
                     events.RescheduleEvent(EVENT_SHAMAN_SPELL_HEALING_WAVE, 12s);
@@ -445,7 +449,7 @@ public:
                     events.RescheduleEvent(EVENT_HUNTER_SPELL_LIGHTNING_ARROWS, 7s);
                     events.RescheduleEvent(EVENT_HUNTER_SPELL_MULTI_SHOT, 12s);
                     break;
-                case NPC_LANA: // Lana Stouthammer
+                case NPC_LANA:    // Lana Stouthammer
                 case NPC_VISCERI: // Deathstalker Visceri
                     events.RescheduleEvent(EVENT_ROGUE_SPELL_EVISCERATE, 8s);
                     events.RescheduleEvent(EVENT_ROGUE_SPELL_FAN_OF_KNIVES, 14s);
@@ -548,7 +552,7 @@ public:
         {
             if (MountPhase)
             {
-                if (me->GetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID) == 0 )
+                if (me->GetUInt32Value(UNIT_FIELD_MOUNTDISPLAYID) == 0)
                     damage = 0;
                 else if (damage >= me->GetHealth())
                 {
@@ -569,7 +573,11 @@ public:
                     if (pInstance)
                     {
                         pInstance->SetData(DATA_MOUNT_DIED, BossOrder);
-                        if (Creature* mount = me->FindNearestCreature( pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_HORDE ? VEHICLE_ARGENT_WARHORSE : VEHICLE_ARGENT_BATTLEWORG, 100.0f, true ))
+                        if (Creature* mount = me->FindNearestCreature(
+                                pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_HORDE ? VEHICLE_ARGENT_WARHORSE
+                                                                                          : VEHICLE_ARGENT_BATTLEWORG,
+                                100.0f,
+                                true))
                         {
                             NewMountGUID = mount->GetGUID();
                             me->GetMotionMaster()->MovePoint(7, *mount);
@@ -578,29 +586,26 @@ public:
                     }
                 }
             }
-            else
+            else if (damage >= me->GetHealth())
             {
-                if (damage >= me->GetHealth())
-                {
-                    MountPhase = true;
-                    events.Reset();
-                    damage = me->GetHealth() - 1;
-                    me->SetReactState(REACT_PASSIVE);
-                    me->RemoveAllAuras();
-                    AddCreatureAddonAuras();
-                    me->GetThreatMgr().ClearAllThreat();
-                    me->CombatStop(true);
-                    me->GetMotionMaster()->Clear();
-                    me->SetRegeneratingHealth(false);
-                    me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-                    me->SetImmuneToAll(true);
-                    if (pInstance)
-                        pInstance->SetData(DATA_GRAND_CHAMPION_DIED, BossOrder);
-                }
+                MountPhase = true;
+                events.Reset();
+                damage = me->GetHealth() - 1;
+                me->SetReactState(REACT_PASSIVE);
+                me->RemoveAllAuras();
+                AddCreatureAddonAuras();
+                me->GetThreatMgr().ClearAllThreat();
+                me->CombatStop(true);
+                me->GetMotionMaster()->Clear();
+                me->SetRegeneratingHealth(false);
+                me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
+                me->SetImmuneToAll(true);
+                if (pInstance)
+                    pInstance->SetData(DATA_GRAND_CHAMPION_DIED, BossOrder);
             }
         }
 
-        void EnterEvadeMode(EvadeReason /*why*/) override {}
+        void EnterEvadeMode(EvadeReason /*why*/) override { }
 
         void WaypointReached(uint32 i) override
         {
@@ -652,7 +657,7 @@ public:
             }
         }
 
-        void SpellHit(Unit*  /*caster*/, SpellInfo const* spell) override
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spell) override
         {
             if (spell->Id == SPELL_TRAMPLE_STUN)
                 Talk(SAY_TRAMPLED, me);
@@ -662,12 +667,13 @@ public:
         {
             npc_escortAI::UpdateAI(diff);
 
-            if (!UpdateVictim() && !NewMountGUID )
+            if (!UpdateVictim() && !NewMountGUID)
                 return;
 
             events.Update(diff);
 
-            if (me->HasUnitState(UNIT_STATE_CASTING) || ((me->GetEntry() == NPC_JACOB || me->GetEntry() == NPC_MOKRA) && me->HasAura(SPELL_BLADESTORM)))
+            if (me->HasUnitState(UNIT_STATE_CASTING) ||
+                ((me->GetEntry() == NPC_JACOB || me->GetEntry() == NPC_MOKRA) && me->HasAura(SPELL_BLADESTORM)))
                 return;
 
             switch (events.ExecuteEvent())
@@ -675,117 +681,125 @@ public:
                 case 0:
                     break;
                 case EVENT_FIND_NEW_MOUNT:
+                {
+                    if (me->HasAura(SPELL_TRAMPLE_STUN))
                     {
-                        if (me->HasAura(SPELL_TRAMPLE_STUN))
+                        events.Repeat(200ms);
+                        break;
+                    }
+
+                    // hackfix, trample won't hit grand champions because of UNIT_FLAG_NON_ATTACKABLE
+                    if (pInstance)
+                    {
+                        bool trample = false;
+                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                        for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
+                            if (Player* plr = itr->GetSource())
+                                if (me->GetExactDist(plr) <= 5.0f)
+                                    if (Vehicle* v = plr->GetVehicle())
+                                        if (Unit* c = v->GetBase())
+                                            if (c->IsCreature() &&
+                                                c->ToCreature()->GetEntry() ==
+                                                    (pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_HORDE
+                                                            ? VEHICLE_ARGENT_BATTLEWORG
+                                                            : VEHICLE_ARGENT_WARHORSE))
+                                            {
+                                                me->GetMotionMaster()->MovementExpired();
+                                                me->GetMotionMaster()->MoveIdle();
+                                                me->StopMoving();
+                                                me->CastSpell(me, SPELL_TRAMPLE_STUN, false);
+                                                trample = true;
+                                                break;
+                                            }
+
+                        if (trample)
                         {
-                            events.Repeat(200ms);
-                            break;
-                        }
-
-                        // hackfix, trample won't hit grand champions because of UNIT_FLAG_NON_ATTACKABLE
-                        if (pInstance)
-                        {
-                            bool trample = false;
-                            Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                            for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
-                                if (Player* plr = itr->GetSource())
-                                    if (me->GetExactDist(plr) <= 5.0f )
-                                        if (Vehicle* v = plr->GetVehicle())
-                                            if (Unit* c = v->GetBase())
-                                                if (c->IsCreature() && c->ToCreature()->GetEntry() == (pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_HORDE ? VEHICLE_ARGENT_BATTLEWORG : VEHICLE_ARGENT_WARHORSE))
-                                                {
-                                                    me->GetMotionMaster()->MovementExpired();
-                                                    me->GetMotionMaster()->MoveIdle();
-                                                    me->StopMoving();
-                                                    me->CastSpell(me, SPELL_TRAMPLE_STUN, false);
-                                                    trample = true;
-                                                    break;
-                                                }
-
-                            if (trample)
-                            {
-                                events.Repeat(15s);
-                                break;
-                            }
-                        }
-
-                        if (Creature* mount = ObjectAccessor::GetCreature(*me, NewMountGUID))
-                            if (mount->IsAlive())
-                            {
-                                if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE )
-                                    me->GetMotionMaster()->MovePoint(7, *mount);
-                                events.Repeat(200ms);
-                                break;
-                            }
-
-                        if (Creature* mount = me->FindNearestCreature( pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_HORDE ? VEHICLE_ARGENT_WARHORSE : VEHICLE_ARGENT_BATTLEWORG, 100.0f, true ))
-                        {
-                            me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                            NewMountGUID = mount->GetGUID();
-                            me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-                            me->SetImmuneToAll(true);
-                            me->GetMotionMaster()->MovePoint(7, *mount);
-                            events.Repeat(200ms);
+                            events.Repeat(15s);
                             break;
                         }
                     }
-                    break;
+
+                    if (Creature* mount = ObjectAccessor::GetCreature(*me, NewMountGUID))
+                        if (mount->IsAlive())
+                        {
+                            if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE)
+                                me->GetMotionMaster()->MovePoint(7, *mount);
+                            events.Repeat(200ms);
+                            break;
+                        }
+
+                    if (Creature* mount = me->FindNearestCreature(
+                            pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_HORDE ? VEHICLE_ARGENT_WARHORSE
+                                                                                      : VEHICLE_ARGENT_BATTLEWORG,
+                            100.0f,
+                            true))
+                    {
+                        me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                        NewMountGUID = mount->GetGUID();
+                        me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
+                        me->SetImmuneToAll(true);
+                        me->GetMotionMaster()->MovePoint(7, *mount);
+                        events.Repeat(200ms);
+                        break;
+                    }
+                }
+                break;
                 case EVENT_MOUNT_CHARGE:
-                    {
-                        GuidVector LIST;
-                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                        for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
-                            if (Player* plr = itr->GetSource())
-                            {
-                                if (me->GetExactDist(plr) < 8.0f || me->GetExactDist(plr) > 25.0f || plr->isDead())
-                                    continue;
-                                if (!plr->GetVehicle())
-                                    LIST.push_back(plr->GetGUID());
-                                else if (Vehicle* v = plr->GetVehicle())
-                                {
-                                    if (Unit* mount = v->GetBase())
-                                        LIST.push_back(mount->GetGUID());
-                                }
-                            }
-                        if (!LIST.empty())
+                {
+                    GuidVector LIST;
+                    Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
+                        if (Player* plr = itr->GetSource())
                         {
-                            uint8 rnd = LIST.size() > 1 ? urand(0, LIST.size() - 1) : 0;
-                            if (Unit* target = ObjectAccessor::GetUnit(*me, LIST.at(rnd)))
+                            if (me->GetExactDist(plr) < 8.0f || me->GetExactDist(plr) > 25.0f || plr->isDead())
+                                continue;
+                            if (!plr->GetVehicle())
+                                LIST.push_back(plr->GetGUID());
+                            else if (Vehicle* v = plr->GetVehicle())
                             {
-                                me->GetThreatMgr().ResetAllThreat();
-                                me->AddThreat(target, 10000.0f);
-                                AttackStart(target);
-                                me->CastSpell(target, SPELL_MINIONS_CHARGE, false);
+                                if (Unit* mount = v->GetBase())
+                                    LIST.push_back(mount->GetGUID());
                             }
                         }
-                        events.Repeat(4500ms, 6000ms);
+                    if (!LIST.empty())
+                    {
+                        uint8 rnd = LIST.size() > 1 ? urand(0, LIST.size() - 1) : 0;
+                        if (Unit* target = ObjectAccessor::GetUnit(*me, LIST.at(rnd)))
+                        {
+                            me->GetThreatMgr().ResetAllThreat();
+                            me->AddThreat(target, 10000.0f);
+                            AttackStart(target);
+                            me->CastSpell(target, SPELL_MINIONS_CHARGE, false);
+                        }
                     }
-                    break;
+                    events.Repeat(4500ms, 6000ms);
+                }
+                break;
                 case EVENT_SHIELD_BREAKER:
-                    {
-                        GuidVector LIST;
-                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                        for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
-                            if (Player* plr = itr->GetSource())
-                            {
-                                if (me->GetExactDist(plr) < 10.0f || me->GetExactDist(plr) > 30.0f )
-                                    continue;
-                                if (Vehicle* v = plr->GetVehicle())
-                                    if (Unit* mount = v->GetBase())
-                                        LIST.push_back(mount->GetGUID());
-                            }
-                        if (!LIST.empty())
+                {
+                    GuidVector LIST;
+                    Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
+                        if (Player* plr = itr->GetSource())
                         {
-                            uint8 rnd = LIST.size() > 1 ? urand(0, LIST.size() - 1) : 0;
-                            if (Unit* target = ObjectAccessor::GetCreature(*me, LIST.at(rnd)))
-                                me->CastSpell(target, SPELL_NPC_SHIELD_BREAKER, false);
+                            if (me->GetExactDist(plr) < 10.0f || me->GetExactDist(plr) > 30.0f)
+                                continue;
+                            if (Vehicle* v = plr->GetVehicle())
+                                if (Unit* mount = v->GetBase())
+                                    LIST.push_back(mount->GetGUID());
                         }
-                        events.Repeat(6s, 8s);
+                    if (!LIST.empty())
+                    {
+                        uint8 rnd = LIST.size() > 1 ? urand(0, LIST.size() - 1) : 0;
+                        if (Unit* target = ObjectAccessor::GetCreature(*me, LIST.at(rnd)))
+                            me->CastSpell(target, SPELL_NPC_SHIELD_BREAKER, false);
                     }
-                    break;
+                    events.Repeat(6s, 8s);
+                }
+                break;
                 case EVENT_THRUST:
                     if (Unit* victim = me->GetVictim())
-                        if (me->GetExactDist(victim) <= 6.0f )
+                        if (me->GetExactDist(victim) <= 6.0f)
                             me->CastSpell(victim, SPELL_PLAYER_VEHICLE_THRUST, false);
                     events.Repeat(3s, 5s);
                     break;
@@ -822,20 +836,20 @@ public:
                     events.Repeat(30s, 35s);
                     break;
                 case EVENT_SHAMAN_SPELL_HEALING_WAVE:
+                {
+                    Unit* target = nullptr;
+                    if (urand(0, 1))
                     {
-                        Unit* target = nullptr;
-                        if (urand(0, 1))
-                        {
-                            target = DoSelectLowestHpFriendly(40.0f);
-                            if (!target)
-                                target = me;
-                        }
-                        else
+                        target = DoSelectLowestHpFriendly(40.0f);
+                        if (!target)
                             target = me;
-                        me->CastSpell(target, SPELL_HEALING_WAVE, false);
-                        events.Repeat(22s);
                     }
-                    break;
+                    else
+                        target = me;
+                    me->CastSpell(target, SPELL_HEALING_WAVE, false);
+                    events.Repeat(22s);
+                }
+                break;
                 case EVENT_SHAMAN_SPELL_HEX_OF_MENDING:
                     if (me->GetVictim())
                         me->CastSpell(me->GetVictim(), SPELL_HEX_OF_MENDING, false);
@@ -852,40 +866,40 @@ public:
                     events.Repeat(20s, 25s);
                     break;
                 case EVENT_HUNTER_SPELL_MULTI_SHOT:
+                {
+                    if (!UnitTargetGUID)
                     {
-                        if (!UnitTargetGUID)
+                        if (Unit* target = SelectTarget(SelectTargetMethod::MinDistance, 0, 30.0f, true))
                         {
-                            if (Unit* target = SelectTarget(SelectTargetMethod::MinDistance, 0, 30.0f, true))
-                            {
-                                me->CastSpell(target, SPELL_SHOOT, false);
-                                UnitTargetGUID = target->GetGUID();
-                            }
-                            events.Repeat(2s);
-                            break;
+                            me->CastSpell(target, SPELL_SHOOT, false);
+                            UnitTargetGUID = target->GetGUID();
                         }
+                        events.Repeat(2s);
+                        break;
+                    }
+                    else
+                    {
+                        Unit* target = ObjectAccessor::GetUnit(*me, UnitTargetGUID);
+                        if (target && me->IsInRange(target, 5.0f, 30.0f, false))
+                            me->CastSpell(target, SPELL_MULTI_SHOT, false);
                         else
                         {
-                            Unit* target = ObjectAccessor::GetUnit(*me, UnitTargetGUID);
-                            if (target && me->IsInRange(target, 5.0f, 30.0f, false))
-                                me->CastSpell(target, SPELL_MULTI_SHOT, false);
-                            else
+                            Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                            for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                             {
-                                Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                                for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
+                                Player* player = itr->GetSource();
+                                if (player && me->IsInRange(player, 5.0f, 30.0f, false))
                                 {
-                                    Player* player = itr->GetSource();
-                                    if (player && me->IsInRange(player, 5.0f, 30.0f, false))
-                                    {
-                                        me->CastSpell(player, SPELL_MULTI_SHOT, false);
-                                        break;
-                                    }
+                                    me->CastSpell(player, SPELL_MULTI_SHOT, false);
+                                    break;
                                 }
                             }
-                            UnitTargetGUID.Clear();
                         }
-                        events.Repeat(15s, 20s);
+                        UnitTargetGUID.Clear();
                     }
-                    break;
+                    events.Repeat(15s, 20s);
+                }
+                break;
                 /**************** HUNTER END ****************/
 
                 /****************** ROGUE *******************/
@@ -917,22 +931,22 @@ public:
                     events.Repeat(15s, 20s);
                     break;
                 case EVENT_WARRIOR_SPELL_INTERCEPT:
+                {
+                    Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                     {
-                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                        for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
+                        Player* player = itr->GetSource();
+                        if (player && me->IsInRange(player, 8.0f, 25.0f, false))
                         {
-                            Player* player = itr->GetSource();
-                            if (player && me->IsInRange(player, 8.0f, 25.0f, false))
-                            {
-                                DoResetThreatList();
-                                me->AddThreat(player, 5.0f);
-                                me->CastSpell(player, SPELL_INTERCEPT, false);
-                                break;
-                            }
+                            DoResetThreatList();
+                            me->AddThreat(player, 5.0f);
+                            me->CastSpell(player, SPELL_INTERCEPT, false);
+                            break;
                         }
-                        events.Repeat(7s);
                     }
-                    break;
+                    events.Repeat(7s);
+                }
+                break;
                 case EVENT_WARRIOR_SPELL_ROLLING_THROW:
 
                     break;

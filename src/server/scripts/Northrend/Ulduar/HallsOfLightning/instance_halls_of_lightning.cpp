@@ -32,7 +32,10 @@ public:
 
     struct instance_halls_of_lightning_InstanceMapScript : public InstanceScript
     {
-        instance_halls_of_lightning_InstanceMapScript(Map* pMap) : InstanceScript(pMap) { Initialize(); };
+        instance_halls_of_lightning_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
+        {
+            Initialize();
+        };
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
@@ -62,12 +65,8 @@ public:
         bool IsEncounterInProgress() const override
         {
             for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-            {
                 if (m_auiEncounter[i] == IN_PROGRESS && i != TYPE_LOKEN_INTRO)
-                {
                     return true;
-                }
-            }
             return false;
         }
 
@@ -124,7 +123,8 @@ public:
             }
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const*  /*source*/, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {
@@ -184,10 +184,8 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << m_auiEncounter[0] << ' '
-                << m_auiEncounter[1] << ' '
-                << m_auiEncounter[2] << ' '
-                << m_auiEncounter[3] << ' ';
+            data << m_auiEncounter[0] << ' ' << m_auiEncounter[1] << ' ' << m_auiEncounter[2] << ' '
+                 << m_auiEncounter[3] << ' ';
         }
 
         uint32 GetData(uint32 uiType) const override

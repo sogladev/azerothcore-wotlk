@@ -17,34 +17,35 @@
 
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
-#include "SpellScriptLoader.h"
-#include "mechanar.h"
 #include "SpellAuraEffects.h"
 #include "SpellScript.h"
+#include "SpellScriptLoader.h"
+#include "mechanar.h"
 
 enum Says
 {
-    SAY_AGGRO                      = 0,
-    SAY_SUMMON                     = 1,
-    SAY_DRAGONS_BREATH             = 2,
-    SAY_SLAY                       = 3,
-    SAY_DEATH                      = 4
+    SAY_AGGRO = 0,
+    SAY_SUMMON = 1,
+    SAY_DRAGONS_BREATH = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4
 };
 
 enum Spells
 {
-    SPELL_FROST_ATTACK             = 45196, // This is definitely spell added in TBC but did it replaced both 35264 and 39086 or only normal version?
-    SPELL_SUMMON_RAGING_FLAMES     = 35275,
-    SPELL_QUELL_RAGING_FLAMES      = 35277,
-    SPELL_ARCANE_BLAST             = 35314,
-    SPELL_DRAGONS_BREATH           = 35250,
+    SPELL_FROST_ATTACK =
+        45196, // This is definitely spell added in TBC but did it replaced both 35264 and 39086 or only normal version?
+    SPELL_SUMMON_RAGING_FLAMES = 35275,
+    SPELL_QUELL_RAGING_FLAMES = 35277,
+    SPELL_ARCANE_BLAST = 35314,
+    SPELL_DRAGONS_BREATH = 35250,
 
     // Raging Flames
-    SPELL_RAGING_FLAMES_DUMMY      = 35274, // NYI, no clue what it can do
-    SPELL_RAGING_FLAMES_AREA_AURA  = 35281,
-    SPELL_INVIS_STEALTH_DETECTION  = 18950,
-    SPELL_INFERNO                  = 35268,
-    SPELL_INFERNO_DAMAGE           = 35283
+    SPELL_RAGING_FLAMES_DUMMY = 35274, // NYI, no clue what it can do
+    SPELL_RAGING_FLAMES_AREA_AURA = 35281,
+    SPELL_INVIS_STEALTH_DETECTION = 18950,
+    SPELL_INFERNO = 35268,
+    SPELL_INFERNO_DAMAGE = 35283
 };
 
 struct boss_nethermancer_sepethrea : public BossAI
@@ -55,44 +56,47 @@ struct boss_nethermancer_sepethrea : public BossAI
     {
         if (me->GetThreatMgr().GetThreatListSize() > 1)
         {
-            ThreatContainer::StorageType::const_iterator lastRef = me->GetThreatMgr().GetOnlineContainer().GetThreatList().end();
+            ThreatContainer::StorageType::const_iterator lastRef =
+                me->GetThreatMgr().GetOnlineContainer().GetThreatList().end();
             --lastRef;
             if (Unit* lastTarget = (*lastRef)->getTarget())
             {
                 if (lastTarget != target)
-                {
                     return !target->HasAura(SPELL_DRAGONS_BREATH);
-                }
             }
         }
 
         return true;
     }
 
-    void JustEngagedWith(Unit*  /*who*/) override
+    void JustEngagedWith(Unit* /*who*/) override
     {
         _JustEngagedWith();
 
-        scheduler.Schedule(6s, [this](TaskContext context)
+        scheduler
+            .Schedule(6s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_FROST_ATTACK);
             context.Repeat(8s);
-        }).Schedule(15s, 25s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                25s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_ARCANE_BLAST);
             if (me->GetVictim())
-            {
                 DoModifyThreatByPercent(me->GetVictim(), -50);
-            }
             context.Repeat();
-        }).Schedule(20s, 30s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                30s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_DRAGONS_BREATH);
             context.Repeat(25s, 35s);
             if (roll_chance_i(50))
-            {
                 Talk(SAY_DRAGONS_BREATH);
-            }
         });
 
         Talk(SAY_AGGRO);
@@ -120,9 +124,7 @@ struct boss_nethermancer_sepethrea : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -166,7 +168,9 @@ struct npc_raging_flames : public ScriptedAI
 
         FixateRandomTarget();
 
-        scheduler.Schedule(15s, 25s, [this](TaskContext task)
+        scheduler.Schedule(15s,
+            25s,
+            [this](TaskContext task)
         {
             DoCastSelf(SPELL_INFERNO);
             FixateRandomTarget();
@@ -202,12 +206,14 @@ class spell_ragin_flames_inferno : public AuraScript
 
     void HandlePeriodic(AuraEffect const* aurEff)
     {
-        GetUnitOwner()->CastCustomSpell(SPELL_INFERNO_DAMAGE, SPELLVALUE_BASE_POINT0, aurEff->GetAmount(), GetUnitOwner(), TRIGGERED_FULL_MASK);
+        GetUnitOwner()->CastCustomSpell(
+            SPELL_INFERNO_DAMAGE, SPELLVALUE_BASE_POINT0, aurEff->GetAmount(), GetUnitOwner(), TRIGGERED_FULL_MASK);
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_ragin_flames_inferno::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_ragin_flames_inferno::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 

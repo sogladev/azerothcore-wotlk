@@ -28,7 +28,7 @@
 
 enum OnlyForFlight
 {
-    SPELL_ARCANE_CHARGES    = 45072
+    SPELL_ARCANE_CHARGES = 45072
 };
 
 class item_only_for_flight : public ItemScript
@@ -135,9 +135,9 @@ public:
 
 enum PetrovClusterBombs
 {
-    SPELL_PETROV_BOMB           = 42406,
-    AREA_ID_SHATTERED_STRAITS   = 4064,
-    ZONE_ID_HOWLING             = 495
+    SPELL_PETROV_BOMB = 42406,
+    AREA_ID_SHATTERED_STRAITS = 4064,
+    ZONE_ID_HOWLING = 495
 };
 
 class item_petrov_cluster_bombs : public ItemScript
@@ -145,7 +145,7 @@ class item_petrov_cluster_bombs : public ItemScript
 public:
     item_petrov_cluster_bombs() : ItemScript("item_petrov_cluster_bombs") { }
 
-    bool OnUse(Player* player, Item* item, const SpellCastTargets& /*targets*/) override
+    bool OnUse(Player* player, Item* item, SpellCastTargets const& /*targets*/) override
     {
         if (player->GetZoneId() != ZONE_ID_HOWLING)
             return false;
@@ -166,8 +166,8 @@ public:
 
 enum CapturedFrog
 {
-    QUEST_THE_PERFECT_SPIES      = 25444,
-    NPC_VANIRAS_SENTRY_TOTEM     = 40187
+    QUEST_THE_PERFECT_SPIES = 25444,
+    NPC_VANIRAS_SENTRY_TOTEM = 40187
 };
 
 class item_captured_frog : public ItemScript
@@ -178,12 +178,10 @@ public:
     bool OnUse(Player* player, Item* item, SpellCastTargets const& /*targets*/) override
     {
         if (player->GetQuestStatus(QUEST_THE_PERFECT_SPIES) == QUEST_STATUS_INCOMPLETE)
-        {
             if (player->FindNearestCreature(NPC_VANIRAS_SENTRY_TOTEM, 10.0f))
                 return false;
             else
                 player->SendEquipError(EQUIP_ERR_OUT_OF_RANGE, item, nullptr);
-        }
         else
             player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, item, nullptr);
         return true;
@@ -197,7 +195,8 @@ class item_generic_limit_chance_above_60 : public ItemScript
 public:
     item_generic_limit_chance_above_60() : ItemScript("item_generic_limit_chance_above_60") { }
 
-    bool OnCastItemCombatSpell(Player* /*player*/, Unit* victim, SpellInfo const* /*spellInfo*/, Item* /*item*/) override
+    bool OnCastItemCombatSpell(
+        Player* /*player*/, Unit* victim, SpellInfo const* /*spellInfo*/, Item* /*item*/) override
     {
         // spell proc chance gets severely reduced on victims > 60 (formula unknown)
         if (victim->GetLevel() > 60)

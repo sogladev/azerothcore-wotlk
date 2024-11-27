@@ -24,22 +24,22 @@
 
 enum Texts
 {
-    SAY_INTRO       = 0,
-    SAY_REGEN       = 1,
-    SAY_AGGRO       = 2,
-    SAY_SLAY        = 3,
-    SAY_DEATH       = 4,
+    SAY_INTRO = 0,
+    SAY_REGEN = 1,
+    SAY_AGGRO = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4,
     EMOTE_DISTILLER = 5
 };
 
 enum Spells
 {
-    SPELL_SPELL_REFLECTION        = 31534,
-    SPELL_IMPALE                  = 39061,
-    SPELL_HEAD_CRACK              = 16172,
-    SPELL_WARLORDS_RAGE           = 37081,
+    SPELL_SPELL_REFLECTION = 31534,
+    SPELL_IMPALE = 39061,
+    SPELL_HEAD_CRACK = 16172,
+    SPELL_WARLORDS_RAGE = 37081,
     SPELL_WARLORDS_RAGE_DISTILLER = 31543,
-    SPELL_WARLORDS_RAGE_PROC      = 36453
+    SPELL_WARLORDS_RAGE_PROC = 36453
 };
 
 enum Misc
@@ -54,7 +54,9 @@ struct boss_warlord_kalithresh : public BossAI
     void Reset() override
     {
         _Reset();
-        instance->DoForAllMinions(DATA_WARLORD_KALITHRESH, [&](Creature* minion) {
+        instance->DoForAllMinions(DATA_WARLORD_KALITHRESH,
+            [&](Creature* minion)
+        {
             minion->SetReactState(REACT_PASSIVE);
             minion->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
         });
@@ -76,19 +78,29 @@ struct boss_warlord_kalithresh : public BossAI
         Talk(SAY_AGGRO);
         _JustEngagedWith();
 
-        scheduler.Schedule(20s, 36s, [this](TaskContext context)
+        scheduler
+            .Schedule(20s,
+                36s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_SPELL_REFLECTION);
             context.Repeat();
-        }).Schedule(7s, 14s, [this](TaskContext context)
+        })
+            .Schedule(7s,
+                14s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_IMPALE, 0, 10.0f);
             context.Repeat(7500ms, 12500ms);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_HEAD_CRACK);
             context.Repeat(45s, 55s);
-        }).Schedule(20s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                [this](TaskContext context)
         {
             Talk(SAY_REGEN);
             Talk(EMOTE_DISTILLER);
@@ -98,26 +110,24 @@ struct boss_warlord_kalithresh : public BossAI
                 distiller->AI()->DoCast(me, SPELL_WARLORDS_RAGE_DISTILLER, true);
                 distiller->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
             }
-            else
+            else if (Creature* distiller = me->FindNearestCreature(NPC_NAGA_DISTILLER, 100.0f))
             {
-                if (Creature* distiller = me->FindNearestCreature(NPC_NAGA_DISTILLER, 100.0f))
-                {
-                    me->GetMotionMaster()->MoveFollow(distiller, 8.0f, 0.0f);
+                me->GetMotionMaster()->MoveFollow(distiller, 8.0f, 0.0f);
 
-                    scheduler.Schedule(1s, [this](TaskContext chaseContext)
+                scheduler.Schedule(1s,
+                    [this](TaskContext chaseContext)
+                {
+                    if (Creature* distiller = me->FindNearestCreature(NPC_NAGA_DISTILLER, 8.0f))
                     {
-                        if (Creature* distiller = me->FindNearestCreature(NPC_NAGA_DISTILLER, 8.0f))
-                        {
-                            distiller->AI()->DoCast(me, SPELL_WARLORDS_RAGE_DISTILLER, true);
-                            distiller->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
-                            me->ResumeChasingVictim();
-                        }
-                        else
-                        {
-                            chaseContext.Repeat();
-                        }
-                    });
-                }
+                        distiller->AI()->DoCast(me, SPELL_WARLORDS_RAGE_DISTILLER, true);
+                        distiller->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                        me->ResumeChasingVictim();
+                    }
+                    else
+                    {
+                        chaseContext.Repeat();
+                    }
+                });
             }
 
             context.Repeat(45s);
@@ -127,18 +137,14 @@ struct boss_warlord_kalithresh : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override
     {
         Talk(SAY_DEATH);
         _JustDied();
-        instance->DoForAllMinions(DATA_WARLORD_KALITHRESH, [&](Creature* minion) {
-            minion->KillSelf();
-        });
+        instance->DoForAllMinions(DATA_WARLORD_KALITHRESH, [&](Creature* minion) { minion->KillSelf(); });
     }
 
 private:
@@ -155,15 +161,14 @@ class spell_warlords_rage : public AuraScript
         if (GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_EXPIRE)
         {
             if (GetTarget())
-            {
                 GetTarget()->CastSpell(GetTarget(), SPELL_WARLORDS_RAGE_PROC, true);
-            }
         }
     }
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_warlords_rage::HandleAfterRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_warlords_rage::HandleAfterRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

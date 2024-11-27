@@ -169,14 +169,8 @@ class CharacterActionIpLogger : public PlayerScript
 {
 public:
     CharacterActionIpLogger() :
-        PlayerScript("CharacterActionIpLogger",
-        {
-            PLAYERHOOK_ON_CREATE,
-            PLAYERHOOK_ON_LOGIN,
-            PLAYERHOOK_ON_LOGOUT
-        })
-    {
-    }
+        PlayerScript("CharacterActionIpLogger", {PLAYERHOOK_ON_CREATE, PLAYERHOOK_ON_LOGIN, PLAYERHOOK_ON_LOGOUT})
+    { }
 
     // CHARACTER_CREATE = 7
     void OnCreate(Player* player) override
@@ -216,7 +210,7 @@ public:
         // We declare all the required variables
         uint32 playerGuid = player->GetSession()->GetAccountId();
         ObjectGuid::LowType characterGuid = player->GetGUID().GetCounter();
-        const std::string currentIp = player->GetSession()->GetRemoteAddress();
+        std::string const currentIp = player->GetSession()->GetRemoteAddress();
         std::string systemNote = "ERROR"; // "ERROR" is a placeholder here. We change it...
 
         // ... with this switch, so that we have a more accurate phrasing of what type it is
@@ -264,13 +258,8 @@ class CharacterDeleteActionIpLogger : public PlayerScript
 {
 public:
     CharacterDeleteActionIpLogger() :
-        PlayerScript("CharacterDeleteActionIpLogger",
-        {
-            PLAYERHOOK_ON_DELETE,
-            PLAYERHOOK_ON_FAILED_DELETE
-        })
-    {
-    }
+        PlayerScript("CharacterDeleteActionIpLogger", {PLAYERHOOK_ON_DELETE, PLAYERHOOK_ON_FAILED_DELETE})
+    { }
 
     // CHARACTER_DELETE = 10
     void OnDelete(ObjectGuid guid, uint32 accountId) override
@@ -293,7 +282,8 @@ public:
         // Else, this script isn't loaded in the first place: We require no config check.
 
         // We declare all the required variables
-        ObjectGuid::LowType characterGuid = guid.GetCounter(); // We have no access to any member function of Player* or WorldSession*. So use old-fashioned way.
+        ObjectGuid::LowType characterGuid =
+            guid.GetCounter(); // We have no access to any member function of Player* or WorldSession*. So use old-fashioned way.
         // Query playerGuid/accountId, as we only have characterGuid
         std::string systemNote = "ERROR"; // "ERROR" is a placeholder here. We change it later.
 

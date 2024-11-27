@@ -57,13 +57,15 @@ void WorldSession::HandleAddFriendOpcode(WorldPacket& recv_data)
     TeamId teamId = Player::TeamIdForRace(playerData->Race);
     FriendsResult friendResult = FRIEND_NOT_FOUND;
 
-    if (!AccountMgr::IsPlayerAccount(GetSecurity()) || sWorld->getBoolConfig(CONFIG_ALLOW_GM_FRIEND)|| AccountMgr::IsPlayerAccount(AccountMgr::GetSecurity(friendAccountId, realm.Id.Realm)))
+    if (!AccountMgr::IsPlayerAccount(GetSecurity()) || sWorld->getBoolConfig(CONFIG_ALLOW_GM_FRIEND) ||
+        AccountMgr::IsPlayerAccount(AccountMgr::GetSecurity(friendAccountId, realm.Id.Realm)))
     {
         if (friendGuid)
         {
             if (friendGuid == GetPlayer()->GetGUID())
                 friendResult = FRIEND_SELF;
-            else if (GetPlayer()->GetTeamId() != teamId && !sWorld->getBoolConfig(CONFIG_ALLOW_TWO_SIDE_ADD_FRIEND)  && AccountMgr::IsPlayerAccount(GetSecurity()))
+            else if (GetPlayer()->GetTeamId() != teamId && !sWorld->getBoolConfig(CONFIG_ALLOW_TWO_SIDE_ADD_FRIEND) &&
+                     AccountMgr::IsPlayerAccount(GetSecurity()))
                 friendResult = FRIEND_ENEMY;
             else if (GetPlayer()->GetSocial()->HasFriend(friendGuid))
                 friendResult = FRIEND_ALREADY;
@@ -77,7 +79,7 @@ void WorldSession::HandleAddFriendOpcode(WorldPacket& recv_data)
                 if (GetPlayer()->GetSocial()->AddToSocialList(friendGuid, SOCIAL_FLAG_FRIEND))
                     GetPlayer()->GetSocial()->SetFriendNote(friendGuid, friendNote);
                 else
-                friendResult = FRIEND_LIST_FULL;
+                    friendResult = FRIEND_LIST_FULL;
             }
             GetPlayer()->GetSocial()->SetFriendNote(friendGuid, friendNote);
         }
@@ -117,7 +119,7 @@ void WorldSession::HandleAddIgnoreOpcode(WorldPacket& recv_data)
 
     FriendsResult ignoreResult;
 
-    if (ignoreGuid == GetPlayer()->GetGUID())              //not add yourself
+    if (ignoreGuid == GetPlayer()->GetGUID()) //not add yourself
         ignoreResult = FRIEND_IGNORE_SELF;
     else if (GetPlayer()->GetSocial()->HasIgnore(ignoreGuid))
         ignoreResult = FRIEND_IGNORE_ALREADY;

@@ -25,14 +25,15 @@
 #include <mysqld_error.h>
 #include <thread>
 
-DatabaseLoader::DatabaseLoader(std::string const& logger, uint32 const defaultUpdateMask, std::string_view modulesList)
-    : _logger(logger),
+DatabaseLoader::DatabaseLoader(
+    std::string const& logger, uint32 const defaultUpdateMask, std::string_view modulesList) :
+    _logger(logger),
     _modulesList(modulesList),
     _autoSetup(sConfigMgr->GetOption<bool>("Updates.AutoSetup", true)),
-    _updateFlags(sConfigMgr->GetOption<uint32>("Updates.EnableDatabases", defaultUpdateMask)) { }
+    _updateFlags(sConfigMgr->GetOption<uint32>("Updates.EnableDatabases", defaultUpdateMask))
+{ }
 
-template <class T>
-DatabaseLoader& DatabaseLoader::AddDatabase(DatabaseWorkerPool<T>& pool, std::string const& name)
+template <class T> DatabaseLoader& DatabaseLoader::AddDatabase(DatabaseWorkerPool<T>& pool, std::string const& name)
 {
     bool const updatesEnabledForThis = DBUpdater<T>::IsEnabled(_updateFlags);
 
@@ -48,8 +49,10 @@ DatabaseLoader& DatabaseLoader::AddDatabase(DatabaseWorkerPool<T>& pool, std::st
         uint8 const asyncThreads = sConfigMgr->GetOption<uint8>(name + "Database.WorkerThreads", 1);
         if (asyncThreads < 1 || asyncThreads > 32)
         {
-            LOG_ERROR(_logger, "{} database: invalid number of worker threads specified. "
-                      "Please pick a value between 1 and 32.", name);
+            LOG_ERROR(_logger,
+                "{} database: invalid number of worker threads specified. "
+                "Please pick a value between 1 and 32.",
+                name);
             return false;
         }
 
@@ -73,13 +76,9 @@ DatabaseLoader& DatabaseLoader::AddDatabase(DatabaseWorkerPool<T>& pool, std::st
                     error = pool.Open();
 
                     if (error == CR_CONNECTION_ERROR)
-                    {
                         reconnectCount++;
-                    }
                     else
-                    {
                         break;
-                    }
                 }
             }
 
@@ -88,25 +87,22 @@ DatabaseLoader& DatabaseLoader::AddDatabase(DatabaseWorkerPool<T>& pool, std::st
             {
                 // Try to create the database and connect again if auto setup is enabled
                 if (DBUpdater<T>::Create(pool) && (!pool.Open()))
-                {
                     error = 0;
-                }
             }
 
             // If the error wasn't handled quit
             if (error)
             {
-                LOG_ERROR(_logger, "DatabasePool {} NOT opened. There were errors opening the MySQL connections. "
-                          "Check your log file for specific errors", name);
+                LOG_ERROR(_logger,
+                    "DatabasePool {} NOT opened. There were errors opening the MySQL connections. "
+                    "Check your log file for specific errors",
+                    name);
 
                 return false;
             }
         }
         // Add the close operation
-        _close.push([&pool]
-        {
-            pool.Close();
-        });
+        _close.push([&pool] { pool.Close(); });
 
         return true;
     });
@@ -154,7 +150,8 @@ DatabaseLoader& DatabaseLoader::AddDatabase(DatabaseWorkerPool<T>& pool, std::st
 bool DatabaseLoader::Load()
 {
     if (!_updateFlags)
-        LOG_WARN("sql.updates", "> AUTOUPDATER: Automatic database updates are disabled for all databases in the config! This is not recommended!");
+        LOG_WARN("sql.updates",
+            "> AUTOUPDATER: Automatic database updates are disabled for all databases in the config! This is not recommended!");
 
     if (!OpenDatabases())
         return false;
@@ -213,9 +210,9 @@ bool DatabaseLoader::Process(std::queue<Predicate>& queue)
     return true;
 }
 
-template AC_DATABASE_API
-DatabaseLoader& DatabaseLoader::AddDatabase<LoginDatabaseConnection>(DatabaseWorkerPool<LoginDatabaseConnection>&, std::string const&);
-template AC_DATABASE_API
-DatabaseLoader& DatabaseLoader::AddDatabase<CharacterDatabaseConnection>(DatabaseWorkerPool<CharacterDatabaseConnection>&, std::string const&);
-template AC_DATABASE_API
-DatabaseLoader& DatabaseLoader::AddDatabase<WorldDatabaseConnection>(DatabaseWorkerPool<WorldDatabaseConnection>&, std::string const&);
+template AC_DATABASE_API DatabaseLoader& DatabaseLoader::AddDatabase<LoginDatabaseConnection>(
+    DatabaseWorkerPool<LoginDatabaseConnection>&, std::string const&);
+template AC_DATABASE_API DatabaseLoader& DatabaseLoader::AddDatabase<CharacterDatabaseConnection>(
+    DatabaseWorkerPool<CharacterDatabaseConnection>&, std::string const&);
+template AC_DATABASE_API DatabaseLoader& DatabaseLoader::AddDatabase<WorldDatabaseConnection>(
+    DatabaseWorkerPool<WorldDatabaseConnection>&, std::string const&);

@@ -36,7 +36,7 @@ namespace Movement
         spline.evaluate_percent(point_Idx, u, c);
 
         if (splineflags.animation)
-            ;// MoveSplineFlag::Animation disables falling or parabolic movement
+            ; // MoveSplineFlag::Animation disables falling or parabolic movement
         else if (splineflags.parabolic)
             computeParabolicElevation(c.z);
         else if (splineflags.falling)
@@ -92,8 +92,10 @@ namespace Movement
 
     struct FallInitializer
     {
-        FallInitializer(float _start_elevation) : start_elevation(_start_elevation) {}
+        FallInitializer(float _start_elevation) : start_elevation(_start_elevation) { }
+
         float start_elevation;
+
         inline int32 operator()(Spline<int32>& s, int32 i)
         {
             return Movement::computeFallTime(start_elevation - s.getPoint(i + 1).z, false) * 1000.f;
@@ -107,7 +109,7 @@ namespace Movement
 
     struct CommonInitializer
     {
-        CommonInitializer(float _velocity) : velocityInv(1000.f / _velocity), _time(minimal_duration) {}
+        CommonInitializer(float _velocity) : velocityInv(1000.f / _velocity), _time(minimal_duration) { }
 
         inline int32 operator()(Spline<int32>& s, int32 i)
         {
@@ -119,9 +121,9 @@ namespace Movement
         int32 _time;
     };
 
-    void MoveSpline::init_spline(const MoveSplineInitArgs& args)
+    void MoveSpline::init_spline(MoveSplineInitArgs const& args)
     {
-        const SplineBase::EvaluationMode modes[2] = {SplineBase::ModeLinear, SplineBase::ModeCatmullrom};
+        SplineBase::EvaluationMode const modes[2] = {SplineBase::ModeLinear, SplineBase::ModeCatmullrom};
         if (args.flags.cyclic)
         {
             uint32 cyclic_point = 0;
@@ -149,9 +151,7 @@ namespace Movement
 
         /// @todo: what to do in such cases? problem is in input data (all points are at same coords)
         if (spline.length() < minimal_duration)
-        {
             spline.set_length(spline.last(), spline.isCyclic() ? 1000 : 1);
-        }
         point_Idx = spline.first();
     }
 
@@ -189,8 +189,14 @@ namespace Movement
         }
     }
 
-    MoveSpline::MoveSpline() : m_Id(0), time_passed(0),
-        vertical_acceleration(0.f), initialOrientation(0.f), effect_start_time(0), point_Idx(0), point_Idx_offset(0),
+    MoveSpline::MoveSpline() :
+        m_Id(0),
+        time_passed(0),
+        vertical_acceleration(0.f),
+        initialOrientation(0.f),
+        effect_start_time(0),
+        point_Idx(0),
+        point_Idx_offset(0),
         onTransport(false)
     {
         splineflags.done = true;
@@ -229,7 +235,8 @@ namespace Movement
             for (uint32 i = 1; i < path.size() - 1; ++i)
             {
                 offset = path[i] - middle;
-                if (std::fabs(offset.x) >= MAX_OFFSET || std::fabs(offset.y) >= MAX_OFFSET || std::fabs(offset.z) >= MAX_OFFSET)
+                if (std::fabs(offset.x) >= MAX_OFFSET || std::fabs(offset.y) >= MAX_OFFSET ||
+                    std::fabs(offset.z) >= MAX_OFFSET)
                 {
                     LOG_ERROR("movement", "MoveSplineInitArgs::_checkPathBounds check failed");
                     return false;
@@ -266,20 +273,17 @@ namespace Movement
             {
                 result = Result_NextSegment;
             }
+            else if (spline.isCyclic())
+            {
+                point_Idx = spline.first();
+                time_passed = time_passed % Duration();
+                result = Movement::MoveSpline::UpdateResult(Result_NextCycle | Result_JustArrived);
+            }
             else
             {
-                if (spline.isCyclic())
-                {
-                    point_Idx = spline.first();
-                    time_passed = time_passed % Duration();
-                    result = Movement::MoveSpline::UpdateResult(Result_NextCycle | Result_JustArrived);
-                }
-                else
-                {
-                    _Finalize();
-                    ms_time_diff = 0;
-                    result = Movement::MoveSpline::UpdateResult(Result_Arrived | Result_JustArrived);
-                }
+                _Finalize();
+                ms_time_diff = 0;
+                result = Movement::MoveSpline::UpdateResult(Result_Arrived | Result_JustArrived);
             }
         }
 
@@ -321,4 +325,4 @@ namespace Movement
             point = point % (spline.last() - spline.first());
         return point;
     }
-}
+} // namespace Movement

@@ -58,7 +58,13 @@ void CinematicMgr::BeginCinematic()
                 return;
 
             player->GetMap()->LoadGrid(pos.GetPositionX(), pos.GetPositionY());
-            m_CinematicObject = player->SummonCreature(VISUAL_WAYPOINT, pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 120000);
+            m_CinematicObject = player->SummonCreature(VISUAL_WAYPOINT,
+                pos.m_positionX,
+                pos.m_positionY,
+                pos.m_positionZ,
+                0.0f,
+                TEMPSUMMON_TIMED_DESPAWN,
+                120000);
             if (m_CinematicObject)
             {
                 m_CinematicObject->setActive(true);
@@ -154,13 +160,15 @@ void CinematicMgr::UpdateCinematicLocation(uint32 /*diff*/)
     float xDiff = nextPosition.m_positionX - lastPosition.m_positionX;
     float yDiff = nextPosition.m_positionY - lastPosition.m_positionY;
     float zDiff = nextPosition.m_positionZ - lastPosition.m_positionZ;
-    Position interPosition(lastPosition.m_positionX + (xDiff * (float(interDiff) / float(timeDiff))), lastPosition.m_positionY +
-        (yDiff * (float(interDiff) / float(timeDiff))), lastPosition.m_positionZ + (zDiff * (float(interDiff) / float(timeDiff))));
+    Position interPosition(lastPosition.m_positionX + (xDiff * (float(interDiff) / float(timeDiff))),
+        lastPosition.m_positionY + (yDiff * (float(interDiff) / float(timeDiff))),
+        lastPosition.m_positionZ + (zDiff * (float(interDiff) / float(timeDiff))));
 
     // Advance (at speed) to this position. The remote sight object is used
     // to send update information to player in cinematic
     if (m_CinematicObject && interPosition.IsPositionValid())
-        m_CinematicObject->MonsterMoveWithSpeed(interPosition.m_positionX, interPosition.m_positionY, interPosition.m_positionZ, 500.0f);
+        m_CinematicObject->MonsterMoveWithSpeed(
+            interPosition.m_positionX, interPosition.m_positionY, interPosition.m_positionZ, 500.0f);
 
     // If we never received an end packet 10 seconds after the final timestamp then force an end
     if (m_cinematicDiff > m_cinematicLength + 10 * IN_MILLISECONDS)

@@ -24,52 +24,52 @@
 
 enum JaraxxusTexts
 {
-    SAY_INTRO               = 0,
-    SAY_AGGRO               = 1,
-    EMOTE_LEGION_FLAME      = 2,
-    EMOTE_NETHER_PORTAL     = 3,
-    SAY_MISTRESS_OF_PAIN    = 4,
-    EMOTE_INCINERATE        = 5,
-    SAY_INCINERATE          = 6,
+    SAY_INTRO = 0,
+    SAY_AGGRO = 1,
+    EMOTE_LEGION_FLAME = 2,
+    EMOTE_NETHER_PORTAL = 3,
+    SAY_MISTRESS_OF_PAIN = 4,
+    EMOTE_INCINERATE = 5,
+    SAY_INCINERATE = 6,
     EMOTE_INFERNAL_ERUPTION = 7,
-    SAY_INFERNAL_ERUPTION   = 8,
-    SAY_KILL_PLAYER         = 9,
-    SAY_DEATH               = 10,
-    SAY_BERSERK             = 11,
+    SAY_INFERNAL_ERUPTION = 8,
+    SAY_KILL_PLAYER = 9,
+    SAY_DEATH = 10,
+    SAY_BERSERK = 11,
 };
 
 enum JaraxxusNPCs
 {
-    NPC_LEGION_FLAME                    = 34784,
-    NPC_INFERNAL_VOLCANO                = 34813,
-    NPC_FEL_INFERNAL                    = 34815,
-    NPC_NETHER_PORTAL                   = 34825,
-    NPC_MISTRESS_OF_PAIN                = 34826,
+    NPC_LEGION_FLAME = 34784,
+    NPC_INFERNAL_VOLCANO = 34813,
+    NPC_FEL_INFERNAL = 34815,
+    NPC_NETHER_PORTAL = 34825,
+    NPC_MISTRESS_OF_PAIN = 34826,
 };
 
 enum JaraxxusSpells
 {
-    SPELL_NETHER_POWER                  = 66228,
-    SPELL_INCINERATE_FLESH              = 66237,
-    SPELL_FEL_FIREBALL                  = 66532,
-    SPELL_FEL_LIGHTNING                 = 66528,
-    SPELL_TOUCH_OF_JARAXXUS             = 66209,
-    SPELL_LEGION_FLAME                  = 66197,
-    SPELL_LEGION_FLAME_NPC_AURA         = 66201,
-    SPELL_SUMMON_VOLCANO                = 66258,
-    SPELL_SUMMON_NETHER_PORTAL          = 66269,
+    SPELL_NETHER_POWER = 66228,
+    SPELL_INCINERATE_FLESH = 66237,
+    SPELL_FEL_FIREBALL = 66532,
+    SPELL_FEL_LIGHTNING = 66528,
+    SPELL_TOUCH_OF_JARAXXUS = 66209,
+    SPELL_LEGION_FLAME = 66197,
+    SPELL_LEGION_FLAME_NPC_AURA = 66201,
+    SPELL_SUMMON_VOLCANO = 66258,
+    SPELL_SUMMON_NETHER_PORTAL = 66269,
 
-    SPELL_FEL_STEAK                     = 66494,
-    SPELL_FEL_STEAK_MORPH               = 66493,
+    SPELL_FEL_STEAK = 66494,
+    SPELL_FEL_STEAK_MORPH = 66493,
 
-    SPELL_SHIVAN_SLASH                  = 66378,
-    SPELL_SPINNING_PAIN_SPIKE           = 66283,
-    SPELL_MISTRESS_KISS                 = 66336,
-    SPELL_MISTRESS_KISS_PERIODIC_DUMMY  = 66334, // also 67905, 67906, 67907
-    SPELL_MISTRESS_KISS_INTERRUPT       = 66359,
+    SPELL_SHIVAN_SLASH = 66378,
+    SPELL_SPINNING_PAIN_SPIKE = 66283,
+    SPELL_MISTRESS_KISS = 66336,
+    SPELL_MISTRESS_KISS_PERIODIC_DUMMY = 66334, // also 67905, 67906, 67907
+    SPELL_MISTRESS_KISS_INTERRUPT = 66359,
 
-    SPELL_CHAINS                        = 67924,
-    SPELL_BERSERK                       = 64238,
+    SPELL_CHAINS = 67924,
+    SPELL_BERSERK = 64238,
 };
 
 enum JaraxxusEvents
@@ -158,35 +158,35 @@ public:
                         a->SetStackAmount(spell->StackAmount);
                     break;
                 case 30449:
+                {
+                    if (!caster)
+                        return;
+                    uint32 id = 0;
+                    switch (me->GetMap()->GetDifficulty())
                     {
-                        if (!caster)
-                            return;
-                        uint32 id = 0;
-                        switch (me->GetMap()->GetDifficulty())
-                        {
-                            case 0:
-                                id = 66228;
-                                break;
-                            case 1:
-                                id = 67106;
-                                break;
-                            case 2:
-                                id = 67107;
-                                break;
-                            case 3:
-                                id = 67108;
-                                break;
-                        }
-                        if (Aura* a = me->GetAura(id))
-                        {
-                            if (a->GetStackAmount() > 1 )
-                                a->ModStackAmount(-1);
-                            else
-                                a->Remove();
-                            caster->CastSpell(caster, SPELL_NETHER_POWER, true);
-                        }
+                        case 0:
+                            id = 66228;
+                            break;
+                        case 1:
+                            id = 67106;
+                            break;
+                        case 2:
+                            id = 67107;
+                            break;
+                        case 3:
+                            id = 67108;
+                            break;
                     }
-                    break;
+                    if (Aura* a = me->GetAura(id))
+                    {
+                        if (a->GetStackAmount() > 1)
+                            a->ModStackAmount(-1);
+                        else
+                            a->Remove();
+                        caster->CastSpell(caster, SPELL_NETHER_POWER, true);
+                    }
+                }
+                break;
                 default:
                     break;
             }
@@ -289,7 +289,7 @@ public:
                 pInstance->SetData(TYPE_FAILED, 1);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
     };
 };
 
@@ -305,7 +305,7 @@ public:
 
     struct npc_fel_infernalAI : public ScriptedAI
     {
-        npc_fel_infernalAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+        npc_fel_infernalAI(Creature* pCreature) : ScriptedAI(pCreature) { }
 
         EventMap events;
 
@@ -375,7 +375,7 @@ public:
 
     struct npc_mistress_of_painAI : public ScriptedAI
     {
-        npc_mistress_of_painAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+        npc_mistress_of_painAI(Creature* pCreature) : ScriptedAI(pCreature) { }
 
         EventMap events;
 
@@ -393,7 +393,7 @@ public:
                 events.RescheduleEvent(EVENT_SPELL_MISTRESS_KISS, 10s, 15s);
         }
 
-        void SpellHit(Unit*  /*caster*/, SpellInfo const*  /*spell*/) override
+        void SpellHit(Unit* /*caster*/, SpellInfo const* /*spell*/) override
         {
             //if (caster && spell && spell->Id == 66287 /*control vehicle*/)
             //  caster->ClearUnitState(UNIT_STATE_ONVEHICLE);
@@ -450,10 +450,10 @@ class spell_toc25_mistress_kiss_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ 66359 });
+        return ValidateSpellInfo({66359});
     }
 
-    void HandleEffectPeriodic(AuraEffect const*   /*aurEff*/)
+    void HandleEffectPeriodic(AuraEffect const* /*aurEff*/)
     {
         if (Unit* caster = GetCaster())
             if (Unit* target = GetTarget())
@@ -466,7 +466,8 @@ class spell_toc25_mistress_kiss_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_toc25_mistress_kiss_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_toc25_mistress_kiss_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -494,8 +495,10 @@ class spell_mistress_kiss_area : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_mistress_kiss_area::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
-        OnEffectHitTarget += SpellEffectFn(spell_mistress_kiss_area::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_mistress_kiss_area::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_mistress_kiss_area::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

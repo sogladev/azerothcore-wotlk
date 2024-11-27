@@ -19,8 +19,9 @@
 #include "Log.h"
 #include "ScriptMgr.h"
 
-BattlegroundMapScript::BattlegroundMapScript(const char* name, uint32 mapId) :
-    ScriptObject(name), MapScript<BattlegroundMap>(mapId)
+BattlegroundMapScript::BattlegroundMapScript(char const* name, uint32 mapId) :
+    ScriptObject(name),
+    MapScript<BattlegroundMap>(mapId)
 {
     ScriptRegistry<BattlegroundMapScript>::AddScript(this);
 }
@@ -30,9 +31,7 @@ void BattlegroundMapScript::checkValidity()
     checkMap();
 
     if (GetEntry() && !GetEntry()->IsBattleground())
-    {
         LOG_ERROR("maps.script", "BattlegroundMapScript for map {} is invalid.", GetEntry()->MapID);
-    }
 }
 
 template class AC_GAME_API ScriptRegistry<BattlegroundMapScript>;

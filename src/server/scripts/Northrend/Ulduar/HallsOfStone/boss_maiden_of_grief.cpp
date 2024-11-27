@@ -21,16 +21,17 @@
 
 enum spells
 {
-    PARTING_SORROW          = 59723,
-    PILLAR_OF_WOE           = 50761,
-    PILLAR_OF_WOE_H         = 59727,
-    SHOCK_OF_SORROW         = 50760,
-    SHOCK_OF_SORROW_H       = 59726,
-    STORM_OF_GRIEF          = 50752,
-    STORM_OF_GRIEF_H        = 59772,
+    PARTING_SORROW = 59723,
+    PILLAR_OF_WOE = 50761,
+    PILLAR_OF_WOE_H = 59727,
+    SHOCK_OF_SORROW = 50760,
+    SHOCK_OF_SORROW_H = 59726,
+    STORM_OF_GRIEF = 50752,
+    STORM_OF_GRIEF_H = 59772,
 
-    ACHIEVEMENT_GOOD_GRIEF  = 20383,
+    ACHIEVEMENT_GOOD_GRIEF = 20383,
 };
+
 enum maidenEvents
 {
     EVENT_NONE,
@@ -42,10 +43,10 @@ enum maidenEvents
 
 enum Yells
 {
-    SAY_AGGRO                                     = 0,
-    SAY_SLAY                                      = 1,
-    SAY_DEATH                                     = 2,
-    SAY_STUN                                      = 3
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_STUN = 3
 };
 
 class boss_maiden_of_grief : public CreatureScript
@@ -78,7 +79,7 @@ public:
             }
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             events.ScheduleEvent(EVENT_STORM, 5s);
             events.ScheduleEvent(EVENT_SHOCK, 26s, 32s);
@@ -106,41 +107,41 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_STORM:
-                    {
-                        me->CastSpell(me->GetVictim(), DUNGEON_MODE(STORM_OF_GRIEF, STORM_OF_GRIEF_H), true);
-                        events.Repeat(10s);
-                        break;
-                    }
+                {
+                    me->CastSpell(me->GetVictim(), DUNGEON_MODE(STORM_OF_GRIEF, STORM_OF_GRIEF_H), true);
+                    events.Repeat(10s);
+                    break;
+                }
                 case EVENT_SHOCK:
-                    {
-                        me->CastSpell(me->GetVictim(), DUNGEON_MODE(SHOCK_OF_SORROW, SHOCK_OF_SORROW_H), false);
-                        Talk(SAY_STUN);
+                {
+                    me->CastSpell(me->GetVictim(), DUNGEON_MODE(SHOCK_OF_SORROW, SHOCK_OF_SORROW_H), false);
+                    Talk(SAY_STUN);
 
-                        events.Repeat(16s, 22s);
-                        break;
-                    }
+                    events.Repeat(16s, 22s);
+                    break;
+                }
                 case EVENT_PILLAR:
-                    {
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
-                            me->CastSpell(target, DUNGEON_MODE(PILLAR_OF_WOE, PILLAR_OF_WOE_H), false);
+                {
+                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
+                        me->CastSpell(target, DUNGEON_MODE(PILLAR_OF_WOE, PILLAR_OF_WOE_H), false);
 
-                        events.Repeat(12s, 20s);
-                        break;
-                    }
+                    events.Repeat(12s, 20s);
+                    break;
+                }
                 case EVENT_PARTING:
-                    {
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
-                            me->CastSpell(target, PARTING_SORROW, false);
+                {
+                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
+                        me->CastSpell(target, PARTING_SORROW, false);
 
-                        events.Repeat(6s, 16s);
-                        break;
-                    }
+                    events.Repeat(6s, 16s);
+                    break;
+                }
             }
 
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
             Talk(SAY_DEATH);
 

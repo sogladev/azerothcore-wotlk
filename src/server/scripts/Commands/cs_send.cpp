@@ -34,33 +34,28 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable sendCommandTable =
-        {
-            { "items",   HandleSendItemsCommand,   SEC_GAMEMASTER,    Console::Yes },
-            { "mail",    HandleSendMailCommand,    SEC_GAMEMASTER,    Console::Yes },
-            { "message", HandleSendMessageCommand, SEC_ADMINISTRATOR, Console::Yes },
-            { "money",   HandleSendMoneyCommand,   SEC_GAMEMASTER,    Console::Yes }
+        static ChatCommandTable sendCommandTable = {
+            {"items",   HandleSendItemsCommand,   SEC_GAMEMASTER,    Console::Yes},
+            {"mail",    HandleSendMailCommand,    SEC_GAMEMASTER,    Console::Yes},
+            {"message", HandleSendMessageCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"money",   HandleSendMoneyCommand,   SEC_GAMEMASTER,    Console::Yes}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "send", sendCommandTable }
+        static ChatCommandTable commandTable = {
+            {"send", sendCommandTable}
         };
 
         return commandTable;
     }
 
-    static bool HandleSendItemsCommand(ChatHandler* handler, Optional<PlayerIdentifier> target, QuotedString subject, QuotedString text, Tail items)
+    static bool HandleSendItemsCommand(
+        ChatHandler* handler, Optional<PlayerIdentifier> target, QuotedString subject, QuotedString text, Tail items)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target)
-        {
             return false;
-        }
 
         // extract items
         std::vector<std::pair<uint32, uint32>> itemList;
@@ -114,7 +109,9 @@ public:
         }
 
         // If the message is sent from console, set it as sent by the target itself, like the other Customer Support mails.
-        ObjectGuid::LowType senderGuid = handler->GetSession() ? handler->GetSession()->GetPlayer()->GetGUID().GetCounter() : target->GetGUID().GetCounter();
+        ObjectGuid::LowType senderGuid = handler->GetSession()
+                                             ? handler->GetSession()->GetPlayer()->GetGUID().GetCounter()
+                                             : target->GetGUID().GetCounter();
 
         // fill mail
         MailDraft draft(subject, text);
@@ -123,7 +120,8 @@ public:
 
         for (auto const& [itemID, itemCount] : itemList)
         {
-            if (Item* item = Item::CreateItem(itemID, itemCount, handler->GetSession() ? handler->GetSession()->GetPlayer() : 0))
+            if (Item* item =
+                    Item::CreateItem(itemID, itemCount, handler->GetSession() ? handler->GetSession()->GetPlayer() : 0))
             {
                 item->SaveToDB(trans); // save for prevent lost at next mail load, if send fail then item will deleted
                 draft.AddItem(item);
@@ -137,19 +135,18 @@ public:
         return true;
     }
 
-    static bool HandleSendMailCommand(ChatHandler* handler, Optional<PlayerIdentifier> target, QuotedString subject, QuotedString text)
+    static bool HandleSendMailCommand(
+        ChatHandler* handler, Optional<PlayerIdentifier> target, QuotedString subject, QuotedString text)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target)
-        {
             return false;
-        }
 
-        ObjectGuid::LowType senderGuid = handler->GetSession() ? handler->GetSession()->GetPlayer()->GetGUID().GetCounter() : target->GetGUID().GetCounter();
+        ObjectGuid::LowType senderGuid = handler->GetSession()
+                                             ? handler->GetSession()->GetPlayer()->GetGUID().GetCounter()
+                                             : target->GetGUID().GetCounter();
 
         // If the message is sent from console, set it as sent by the target itself, like the other Customer Support mails.
         MailSender sender(MAIL_NORMAL, senderGuid, MAIL_STATIONERY_GM);
@@ -165,17 +162,13 @@ public:
     static bool HandleSendMessageCommand(ChatHandler* handler, Optional<PlayerIdentifier> target, Tail message)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target || !target->IsConnected())
-        {
             return false;
-        }
 
         Player* player = target->GetConnectedPlayer();
-        std::string msg = std::string{ message };
+        std::string msg = std::string {message};
 
         /// - Send the message
         // Use SendAreaTriggerMessage for fastest delivery.
@@ -188,26 +181,25 @@ public:
         return true;
     }
 
-    static bool HandleSendMoneyCommand(ChatHandler* handler, Optional<PlayerIdentifier> target, QuotedString subject, QuotedString text, uint32 money)
+    static bool HandleSendMoneyCommand(
+        ChatHandler* handler, Optional<PlayerIdentifier> target, QuotedString subject, QuotedString text, uint32 money)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target)
-        {
             return false;
-        }
 
         // from console show not existed sender
-        MailSender sender(MAIL_NORMAL, handler->GetSession() ? handler->GetSession()->GetPlayer()->GetGUID().GetCounter() : 0, MAIL_STATIONERY_GM);
+        MailSender sender(MAIL_NORMAL,
+            handler->GetSession() ? handler->GetSession()->GetPlayer()->GetGUID().GetCounter() : 0,
+            MAIL_STATIONERY_GM);
 
         CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 
         MailDraft(subject, text)
-        .AddMoney(money)
-        .SendMailTo(trans, MailReceiver(target->GetConnectedPlayer(), target->GetGUID().GetCounter()), sender);
+            .AddMoney(money)
+            .SendMailTo(trans, MailReceiver(target->GetConnectedPlayer(), target->GetGUID().GetCounter()), sender);
 
         CharacterDatabase.CommitTransaction(trans);
 

@@ -22,22 +22,22 @@
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_SLAY                                    = 1,
-    SAY_DEATH                                   = 2,
-    SAY_SPAWN                                   = 3,
-    SAY_SHIELD                                  = 4,
-    SAY_WHISPER                                 = 5
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_SPAWN = 3,
+    SAY_SHIELD = 4,
+    SAY_WHISPER = 5
 };
 
 enum eSpells
 {
-    SPELL_SHROUD_OF_DARKNESS_N                      = 54524,
-    SPELL_SHROUD_OF_DARKNESS_H                      = 59745,
-    SPELL_VOID_SHIFT_N                              = 54361,
-    SPELL_VOID_SHIFT_H                              = 59743,
-    SPELL_SUMMON_VOID_SENTRY                        = 54369,
-    SPELL_SUMMON_VOID_SENTRY_BALL                   = 58650,
+    SPELL_SHROUD_OF_DARKNESS_N = 54524,
+    SPELL_SHROUD_OF_DARKNESS_H = 59745,
+    SPELL_VOID_SHIFT_N = 54361,
+    SPELL_VOID_SHIFT_H = 59743,
+    SPELL_SUMMON_VOID_SENTRY = 54369,
+    SPELL_SUMMON_VOID_SENTRY_BALL = 58650,
 
     //SPELL_ZURAMAT_ADD_2_N                         = 54342,
     //SPELL_ZURAMAT_ADD_2_H                         = 59747,
@@ -168,7 +168,7 @@ public:
             }
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void EnterEvadeMode(EvadeReason why) override
         {

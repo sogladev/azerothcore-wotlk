@@ -23,20 +23,20 @@
 
 enum Spells
 {
-    SPELL_SLEEP                             = 24664,
-    SPELL_EARTH_SHOCK                       = 24685,
-    SPELL_CHAIN_BURN                        = 24684,
-    SPELL_SUMMON_NIGHTMARE_ILLUSION_LEFT    = 24681,
-    SPELL_SUMMON_NIGHTMARE_ILLUSION_BACK    = 24728,
-    SPELL_SUMMON_NIGHTMARE_ILLUSION_RIGHT   = 24729
+    SPELL_SLEEP = 24664,
+    SPELL_EARTH_SHOCK = 24685,
+    SPELL_CHAIN_BURN = 24684,
+    SPELL_SUMMON_NIGHTMARE_ILLUSION_LEFT = 24681,
+    SPELL_SUMMON_NIGHTMARE_ILLUSION_BACK = 24728,
+    SPELL_SUMMON_NIGHTMARE_ILLUSION_RIGHT = 24729
 };
 
 enum Events
 {
-    EVENT_SLEEP                             = 1,
-    EVENT_EARTH_SHOCK                       = 2,
-    EVENT_CHAIN_BURN                        = 3,
-    EVENT_ILLUSIONS                         = 4
+    EVENT_SLEEP = 1,
+    EVENT_EARTH_SHOCK = 2,
+    EVENT_CHAIN_BURN = 3,
+    EVENT_ILLUSIONS = 4
 };
 
 struct boss_hazzarah : public BossAI
@@ -51,17 +51,16 @@ struct boss_hazzarah : public BossAI
         summon->SetReactState(REACT_PASSIVE);
         summon->SetUnitFlag(UNIT_FLAG_DISABLE_MOVE);
         summon->SetVisible(false);
-        summon->m_Events.AddEventAtOffset([summon]()
-            {
-                summon->SetVisible(true);
-            }, 2s);
+        summon->m_Events.AddEventAtOffset([summon]() { summon->SetVisible(true); }, 2s);
 
-        summon->m_Events.AddEventAtOffset([summon]()
-            {
-                summon->RemoveUnitFlag(UNIT_FLAG_DISABLE_MOVE);
-                summon->SetReactState(REACT_AGGRESSIVE);
-                summon->SetInCombatWithZone();
-            }, 5s);
+        summon->m_Events.AddEventAtOffset(
+            [summon]()
+        {
+            summon->RemoveUnitFlag(UNIT_FLAG_DISABLE_MOVE);
+            summon->SetReactState(REACT_AGGRESSIVE);
+            summon->SetInCombatWithZone();
+        },
+            5s);
     }
 
     void SummonedCreatureDies(Creature* summon, Unit* /*killer*/) override
@@ -83,14 +82,13 @@ struct boss_hazzarah : public BossAI
     {
         if (me->GetThreatMgr().GetThreatListSize() > 1)
         {
-            ThreatContainer::StorageType::const_iterator lastRef = me->GetThreatMgr().GetOnlineContainer().GetThreatList().end();
+            ThreatContainer::StorageType::const_iterator lastRef =
+                me->GetThreatMgr().GetOnlineContainer().GetThreatList().end();
             --lastRef;
             if (Unit* lastTarget = (*lastRef)->getTarget())
             {
                 if (lastTarget != target)
-                {
                     return !target->HasAura(SPELL_SLEEP);
-                }
             }
         }
 
@@ -122,7 +120,9 @@ struct boss_hazzarah : public BossAI
                 case EVENT_CHAIN_BURN:
                     if (me->GetPowerPct(POWER_MANA) > 5.f) // totally guessed
                     {
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, [&](Unit* u) { return u && !u->IsPet() && u->getPowerType() == POWER_MANA; }))
+                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, [&](Unit* u) {
+                            return u && !u->IsPet() && u->getPowerType() == POWER_MANA;
+                        }))
                         {
                             DoCast(target, SPELL_CHAIN_BURN);
                         }
@@ -160,7 +160,8 @@ class spell_chain_burn : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_chain_burn::FilterTargets, EFFECT_0, TARGET_UNIT_TARGET_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_chain_burn::FilterTargets, EFFECT_0, TARGET_UNIT_TARGET_ENEMY);
     }
 };
 

@@ -39,36 +39,33 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable ticketResponseCommandTable =
-        {
-            { "append",         HandleGMTicketResponseAppendCommand,    SEC_GAMEMASTER,     Console::Yes },
-            { "appendln",       HandleGMTicketResponseAppendLnCommand,  SEC_GAMEMASTER,     Console::Yes },
-            { "delete",         HandleGMTicketResponseDeleteCommand,    SEC_GAMEMASTER,     Console::Yes },
-            { "show",           HandleGMTicketResponseShowCommand,      SEC_GAMEMASTER,     Console::Yes }
+        static ChatCommandTable ticketResponseCommandTable = {
+            {"append",   HandleGMTicketResponseAppendCommand,   SEC_GAMEMASTER, Console::Yes},
+            {"appendln", HandleGMTicketResponseAppendLnCommand, SEC_GAMEMASTER, Console::Yes},
+            {"delete",   HandleGMTicketResponseDeleteCommand,   SEC_GAMEMASTER, Console::Yes},
+            {"show",     HandleGMTicketResponseShowCommand,     SEC_GAMEMASTER, Console::Yes}
         };
-        static ChatCommandTable ticketCommandTable =
-        {
-            { "assign",         HandleGMTicketAssignToCommand,          SEC_GAMEMASTER,     Console::Yes },
-            { "close",          HandleGMTicketCloseByIdCommand,         SEC_GAMEMASTER,     Console::Yes },
-            { "closedlist",     HandleGMTicketListClosedCommand,        SEC_GAMEMASTER,     Console::Yes },
-            { "comment",        HandleGMTicketCommentCommand,           SEC_GAMEMASTER,     Console::Yes },
-            { "complete",       HandleGMTicketCompleteCommand,          SEC_GAMEMASTER,     Console::Yes },
-            { "delete",         HandleGMTicketDeleteByIdCommand,        SEC_ADMINISTRATOR,  Console::Yes },
-            { "escalate",       HandleGMTicketEscalateCommand,          SEC_GAMEMASTER,     Console::Yes },
-            { "escalatedlist",  HandleGMTicketListEscalatedCommand,     SEC_GAMEMASTER,     Console::Yes },
-            { "list",           HandleGMTicketListCommand,              SEC_GAMEMASTER,     Console::Yes },
-            { "onlinelist",     HandleGMTicketListOnlineCommand,        SEC_GAMEMASTER,     Console::Yes },
-            { "reset",          HandleGMTicketResetCommand,             SEC_CONSOLE,        Console::Yes },
+        static ChatCommandTable ticketCommandTable = {
+            {"assign", HandleGMTicketAssignToCommand, SEC_GAMEMASTER, Console::Yes},
+            {"close", HandleGMTicketCloseByIdCommand, SEC_GAMEMASTER, Console::Yes},
+            {"closedlist", HandleGMTicketListClosedCommand, SEC_GAMEMASTER, Console::Yes},
+            {"comment", HandleGMTicketCommentCommand, SEC_GAMEMASTER, Console::Yes},
+            {"complete", HandleGMTicketCompleteCommand, SEC_GAMEMASTER, Console::Yes},
+            {"delete", HandleGMTicketDeleteByIdCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"escalate", HandleGMTicketEscalateCommand, SEC_GAMEMASTER, Console::Yes},
+            {"escalatedlist", HandleGMTicketListEscalatedCommand, SEC_GAMEMASTER, Console::Yes},
+            {"list", HandleGMTicketListCommand, SEC_GAMEMASTER, Console::Yes},
+            {"onlinelist", HandleGMTicketListOnlineCommand, SEC_GAMEMASTER, Console::Yes},
+            {"reset", HandleGMTicketResetCommand, SEC_CONSOLE, Console::Yes},
 
-            { "response",       ticketResponseCommandTable },
-            { "togglesystem",   HandleToggleGMTicketSystem,             SEC_ADMINISTRATOR,  Console::Yes },
-            { "unassign",       HandleGMTicketUnAssignCommand,          SEC_GAMEMASTER,     Console::Yes },
-            { "viewid",         HandleGMTicketGetByIdCommand,           SEC_GAMEMASTER,     Console::Yes },
-            { "viewname",       HandleGMTicketGetByNameCommand,         SEC_GAMEMASTER,     Console::Yes }
+            {"response", ticketResponseCommandTable},
+            {"togglesystem", HandleToggleGMTicketSystem, SEC_ADMINISTRATOR, Console::Yes},
+            {"unassign", HandleGMTicketUnAssignCommand, SEC_GAMEMASTER, Console::Yes},
+            {"viewid", HandleGMTicketGetByIdCommand, SEC_GAMEMASTER, Console::Yes},
+            {"viewname", HandleGMTicketGetByNameCommand, SEC_GAMEMASTER, Console::Yes}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "ticket", ticketCommandTable }
+        static ChatCommandTable commandTable = {
+            {"ticket", ticketCommandTable}
         };
         return commandTable;
     }
@@ -145,7 +142,8 @@ public:
         sTicketMgr->ResolveAndCloseTicket(ticket->GetId(), player ? player->GetGUID() : ObjectGuid::Empty);
         sTicketMgr->UpdateLastChange();
 
-        std::string msg = ticket->FormatMessageString(*handler, player ? player->GetName().c_str() : "Console", nullptr, nullptr, nullptr);
+        std::string msg = ticket->FormatMessageString(
+            *handler, player ? player->GetName().c_str() : "Console", nullptr, nullptr, nullptr);
         handler->SendGlobalGMSysMessage(msg.c_str());
 
         // Inform player, who submitted this ticket, that it is closed
@@ -185,9 +183,11 @@ public:
         sTicketMgr->UpdateLastChange();
 
         std::string const assignedName = ticket->GetAssignedToName();
-        std::string msg = ticket->FormatMessageString(*handler, assignedName.empty() ? nullptr : assignedName.c_str(), nullptr, nullptr, nullptr);
+        std::string msg = ticket->FormatMessageString(
+            *handler, assignedName.empty() ? nullptr : assignedName.c_str(), nullptr, nullptr, nullptr);
 
-        msg += handler->PGetParseString(LANG_COMMAND_TICKETLISTADDCOMMENT, player ? player->GetName().c_str() : "Console", comment.data());
+        msg += handler->PGetParseString(
+            LANG_COMMAND_TICKETLISTADDCOMMENT, player ? player->GetName().c_str() : "Console", comment.data());
         handler->SendGlobalGMSysMessage(msg.c_str());
 
         return true;
@@ -256,7 +256,11 @@ public:
             return true;
         }
 
-        std::string msg = ticket->FormatMessageString(*handler, nullptr, nullptr, nullptr, handler->GetSession() ? handler->GetSession()->GetPlayer()->GetName().c_str() : "Console");
+        std::string msg = ticket->FormatMessageString(*handler,
+            nullptr,
+            nullptr,
+            nullptr,
+            handler->GetSession() ? handler->GetSession()->GetPlayer()->GetName().c_str() : "Console");
         handler->SendGlobalGMSysMessage(msg.c_str());
 
         sTicketMgr->RemoveTicket(ticket->GetId());
@@ -369,14 +373,19 @@ public:
             return true;
         }
 
-        std::string assignedTo = ticket->GetAssignedToName(); // copy assignedto name because we need it after the ticket has been unnassigned
+        std::string assignedTo =
+            ticket
+                ->GetAssignedToName(); // copy assignedto name because we need it after the ticket has been unnassigned
         CharacterDatabaseTransaction trans = CharacterDatabaseTransaction(nullptr);
         ticket->SetUnassigned();
         ticket->SaveToDB(trans);
         sTicketMgr->UpdateLastChange();
 
-        std::string msg = ticket->FormatMessageString(*handler, nullptr, assignedTo.c_str(),
-                          handler->GetSession() ? handler->GetSession()->GetPlayer()->GetName().c_str() : "Console", nullptr);
+        std::string msg = ticket->FormatMessageString(*handler,
+            nullptr,
+            assignedTo.c_str(),
+            handler->GetSession() ? handler->GetSession()->GetPlayer()->GetName().c_str() : "Console",
+            nullptr);
         handler->SendGlobalGMSysMessage(msg.c_str());
 
         return true;
@@ -407,13 +416,9 @@ public:
         // Detect target's GUID
         ObjectGuid guid;
         if (Player* player = ObjectAccessor::FindPlayerByName(name, false))
-        {
             guid = player->GetGUID();
-        }
         else
-        {
             guid = sCharacterCache->GetCharacterGuidByName(name);
-        }
 
         // Target must exist
         if (!guid)

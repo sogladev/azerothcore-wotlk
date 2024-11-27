@@ -40,34 +40,35 @@ public:
 
         for (auto const& [mailId, servMail] : serverMailStore)
         {
-            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_MAIL_SERVER_CHARACTER);
+            CharacterDatabasePreparedStatement* stmt =
+                CharacterDatabase.GetPreparedStatement(CHAR_SEL_MAIL_SERVER_CHARACTER);
             stmt->SetData(0, playerGUID);
             stmt->SetData(1, mailId);
 
             // Capture servMail by value
-            auto callback = [session, servMailWrapper = std::reference_wrapper<ServerMail const>(servMail)](PreparedQueryResult result)
-                {
-                     ServerMail const& servMail = servMailWrapper.get();  // Dereference the wrapper to get the original object
+            auto callback = [session, servMailWrapper = std::reference_wrapper<ServerMail const>(servMail)](
+                                PreparedQueryResult result)
+            {
+                ServerMail const& servMail =
+                    servMailWrapper.get(); // Dereference the wrapper to get the original object
 
-                    if (!result)
-                    {
-                        sObjectMgr->SendServerMail(
-                            session->GetPlayer(),
-                            servMail.id,
-                            servMail.reqLevel,
-                            servMail.reqPlayTime,
-                            servMail.moneyA,
-                            servMail.moneyH,
-                            servMail.itemA,
-                            servMail.itemCountA,
-                            servMail.itemH,
-                            servMail.itemCountH,
-                            servMail.subject,
-                            servMail.body,
-                            servMail.active
-                        );
-                    }
-                };
+                if (!result)
+                {
+                    sObjectMgr->SendServerMail(session->GetPlayer(),
+                        servMail.id,
+                        servMail.reqLevel,
+                        servMail.reqPlayTime,
+                        servMail.moneyA,
+                        servMail.moneyH,
+                        servMail.itemA,
+                        servMail.itemCountA,
+                        servMail.itemH,
+                        servMail.itemCountH,
+                        servMail.subject,
+                        servMail.body,
+                        servMail.active);
+                }
+            };
 
             // Execute the query asynchronously and add the callback
             session->GetQueryProcessor().AddCallback(CharacterDatabase.AsyncQuery(stmt).WithPreparedCallback(callback));

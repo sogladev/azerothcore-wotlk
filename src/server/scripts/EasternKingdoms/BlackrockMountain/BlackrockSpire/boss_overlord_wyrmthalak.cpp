@@ -21,30 +21,30 @@
 
 enum Spells
 {
-    SPELL_BLASTWAVE                 = 11130,
-    SPELL_SHOUT                     = 23511,
-    SPELL_CLEAVE                    = 20691,
-    SPELL_KNOCKAWAY                 = 20686
+    SPELL_BLASTWAVE = 11130,
+    SPELL_SHOUT = 23511,
+    SPELL_CLEAVE = 20691,
+    SPELL_KNOCKAWAY = 20686
 };
 
 enum Events
 {
-    EVENT_BLAST_WAVE                = 1,
-    EVENT_SHOUT                     = 2,
-    EVENT_CLEAVE                    = 3,
-    EVENT_KNOCK_AWAY                = 4
+    EVENT_BLAST_WAVE = 1,
+    EVENT_SHOUT = 2,
+    EVENT_CLEAVE = 3,
+    EVENT_KNOCK_AWAY = 4
 };
 
 enum Adds
 {
-    NPC_SPIRESTONE_WARLORD          = 9216,
-    NPC_SMOLDERTHORN_BERSERKER      = 9268
+    NPC_SPIRESTONE_WARLORD = 9216,
+    NPC_SMOLDERTHORN_BERSERKER = 9268
 };
 
 constexpr uint32 CALL_HELP = 0;
 
-const Position SummonLocation1 = {-49.43f, -455.82f, 77.82f, 4.61f};
-const Position SummonLocation2 = {-58.48f, -456.29f, 77.82f, 4.613f};
+Position const SummonLocation1 = {-49.43f, -455.82f, 77.82f, 4.61f};
+Position const SummonLocation2 = {-58.48f, -456.29f, 77.82f, 4.613f};
 
 class boss_overlord_wyrmthalak : public CreatureScript
 {
@@ -92,9 +92,13 @@ public:
                 Talk(CALL_HELP);
                 if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
                 {
-                    if (Creature* warlord = me->SummonCreature(NPC_SPIRESTONE_WARLORD, SummonLocation1, TEMPSUMMON_TIMED_DESPAWN, 300 * IN_MILLISECONDS))
+                    if (Creature* warlord = me->SummonCreature(
+                            NPC_SPIRESTONE_WARLORD, SummonLocation1, TEMPSUMMON_TIMED_DESPAWN, 300 * IN_MILLISECONDS))
                         warlord->AI()->AttackStart(target);
-                    if (Creature* berserker = me->SummonCreature(NPC_SMOLDERTHORN_BERSERKER, SummonLocation2, TEMPSUMMON_TIMED_DESPAWN, 300 * IN_MILLISECONDS))
+                    if (Creature* berserker = me->SummonCreature(NPC_SMOLDERTHORN_BERSERKER,
+                            SummonLocation2,
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            300 * IN_MILLISECONDS))
                         berserker->AI()->AttackStart(target);
                     Summoned = true;
                 }

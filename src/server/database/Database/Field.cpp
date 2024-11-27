@@ -31,8 +31,7 @@ Field::Field()
 
 namespace
 {
-    template<typename T>
-    constexpr T GetDefaultValue()
+    template <typename T> constexpr T GetDefaultValue()
     {
         if constexpr (std::is_same_v<T, bool>)
             return false;
@@ -46,8 +45,7 @@ namespace
             return "";
     }
 
-    template<typename T>
-    inline bool IsCorrectFieldType(DatabaseFieldTypes type)
+    template <typename T> inline bool IsCorrectFieldType(DatabaseFieldTypes type)
     {
         // Int8
         if constexpr (std::is_same_v<T, bool> || std::is_same_v<T, int8> || std::is_same_v<T, uint8>)
@@ -112,11 +110,10 @@ namespace
 
         alias.remove_suffix(alias.length() - pos);
 
-        return { alias };
+        return {alias};
     }
 
-    template<typename T>
-    inline bool IsCorrectAlias(DatabaseFieldTypes type, std::string_view alias)
+    template <typename T> inline bool IsCorrectAlias(DatabaseFieldTypes type, std::string_view alias)
     {
         if constexpr (std::is_same_v<T, double>)
         {
@@ -135,17 +132,19 @@ namespace
         }
 
         if ((StringEqualI(alias, "min") || StringEqualI(alias, "max")) && IsCorrectFieldType<T>(type))
-        {
             return true;
-        }
 
         return false;
     }
-}
+} // namespace
 
 void Field::GetBinarySizeChecked(uint8* buf, std::size_t length) const
 {
-    ASSERT(data.value && (data.length == length), "Expected {}-byte binary blob, got {}data ({} bytes) instead", length, data.value ? "" : "no ", data.length);
+    ASSERT(data.value && (data.length == length),
+        "Expected {}-byte binary blob, got {}data ({} bytes) instead",
+        length,
+        data.value ? "" : "no ",
+        data.length);
     memcpy(buf, data.value, length);
 }
 
@@ -172,18 +171,23 @@ bool Field::IsType(DatabaseFieldTypes type) const
 
 bool Field::IsNumeric() const
 {
-    return (meta->Type == DatabaseFieldTypes::Int8 ||
-        meta->Type == DatabaseFieldTypes::Int16 ||
-        meta->Type == DatabaseFieldTypes::Int32 ||
-        meta->Type == DatabaseFieldTypes::Int64 ||
-        meta->Type == DatabaseFieldTypes::Float ||
-        meta->Type == DatabaseFieldTypes::Double);
+    return (meta->Type == DatabaseFieldTypes::Int8 || meta->Type == DatabaseFieldTypes::Int16 ||
+            meta->Type == DatabaseFieldTypes::Int32 || meta->Type == DatabaseFieldTypes::Int64 ||
+            meta->Type == DatabaseFieldTypes::Float || meta->Type == DatabaseFieldTypes::Double);
 }
 
 void Field::LogWrongType(std::string_view getter, std::string_view typeName) const
 {
-    LOG_WARN("sql.sql", "Warning: {}<{}> on {} field {}.{} ({}.{}) at index {}.",
-        getter, typeName, meta->TypeName, meta->TableAlias, meta->Alias, meta->TableName, meta->Name, meta->Index);
+    LOG_WARN("sql.sql",
+        "Warning: {}<{}> on {} field {}.{} ({}.{}) at index {}.",
+        getter,
+        typeName,
+        meta->TypeName,
+        meta->TableAlias,
+        meta->Alias,
+        meta->TableName,
+        meta->Name,
+        meta->Index);
 }
 
 void Field::SetMetadata(QueryResultFieldMetadata const* fieldMeta)
@@ -191,8 +195,7 @@ void Field::SetMetadata(QueryResultFieldMetadata const* fieldMeta)
     meta = fieldMeta;
 }
 
-template<typename T>
-T Field::GetData() const
+template <typename T> T Field::GetData() const
 {
     static_assert(std::is_arithmetic_v<T>, "Unsurropt type for Field::GetData()");
 
@@ -226,7 +229,7 @@ T Field::GetData() const
     // Check -1 for *_dbc db tables
     if constexpr (std::is_same_v<T, uint32>)
     {
-        std::string_view tableName{ meta->TableName };
+        std::string_view tableName {meta->TableName};
 
         if (!tableName.empty() && tableName.size() > 4)
         {
@@ -234,8 +237,14 @@ T Field::GetData() const
 
             if (signedResult && !result && tableName.substr(tableName.length() - 4) == "_dbc")
             {
-                LOG_DEBUG("sql.sql", "> Found incorrect value '{}' for type '{}' in _dbc table.", data.value, typeid(T).name());
-                LOG_DEBUG("sql.sql", "> Table name '{}'. Field name '{}'. Try return int32 value", meta->TableName, meta->Name);
+                LOG_DEBUG("sql.sql",
+                    "> Found incorrect value '{}' for type '{}' in _dbc table.",
+                    data.value,
+                    typeid(T).name());
+                LOG_DEBUG("sql.sql",
+                    "> Table name '{}'. Field name '{}'. Try return int32 value",
+                    meta->TableName,
+                    meta->Name);
                 return GetData<int32>();
             }
         }
@@ -244,9 +253,7 @@ T Field::GetData() const
     if (auto alias = GetCleanAliasName(meta->Alias))
     {
         if ((StringEqualI(*alias, "min") || StringEqualI(*alias, "max")) && !IsCorrectAlias<T>(meta->Type, *alias))
-        {
             LogWrongType(__FUNCTION__, typeid(T).name());
-        }
 
         if ((StringEqualI(*alias, "sum") || StringEqualI(*alias, "avg")) && !IsCorrectAlias<T>(meta->Type, *alias))
         {
@@ -265,7 +272,11 @@ T Field::GetData() const
 
     if (!result)
     {
-        LOG_FATAL("sql.sql", "> Incorrect value '{}' for type '{}'. Value is raw ? '{}'", data.value, typeid(T).name(), data.raw);
+        LOG_FATAL("sql.sql",
+            "> Incorrect value '{}' for type '{}'. Value is raw ? '{}'",
+            data.value,
+            typeid(T).name(),
+            data.raw);
         LOG_FATAL("sql.sql", "> Table name '{}'. Field name '{}'", meta->TableName, meta->Name);
         //ABORT();
         return GetDefaultValue<T>();
@@ -299,7 +310,7 @@ std::string Field::GetDataString() const
     }
 #endif
 
-    return { data.value, data.length };
+    return {data.value, data.length};
 }
 
 std::string_view Field::GetDataStringView() const
@@ -315,7 +326,7 @@ std::string_view Field::GetDataStringView() const
     }
 #endif
 
-    return { data.value, data.length };
+    return {data.value, data.length};
 }
 
 Binary Field::GetDataBinary() const

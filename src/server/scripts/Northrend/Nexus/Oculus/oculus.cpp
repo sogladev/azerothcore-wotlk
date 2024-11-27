@@ -32,42 +32,42 @@
 
 enum Drakes
 {
-    SPELL_RIDE_RUBY_DRAKE_QUE               = 49463,
-    SPELL_RIDE_AMBER_DRAKE_QUE              = 49459,
-    SPELL_RIDE_EMERALD_DRAKE_QUE            = 49427,
+    SPELL_RIDE_RUBY_DRAKE_QUE = 49463,
+    SPELL_RIDE_AMBER_DRAKE_QUE = 49459,
+    SPELL_RIDE_EMERALD_DRAKE_QUE = 49427,
 
     // Centrifuge Constructs
-    SPELL_EMPOWERING_BLOWS                  = 50044,
-    H_SPELL_EMPOWERING_BLOWS                = 59213,
+    SPELL_EMPOWERING_BLOWS = 50044,
+    H_SPELL_EMPOWERING_BLOWS = 59213,
 
-    SPELL_AMBER_SHOCK_CHARGE                = 49836,
-    SPELL_RUBY_EVASIVE_CHARGES              = 50241,
+    SPELL_AMBER_SHOCK_CHARGE = 49836,
+    SPELL_RUBY_EVASIVE_CHARGES = 50241,
 
     // Common Drake
-    SPELL_DRAKE_FLAG_VISUAL                 = 53797,
-    SPELL_SOAR_TRIGGER                      = 50325,
-    SPELL_SOAR_BUFF                         = 50024,
-    SPELL_SCALE_STATS                       = 66667,
+    SPELL_DRAKE_FLAG_VISUAL = 53797,
+    SPELL_SOAR_TRIGGER = 50325,
+    SPELL_SOAR_BUFF = 50024,
+    SPELL_SCALE_STATS = 66667,
     // Ruby Drake
-    SPELL_RUBY_EVASIVE_AURA                 = 50248,
-    SPELL_RUBY_EVASIVE_MANEUVERS            = 50240,
+    SPELL_RUBY_EVASIVE_AURA = 50248,
+    SPELL_RUBY_EVASIVE_MANEUVERS = 50240,
 
     // Misc
-    POINT_LAND                              = 2,
-    POINT_TAKE_OFF                          = 3
+    POINT_LAND = 2,
+    POINT_TAKE_OFF = 3
 };
 
 enum DrakeGiverTexts
 {
-    GOSSIP_TEXTID_DRAKES                        = 13267,
-    GOSSIP_TEXTID_BELGARISTRASZ1                = 12916,
-    GOSSIP_TEXTID_BELGARISTRASZ2                = 13254,
-    GOSSIP_TEXTID_VERDISA1                      = 12915,
-    GOSSIP_TEXTID_VERDISA2                      = 13466,
-    GOSSIP_TEXTID_VERDISA3                      = 13258,
-    GOSSIP_TEXTID_ETERNOS1                      = 12917,
-    GOSSIP_TEXTID_ETERNOS2                      = 13466,
-    GOSSIP_TEXTID_ETERNOS3                      = 13256,
+    GOSSIP_TEXTID_DRAKES = 13267,
+    GOSSIP_TEXTID_BELGARISTRASZ1 = 12916,
+    GOSSIP_TEXTID_BELGARISTRASZ2 = 13254,
+    GOSSIP_TEXTID_VERDISA1 = 12915,
+    GOSSIP_TEXTID_VERDISA2 = 13466,
+    GOSSIP_TEXTID_VERDISA3 = 13258,
+    GOSSIP_TEXTID_ETERNOS1 = 12917,
+    GOSSIP_TEXTID_ETERNOS2 = 13466,
+    GOSSIP_TEXTID_ETERNOS3 = 13256,
 };
 
 #define HAS_ESSENCE(a) ((a)->HasItemCount(ITEM_EMERALD_ESSENCE) || (a)->HasItemCount(ITEM_AMBER_ESSENCE) || (a)->HasItemCount(ITEM_RUBY_ESSENCE))
@@ -75,7 +75,7 @@ enum DrakeGiverTexts
 class npc_oculus_drakegiver : public CreatureScript
 {
 public:
-    std::unordered_map<ObjectGuid, bool>openedMenu;
+    std::unordered_map<ObjectGuid, bool> openedMenu;
 
     npc_oculus_drakegiver() : CreatureScript("npc_oculus_drakegiver") { }
 
@@ -84,7 +84,8 @@ public:
         return GetOculusAI<npc_oculus_drakegiverAI>(creature);
     }
 
-    struct  npc_oculus_drakegiverAI : public ScriptedAI {
+    struct npc_oculus_drakegiverAI : public ScriptedAI
+    {
         npc_oculus_drakegiverAI(Creature* creature) : ScriptedAI(creature)
         {
             m_pInstance = me->GetInstanceScript();
@@ -93,7 +94,8 @@ public:
                 resetPosition = true;
                 moved = true;
             }
-            else {
+            else
+            {
                 moved = false;
                 resetPosition = false;
             }
@@ -118,15 +120,15 @@ public:
                         me->SetWalk(true);
                         switch (me->GetEntry())
                         {
-                        case NPC_VERDISA:
-                            me->GetMotionMaster()->MovePoint(POINT_MOVE_DRAKES, VerdisaPOS);
-                            break;
-                        case NPC_BELGARISTRASZ:
-                            me->GetMotionMaster()->MovePoint(POINT_MOVE_DRAKES, BelgaristraszPOS);
-                            break;
-                        case NPC_ETERNOS:
-                            me->GetMotionMaster()->MovePoint(POINT_MOVE_DRAKES, EternosPOS);
-                            break;
+                            case NPC_VERDISA:
+                                me->GetMotionMaster()->MovePoint(POINT_MOVE_DRAKES, VerdisaPOS);
+                                break;
+                            case NPC_BELGARISTRASZ:
+                                me->GetMotionMaster()->MovePoint(POINT_MOVE_DRAKES, BelgaristraszPOS);
+                                break;
+                            case NPC_ETERNOS:
+                                me->GetMotionMaster()->MovePoint(POINT_MOVE_DRAKES, EternosPOS);
+                                break;
                         }
                     }
                 }
@@ -135,15 +137,15 @@ public:
                     me->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_QUESTGIVER);
                     switch (me->GetEntry())
                     {
-                    case NPC_VERDISA:
-                        me->SetPosition(VerdisaPOS);
-                        break;
-                    case NPC_BELGARISTRASZ:
-                        me->SetPosition(BelgaristraszPOS);
-                        break;
-                    case NPC_ETERNOS:
-                        me->SetPosition(EternosPOS);
-                        break;
+                        case NPC_VERDISA:
+                            me->SetPosition(VerdisaPOS);
+                            break;
+                        case NPC_BELGARISTRASZ:
+                            me->SetPosition(BelgaristraszPOS);
+                            break;
+                        case NPC_ETERNOS:
+                            me->SetPosition(EternosPOS);
+                            break;
                     }
                     resetPosition = false;
                 }
@@ -153,14 +155,10 @@ public:
         void MovementInform(uint32 /*type*/, uint32 id) override
         {
             if (id != POINT_MOVE_DRAKES)
-            {
                 return;
-            }
 
             if (me->GetEntry() == NPC_BELGARISTRASZ)
-            {
                 Talk(SAY_BELGARISTRASZ);
-            }
             me->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_QUESTGIVER);
         }
     };
@@ -174,56 +172,42 @@ public:
         {
             switch (creature->GetEntry())
             {
-            case NPC_VERDISA:
-                AddGossipItemFor(player, 9573, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-                if (player->HasItemCount(ITEM_AMBER_ESSENCE))
-                {
-                    AddGossipItemFor(player, 9573, 2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                }
-                else if (player->HasItemCount(ITEM_RUBY_ESSENCE))
-                {
-                    AddGossipItemFor(player, 9573, 3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                }
-                else if (!player->HasItemCount(ITEM_EMERALD_ESSENCE))
-                {
-                    AddGossipItemFor(player, 9573, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                }
-                AddGossipItemFor(player, 9573, 4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-                SendGossipMenuFor(player, GOSSIP_TEXTID_VERDISA1, creature->GetGUID());
-                break;
-            case NPC_BELGARISTRASZ:
-                if (HAS_ESSENCE(player))
-                {
-                    openedMenu[player->GetGUID()] = true;
-                }
+                case NPC_VERDISA:
+                    AddGossipItemFor(player, 9573, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+                    if (player->HasItemCount(ITEM_AMBER_ESSENCE))
+                        AddGossipItemFor(player, 9573, 2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                    else if (player->HasItemCount(ITEM_RUBY_ESSENCE))
+                        AddGossipItemFor(player, 9573, 3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    else if (!player->HasItemCount(ITEM_EMERALD_ESSENCE))
+                        AddGossipItemFor(player, 9573, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    AddGossipItemFor(player, 9573, 4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                    SendGossipMenuFor(player, GOSSIP_TEXTID_VERDISA1, creature->GetGUID());
+                    break;
+                case NPC_BELGARISTRASZ:
+                    if (HAS_ESSENCE(player))
+                        openedMenu[player->GetGUID()] = true;
 
-                if (!openedMenu[player->GetGUID()])
-                {
-                    AddGossipItemFor(player, 9708, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-                    SendGossipMenuFor(player, GOSSIP_TEXTID_DRAKES, creature->GetGUID());
-                }
-                else
-                {
-                    OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-                }
-                break;
-            case NPC_ETERNOS:
-                AddGossipItemFor(player, 9574, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-                if (player->HasItemCount(ITEM_EMERALD_ESSENCE))
-                {
-                    AddGossipItemFor(player, 9574, 2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                }
-                else if (player->HasItemCount(ITEM_RUBY_ESSENCE))
-                {
-                    AddGossipItemFor(player, 9574, 3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                }
-                else if (!player->HasItemCount(ITEM_AMBER_ESSENCE))
-                {
-                    AddGossipItemFor(player, 9574, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                }
-                AddGossipItemFor(player, 9574, 4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-                SendGossipMenuFor(player, GOSSIP_TEXTID_ETERNOS1, creature->GetGUID());
-                break;
+                    if (!openedMenu[player->GetGUID()])
+                    {
+                        AddGossipItemFor(player, 9708, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+                        SendGossipMenuFor(player, GOSSIP_TEXTID_DRAKES, creature->GetGUID());
+                    }
+                    else
+                    {
+                        OnGossipSelect(player, creature, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+                    }
+                    break;
+                case NPC_ETERNOS:
+                    AddGossipItemFor(player, 9574, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+                    if (player->HasItemCount(ITEM_EMERALD_ESSENCE))
+                        AddGossipItemFor(player, 9574, 2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                    else if (player->HasItemCount(ITEM_RUBY_ESSENCE))
+                        AddGossipItemFor(player, 9574, 3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    else if (!player->HasItemCount(ITEM_AMBER_ESSENCE))
+                        AddGossipItemFor(player, 9574, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    AddGossipItemFor(player, 9574, 4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                    SendGossipMenuFor(player, GOSSIP_TEXTID_ETERNOS1, creature->GetGUID());
+                    break;
             }
         }
 
@@ -237,9 +221,7 @@ public:
         if (msg == EQUIP_ERR_OK)
         {
             if (Item* item = player->StoreNewItem(dest, itemId, true))
-            {
                 player->SendNewItem(item, 1, true, true);
-            }
         }
     }
 
@@ -253,77 +235,71 @@ public:
         ClearGossipMenuFor(player);
         switch (creature->GetEntry())
         {
-        case NPC_VERDISA:
-            switch (uiAction)
-            {
-            case GOSSIP_ACTION_INFO_DEF:
-                SendGossipMenuFor(player, GOSSIP_TEXTID_VERDISA2, creature->GetGUID());
-                return true;
-            case GOSSIP_ACTION_INFO_DEF + 4:
-                SendGossipMenuFor(player, GOSSIP_TEXTID_VERDISA3, creature->GetGUID());
-                return true;
-            case GOSSIP_ACTION_INFO_DEF + 1:
-                RemoveEssence(player, ITEM_AMBER_ESSENCE);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 2:
-                RemoveEssence(player, ITEM_RUBY_ESSENCE);
-                break;
-            }
-            StoreEssence(player, ITEM_EMERALD_ESSENCE);
-            CloseGossipMenuFor(player);
-            break;
-        case NPC_BELGARISTRASZ:
-            switch (uiAction)
-            {
-            case GOSSIP_ACTION_INFO_DEF:
-                openedMenu[player->GetGUID()] = true;
-                if (player->HasItemCount(ITEM_AMBER_ESSENCE))
+            case NPC_VERDISA:
+                switch (uiAction)
                 {
-                    AddGossipItemFor(player, 9575, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                    case GOSSIP_ACTION_INFO_DEF:
+                        SendGossipMenuFor(player, GOSSIP_TEXTID_VERDISA2, creature->GetGUID());
+                        return true;
+                    case GOSSIP_ACTION_INFO_DEF + 4:
+                        SendGossipMenuFor(player, GOSSIP_TEXTID_VERDISA3, creature->GetGUID());
+                        return true;
+                    case GOSSIP_ACTION_INFO_DEF + 1:
+                        RemoveEssence(player, ITEM_AMBER_ESSENCE);
+                        break;
+                    case GOSSIP_ACTION_INFO_DEF + 2:
+                        RemoveEssence(player, ITEM_RUBY_ESSENCE);
+                        break;
                 }
-                else if (player->HasItemCount(ITEM_EMERALD_ESSENCE))
+                StoreEssence(player, ITEM_EMERALD_ESSENCE);
+                CloseGossipMenuFor(player);
+                break;
+            case NPC_BELGARISTRASZ:
+                switch (uiAction)
                 {
-                    AddGossipItemFor(player, 9575, 2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    case GOSSIP_ACTION_INFO_DEF:
+                        openedMenu[player->GetGUID()] = true;
+                        if (player->HasItemCount(ITEM_AMBER_ESSENCE))
+                            AddGossipItemFor(player, 9575, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                        else if (player->HasItemCount(ITEM_EMERALD_ESSENCE))
+                            AddGossipItemFor(player, 9575, 2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                        else if (!player->HasItemCount(ITEM_RUBY_ESSENCE))
+                            AddGossipItemFor(player, 9575, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                        AddGossipItemFor(player, 9575, 3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                        SendGossipMenuFor(player, GOSSIP_TEXTID_BELGARISTRASZ1, creature->GetGUID());
+                        return true;
+                    case GOSSIP_ACTION_INFO_DEF + 4:
+                        SendGossipMenuFor(player, GOSSIP_TEXTID_BELGARISTRASZ2, creature->GetGUID());
+                        return true;
+                    case GOSSIP_ACTION_INFO_DEF + 1:
+                        RemoveEssence(player, ITEM_AMBER_ESSENCE);
+                        break;
+                    case GOSSIP_ACTION_INFO_DEF + 2:
+                        RemoveEssence(player, ITEM_EMERALD_ESSENCE);
+                        break;
                 }
-                else if (!player->HasItemCount(ITEM_RUBY_ESSENCE))
+                StoreEssence(player, ITEM_RUBY_ESSENCE);
+                CloseGossipMenuFor(player);
+                break;
+            case NPC_ETERNOS:
+                switch (uiAction)
                 {
-                    AddGossipItemFor(player, 9575, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    case GOSSIP_ACTION_INFO_DEF:
+                        SendGossipMenuFor(player, GOSSIP_TEXTID_ETERNOS2, creature->GetGUID());
+                        return true;
+                    case GOSSIP_ACTION_INFO_DEF + 4:
+                        SendGossipMenuFor(player, GOSSIP_TEXTID_ETERNOS3, creature->GetGUID());
+                        return true;
+                    case GOSSIP_ACTION_INFO_DEF + 1:
+                        RemoveEssence(player, ITEM_EMERALD_ESSENCE);
+                        break;
+                    case GOSSIP_ACTION_INFO_DEF + 2:
+                        RemoveEssence(player, ITEM_RUBY_ESSENCE);
+                        break;
                 }
-                AddGossipItemFor(player, 9575, 3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-                SendGossipMenuFor(player, GOSSIP_TEXTID_BELGARISTRASZ1, creature->GetGUID());
-                return true;
-            case GOSSIP_ACTION_INFO_DEF + 4:
-                SendGossipMenuFor(player, GOSSIP_TEXTID_BELGARISTRASZ2, creature->GetGUID());
-                return true;
-            case GOSSIP_ACTION_INFO_DEF + 1:
-                RemoveEssence(player, ITEM_AMBER_ESSENCE);
+                StoreEssence(player, ITEM_AMBER_ESSENCE);
+                CloseGossipMenuFor(player);
                 break;
-            case GOSSIP_ACTION_INFO_DEF + 2:
-                RemoveEssence(player, ITEM_EMERALD_ESSENCE);
-                break;
-            }
-            StoreEssence(player, ITEM_RUBY_ESSENCE);
-            CloseGossipMenuFor(player);
-            break;
-        case NPC_ETERNOS:
-            switch (uiAction)
-            {
-            case GOSSIP_ACTION_INFO_DEF:
-                SendGossipMenuFor(player, GOSSIP_TEXTID_ETERNOS2, creature->GetGUID());
-                return true;
-            case GOSSIP_ACTION_INFO_DEF + 4:
-                SendGossipMenuFor(player, GOSSIP_TEXTID_ETERNOS3, creature->GetGUID());
-                return true;
-            case GOSSIP_ACTION_INFO_DEF + 1:
-                RemoveEssence(player, ITEM_EMERALD_ESSENCE);
-                break;
-            case GOSSIP_ACTION_INFO_DEF + 2:
-                RemoveEssence(player, ITEM_RUBY_ESSENCE);
-                break;
-            }
-            StoreEssence(player, ITEM_AMBER_ESSENCE);
-            CloseGossipMenuFor(player);
-            break;
         }
 
         return true;
@@ -355,9 +331,7 @@ public:
         void IsSummonedBy(WorldObject* summoner) override
         {
             if (!summoner->IsPlayer())
-            {
                 return;
-            }
 
             if (m_pInstance->GetBossState(DATA_EREGOS) == IN_PROGRESS)
                 if (Creature* eregos = me->FindNearestCreature(NPC_EREGOS, 450.0f, true))
@@ -387,7 +361,8 @@ public:
         void MovementInform(uint32 type, uint32 id) override
         {
             if (type == POINT_MOTION_TYPE && id == POINT_LAND)
-                me->SetDisableGravity(false); // Needed this for proper animation after spawn, the summon in air fall to ground bug leave no other option for now, if this isn't used the drake will only walk on move.
+                me->SetDisableGravity(
+                    false); // Needed this for proper animation after spawn, the summon in air fall to ground bug leave no other option for now, if this isn't used the drake will only walk on move.
         }
 
         void PassengerBoarded(Unit* passenger, int8 /*seatid*/, bool add) override
@@ -405,7 +380,7 @@ public:
                 me->SetOrientation(2.5f);
                 me->SetSpeedRate(MOVE_FLIGHT, 1.0f);
                 Position pos = me->GetPosition();
-                Position offset = { 10.0f, 10.0f, 12.0f, 0.0f };
+                Position offset = {10.0f, 10.0f, 12.0f, 0.0f};
                 pos.RelocateOffset(offset);
                 me->SetDisableGravity(true);
                 me->GetMotionMaster()->MovePoint(POINT_TAKE_OFF, pos);
@@ -414,10 +389,11 @@ public:
 
         void SpellHitTarget(Unit* target, SpellInfo const* spell) override
         {
-            for( uint8 i = 0; i < 8; ++i )
+            for (uint8 i = 0; i < 8; ++i)
                 if (me->m_spells[i] == spell->Id)
                 {
-                    if (target && target->IsAlive() && !target->CanFly() && target->IsHostileTo(me) && !spell->IsTargetingArea())
+                    if (target && target->IsAlive() && !target->CanFly() && target->IsHostileTo(me) &&
+                        !spell->IsTargetingArea())
                     {
                         if (Unit* charmer = me->GetCharmer())
                             Unit::Kill(charmer, charmer, false);
@@ -462,7 +438,7 @@ public:
                         me->SetOrientation(2.5f);
                         me->SetSpeedRate(MOVE_FLIGHT, 1.0f);
                         Position pos = me->GetPosition();
-                        Position offset = { 10.0f, 10.0f, 12.0f, 0.0f };
+                        Position offset = {10.0f, 10.0f, 12.0f, 0.0f};
                         pos.RelocateOffset(offset);
                         me->SetDisableGravity(true);
                         me->GetMotionMaster()->MovePoint(POINT_TAKE_OFF, pos);
@@ -478,7 +454,7 @@ public:
                     me->DespawnOrUnsummon(2050);
                     me->SetOrientation(2.5f);
                     Position pos = me->GetPosition();
-                    Position offset = { 10.0f, 10.0f, 12.0f, 0.0f };
+                    Position offset = {10.0f, 10.0f, 12.0f, 0.0f};
                     pos.RelocateOffset(offset);
                     return;
                 }
@@ -498,9 +474,9 @@ public:
 
     struct npc_centrifuge_constructAI : public ScriptedAI
     {
-        npc_centrifuge_constructAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_centrifuge_constructAI(Creature* creature) : ScriptedAI(creature) { }
 
-        void Reset() override {}
+        void Reset() override { }
 
         void JustEngagedWith(Unit* /*who*/) override
         {
@@ -525,6 +501,7 @@ public:
             }
         }
     };
+
     CreatureAI* GetAI(Creature* creature) const override
     {
         return GetOculusAI<npc_centrifuge_constructAI>(creature);
@@ -538,7 +515,7 @@ class spell_oculus_stop_time_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_AMBER_SHOCK_CHARGE });
+        return ValidateSpellInfo({SPELL_AMBER_SHOCK_CHARGE});
     }
 
     void Apply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -554,7 +531,8 @@ class spell_oculus_stop_time_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_oculus_stop_time_aura::Apply, EFFECT_0, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(
+            spell_oculus_stop_time_aura::Apply, EFFECT_0, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -565,7 +543,7 @@ class spell_oculus_evasive_maneuvers_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_RUBY_EVASIVE_CHARGES });
+        return ValidateSpellInfo({SPELL_RUBY_EVASIVE_CHARGES});
     }
 
     void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& /*eventInfo*/)
@@ -578,7 +556,8 @@ class spell_oculus_evasive_maneuvers_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectProc += AuraEffectProcFn(spell_oculus_evasive_maneuvers_aura::HandleProc, EFFECT_2, SPELL_AURA_PROC_TRIGGER_SPELL);
+        OnEffectProc +=
+            AuraEffectProcFn(spell_oculus_evasive_maneuvers_aura::HandleProc, EFFECT_2, SPELL_AURA_PROC_TRIGGER_SPELL);
     }
 };
 
@@ -589,14 +568,15 @@ class spell_oculus_shock_lance : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_AMBER_SHOCK_CHARGE });
+        return ValidateSpellInfo({SPELL_AMBER_SHOCK_CHARGE});
     }
 
     void CalcDamage()
     {
         int32 damage = GetHitDamage();
         if (Unit* target = GetHitUnit())
-            if (Aura* aura = target->GetAura(SPELL_AMBER_SHOCK_CHARGE, GetCaster()->GetGUID())) // shock charges from same caster
+            if (Aura* aura =
+                    target->GetAura(SPELL_AMBER_SHOCK_CHARGE, GetCaster()->GetGUID())) // shock charges from same caster
             {
                 damage += aura->GetStackAmount() * 6525;
                 aura->Remove();
@@ -618,7 +598,7 @@ class spell_oculus_temporal_rift_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_AMBER_SHOCK_CHARGE });
+        return ValidateSpellInfo({SPELL_AMBER_SHOCK_CHARGE});
     }
 
     void HandleProc(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
@@ -628,9 +608,7 @@ class spell_oculus_temporal_rift_aura : public AuraScript
         DamageInfo* damageInfo = eventInfo.GetDamageInfo();
 
         if (!damageInfo || !damageInfo->GetDamage())
-        {
             return;
-        }
 
         int32 amount = aurEff->GetAmount() + damageInfo->GetDamage();
 
@@ -638,7 +616,7 @@ class spell_oculus_temporal_rift_aura : public AuraScript
         if (amount >= 15000)
         {
             if (Unit* caster = GetCaster())
-                for (uint8 i  = 0; i < num; ++i )
+                for (uint8 i = 0; i < num; ++i)
                     caster->CastSpell(GetTarget(), SPELL_AMBER_SHOCK_CHARGE, true);
         }
 
@@ -663,7 +641,8 @@ class spell_oculus_touch_the_nightmare : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_oculus_touch_the_nightmare::HandleDamageCalc, EFFECT_2, SPELL_EFFECT_SCHOOL_DAMAGE);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_oculus_touch_the_nightmare::HandleDamageCalc, EFFECT_2, SPELL_EFFECT_SCHOOL_DAMAGE);
     }
 };
 
@@ -682,8 +661,10 @@ class spell_oculus_dream_funnel_aura : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_oculus_dream_funnel_aura::HandleEffectCalcAmount, EFFECT_0, SPELL_AURA_PERIODIC_HEAL);
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_oculus_dream_funnel_aura::HandleEffectCalcAmount, EFFECT_2, SPELL_AURA_PERIODIC_DAMAGE);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(
+            spell_oculus_dream_funnel_aura::HandleEffectCalcAmount, EFFECT_0, SPELL_AURA_PERIODIC_HEAL);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(
+            spell_oculus_dream_funnel_aura::HandleEffectCalcAmount, EFFECT_2, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 
@@ -694,13 +675,14 @@ class spell_oculus_call_ruby_emerald_amber_drake : public SpellScript
     void SetDest(SpellDestination& dest)
     {
         // Adjust effect summon position
-        Position const offset = { 0.0f, 0.0f, 12.0f, 0.0f };
+        Position const offset = {0.0f, 0.0f, 12.0f, 0.0f};
         dest.RelocateOffset(offset);
     }
 
     void Register() override
     {
-        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_oculus_call_ruby_emerald_amber_drake::SetDest, EFFECT_0, TARGET_DEST_CASTER_FRONT);
+        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(
+            spell_oculus_call_ruby_emerald_amber_drake::SetDest, EFFECT_0, TARGET_DEST_CASTER_FRONT);
     }
 };
 
@@ -718,7 +700,9 @@ class spell_oculus_ride_ruby_emerald_amber_drake_que_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_oculus_ride_ruby_emerald_amber_drake_que_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(spell_oculus_ride_ruby_emerald_amber_drake_que_aura::HandlePeriodic,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -728,7 +712,7 @@ class spell_oculus_evasive_charges_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_RUBY_EVASIVE_MANEUVERS });
+        return ValidateSpellInfo({SPELL_RUBY_EVASIVE_MANEUVERS});
     }
 
     void HandleOnEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -748,8 +732,14 @@ class spell_oculus_evasive_charges_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_oculus_evasive_charges_aura::HandleOnEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
-        OnEffectRemove += AuraEffectRemoveFn(spell_oculus_evasive_charges_aura::HandleOnEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_oculus_evasive_charges_aura::HandleOnEffectApply,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        OnEffectRemove += AuraEffectRemoveFn(spell_oculus_evasive_charges_aura::HandleOnEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -759,7 +749,7 @@ class spell_oculus_soar_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SOAR_BUFF });
+        return ValidateSpellInfo({SPELL_SOAR_BUFF});
     }
 
     void HandleEffectPeriodic(AuraEffect const* /*aurEff*/)
@@ -799,8 +789,12 @@ class spell_oculus_soar_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_oculus_soar_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
-        OnEffectApply += AuraEffectApplyFn(spell_oculus_soar_aura::HandleOnEffectApply, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_oculus_soar_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectApply += AuraEffectApplyFn(spell_oculus_soar_aura::HandleOnEffectApply,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -810,7 +804,7 @@ class spell_oculus_rider_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SOAR_TRIGGER, SPELL_RUBY_EVASIVE_AURA, SPELL_DRAKE_FLAG_VISUAL });
+        return ValidateSpellInfo({SPELL_SOAR_TRIGGER, SPELL_RUBY_EVASIVE_AURA, SPELL_DRAKE_FLAG_VISUAL});
     }
 
     ObjectGuid _drakeGUID;
@@ -866,9 +860,18 @@ class spell_oculus_rider_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_oculus_rider_aura::HandleOnEffectApply, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
-        OnEffectApply += AuraEffectApplyFn(spell_oculus_rider_aura::HandleOnEffectApply, EFFECT_2, SPELL_AURA_LINKED, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
-        OnEffectRemove += AuraEffectRemoveFn(spell_oculus_rider_aura::HandleOnEffectRemove, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        OnEffectApply += AuraEffectApplyFn(spell_oculus_rider_aura::HandleOnEffectApply,
+            EFFECT_1,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        OnEffectApply += AuraEffectApplyFn(spell_oculus_rider_aura::HandleOnEffectApply,
+            EFFECT_2,
+            SPELL_AURA_LINKED,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        OnEffectRemove += AuraEffectRemoveFn(spell_oculus_rider_aura::HandleOnEffectRemove,
+            EFFECT_1,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
     }
 };
 
@@ -878,7 +881,7 @@ class spell_oculus_drake_flag_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRAKE_FLAG_VISUAL });
+        return ValidateSpellInfo({SPELL_DRAKE_FLAG_VISUAL});
     }
 
     void HandleOnEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -899,7 +902,10 @@ class spell_oculus_drake_flag_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_oculus_drake_flag_aura::HandleOnEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        OnEffectApply += AuraEffectApplyFn(spell_oculus_drake_flag_aura::HandleOnEffectApply,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
     }
 };
 

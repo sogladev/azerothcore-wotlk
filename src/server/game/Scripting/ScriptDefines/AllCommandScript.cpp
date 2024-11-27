@@ -22,21 +22,26 @@
 
 void ScriptMgr::OnHandleDevCommand(Player* player, bool& enable)
 {
-    CALL_ENABLED_HOOKS(AllCommandScript, ALLCOMMANDHOOK_ON_HANDLE_DEV_COMMAND, script->OnHandleDevCommand(player, enable));
+    CALL_ENABLED_HOOKS(
+        AllCommandScript, ALLCOMMANDHOOK_ON_HANDLE_DEV_COMMAND, script->OnHandleDevCommand(player, enable));
 }
 
 bool ScriptMgr::OnTryExecuteCommand(ChatHandler& handler, std::string_view cmdStr)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(AllCommandScript, ALLCOMMANDHOOK_ON_TRY_EXECUTE_COMMAND, !script->OnTryExecuteCommand(handler, cmdStr));
+    CALL_ENABLED_BOOLEAN_HOOKS(
+        AllCommandScript, ALLCOMMANDHOOK_ON_TRY_EXECUTE_COMMAND, !script->OnTryExecuteCommand(handler, cmdStr));
 }
 
-bool ScriptMgr::OnBeforeIsInvokerVisible(std::string name, Acore::Impl::ChatCommands::CommandPermissions permissions, ChatHandler const& who)
+bool ScriptMgr::OnBeforeIsInvokerVisible(
+    std::string name, Acore::Impl::ChatCommands::CommandPermissions permissions, ChatHandler const& who)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(AllCommandScript, ALLCOMMANDHOOK_ON_BEFORE_IS_INVOKER_VISIBLE, !script->OnBeforeIsInvokerVisible(name, permissions, who));
+    CALL_ENABLED_BOOLEAN_HOOKS(AllCommandScript,
+        ALLCOMMANDHOOK_ON_BEFORE_IS_INVOKER_VISIBLE,
+        !script->OnBeforeIsInvokerVisible(name, permissions, who));
 }
 
-AllCommandScript::AllCommandScript(const char* name, std::vector<uint16> enabledHooks)
-    : ScriptObject(name, ALLCOMMANDHOOK_END)
+AllCommandScript::AllCommandScript(char const* name, std::vector<uint16> enabledHooks) :
+    ScriptObject(name, ALLCOMMANDHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

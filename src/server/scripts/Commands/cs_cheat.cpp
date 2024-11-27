@@ -30,21 +30,19 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable cheatCommandTable =
-        {
-            { "god",       HandleGodModeCheatCommand,   SEC_GAMEMASTER, Console::No },
-            { "casttime",  HandleCasttimeCheatCommand,  SEC_GAMEMASTER, Console::No },
-            { "cooldown",  HandleCoolDownCheatCommand,  SEC_GAMEMASTER, Console::No },
-            { "power",     HandlePowerCheatCommand,     SEC_GAMEMASTER, Console::No },
-            { "waterwalk", HandleWaterWalkCheatCommand, SEC_GAMEMASTER, Console::No },
-            { "status",    HandleCheatStatusCommand,    SEC_GAMEMASTER, Console::No },
-            { "taxi",      HandleTaxiCheatCommand,      SEC_GAMEMASTER, Console::No },
-            { "explore",   HandleExploreCheatCommand,   SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable cheatCommandTable = {
+            {"god",       HandleGodModeCheatCommand,   SEC_GAMEMASTER, Console::No},
+            {"casttime",  HandleCasttimeCheatCommand,  SEC_GAMEMASTER, Console::No},
+            {"cooldown",  HandleCoolDownCheatCommand,  SEC_GAMEMASTER, Console::No},
+            {"power",     HandlePowerCheatCommand,     SEC_GAMEMASTER, Console::No},
+            {"waterwalk", HandleWaterWalkCheatCommand, SEC_GAMEMASTER, Console::No},
+            {"status",    HandleCheatStatusCommand,    SEC_GAMEMASTER, Console::No},
+            {"taxi",      HandleTaxiCheatCommand,      SEC_GAMEMASTER, Console::No},
+            {"explore",   HandleExploreCheatCommand,   SEC_GAMEMASTER, Console::No}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "cheat", cheatCommandTable }
+        static ChatCommandTable commandTable = {
+            {"cheat", cheatCommandTable}
         };
         return commandTable;
     }
@@ -156,13 +154,13 @@ public:
         if (enable)
         {
             handler->GetSession()->GetPlayer()->SetCommandStatusOn(CHEAT_WATERWALK);
-            handler->GetSession()->GetPlayer()->SetMovement(MOVE_WATER_WALK);               // ON
+            handler->GetSession()->GetPlayer()->SetMovement(MOVE_WATER_WALK); // ON
             handler->SendSysMessage("Waterwalking is ON. You can walk on water.");
         }
         else
         {
             handler->GetSession()->GetPlayer()->SetCommandStatusOff(CHEAT_WATERWALK);
-            handler->GetSession()->GetPlayer()->SetMovement(MOVE_LAND_WALK);                // OFF
+            handler->GetSession()->GetPlayer()->SetMovement(MOVE_LAND_WALK); // OFF
             handler->SendSysMessage("Waterwalking is OFF. You can't walk on water.");
         }
 
@@ -223,12 +221,10 @@ public:
         }
 
         for (uint8 i = 0; i < PLAYER_EXPLORED_ZONES_SIZE; ++i)
-        {
             if (reveal)
-                handler->GetSession()->GetPlayer()->SetFlag(PLAYER_EXPLORED_ZONES_1+i, 0xFFFFFFFF);
+                handler->GetSession()->GetPlayer()->SetFlag(PLAYER_EXPLORED_ZONES_1 + i, 0xFFFFFFFF);
             else
-                handler->GetSession()->GetPlayer()->SetFlag(PLAYER_EXPLORED_ZONES_1+i, 0);
-        }
+                handler->GetSession()->GetPlayer()->SetFlag(PLAYER_EXPLORED_ZONES_1 + i, 0);
 
         return true;
     }

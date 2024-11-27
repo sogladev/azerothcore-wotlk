@@ -23,62 +23,54 @@
 
 enum Yells
 {
-    SAY_AGGRO                   = 0,
-    SAY_SPECIAL                 = 1,
-    SAY_KILL                    = 2,
-    SAY_DEATH                   = 3,
-    SAY_OUT_OF_COMBAT           = 4,
+    SAY_AGGRO = 0,
+    SAY_SPECIAL = 1,
+    SAY_KILL = 2,
+    SAY_DEATH = 3,
+    SAY_OUT_OF_COMBAT = 4,
 
-    SAY_GUEST                   = 0
+    SAY_GUEST = 0
 };
 
 enum Spells
 {
-    SPELL_VANISH                = 29448,
-    SPELL_GARROTE_DUMMY         = 29433,
-    SPELL_GARROTE               = 37066,
-    SPELL_BLIND                 = 34694,
-    SPELL_GOUGE                 = 29425,
-    SPELL_FRENZY                = 37023,
-    SPELL_DUAL_WIELD            = 29651,
-    SPELL_BERSERK               = 26662,
-    SPELL_VANISH_TELEPORT       = 29431
+    SPELL_VANISH = 29448,
+    SPELL_GARROTE_DUMMY = 29433,
+    SPELL_GARROTE = 37066,
+    SPELL_BLIND = 34694,
+    SPELL_GOUGE = 29425,
+    SPELL_FRENZY = 37023,
+    SPELL_DUAL_WIELD = 29651,
+    SPELL_BERSERK = 26662,
+    SPELL_VANISH_TELEPORT = 29431
 };
 
 enum Misc
 {
-    ACTIVE_GUEST_COUNT          = 4,
-    MAX_GUEST_COUNT             = 6
+    ACTIVE_GUEST_COUNT = 4,
+    MAX_GUEST_COUNT = 6
 };
 
 enum Groups
 {
-    GROUP_PRECOMBAT_TALK        = 0
+    GROUP_PRECOMBAT_TALK = 0
 };
 
-const Position GuestsPosition[4] =
-{
+Position const GuestsPosition[4] = {
     {-10987.38f, -1883.38f, 81.73f, 1.50f},
     {-10989.60f, -1881.27f, 81.73f, 0.73f},
     {-10978.81f, -1884.08f, 81.73f, 1.50f},
     {-10976.38f, -1882.59f, 81.73f, 2.31f}
 };
 
-const uint32 GuestEntries[6] =
-{
-    17007, 19872, 19873,
-    19874, 19875, 19876
-};
+uint32 const GuestEntries[6] = {17007, 19872, 19873, 19874, 19875, 19876};
 
 struct boss_moroes : public BossAI
 {
     boss_moroes(Creature* creature) : BossAI(creature, DATA_MOROES)
     {
         _activeGuests = 0;
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void InitializeAI() override
@@ -106,21 +98,22 @@ struct boss_moroes : public BossAI
             _activeGuests &= ~(rand1 | rand2);
         }
         for (uint8 i = 0; i < MAX_GUEST_COUNT; ++i)
-        {
             if ((1 << i) & _activeGuests)
-            {
                 me->SummonCreature(GuestEntries[i], GuestsPosition[summons.size()], TEMPSUMMON_MANUAL_DESPAWN);
-            }
-        }
 
-        scheduler.Schedule(10s, GROUP_PRECOMBAT_TALK, [this](TaskContext context)
+        scheduler
+            .Schedule(10s,
+                GROUP_PRECOMBAT_TALK,
+                [this](TaskContext context)
         {
             if (Creature* guest = GetRandomGuest())
-            {
                 guest->AI()->Talk(SAY_GUEST);
-            }
             context.Repeat(5s);
-        }).Schedule(1min, 2min, GROUP_PRECOMBAT_TALK, [this](TaskContext context)
+        })
+            .Schedule(1min,
+                2min,
+                GROUP_PRECOMBAT_TALK,
+                [this](TaskContext context)
         {
             Talk(SAY_OUT_OF_COMBAT);
             context.Repeat(1min, 2min);
@@ -134,9 +127,7 @@ struct boss_moroes : public BossAI
         _recentlySpoken = false;
         _vanished = false;
 
-        ScheduleHealthCheckEvent(30, [&] {
-            DoCastSelf(SPELL_FRENZY, true);
-        });
+        ScheduleHealthCheckEvent(30, [&] { DoCastSelf(SPELL_FRENZY, true); });
     }
 
     void JustEngagedWith(Unit* who) override
@@ -147,14 +138,18 @@ struct boss_moroes : public BossAI
         DoZoneInCombat();
         scheduler.CancelGroup(GROUP_PRECOMBAT_TALK);
 
-        scheduler.Schedule(30s, [this](TaskContext context)
+        scheduler
+            .Schedule(30s,
+                [this](TaskContext context)
         {
             scheduler.DelayAll(9s);
             _vanished = true;
             Talk(SAY_SPECIAL);
             DoCastSelf(SPELL_VANISH);
             me->SetImmuneToAll(true);
-            scheduler.Schedule(5s, 7s, [this](TaskContext)
+            scheduler.Schedule(5s,
+                7s,
+                [this](TaskContext)
             {
                 me->SetImmuneToAll(false);
                 DoCastSelf(SPELL_VANISH_TELEPORT);
@@ -162,18 +157,19 @@ struct boss_moroes : public BossAI
             });
 
             context.Repeat(30s);
-        }).Schedule(20s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                [this](TaskContext context)
         {
             DoCastMaxThreat(SPELL_BLIND, 1, 10.0f, true);
             context.Repeat(25s, 40s);
-        }).Schedule(13s, [this](TaskContext context)
+        })
+            .Schedule(13s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_GOUGE);
             context.Repeat(25s, 40s);
-        }).Schedule(10min, [this](TaskContext)
-        {
-            DoCastSelf(SPELL_BERSERK, true);
-        });
+        }).Schedule(10min, [this](TaskContext) { DoCastSelf(SPELL_BERSERK, true); });
     }
 
     void KilledUnit(Unit* victim) override
@@ -182,10 +178,7 @@ struct boss_moroes : public BossAI
         {
             Talk(SAY_KILL);
             _recentlySpoken = true;
-            scheduler.Schedule(5s, [this](TaskContext)
-            {
-                _recentlySpoken = false;
-            });
+            scheduler.Schedule(5s, [this](TaskContext) { _recentlySpoken = false; });
         }
     }
 
@@ -200,12 +193,8 @@ struct boss_moroes : public BossAI
     {
         std::list<Creature*> guestList;
         for (SummonList::const_iterator i = summons.begin(); i != summons.end(); ++i)
-        {
             if (Creature* summon = ObjectAccessor::GetCreature(*me, *i))
-            {
                 guestList.push_back(summon);
-            }
-        }
 
         return Acore::Containers::SelectRandomContainerElement(guestList);
     }
@@ -215,7 +204,8 @@ struct boss_moroes : public BossAI
         bool guestsInRoom = true;
         summons.DoForAllSummons([&guestsInRoom](WorldObject* summon)
         {
-            if ((summon->ToCreature()->GetPositionX()) < -11028.f || (summon->ToCreature()->GetPositionY()) < -1955.f) //boundaries of the two doors
+            if ((summon->ToCreature()->GetPositionX()) < -11028.f ||
+                (summon->ToCreature()->GetPositionY()) < -1955.f) //boundaries of the two doors
             {
                 guestsInRoom = false;
                 return false;
@@ -233,10 +223,7 @@ struct boss_moroes : public BossAI
         if (!CheckGuestsInRoom())
         {
             EnterEvadeMode();
-            summons.DoForAllSummons([](WorldObject* summon)
-            {
-                summon->ToCreature()->DespawnOnEvade(5s);
-            });
+            summons.DoForAllSummons([](WorldObject* summon) { summon->ToCreature()->DespawnOnEvade(5s); });
             return;
         }
 
@@ -244,16 +231,14 @@ struct boss_moroes : public BossAI
             return;
 
         if (_vanished == false)
-        {
             DoMeleeAttackIfReady();
-        }
     }
 
-    private:
-        EventMap _events2;
-        uint8 _activeGuests;
-        bool _recentlySpoken;
-        bool _vanished;
+private:
+    EventMap _events2;
+    uint8 _activeGuests;
+    bool _recentlySpoken;
+    bool _vanished;
 };
 
 class spell_moroes_vanish : public SpellScript
@@ -268,7 +253,8 @@ class spell_moroes_vanish : public SpellScript
             Position pos = target->GetFirstCollisionPosition(5.0f, M_PI);
             GetCaster()->CastSpell(target, SPELL_GARROTE_DUMMY, true);
             GetCaster()->RemoveAurasDueToSpell(SPELL_VANISH);
-            GetCaster()->NearTeleportTo(pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), target->GetOrientation());
+            GetCaster()->NearTeleportTo(
+                pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), target->GetOrientation());
         }
     }
 

@@ -42,15 +42,14 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable commandTable =
-        {
-            { "nameannounce",   HandleNameAnnounceCommand,   SEC_GAMEMASTER, Console::Yes },
-            { "gmnameannounce", HandleGMNameAnnounceCommand, SEC_GAMEMASTER, Console::Yes },
-            { "announce",       HandleAnnounceCommand,       SEC_GAMEMASTER, Console::Yes },
-            { "gmannounce",     HandleGMAnnounceCommand,     SEC_GAMEMASTER, Console::Yes },
-            { "notify",         HandleNotifyCommand,         SEC_GAMEMASTER, Console::Yes },
-            { "gmnotify",       HandleGMNotifyCommand,       SEC_GAMEMASTER, Console::Yes },
-            { "whispers",       HandleWhispersCommand,       SEC_MODERATOR,  Console::No },
+        static ChatCommandTable commandTable = {
+            {"nameannounce",   HandleNameAnnounceCommand,   SEC_GAMEMASTER, Console::Yes},
+            {"gmnameannounce", HandleGMNameAnnounceCommand, SEC_GAMEMASTER, Console::Yes},
+            {"announce",       HandleAnnounceCommand,       SEC_GAMEMASTER, Console::Yes},
+            {"gmannounce",     HandleGMAnnounceCommand,     SEC_GAMEMASTER, Console::Yes},
+            {"notify",         HandleNotifyCommand,         SEC_GAMEMASTER, Console::Yes},
+            {"gmnotify",       HandleGMNotifyCommand,       SEC_GAMEMASTER, Console::Yes},
+            {"whispers",       HandleWhispersCommand,       SEC_MODERATOR,  Console::No },
         };
         return commandTable;
     }
@@ -87,7 +86,8 @@ public:
         if (message.empty())
             return false;
 
-        sWorld->SendServerMessage(SERVER_MSG_STRING, Acore::StringFormat(handler->GetAcoreString(LANG_SYSTEMMESSAGE), message.data()));
+        sWorld->SendServerMessage(
+            SERVER_MSG_STRING, Acore::StringFormat(handler->GetAcoreString(LANG_SYSTEMMESSAGE), message.data()));
         return true;
     }
 
@@ -134,11 +134,14 @@ public:
     }
 
     // Enable/Disable accepting whispers (for GM)
-    static bool HandleWhispersCommand(ChatHandler* handler, Optional<Variant<bool, EXACT_SEQUENCE("remove")>> operationArg, Optional<std::string> playerNameArg)
+    static bool HandleWhispersCommand(ChatHandler* handler,
+        Optional<Variant<bool, EXACT_SEQUENCE("remove")>> operationArg, Optional<std::string> playerNameArg)
     {
         if (!operationArg)
         {
-            handler->PSendSysMessage(LANG_COMMAND_WHISPERACCEPTING, handler->GetSession()->GetPlayer()->isAcceptWhispers() ?  handler->GetAcoreString(LANG_ON) : handler->GetAcoreString(LANG_OFF));
+            handler->PSendSysMessage(LANG_COMMAND_WHISPERACCEPTING,
+                handler->GetSession()->GetPlayer()->isAcceptWhispers() ? handler->GetAcoreString(LANG_ON)
+                                                                       : handler->GetAcoreString(LANG_OFF));
             return true;
         }
 

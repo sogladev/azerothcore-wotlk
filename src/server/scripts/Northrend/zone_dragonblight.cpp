@@ -39,29 +39,29 @@ QUEST Conversing With the Depths (12032)
 
 enum DepthsMisc
 {
-    QUEST_CONVERSING_WITH_THE_DEPTHS        = 12032,
-    DEEPDIVING_PEARL_BUFF                   = 41273,
-    NPC_OACHANOA                            = 26648,
-    NPC_CONVERSING_WITH_THE_DEPTHS_TRIGGER  = 70100,
+    QUEST_CONVERSING_WITH_THE_DEPTHS = 12032,
+    DEEPDIVING_PEARL_BUFF = 41273,
+    NPC_OACHANOA = 26648,
+    NPC_CONVERSING_WITH_THE_DEPTHS_TRIGGER = 70100,
 };
 
 enum DepthsTexts
 {
     // Oacha'noa being summoned
-    SAY_OACHANOA_SUMMONED_0                 = 0,
-    SAY_OACHANOA_SUMMONED_1                 = 1,
-    SAY_OACHANOA_SUMMONED_2                 = 2,
-    SAY_OACHANOA_SUMMONED_3                 = 3,
+    SAY_OACHANOA_SUMMONED_0 = 0,
+    SAY_OACHANOA_SUMMONED_1 = 1,
+    SAY_OACHANOA_SUMMONED_2 = 2,
+    SAY_OACHANOA_SUMMONED_3 = 3,
     //SAY_OACHANOA_SUMMONED_4                 = 4, // Unused(no source) and no BroadcastTextId
 
     // If success
-    SAY_OACHANOA_SUCCESS                    = 5,
-    WHISPER_OACHANOA_SUCCESS_0              = 6,
-    WHISPER_OACHANOA_SUCCESS_1              = 7,
-    WHISPER_OACHANOA_SUCCESS_2              = 8,
+    SAY_OACHANOA_SUCCESS = 5,
+    WHISPER_OACHANOA_SUCCESS_0 = 6,
+    WHISPER_OACHANOA_SUCCESS_1 = 7,
+    WHISPER_OACHANOA_SUCCESS_2 = 8,
 
     // If failed
-    SAY_OACHANOA_FAILED                     = 9,
+    SAY_OACHANOA_FAILED = 9,
 };
 
 class npc_conversing_with_the_depths_trigger : public CreatureScript
@@ -71,7 +71,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_conversing_with_the_depths_triggerAI (pCreature);
+        return new npc_conversing_with_the_depths_triggerAI(pCreature);
     }
 
     struct npc_conversing_with_the_depths_triggerAI : public ScriptedAI
@@ -86,8 +86,15 @@ public:
         ObjectGuid pGUID;
         ObjectGuid oachanoaGUID;
 
-        Creature* GetOachanoa() {return ObjectAccessor::GetCreature(*me, oachanoaGUID);}
-        Player* GetPlayer() {return ObjectAccessor::GetPlayer(*me, pGUID);}
+        Creature* GetOachanoa()
+        {
+            return ObjectAccessor::GetCreature(*me, oachanoaGUID);
+        }
+
+        Player* GetPlayer()
+        {
+            return ObjectAccessor::GetPlayer(*me, pGUID);
+        }
 
         void Reset() override
         {
@@ -100,7 +107,7 @@ public:
             oachanoaGUID.Clear();
         }
 
-        void NextStep(const uint32 time)
+        void NextStep(uint32 const time)
         {
             step++;
             timer = time;
@@ -117,7 +124,7 @@ public:
             if (running)
             {
                 if (Player* p = GetPlayer())
-                    if (p->GetPositionZ() < 1.0f && !secondpart)  // Player is in the water
+                    if (p->GetPositionZ() < 1.0f && !secondpart) // Player is in the water
                     {
                         if (p->HasAura(DEEPDIVING_PEARL_BUFF) && canjump)
                         {
@@ -145,125 +152,126 @@ public:
                             NextStep(10000);
                             break;
                         case 1: // Oacha'noa being summoned
+                        {
+                            Creature* c = me->SummonCreature(
+                                NPC_OACHANOA, 2406.24f, 1701.98f, 0.1f, 0.3f, TEMPSUMMON_TIMED_DESPAWN, 90000, 0);
+                            if (!c)
                             {
-                                Creature* c = me->SummonCreature(NPC_OACHANOA, 2406.24f, 1701.98f, 0.1f, 0.3f, TEMPSUMMON_TIMED_DESPAWN, 90000, 0);
-                                if (!c)
-                                {
-                                    Reset();
-                                    return;
-                                }
-                                c->SetCanFly(true);
-                                c->GetMotionMaster()->MovePoint(0, 2406.25f, 1701.98f, 0.1f);
-                                oachanoaGUID = c->GetGUID();
-
-                                NextStep(3000);
-                                break;
+                                Reset();
+                                return;
                             }
+                            c->SetCanFly(true);
+                            c->GetMotionMaster()->MovePoint(0, 2406.25f, 1701.98f, 0.1f);
+                            oachanoaGUID = c->GetGUID();
+
+                            NextStep(3000);
+                            break;
+                        }
                         case 2:
+                        {
+                            Player* p = GetPlayer();
+                            if (!p)
                             {
-                                Player* p = GetPlayer();
-                                if (!p)
-                                {
-                                    Reset();
-                                    return;
-                                }
-                                if (Creature* c = GetOachanoa())
-                                    c->AI()->Talk(SAY_OACHANOA_SUMMONED_0, p);
-
-                                NextStep(6000);
-                                break;
+                                Reset();
+                                return;
                             }
+                            if (Creature* c = GetOachanoa())
+                                c->AI()->Talk(SAY_OACHANOA_SUMMONED_0, p);
+
+                            NextStep(6000);
+                            break;
+                        }
                         case 3:
-                            {
-                                if (Creature* c = GetOachanoa())
-                                    c->AI()->Talk(SAY_OACHANOA_SUMMONED_1);
+                        {
+                            if (Creature* c = GetOachanoa())
+                                c->AI()->Talk(SAY_OACHANOA_SUMMONED_1);
 
-                                NextStep(6000);
-                                break;
-                            }
+                            NextStep(6000);
+                            break;
+                        }
                         case 4:
+                        {
+                            if (Creature* c = GetOachanoa())
+                                c->AI()->Talk(SAY_OACHANOA_SUMMONED_2);
+                            Player* p = GetPlayer();
+                            if (!p)
                             {
-                                if (Creature* c = GetOachanoa())
-                                    c->AI()->Talk(SAY_OACHANOA_SUMMONED_2);
-                                Player* p = GetPlayer();
-                                if (!p)
-                                {
-                                    Reset();
-                                    return;
-                                }
-                                p->CastSpell(p, DEEPDIVING_PEARL_BUFF, true);
-
-                                NextStep(6000);
-                                break;
+                                Reset();
+                                return;
                             }
+                            p->CastSpell(p, DEEPDIVING_PEARL_BUFF, true);
+
+                            NextStep(6000);
+                            break;
+                        }
                         case 5: // 20s countdown starts, the player can jump now
-                            {
-                                canjump = true;
-                                if (Creature* c = GetOachanoa())
-                                    c->AI()->Talk(SAY_OACHANOA_SUMMONED_3);
+                        {
+                            canjump = true;
+                            if (Creature* c = GetOachanoa())
+                                c->AI()->Talk(SAY_OACHANOA_SUMMONED_3);
 
-                                NextStep(20500);
-                                break;
-                            }
+                            NextStep(20500);
+                            break;
+                        }
                         case 6: // If failed (player DOESN'T jump within 20 seconds)
-                            {
-                                Player* p = GetPlayer();
-                                if (Creature* c = GetOachanoa())
-                                    c->AI()->Talk(SAY_OACHANOA_FAILED, p);
+                        {
+                            Player* p = GetPlayer();
+                            if (Creature* c = GetOachanoa())
+                                c->AI()->Talk(SAY_OACHANOA_FAILED, p);
 
-                                DespawnOachanoa();
-                                Reset();
-                                break;
-                            }
+                            DespawnOachanoa();
+                            Reset();
+                            break;
+                        }
                         case 7: // If success (player jumps)
+                        {
+                            Player* p = GetPlayer();
+                            if (!p)
                             {
-                                Player* p = GetPlayer();
-                                if (!p)
-                                {
-                                    Reset();
-                                    return;
-                                }
-                                if (Creature* c = GetOachanoa())
-                                    c->AI()->Talk(SAY_OACHANOA_SUCCESS, p);
-
-                                NextStep(6000);
-                                break;
-                            }
-                        case 8:
-                            {
-                                Player* p = GetPlayer();
-                                if (Creature* c = GetOachanoa())
-                                    c->AI()->Talk(WHISPER_OACHANOA_SUCCESS_0, p);
-
-                                NextStep(6000);
-                                break;
-                            }
-                        case 9:
-                            {
-                                Player* p = GetPlayer();
-                                if (Creature* c = GetOachanoa())
-                                    c->AI()->Talk(WHISPER_OACHANOA_SUCCESS_1, p);
-
-                                NextStep(6000);
-                                break;
-                            }
-                        case 10:
-                            {
-                                Player* p = GetPlayer();
-                                if (!p)
-                                {
-                                    Reset();
-                                    return;
-                                }
-
-                                if (Creature* c = GetOachanoa())
-                                    c->AI()->Talk(WHISPER_OACHANOA_SUCCESS_2, p);
-
-                                p->AreaExploredOrEventHappens(QUEST_CONVERSING_WITH_THE_DEPTHS);
-
-                                DespawnOachanoa();
                                 Reset();
+                                return;
                             }
+                            if (Creature* c = GetOachanoa())
+                                c->AI()->Talk(SAY_OACHANOA_SUCCESS, p);
+
+                            NextStep(6000);
+                            break;
+                        }
+                        case 8:
+                        {
+                            Player* p = GetPlayer();
+                            if (Creature* c = GetOachanoa())
+                                c->AI()->Talk(WHISPER_OACHANOA_SUCCESS_0, p);
+
+                            NextStep(6000);
+                            break;
+                        }
+                        case 9:
+                        {
+                            Player* p = GetPlayer();
+                            if (Creature* c = GetOachanoa())
+                                c->AI()->Talk(WHISPER_OACHANOA_SUCCESS_1, p);
+
+                            NextStep(6000);
+                            break;
+                        }
+                        case 10:
+                        {
+                            Player* p = GetPlayer();
+                            if (!p)
+                            {
+                                Reset();
+                                return;
+                            }
+
+                            if (Creature* c = GetOachanoa())
+                                c->AI()->Talk(WHISPER_OACHANOA_SUCCESS_2, p);
+
+                            p->AreaExploredOrEventHappens(QUEST_CONVERSING_WITH_THE_DEPTHS);
+
+                            DespawnOachanoa();
+                            Reset();
+                        }
                     }
             }
         }
@@ -287,9 +295,12 @@ public:
             return true;
 
         Creature* t = player->FindNearestCreature(NPC_CONVERSING_WITH_THE_DEPTHS_TRIGGER, 10.0f, true);
-        if (t && t->AI() && CAST_AI(npc_conversing_with_the_depths_trigger::npc_conversing_with_the_depths_triggerAI, t->AI()))
-            if (!CAST_AI(npc_conversing_with_the_depths_trigger::npc_conversing_with_the_depths_triggerAI, t->AI())->running)
-                CAST_AI(npc_conversing_with_the_depths_trigger::npc_conversing_with_the_depths_triggerAI, t->AI())->Start(player->GetGUID());
+        if (t && t->AI() &&
+            CAST_AI(npc_conversing_with_the_depths_trigger::npc_conversing_with_the_depths_triggerAI, t->AI()))
+            if (!CAST_AI(npc_conversing_with_the_depths_trigger::npc_conversing_with_the_depths_triggerAI, t->AI())
+                     ->running)
+                CAST_AI(npc_conversing_with_the_depths_trigger::npc_conversing_with_the_depths_triggerAI, t->AI())
+                    ->Start(player->GetGUID());
 
         return true;
     }
@@ -297,52 +308,52 @@ public:
 
 enum hourglass
 {
-    NPC_FUTURE_HOURGLASS                    = 27840,
-    NPC_FUTURE_YOU                          = 27899,
+    NPC_FUTURE_HOURGLASS = 27840,
+    NPC_FUTURE_YOU = 27899,
 
-    NPC_PAST_HOURGLASS                      = 32327,
-    NPC_PAST_YOU                            = 32331,
+    NPC_PAST_HOURGLASS = 32327,
+    NPC_PAST_YOU = 32331,
 
-    NPC_INFINITE_ASSAILANT                  = 27896,
-    NPC_INFINITE_CHRONO_MAGUS               = 27898,
-    NPC_INFINITE_DESTROYER                  = 27897,
-    NPC_INFINITE_TIMERENDER                 = 27900,
-    NPC_NOZDORMU                            = 27925,
+    NPC_INFINITE_ASSAILANT = 27896,
+    NPC_INFINITE_CHRONO_MAGUS = 27898,
+    NPC_INFINITE_DESTROYER = 27897,
+    NPC_INFINITE_TIMERENDER = 27900,
+    NPC_NOZDORMU = 27925,
 
-    SPELL_NOZDORMU_INVIS                    = 50013,
-    SPELL_CLONE_CASTER                      = 49889,
-    SPELL_TELEPORT_EFFECT                   = 52096,
+    SPELL_NOZDORMU_INVIS = 50013,
+    SPELL_CLONE_CASTER = 49889,
+    SPELL_TELEPORT_EFFECT = 52096,
 
-    EVENT_START_EVENT                       = 1,
-    EVENT_FIGHT_1                           = 2,
-    EVENT_FIGHT_2                           = 3,
-    EVENT_CHECK_FINISH                      = 4,
-    EVENT_FINISH_EVENT                      = 5,
+    EVENT_START_EVENT = 1,
+    EVENT_FIGHT_1 = 2,
+    EVENT_FIGHT_2 = 3,
+    EVENT_CHECK_FINISH = 4,
+    EVENT_FINISH_EVENT = 5,
 
-    QUEST_MYSTERY_OF_THE_INFINITE           = 12470,
-    QUEST_MYSTERY_OF_THE_INFINITE_REDUX     = 13343,
+    QUEST_MYSTERY_OF_THE_INFINITE = 12470,
+    QUEST_MYSTERY_OF_THE_INFINITE_REDUX = 13343,
 };
 
 enum hourglassText
 {
     // (All are whispers) Both NPC_PAST_YOU and NPC_FUTURE_YOU share the same creature_text GroupIDs
     // Start
-    SAY_HOURGLASS_START_1                   = 1,
-    SAY_HOURGLASS_START_2                   = 2,
+    SAY_HOURGLASS_START_1 = 1,
+    SAY_HOURGLASS_START_2 = 2,
 
     // Random whispers during the fight
-    SAY_HOURGLASS_RANDOM_1                  = 3,
-    SAY_HOURGLASS_RANDOM_2                  = 4,
-    SAY_HOURGLASS_RANDOM_3                  = 5,
-    SAY_HOURGLASS_RANDOM_4                  = 6,
-    SAY_HOURGLASS_RANDOM_5                  = 7,
-    SAY_HOURGLASS_RANDOM_6                  = 8,
-    SAY_HOURGLASS_RANDOM_7                  = 9,
-    SAY_HOURGLASS_RANDOM_8                  = 10,
+    SAY_HOURGLASS_RANDOM_1 = 3,
+    SAY_HOURGLASS_RANDOM_2 = 4,
+    SAY_HOURGLASS_RANDOM_3 = 5,
+    SAY_HOURGLASS_RANDOM_4 = 6,
+    SAY_HOURGLASS_RANDOM_5 = 7,
+    SAY_HOURGLASS_RANDOM_6 = 8,
+    SAY_HOURGLASS_RANDOM_7 = 9,
+    SAY_HOURGLASS_RANDOM_8 = 10,
 
     // End
-    SAY_HOURGLASS_END_1                     = 11,
-    SAY_HOURGLASS_END_2                     = 12,
+    SAY_HOURGLASS_END_1 = 11,
+    SAY_HOURGLASS_END_2 = 12,
 };
 
 class npc_hourglass_of_eternity : public CreatureScript
@@ -352,12 +363,12 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_hourglass_of_eternityAI (pCreature);
+        return new npc_hourglass_of_eternityAI(pCreature);
     }
 
     struct npc_hourglass_of_eternityAI : public ScriptedAI
     {
-        npc_hourglass_of_eternityAI(Creature* c) : ScriptedAI(c) {}
+        npc_hourglass_of_eternityAI(Creature* c) : ScriptedAI(c) { }
 
         ObjectGuid pGUID;
         ObjectGuid copyGUID;
@@ -367,7 +378,11 @@ public:
         uint8 randomTalk;
         uint8 lastRandomTalk;
 
-        bool IsFuture() {return me->GetEntry() == NPC_FUTURE_HOURGLASS;}
+        bool IsFuture()
+        {
+            return me->GetEntry() == NPC_FUTURE_HOURGLASS;
+        }
+
         void InitializeAI() override
         {
             if (me->ToTempSummon())
@@ -376,7 +391,13 @@ public:
                     pGUID = summoner->GetGUID();
                     float x, y, z;
                     me->GetNearPoint(summoner, x, y, z, me->GetCombatReach(), 0.0f, rand_norm() * 2 * M_PI);
-                    if (Creature* cr = summoner->SummonCreature((IsFuture() ? NPC_FUTURE_YOU : NPC_PAST_YOU), x, y, z, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 210000))
+                    if (Creature* cr = summoner->SummonCreature((IsFuture() ? NPC_FUTURE_YOU : NPC_PAST_YOU),
+                            x,
+                            y,
+                            z,
+                            0.0f,
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            210000))
                     {
                         copyGUID = cr->GetGUID();
                         summoner->CastSpell(cr, SPELL_CLONE_CASTER, true);
@@ -394,8 +415,15 @@ public:
             events.ScheduleEvent(EVENT_START_EVENT, 4s);
         }
 
-        Player* GetPlayer() {return ObjectAccessor::GetPlayer(*me, pGUID);}
-        Creature* GetCopy() {return ObjectAccessor::GetCreature(*me, copyGUID);}
+        Player* GetPlayer()
+        {
+            return ObjectAccessor::GetPlayer(*me, pGUID);
+        }
+
+        Creature* GetCopy()
+        {
+            return ObjectAccessor::GetCreature(*me, copyGUID);
+        }
 
         uint32 randEntry()
         {
@@ -430,72 +458,80 @@ public:
                     events.ScheduleEvent(EVENT_FIGHT_2, 6s);
                     break;
                 case EVENT_FIGHT_2:
-                    {
-                        if (phase)
-                            randomWhisper();
+                {
+                    if (phase)
+                        randomWhisper();
 
-                        Creature* cr = nullptr;
-                        float x, y, z;
-                        if (phase < 3)
+                    Creature* cr = nullptr;
+                    float x, y, z;
+                    if (phase < 3)
+                    {
+                        for (uint8 i = 0; i < count[phase]; ++i)
                         {
-                            for (uint8 i = 0; i < count[phase]; ++i)
-                            {
-                                me->GetNearPoint(me, x, y, z, me->GetCombatReach(), 10.0f, rand_norm() * 2 * M_PI);
-                                if ((cr = me->SummonCreature(randEntry(), x, y, z + 2.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000)))
-                                {
-                                    cr->CastSpell(cr, SPELL_TELEPORT_EFFECT, true);
-                                    cr->AI()->AttackStart(me);
-                                    cr->AddThreat(me, 100.0f);
-                                }
-                            }
-                        }
-                        else if (phase == 3)
-                        {
-                            me->GetNearPoint(me, x, y, z, me->GetCombatReach(), 20.0f, rand_norm() * 2 * M_PI);
-                            if ((cr = me->SummonCreature(NPC_INFINITE_TIMERENDER, x, y, z, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000)))
+                            me->GetNearPoint(me, x, y, z, me->GetCombatReach(), 10.0f, rand_norm() * 2 * M_PI);
+                            if ((cr = me->SummonCreature(
+                                     randEntry(), x, y, z + 2.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000)))
                             {
                                 cr->CastSpell(cr, SPELL_TELEPORT_EFFECT, true);
                                 cr->AI()->AttackStart(me);
+                                cr->AddThreat(me, 100.0f);
                             }
-
-                            events.ScheduleEvent(EVENT_CHECK_FINISH, 20s);
-                            return;
+                        }
+                    }
+                    else if (phase == 3)
+                    {
+                        me->GetNearPoint(me, x, y, z, me->GetCombatReach(), 20.0f, rand_norm() * 2 * M_PI);
+                        if ((cr = me->SummonCreature(NPC_INFINITE_TIMERENDER,
+                                 x,
+                                 y,
+                                 z,
+                                 0.0f,
+                                 TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                                 30000)))
+                        {
+                            cr->CastSpell(cr, SPELL_TELEPORT_EFFECT, true);
+                            cr->AI()->AttackStart(me);
                         }
 
-                        ++phase;
-                        events.ScheduleEvent(EVENT_FIGHT_2, 35s);
-                        break;
+                        events.ScheduleEvent(EVENT_CHECK_FINISH, 20s);
+                        return;
                     }
+
+                    ++phase;
+                    events.ScheduleEvent(EVENT_FIGHT_2, 35s);
+                    break;
+                }
                 case EVENT_CHECK_FINISH:
+                {
+                    if (me->FindNearestCreature(NPC_INFINITE_TIMERENDER, 50.0f))
                     {
-                        if (me->FindNearestCreature(NPC_INFINITE_TIMERENDER, 50.0f))
-                        {
-                            events.Repeat(5s);
-                            return;
-                        }
-
-                        ShowNozdormu();
-                        if (Player* player = GetPlayer())
-                            player->GroupEventHappens(IsFuture() ? QUEST_MYSTERY_OF_THE_INFINITE : QUEST_MYSTERY_OF_THE_INFINITE_REDUX, me);
-
-                        if (Creature* cr = GetCopy())
-                        {
-                            cr->SetFacingToObject(me->FindNearestCreature(NPC_NOZDORMU, 100.0f, true));
-                            cr->AI()->Talk(SAY_HOURGLASS_END_1, GetPlayer());
-                        }
-                        events.ScheduleEvent(EVENT_FINISH_EVENT, 6s);
-                        break;
+                        events.Repeat(5s);
+                        return;
                     }
+
+                    ShowNozdormu();
+                    if (Player* player = GetPlayer())
+                        player->GroupEventHappens(
+                            IsFuture() ? QUEST_MYSTERY_OF_THE_INFINITE : QUEST_MYSTERY_OF_THE_INFINITE_REDUX, me);
+
+                    if (Creature* cr = GetCopy())
+                    {
+                        cr->SetFacingToObject(me->FindNearestCreature(NPC_NOZDORMU, 100.0f, true));
+                        cr->AI()->Talk(SAY_HOURGLASS_END_1, GetPlayer());
+                    }
+                    events.ScheduleEvent(EVENT_FINISH_EVENT, 6s);
+                    break;
+                }
                 case EVENT_FINISH_EVENT:
-                    {
-                        HideNozdormu();
-                        if (Creature* cr = GetCopy())
-                            cr->AI()->Talk(SAY_HOURGLASS_END_2, GetPlayer());
-                        me->DespawnOrUnsummon(500);
-                        if (GetCopy())
-                            GetCopy()->DespawnOrUnsummon(500);
-                        break;
-                    }
+                {
+                    HideNozdormu();
+                    if (Creature* cr = GetCopy())
+                        cr->AI()->Talk(SAY_HOURGLASS_END_2, GetPlayer());
+                    me->DespawnOrUnsummon(500);
+                    if (GetCopy())
+                        GetCopy()->DespawnOrUnsummon(500);
+                    break;
+                }
             }
         }
 
@@ -523,12 +559,12 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_future_youAI (pCreature);
+        return new npc_future_youAI(pCreature);
     }
 
     struct npc_future_youAI : public ScriptedAI
     {
-        npc_future_youAI(Creature* c) : ScriptedAI(c) {}
+        npc_future_youAI(Creature* c) : ScriptedAI(c) { }
 
         void EnterEvadeMode(EvadeReason /*why*/) override
         {
@@ -544,11 +580,12 @@ public:
 
         void MoveInLineOfSight(Unit* who) override
         {
-            if (!me->GetVictim() && !who->IsFlying() && who->GetEntry() >= NPC_INFINITE_ASSAILANT && who->GetEntry() <= NPC_INFINITE_TIMERENDER)
+            if (!me->GetVictim() && !who->IsFlying() && who->GetEntry() >= NPC_INFINITE_ASSAILANT &&
+                who->GetEntry() <= NPC_INFINITE_TIMERENDER)
                 AttackStart(who);
         }
 
-        void UpdateAI(uint32  /*diff*/) override
+        void UpdateAI(uint32 /*diff*/) override
         {
             if (!UpdateVictim())
                 return;
@@ -560,8 +597,8 @@ public:
 
 enum chainGun
 {
-    NPC_INJURED_7TH_LEGION_SOLDER               = 27788,
-    SPELL_FEAR_AURA_WITH_COWER                  = 49774
+    NPC_INJURED_7TH_LEGION_SOLDER = 27788,
+    SPELL_FEAR_AURA_WITH_COWER = 49774
 };
 
 class npc_mindless_ghoul : public CreatureScript
@@ -571,7 +608,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_mindless_ghoulAI (pCreature);
+        return new npc_mindless_ghoulAI(pCreature);
     }
 
     struct npc_mindless_ghoulAI : public ScriptedAI
@@ -600,12 +637,12 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_injured_7th_legion_soldierAI (pCreature);
+        return new npc_injured_7th_legion_soldierAI(pCreature);
     }
 
     struct npc_injured_7th_legion_soldierAI : public NullCreatureAI
     {
-        npc_injured_7th_legion_soldierAI(Creature* c) : NullCreatureAI(c) {}
+        npc_injured_7th_legion_soldierAI(Creature* c) : NullCreatureAI(c) { }
 
         void Reset() override
         {
@@ -638,26 +675,26 @@ public:
 
 enum WintergardeGryphon
 {
-    SPELL_RESCUE_VILLAGER                       = 48363,
-    SPELL_DROP_OFF_VILLAGER                     = 48397,
-    SPELL_RIDE_VEHICLE                          = 43671,
+    SPELL_RESCUE_VILLAGER = 48363,
+    SPELL_DROP_OFF_VILLAGER = 48397,
+    SPELL_RIDE_VEHICLE = 43671,
 
-    NPC_HELPLESS_VILLAGER_A                     = 27315,
-    NPC_HELPLESS_VILLAGER_B                     = 27336,
+    NPC_HELPLESS_VILLAGER_A = 27315,
+    NPC_HELPLESS_VILLAGER_B = 27336,
 
-    EVENT_VEHICLE_GET                           = 1,
-    EVENT_TAKE_OFF                              = 2,
-    EVENT_GET_VILLAGER                          = 3,
+    EVENT_VEHICLE_GET = 1,
+    EVENT_TAKE_OFF = 2,
+    EVENT_GET_VILLAGER = 3,
 
-    EVENT_PHASE_FEAR                            = 1,
-    EVENT_PHASE_VEHICLE                         = 2,
+    EVENT_PHASE_FEAR = 1,
+    EVENT_PHASE_VEHICLE = 2,
 
-    POINT_LAND                                  = 1,
-    POINT_TAKE_OFF                              = 2,
+    POINT_LAND = 1,
+    POINT_TAKE_OFF = 2,
 
-    QUEST_FLIGHT_OF_THE_WINTERGARDE_DEFENDER    = 12237,
-    GO_TEMP_GRYPHON_STATION                     = 188679,
-    AREA_WINTERGARDE_KEEP                       = 4177
+    QUEST_FLIGHT_OF_THE_WINTERGARDE_DEFENDER = 12237,
+    GO_TEMP_GRYPHON_STATION = 188679,
+    AREA_WINTERGARDE_KEEP = 4177
 };
 
 class npc_wintergarde_gryphon : public VehicleAI
@@ -709,7 +746,10 @@ public:
         }
     }
 
-    Creature* getVillager() { return ObjectAccessor::GetCreature(*me, villagerGUID); }
+    Creature* getVillager()
+    {
+        return ObjectAccessor::GetCreature(*me, villagerGUID);
+    }
 
     void UpdateAI(uint32 diff) override
     {
@@ -731,7 +771,7 @@ public:
                     me->SetOrientation(2.5f);
                     me->SetSpeedRate(MOVE_FLIGHT, 1.0f);
                     Position pos = me->GetPosition();
-                    Position offset = { 14.0f, 14.0f, 16.0f, 0.0f };
+                    Position offset = {14.0f, 14.0f, 16.0f, 0.0f};
                     pos.RelocateOffset(offset);
                     me->GetMotionMaster()->MovePoint(POINT_TAKE_OFF, pos);
                     break;
@@ -766,6 +806,7 @@ public:
                 events.ScheduleEvent(EVENT_GET_VILLAGER, 3s);
             }
     }
+
 private:
     ObjectGuid villagerGUID;
 };
@@ -790,7 +831,8 @@ class spell_q12237_rescue_villager : public SpellScript
             result = SPELL_FAILED_CUSTOM_ERROR;
         }
 
-        if (!GetCaster()->FindNearestCreature(NPC_HELPLESS_VILLAGER_A, 5.0f) && !GetCaster()->FindNearestCreature(NPC_HELPLESS_VILLAGER_B, 5.0f))
+        if (!GetCaster()->FindNearestCreature(NPC_HELPLESS_VILLAGER_A, 5.0f) &&
+            !GetCaster()->FindNearestCreature(NPC_HELPLESS_VILLAGER_B, 5.0f))
         {
             extension = SPELL_CUSTOM_ERROR_MUST_BE_NEAR_HELPLESS_VILLAGER;
             result = SPELL_FAILED_CUSTOM_ERROR;
@@ -822,7 +864,8 @@ class spell_q12237_rescue_villager : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_q12237_rescue_villager::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_q12237_rescue_villager::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
         OnCheckCast += SpellCheckCastFn(spell_q12237_rescue_villager::CheckCast);
     }
 };
@@ -872,7 +915,7 @@ class spell_call_wintergarde_gryphon : public SpellScript
     void SetDest(SpellDestination& dest)
     {
         // Adjust effect summon position
-        Position const offset = { 0.0f, 0.0f, 9.0f, 0.0f };
+        Position const offset = {0.0f, 0.0f, 9.0f, 0.0f};
         dest.RelocateOffset(offset);
     }
 
@@ -889,7 +932,8 @@ class spell_call_wintergarde_gryphon : public SpellScript
     void Register() override
     {
         OnCheckCast += SpellCheckCastFn(spell_call_wintergarde_gryphon::CheckRequirement);
-        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_call_wintergarde_gryphon::SetDest, EFFECT_0, TARGET_DEST_CASTER_FRONT);
+        OnDestinationTargetSelect +=
+            SpellDestinationTargetSelectFn(spell_call_wintergarde_gryphon::SetDest, EFFECT_0, TARGET_DEST_CASTER_FRONT);
     }
 };
 
@@ -900,12 +944,12 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_heated_battleAI (pCreature);
+        return new npc_heated_battleAI(pCreature);
     }
 
     struct npc_heated_battleAI : public CombatAI
     {
-        npc_heated_battleAI(Creature* c) : CombatAI(c) {}
+        npc_heated_battleAI(Creature* c) : CombatAI(c) { }
 
         void Reset() override
         {
@@ -928,7 +972,7 @@ public:
 
 enum eFrostmourneCavern
 {
-    NPC_PRINCE_ARTHAS               = 27455,
+    NPC_PRINCE_ARTHAS = 27455,
 };
 
 class spell_q12478_frostmourne_cavern : public SpellScript
@@ -943,7 +987,8 @@ class spell_q12478_frostmourne_cavern : public SpellScript
 
     void Register() override
     {
-        OnEffectHit += SpellEffectFn(spell_q12478_frostmourne_cavern::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
+        OnEffectHit +=
+            SpellEffectFn(spell_q12478_frostmourne_cavern::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
     }
 };
 
@@ -972,8 +1017,14 @@ class spell_q12243_fire_upon_the_waters_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_q12243_fire_upon_the_waters_aura::HandleApplyEffect, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
-        OnEffectRemove += AuraEffectRemoveFn(spell_q12243_fire_upon_the_waters_aura::HandleRemoveEffect, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_q12243_fire_upon_the_waters_aura::HandleApplyEffect,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_q12243_fire_upon_the_waters_aura::HandleRemoveEffect,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -1036,14 +1087,12 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_q24545_lich_kingAI (pCreature);
+        return new npc_q24545_lich_kingAI(pCreature);
     }
 
     struct npc_q24545_lich_kingAI : public NullCreatureAI
     {
-        npc_q24545_lich_kingAI(Creature* c) : NullCreatureAI(c), summons(me)
-        {
-        }
+        npc_q24545_lich_kingAI(Creature* c) : NullCreatureAI(c), summons(me) { }
 
         EventMap events;
         SummonList summons;
@@ -1094,7 +1143,7 @@ public:
             me->GetMotionMaster()->Clear();
         }
 
-        void SetGUID(ObjectGuid guid, int32  /*id*/) override
+        void SetGUID(ObjectGuid guid, int32 /*id*/) override
         {
             if (playerGUID || events.GetNextEventTime(998) || events.GetNextEventTime(2))
                 return;
@@ -1161,7 +1210,8 @@ public:
                     {
                         bool valid = false;
                         if (Player* p = ObjectAccessor::GetPlayer(*me, playerGUID))
-                            if (p->IsAlive() && p->GetPhaseMask() & 2 && p->GetExactDistSq(me) < 100.0f * 100.0f && !p->IsGameMaster())
+                            if (p->IsAlive() && p->GetPhaseMask() & 2 && p->GetExactDistSq(me) < 100.0f * 100.0f &&
+                                !p->IsGameMaster())
                                 valid = true;
                         if (!valid)
                         {
@@ -1257,7 +1307,8 @@ public:
                         if (Creature* c = me->FindNearestCreature(NPC_SAC_LIGHTS_VENGEANCE_BUNNY, 150.0f, true))
                         {
                             c->RemoveAurasDueToSpell(SPELL_SAC_HOLY_ZONE_AURA);
-                            if (Creature* l = me->SummonCreature(NPC_SAC_LIGHTS_VENGEANCE, *c, TEMPSUMMON_MANUAL_DESPAWN))
+                            if (Creature* l =
+                                    me->SummonCreature(NPC_SAC_LIGHTS_VENGEANCE, *c, TEMPSUMMON_MANUAL_DESPAWN))
                             {
                                 x->SetCanFly(true);
                                 x->SetDisableGravity(true);
@@ -1279,32 +1330,32 @@ public:
                     events.ScheduleEvent(17, 12s);
                     break;
                 case 17: // kill vegard
-                    {
-                        WretchedGhoulCleaner cleaner;
-                        Acore::CreatureWorker<WretchedGhoulCleaner> worker(me, cleaner);
-                        Cell::VisitGridObjects(me, worker, 150.0f);
+                {
+                    WretchedGhoulCleaner cleaner;
+                    Acore::CreatureWorker<WretchedGhoulCleaner> worker(me, cleaner);
+                    Cell::VisitGridObjects(me, worker, 150.0f);
 
-                        if (Creature* c = me->FindNearestCreature(NPC_SAC_LIGHTS_VENGEANCE, 150.0f, true))
-                            if (Creature* v = me->FindNearestCreature(NPC_SAC_VEGARD_1, 50.0f, true))
-                                if (Creature* b = me->FindNearestCreature(NPC_SAC_LIGHTS_VENGEANCE_VEH_1, 150.0f, true))
+                    if (Creature* c = me->FindNearestCreature(NPC_SAC_LIGHTS_VENGEANCE, 150.0f, true))
+                        if (Creature* v = me->FindNearestCreature(NPC_SAC_VEGARD_1, 50.0f, true))
+                            if (Creature* b = me->FindNearestCreature(NPC_SAC_LIGHTS_VENGEANCE_VEH_1, 150.0f, true))
+                            {
+                                c->CastSpell(v, SPELL_SAC_KILL_VEGARD, true);
+                                v->SetDisplayId(11686);
+                                v->DespawnOrUnsummon(1000);
+                                b->CastSpell(b, SPELL_SAC_HOLY_BOMB_EXPLOSION, true);
+                                b->CastSpell(b, SPELL_SAC_SUMMON_GO_2, true);
+                                if (Unit* vb = c->GetVehicleBase())
                                 {
-                                    c->CastSpell(v, SPELL_SAC_KILL_VEGARD, true);
-                                    v->SetDisplayId(11686);
-                                    v->DespawnOrUnsummon(1000);
-                                    b->CastSpell(b, SPELL_SAC_HOLY_BOMB_EXPLOSION, true);
-                                    b->CastSpell(b, SPELL_SAC_SUMMON_GO_2, true);
-                                    if (Unit* vb = c->GetVehicleBase())
-                                    {
-                                        if (Unit* pass = vb->GetVehicleKit()->GetPassenger(0))
-                                            if (pass->IsCreature())
-                                                pass->ToCreature()->DespawnOrUnsummon(1);
-                                        vb->RemoveAllAuras();
-                                        vb->ToCreature()->DespawnOrUnsummon(1);
-                                    }
-                                    c->ToCreature()->DespawnOrUnsummon(1);
+                                    if (Unit* pass = vb->GetVehicleKit()->GetPassenger(0))
+                                        if (pass->IsCreature())
+                                            pass->ToCreature()->DespawnOrUnsummon(1);
+                                    vb->RemoveAllAuras();
+                                    vb->ToCreature()->DespawnOrUnsummon(1);
                                 }
-                    }
-                    break;
+                                c->ToCreature()->DespawnOrUnsummon(1);
+                            }
+                }
+                break;
                 case 18: // summon vegard
                     me->CastSpell(me, SPELL_SAC_SUMMON_VEGARD_SKELETON, true);
                     break;
@@ -1352,7 +1403,7 @@ public:
 class SACActivateEvent : public BasicEvent
 {
 public:
-    SACActivateEvent(Creature* owner) : _owner(owner) {}
+    SACActivateEvent(Creature* owner) : _owner(owner) { }
 
     bool Execute(uint64 /*time*/, uint32 /*diff*/) override
     {
@@ -1372,7 +1423,7 @@ private:
 class SACDeactivateEvent : public BasicEvent
 {
 public:
-    SACDeactivateEvent(Creature* owner) : _owner(owner) {}
+    SACDeactivateEvent(Creature* owner) : _owner(owner) { }
 
     bool Execute(uint64 /*time*/, uint32 /*diff*/) override
     {
@@ -1393,7 +1444,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_q24545_wretched_ghoulAI (pCreature);
+        return new npc_q24545_wretched_ghoulAI(pCreature);
     }
 
     struct npc_q24545_wretched_ghoulAI : public ScriptedAI
@@ -1430,7 +1481,8 @@ public:
 
         bool CanAIAttack(Unit const* target) const override
         {
-            if (me->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE) || target->HasUnitState(UNIT_STATE_STUNNED) || me->GetDisplayId() == 11686)
+            if (me->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE) || target->HasUnitState(UNIT_STATE_STUNNED) ||
+                me->GetDisplayId() == 11686)
                 return false;
             Position homePos = me->GetHomePosition();
             return target->GetExactDistSq(&homePos) < 30.0f * 30.0f;
@@ -1466,11 +1518,13 @@ public:
 class GhoulTargetCheck
 {
 public:
-    explicit GhoulTargetCheck(bool alive) : _alive(alive) {}
+    explicit GhoulTargetCheck(bool alive) : _alive(alive) { }
+
     bool operator()(WorldObject* object) const
     {
         return _alive ^ (!object->IsCreature() || ((Unit*)object)->GetDisplayId() != 11686);
     }
+
 private:
     bool _alive;
 };
@@ -1495,7 +1549,8 @@ class spell_q24545_aod_special : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_q24545_aod_special::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_q24545_aod_special::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
         OnEffectHitTarget += SpellEffectFn(spell_q24545_aod_special::HandleScript, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
@@ -1507,7 +1562,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_q24545_vegard_dummyAI (pCreature);
+        return new npc_q24545_vegard_dummyAI(pCreature);
     }
 
     struct npc_q24545_vegard_dummyAI : public NullCreatureAI
@@ -1519,7 +1574,7 @@ public:
 
         bool done;
 
-        void UpdateAI(uint32  /*diff*/) override
+        void UpdateAI(uint32 /*diff*/) override
         {
             if (!done)
             {
@@ -1537,7 +1592,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_q24545_vegardAI (pCreature);
+        return new npc_q24545_vegardAI(pCreature);
     }
 
     struct npc_q24545_vegardAI : public ScriptedAI
@@ -1623,12 +1678,12 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_spiritual_insightAI (pCreature);
+        return new npc_spiritual_insightAI(pCreature);
     }
 
     struct npc_spiritual_insightAI : public NullCreatureAI
     {
-        npc_spiritual_insightAI(Creature* c) : NullCreatureAI(c) {}
+        npc_spiritual_insightAI(Creature* c) : NullCreatureAI(c) { }
 
         uint8 GetSpeachId()
         {
@@ -1654,7 +1709,14 @@ public:
             uint8 id = GetSpeachId();
             std::string const& text = sCreatureTextMgr->GetLocalizedChatString(me->GetEntry(), 0, id, 0, LOCALE_enUS);
             WorldPacket data;
-            ChatHandler::BuildChatPacket(data, CHAT_MSG_MONSTER_WHISPER, LANG_UNIVERSAL, me->GetGUID(), summoner->GetGUID(), text, CHAT_TAG_NONE, "Toalu'u the Mystic");
+            ChatHandler::BuildChatPacket(data,
+                CHAT_MSG_MONSTER_WHISPER,
+                LANG_UNIVERSAL,
+                me->GetGUID(),
+                summoner->GetGUID(),
+                text,
+                CHAT_TAG_NONE,
+                "Toalu'u the Mystic");
             summoner->ToPlayer()->SendDirectMessage(&data);
 
             if (id == 1)
@@ -1672,111 +1734,110 @@ public:
 
 enum CommanderEligorDawnbringer
 {
-    MODEL_IMAGE_OF_KELTHUZAD           = 24787, // Image of Kel'Thuzad
-    MODEL_IMAGE_OF_SAPPHIRON           = 24788, // Image of Sapphiron
-    MODEL_IMAGE_OF_RAZUVIOUS           = 24799, // Image of Razuvious
-    MODEL_IMAGE_OF_GOTHIK              = 24804, // Image of Gothik
-    MODEL_IMAGE_OF_THANE               = 24802, // Image of Thane Korth'azz
-    MODEL_IMAGE_OF_BLAUMEUX            = 24794, // Image of Lady Blaumeux
-    MODEL_IMAGE_OF_ZELIEK              = 24800, // Image of Sir Zeliek
-    MODEL_IMAGE_OF_PATCHWERK           = 24798, // Image of Patchwerk
-    MODEL_IMAGE_OF_GROBBULUS           = 24792, // Image of Grobbulus
-    MODEL_IMAGE_OF_THADDIUS            = 24801, // Image of Thaddius
-    MODEL_IMAGE_OF_GLUTH               = 24803, // Image of Gluth
-    MODEL_IMAGE_OF_ANUBREKHAN          = 24789, // Image of Anub'rekhan
-    MODEL_IMAGE_OF_FAERLINA            = 24790, // Image of Faerlina
-    MODEL_IMAGE_OF_MAEXXNA             = 24796, // Image of Maexxna
-    MODEL_IMAGE_OF_NOTH                = 24797, // Image of Noth
-    MODEL_IMAGE_OF_HEIGAN              = 24793, // Image of Heigan
-    MODEL_IMAGE_OF_LOATHEB             = 24795, // Image of Loatheb
+    MODEL_IMAGE_OF_KELTHUZAD = 24787,  // Image of Kel'Thuzad
+    MODEL_IMAGE_OF_SAPPHIRON = 24788,  // Image of Sapphiron
+    MODEL_IMAGE_OF_RAZUVIOUS = 24799,  // Image of Razuvious
+    MODEL_IMAGE_OF_GOTHIK = 24804,     // Image of Gothik
+    MODEL_IMAGE_OF_THANE = 24802,      // Image of Thane Korth'azz
+    MODEL_IMAGE_OF_BLAUMEUX = 24794,   // Image of Lady Blaumeux
+    MODEL_IMAGE_OF_ZELIEK = 24800,     // Image of Sir Zeliek
+    MODEL_IMAGE_OF_PATCHWERK = 24798,  // Image of Patchwerk
+    MODEL_IMAGE_OF_GROBBULUS = 24792,  // Image of Grobbulus
+    MODEL_IMAGE_OF_THADDIUS = 24801,   // Image of Thaddius
+    MODEL_IMAGE_OF_GLUTH = 24803,      // Image of Gluth
+    MODEL_IMAGE_OF_ANUBREKHAN = 24789, // Image of Anub'rekhan
+    MODEL_IMAGE_OF_FAERLINA = 24790,   // Image of Faerlina
+    MODEL_IMAGE_OF_MAEXXNA = 24796,    // Image of Maexxna
+    MODEL_IMAGE_OF_NOTH = 24797,       // Image of Noth
+    MODEL_IMAGE_OF_HEIGAN = 24793,     // Image of Heigan
+    MODEL_IMAGE_OF_LOATHEB = 24795,    // Image of Loatheb
 
-    NPC_IMAGE_OF_KELTHUZAD             = 27766, // Image of Kel'Thuzad
-    NPC_IMAGE_OF_SAPPHIRON             = 27767, // Image of Sapphiron
-    NPC_IMAGE_OF_RAZUVIOUS             = 27768, // Image of Razuvious
-    NPC_IMAGE_OF_GOTHIK                = 27769, // Image of Gothik
-    NPC_IMAGE_OF_THANE                 = 27770, // Image of Thane Korth'azz
-    NPC_IMAGE_OF_BLAUMEUX              = 27771, // Image of Lady Blaumeux
-    NPC_IMAGE_OF_ZELIEK                = 27772, // Image of Sir Zeliek
-    NPC_IMAGE_OF_PATCHWERK             = 27773, // Image of Patchwerk
-    NPC_IMAGE_OF_GROBBULUS             = 27774, // Image of Grobbulus
-    NPC_IMAGE_OF_THADDIUS              = 27775, // Image of Thaddius
-    NPC_IMAGE_OF_GLUTH                 = 27782, // Image of Gluth
-    NPC_IMAGE_OF_ANUBREKHAN            = 27776, // Image of Anub'rekhan
-    NPC_IMAGE_OF_FAERLINA              = 27777, // Image of Faerlina
-    NPC_IMAGE_OF_MAEXXNA               = 27778, // Image of Maexxna
-    NPC_IMAGE_OF_NOTH                  = 27779, // Image of Noth
-    NPC_IMAGE_OF_HEIGAN                = 27780, // Image of Heigan
-    NPC_IMAGE_OF_LOATHEB               = 27781, // Image of Loatheb
+    NPC_IMAGE_OF_KELTHUZAD = 27766,  // Image of Kel'Thuzad
+    NPC_IMAGE_OF_SAPPHIRON = 27767,  // Image of Sapphiron
+    NPC_IMAGE_OF_RAZUVIOUS = 27768,  // Image of Razuvious
+    NPC_IMAGE_OF_GOTHIK = 27769,     // Image of Gothik
+    NPC_IMAGE_OF_THANE = 27770,      // Image of Thane Korth'azz
+    NPC_IMAGE_OF_BLAUMEUX = 27771,   // Image of Lady Blaumeux
+    NPC_IMAGE_OF_ZELIEK = 27772,     // Image of Sir Zeliek
+    NPC_IMAGE_OF_PATCHWERK = 27773,  // Image of Patchwerk
+    NPC_IMAGE_OF_GROBBULUS = 27774,  // Image of Grobbulus
+    NPC_IMAGE_OF_THADDIUS = 27775,   // Image of Thaddius
+    NPC_IMAGE_OF_GLUTH = 27782,      // Image of Gluth
+    NPC_IMAGE_OF_ANUBREKHAN = 27776, // Image of Anub'rekhan
+    NPC_IMAGE_OF_FAERLINA = 27777,   // Image of Faerlina
+    NPC_IMAGE_OF_MAEXXNA = 27778,    // Image of Maexxna
+    NPC_IMAGE_OF_NOTH = 27779,       // Image of Noth
+    NPC_IMAGE_OF_HEIGAN = 27780,     // Image of Heigan
+    NPC_IMAGE_OF_LOATHEB = 27781,    // Image of Loatheb
 
-    NPC_INFANTRYMAN                    = 27160, // Add in case I randomize the spawning
-    NPC_SENTINAL                       = 27162,
-    NPC_BATTLE_MAGE                    = 27164,
+    NPC_INFANTRYMAN = 27160, // Add in case I randomize the spawning
+    NPC_SENTINAL = 27162,
+    NPC_BATTLE_MAGE = 27164,
 
     // Five platforms to choose from
-    SAY_PINNACLE                       = 0,
-    SAY_DEATH_KNIGHT_WING              = 1,
-    SAY_ABOMINATION_WING               = 2,
-    SAY_SPIDER_WING                    = 3,
-    SAY_PLAGUE_WING                    = 4,
+    SAY_PINNACLE = 0,
+    SAY_DEATH_KNIGHT_WING = 1,
+    SAY_ABOMINATION_WING = 2,
+    SAY_SPIDER_WING = 3,
+    SAY_PLAGUE_WING = 4,
     // Used in all talks
-    SAY_TALK_COMPLETE                  = 5,
+    SAY_TALK_COMPLETE = 5,
     // Pinnacle of Naxxramas
-    SAY_SAPPHIRON                      = 6,
-    SAY_KELTHUZAD_1                    = 7,
-    SAY_KELTHUZAD_2                    = 8,
-    SAY_KELTHUZAD_3                    = 9,
+    SAY_SAPPHIRON = 6,
+    SAY_KELTHUZAD_1 = 7,
+    SAY_KELTHUZAD_2 = 8,
+    SAY_KELTHUZAD_3 = 9,
     // Death knight wing of Naxxramas
-    SAY_RAZUVIOUS                      = 10,
-    SAY_GOTHIK                         = 11,
-    SAY_DEATH_KNIGHTS_1                = 12,
-    SAY_DEATH_KNIGHTS_2                = 13,
-    SAY_DEATH_KNIGHTS_3                = 14,
-    SAY_DEATH_KNIGHTS_4                = 15,
+    SAY_RAZUVIOUS = 10,
+    SAY_GOTHIK = 11,
+    SAY_DEATH_KNIGHTS_1 = 12,
+    SAY_DEATH_KNIGHTS_2 = 13,
+    SAY_DEATH_KNIGHTS_3 = 14,
+    SAY_DEATH_KNIGHTS_4 = 15,
     // Blighted abomination wing of Naxxramas
-    SAY_PATCHWERK                      = 16,
-    SAY_GROBBULUS                      = 17,
-    SAY_GLUTH                          = 18,
-    SAY_THADDIUS                       = 19,
+    SAY_PATCHWERK = 16,
+    SAY_GROBBULUS = 17,
+    SAY_GLUTH = 18,
+    SAY_THADDIUS = 19,
     // Accursed spider wing of Naxxramas
-    SAY_ANUBREKHAN                     = 20,
-    SAY_FAERLINA                       = 21,
-    SAY_MAEXXNA                        = 22,
+    SAY_ANUBREKHAN = 20,
+    SAY_FAERLINA = 21,
+    SAY_MAEXXNA = 22,
     // Dread plague wing of Naxxramas
-    SAY_NOTH                           = 23,
-    SAY_HEIGAN_1                       = 24,
-    SAY_HEIGAN_2                       = 25,
-    SAY_LOATHEB                        = 26,
+    SAY_NOTH = 23,
+    SAY_HEIGAN_1 = 24,
+    SAY_HEIGAN_2 = 25,
+    SAY_LOATHEB = 26,
 
-    SPELL_HEROIC_IMAGE_CHANNEL         = 49519,
+    SPELL_HEROIC_IMAGE_CHANNEL = 49519,
 
-    EVENT_START_RANDOM                 = 1,
-    EVENT_MOVE_TO_POINT                = 2,
-    EVENT_TALK_COMPLETE                = 3,
-    EVENT_GET_TARGETS                  = 4,
-    EVENT_KELTHUZAD_2                  = 5,
-    EVENT_KELTHUZAD_3                  = 6,
-    EVENT_DEATH_KNIGHTS_2              = 7,
-    EVENT_DEATH_KNIGHTS_3              = 8,
-    EVENT_DEATH_KNIGHTS_4              = 9,
-    EVENT_HEIGAN_2                     = 10
+    EVENT_START_RANDOM = 1,
+    EVENT_MOVE_TO_POINT = 2,
+    EVENT_TALK_COMPLETE = 3,
+    EVENT_GET_TARGETS = 4,
+    EVENT_KELTHUZAD_2 = 5,
+    EVENT_KELTHUZAD_3 = 6,
+    EVENT_DEATH_KNIGHTS_2 = 7,
+    EVENT_DEATH_KNIGHTS_3 = 8,
+    EVENT_DEATH_KNIGHTS_4 = 9,
+    EVENT_HEIGAN_2 = 10
 };
 
-uint32 const AudienceMobs[3] = { NPC_INFANTRYMAN, NPC_SENTINAL, NPC_BATTLE_MAGE };
+uint32 const AudienceMobs[3] = {NPC_INFANTRYMAN, NPC_SENTINAL, NPC_BATTLE_MAGE};
 
-Position const PosTalkLocations[6] =
-{
-    { 3805.453f, -682.9075f, 222.2917f, 2.793398f }, // Pinnacle of Naxxramas
-    { 3807.508f, -691.0882f, 221.9688f, 2.094395f }, // Death knight wing of Naxxramas
-    { 3797.228f, -690.3555f, 222.5019f, 1.134464f }, // Blighted abomination wing of Naxxramas
-    { 3804.038f, -672.3098f, 222.5019f, 4.578917f }, // Accursed spider wing of Naxxramas
-    { 3815.097f, -680.2596f, 221.9777f, 2.86234f  }, // Dread plague wing of Naxxramas
-    { 3798.05f,  -680.611f,  222.9825f, 6.038839f }, // Home
+Position const PosTalkLocations[6] = {
+    {3805.453f, -682.9075f, 222.2917f, 2.793398f}, // Pinnacle of Naxxramas
+    {3807.508f, -691.0882f, 221.9688f, 2.094395f}, // Death knight wing of Naxxramas
+    {3797.228f, -690.3555f, 222.5019f, 1.134464f}, // Blighted abomination wing of Naxxramas
+    {3804.038f, -672.3098f, 222.5019f, 4.578917f}, // Accursed spider wing of Naxxramas
+    {3815.097f, -680.2596f, 221.9777f, 2.86234f }, // Dread plague wing of Naxxramas
+    {3798.05f,  -680.611f,  222.9825f, 6.038839f}, // Home
 };
 
 class npc_commander_eligor_dawnbringer : public CreatureScript
 {
 public:
-    npc_commander_eligor_dawnbringer() : CreatureScript("npc_commander_eligor_dawnbringer") {}
+    npc_commander_eligor_dawnbringer() : CreatureScript("npc_commander_eligor_dawnbringer") { }
 
     struct npc_commander_eligor_dawnbringerAI : public ScriptedAI
     {
@@ -1811,88 +1872,88 @@ public:
                     switch (talkWing)
                     {
                         case 0: // Pinnacle of Naxxramas
+                        {
+                            switch (urand(0, 1))
                             {
-                                switch (urand (0, 1))
-                                {
-                                    case 0:
-                                        ChangeImage(NPC_IMAGE_OF_KELTHUZAD, MODEL_IMAGE_OF_KELTHUZAD, SAY_KELTHUZAD_1);
-                                        _events.ScheduleEvent(EVENT_KELTHUZAD_2, 8s);
-                                        break;
-                                    case 1:
-                                        ChangeImage(NPC_IMAGE_OF_SAPPHIRON, MODEL_IMAGE_OF_SAPPHIRON, SAY_SAPPHIRON);
-                                        break;
-                                }
+                                case 0:
+                                    ChangeImage(NPC_IMAGE_OF_KELTHUZAD, MODEL_IMAGE_OF_KELTHUZAD, SAY_KELTHUZAD_1);
+                                    _events.ScheduleEvent(EVENT_KELTHUZAD_2, 8s);
+                                    break;
+                                case 1:
+                                    ChangeImage(NPC_IMAGE_OF_SAPPHIRON, MODEL_IMAGE_OF_SAPPHIRON, SAY_SAPPHIRON);
+                                    break;
                             }
-                            break;
+                        }
+                        break;
                         case 1: // Death knight wing of Naxxramas
+                        {
+                            switch (urand(0, 2))
                             {
-                                switch (urand (0, 2))
-                                {
-                                    case 0:
-                                        ChangeImage(NPC_IMAGE_OF_RAZUVIOUS, MODEL_IMAGE_OF_RAZUVIOUS, SAY_RAZUVIOUS);
-                                        break;
-                                    case 1:
-                                        ChangeImage(NPC_IMAGE_OF_GOTHIK, MODEL_IMAGE_OF_GOTHIK, SAY_GOTHIK);
-                                        break;
-                                    case 2:
-                                        ChangeImage(NPC_IMAGE_OF_THANE, MODEL_IMAGE_OF_THANE, SAY_DEATH_KNIGHTS_1);
-                                        _events.ScheduleEvent(EVENT_DEATH_KNIGHTS_2, 10s);
-                                        break;
-                                }
+                                case 0:
+                                    ChangeImage(NPC_IMAGE_OF_RAZUVIOUS, MODEL_IMAGE_OF_RAZUVIOUS, SAY_RAZUVIOUS);
+                                    break;
+                                case 1:
+                                    ChangeImage(NPC_IMAGE_OF_GOTHIK, MODEL_IMAGE_OF_GOTHIK, SAY_GOTHIK);
+                                    break;
+                                case 2:
+                                    ChangeImage(NPC_IMAGE_OF_THANE, MODEL_IMAGE_OF_THANE, SAY_DEATH_KNIGHTS_1);
+                                    _events.ScheduleEvent(EVENT_DEATH_KNIGHTS_2, 10s);
+                                    break;
                             }
-                            break;
+                        }
+                        break;
                         case 2: // Blighted abomination wing of Naxxramas
+                        {
+                            switch (urand(0, 3))
                             {
-                                switch (urand (0, 3))
-                                {
-                                    case 0:
-                                        ChangeImage(NPC_IMAGE_OF_PATCHWERK, MODEL_IMAGE_OF_PATCHWERK, SAY_PATCHWERK);
-                                        break;
-                                    case 1:
-                                        ChangeImage(NPC_IMAGE_OF_GROBBULUS, MODEL_IMAGE_OF_GROBBULUS, SAY_GROBBULUS);
-                                        break;
-                                    case 2:
-                                        ChangeImage(NPC_IMAGE_OF_THADDIUS, MODEL_IMAGE_OF_THADDIUS, SAY_THADDIUS);
-                                        break;
-                                    case 3:
-                                        ChangeImage(NPC_IMAGE_OF_GLUTH, MODEL_IMAGE_OF_GLUTH, SAY_GLUTH);
-                                        break;
-                                }
+                                case 0:
+                                    ChangeImage(NPC_IMAGE_OF_PATCHWERK, MODEL_IMAGE_OF_PATCHWERK, SAY_PATCHWERK);
+                                    break;
+                                case 1:
+                                    ChangeImage(NPC_IMAGE_OF_GROBBULUS, MODEL_IMAGE_OF_GROBBULUS, SAY_GROBBULUS);
+                                    break;
+                                case 2:
+                                    ChangeImage(NPC_IMAGE_OF_THADDIUS, MODEL_IMAGE_OF_THADDIUS, SAY_THADDIUS);
+                                    break;
+                                case 3:
+                                    ChangeImage(NPC_IMAGE_OF_GLUTH, MODEL_IMAGE_OF_GLUTH, SAY_GLUTH);
+                                    break;
                             }
-                            break;
+                        }
+                        break;
                         case 3: // Accursed spider wing of Naxxramas
+                        {
+                            switch (urand(0, 2))
                             {
-                                switch (urand (0, 2))
-                                {
-                                    case 0:
-                                        ChangeImage(NPC_IMAGE_OF_ANUBREKHAN, MODEL_IMAGE_OF_ANUBREKHAN, SAY_ANUBREKHAN);
-                                        break;
-                                    case 1:
-                                        ChangeImage(NPC_IMAGE_OF_FAERLINA, MODEL_IMAGE_OF_FAERLINA, SAY_FAERLINA);
-                                        break;
-                                    case 2:
-                                        ChangeImage(NPC_IMAGE_OF_MAEXXNA, MODEL_IMAGE_OF_MAEXXNA, SAY_MAEXXNA);
-                                        break;
-                                }
+                                case 0:
+                                    ChangeImage(NPC_IMAGE_OF_ANUBREKHAN, MODEL_IMAGE_OF_ANUBREKHAN, SAY_ANUBREKHAN);
+                                    break;
+                                case 1:
+                                    ChangeImage(NPC_IMAGE_OF_FAERLINA, MODEL_IMAGE_OF_FAERLINA, SAY_FAERLINA);
+                                    break;
+                                case 2:
+                                    ChangeImage(NPC_IMAGE_OF_MAEXXNA, MODEL_IMAGE_OF_MAEXXNA, SAY_MAEXXNA);
+                                    break;
                             }
-                            break;
+                        }
+                        break;
                         case 4: // Dread plague wing of Naxxramas
+                        {
+                            switch (urand(0, 2))
                             {
-                                switch (urand (0, 2))
-                                {
-                                    case 0:
-                                        ChangeImage(NPC_IMAGE_OF_NOTH, MODEL_IMAGE_OF_NOTH, SAY_NOTH);
-                                        break;
-                                    case 1:
-                                        ChangeImage(NPC_IMAGE_OF_HEIGAN, MODEL_IMAGE_OF_HEIGAN, SAY_HEIGAN_1);
-                                        _events.ScheduleEvent(EVENT_HEIGAN_2, 8s);
-                                        break;
-                                    case 2:
-                                        ChangeImage(NPC_IMAGE_OF_LOATHEB, MODEL_IMAGE_OF_LOATHEB, SAY_LOATHEB);
-                                        break;
-                                }
+                                case 0:
+                                    ChangeImage(NPC_IMAGE_OF_NOTH, MODEL_IMAGE_OF_NOTH, SAY_NOTH);
+                                    break;
+                                case 1:
+                                    ChangeImage(NPC_IMAGE_OF_HEIGAN, MODEL_IMAGE_OF_HEIGAN, SAY_HEIGAN_1);
+                                    _events.ScheduleEvent(EVENT_HEIGAN_2, 8s);
+                                    break;
+                                case 2:
+                                    ChangeImage(NPC_IMAGE_OF_LOATHEB, MODEL_IMAGE_OF_LOATHEB, SAY_LOATHEB);
+                                    break;
                             }
-                            break;
+                        }
+                        break;
                         case 5: // Home
                             _events.ScheduleEvent(EVENT_START_RANDOM, 30s);
                             break;
@@ -1946,10 +2007,8 @@ public:
         void TurnAudience()
         {
             for (uint8 i = 0; i < 10; ++i)
-            {
                 if (Creature* creature = ObjectAccessor::GetCreature(*me, audienceList[i]))
                     creature->SetFacingToObject(me);
-            }
         }
 
         void UpdateAI(uint32 diff) override
@@ -1961,14 +2020,17 @@ public:
                 switch (eventId)
                 {
                     case EVENT_START_RANDOM:
-                        talkWing = urand (0, 4);
+                        talkWing = urand(0, 4);
                         Talk(talkWing);
                         _events.ScheduleEvent(EVENT_MOVE_TO_POINT, 8s);
                         break;
                     case EVENT_MOVE_TO_POINT:
                         me->SetWalk(true);
                         me->GetMotionMaster()->Clear();
-                        me->GetMotionMaster()->MovePoint(1, PosTalkLocations[talkWing].m_positionX, PosTalkLocations[talkWing].m_positionY, PosTalkLocations[talkWing].m_positionZ);
+                        me->GetMotionMaster()->MovePoint(1,
+                            PosTalkLocations[talkWing].m_positionX,
+                            PosTalkLocations[talkWing].m_positionY,
+                            PosTalkLocations[talkWing].m_positionZ);
                         break;
                     case EVENT_TALK_COMPLETE:
                         talkWing = 5;
@@ -2015,6 +2077,7 @@ public:
             }
             DoMeleeAttackIfReady();
         }
+
     private:
         EventMap _events;
         ObjectGuid audienceList[10];
@@ -2034,14 +2097,14 @@ public:
 
 enum StrengthenAncientsMisc
 {
-    SAY_WALKER_FRIENDLY         = 0,
-    SAY_WALKER_ENEMY            = 1,
-    SAY_LOTHALOR                = 0,
+    SAY_WALKER_FRIENDLY = 0,
+    SAY_WALKER_ENEMY = 1,
+    SAY_LOTHALOR = 0,
 
-    SPELL_CREATE_ITEM_BARK      = 47550,
-    SPELL_CONFUSED              = 47044,
+    SPELL_CREATE_ITEM_BARK = 47550,
+    SPELL_CONFUSED = 47044,
 
-    NPC_LOTHALOR                = 26321
+    NPC_LOTHALOR = 26321
 };
 
 class spell_q12096_q12092_dummy : public SpellScript
@@ -2050,7 +2113,7 @@ class spell_q12096_q12092_dummy : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CREATE_ITEM_BARK });
+        return ValidateSpellInfo({SPELL_CREATE_ITEM_BARK});
     }
 
     void HandleDummy(SpellEffIndex /*effIndex*/)
@@ -2112,19 +2175,19 @@ class spell_q12096_q12092_bark : public SpellScript
 
 enum TorturerLeCraft
 {
-    SPELL_HEMORRHAGE                   = 30478,
-    SPELL_KIDNEY_SHOT                  = 30621,
+    SPELL_HEMORRHAGE = 30478,
+    SPELL_KIDNEY_SHOT = 30621,
     SPELL_HIGH_EXECUTORS_BRANDING_IRON = 48603,
-    NPC_TORTURER_LECRAFT               = 27394,
-    EVENT_HEMORRHAGE                   = 1,
-    EVENT_KIDNEY_SHOT                  = 2,
-    SAY_AGGRO                          = 0
+    NPC_TORTURER_LECRAFT = 27394,
+    EVENT_HEMORRHAGE = 1,
+    EVENT_KIDNEY_SHOT = 2,
+    SAY_AGGRO = 0
 };
 
 class npc_torturer_lecraft : public CreatureScript
 {
 public:
-    npc_torturer_lecraft() : CreatureScript("npc_torturer_lecraft") {}
+    npc_torturer_lecraft() : CreatureScript("npc_torturer_lecraft") { }
 
     struct npc_torturer_lecraftAI : public ScriptedAI
     {
@@ -2146,7 +2209,7 @@ public:
             _events.ScheduleEvent(EVENT_KIDNEY_SHOT, urand(12000, 15000));
 
             if (Player* player = who->ToPlayer())
-                Talk (SAY_AGGRO, player);
+                Talk(SAY_AGGRO, player);
         }
 
         void SpellHit(Unit* caster, SpellInfo const* spell) override
@@ -2199,10 +2262,11 @@ public:
             }
             DoMeleeAttackIfReady();
         }
+
     private:
         EventMap _events;
-        uint8    _textCounter;
-        ObjectGuid   _playerGUID;
+        uint8 _textCounter;
+        ObjectGuid _playerGUID;
     };
 
     CreatureAI* GetAI(Creature* creature) const override
@@ -2218,7 +2282,7 @@ class spell_dragonblight_corrosive_spit : public AuraScript
 
     bool Validate(SpellInfo const* spellInfo) override
     {
-        return ValidateSpellInfo({ uint32(spellInfo->GetEffect(EFFECT_0).CalcValue()) });
+        return ValidateSpellInfo({uint32(spellInfo->GetEffect(EFFECT_0).CalcValue())});
     }
 
     void AfterApply(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
@@ -2238,8 +2302,12 @@ class spell_dragonblight_corrosive_spit : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_dragonblight_corrosive_spit::AfterApply, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_dragonblight_corrosive_spit::PeriodicTick, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE);
+        AfterEffectApply += AuraEffectApplyFn(spell_dragonblight_corrosive_spit::AfterApply,
+            EFFECT_1,
+            SPELL_AURA_PERIODIC_DAMAGE,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_dragonblight_corrosive_spit::PeriodicTick, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 

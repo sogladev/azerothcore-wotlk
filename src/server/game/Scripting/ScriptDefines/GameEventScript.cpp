@@ -34,8 +34,8 @@ void ScriptMgr::OnGameEventCheck(uint16 EventID)
     CALL_ENABLED_HOOKS(GameEventScript, GAMEEVENTHOOK_ON_EVENT_CHECK, script->OnEventCheck(EventID));
 }
 
-GameEventScript::GameEventScript(const char* name, std::vector<uint16> enabledHooks)
-    : ScriptObject(name, GAMEEVENTHOOK_END)
+GameEventScript::GameEventScript(char const* name, std::vector<uint16> enabledHooks) :
+    ScriptObject(name, GAMEEVENTHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

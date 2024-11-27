@@ -76,7 +76,9 @@ void ScriptMgr::OnAfterUnloadAllMaps()
 
 void ScriptMgr::OnBeforeFinalizePlayerWorldSession(uint32& cacheVersion)
 {
-    CALL_ENABLED_HOOKS(WorldScript, WORLDHOOK_ON_BEFORE_FINALIZE_PLAYER_WORLD_SESSION, script->OnBeforeFinalizePlayerWorldSession(cacheVersion));
+    CALL_ENABLED_HOOKS(WorldScript,
+        WORLDHOOK_ON_BEFORE_FINALIZE_PLAYER_WORLD_SESSION,
+        script->OnBeforeFinalizePlayerWorldSession(cacheVersion));
 }
 
 void ScriptMgr::OnBeforeWorldInitialized()
@@ -84,8 +86,7 @@ void ScriptMgr::OnBeforeWorldInitialized()
     CALL_ENABLED_HOOKS(WorldScript, WORLDHOOK_ON_BEFORE_WORLD_INITIALIZED, script->OnBeforeWorldInitialized());
 }
 
-WorldScript::WorldScript(const char* name, std::vector<uint16> enabledHooks)
-    : ScriptObject(name, WORLDHOOK_END)
+WorldScript::WorldScript(char const* name, std::vector<uint16> enabledHooks) : ScriptObject(name, WORLDHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

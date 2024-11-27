@@ -24,34 +24,34 @@
 
 enum Spells
 {
-    SPELL_BELLOWING_ROAR                = 22686,
-    SPELL_GRIEVOUS_BITE                 = 48920,
-    SPELL_MANGLING_SLASH                = 48873,
-    SPELL_FEARSOME_ROAR                 = 48849,
-    SPELL_PIERCING_SLASH                = 48878,
-    SPELL_RAPTOR_CALL                   = 59416
+    SPELL_BELLOWING_ROAR = 22686,
+    SPELL_GRIEVOUS_BITE = 48920,
+    SPELL_MANGLING_SLASH = 48873,
+    SPELL_FEARSOME_ROAR = 48849,
+    SPELL_PIERCING_SLASH = 48878,
+    SPELL_RAPTOR_CALL = 59416
 };
 
 enum Misc
 {
-    NPC_DRAKKARI_SCYTHECLAW             = 26628,
-    NPC_DRAKKARI_GUTRIPPER              = 26641,
+    NPC_DRAKKARI_SCYTHECLAW = 26628,
+    NPC_DRAKKARI_GUTRIPPER = 26641,
 
-    SAY_CLAW_EMOTE                      = 0,
+    SAY_CLAW_EMOTE = 0,
 
-    EVENT_SPELL_BELLOWING_ROAR          = 1,
-    EVENT_SPELL_GRIEVOUS_BITE           = 2,
-    EVENT_SPELL_MANGLING_SLASH          = 3,
-    EVENT_SPELL_FEARSOME_ROAR           = 4,
-    EVENT_SPELL_PIERCING_SLASH          = 5,
-    EVENT_SPELL_RAPTOR_CALL             = 6,
-    EVENT_MENACING_CLAW                 = 7
+    EVENT_SPELL_BELLOWING_ROAR = 1,
+    EVENT_SPELL_GRIEVOUS_BITE = 2,
+    EVENT_SPELL_MANGLING_SLASH = 3,
+    EVENT_SPELL_FEARSOME_ROAR = 4,
+    EVENT_SPELL_PIERCING_SLASH = 5,
+    EVENT_SPELL_RAPTOR_CALL = 6,
+    EVENT_MENACING_CLAW = 7
 };
 
 class boss_dred : public CreatureScript
 {
 public:
-    boss_dred() : CreatureScript("boss_dred") {}
+    boss_dred() : CreatureScript("boss_dred") { }
 
     CreatureAI* GetAI(Creature* creature) const override
     {
@@ -60,9 +60,7 @@ public:
 
     struct boss_dredAI : public BossAI
     {
-        boss_dredAI(Creature* creature) : BossAI(creature, DATA_DRED)
-        {
-        }
+        boss_dredAI(Creature* creature) : BossAI(creature, DATA_DRED) { }
 
         void Reset() override
         {
@@ -171,7 +169,8 @@ class spell_dred_grievious_bite_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_dred_grievious_bite_aura::OnPeriodic, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_dred_grievious_bite_aura::OnPeriodic, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 
@@ -181,7 +180,8 @@ class spell_dred_raptor_call : public SpellScript
 
     void HandleDummy(SpellEffIndex /*effIndex*/)
     {
-        GetCaster()->SummonCreature(RAND(NPC_DRAKKARI_GUTRIPPER, NPC_DRAKKARI_SCYTHECLAW), -522.02f, -718.89f, 30.26f, 2.41f);
+        GetCaster()->SummonCreature(
+            RAND(NPC_DRAKKARI_GUTRIPPER, NPC_DRAKKARI_SCYTHECLAW), -522.02f, -718.89f, 30.26f, 2.41f);
     }
 
     void Register() override
@@ -193,9 +193,7 @@ class spell_dred_raptor_call : public SpellScript
 class achievement_better_off_dred : public AchievementCriteriaScript
 {
 public:
-    achievement_better_off_dred() : AchievementCriteriaScript("achievement_better_off_dred")
-    {
-    }
+    achievement_better_off_dred() : AchievementCriteriaScript("achievement_better_off_dred") { }
 
     bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {

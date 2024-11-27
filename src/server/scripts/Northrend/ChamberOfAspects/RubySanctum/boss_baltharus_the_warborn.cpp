@@ -21,69 +21,69 @@
 #include "Player.h"
 #include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "ruby_sanctum.h"
-#include "SpellScript.h"
 
 enum Texts
 {
-    SAY_BALTHARUS_INTRO         = 0,
-    SAY_AGGRO                   = 1,
-    SAY_KILL                    = 2,
-    SAY_CLONE                   = 3,
-    SAY_DEATH                   = 4,
+    SAY_BALTHARUS_INTRO = 0,
+    SAY_AGGRO = 1,
+    SAY_KILL = 2,
+    SAY_CLONE = 3,
+    SAY_DEATH = 4,
 
-    SAY_XERESTRASZA_EVENT       = 0,
-    SAY_XERESTRASZA_EVENT_1     = 1,
-    SAY_XERESTRASZA_EVENT_2     = 2,
-    SAY_XERESTRASZA_EVENT_3     = 3,
-    SAY_XERESTRASZA_EVENT_4     = 4,
-    SAY_XERESTRASZA_EVENT_5     = 5,
-    SAY_XERESTRASZA_EVENT_6     = 6,
-    SAY_XERESTRASZA_EVENT_7     = 7,
-    SAY_XERESTRASZA_INTRO       = 8
+    SAY_XERESTRASZA_EVENT = 0,
+    SAY_XERESTRASZA_EVENT_1 = 1,
+    SAY_XERESTRASZA_EVENT_2 = 2,
+    SAY_XERESTRASZA_EVENT_3 = 3,
+    SAY_XERESTRASZA_EVENT_4 = 4,
+    SAY_XERESTRASZA_EVENT_5 = 5,
+    SAY_XERESTRASZA_EVENT_6 = 6,
+    SAY_XERESTRASZA_EVENT_7 = 7,
+    SAY_XERESTRASZA_INTRO = 8
 };
 
 enum Spells
 {
-    SPELL_BARRIER_CHANNEL       = 76221,
+    SPELL_BARRIER_CHANNEL = 76221,
 
-    SPELL_ENERVATING_BRAND      = 74502,
-    SPELL_SIPHONED_MIGHT        = 74507,
-    SPELL_CLEAVE                = 40504,
-    SPELL_BLADE_TEMPEST         = 75125,
-    SPELL_CLONE                 = 74511,
-    SPELL_REPELLING_WAVE        = 74509,
-    SPELL_CLEAR_DEBUFFS         = 34098,
-    SPELL_SPAWN_EFFECT          = 64195
+    SPELL_ENERVATING_BRAND = 74502,
+    SPELL_SIPHONED_MIGHT = 74507,
+    SPELL_CLEAVE = 40504,
+    SPELL_BLADE_TEMPEST = 75125,
+    SPELL_CLONE = 74511,
+    SPELL_REPELLING_WAVE = 74509,
+    SPELL_CLEAR_DEBUFFS = 34098,
+    SPELL_SPAWN_EFFECT = 64195
 };
 
 enum Events
 {
-    EVENT_BLADE_TEMPEST         = 1,
-    EVENT_CLEAVE                = 2,
-    EVENT_ENERVATING_BRAND      = 3,
-    EVENT_CHECK_HEALTH1         = 4,
-    EVENT_CHECK_HEALTH2         = 5,
-    EVENT_CHECK_HEALTH3         = 6,
-    EVENT_KILL_TALK             = 7,
-    EVENT_SUMMON_CLONE          = 8,
+    EVENT_BLADE_TEMPEST = 1,
+    EVENT_CLEAVE = 2,
+    EVENT_ENERVATING_BRAND = 3,
+    EVENT_CHECK_HEALTH1 = 4,
+    EVENT_CHECK_HEALTH2 = 5,
+    EVENT_CHECK_HEALTH3 = 6,
+    EVENT_KILL_TALK = 7,
+    EVENT_SUMMON_CLONE = 8,
 
-    EVENT_XERESTRASZA_EVENT_0   = 1,
-    EVENT_XERESTRASZA_EVENT_1   = 2,
-    EVENT_XERESTRASZA_EVENT_2   = 3,
-    EVENT_XERESTRASZA_EVENT_3   = 4,
-    EVENT_XERESTRASZA_EVENT_4   = 5,
-    EVENT_XERESTRASZA_EVENT_5   = 6,
-    EVENT_XERESTRASZA_EVENT_6   = 7,
-    EVENT_XERESTRASZA_EVENT_7   = 8
+    EVENT_XERESTRASZA_EVENT_0 = 1,
+    EVENT_XERESTRASZA_EVENT_1 = 2,
+    EVENT_XERESTRASZA_EVENT_2 = 3,
+    EVENT_XERESTRASZA_EVENT_3 = 4,
+    EVENT_XERESTRASZA_EVENT_4 = 5,
+    EVENT_XERESTRASZA_EVENT_5 = 6,
+    EVENT_XERESTRASZA_EVENT_6 = 7,
+    EVENT_XERESTRASZA_EVENT_7 = 8
 };
 
 enum Actions
 {
-    ACTION_INTRO_BALTHARUS      = -3975101,
-    ACTION_BALTHARUS_DEATH      = -3975102,
-    ACTION_CLONE                = 1
+    ACTION_INTRO_BALTHARUS = -3975101,
+    ACTION_BALTHARUS_DEATH = -3975102,
+    ACTION_CLONE = 1
 };
 
 class DelayedTalk : public BasicEvent
@@ -189,7 +189,7 @@ public:
                 xerestrasza->AI()->DoAction(ACTION_BALTHARUS_DEATH);
         }
 
-        void KilledUnit(Unit*  /*victim*/) override
+        void KilledUnit(Unit* /*victim*/) override
         {
             if (events.GetNextEventTime(EVENT_KILL_TALK) == 0)
             {
@@ -228,7 +228,8 @@ public:
                     break;
                 case EVENT_ENERVATING_BRAND:
                     for (uint8 i = 0; i < RAID_MODE<uint8>(2, 4, 2, 4); i++)
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 45.0f, true, true, -SPELL_ENERVATING_BRAND))
+                        if (Unit* target =
+                                SelectTarget(SelectTargetMethod::Random, 0, 45.0f, true, true, -SPELL_ENERVATING_BRAND))
                             me->CastSpell(target, SPELL_ENERVATING_BRAND, true);
                     events.ScheduleEvent(EVENT_ENERVATING_BRAND, 26s);
                     break;
@@ -282,9 +283,7 @@ public:
 
     struct npc_baltharus_the_warborn_cloneAI : public ScriptedAI
     {
-        npc_baltharus_the_warborn_cloneAI(Creature* creature) : ScriptedAI(creature)
-        {
-        }
+        npc_baltharus_the_warborn_cloneAI(Creature* creature) : ScriptedAI(creature) { }
 
         void JustEngagedWith(Unit* /*who*/) override
         {
@@ -315,7 +314,8 @@ public:
                     break;
                 case EVENT_ENERVATING_BRAND:
                     for (uint8 i = 0; i < RAID_MODE<uint8>(4, 10, 4, 10); i++)
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 45.0f, true, true, -SPELL_ENERVATING_BRAND))
+                        if (Unit* target =
+                                SelectTarget(SelectTargetMethod::Random, 0, 45.0f, true, true, -SPELL_ENERVATING_BRAND))
                             me->CastSpell(target, SPELL_ENERVATING_BRAND, true);
                     _events.ScheduleEvent(EVENT_ENERVATING_BRAND, 26s);
                     break;
@@ -340,7 +340,7 @@ class spell_baltharus_enervating_brand_trigger : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SIPHONED_MIGHT });
+        return ValidateSpellInfo({SPELL_SIPHONED_MIGHT});
     }
 
     void CheckDistance()
@@ -348,8 +348,8 @@ class spell_baltharus_enervating_brand_trigger : public SpellScript
         if (Unit* caster = GetOriginalCaster())
             if (Unit* target = GetHitUnit())
                 if (target == GetCaster()
-                        // the spell has an unlimited range, so we need this check
-                        && target->GetDistance2d(caster) <= 12.0f)
+                    // the spell has an unlimited range, so we need this check
+                    && target->GetDistance2d(caster) <= 12.0f)
                     target->CastSpell(caster, SPELL_SIPHONED_MIGHT, true);
     }
 
@@ -468,7 +468,8 @@ public:
             if (Creature* xerestrasza = ObjectAccessor::GetCreature(*player, instance->GetGuidData(NPC_XERESTRASZA)))
                 xerestrasza->AI()->DoAction(ACTION_INTRO_BALTHARUS);
 
-            if (Creature* baltharus = ObjectAccessor::GetCreature(*player, instance->GetGuidData(NPC_BALTHARUS_THE_WARBORN)))
+            if (Creature* baltharus =
+                    ObjectAccessor::GetCreature(*player, instance->GetGuidData(NPC_BALTHARUS_THE_WARBORN)))
                 baltharus->AI()->DoAction(ACTION_INTRO_BALTHARUS);
         }
 

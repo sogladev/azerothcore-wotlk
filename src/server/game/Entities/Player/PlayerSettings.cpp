@@ -28,9 +28,7 @@ void Player::_LoadCharacterSettings(PreparedQueryResult result)
     m_charSettingsMap.clear();
 
     if (!sWorld->getBoolConfig(CONFIG_PLAYER_SETTINGS_ENABLED))
-    {
         return;
-    }
 
     if (result)
     {
@@ -38,7 +36,8 @@ void Player::_LoadCharacterSettings(PreparedQueryResult result)
         {
             Field* fields = result->Fetch();
 
-            std::string source = fields[0].Get<std::string>();;
+            std::string source = fields[0].Get<std::string>();
+            ;
             std::string data = fields[1].Get<std::string>();
 
             std::vector<std::string_view> tokens = Acore::Tokenize(data, ' ', false);
@@ -51,9 +50,7 @@ void Player::_LoadCharacterSettings(PreparedQueryResult result)
             for (auto& token : tokens)
             {
                 if (token.empty())
-                {
                     continue;
-                }
 
                 PlayerSetting set;
                 set.value = Acore::StringTo<uint32>(token).value();
@@ -91,18 +88,14 @@ PlayerSetting Player::GetPlayerSetting(std::string source, uint8 index)
 void Player::_SavePlayerSettings(CharacterDatabaseTransaction trans)
 {
     if (!sWorld->getBoolConfig(CONFIG_PLAYER_SETTINGS_ENABLED))
-    {
         return;
-    }
 
     for (auto& itr : m_charSettingsMap)
     {
         std::ostringstream data;
 
         for (auto& setting : itr.second)
-        {
             data << setting.value << ' ';
-        }
 
         CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_REP_CHAR_SETTINGS);
         stmt->SetData(0, GetGUID().GetCounter());
@@ -136,9 +129,7 @@ void Player::UpdatePlayerSetting(std::string source, uint8 index, uint32 value)
     else
     {
         if (size > itr->second.size())
-        {
             itr->second.resize(size);
-        }
         itr->second[index].value = value;
     }
 }

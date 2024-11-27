@@ -26,15 +26,11 @@ bool ScriptMgr::OnGossipHello(Player* player, GameObject* go)
     ASSERT(player);
     ASSERT(go);
 
-    auto ret = IsValidBoolScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        return script->CanGameObjectGossipHello(player, go);
-    });
+    auto ret = IsValidBoolScript<AllGameObjectScript>(
+        [&](AllGameObjectScript* script) { return script->CanGameObjectGossipHello(player, go); });
 
     if (ret && *ret)
-    {
         return true;
-    }
 
     auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId());
     ClearGossipMenuFor(player);
@@ -46,35 +42,27 @@ bool ScriptMgr::OnGossipSelect(Player* player, GameObject* go, uint32 sender, ui
     ASSERT(player);
     ASSERT(go);
 
-    auto ret = IsValidBoolScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        return script->CanGameObjectGossipSelect(player, go, sender, action);
-    });
+    auto ret = IsValidBoolScript<AllGameObjectScript>(
+        [&](AllGameObjectScript* script) { return script->CanGameObjectGossipSelect(player, go, sender, action); });
 
     if (ret && *ret)
-    {
         return true;
-    }
 
     auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId());
     return tempScript ? tempScript->OnGossipSelect(player, go, sender, action) : false;
 }
 
-bool ScriptMgr::OnGossipSelectCode(Player* player, GameObject* go, uint32 sender, uint32 action, const char* code)
+bool ScriptMgr::OnGossipSelectCode(Player* player, GameObject* go, uint32 sender, uint32 action, char const* code)
 {
     ASSERT(player);
     ASSERT(go);
     ASSERT(code);
 
     auto ret = IsValidBoolScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        return script->CanGameObjectGossipSelectCode(player, go, sender, action, code);
-    });
+    { return script->CanGameObjectGossipSelectCode(player, go, sender, action, code); });
 
     if (ret && *ret)
-    {
         return true;
-    }
 
     auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId());
     return tempScript ? tempScript->OnGossipSelectCode(player, go, sender, action, code) : false;
@@ -86,15 +74,11 @@ bool ScriptMgr::OnQuestAccept(Player* player, GameObject* go, Quest const* quest
     ASSERT(go);
     ASSERT(quest);
 
-    auto ret = IsValidBoolScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        return script->CanGameObjectQuestAccept(player, go, quest);
-    });
+    auto ret = IsValidBoolScript<AllGameObjectScript>(
+        [&](AllGameObjectScript* script) { return script->CanGameObjectQuestAccept(player, go, quest); });
 
     if (ret && *ret)
-    {
         return true;
-    }
 
     auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId());
     ClearGossipMenuFor(player);
@@ -107,15 +91,11 @@ bool ScriptMgr::OnQuestReward(Player* player, GameObject* go, Quest const* quest
     ASSERT(go);
     ASSERT(quest);
 
-    auto ret = IsValidBoolScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        return script->CanGameObjectQuestReward(player, go, quest, opt);
-    });
+    auto ret = IsValidBoolScript<AllGameObjectScript>(
+        [&](AllGameObjectScript* script) { return script->CanGameObjectQuestReward(player, go, quest, opt); });
 
     if (ret && *ret)
-    {
         return false;
-    }
 
     auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId());
     ClearGossipMenuFor(player);
@@ -135,112 +115,81 @@ void ScriptMgr::OnGameObjectDestroyed(GameObject* go, Player* player)
 {
     ASSERT(go);
 
-    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        script->OnGameObjectDestroyed(go, player);
-    });
+    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script) { script->OnGameObjectDestroyed(go, player); });
 
     if (auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId()))
-    {
         tempScript->OnDestroyed(go, player);
-    }
 }
 
 void ScriptMgr::OnGameObjectDamaged(GameObject* go, Player* player)
 {
     ASSERT(go);
 
-    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        script->OnGameObjectDamaged(go, player);
-    });
+    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script) { script->OnGameObjectDamaged(go, player); });
 
     if (auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId()))
-    {
         tempScript->OnDamaged(go, player);
-    }
 }
 
-void ScriptMgr::OnGameObjectModifyHealth(GameObject* go, Unit* attackerOrHealer, int32& change, SpellInfo const* spellInfo)
+void ScriptMgr::OnGameObjectModifyHealth(
+    GameObject* go, Unit* attackerOrHealer, int32& change, SpellInfo const* spellInfo)
 {
     ASSERT(go);
 
     ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        script->OnGameObjectModifyHealth(go, attackerOrHealer, change, spellInfo);
-    });
+    { script->OnGameObjectModifyHealth(go, attackerOrHealer, change, spellInfo); });
 
     if (auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId()))
-    {
         tempScript->OnModifyHealth(go, attackerOrHealer, change, spellInfo);
-    }
 }
 
 void ScriptMgr::OnGameObjectLootStateChanged(GameObject* go, uint32 state, Unit* unit)
 {
     ASSERT(go);
 
-    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        script->OnGameObjectLootStateChanged(go, state, unit);
-    });
+    ExecuteScript<AllGameObjectScript>(
+        [&](AllGameObjectScript* script) { script->OnGameObjectLootStateChanged(go, state, unit); });
 
     if (auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId()))
-    {
         tempScript->OnLootStateChanged(go, state, unit);
-    }
 }
 
 void ScriptMgr::OnGameObjectStateChanged(GameObject* go, uint32 state)
 {
     ASSERT(go);
 
-    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        script->OnGameObjectStateChanged(go, state);
-    });
+    ExecuteScript<AllGameObjectScript>(
+        [&](AllGameObjectScript* script) { script->OnGameObjectStateChanged(go, state); });
 
     if (auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId()))
-    {
         tempScript->OnGameObjectStateChanged(go, state);
-    }
 }
 
 void ScriptMgr::OnGameObjectUpdate(GameObject* go, uint32 diff)
 {
     ASSERT(go);
 
-    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        script->OnGameObjectUpdate(go, diff);
-    });
+    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script) { script->OnGameObjectUpdate(go, diff); });
 
     if (auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId()))
-    {
         tempScript->OnUpdate(go, diff);
-    }
 }
 
 GameObjectAI* ScriptMgr::GetGameObjectAI(GameObject* go)
 {
     ASSERT(go);
 
-    auto retAI = GetReturnAIScript<AllGameObjectScript, GameObjectAI>([go](AllGameObjectScript* script)
-    {
-        return script->GetGameObjectAI(go);
-    });
+    auto retAI = GetReturnAIScript<AllGameObjectScript, GameObjectAI>(
+        [go](AllGameObjectScript* script) { return script->GetGameObjectAI(go); });
 
     if (retAI)
-    {
         return retAI;
-    }
 
     auto tempScript = ScriptRegistry<GameObjectScript>::GetScriptById(go->GetScriptId());
     return tempScript ? tempScript->GetAI(go) : nullptr;
 }
 
-GameObjectScript::GameObjectScript(const char* name)
-    : ScriptObject(name)
+GameObjectScript::GameObjectScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<GameObjectScript>::AddScript(this);
 }

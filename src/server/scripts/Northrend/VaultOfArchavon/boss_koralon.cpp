@@ -25,23 +25,23 @@
 enum Events
 {
     // Koralon
-    EVENT_BURNING_BREATH            = 1,
-    EVENT_FLAME_CINDER              = 2,
-    EVENT_METEOR_FISTS              = 3,
+    EVENT_BURNING_BREATH = 1,
+    EVENT_FLAME_CINDER = 2,
+    EVENT_METEOR_FISTS = 3,
 };
 
 enum Spells
 {
-    SPELL_BURNING_FURY                          = 68168,
-    SPELL_BURNING_BREATH                        = 66665, // handled by spell_difficulty
+    SPELL_BURNING_FURY = 68168,
+    SPELL_BURNING_BREATH = 66665, // handled by spell_difficulty
 
-    SPELL_FLAMING_CINDER                        = 66681,
-    SPELL_FLAMING_CINDER_DUMMY                  = 66690,
-    SPELL_FLAMING_CINDER_MISSILE                = 66682, // trigger of missile handled by spell_difficulty
+    SPELL_FLAMING_CINDER = 66681,
+    SPELL_FLAMING_CINDER_DUMMY = 66690,
+    SPELL_FLAMING_CINDER_MISSILE = 66682, // trigger of missile handled by spell_difficulty
 
-    SPELL_METEOR_FISTS                          = 66725, // handled by spell_difficulty
-    SPELL_METEOR_FISTS_DAMAGE                   = 66765,
-    SPELL_FW_METEOR_FISTS_DAMAGE                = 66809
+    SPELL_METEOR_FISTS = 66725, // handled by spell_difficulty
+    SPELL_METEOR_FISTS_DAMAGE = 66765,
+    SPELL_FW_METEOR_FISTS_DAMAGE = 66809
 };
 
 class boss_koralon : public CreatureScript
@@ -171,13 +171,17 @@ class spell_voa_flaming_cinder : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_FLAMING_CINDER_MISSILE });
+        return ValidateSpellInfo({SPELL_FLAMING_CINDER_MISSILE});
     }
 
     void HandleDummy(SpellEffIndex /*effIndex*/)
     {
         if (Unit* target = GetHitUnit())
-            GetCaster()->CastSpell(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), SPELL_FLAMING_CINDER_MISSILE, true);
+            GetCaster()->CastSpell(target->GetPositionX(),
+                target->GetPositionY(),
+                target->GetPositionZ(),
+                SPELL_FLAMING_CINDER_MISSILE,
+                true);
     }
 
     void Register() override
@@ -192,7 +196,7 @@ class spell_koralon_meteor_fists_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_METEOR_FISTS_DAMAGE });
+        return ValidateSpellInfo({SPELL_METEOR_FISTS_DAMAGE});
     }
 
     void TriggerFists(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
@@ -213,7 +217,7 @@ class spell_flame_warder_meteor_fists_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_FW_METEOR_FISTS_DAMAGE });
+        return ValidateSpellInfo({SPELL_FW_METEOR_FISTS_DAMAGE});
     }
 
     void TriggerFists(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
@@ -224,7 +228,8 @@ class spell_flame_warder_meteor_fists_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectProc += AuraEffectProcFn(spell_flame_warder_meteor_fists_aura::TriggerFists, EFFECT_0, SPELL_AURA_DUMMY);
+        OnEffectProc +=
+            AuraEffectProcFn(spell_flame_warder_meteor_fists_aura::TriggerFists, EFFECT_0, SPELL_AURA_DUMMY);
     }
 };
 

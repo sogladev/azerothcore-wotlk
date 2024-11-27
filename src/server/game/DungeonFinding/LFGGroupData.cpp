@@ -21,12 +21,15 @@
 
 namespace lfg
 {
-    LfgGroupData::LfgGroupData(): m_State(LFG_STATE_NONE), m_OldState(LFG_STATE_NONE),
-        m_Dungeon(0), _isLFGGroup(false), m_KicksLeft(sWorld->getIntConfig(CONFIG_LFG_MAX_KICK_COUNT))
+    LfgGroupData::LfgGroupData() :
+        m_State(LFG_STATE_NONE),
+        m_OldState(LFG_STATE_NONE),
+        m_Dungeon(0),
+        _isLFGGroup(false),
+        m_KicksLeft(sWorld->getIntConfig(CONFIG_LFG_MAX_KICK_COUNT))
     { }
 
-    LfgGroupData::~LfgGroupData()
-    { }
+    LfgGroupData::~LfgGroupData() { }
 
     bool LfgGroupData::IsLfgGroup()
     {

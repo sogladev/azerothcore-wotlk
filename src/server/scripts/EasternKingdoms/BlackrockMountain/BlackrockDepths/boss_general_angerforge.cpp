@@ -21,9 +21,9 @@
 
 enum Spells
 {
-    SPELL_MIGHTYBLOW                                       = 14099,
-    SPELL_HAMSTRING                                        = 9080,
-    SPELL_CLEAVE                                           = 20691
+    SPELL_MIGHTYBLOW = 14099,
+    SPELL_HAMSTRING = 9080,
+    SPELL_CLEAVE = 20691
 };
 
 class boss_general_angerforge : public CreatureScript
@@ -59,13 +59,20 @@ public:
 
         void SummonAdds(Unit* victim)
         {
-            if (Creature* SummonedAdd = DoSpawnCreature(8901, float(irand(-14, 14)), float(irand(-14, 14)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
+            if (Creature* SummonedAdd = DoSpawnCreature(8901,
+                    float(irand(-14, 14)),
+                    float(irand(-14, 14)),
+                    0,
+                    0,
+                    TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,
+                    120000))
                 SummonedAdd->AI()->AttackStart(victim);
         }
 
         void SummonMedics(Unit* victim)
         {
-            if (Creature* SummonedMedic = DoSpawnCreature(8894, float(irand(-9, 9)), float(irand(-9, 9)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
+            if (Creature* SummonedMedic = DoSpawnCreature(
+                    8894, float(irand(-9, 9)), float(irand(-9, 9)), 0, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 120000))
                 SummonedMedic->AI()->AttackStart(victim);
         }
 
@@ -81,7 +88,8 @@ public:
                 DoCastVictim(SPELL_MIGHTYBLOW);
                 MightyBlow_Timer = 18000;
             }
-            else MightyBlow_Timer -= diff;
+            else
+                MightyBlow_Timer -= diff;
 
             //HamString_Timer
             if (HamString_Timer <= diff)
@@ -89,7 +97,8 @@ public:
                 DoCastVictim(SPELL_HAMSTRING);
                 HamString_Timer = 15000;
             }
-            else HamString_Timer -= diff;
+            else
+                HamString_Timer -= diff;
 
             //Cleave_Timer
             if (Cleave_Timer <= diff)
@@ -97,7 +106,8 @@ public:
                 DoCastVictim(SPELL_CLEAVE);
                 Cleave_Timer = 9000;
             }
-            else Cleave_Timer -= diff;
+            else
+                Cleave_Timer -= diff;
 
             //Adds_Timer
             if (HealthBelowPct(21))
@@ -111,7 +121,8 @@ public:
 
                     Adds_Timer = 25000;
                 }
-                else Adds_Timer -= diff;
+                else
+                    Adds_Timer -= diff;
             }
 
             //Summon Medics

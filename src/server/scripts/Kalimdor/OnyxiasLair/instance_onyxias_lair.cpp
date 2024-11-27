@@ -19,10 +19,9 @@
 #include "ScriptedCreature.h"
 #include "onyxias_lair.h"
 
-ObjectData const creatureData[] =
-{
-    { NPC_ONYXIA, DATA_ONYXIA },
-    { 0,          0           }
+ObjectData const creatureData[] = {
+    {NPC_ONYXIA, DATA_ONYXIA},
+    {0,          0          }
 };
 
 class instance_onyxias_lair : public InstanceMapScript
@@ -37,7 +36,10 @@ public:
 
     struct instance_onyxias_lair_InstanceMapScript : public InstanceScript
     {
-        instance_onyxias_lair_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
+        instance_onyxias_lair_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
+        {
+            Initialize();
+        };
 
         std::string str_data;
         uint16 ManyWhelpsCounter;
@@ -59,9 +61,7 @@ public:
                 case GO_WHELP_SPAWNER:
                     go->CastSpell((Unit*)nullptr, 17646);
                     if (Creature* onyxia = GetCreature(DATA_ONYXIA))
-                    {
                         onyxia->AI()->DoAction(-1);
-                    }
                     break;
             }
         }
@@ -69,9 +69,7 @@ public:
         bool SetBossState(uint32 type, EncounterState state) override
         {
             if (!InstanceScript::SetBossState(type, state))
-            {
                 return false;
-            }
 
             if (type == DATA_ONYXIA && state == NOT_STARTED)
             {
@@ -95,7 +93,8 @@ public:
             }
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const*  /*source*/, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {

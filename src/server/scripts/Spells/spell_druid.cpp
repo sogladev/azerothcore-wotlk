@@ -23,6 +23,7 @@
 #include "SpellMgr.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
+
 /*
  * Scripts for spells with SPELLFAMILY_DRUID and SPELLFAMILY_GENERIC spells used by druid players.
  * Ordered alphabetically using scriptname.
@@ -31,40 +32,40 @@
 
 enum DruidSpells
 {
-    SPELL_DRUID_GLYPH_OF_WILD_GROWTH        = 62970,
-    SPELL_DRUID_NURTURING_INSTINCT_R1       = 47179,
-    SPELL_DRUID_NURTURING_INSTINCT_R2       = 47180,
-    SPELL_DRUID_FERAL_SWIFTNESS_R1          = 17002,
-    SPELL_DRUID_FERAL_SWIFTNESS_R2          = 24866,
-    SPELL_DRUID_FERAL_SWIFTNESS_PASSIVE_1   = 24867,
-    SPELL_DRUID_FERAL_SWIFTNESS_PASSIVE_2   = 24864,
-    SPELL_DRUID_BARKSKIN                    = 22812,
-    SPELL_DRUID_GLYPH_OF_BARKSKIN           = 63057,
-    SPELL_DRUID_GLYPH_OF_BARKSKIN_TRIGGER   = 63058,
-    SPELL_DRUID_ENRAGE_MOD_DAMAGE           = 51185,
-    SPELL_DRUID_GLYPH_OF_TYPHOON            = 62135,
-    SPELL_DRUID_IDOL_OF_FERAL_SHADOWS       = 34241,
-    SPELL_DRUID_IDOL_OF_WORSHIP             = 60774,
+    SPELL_DRUID_GLYPH_OF_WILD_GROWTH = 62970,
+    SPELL_DRUID_NURTURING_INSTINCT_R1 = 47179,
+    SPELL_DRUID_NURTURING_INSTINCT_R2 = 47180,
+    SPELL_DRUID_FERAL_SWIFTNESS_R1 = 17002,
+    SPELL_DRUID_FERAL_SWIFTNESS_R2 = 24866,
+    SPELL_DRUID_FERAL_SWIFTNESS_PASSIVE_1 = 24867,
+    SPELL_DRUID_FERAL_SWIFTNESS_PASSIVE_2 = 24864,
+    SPELL_DRUID_BARKSKIN = 22812,
+    SPELL_DRUID_GLYPH_OF_BARKSKIN = 63057,
+    SPELL_DRUID_GLYPH_OF_BARKSKIN_TRIGGER = 63058,
+    SPELL_DRUID_ENRAGE_MOD_DAMAGE = 51185,
+    SPELL_DRUID_GLYPH_OF_TYPHOON = 62135,
+    SPELL_DRUID_IDOL_OF_FERAL_SHADOWS = 34241,
+    SPELL_DRUID_IDOL_OF_WORSHIP = 60774,
     SPELL_DRUID_INCREASED_MOONFIRE_DURATION = 38414,
-    SPELL_DRUID_KING_OF_THE_JUNGLE          = 48492,
-    SPELL_DRUID_LIFEBLOOM_ENERGIZE          = 64372,
-    SPELL_DRUID_LIFEBLOOM_FINAL_HEAL        = 33778,
-    SPELL_DRUID_LIVING_SEED_HEAL            = 48503,
-    SPELL_DRUID_LIVING_SEED_PROC            = 48504,
-    SPELL_DRUID_NATURES_SPLENDOR            = 57865,
-    SPELL_DRUID_SURVIVAL_INSTINCTS          = 50322,
-    SPELL_DRUID_SAVAGE_ROAR                 = 62071,
-    SPELL_DRUID_TIGER_S_FURY_ENERGIZE       = 51178,
-    SPELL_DRUID_BEAR_FORM_PASSIVE           = 1178,
-    SPELL_DRUID_DIRE_BEAR_FORM_PASSIVE      = 9635,
-    SPELL_DRUID_ENRAGE                      = 5229,
-    SPELL_DRUID_ENRAGED_DEFENSE             = 70725,
-    SPELL_DRUID_ITEM_T10_FERAL_4P_BONUS     = 70726,
+    SPELL_DRUID_KING_OF_THE_JUNGLE = 48492,
+    SPELL_DRUID_LIFEBLOOM_ENERGIZE = 64372,
+    SPELL_DRUID_LIFEBLOOM_FINAL_HEAL = 33778,
+    SPELL_DRUID_LIVING_SEED_HEAL = 48503,
+    SPELL_DRUID_LIVING_SEED_PROC = 48504,
+    SPELL_DRUID_NATURES_SPLENDOR = 57865,
+    SPELL_DRUID_SURVIVAL_INSTINCTS = 50322,
+    SPELL_DRUID_SAVAGE_ROAR = 62071,
+    SPELL_DRUID_TIGER_S_FURY_ENERGIZE = 51178,
+    SPELL_DRUID_BEAR_FORM_PASSIVE = 1178,
+    SPELL_DRUID_DIRE_BEAR_FORM_PASSIVE = 9635,
+    SPELL_DRUID_ENRAGE = 5229,
+    SPELL_DRUID_ENRAGED_DEFENSE = 70725,
+    SPELL_DRUID_ITEM_T10_FERAL_4P_BONUS = 70726,
 };
 
 enum DruidIcons
 {
-    SPELL_ICON_REVITALIZE                   = 2862
+    SPELL_ICON_REVITALIZE = 2862
 };
 
 // 1178 - Bear Form (Passive)
@@ -75,12 +76,13 @@ class spell_dru_bear_form_passive : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRUID_ENRAGE, SPELL_DRUID_ITEM_T10_FERAL_4P_BONUS });
+        return ValidateSpellInfo({SPELL_DRUID_ENRAGE, SPELL_DRUID_ITEM_T10_FERAL_4P_BONUS});
     }
 
     void CalculateAmount(AuraEffect const* /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
     {
-        if (!GetUnitOwner()->HasAura(SPELL_DRUID_ENRAGE) || GetUnitOwner()->HasAura(SPELL_DRUID_ITEM_T10_FERAL_4P_BONUS))
+        if (!GetUnitOwner()->HasAura(SPELL_DRUID_ENRAGE) ||
+            GetUnitOwner()->HasAura(SPELL_DRUID_ITEM_T10_FERAL_4P_BONUS))
         {
             return;
         }
@@ -103,7 +105,8 @@ class spell_dru_bear_form_passive : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_bear_form_passive::CalculateAmount, EFFECT_0, SPELL_AURA_MOD_BASE_RESISTANCE_PCT);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(
+            spell_dru_bear_form_passive::CalculateAmount, EFFECT_0, SPELL_AURA_MOD_BASE_RESISTANCE_PCT);
     }
 };
 
@@ -124,8 +127,10 @@ class spell_dru_t10_balance_4p_bonus : public AuraScript
         uint32 triggered_spell_id = 71023;
         SpellInfo const* triggeredSpell = sSpellMgr->GetSpellInfo(triggered_spell_id);
 
-        int32 amount = CalculatePct(eventInfo.GetDamageInfo()->GetDamage(), aurEff->GetAmount()) / triggeredSpell->GetMaxTicks();
-        eventInfo.GetProcTarget()->CastDelayedSpellWithPeriodicAmount(GetTarget(), triggered_spell_id, SPELL_AURA_PERIODIC_DAMAGE, amount, EFFECT_0);
+        int32 amount =
+            CalculatePct(eventInfo.GetDamageInfo()->GetDamage(), aurEff->GetAmount()) / triggeredSpell->GetMaxTicks();
+        eventInfo.GetProcTarget()->CastDelayedSpellWithPeriodicAmount(
+            GetTarget(), triggered_spell_id, SPELL_AURA_PERIODIC_DAMAGE, amount, EFFECT_0);
 
         //GetTarget()->CastCustomSpell(triggered_spell_id, SPELLVALUE_BASE_POINT0, amount, eventInfo.GetProcTarget(), true, nullptr, aurEff);
     }
@@ -142,22 +147,35 @@ class spell_dru_nurturing_instinct : public AuraScript
 {
     PrepareAuraScript(spell_dru_nurturing_instinct);
 
-    void AfterApply(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void AfterApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (Player* player = GetTarget()->ToPlayer())
-            player->addSpell(GetSpellInfo()->GetRank() == 1 ? SPELL_DRUID_NURTURING_INSTINCT_R1 : SPELL_DRUID_NURTURING_INSTINCT_R2, SPEC_MASK_ALL, false, true);
+            player->addSpell(
+                GetSpellInfo()->GetRank() == 1 ? SPELL_DRUID_NURTURING_INSTINCT_R1 : SPELL_DRUID_NURTURING_INSTINCT_R2,
+                SPEC_MASK_ALL,
+                false,
+                true);
     }
 
     void AfterRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (Player* player = GetTarget()->ToPlayer())
-            player->removeSpell(GetSpellInfo()->GetRank() == 1 ? SPELL_DRUID_NURTURING_INSTINCT_R1 : SPELL_DRUID_NURTURING_INSTINCT_R2, SPEC_MASK_ALL, true);
+            player->removeSpell(
+                GetSpellInfo()->GetRank() == 1 ? SPELL_DRUID_NURTURING_INSTINCT_R1 : SPELL_DRUID_NURTURING_INSTINCT_R2,
+                SPEC_MASK_ALL,
+                true);
     }
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_dru_nurturing_instinct::AfterApply, EFFECT_0, SPELL_AURA_MOD_SPELL_HEALING_OF_STAT_PERCENT, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_nurturing_instinct::AfterRemove, EFFECT_0, SPELL_AURA_MOD_SPELL_HEALING_OF_STAT_PERCENT, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(spell_dru_nurturing_instinct::AfterApply,
+            EFFECT_0,
+            SPELL_AURA_MOD_SPELL_HEALING_OF_STAT_PERCENT,
+            AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_nurturing_instinct::AfterRemove,
+            EFFECT_0,
+            SPELL_AURA_MOD_SPELL_HEALING_OF_STAT_PERCENT,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -170,8 +188,15 @@ class spell_dru_feral_swiftness : public AuraScript
     void AfterApply(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
     {
         if (Player* player = GetTarget()->ToPlayer())
-            if (uint8 rank = player->HasTalent(SPELL_DRUID_FERAL_SWIFTNESS_R1, player->GetActiveSpec()) ? 1 : (player->HasTalent(SPELL_DRUID_FERAL_SWIFTNESS_R2, player->GetActiveSpec()) ? 2 : 0))
-                player->CastSpell(player, rank == 1 ? SPELL_DRUID_FERAL_SWIFTNESS_PASSIVE_1 : SPELL_DRUID_FERAL_SWIFTNESS_PASSIVE_2, true, nullptr, aurEff, GetCasterGUID());
+            if (uint8 rank = player->HasTalent(SPELL_DRUID_FERAL_SWIFTNESS_R1, player->GetActiveSpec())
+                                 ? 1
+                                 : (player->HasTalent(SPELL_DRUID_FERAL_SWIFTNESS_R2, player->GetActiveSpec()) ? 2 : 0))
+                player->CastSpell(player,
+                    rank == 1 ? SPELL_DRUID_FERAL_SWIFTNESS_PASSIVE_1 : SPELL_DRUID_FERAL_SWIFTNESS_PASSIVE_2,
+                    true,
+                    nullptr,
+                    aurEff,
+                    GetCasterGUID());
     }
 
     void AfterRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -182,8 +207,10 @@ class spell_dru_feral_swiftness : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_dru_feral_swiftness::AfterApply, EFFECT_0, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_feral_swiftness::AfterRemove, EFFECT_0, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply +=
+            AuraEffectApplyFn(spell_dru_feral_swiftness::AfterApply, EFFECT_0, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_dru_feral_swiftness::AfterRemove, EFFECT_0, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -196,29 +223,25 @@ class spell_dru_omen_of_clarity : public AuraScript
     {
         SpellInfo const* spellInfo = eventInfo.GetSpellInfo();
         if (!spellInfo)
-        {
             return true;
-        }
 
         // Prevent passive spells to proc. (I.e shapeshift passives & passive talents)
         if (spellInfo->IsPassive())
-        {
             return false;
-        }
 
         // Don't proc on crafting items.
         if (spellInfo->HasEffect(SPELL_EFFECT_CREATE_ITEM))
-        {
             return false;
-        }
 
         if (eventInfo.GetTypeMask() & PROC_FLAG_DONE_SPELL_MELEE_DMG_CLASS)
         {
-            return spellInfo->HasAttribute(SPELL_ATTR0_ON_NEXT_SWING) || spellInfo->HasAttribute(SPELL_ATTR0_ON_NEXT_SWING_NO_DAMAGE);
+            return spellInfo->HasAttribute(SPELL_ATTR0_ON_NEXT_SWING) ||
+                   spellInfo->HasAttribute(SPELL_ATTR0_ON_NEXT_SWING_NO_DAMAGE);
         }
 
         // Non-damaged/Non-healing spells - only druid abilities
-        if (!spellInfo->HasAttribute(SpellCustomAttributes(SPELL_ATTR0_CU_DIRECT_DAMAGE | SPELL_ATTR0_CU_NO_INITIAL_THREAT)))
+        if (!spellInfo->HasAttribute(
+                SpellCustomAttributes(SPELL_ATTR0_CU_DIRECT_DAMAGE | SPELL_ATTR0_CU_NO_INITIAL_THREAT)))
         {
             if (spellInfo->SpellFamilyName == SPELLFAMILY_DRUID)
             {
@@ -231,9 +254,7 @@ class spell_dru_omen_of_clarity : public AuraScript
 
         // Revitalize
         if (spellInfo->SpellIconID == SPELL_ICON_REVITALIZE)
-        {
             return false;
-        }
 
         return true;
     }
@@ -249,7 +270,7 @@ class spell_dru_brambles_treant : public AuraScript
 {
     PrepareAuraScript(spell_dru_brambles_treant);
 
-    bool CheckProc(ProcEventInfo&  /*eventInfo*/)
+    bool CheckProc(ProcEventInfo& /*eventInfo*/)
     {
         if (Player* player = GetUnitOwner()->GetSpellModOwner())
         {
@@ -275,7 +296,8 @@ class spell_dru_brambles_treant : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_brambles_treant::CalculateAmount, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_DONE);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(
+            spell_dru_brambles_treant::CalculateAmount, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_DONE);
         DoCheckProc += AuraCheckProcFn(spell_dru_brambles_treant::CheckProc);
     }
 };
@@ -285,7 +307,7 @@ class spell_dru_barkskin : public AuraScript
 {
     PrepareAuraScript(spell_dru_barkskin);
 
-    void AfterApply(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void AfterApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (GetUnitOwner()->HasAura(SPELL_DRUID_GLYPH_OF_BARKSKIN, GetUnitOwner()->GetGUID()))
             GetUnitOwner()->CastSpell(GetUnitOwner(), SPELL_DRUID_GLYPH_OF_BARKSKIN_TRIGGER, true);
@@ -298,8 +320,10 @@ class spell_dru_barkskin : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_dru_barkskin::AfterApply, EFFECT_0, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_barkskin::AfterRemove, EFFECT_0, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply +=
+            AuraEffectApplyFn(spell_dru_barkskin::AfterApply, EFFECT_0, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove +=
+            AuraEffectRemoveFn(spell_dru_barkskin::AfterRemove, EFFECT_0, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -316,7 +340,8 @@ class spell_dru_treant_scaling : public AuraScript
         // xinef: treant inherits 40% of resistance from owner and 35% of armor (guessed)
         if (Unit* owner = GetUnitOwner()->GetOwner())
         {
-            SpellSchoolMask schoolMask = SpellSchoolMask(aurEff->GetSpellInfo()->Effects[aurEff->GetEffIndex()].MiscValue);
+            SpellSchoolMask schoolMask =
+                SpellSchoolMask(aurEff->GetSpellInfo()->Effects[aurEff->GetEffIndex()].MiscValue);
             int32 modifier = schoolMask == SPELL_SCHOOL_MASK_NORMAL ? 35 : 40;
             amount = CalculatePct(std::max<int32>(0, owner->GetResistance(schoolMask)), modifier);
         }
@@ -332,7 +357,7 @@ class spell_dru_treant_scaling : public AuraScript
         }
     }
 
-    void CalculateAPAmount(AuraEffect const*  /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
+    void CalculateAPAmount(AuraEffect const* /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
     {
         // xinef: treant inherits 105% of SP as AP - 15% of damage increase per hit
         if (Unit* owner = GetUnitOwner()->GetOwner())
@@ -341,12 +366,13 @@ class spell_dru_treant_scaling : public AuraScript
             amount = CalculatePct(std::max<int32>(0, nature), 105);
 
             // xinef: brambles talent
-            if (AuraEffect const* bramblesEff = owner->GetAuraEffect(SPELL_AURA_ADD_FLAT_MODIFIER, SPELLFAMILY_DRUID, 53, 2))
+            if (AuraEffect const* bramblesEff =
+                    owner->GetAuraEffect(SPELL_AURA_ADD_FLAT_MODIFIER, SPELLFAMILY_DRUID, 53, 2))
                 AddPct(amount, bramblesEff->GetAmount());
         }
     }
 
-    void CalculateSPAmount(AuraEffect const*  /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
+    void CalculateSPAmount(AuraEffect const* /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
     {
         // xinef: treant inherits 15% of SP
         if (Unit* owner = GetUnitOwner()->GetOwner())
@@ -364,26 +390,33 @@ class spell_dru_treant_scaling : public AuraScript
     {
         GetUnitOwner()->ApplySpellImmune(0, IMMUNITY_STATE, aurEff->GetAuraType(), true, SPELL_BLOCK_TYPE_POSITIVE);
         if (aurEff->GetAuraType() == SPELL_AURA_MOD_ATTACK_POWER)
-            GetUnitOwner()->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_ATTACK_POWER_PCT, true, SPELL_BLOCK_TYPE_POSITIVE);
+            GetUnitOwner()->ApplySpellImmune(
+                0, IMMUNITY_STATE, SPELL_AURA_MOD_ATTACK_POWER_PCT, true, SPELL_BLOCK_TYPE_POSITIVE);
         else if (aurEff->GetAuraType() == SPELL_AURA_MOD_STAT)
-            GetUnitOwner()->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TOTAL_STAT_PERCENTAGE, true, SPELL_BLOCK_TYPE_POSITIVE);
+            GetUnitOwner()->ApplySpellImmune(
+                0, IMMUNITY_STATE, SPELL_AURA_MOD_TOTAL_STAT_PERCENTAGE, true, SPELL_BLOCK_TYPE_POSITIVE);
     }
 
     void Register() override
     {
         if (m_scriptSpellId != 35669)
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_treant_scaling::CalculateResistanceAmount, EFFECT_ALL, SPELL_AURA_MOD_RESISTANCE);
+            DoEffectCalcAmount += AuraEffectCalcAmountFn(
+                spell_dru_treant_scaling::CalculateResistanceAmount, EFFECT_ALL, SPELL_AURA_MOD_RESISTANCE);
 
         if (m_scriptSpellId == 35669 || m_scriptSpellId == 35670)
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_treant_scaling::CalculateStatAmount, EFFECT_ALL, SPELL_AURA_MOD_STAT);
+            DoEffectCalcAmount +=
+                AuraEffectCalcAmountFn(spell_dru_treant_scaling::CalculateStatAmount, EFFECT_ALL, SPELL_AURA_MOD_STAT);
 
         if (m_scriptSpellId == 35669)
         {
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_treant_scaling::CalculateAPAmount, EFFECT_ALL, SPELL_AURA_MOD_ATTACK_POWER);
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_treant_scaling::CalculateSPAmount, EFFECT_ALL, SPELL_AURA_MOD_DAMAGE_DONE);
+            DoEffectCalcAmount += AuraEffectCalcAmountFn(
+                spell_dru_treant_scaling::CalculateAPAmount, EFFECT_ALL, SPELL_AURA_MOD_ATTACK_POWER);
+            DoEffectCalcAmount += AuraEffectCalcAmountFn(
+                spell_dru_treant_scaling::CalculateSPAmount, EFFECT_ALL, SPELL_AURA_MOD_DAMAGE_DONE);
         }
 
-        OnEffectApply += AuraEffectApplyFn(spell_dru_treant_scaling::HandleEffectApply, EFFECT_ALL, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_dru_treant_scaling::HandleEffectApply, EFFECT_ALL, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -419,14 +452,13 @@ class spell_dru_dash_aura : public AuraScript
     {
         // do not set speed if not in cat form
         if (GetUnitOwner()->GetShapeshiftForm() != FORM_CAT)
-        {
             amount = 0;
-        }
     }
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_dash_aura::CalculateAmount, EFFECT_0, SPELL_AURA_MOD_INCREASE_SPEED);
+        DoEffectCalcAmount +=
+            AuraEffectCalcAmountFn(spell_dru_dash_aura::CalculateAmount, EFFECT_0, SPELL_AURA_MOD_INCREASE_SPEED);
     }
 };
 
@@ -437,7 +469,10 @@ class spell_dru_enrage : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRUID_KING_OF_THE_JUNGLE, SPELL_DRUID_ENRAGE_MOD_DAMAGE, SPELL_DRUID_ENRAGED_DEFENSE, SPELL_DRUID_ITEM_T10_FERAL_4P_BONUS });
+        return ValidateSpellInfo({SPELL_DRUID_KING_OF_THE_JUNGLE,
+            SPELL_DRUID_ENRAGE_MOD_DAMAGE,
+            SPELL_DRUID_ENRAGED_DEFENSE,
+            SPELL_DRUID_ITEM_T10_FERAL_4P_BONUS});
     }
 
     void RecalculateBaseArmor()
@@ -448,9 +483,7 @@ class spell_dru_enrage : public AuraScript
             SpellInfo const* spellInfo = (*i)->GetSpellInfo();
             // Dire- / Bear Form (Passive)
             if (spellInfo->SpellFamilyName == SPELLFAMILY_DRUID && spellInfo->SpellFamilyFlags.HasFlag(0x0, 0x0, 0x2))
-            {
                 (*i)->RecalculateAmount();
-            }
         }
     }
 
@@ -459,14 +492,13 @@ class spell_dru_enrage : public AuraScript
         Unit* target = GetTarget();
         if (AuraEffect const* aurEff = target->GetAuraEffectOfRankedSpell(SPELL_DRUID_KING_OF_THE_JUNGLE, EFFECT_0))
         {
-            target->CastCustomSpell(SPELL_DRUID_ENRAGE_MOD_DAMAGE, SPELLVALUE_BASE_POINT0, aurEff->GetAmount(), target, true);
+            target->CastCustomSpell(
+                SPELL_DRUID_ENRAGE_MOD_DAMAGE, SPELLVALUE_BASE_POINT0, aurEff->GetAmount(), target, true);
         }
 
         // Item - Druid T10 Feral 4P Bonus
         if (target->HasAura(SPELL_DRUID_ITEM_T10_FERAL_4P_BONUS))
-        {
             target->CastSpell(target, SPELL_DRUID_ENRAGED_DEFENSE, true);
-        }
 
         RecalculateBaseArmor();
     }
@@ -481,8 +513,10 @@ class spell_dru_enrage : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_dru_enrage::HandleApply, EFFECT_0, SPELL_AURA_PERIODIC_ENERGIZE, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_enrage::HandleRemove, EFFECT_0, SPELL_AURA_PERIODIC_ENERGIZE, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(
+            spell_dru_enrage::HandleApply, EFFECT_0, SPELL_AURA_PERIODIC_ENERGIZE, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_dru_enrage::HandleRemove, EFFECT_0, SPELL_AURA_PERIODIC_ENERGIZE, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -493,14 +527,15 @@ class spell_dru_glyph_of_starfire : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRUID_INCREASED_MOONFIRE_DURATION, SPELL_DRUID_NATURES_SPLENDOR });
+        return ValidateSpellInfo({SPELL_DRUID_INCREASED_MOONFIRE_DURATION, SPELL_DRUID_NATURES_SPLENDOR});
     }
 
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
     {
         Unit* caster = GetCaster();
         if (Unit* unitTarget = GetHitUnit())
-            if (AuraEffect const* aurEff = unitTarget->GetAuraEffect(SPELL_AURA_PERIODIC_DAMAGE, SPELLFAMILY_DRUID, 0x00000002, 0, 0, caster->GetGUID()))
+            if (AuraEffect const* aurEff = unitTarget->GetAuraEffect(
+                    SPELL_AURA_PERIODIC_DAMAGE, SPELLFAMILY_DRUID, 0x00000002, 0, 0, caster->GetGUID()))
             {
                 Aura* aura = aurEff->GetBase();
 
@@ -521,7 +556,8 @@ class spell_dru_glyph_of_starfire : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_dru_glyph_of_starfire::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_dru_glyph_of_starfire::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -546,7 +582,8 @@ class spell_dru_idol_lifebloom : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcSpellMod += AuraEffectCalcSpellModFn(spell_dru_idol_lifebloom::HandleEffectCalcSpellMod, EFFECT_0, SPELL_AURA_DUMMY);
+        DoEffectCalcSpellMod +=
+            AuraEffectCalcSpellModFn(spell_dru_idol_lifebloom::HandleEffectCalcSpellMod, EFFECT_0, SPELL_AURA_DUMMY);
     }
 };
 
@@ -565,7 +602,8 @@ class spell_dru_innervate : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_innervate::CalculateAmount, EFFECT_0, SPELL_AURA_PERIODIC_ENERGIZE);
+        DoEffectCalcAmount +=
+            AuraEffectCalcAmountFn(spell_dru_innervate::CalculateAmount, EFFECT_0, SPELL_AURA_PERIODIC_ENERGIZE);
     }
 };
 
@@ -576,7 +614,7 @@ class spell_dru_lifebloom : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRUID_LIFEBLOOM_FINAL_HEAL, SPELL_DRUID_LIFEBLOOM_ENERGIZE });
+        return ValidateSpellInfo({SPELL_DRUID_LIFEBLOOM_FINAL_HEAL, SPELL_DRUID_LIFEBLOOM_ENERGIZE});
     }
 
     void AfterRemove(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
@@ -592,13 +630,30 @@ class spell_dru_lifebloom : public AuraScript
 
         if (Unit* caster = GetCaster())
         {
-            healAmount = caster->SpellHealingBonusDone(GetTarget(), finalHeal, healAmount, HEAL, aurEff->GetEffIndex(), 0.0f, stack);
+            healAmount = caster->SpellHealingBonusDone(
+                GetTarget(), finalHeal, healAmount, HEAL, aurEff->GetEffIndex(), 0.0f, stack);
             healAmount = GetTarget()->SpellHealingBonusTaken(caster, finalHeal, healAmount, HEAL, stack);
             // restore mana
             int32 returnmana = (GetSpellInfo()->ManaCostPercentage * caster->GetCreateMana() / 100) * stack / 2;
-            caster->CastCustomSpell(caster, SPELL_DRUID_LIFEBLOOM_ENERGIZE, &returnmana, nullptr, nullptr, true, nullptr, aurEff, GetCasterGUID());
+            caster->CastCustomSpell(caster,
+                SPELL_DRUID_LIFEBLOOM_ENERGIZE,
+                &returnmana,
+                nullptr,
+                nullptr,
+                true,
+                nullptr,
+                aurEff,
+                GetCasterGUID());
         }
-        GetTarget()->CastCustomSpell(GetTarget(), SPELL_DRUID_LIFEBLOOM_FINAL_HEAL, &healAmount, nullptr, nullptr, true, nullptr, aurEff, GetCasterGUID());
+        GetTarget()->CastCustomSpell(GetTarget(),
+            SPELL_DRUID_LIFEBLOOM_FINAL_HEAL,
+            &healAmount,
+            nullptr,
+            nullptr,
+            true,
+            nullptr,
+            aurEff,
+            GetCasterGUID());
     }
 
     void HandleDispel(DispelInfo* dispelInfo)
@@ -608,26 +663,47 @@ class spell_dru_lifebloom : public AuraScript
             if (GetEffect(EFFECT_1))
             {
                 Unit* caster = GetCaster();
-                int32 healAmount = GetSpellInfo()->Effects[EFFECT_1].CalcValue(caster ? caster : target, 0, target) * dispelInfo->GetRemovedCharges();
+                int32 healAmount = GetSpellInfo()->Effects[EFFECT_1].CalcValue(caster ? caster : target, 0, target) *
+                                   dispelInfo->GetRemovedCharges();
                 SpellInfo const* finalHeal = sSpellMgr->GetSpellInfo(SPELL_DRUID_LIFEBLOOM_FINAL_HEAL);
                 if (caster)
                 {
                     // healing with bonus
-                    healAmount = caster->SpellHealingBonusDone(target, finalHeal, healAmount, HEAL, EFFECT_1, 0.0f, dispelInfo->GetRemovedCharges());
-                    healAmount = target->SpellHealingBonusTaken(caster, finalHeal, healAmount, HEAL, dispelInfo->GetRemovedCharges());
+                    healAmount = caster->SpellHealingBonusDone(
+                        target, finalHeal, healAmount, HEAL, EFFECT_1, 0.0f, dispelInfo->GetRemovedCharges());
+                    healAmount = target->SpellHealingBonusTaken(
+                        caster, finalHeal, healAmount, HEAL, dispelInfo->GetRemovedCharges());
 
                     // mana amount
-                    int32 mana = CalculatePct(caster->GetCreateMana(), GetSpellInfo()->ManaCostPercentage) * dispelInfo->GetRemovedCharges() / 2;
-                    caster->CastCustomSpell(caster, SPELL_DRUID_LIFEBLOOM_ENERGIZE, &mana, nullptr, nullptr, true, nullptr, nullptr, GetCasterGUID());
+                    int32 mana = CalculatePct(caster->GetCreateMana(), GetSpellInfo()->ManaCostPercentage) *
+                                 dispelInfo->GetRemovedCharges() / 2;
+                    caster->CastCustomSpell(caster,
+                        SPELL_DRUID_LIFEBLOOM_ENERGIZE,
+                        &mana,
+                        nullptr,
+                        nullptr,
+                        true,
+                        nullptr,
+                        nullptr,
+                        GetCasterGUID());
                 }
-                target->CastCustomSpell(target, SPELL_DRUID_LIFEBLOOM_FINAL_HEAL, &healAmount, nullptr, nullptr, true, nullptr, nullptr, GetCasterGUID());
+                target->CastCustomSpell(target,
+                    SPELL_DRUID_LIFEBLOOM_FINAL_HEAL,
+                    &healAmount,
+                    nullptr,
+                    nullptr,
+                    true,
+                    nullptr,
+                    nullptr,
+                    GetCasterGUID());
             }
         }
     }
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_lifebloom::AfterRemove, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove +=
+            AuraEffectRemoveFn(spell_dru_lifebloom::AfterRemove, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
         AfterDispel += AuraDispelFn(spell_dru_lifebloom::HandleDispel);
     }
 };
@@ -639,7 +715,7 @@ class spell_dru_living_seed : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRUID_LIVING_SEED_PROC });
+        return ValidateSpellInfo({SPELL_DRUID_LIVING_SEED_PROC});
     }
 
     void HandleProc(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
@@ -647,12 +723,16 @@ class spell_dru_living_seed : public AuraScript
         PreventDefaultAction();
 
         if (!eventInfo.GetHealInfo() || !eventInfo.GetProcTarget())
-        {
             return;
-        }
 
         int32 amount = CalculatePct(eventInfo.GetHealInfo()->GetHeal(), aurEff->GetAmount());
-        GetTarget()->CastCustomSpell(SPELL_DRUID_LIVING_SEED_PROC, SPELLVALUE_BASE_POINT0, amount, eventInfo.GetProcTarget(), true, nullptr, aurEff);
+        GetTarget()->CastCustomSpell(SPELL_DRUID_LIVING_SEED_PROC,
+            SPELLVALUE_BASE_POINT0,
+            amount,
+            eventInfo.GetProcTarget(),
+            true,
+            nullptr,
+            aurEff);
     }
 
     void Register() override
@@ -668,13 +748,19 @@ class spell_dru_living_seed_proc : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRUID_LIVING_SEED_HEAL });
+        return ValidateSpellInfo({SPELL_DRUID_LIVING_SEED_HEAL});
     }
 
     void HandleProc(AuraEffect const* aurEff, ProcEventInfo& /*eventInfo*/)
     {
         PreventDefaultAction();
-        GetTarget()->CastCustomSpell(SPELL_DRUID_LIVING_SEED_HEAL, SPELLVALUE_BASE_POINT0, aurEff->GetAmount(), GetTarget(), true, nullptr, aurEff);
+        GetTarget()->CastCustomSpell(SPELL_DRUID_LIVING_SEED_HEAL,
+            SPELLVALUE_BASE_POINT0,
+            aurEff->GetAmount(),
+            GetTarget(),
+            true,
+            nullptr,
+            aurEff);
     }
 
     void Register() override
@@ -711,7 +797,8 @@ class spell_dru_moonkin_form_passive : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_moonkin_form_passive::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
+        DoEffectCalcAmount +=
+            AuraEffectCalcAmountFn(spell_dru_moonkin_form_passive::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
         OnEffectAbsorb += AuraEffectAbsorbFn(spell_dru_moonkin_form_passive::Absorb, EFFECT_0);
     }
 };
@@ -728,7 +815,8 @@ class spell_dru_owlkin_frenzy : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_owlkin_frenzy::CalculateAmount, EFFECT_2, SPELL_AURA_PERIODIC_ENERGIZE);
+        DoEffectCalcAmount +=
+            AuraEffectCalcAmountFn(spell_dru_owlkin_frenzy::CalculateAmount, EFFECT_2, SPELL_AURA_PERIODIC_ENERGIZE);
     }
 };
 
@@ -745,8 +833,14 @@ class spell_dru_predatory_strikes : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_dru_predatory_strikes::UpdateAmount, EFFECT_ALL, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_predatory_strikes::UpdateAmount, EFFECT_ALL, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK);
+        AfterEffectApply += AuraEffectApplyFn(spell_dru_predatory_strikes::UpdateAmount,
+            EFFECT_ALL,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_predatory_strikes::UpdateAmount,
+            EFFECT_ALL,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK);
     }
 };
 
@@ -772,13 +866,15 @@ class spell_dru_primal_tenacity : public AuraScript
     void Absorb(AuraEffect* /*aurEff*/, DamageInfo& dmgInfo, uint32& absorbAmount)
     {
         // reduces all damage taken while Stunned in Cat Form
-        if (GetTarget()->GetShapeshiftForm() == FORM_CAT && GetTarget()->HasUnitFlag(UNIT_FLAG_STUNNED) && GetTarget()->HasAuraWithMechanic(1 << MECHANIC_STUN))
+        if (GetTarget()->GetShapeshiftForm() == FORM_CAT && GetTarget()->HasUnitFlag(UNIT_FLAG_STUNNED) &&
+            GetTarget()->HasAuraWithMechanic(1 << MECHANIC_STUN))
             absorbAmount = CalculatePct(dmgInfo.GetDamage(), absorbPct);
     }
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_primal_tenacity::CalculateAmount, EFFECT_1, SPELL_AURA_SCHOOL_ABSORB);
+        DoEffectCalcAmount +=
+            AuraEffectCalcAmountFn(spell_dru_primal_tenacity::CalculateAmount, EFFECT_1, SPELL_AURA_SCHOOL_ABSORB);
         OnEffectAbsorb += AuraEffectAbsorbFn(spell_dru_primal_tenacity::Absorb, EFFECT_1);
     }
 };
@@ -816,7 +912,8 @@ class spell_dru_rip : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_rip::CalculateAmount, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
+        DoEffectCalcAmount +=
+            AuraEffectCalcAmountFn(spell_dru_rip::CalculateAmount, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 
@@ -847,7 +944,8 @@ class spell_dru_savage_defense : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_savage_defense::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
+        DoEffectCalcAmount +=
+            AuraEffectCalcAmountFn(spell_dru_savage_defense::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
         OnEffectAbsorb += AuraEffectAbsorbFn(spell_dru_savage_defense::Absorb, EFFECT_0);
     }
 };
@@ -878,7 +976,7 @@ class spell_dru_savage_roar_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRUID_SAVAGE_ROAR });
+        return ValidateSpellInfo({SPELL_DRUID_SAVAGE_ROAR});
     }
 
     void AfterApply(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
@@ -894,8 +992,10 @@ class spell_dru_savage_roar_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_dru_savage_roar_aura::AfterApply, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_savage_roar_aura::AfterRemove, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(
+            spell_dru_savage_roar_aura::AfterApply, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_dru_savage_roar_aura::AfterRemove, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -911,7 +1011,8 @@ class spell_dru_starfall_aoe : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_dru_starfall_aoe::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_dru_starfall_aoe::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
     }
 };
 
@@ -945,7 +1046,8 @@ class spell_dru_starfall_dummy : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_dru_starfall_dummy::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_dru_starfall_dummy::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
         OnEffectHitTarget += SpellEffectFn(spell_dru_starfall_dummy::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
@@ -976,7 +1078,7 @@ class spell_dru_survival_instincts_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_DRUID_SURVIVAL_INSTINCTS });
+        return ValidateSpellInfo({SPELL_DRUID_SURVIVAL_INSTINCTS});
     }
 
     void AfterApply(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
@@ -993,8 +1095,14 @@ class spell_dru_survival_instincts_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_dru_survival_instincts_aura::AfterApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_survival_instincts_aura::AfterRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK);
+        AfterEffectApply += AuraEffectApplyFn(spell_dru_survival_instincts_aura::AfterApply,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_dru_survival_instincts_aura::AfterRemove,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_CHANGE_AMOUNT_MASK);
     }
 };
 
@@ -1017,7 +1125,8 @@ class spell_dru_swift_flight_passive : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_dru_swift_flight_passive::CalculateAmount, EFFECT_1, SPELL_AURA_MOD_INCREASE_FLIGHT_SPEED);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(
+            spell_dru_swift_flight_passive::CalculateAmount, EFFECT_1, SPELL_AURA_MOD_INCREASE_FLIGHT_SPEED);
     }
 };
 
@@ -1028,8 +1137,10 @@ class spell_dru_tiger_s_fury : public SpellScript
 
     void OnHit()
     {
-        if (AuraEffect const* aurEff = GetHitUnit()->GetAuraEffectOfRankedSpell(SPELL_DRUID_KING_OF_THE_JUNGLE, EFFECT_1))
-            GetHitUnit()->CastCustomSpell(SPELL_DRUID_TIGER_S_FURY_ENERGIZE, SPELLVALUE_BASE_POINT0, aurEff->GetAmount(), GetHitUnit(), true);
+        if (AuraEffect const* aurEff =
+                GetHitUnit()->GetAuraEffectOfRankedSpell(SPELL_DRUID_KING_OF_THE_JUNGLE, EFFECT_1))
+            GetHitUnit()->CastCustomSpell(
+                SPELL_DRUID_TIGER_S_FURY_ENERGIZE, SPELLVALUE_BASE_POINT0, aurEff->GetAmount(), GetHitUnit(), true);
     }
 
     void Register() override
@@ -1078,7 +1189,8 @@ class spell_dru_t10_restoration_4p_bonus : public SpellScript
             targets.remove(GetExplTargetUnit());
             std::list<Unit*> tempTargets;
             for (std::list<WorldObject*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
-                if ((*itr)->isType(TYPEMASK_UNIT | TYPEMASK_PLAYER) && GetCaster()->IsInRaidWith((*itr)->ToUnit()) && !(*itr)->ToUnit()->GetAuraEffect(SPELL_AURA_PERIODIC_HEAL, SPELLFAMILY_DRUID, 64, EFFECT_0))
+                if ((*itr)->isType(TYPEMASK_UNIT | TYPEMASK_PLAYER) && GetCaster()->IsInRaidWith((*itr)->ToUnit()) &&
+                    !(*itr)->ToUnit()->GetAuraEffect(SPELL_AURA_PERIODIC_HEAL, SPELLFAMILY_DRUID, 64, EFFECT_0))
                     tempTargets.push_back((*itr)->ToUnit());
 
             if (tempTargets.empty())
@@ -1096,7 +1208,8 @@ class spell_dru_t10_restoration_4p_bonus : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_dru_t10_restoration_4p_bonus::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ALLY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_dru_t10_restoration_4p_bonus::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ALLY);
     }
 };
 
@@ -1134,8 +1247,10 @@ class spell_dru_wild_growth : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_dru_wild_growth::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ALLY);
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_dru_wild_growth::SetTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ALLY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_dru_wild_growth::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ALLY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_dru_wild_growth::SetTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ALLY);
     }
 
 private:
@@ -1154,8 +1269,8 @@ class spell_dru_berserk : public SpellScript
         if (caster->IsPlayer())
         {
             // Remove tiger fury / mangle(bear)
-            const uint32 TigerFury[6] = { 5217, 6793, 9845, 9846, 50212, 50213 };
-            const uint32 DireMaul[6] = { 33878, 33986, 33987, 48563, 48564 };
+            uint32 const TigerFury[6] = {5217, 6793, 9845, 9846, 50212, 50213};
+            uint32 const DireMaul[6] = {33878, 33986, 33987, 48563, 48564};
 
             // remove aura
             for (auto& i : TigerFury)
@@ -1181,9 +1296,7 @@ class spell_dru_moonkin_form_passive_proc : public AuraScript
     bool CheckProc(ProcEventInfo& eventInfo)
     {
         if (SpellInfo const* spellInfo = eventInfo.GetSpellInfo())
-        {
             return !spellInfo->IsAffectingArea();
-        }
 
         return false;
     }

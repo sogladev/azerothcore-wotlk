@@ -22,29 +22,27 @@
 #include "TaskScheduler.h"
 #include "temple_of_ahnqiraj.h"
 
-ObjectData const creatureData[] =
-{
-    { NPC_VEM,          DATA_VEM          },
-    { NPC_KRI,          DATA_KRI          },
-    { NPC_YAUJ,         DATA_YAUJ         },
-    { NPC_SARTURA,      DATA_SARTURA      },
-    { NPC_CTHUN,        DATA_CTHUN        },
-    { NPC_EYE_OF_CTHUN, DATA_EYE_OF_CTHUN },
-    { NPC_OURO,         DATA_OURO         },
-    { NPC_OURO_SPAWNER, DATA_OURO_SPAWNER },
-    { NPC_MASTERS_EYE,  DATA_MASTERS_EYE  },
-    { NPC_VEKLOR,       DATA_VEKLOR       },
-    { NPC_VEKNILASH,    DATA_VEKNILASH    },
-    { NPC_VISCIDUS,     DATA_VISCIDUS     },
-    { 0,                0                 }
+ObjectData const creatureData[] = {
+    {NPC_VEM,          DATA_VEM         },
+    {NPC_KRI,          DATA_KRI         },
+    {NPC_YAUJ,         DATA_YAUJ        },
+    {NPC_SARTURA,      DATA_SARTURA     },
+    {NPC_CTHUN,        DATA_CTHUN       },
+    {NPC_EYE_OF_CTHUN, DATA_EYE_OF_CTHUN},
+    {NPC_OURO,         DATA_OURO        },
+    {NPC_OURO_SPAWNER, DATA_OURO_SPAWNER},
+    {NPC_MASTERS_EYE,  DATA_MASTERS_EYE },
+    {NPC_VEKLOR,       DATA_VEKLOR      },
+    {NPC_VEKNILASH,    DATA_VEKNILASH   },
+    {NPC_VISCIDUS,     DATA_VISCIDUS    },
+    {0,                0                }
 };
 
-DoorData const doorData[] =
-{
-    { AQ40_DOOR_SKERAM,      DATA_SKERAM,        DOOR_TYPE_PASSAGE },
-    { AQ40_DOOR_TE_ENTRANCE, DATA_TWIN_EMPERORS, DOOR_TYPE_ROOM },
-    { AQ40_DOOR_TE_EXIT,     DATA_TWIN_EMPERORS, DOOR_TYPE_PASSAGE },
-    { 0,                     0,                  DOOR_TYPE_ROOM}
+DoorData const doorData[] = {
+    {AQ40_DOOR_SKERAM,      DATA_SKERAM,        DOOR_TYPE_PASSAGE},
+    {AQ40_DOOR_TE_ENTRANCE, DATA_TWIN_EMPERORS, DOOR_TYPE_ROOM   },
+    {AQ40_DOOR_TE_EXIT,     DATA_TWIN_EMPERORS, DOOR_TYPE_PASSAGE},
+    {0,                     0,                  DOOR_TYPE_ROOM   }
 };
 
 class instance_temple_of_ahnqiraj : public InstanceMapScript
@@ -88,12 +86,8 @@ public:
                     if (!creature->IsAlive())
                     {
                         for (ObjectGuid const& guid : CThunGraspGUIDs)
-                        {
                             if (GameObject* cthunGrasp = instance->GetGameObject(guid))
-                            {
                                 cthunGrasp->DespawnOrUnsummon(1s);
-                            }
-                        }
                     }
                     break;
                 default:
@@ -112,9 +106,7 @@ public:
                     if (Creature* CThun = GetCreature(DATA_CTHUN))
                     {
                         if (!CThun->IsAlive())
-                        {
                             go->DespawnOrUnsummon(1s);
-                        }
                     }
                     break;
                 default:
@@ -134,16 +126,15 @@ public:
                     {
                         if (CreatureGroup* formation = creature->GetFormation())
                         {
-                            scheduler.Schedule(100ms, [formation](TaskContext /*context*/)
+                            scheduler.Schedule(100ms,
+                                [formation](TaskContext /*context*/)
                             {
                                 if (!formation->IsAnyMemberAlive(true))
                                 {
                                     if (Creature* leader = formation->GetLeader())
                                     {
                                         if (leader->IsAlive())
-                                        {
                                             leader->AI()->SetData(0, 1);
-                                        }
                                     }
                                 }
                             });
@@ -152,12 +143,8 @@ public:
                     break;
                 case NPC_CTHUN:
                     for (ObjectGuid const& guid : CThunGraspGUIDs)
-                    {
                         if (GameObject* cthunGrasp = instance->GetGameObject(guid))
-                        {
                             cthunGrasp->DespawnOrUnsummon(1s);
-                        }
-                    }
                     break;
                 default:
                     break;

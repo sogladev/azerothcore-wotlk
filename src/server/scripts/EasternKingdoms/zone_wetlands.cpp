@@ -38,11 +38,11 @@ EndContentData */
 
 enum TapokeSlim
 {
-    QUEST_MISSING_DIPLO_PT11    = 1249,
-    SPELL_STEALTH               = 1785,
-    SPELL_CALL_FRIENDS          = 16457,                    //summons 1x friend
-    NPC_SLIMS_FRIEND            = 4971,
-    NPC_TAPOKE_SLIM_JAHN        = 4962
+    QUEST_MISSING_DIPLO_PT11 = 1249,
+    SPELL_STEALTH = 1785,
+    SPELL_CALL_FRIENDS = 16457, //summons 1x friend
+    NPC_SLIMS_FRIEND = 4971,
+    NPC_TAPOKE_SLIM_JAHN = 4962
 };
 
 class npc_tapoke_slim_jahn : public CreatureScript
@@ -137,7 +137,7 @@ class npc_mikhail : public CreatureScript
 public:
     npc_mikhail() : CreatureScript("npc_mikhail") { }
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
     {
         if (quest->GetQuestId() == QUEST_MISSING_DIPLO_PT11)
         {
@@ -149,7 +149,8 @@ public:
             if (!pSlim->HasStealthAura())
                 pSlim->CastSpell(pSlim, SPELL_STEALTH, true);
 
-            if (npc_tapoke_slim_jahn::npc_tapoke_slim_jahnAI* pEscortAI = CAST_AI(npc_tapoke_slim_jahn::npc_tapoke_slim_jahnAI, pSlim->AI()))
+            if (npc_tapoke_slim_jahn::npc_tapoke_slim_jahnAI* pEscortAI =
+                    CAST_AI(npc_tapoke_slim_jahn::npc_tapoke_slim_jahnAI, pSlim->AI()))
                 pEscortAI->Start(false, false, player->GetGUID(), quest);
         }
         return false;

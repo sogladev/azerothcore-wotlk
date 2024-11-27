@@ -35,7 +35,10 @@ void WorldSession::HandleGuildQueryOpcode(WorldPackets::Guild::QueryGuildInfo& q
 
 void WorldSession::HandleGuildCreateOpcode(WorldPackets::Guild::GuildCreate& packet)
 {
-    LOG_ERROR("network.opcode", "CMSG_GUILD_CREATE: Possible hacking-attempt: {} tried to create a guild [Name: {}] using cheats", GetPlayerInfo(), packet.GuildName);
+    LOG_ERROR("network.opcode",
+        "CMSG_GUILD_CREATE: Possible hacking-attempt: {} tried to create a guild [Name: {}] using cheats",
+        GetPlayerInfo(),
+        packet.GuildName);
 }
 
 void WorldSession::HandleGuildInviteOpcode(WorldPackets::Guild::GuildInviteByName& packet)
@@ -69,9 +72,7 @@ void WorldSession::HandleGuildDeclineOpcode(WorldPackets::Guild::GuildDeclineInv
     LOG_DEBUG("guild", "CMSG_GUILD_DECLINE [{}]", GetPlayerInfo());
 
     if (GetPlayer()->GetGuild())
-    {
         return;
-    }
 
     GetPlayer()->SetGuildIdInvited(0);
     GetPlayer()->SetInGuild(0);
@@ -148,7 +149,11 @@ void WorldSession::HandleGuildMOTDOpcode(WorldPackets::Guild::GuildUpdateMotdTex
 
 void WorldSession::HandleGuildSetPublicNoteOpcode(WorldPackets::Guild::GuildSetMemberNote& packet)
 {
-    LOG_DEBUG("guild", "CMSG_GUILD_SET_PUBLIC_NOTE [{}]: Target: {}, Note: {}", GetPlayerInfo(), packet.NoteeName, packet.Note);
+    LOG_DEBUG("guild",
+        "CMSG_GUILD_SET_PUBLIC_NOTE [{}]: Target: {}, Note: {}",
+        GetPlayerInfo(),
+        packet.NoteeName,
+        packet.Note);
 
     if (normalizePlayerName(packet.NoteeName))
         if (Guild* guild = GetPlayer()->GetGuild())
@@ -157,8 +162,11 @@ void WorldSession::HandleGuildSetPublicNoteOpcode(WorldPackets::Guild::GuildSetM
 
 void WorldSession::HandleGuildSetOfficerNoteOpcode(WorldPackets::Guild::GuildSetMemberNote& packet)
 {
-    LOG_DEBUG("guild", "CMSG_GUILD_SET_OFFICER_NOTE [{}]: Target: {}, Note: {}",
-              GetPlayerInfo(), packet.NoteeName, packet.Note);
+    LOG_DEBUG("guild",
+        "CMSG_GUILD_SET_OFFICER_NOTE [{}]: Target: {}, Note: {}",
+        GetPlayerInfo(),
+        packet.NoteeName,
+        packet.Note);
 
     if (normalizePlayerName(packet.NoteeName))
         if (Guild* guild = GetPlayer()->GetGuild())
@@ -169,9 +177,7 @@ void WorldSession::HandleGuildRankOpcode(WorldPackets::Guild::GuildSetRankPermis
 {
     Guild* guild = GetPlayer()->GetGuild();
     if (!guild)
-    {
         return;
-    }
 
     std::array<GuildBankRightsAndSlots, GUILD_BANK_MAX_TABS> rightsAndSlots;
 
@@ -180,21 +186,19 @@ void WorldSession::HandleGuildRankOpcode(WorldPackets::Guild::GuildSetRankPermis
         // For some reason the client is sending - 1 for guildmaster tab withdraw item limit, that's ilegal for us because we expect unsigned int.
         // Probably core handling for this should be changed.
         if (packet.TabWithdrawItemLimit[tabId] <= 0)
-        {
             packet.TabWithdrawItemLimit[tabId] = uint32(GUILD_WITHDRAW_SLOT_UNLIMITED);
-        }
-        rightsAndSlots[tabId] = GuildBankRightsAndSlots(tabId, uint8(packet.TabFlags[tabId]), packet.TabWithdrawItemLimit[tabId]);
+        rightsAndSlots[tabId] =
+            GuildBankRightsAndSlots(tabId, uint8(packet.TabFlags[tabId]), packet.TabWithdrawItemLimit[tabId]);
     }
 
     LOG_DEBUG("guild", "CMSG_GUILD_RANK [{}]: Rank: {} ({})", GetPlayerInfo(), packet.RankName, packet.RankID);
 
     // Same as the issue above but this time with rights.
     if (packet.Flags <= 0)
-    {
         packet.Flags = GUILD_BANK_RIGHT_FULL;
-    }
 
-    guild->HandleSetRankInfo(this, packet.RankID, packet.RankName, packet.Flags, packet.WithdrawGoldLimit, rightsAndSlots);
+    guild->HandleSetRankInfo(
+        this, packet.RankID, packet.RankName, packet.Flags, packet.WithdrawGoldLimit, rightsAndSlots);
 }
 
 void WorldSession::HandleGuildAddRankOpcode(WorldPackets::Guild::GuildAddRank& packet)
@@ -226,10 +230,15 @@ void WorldSession::HandleSaveGuildEmblemOpcode(WorldPackets::Guild::SaveGuildEmb
     EmblemInfo emblemInfo;
     emblemInfo.ReadPacket(packet);
 
-    LOG_DEBUG("guild", "MSG_SAVE_GUILD_EMBLEM [{}]: Guid: [{}] Style: {}, Color: {}, BorderStyle: {}, BorderColor: {}, BackgroundColor: {}"
-                   , GetPlayerInfo(), packet.Vendor.ToString(), emblemInfo.GetStyle()
-                   , emblemInfo.GetColor(), emblemInfo.GetBorderStyle()
-                   , emblemInfo.GetBorderColor(), emblemInfo.GetBackgroundColor());
+    LOG_DEBUG("guild",
+        "MSG_SAVE_GUILD_EMBLEM [{}]: Guid: [{}] Style: {}, Color: {}, BorderStyle: {}, BorderColor: {}, BackgroundColor: {}",
+        GetPlayerInfo(),
+        packet.Vendor.ToString(),
+        emblemInfo.GetStyle(),
+        emblemInfo.GetColor(),
+        emblemInfo.GetBorderStyle(),
+        emblemInfo.GetBorderColor(),
+        emblemInfo.GetBackgroundColor());
     if (GetPlayer()->GetNPCIfCanInteractWith(packet.Vendor, UNIT_NPC_FLAG_TABARDDESIGNER))
     {
         // Remove fake death
@@ -270,8 +279,11 @@ void WorldSession::HandleGuildPermissions(WorldPackets::Guild::GuildPermissionsQ
 // Called when clicking on Guild bank gameobject
 void WorldSession::HandleGuildBankerActivate(WorldPackets::Guild::GuildBankActivate& packet)
 {
-    LOG_DEBUG("guild", "CMSG_GUILD_BANKER_ACTIVATE [{}]: Go: [{}] AllSlots: {}"
-    , GetPlayerInfo(), packet.Banker.ToString(), packet.FullUpdate);
+    LOG_DEBUG("guild",
+        "CMSG_GUILD_BANKER_ACTIVATE [{}]: Go: [{}] AllSlots: {}",
+        GetPlayerInfo(),
+        packet.Banker.ToString(),
+        packet.FullUpdate);
 
     GameObject const* const go = GetPlayer()->GetGameObjectIfCanInteractWith(packet.Banker, GAMEOBJECT_TYPE_GUILD_BANK);
     if (!go)
@@ -290,8 +302,12 @@ void WorldSession::HandleGuildBankerActivate(WorldPackets::Guild::GuildBankActiv
 // Called when opening guild bank tab only
 void WorldSession::HandleGuildBankQueryTab(WorldPackets::Guild::GuildBankQueryTab& packet)
 {
-    LOG_DEBUG("guild", "CMSG_GUILD_BANK_QUERY_TAB [{}]: Go: [{}], TabId: {}, ShowTabs: {}"
-    , GetPlayerInfo(), packet.Banker.ToString(), packet.Tab, packet.FullUpdate);
+    LOG_DEBUG("guild",
+        "CMSG_GUILD_BANK_QUERY_TAB [{}]: Go: [{}], TabId: {}, ShowTabs: {}",
+        GetPlayerInfo(),
+        packet.Banker.ToString(),
+        packet.Tab,
+        packet.FullUpdate);
 
     if (GetPlayer()->GetGameObjectIfCanInteractWith(packet.Banker, GAMEOBJECT_TYPE_GUILD_BANK))
         if (Guild* guild = GetPlayer()->GetGuild())
@@ -300,8 +316,11 @@ void WorldSession::HandleGuildBankQueryTab(WorldPackets::Guild::GuildBankQueryTa
 
 void WorldSession::HandleGuildBankDepositMoney(WorldPackets::Guild::GuildBankDepositMoney& packet)
 {
-    LOG_DEBUG("guild", "CMSG_GUILD_BANK_DEPOSIT_MONEY [{}]: Go: [{}], money: {}",
-              GetPlayerInfo(), packet.Banker.ToString(), packet.Money);
+    LOG_DEBUG("guild",
+        "CMSG_GUILD_BANK_DEPOSIT_MONEY [{}]: Go: [{}], money: {}",
+        GetPlayerInfo(),
+        packet.Banker.ToString(),
+        packet.Money);
 
     if (GetPlayer()->GetGameObjectIfCanInteractWith(packet.Banker, GAMEOBJECT_TYPE_GUILD_BANK))
         if (packet.Money && GetPlayer()->HasEnoughMoney(packet.Money))
@@ -311,8 +330,11 @@ void WorldSession::HandleGuildBankDepositMoney(WorldPackets::Guild::GuildBankDep
 
 void WorldSession::HandleGuildBankWithdrawMoney(WorldPackets::Guild::GuildBankWithdrawMoney& packet)
 {
-    LOG_DEBUG("guild", "CMSG_GUILD_BANK_WITHDRAW_MONEY [{}]: Go: [{}], money: {}",
-                   GetPlayerInfo(), packet.Banker.ToString(), packet.Money);
+    LOG_DEBUG("guild",
+        "CMSG_GUILD_BANK_WITHDRAW_MONEY [{}]: Go: [{}], money: {}",
+        GetPlayerInfo(),
+        packet.Banker.ToString(),
+        packet.Money);
     if (packet.Money && GetPlayer()->GetGameObjectIfCanInteractWith(packet.Banker, GAMEOBJECT_TYPE_GUILD_BANK))
         if (Guild* guild = GetPlayer()->GetGuild())
             guild->HandleMemberWithdrawMoney(this, packet.Money);
@@ -321,18 +343,15 @@ void WorldSession::HandleGuildBankWithdrawMoney(WorldPackets::Guild::GuildBankWi
 void WorldSession::HandleGuildBankSwapItems(WorldPackets::Guild::GuildBankSwapItems& packet)
 {
     if (!GetPlayer()->GetGameObjectIfCanInteractWith(packet.Banker, GAMEOBJECT_TYPE_GUILD_BANK))
-    {
         return;
-    }
 
     Guild* guild = GetPlayer()->GetGuild();
     if (!guild)
-    {
         return;
-    }
 
     if (packet.BankOnly)
-        guild->SwapItems(GetPlayer(), packet.BankTab1, packet.BankSlot1, packet.BankTab, packet.BankSlot, packet.BankItemCount);
+        guild->SwapItems(
+            GetPlayer(), packet.BankTab1, packet.BankSlot1, packet.BankTab, packet.BankSlot, packet.BankItemCount);
     else
     {
         uint8 playerBag = NULL_BAG;
@@ -353,13 +372,18 @@ void WorldSession::HandleGuildBankSwapItems(WorldPackets::Guild::GuildBankSwapIt
         if (!Player::IsInventoryPos(playerBag, playerSlotId) && !(playerBag == NULL_BAG && playerSlotId == NULL_SLOT))
             GetPlayer()->SendEquipError(EQUIP_ERR_NONE, nullptr);
         else
-            guild->SwapItemsWithInventory(GetPlayer(), toChar != 0, packet.BankTab, packet.BankSlot, playerBag, playerSlotId, splitedAmount);
+            guild->SwapItemsWithInventory(
+                GetPlayer(), toChar != 0, packet.BankTab, packet.BankSlot, playerBag, playerSlotId, splitedAmount);
     }
 }
 
 void WorldSession::HandleGuildBankBuyTab(WorldPackets::Guild::GuildBankBuyTab& packet)
 {
-    LOG_DEBUG("guild", "CMSG_GUILD_BANK_BUY_TAB [{}]: [{}[, TabId: {}", GetPlayerInfo(), packet.Banker .ToString(), packet.BankTab);
+    LOG_DEBUG("guild",
+        "CMSG_GUILD_BANK_BUY_TAB [{}]: [{}[, TabId: {}",
+        GetPlayerInfo(),
+        packet.Banker.ToString(),
+        packet.BankTab);
 
     if (GetPlayer()->GetGameObjectIfCanInteractWith(packet.Banker, GAMEOBJECT_TYPE_GUILD_BANK))
         if (Guild* guild = GetPlayer()->GetGuild())
@@ -368,8 +392,13 @@ void WorldSession::HandleGuildBankBuyTab(WorldPackets::Guild::GuildBankBuyTab& p
 
 void WorldSession::HandleGuildBankUpdateTab(WorldPackets::Guild::GuildBankUpdateTab& packet)
 {
-    LOG_DEBUG("guild", "CMSG_GUILD_BANK_UPDATE_TAB [{}]: Go: [{}], TabId: {}, Name: {}, Icon: {}"
-    , GetPlayerInfo(), packet.Banker.ToString(), packet.BankTab, packet.Name, packet.Icon);
+    LOG_DEBUG("guild",
+        "CMSG_GUILD_BANK_UPDATE_TAB [{}]: Go: [{}], TabId: {}, Name: {}, Icon: {}",
+        GetPlayerInfo(),
+        packet.Banker.ToString(),
+        packet.BankTab,
+        packet.Name,
+        packet.Icon);
 
     if (!packet.Name.empty() && !packet.Icon.empty())
         if (GetPlayer()->GetGameObjectIfCanInteractWith(packet.Banker, GAMEOBJECT_TYPE_GUILD_BANK))
@@ -395,7 +424,8 @@ void WorldSession::HandleQueryGuildBankTabText(WorldPackets::Guild::GuildBankTex
 
 void WorldSession::HandleSetGuildBankTabText(WorldPackets::Guild::GuildBankSetTabText& packet)
 {
-    LOG_DEBUG("guild", "CMSG_SET_GUILD_BANK_TEXT [{}]: TabId: {}, Text: {}", GetPlayerInfo(), packet.Tab, packet.TabText);
+    LOG_DEBUG(
+        "guild", "CMSG_SET_GUILD_BANK_TEXT [{}]: TabId: {}, Text: {}", GetPlayerInfo(), packet.Tab, packet.TabText);
 
     if (Guild* guild = GetPlayer()->GetGuild())
         guild->SetBankTabText(packet.Tab, packet.TabText);

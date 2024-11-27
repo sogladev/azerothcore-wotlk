@@ -27,92 +27,90 @@
 
 enum Says
 {
-    SAY_AGGRO                 = 0,
-    SAY_DING_KILL             = 1,
-    SAY_WATCH                 = 2,
-    SAY_WATCH_WHISPER         = 3,
-    SAY_OHGAN_DEAD            = 4,
-    SAY_GRATS_JINDO           = 0,
+    SAY_AGGRO = 0,
+    SAY_DING_KILL = 1,
+    SAY_WATCH = 2,
+    SAY_WATCH_WHISPER = 3,
+    SAY_OHGAN_DEAD = 4,
+    SAY_GRATS_JINDO = 0,
 };
 
 enum Spells
 {
-    SPELL_CHARGE              = 24408,
-    SPELL_OVERPOWER           = 24407,
-    SPELL_FRIGHTENING_SHOUT   = 19134,
-    SPELL_WHIRLWIND           = 13736, // triggers 15589
-    SPELL_MORTAL_STRIKE       = 16856,
-    SPELL_FRENZY              = 24318,
-    SPELL_WATCH               = 24314, // triggers 24315 and 24316
-    SPELL_WATCH_CHARGE        = 24315, // triggers 24316
-    SPELL_LEVEL_UP            = 24312,
-    SPELL_EXECUTE             = 7160,
-    SPELL_MANDOKIR_CLEAVE     = 20691,
-    SPELL_SUMMON_PLAYER       = 25104,
+    SPELL_CHARGE = 24408,
+    SPELL_OVERPOWER = 24407,
+    SPELL_FRIGHTENING_SHOUT = 19134,
+    SPELL_WHIRLWIND = 13736, // triggers 15589
+    SPELL_MORTAL_STRIKE = 16856,
+    SPELL_FRENZY = 24318,
+    SPELL_WATCH = 24314,        // triggers 24315 and 24316
+    SPELL_WATCH_CHARGE = 24315, // triggers 24316
+    SPELL_LEVEL_UP = 24312,
+    SPELL_EXECUTE = 7160,
+    SPELL_MANDOKIR_CLEAVE = 20691,
+    SPELL_SUMMON_PLAYER = 25104,
 
-    SPELL_REVIVE              = 24341 // chained spirit
+    SPELL_REVIVE = 24341 // chained spirit
 };
 
 enum Events
 {
-    EVENT_CHECK_SPEAKER       = 1,
-    EVENT_CHECK_START         = 2,
-    EVENT_STARTED             = 3,
-    EVENT_OVERPOWER           = 4,
-    EVENT_MORTAL_STRIKE       = 5,
-    EVENT_WHIRLWIND           = 6,
-    EVENT_CHECK_OHGAN         = 7,
-    EVENT_WATCH_PLAYER        = 8,
-    EVENT_CHARGE_PLAYER       = 9,
-    EVENT_EXECUTE             = 10,
-    EVENT_CLEAVE              = 11
+    EVENT_CHECK_SPEAKER = 1,
+    EVENT_CHECK_START = 2,
+    EVENT_STARTED = 3,
+    EVENT_OVERPOWER = 4,
+    EVENT_MORTAL_STRIKE = 5,
+    EVENT_WHIRLWIND = 6,
+    EVENT_CHECK_OHGAN = 7,
+    EVENT_WATCH_PLAYER = 8,
+    EVENT_CHARGE_PLAYER = 9,
+    EVENT_EXECUTE = 10,
+    EVENT_CLEAVE = 11
 };
 
 enum Action
 {
-    ACTION_START_REVIVE       = 1, // broodlord mandokir
-    ACTION_REVIVE             = 2 // chained spirit
+    ACTION_START_REVIVE = 1, // broodlord mandokir
+    ACTION_REVIVE = 2        // chained spirit
 };
 
 enum Misc
 {
-    POINT_START_REVIVE        = 1, // chained spirit
+    POINT_START_REVIVE = 1, // chained spirit
 
-    MODEL_OHGAN_MOUNT         = 15271,
-    PATH_MANDOKIR             = 492861,
-    POINT_MANDOKIR_END        = 24,
-    CHAINED_SPIRIT_COUNT      = 20,
-    ACTION_CHARGE             = 1
+    MODEL_OHGAN_MOUNT = 15271,
+    PATH_MANDOKIR = 492861,
+    POINT_MANDOKIR_END = 24,
+    CHAINED_SPIRIT_COUNT = 20,
+    ACTION_CHARGE = 1
 };
 
-Position const PosSummonChainedSpirits[CHAINED_SPIRIT_COUNT] =
-{
-    { -12167.17f, -1979.330f, 133.0992f, 2.268928f },
-    { -12262.74f, -1953.394f, 133.5496f, 0.593412f },
-    { -12176.89f, -1983.068f, 133.7841f, 2.129302f },
-    { -12226.45f, -1977.933f, 132.7982f, 1.466077f },
-    { -12204.74f, -1890.431f, 135.7569f, 4.415683f },
-    { -12216.70f, -1891.806f, 136.3496f, 4.677482f },
-    { -12236.19f, -1892.034f, 134.1041f, 5.044002f },
-    { -12248.24f, -1893.424f, 134.1182f, 5.270895f },
-    { -12257.36f, -1897.663f, 133.1484f, 5.462881f },
-    { -12265.84f, -1903.077f, 133.1649f, 5.654867f },
-    { -12158.69f, -1972.707f, 133.8751f, 2.408554f },
-    { -12178.82f, -1891.974f, 134.1786f, 3.944444f },
-    { -12193.36f, -1890.039f, 135.1441f, 4.188790f },
-    { -12275.59f, -1932.845f, 134.9017f, 0.174533f },
-    { -12273.51f, -1941.539f, 136.1262f, 0.314159f },
-    { -12247.02f, -1963.497f, 133.9476f, 0.872665f },
-    { -12238.68f, -1969.574f, 133.6273f, 1.134464f },
-    { -12192.78f, -1982.116f, 132.6966f, 1.919862f },
-    { -12210.81f, -1979.316f, 133.8700f, 1.797689f },
-    { -12283.51f, -1924.839f, 133.5170f, 0.069813f }
+Position const PosSummonChainedSpirits[CHAINED_SPIRIT_COUNT] = {
+    {-12167.17f, -1979.330f, 133.0992f, 2.268928f},
+    {-12262.74f, -1953.394f, 133.5496f, 0.593412f},
+    {-12176.89f, -1983.068f, 133.7841f, 2.129302f},
+    {-12226.45f, -1977.933f, 132.7982f, 1.466077f},
+    {-12204.74f, -1890.431f, 135.7569f, 4.415683f},
+    {-12216.70f, -1891.806f, 136.3496f, 4.677482f},
+    {-12236.19f, -1892.034f, 134.1041f, 5.044002f},
+    {-12248.24f, -1893.424f, 134.1182f, 5.270895f},
+    {-12257.36f, -1897.663f, 133.1484f, 5.462881f},
+    {-12265.84f, -1903.077f, 133.1649f, 5.654867f},
+    {-12158.69f, -1972.707f, 133.8751f, 2.408554f},
+    {-12178.82f, -1891.974f, 134.1786f, 3.944444f},
+    {-12193.36f, -1890.039f, 135.1441f, 4.188790f},
+    {-12275.59f, -1932.845f, 134.9017f, 0.174533f},
+    {-12273.51f, -1941.539f, 136.1262f, 0.314159f},
+    {-12247.02f, -1963.497f, 133.9476f, 0.872665f},
+    {-12238.68f, -1969.574f, 133.6273f, 1.134464f},
+    {-12192.78f, -1982.116f, 132.6966f, 1.919862f},
+    {-12210.81f, -1979.316f, 133.8700f, 1.797689f},
+    {-12283.51f, -1924.839f, 133.5170f, 0.069813f}
 };
 
-Position const PosMandokir[2] =
-{
-    { -12167.8f, -1927.25f, 153.73f, 3.76991f },
-    { -12197.86f, -1949.392f, 130.2745f, 0.0f }
+Position const PosMandokir[2] = {
+    {-12167.8f,  -1927.25f,  153.73f,   3.76991f},
+    {-12197.86f, -1949.392f, 130.2745f, 0.0f    }
 };
 
 void RevivePlayer(Unit* victim, ObjectGuid& reviveGUID)
@@ -124,9 +122,7 @@ void RevivePlayer(Unit* victim, ObjectGuid& reviveGUID)
 
     // Sort the list by distance to the victim.
     chainedSpirits.sort([victim](Creature const* c1, Creature const* c2)
-        {
-            return c1->GetDistance2d(victim) < c2->GetDistance2d(victim);
-        });
+    { return c1->GetDistance2d(victim) < c2->GetDistance2d(victim); });
 
     // Now we have to check if the spirit is already reviving someone...
     for (Creature* spirit : chainedSpirits)
@@ -160,9 +156,7 @@ public:
                 if (Creature* speaker = ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_VILEBRANCH_SPEAKER)))
                 {
                     if (!speaker->IsAlive())
-                    {
                         speaker->Respawn(true);
-                    }
                 }
             }
             me->RemoveAurasDueToSpell(SPELL_FRENZY);
@@ -199,11 +193,15 @@ public:
             Talk(SAY_AGGRO);
             me->Dismount();
             // Summon Ohgan (Spell missing) TEMP HACK
-            me->SummonCreature(NPC_OHGAN, me->GetPositionX() - 3, me->GetPositionY(), me->GetPositionZ(), me->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 35000);
+            me->SummonCreature(NPC_OHGAN,
+                me->GetPositionX() - 3,
+                me->GetPositionY(),
+                me->GetPositionZ(),
+                me->GetOrientation(),
+                TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                35000);
             for (int i = 0; i < CHAINED_SPIRIT_COUNT; ++i)
-            {
                 me->SummonCreature(NPC_CHAINED_SPIRIT, PosSummonChainedSpirits[i], TEMPSUMMON_CORPSE_DESPAWN);
-            }
             DoZoneInCombat();
         }
 
@@ -220,9 +218,7 @@ public:
                 if (Creature* jindo = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_JINDO)))
                 {
                     if (jindo->IsAlive())
-                    {
                         jindo->AI()->Talk(SAY_GRATS_JINDO);
-                    }
                 }
                 DoCastSelf(SPELL_LEVEL_UP, true);
                 killCount = 0;
@@ -287,7 +283,8 @@ public:
             if (_chargeTarget.first == hatedUnit->GetGUID())
             {
                 // Do not count DOTs/HOTs
-                if (!(threatSpell && (threatSpell->HasAura(SPELL_AURA_DAMAGE_SHIELD) || threatSpell->HasAttribute(SPELL_ATTR0_CU_NO_INITIAL_THREAT))))
+                if (!(threatSpell && (threatSpell->HasAura(SPELL_AURA_DAMAGE_SHIELD) ||
+                                         threatSpell->HasAttribute(SPELL_ATTR0_CU_NO_INITIAL_THREAT))))
                 {
                     _chargeTarget.second += threat;
                 }
@@ -323,9 +320,7 @@ public:
         void DoMeleeAttackIfReady(bool ignoreCasting)
         {
             if (!ignoreCasting && me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             Unit* victim = me->GetVictim();
             if (!victim || !victim->IsInWorld())
@@ -363,7 +358,8 @@ public:
 
             if (!UpdateVictim())
             {
-                if (instance->GetBossState(DATA_MANDOKIR) == NOT_STARTED || instance->GetBossState(DATA_MANDOKIR) == SPECIAL)
+                if (instance->GetBossState(DATA_MANDOKIR) == NOT_STARTED ||
+                    instance->GetBossState(DATA_MANDOKIR) == SPECIAL)
                 {
                     while (uint32 eventId = events.ExecuteEvent())
                     {
@@ -372,7 +368,10 @@ public:
                             case EVENT_CHECK_START:
                                 if (instance->GetBossState(DATA_MANDOKIR) == SPECIAL)
                                 {
-                                    me->GetMotionMaster()->MovePoint(0, PosMandokir[1].m_positionX, PosMandokir[1].m_positionY, PosMandokir[1].m_positionZ);
+                                    me->GetMotionMaster()->MovePoint(0,
+                                        PosMandokir[1].m_positionX,
+                                        PosMandokir[1].m_positionY,
+                                        PosMandokir[1].m_positionZ);
                                     events.ScheduleEvent(EVENT_STARTED, 6s);
                                 }
                                 else
@@ -395,9 +394,7 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING) || me->HasUnitState(UNIT_STATE_CHARGING))
             {
                 if (me->GetCurrentSpellCastTime(SPELL_WATCH) >= 0)
-                {
                     DoMeleeAttackIfReady(true);
-                }
 
                 return;
             }
@@ -408,13 +405,9 @@ public:
                 {
                     case EVENT_OVERPOWER:
                         if (DoCastVictim(SPELL_OVERPOWER) == SPELL_CAST_OK)
-                        {
                             events.ScheduleEvent(EVENT_OVERPOWER, 6s, 8s);
-                        }
                         else
-                        {
                             events.ScheduleEvent(EVENT_OVERPOWER, 1s);
-                        }
                         break;
                     case EVENT_MORTAL_STRIKE:
                         DoCastVictim(SPELL_MORTAL_STRIKE);
@@ -422,7 +415,7 @@ public:
                         break;
                     case EVENT_WHIRLWIND:
                         DoCast(me, SPELL_WHIRLWIND);
-                        events.ScheduleEvent(EVENT_WHIRLWIND, 22s,  26s);
+                        events.ScheduleEvent(EVENT_WHIRLWIND, 22s, 26s);
                         break;
                     case EVENT_CHECK_OHGAN:
                         if (instance->GetBossState(DATA_OHGAN) == DONE)
@@ -445,21 +438,21 @@ public:
                         events.ScheduleEvent(EVENT_WATCH_PLAYER, 12s, 24s);
                         break;
                     case EVENT_CHARGE_PLAYER:
-                        if (Unit* target = SelectTarget(SelectTargetMethod::MinDistance, 0, [this](Unit const* target)
-                            {
-                                if (!me || !target)
-                                    return false;
-                                if (!target->IsPlayer() || !me->IsWithinLOSInMap(target))
-                                    return false;
-                                return true;
-                            }))
+                        if (Unit* target = SelectTarget(SelectTargetMethod::MinDistance,
+                                0,
+                                [this](Unit const* target)
+                        {
+                            if (!me || !target)
+                                return false;
+                            if (!target->IsPlayer() || !me->IsWithinLOSInMap(target))
+                                return false;
+                            return true;
+                        }))
                         {
                             DoCast(target, SPELL_CHARGE);
                             events.DelayEvents(1500ms);
                             if (Unit* mainTarget = SelectTarget(SelectTargetMethod::MaxThreat, 0, 100.0f))
-                            {
                                 me->GetThreatMgr().ModifyThreatByPercent(mainTarget, -100);
-                            }
                         }
                         events.ScheduleEvent(EVENT_CHARGE_PLAYER, 30s, 40s);
                         break;
@@ -468,28 +461,26 @@ public:
                         events.ScheduleEvent(EVENT_EXECUTE, 7s, 14s);
                         break;
                     case EVENT_CLEAVE:
+                    {
+                        std::list<Unit*> meleeRangeTargets;
+                        auto i = me->GetThreatMgr().GetThreatList().begin();
+                        for (; i != me->GetThreatMgr().GetThreatList().end(); ++i)
                         {
-                            std::list<Unit*> meleeRangeTargets;
-                            auto i = me->GetThreatMgr().GetThreatList().begin();
-                            for (; i != me->GetThreatMgr().GetThreatList().end(); ++i)
-                            {
-                                Unit* target = (*i)->getTarget();
-                                if (me->IsWithinMeleeRange(target))
-                                {
-                                    meleeRangeTargets.push_back(target);
-                                }
-                            }
-                            if (meleeRangeTargets.size() >= 5)
-                            {
-                                DoCastVictim(SPELL_MANDOKIR_CLEAVE);
-                                events.ScheduleEvent(EVENT_CLEAVE, 10s, 20s);
-                            }
-                            else
-                            {
-                                events.ScheduleEvent(EVENT_CLEAVE, 1s);
-                            }
-                            break;
+                            Unit* target = (*i)->getTarget();
+                            if (me->IsWithinMeleeRange(target))
+                                meleeRangeTargets.push_back(target);
                         }
+                        if (meleeRangeTargets.size() >= 5)
+                        {
+                            DoCastVictim(SPELL_MANDOKIR_CLEAVE);
+                            events.ScheduleEvent(EVENT_CLEAVE, 10s, 20s);
+                        }
+                        else
+                        {
+                            events.ScheduleEvent(EVENT_CLEAVE, 1s);
+                        }
+                        break;
+                    }
                     default:
                         break;
                 }
@@ -514,8 +505,8 @@ public:
 // Ohgan
 enum OhganSpells
 {
-    SPELL_SUNDERARMOR         = 24317,
-    SPELL_THRASH              = 3391
+    SPELL_SUNDERARMOR = 24317,
+    SPELL_THRASH = 3391
 };
 
 class npc_ohgan : public CreatureScript
@@ -530,10 +521,7 @@ public:
         void Reset() override
         {
             _scheduler.CancelAll();
-            _scheduler.SetValidator([this]
-            {
-                return !me->HasUnitState(UNIT_STATE_CASTING);
-            });
+            _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
 
             reviveGUID.Clear();
         }
@@ -543,12 +531,16 @@ public:
             if (!who->IsPlayer())
                 return;
 
-            _scheduler.Schedule(6s, 12s, [this](TaskContext context)
+            _scheduler.Schedule(6s,
+                12s,
+                [this](TaskContext context)
             {
                 DoCastVictim(SPELL_SUNDERARMOR);
                 context.Repeat(6s, 12s);
             });
-            _scheduler.Schedule(12s, 18s, [this](TaskContext context)
+            _scheduler.Schedule(12s,
+                18s,
+                [this](TaskContext context)
             {
                 DoCastSelf(SPELL_THRASH);
                 context.Repeat(12s, 18s);
@@ -579,9 +571,7 @@ public:
             _scheduler.Update(diff);
 
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             DoMeleeAttackIfReady();
         }
@@ -624,7 +614,8 @@ public:
             if (Player* target = ObjectAccessor::GetPlayer(*me, revivePlayerGUID))
             {
                 Position pos;
-                target->GetNearPoint(me, pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0.0f, 0.0f, target->GetAbsoluteAngle(me));
+                target->GetNearPoint(
+                    me, pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0.0f, 0.0f, target->GetAbsoluteAngle(me));
                 me->GetMotionMaster()->MovePoint(POINT_START_REVIVE, pos);
             }
         }
@@ -638,9 +629,7 @@ public:
         if (pointId == POINT_START_REVIVE)
         {
             if (Player* target = ObjectAccessor::GetPlayer(*me, revivePlayerGUID))
-            {
                 DoCast(target, SPELL_REVIVE);
-            }
             me->DespawnOrUnsummon(1000);
         }
     }
@@ -655,13 +644,12 @@ public:
 private:
     InstanceScript* instance;
     ObjectGuid revivePlayerGUID;
-
 };
 
 enum VilebranchSpells
 {
-    SPELL_DEMORALIZING_SHOUT  = 13730,
-    SPELL_CLEAVE              = 15284
+    SPELL_DEMORALIZING_SHOUT = 13730,
+    SPELL_CLEAVE = 15284
 };
 
 struct npc_vilebranch_speaker : public ScriptedAI
@@ -676,16 +664,20 @@ struct npc_vilebranch_speaker : public ScriptedAI
     void JustEngagedWith(Unit* /*who*/) override
     {
         _scheduler
-            .Schedule(2s, 4s, [this](TaskContext context)
-            {
-                DoCastAOE(SPELL_DEMORALIZING_SHOUT);
-                context.Repeat(22s, 30s);
-            })
-            .Schedule(5s, 8s, [this](TaskContext context)
-            {
-                DoCastVictim(SPELL_CLEAVE, true);
-                context.Repeat(6s, 9s);
-            });
+            .Schedule(2s,
+                4s,
+                [this](TaskContext context)
+        {
+            DoCastAOE(SPELL_DEMORALIZING_SHOUT);
+            context.Repeat(22s, 30s);
+        })
+            .Schedule(5s,
+                8s,
+                [this](TaskContext context)
+        {
+            DoCastVictim(SPELL_CLEAVE, true);
+            context.Repeat(6s, 9s);
+        });
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -699,10 +691,7 @@ struct npc_vilebranch_speaker : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-        _scheduler.Update(diff, [this]
-            {
-                DoMeleeAttackIfReady();
-            });
+        _scheduler.Update(diff, [this] { DoMeleeAttackIfReady(); });
     }
 
 private:
@@ -725,9 +714,7 @@ class spell_threatening_gaze_aura : public AuraScript
                     if (Creature* cCaster = caster->ToCreature())
                     {
                         if (cCaster->IsAIEnabled)
-                        {
                             cCaster->AI()->SetGUID(target->GetGUID(), ACTION_CHARGE);
-                        }
                     }
                 }
             }
@@ -736,7 +723,8 @@ class spell_threatening_gaze_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_threatening_gaze_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_threatening_gaze_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -762,7 +750,7 @@ class spell_threatening_gaze_charge : public SpellScript
 {
     PrepareSpellScript(spell_threatening_gaze_charge)
 
-    void PreventLaunchHit(SpellEffIndex effIndex)
+        void PreventLaunchHit(SpellEffIndex effIndex)
     {
         PreventHitDefaultEffect(effIndex);
     }
@@ -776,8 +764,10 @@ class spell_threatening_gaze_charge : public SpellScript
 
     void Register() override
     {
-        OnEffectLaunchTarget += SpellEffectFn(spell_threatening_gaze_charge::PreventLaunchHit, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
-        OnEffectHitTarget += SpellEffectFn(spell_threatening_gaze_charge::LaunchHit, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
+        OnEffectLaunchTarget +=
+            SpellEffectFn(spell_threatening_gaze_charge::PreventLaunchHit, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_threatening_gaze_charge::LaunchHit, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
     }
 };
 

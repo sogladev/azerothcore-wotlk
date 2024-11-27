@@ -19,50 +19,50 @@
 #include "CreatureScript.h"
 #include "ObjectMgr.h"
 #include "ScriptedCreature.h"
+#include "SpellAuraEffects.h"
 #include "SpellAuras.h"
+#include "SpellMgr.h"
 #include "SpellScriptLoader.h"
 #include "icecrown_citadel.h"
-#include "SpellAuraEffects.h"
-#include "SpellMgr.h"
 
 enum ScriptTexts
 {
-    SAY_STINKY_DEAD             = 0,
-    SAY_AGGRO                   = 1,
-    EMOTE_GAS_SPORE             = 2,
-    EMOTE_WARN_GAS_SPORE        = 3,
-    SAY_PUNGENT_BLIGHT          = 4,
-    EMOTE_WARN_PUNGENT_BLIGHT   = 5,
-    EMOTE_PUNGENT_BLIGHT        = 6,
-    SAY_KILL                    = 7,
-    SAY_BERSERK                 = 8,
-    SAY_DEATH                   = 9,
+    SAY_STINKY_DEAD = 0,
+    SAY_AGGRO = 1,
+    EMOTE_GAS_SPORE = 2,
+    EMOTE_WARN_GAS_SPORE = 3,
+    SAY_PUNGENT_BLIGHT = 4,
+    EMOTE_WARN_PUNGENT_BLIGHT = 5,
+    EMOTE_PUNGENT_BLIGHT = 6,
+    SAY_KILL = 7,
+    SAY_BERSERK = 8,
+    SAY_DEATH = 9,
 };
 
 enum Spells
 {
     // Festergut
-    SPELL_INHALE_BLIGHT         = 69165,
-    SPELL_PUNGENT_BLIGHT        = 69195,
-    SPELL_GASTRIC_BLOAT         = 72219, // 72214 is the proper way (with proc) but atm procs can't have cooldown for creatures
-    SPELL_GASTRIC_EXPLOSION     = 72227,
-    SPELL_GAS_SPORE             = 69278,
-    SPELL_VILE_GAS              = 69240,
-    SPELL_INOCULATED            = 69291,
-    SPELL_MALLABLE_GOO_H        = 72296,
+    SPELL_INHALE_BLIGHT = 69165,
+    SPELL_PUNGENT_BLIGHT = 69195,
+    SPELL_GASTRIC_BLOAT = 72219, // 72214 is the proper way (with proc) but atm procs can't have cooldown for creatures
+    SPELL_GASTRIC_EXPLOSION = 72227,
+    SPELL_GAS_SPORE = 69278,
+    SPELL_VILE_GAS = 69240,
+    SPELL_INOCULATED = 69291,
+    SPELL_MALLABLE_GOO_H = 72296,
 
     // Stinky
-    SPELL_MORTAL_WOUND          = 71127,
-    SPELL_DECIMATE              = 71123,
-    SPELL_PLAGUE_STENCH         = 71805,
+    SPELL_MORTAL_WOUND = 71127,
+    SPELL_DECIMATE = 71123,
+    SPELL_PLAGUE_STENCH = 71805,
 };
 
 // Used for HasAura checks
 #define PUNGENT_BLIGHT_HELPER RAID_MODE<uint32>(69195, 71219, 73031, 73032)
 #define INOCULATED_HELPER     RAID_MODE<uint32>(69291, 72101, 72102, 72103)
 
-uint32 const gaseousBlight[3]        = {69157, 69162, 69164};
-uint32 const gaseousBlightVisual[3]  = {69126, 69152, 69154};
+uint32 const gaseousBlight[3] = {69157, 69162, 69164};
+uint32 const gaseousBlightVisual[3] = {69126, 69152, 69154};
 
 #define DATA_INOCULATED_STACK 69291
 
@@ -175,8 +175,12 @@ public:
             else if (Player* p = target->ToPlayer())
             {
                 // Gaseous Blight damage
-                if (((spell->Id == 69159 || spell->Id == 70136 || spell->Id == 69161 || spell->Id == 70139 || spell->Id == 69163 || spell->Id == 70469) && p->GetQuestStatus(QUEST_RESIDUE_RENDEZVOUS_10) == QUEST_STATUS_INCOMPLETE) ||
-                        ((spell->Id == 70135 || spell->Id == 70138 || spell->Id == 70468 || spell->Id == 70137 || spell->Id == 70140 || spell->Id == 70470) && p->GetQuestStatus(QUEST_RESIDUE_RENDEZVOUS_25) == QUEST_STATUS_INCOMPLETE))
+                if (((spell->Id == 69159 || spell->Id == 70136 || spell->Id == 69161 || spell->Id == 70139 ||
+                         spell->Id == 69163 || spell->Id == 70469) &&
+                        p->GetQuestStatus(QUEST_RESIDUE_RENDEZVOUS_10) == QUEST_STATUS_INCOMPLETE) ||
+                    ((spell->Id == 70135 || spell->Id == 70138 || spell->Id == 70468 || spell->Id == 70137 ||
+                         spell->Id == 70140 || spell->Id == 70470) &&
+                        p->GetQuestStatus(QUEST_RESIDUE_RENDEZVOUS_25) == QUEST_STATUS_INCOMPLETE))
                     p->CastSpell(p, SPELL_ORANGE_BLIGHT_RESIDUE, true);
             }
         }
@@ -236,26 +240,27 @@ public:
                     events.DelayEventsToMax(20000, 1); // delay EVENT_VILE_GAS
                     break;
                 case EVENT_VILE_GAS:
-                    {
-                        std::list<Unit*> targets;
-                        uint32 minTargets = RAID_MODE<uint32>(3, 8, 3, 8);
-                        SelectTargetList(targets, minTargets, SelectTargetMethod::Random, 0, -5.0f, true);
-                        float minDist = 0.0f;
-                        if (targets.size() >= minTargets)
-                            minDist = -5.0f;
+                {
+                    std::list<Unit*> targets;
+                    uint32 minTargets = RAID_MODE<uint32>(3, 8, 3, 8);
+                    SelectTargetList(targets, minTargets, SelectTargetMethod::Random, 0, -5.0f, true);
+                    float minDist = 0.0f;
+                    if (targets.size() >= minTargets)
+                        minDist = -5.0f;
 
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, minDist, true))
-                            me->CastSpell(target, SPELL_VILE_GAS, false);
-                        events.ScheduleEvent(EVENT_VILE_GAS, 28s, 35s, 1);
-                        break;
-                    }
+                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, minDist, true))
+                        me->CastSpell(target, SPELL_VILE_GAS, false);
+                    events.ScheduleEvent(EVENT_VILE_GAS, 28s, 35s, 1);
+                    break;
+                }
                 case EVENT_GASTRIC_BLOAT:
                     me->CastSpell(me->GetVictim(), SPELL_GASTRIC_BLOAT, false);
                     events.ScheduleEvent(EVENT_GASTRIC_BLOAT, 15s, 17s + 500ms);
                     break;
                 case EVENT_FESTERGUT_GOO:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, NonTankTargetSelector(me)))
-                        if (Creature* professor = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_PROFESSOR_PUTRICIDE)))
+                        if (Creature* professor =
+                                ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_PROFESSOR_PUTRICIDE)))
                             professor->CastSpell(target, SPELL_MALLABLE_GOO_H, true);
                     events.ScheduleEvent(EVENT_FESTERGUT_GOO, 15s, 20s);
                 default:
@@ -315,7 +320,8 @@ class spell_festergut_pungent_blight : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_festergut_pungent_blight::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_festergut_pungent_blight::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -325,20 +331,24 @@ class spell_festergut_blighted_spores_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_INOCULATED });
+        return ValidateSpellInfo({SPELL_INOCULATED});
     }
 
     void ExtraEffect(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
     {
         if (Aura* a = aurEff->GetBase())
-            if (a->GetDuration() > a->GetMaxDuration() - 1000) // this does not stack for different casters and previous is removed by new DoT, prevent it from giving inoculation in such case
+            if (a->GetDuration() >
+                a->GetMaxDuration() -
+                    1000) // this does not stack for different casters and previous is removed by new DoT, prevent it from giving inoculation in such case
                 return;
         uint32 inoculatedId = sSpellMgr->GetSpellIdForDifficulty(SPELL_INOCULATED, GetTarget());
         uint8 inoculatedStack = 1;
         if (Aura* a = GetTarget()->GetAura(inoculatedId))
         {
             inoculatedStack += a->GetStackAmount();
-            if (a->GetDuration() > a->GetMaxDuration() - 10000) // player may gain only one stack at a time, no matter how many spores explode near him
+            if (a->GetDuration() >
+                a->GetMaxDuration() -
+                    10000) // player may gain only one stack at a time, no matter how many spores explode near him
                 return;
         }
         GetTarget()->CastSpell(GetTarget(), SPELL_INOCULATED, true);
@@ -349,7 +359,10 @@ class spell_festergut_blighted_spores_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_festergut_blighted_spores_aura::ExtraEffect, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_festergut_blighted_spores_aura::ExtraEffect,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DAMAGE,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -359,7 +372,7 @@ class spell_festergut_gastric_bloat : public SpellScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_GASTRIC_EXPLOSION });
+        return ValidateSpellInfo({SPELL_GASTRIC_EXPLOSION});
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -374,7 +387,8 @@ class spell_festergut_gastric_bloat : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_festergut_gastric_bloat::HandleScript, EFFECT_2, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_festergut_gastric_bloat::HandleScript, EFFECT_2, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -399,7 +413,7 @@ public:
 
     struct npc_stinky_iccAI : public ScriptedAI
     {
-        npc_stinky_iccAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_stinky_iccAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() override
         {

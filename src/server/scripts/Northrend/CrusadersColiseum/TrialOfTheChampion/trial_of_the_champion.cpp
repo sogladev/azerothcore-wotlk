@@ -23,26 +23,25 @@
 
 enum Texts
 {
-    NPC_TEXT_NOT_MOUNTED_H = 15043,  // Horde text
-    NPC_TEXT_NOT_MOUNTED_A = 14757,  // Alliance text
+    NPC_TEXT_NOT_MOUNTED_H = 15043, // Horde text
+    NPC_TEXT_NOT_MOUNTED_A = 14757, // Alliance text
 
-    NPC_TEXT_CHALLENGE_1   = 14688,
-    NPC_TEXT_CHALLENGE_2   = 14737,
-    NPC_TEXT_CHALLENGE_3   = 14738,
+    NPC_TEXT_CHALLENGE_1 = 14688,
+    NPC_TEXT_CHALLENGE_2 = 14737,
+    NPC_TEXT_CHALLENGE_3 = 14738,
 
-    GOSSIP_MENU_STAGE      = 10614,
+    GOSSIP_MENU_STAGE = 10614,
 
-    GOSSIP_START_EVENT_1A  = 0,
-    GOSSIP_START_EVENT_1B  = 3, // Skip roleplay
-    GOSSIP_START_EVENT_2   = 1,
-    GOSSIP_START_EVENT_3   = 2,
-
+    GOSSIP_START_EVENT_1A = 0,
+    GOSSIP_START_EVENT_1B = 3, // Skip roleplay
+    GOSSIP_START_EVENT_2 = 1,
+    GOSSIP_START_EVENT_3 = 2,
 };
 
 class npc_announcer_toc5 : public CreatureScript
 {
 public:
-    npc_announcer_toc5() : CreatureScript("npc_announcer_toc5") {}
+    npc_announcer_toc5() : CreatureScript("npc_announcer_toc5") { }
 
     bool OnGossipHello(Player* player, Creature* creature) override
     {
@@ -67,17 +66,27 @@ public:
                 else
                 {
                     gossipTextId = NPC_TEXT_CHALLENGE_1;
-                    AddGossipItemFor(player, GOSSIP_MENU_STAGE, GOSSIP_START_EVENT_1A, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                    AddGossipItemFor(player, GOSSIP_MENU_STAGE, GOSSIP_START_EVENT_1B, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    AddGossipItemFor(player,
+                        GOSSIP_MENU_STAGE,
+                        GOSSIP_START_EVENT_1A,
+                        GOSSIP_SENDER_MAIN,
+                        GOSSIP_ACTION_INFO_DEF + 1);
+                    AddGossipItemFor(player,
+                        GOSSIP_MENU_STAGE,
+                        GOSSIP_START_EVENT_1B,
+                        GOSSIP_SENDER_MAIN,
+                        GOSSIP_ACTION_INFO_DEF + 2);
                 }
                 break;
             case INSTANCE_PROGRESS_CHAMPIONS_DEAD:
                 gossipTextId = NPC_TEXT_CHALLENGE_2;
-                AddGossipItemFor(player, GOSSIP_MENU_STAGE, GOSSIP_START_EVENT_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                AddGossipItemFor(
+                    player, GOSSIP_MENU_STAGE, GOSSIP_START_EVENT_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
                 break;
             case INSTANCE_PROGRESS_ARGENT_CHALLENGE_DIED:
                 gossipTextId = NPC_TEXT_CHALLENGE_3;
-                AddGossipItemFor(player, GOSSIP_MENU_STAGE, GOSSIP_START_EVENT_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                AddGossipItemFor(
+                    player, GOSSIP_MENU_STAGE, GOSSIP_START_EVENT_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
                 break;
             default:
                 return true;
@@ -95,7 +104,8 @@ public:
         if (!pInstance)
             return true;
 
-        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1 || uiAction == GOSSIP_ACTION_INFO_DEF + 2 || uiAction == GOSSIP_ACTION_INFO_DEF + 3 || uiAction == GOSSIP_ACTION_INFO_DEF + 4)
+        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1 || uiAction == GOSSIP_ACTION_INFO_DEF + 2 ||
+            uiAction == GOSSIP_ACTION_INFO_DEF + 3 || uiAction == GOSSIP_ACTION_INFO_DEF + 4)
         {
             pInstance->SetData(DATA_ANNOUNCER_GOSSIP_SELECT, (uiAction == GOSSIP_ACTION_INFO_DEF + 2 ? 1 : 0));
             creature->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
@@ -112,14 +122,14 @@ public:
 
     struct npc_announcer_toc5AI : public CreatureAI
     {
-        npc_announcer_toc5AI(Creature* creature) : CreatureAI(creature) {}
+        npc_announcer_toc5AI(Creature* creature) : CreatureAI(creature) { }
 
         void Reset() override
         {
             InstanceScript* pInstance = me->GetInstanceScript();
             if (!pInstance)
                 return;
-            if (pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_ALLIANCE )
+            if (pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_ALLIANCE)
                 me->UpdateEntry(NPC_ARELAS);
             me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE); // removed during black knight scene
         }

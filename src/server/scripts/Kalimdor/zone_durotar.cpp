@@ -25,69 +25,69 @@
 enum Texts
 {
     // Tiger Matriarch Credit
-    SAY_MATRIARCH_AGGRO     = 0,
+    SAY_MATRIARCH_AGGRO = 0,
 
     // Troll Volunteer
-    SAY_VOLUNTEER_START     = 0,
-    SAY_VOLUNTEER_END       = 1,
+    SAY_VOLUNTEER_START = 0,
+    SAY_VOLUNTEER_END = 1,
 };
 
 enum Spells
 {
     // Tiger Matriarch Credit
-    SPELL_SUMMON_MATRIARCH              = 75187,
-    SPELL_NO_SUMMON_AURA                = 75213,
-    SPELL_DETECT_INVIS                  = 75180,
-    SPELL_SUMMON_ZENTABRA_TRIGGER       = 75212,
+    SPELL_SUMMON_MATRIARCH = 75187,
+    SPELL_NO_SUMMON_AURA = 75213,
+    SPELL_DETECT_INVIS = 75180,
+    SPELL_SUMMON_ZENTABRA_TRIGGER = 75212,
 
     // Tiger Matriarch
-    SPELL_POUNCE                        = 61184,
-    SPELL_FURIOUS_BITE                  = 75164,
-    SPELL_SUMMON_ZENTABRA               = 75181,
-    SPELL_SPIRIT_OF_THE_TIGER_RIDER     = 75166,
-    SPELL_EJECT_PASSENGERS              = 50630,
+    SPELL_POUNCE = 61184,
+    SPELL_FURIOUS_BITE = 75164,
+    SPELL_SUMMON_ZENTABRA = 75181,
+    SPELL_SPIRIT_OF_THE_TIGER_RIDER = 75166,
+    SPELL_EJECT_PASSENGERS = 50630,
 
     // Troll Volunteer
-    SPELL_VOLUNTEER_AURA                = 75076,
-    SPELL_PETACT_AURA                   = 74071,
-    SPELL_QUEST_CREDIT                  = 75106,
-    SPELL_MOUNTING_CHECK                = 75420,
-    SPELL_TURNIN                        = 73953,
-    SPELL_AOE_TURNIN                    = 75107,
+    SPELL_VOLUNTEER_AURA = 75076,
+    SPELL_PETACT_AURA = 74071,
+    SPELL_QUEST_CREDIT = 75106,
+    SPELL_MOUNTING_CHECK = 75420,
+    SPELL_TURNIN = 73953,
+    SPELL_AOE_TURNIN = 75107,
 
     // Vol'jin War Drums
-    SPELL_MOTIVATE_1                    = 75088,
-    SPELL_MOTIVATE_2                    = 75086,
+    SPELL_MOTIVATE_1 = 75088,
+    SPELL_MOTIVATE_2 = 75086,
 };
 
 enum Creatures
 {
     // Tiger Matriarch Credit
-    NPC_TIGER_VEHICLE                   = 40305,
+    NPC_TIGER_VEHICLE = 40305,
 
     // Troll Volunteer
-    NPC_URUZIN                          = 40253,
-    NPC_VOLUNTEER_1                     = 40264,
-    NPC_VOLUNTEER_2                     = 40260,
+    NPC_URUZIN = 40253,
+    NPC_VOLUNTEER_1 = 40264,
+    NPC_VOLUNTEER_2 = 40260,
 
     // Vol'jin War Drums
-    NPC_CITIZEN_1                       = 40256,
-    NPC_CITIZEN_2                       = 40257,
+    NPC_CITIZEN_1 = 40256,
+    NPC_CITIZEN_2 = 40257,
 };
 
 enum Events
 {
     // Tiger Matriarch Credit
-    EVENT_CHECK_SUMMON_AURA             = 1,
+    EVENT_CHECK_SUMMON_AURA = 1,
 
     // Tiger Matriarch
-    EVENT_POUNCE                        = 2,
-    EVENT_NOSUMMON                      = 3,
+    EVENT_POUNCE = 2,
+    EVENT_NOSUMMON = 3,
 };
 
 enum Points
 {
-    POINT_URUZIN                        = 4026400,
+    POINT_URUZIN = 4026400,
 };
 
 class npc_tiger_matriarch_credit : public CreatureScript
@@ -119,8 +119,8 @@ public:
                             continue;
 
                         if (Unit* summoner = (*itr)->ToTempSummon()->GetSummonerUnit())
-                            if (!summoner->HasAura(SPELL_NO_SUMMON_AURA) && !summoner->HasAura(SPELL_SUMMON_ZENTABRA_TRIGGER)
-                                    && !summoner->IsInCombat())
+                            if (!summoner->HasAura(SPELL_NO_SUMMON_AURA) &&
+                                !summoner->HasAura(SPELL_SUMMON_ZENTABRA_TRIGGER) && !summoner->IsInCombat())
                             {
                                 me->AddAura(SPELL_NO_SUMMON_AURA, summoner);
                                 me->AddAura(SPELL_DETECT_INVIS, summoner);
@@ -151,9 +151,7 @@ public:
 
     struct npc_tiger_matriarchAI : public ScriptedAI
     {
-        npc_tiger_matriarchAI(Creature* creature) : ScriptedAI(creature)
-        {
-        }
+        npc_tiger_matriarchAI(Creature* creature) : ScriptedAI(creature) { }
 
         void JustEngagedWith(Unit* /*target*/) override
         {
@@ -265,12 +263,46 @@ public:
 
 // These models was found in sniff.
 /// @todo generalize these models with race from dbc
-uint32 const trollmodel[] =
-{
-    11665, 11734, 11750, 12037, 12038, 12042, 12049, 12849, 13529, 14759, 15570, 15701,
-    15702, 1882, 1897, 1976, 2025, 27286, 2734, 2735, 4084, 4085, 4087, 4089, 4231, 4357,
-    4358, 4360, 4361, 4362, 4363, 4370, 4532, 4537, 4540, 4610, 6839, 7037, 9767, 9768
-};
+uint32 const trollmodel[] = {11665,
+    11734,
+    11750,
+    12037,
+    12038,
+    12042,
+    12049,
+    12849,
+    13529,
+    14759,
+    15570,
+    15701,
+    15702,
+    1882,
+    1897,
+    1976,
+    2025,
+    27286,
+    2734,
+    2735,
+    4084,
+    4085,
+    4087,
+    4089,
+    4231,
+    4357,
+    4358,
+    4360,
+    4361,
+    4362,
+    4363,
+    4370,
+    4532,
+    4537,
+    4540,
+    4610,
+    6839,
+    7037,
+    9767,
+    9768};
 
 class npc_troll_volunteer : public CreatureScript
 {
@@ -279,9 +311,7 @@ public:
 
     struct npc_troll_volunteerAI : public ScriptedAI
     {
-        npc_troll_volunteerAI(Creature* creature) : ScriptedAI(creature)
-        {
-        }
+        npc_troll_volunteerAI(Creature* creature) : ScriptedAI(creature) { }
 
         void InitializeAI() override
         {
@@ -338,13 +368,14 @@ public:
         {
             if (spell->Id == SPELL_AOE_TURNIN && caster->GetEntry() == NPC_URUZIN && !_complete)
             {
-                _complete = true;    // Preventing from giving credit twice
+                _complete = true; // Preventing from giving credit twice
                 DoCast(me, SPELL_TURNIN);
                 DoCast(me, SPELL_QUEST_CREDIT);
                 me->RemoveAurasDueToSpell(SPELL_MOUNTING_CHECK);
                 me->Dismount();
                 Talk(SAY_VOLUNTEER_END);
-                me->GetMotionMaster()->MovePoint(POINT_URUZIN, caster->GetPositionX(), caster->GetPositionY(), caster->GetPositionZ());
+                me->GetMotionMaster()->MovePoint(
+                    POINT_URUZIN, caster->GetPositionX(), caster->GetPositionY(), caster->GetPositionZ());
             }
         }
 
@@ -367,7 +398,7 @@ class spell_mount_check_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_MOUNTING_CHECK });
+        return ValidateSpellInfo({SPELL_MOUNTING_CHECK});
     }
 
     void HandleEffectPeriodic(AuraEffect const* /*aurEff*/)
@@ -392,7 +423,8 @@ class spell_mount_check_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_mount_check_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_mount_check_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -402,7 +434,7 @@ class spell_voljin_war_drums : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_MOTIVATE_1, SPELL_MOTIVATE_2 });
+        return ValidateSpellInfo({SPELL_MOTIVATE_1, SPELL_MOTIVATE_2});
     }
 
     void HandleDummy(SpellEffIndex /*effIndex*/)
@@ -428,13 +460,13 @@ class spell_voljin_war_drums : public SpellScript
 
 enum VoodooSpells
 {
-    SPELL_BREW      = 16712, // Special Brew
-    SPELL_GHOSTLY   = 16713, // Ghostly
-    SPELL_HEX1      = 16707, // Hex
-    SPELL_HEX2      = 16708, // Hex
-    SPELL_HEX3      = 16709, // Hex
-    SPELL_GROW      = 16711, // Grow
-    SPELL_LAUNCH    = 16716, // Launch (Whee!)
+    SPELL_BREW = 16712,    // Special Brew
+    SPELL_GHOSTLY = 16713, // Ghostly
+    SPELL_HEX1 = 16707,    // Hex
+    SPELL_HEX2 = 16708,    // Hex
+    SPELL_HEX3 = 16709,    // Hex
+    SPELL_GROW = 16711,    // Grow
+    SPELL_LAUNCH = 16716,  // Launch (Whee!)
 };
 
 // 17009
@@ -445,20 +477,13 @@ class spell_voodoo : public SpellScript
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
         return ValidateSpellInfo(
-            {
-                SPELL_BREW,
-                SPELL_GHOSTLY,
-                SPELL_HEX1,
-                SPELL_HEX2,
-                SPELL_HEX3,
-                SPELL_GROW,
-                SPELL_LAUNCH
-            });
+            {SPELL_BREW, SPELL_GHOSTLY, SPELL_HEX1, SPELL_HEX2, SPELL_HEX3, SPELL_GROW, SPELL_LAUNCH});
     }
 
     void HandleDummy(SpellEffIndex /*effIndex*/)
     {
-        uint32 spellid = RAND(SPELL_BREW, SPELL_GHOSTLY, RAND(SPELL_HEX1, SPELL_HEX2, SPELL_HEX3), SPELL_GROW, SPELL_LAUNCH);
+        uint32 spellid =
+            RAND(SPELL_BREW, SPELL_GHOSTLY, RAND(SPELL_HEX1, SPELL_HEX2, SPELL_HEX3), SPELL_GROW, SPELL_LAUNCH);
         if (Unit* target = GetHitUnit())
             GetCaster()->CastSpell(target, spellid, false);
     }

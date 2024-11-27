@@ -26,16 +26,19 @@
 
 enum HunterSpells
 {
-    SPELL_HUNTER_CRIPPLING_POISON       = 30981, // Viper
-    SPELL_HUNTER_DEADLY_POISON_PASSIVE  = 34657, // Venomous Snake
-    SPELL_HUNTER_MIND_NUMBING_POISON    = 25810, // Viper
-    SPELL_HUNTER_GLYPH_OF_SNAKE_TRAP    = 56849,
-    SPELL_HUNTER_PET_SCALING            = 62915
+    SPELL_HUNTER_CRIPPLING_POISON = 30981,      // Viper
+    SPELL_HUNTER_DEADLY_POISON_PASSIVE = 34657, // Venomous Snake
+    SPELL_HUNTER_MIND_NUMBING_POISON = 25810,   // Viper
+    SPELL_HUNTER_GLYPH_OF_SNAKE_TRAP = 56849,
+    SPELL_HUNTER_PET_SCALING = 62915
 };
 
 struct npc_pet_hunter_snake_trap : public ScriptedAI
 {
-    npc_pet_hunter_snake_trap(Creature* creature) : ScriptedAI(creature) { _init = false; }
+    npc_pet_hunter_snake_trap(Creature* creature) : ScriptedAI(creature)
+    {
+        _init = false;
+    }
 
     void Reset() override
     {
@@ -69,7 +72,8 @@ struct npc_pet_hunter_snake_trap : public ScriptedAI
     //Redefined for random target selection:
     void MoveInLineOfSight(Unit* who) override
     {
-        if (!me->GetVictim() && who->isTargetableForAttack() && (me->IsHostileTo(who)) && who->isInAccessiblePlaceFor(me))
+        if (!me->GetVictim() && who->isTargetableForAttack() && (me->IsHostileTo(who)) &&
+            who->isInAccessiblePlaceFor(me))
         {
             if (me->GetDistanceZ(who) > CREATURE_Z_ATTACK_RANGE)
                 return;

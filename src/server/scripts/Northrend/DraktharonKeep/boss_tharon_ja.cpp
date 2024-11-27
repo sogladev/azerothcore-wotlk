@@ -17,54 +17,54 @@
 
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "drak_tharon_keep.h"
-#include "SpellScript.h"
 
 enum Yells
 {
-    SAY_AGGRO                       = 0,
-    SAY_KILL                        = 1,
-    SAY_FLESH                       = 2,
-    SAY_SKELETON                    = 3,
-    SAY_DEATH                       = 4
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_FLESH = 2,
+    SAY_SKELETON = 3,
+    SAY_DEATH = 4
 };
 
 enum Spells
 {
-    SPELL_CURSE_OF_LIFE                 = 49527,
-    SPELL_RAIN_OF_FIRE                  = 49518,
-    SPELL_SHADOW_VOLLEY                 = 49528,
+    SPELL_CURSE_OF_LIFE = 49527,
+    SPELL_RAIN_OF_FIRE = 49518,
+    SPELL_SHADOW_VOLLEY = 49528,
 
     // flesh spells
-    SPELL_EYE_BEAM                      = 49544,
-    SPELL_LIGHTNING_BREATH              = 49537,
-    SPELL_POISON_CLOUD                  = 49548,
+    SPELL_EYE_BEAM = 49544,
+    SPELL_LIGHTNING_BREATH = 49537,
+    SPELL_POISON_CLOUD = 49548,
 
-    SPELL_TURN_FLESH                    = 49356,
-    SPELL_TURN_BONES                    = 53463,
-    SPELL_GIFT_OF_THARON_JA             = 52509,
-    SPELL_DUMMY                         = 49551,
-    SPELL_FLESH_VISUAL                  = 52582,
-    SPELL_CLEAR_GIFT                    = 53242,
+    SPELL_TURN_FLESH = 49356,
+    SPELL_TURN_BONES = 53463,
+    SPELL_GIFT_OF_THARON_JA = 52509,
+    SPELL_DUMMY = 49551,
+    SPELL_FLESH_VISUAL = 52582,
+    SPELL_CLEAR_GIFT = 53242,
 
-    SPELL_ACHIEVEMENT_CHECK             = 61863
+    SPELL_ACHIEVEMENT_CHECK = 61863
 };
 
 enum Misc
 {
-    ACTION_TURN_BONES                   = 1,
+    ACTION_TURN_BONES = 1,
 
-    EVENT_SPELL_CURSE_OF_LIFE           = 1,
-    EVENT_SPELL_RAIN_OF_FIRE            = 2,
-    EVENT_SPELL_SHADOW_VOLLEY           = 3,
-    EVENT_SPELL_EYE_BEAM                = 4,
-    EVENT_SPELL_LIGHTNING_BREATH        = 5,
-    EVENT_SPELL_POISON_CLOUD            = 6,
-    EVENT_SPELL_TURN_FLESH              = 7,
-    EVENT_TURN_FLESH_REAL               = 9,
-    EVENT_TURN_BONES_REAL               = 10,
-    EVENT_KILL_TALK                     = 11
+    EVENT_SPELL_CURSE_OF_LIFE = 1,
+    EVENT_SPELL_RAIN_OF_FIRE = 2,
+    EVENT_SPELL_SHADOW_VOLLEY = 3,
+    EVENT_SPELL_EYE_BEAM = 4,
+    EVENT_SPELL_LIGHTNING_BREATH = 5,
+    EVENT_SPELL_POISON_CLOUD = 6,
+    EVENT_SPELL_TURN_FLESH = 7,
+    EVENT_TURN_FLESH_REAL = 9,
+    EVENT_TURN_BONES_REAL = 10,
+    EVENT_KILL_TALK = 11
 };
 
 class boss_tharon_ja : public CreatureScript
@@ -79,9 +79,7 @@ public:
 
     struct boss_tharon_jaAI : public BossAI
     {
-        boss_tharon_jaAI(Creature* creature) : BossAI(creature, DATA_THARON_JA)
-        {
-        }
+        boss_tharon_jaAI(Creature* creature) : BossAI(creature, DATA_THARON_JA) { }
 
         void Reset() override
         {
@@ -224,7 +222,8 @@ class spell_tharon_ja_curse_of_life_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_tharon_ja_curse_of_life_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_tharon_ja_curse_of_life_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 
@@ -234,10 +233,10 @@ class spell_tharon_ja_dummy_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_FLESH_VISUAL, SPELL_GIFT_OF_THARON_JA, SPELL_TURN_BONES });
+        return ValidateSpellInfo({SPELL_FLESH_VISUAL, SPELL_GIFT_OF_THARON_JA, SPELL_TURN_BONES});
     }
 
-    void HandleEffectApply(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void HandleEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         PreventDefaultAction();
         GetUnitOwner()->CastSpell(GetUnitOwner(), SPELL_FLESH_VISUAL, true);
@@ -245,7 +244,7 @@ class spell_tharon_ja_dummy_aura : public AuraScript
         GetUnitOwner()->SetDisplayId(GetUnitOwner()->GetNativeDisplayId() + 1);
     }
 
-    void HandleEffectRemove(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         PreventDefaultAction();
         GetUnitOwner()->GetThreatMgr().ResetAllThreat();
@@ -256,8 +255,14 @@ class spell_tharon_ja_dummy_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_tharon_ja_dummy_aura::HandleEffectApply, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
-        OnEffectRemove += AuraEffectRemoveFn(spell_tharon_ja_dummy_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_tharon_ja_dummy_aura::HandleEffectApply,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_tharon_ja_dummy_aura::HandleEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -273,7 +278,8 @@ class spell_tharon_ja_clear_gift_of_tharon_ja : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_tharon_ja_clear_gift_of_tharon_ja::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_tharon_ja_clear_gift_of_tharon_ja::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

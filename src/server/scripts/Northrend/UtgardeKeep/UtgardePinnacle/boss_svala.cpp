@@ -26,67 +26,66 @@
 enum Misc
 {
     // SAY
-    TALK_INTRO_A1                           = 0,
-    TALK_INTRO_A2                           = 1,
-    TALK_INTRO_S1                           = 0,
-    TALK_INTRO_S2                           = 0,
-    TALK_INTRO_S3                           = 1,
-    SAY_AGGRO                               = 2,
-    SAY_SLAY                                = 3,
-    SAY_DEATH                               = 4,
-    SAY_SACRIFICE_PLAYER                    = 5,
+    TALK_INTRO_A1 = 0,
+    TALK_INTRO_A2 = 1,
+    TALK_INTRO_S1 = 0,
+    TALK_INTRO_S2 = 0,
+    TALK_INTRO_S3 = 1,
+    SAY_AGGRO = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4,
+    SAY_SACRIFICE_PLAYER = 5,
 
     // SPELLS
     // INTRO
-    SPELL_ARTHAS_TRANSFORMING_SVALA         = 54142,
-    SPELL_SVALA_TRANSFORMING1               = 54205,
-    SPELL_SVALA_TRANSFORMING2               = 54140,
+    SPELL_ARTHAS_TRANSFORMING_SVALA = 54142,
+    SPELL_SVALA_TRANSFORMING1 = 54205,
+    SPELL_SVALA_TRANSFORMING2 = 54140,
 
     // SORROWGRAVE
-    SPELL_CALL_FLAMES                       = 48258,
-    SPELL_BALL_OF_FLAME                     = 48246,
-    SPELL_RITUAL_OF_THE_SWORD               = 48276,
-    SPELL_RITUAL_STRIKE                     = 48331,
-    SPELL_SINSTER_STRIKE_N                  = 15667,
-    SPELL_SINSTER_STRIKE_H                  = 59409,
-    EQUIP_SWORD                             = 40343,
+    SPELL_CALL_FLAMES = 48258,
+    SPELL_BALL_OF_FLAME = 48246,
+    SPELL_RITUAL_OF_THE_SWORD = 48276,
+    SPELL_RITUAL_STRIKE = 48331,
+    SPELL_SINSTER_STRIKE_N = 15667,
+    SPELL_SINSTER_STRIKE_H = 59409,
+    EQUIP_SWORD = 40343,
 
     // CHANNELERS
-    SPELL_PARALYZE                          = 48278,
-    SPELL_SHADOWS_IN_THE_DARK               = 59407,
-    SPELL_TELEPORT_VISUAL                   = 64446,
+    SPELL_PARALYZE = 48278,
+    SPELL_SHADOWS_IN_THE_DARK = 59407,
+    SPELL_TELEPORT_VISUAL = 64446,
 
     // NPCS
-    NPC_RITUAL_CHANNELER                    = 27281,
-    NPC_ARTHAS                              = 29280,
-    NPC_FLAME_BRAZIER                       = 27273,
+    NPC_RITUAL_CHANNELER = 27281,
+    NPC_ARTHAS = 29280,
+    NPC_FLAME_BRAZIER = 27273,
 };
 
 enum Events
 {
     // BASE EVENT START
-    EVENT_SVALA_START                   = 1,
-    EVENT_SVALA_TALK1                   = 2,
-    EVENT_SVALA_TALK2                   = 3,
-    EVENT_SVALA_TALK3                   = 4,
-    EVENT_SVALA_TALK4                   = 5,
-    EVENT_SVALA_TALK5                   = 6,
-    EVENT_SVALA_TALK6                   = 7,
-    EVENT_SVALA_TALK7                   = 8,
-    EVENT_SVALA_TALK8                   = 9,
-    EVENT_SVALA_TALK9                   = 20,
+    EVENT_SVALA_START = 1,
+    EVENT_SVALA_TALK1 = 2,
+    EVENT_SVALA_TALK2 = 3,
+    EVENT_SVALA_TALK3 = 4,
+    EVENT_SVALA_TALK4 = 5,
+    EVENT_SVALA_TALK5 = 6,
+    EVENT_SVALA_TALK6 = 7,
+    EVENT_SVALA_TALK7 = 8,
+    EVENT_SVALA_TALK8 = 9,
+    EVENT_SVALA_TALK9 = 20,
 
     // FIGHT
-    EVENT_SORROWGRAVE_SS                = 10,
-    EVENT_SORROWGRAVE_FLAMES            = 11,
-    EVENT_SORROWGRAVE_FLAMES2           = 12,
-    EVENT_SORROWGRAVE_RITUAL            = 13,
-    EVENT_SORROWGRAVE_RITUAL_SPELLS     = 14,
-    EVENT_SORROWGRAVE_FINISH_RITUAL     = 15,
+    EVENT_SORROWGRAVE_SS = 10,
+    EVENT_SORROWGRAVE_FLAMES = 11,
+    EVENT_SORROWGRAVE_FLAMES2 = 12,
+    EVENT_SORROWGRAVE_RITUAL = 13,
+    EVENT_SORROWGRAVE_RITUAL_SPELLS = 14,
+    EVENT_SORROWGRAVE_FINISH_RITUAL = 15,
 };
 
-const Position RitualChannelerLoc[3] =
-{
+Position const RitualChannelerLoc[3] = {
     {296.42f, -355.01f, 90.94f, 0.0f},
     {302.36f, -352.01f, 90.54f, 0.0f},
     {291.39f, -350.89f, 90.54f, 0.0f}
@@ -158,7 +157,8 @@ public:
             Started = true;
             me->setActive(true);
             events2.ScheduleEvent(EVENT_SVALA_START, 5000);
-            if (Creature* pArthas = me->SummonCreature(NPC_ARTHAS, 295.81f, -366.16f, 92.57f, 1.58f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 59000))
+            if (Creature* pArthas = me->SummonCreature(
+                    NPC_ARTHAS, 295.81f, -366.16f, 92.57f, 1.58f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 59000))
                 ArthasGUID = pArthas->GetGUID();
 
             if (instance)
@@ -237,32 +237,33 @@ public:
                     events2.ScheduleEvent(EVENT_SVALA_TALK4, 9s);
                     break;
                 case 30:
-                    {
-                        WorldPacket data(SMSG_SPLINE_MOVE_SET_HOVER, 9);
-                        data << me->GetPackGUID();
-                        me->SendMessageToSet(&data, false);
-                        break;
-                    }
+                {
+                    WorldPacket data(SMSG_SPLINE_MOVE_SET_HOVER, 9);
+                    data << me->GetPackGUID();
+                    me->SendMessageToSet(&data, false);
+                    break;
+                }
                 case EVENT_SVALA_TALK4:
-                    {
-                        me->CastSpell(me, SPELL_SVALA_TRANSFORMING1, true);
-                        me->UpdateEntry(NPC_SVALA_SORROWGRAVE);
-                        me->SetCorpseDelay(sWorld->getIntConfig(CONFIG_CORPSE_DECAY_ELITE));
-                        me->SetFloatValue(UNIT_FIELD_HOVERHEIGHT, 6.0f);
-                        me->SetImmuneToAll(true);
-                        if (Creature* Arthas = ObjectAccessor::GetCreature(*me, ArthasGUID))
-                            Arthas->InterruptNonMeleeSpells(false);
-                        me->RemoveAllAuras();
-                        me->SetWalk(false);
-                        events2.ScheduleEvent(EVENT_SVALA_TALK5, 2s);
+                {
+                    me->CastSpell(me, SPELL_SVALA_TRANSFORMING1, true);
+                    me->UpdateEntry(NPC_SVALA_SORROWGRAVE);
+                    me->SetCorpseDelay(sWorld->getIntConfig(CONFIG_CORPSE_DECAY_ELITE));
+                    me->SetFloatValue(UNIT_FIELD_HOVERHEIGHT, 6.0f);
+                    me->SetImmuneToAll(true);
+                    if (Creature* Arthas = ObjectAccessor::GetCreature(*me, ArthasGUID))
+                        Arthas->InterruptNonMeleeSpells(false);
+                    me->RemoveAllAuras();
+                    me->SetWalk(false);
+                    events2.ScheduleEvent(EVENT_SVALA_TALK5, 2s);
 
-                        std::list<Creature*> creatureList;
-                        me->GetCreaturesWithEntryInRange(creatureList, 100.0f, NPC_DRAGONFLAYER_SPECTATOR);
-                        for (std::list<Creature*>::const_iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
-                            (*itr)->AI()->SetData(1, 2);
+                    std::list<Creature*> creatureList;
+                    me->GetCreaturesWithEntryInRange(creatureList, 100.0f, NPC_DRAGONFLAYER_SPECTATOR);
+                    for (std::list<Creature*>::const_iterator itr = creatureList.begin(); itr != creatureList.end();
+                         ++itr)
+                        (*itr)->AI()->SetData(1, 2);
 
-                        break;
-                    }
+                    break;
+                }
                 case EVENT_SVALA_TALK5:
                     Talk(TALK_INTRO_S2);
                     events2.ScheduleEvent(EVENT_SVALA_TALK6, 12s);
@@ -314,23 +315,24 @@ public:
                     events.ScheduleEvent(EVENT_SORROWGRAVE_FLAMES, 8s, 12s);
                     break;
                 case EVENT_SORROWGRAVE_FLAMES2:
-                    {
-                        std::list<Creature*> braziers;
-                        me->GetCreaturesWithEntryInRange(braziers, 100.0f, NPC_FLAME_BRAZIER);
-                        if (!braziers.empty())
-                        {
-                            for (std::list<Creature*>::const_iterator itr = braziers.begin(); itr != braziers.end(); ++itr)
-                                (*itr)->CastCustomSpell(SPELL_BALL_OF_FLAME, SPELLVALUE_MAX_TARGETS, 1, (*itr), true);
-                        }
-                        break;
-                    }
+                {
+                    std::list<Creature*> braziers;
+                    me->GetCreaturesWithEntryInRange(braziers, 100.0f, NPC_FLAME_BRAZIER);
+                    if (!braziers.empty())
+                        for (std::list<Creature*>::const_iterator itr = braziers.begin(); itr != braziers.end(); ++itr)
+                            (*itr)->CastCustomSpell(SPELL_BALL_OF_FLAME, SPELLVALUE_MAX_TARGETS, 1, (*itr), true);
+                    break;
+                }
                 case EVENT_SORROWGRAVE_RITUAL:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true))
                     {
                         Talk(SAY_SACRIFICE_PLAYER);
 
                         for (uint8 i = 0; i < 3; ++i)
-                            if (Creature* cr = me->SummonCreature(NPC_RITUAL_CHANNELER, RitualChannelerLoc[i], TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 360000))
+                            if (Creature* cr = me->SummonCreature(NPC_RITUAL_CHANNELER,
+                                    RitualChannelerLoc[i],
+                                    TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,
+                                    360000))
                                 cr->AI()->AttackStart(target);
 
                         me->GetMotionMaster()->MoveIdle();
@@ -380,7 +382,7 @@ public:
 
     struct npc_ritual_channelerAI : public NullCreatureAI
     {
-        npc_ritual_channelerAI(Creature* pCreature) : NullCreatureAI(pCreature) {}
+        npc_ritual_channelerAI(Creature* pCreature) : NullCreatureAI(pCreature) { }
 
         void AttackStart(Unit* pWho) override
         {
@@ -429,7 +431,8 @@ class spell_svala_ritual_strike_aura : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_svala_ritual_strike_aura::CalculateAmount, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(
+            spell_svala_ritual_strike_aura::CalculateAmount, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 

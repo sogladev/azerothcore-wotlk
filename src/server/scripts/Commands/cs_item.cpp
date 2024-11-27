@@ -39,20 +39,17 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable HandleItemRestoreCommandTable =
-        {
-            { "list",      HandleItemRestoreListCommand,        SEC_GAMEMASTER,    Console::Yes },
-            { "",          HandleItemRestoreCommand,            SEC_GAMEMASTER,    Console::Yes },
+        static ChatCommandTable HandleItemRestoreCommandTable = {
+            {"list", HandleItemRestoreListCommand, SEC_GAMEMASTER, Console::Yes},
+            {"",     HandleItemRestoreCommand,     SEC_GAMEMASTER, Console::Yes},
         };
-        static ChatCommandTable itemCommandTable =
-        {
-            { "restore",   HandleItemRestoreCommandTable },
-            { "move",      HandleItemMoveCommand,               SEC_GAMEMASTER,    Console::Yes },
-            { "refund",    HandleItemRefundCommand,             SEC_ADMINISTRATOR, Console::Yes },
+        static ChatCommandTable itemCommandTable = {
+            {"restore", HandleItemRestoreCommandTable},
+            {"move", HandleItemMoveCommand, SEC_GAMEMASTER, Console::Yes},
+            {"refund", HandleItemRefundCommand, SEC_ADMINISTRATOR, Console::Yes},
         };
-        static ChatCommandTable commandTable =
-        {
-            { "item",      itemCommandTable }
+        static ChatCommandTable commandTable = {
+            {"item", itemCommandTable}
         };
         return commandTable;
     }
@@ -60,9 +57,7 @@ public:
     static bool HandleItemRestoreCommand(ChatHandler* handler, uint32 restoreId, PlayerIdentifier player)
     {
         if (!restoreId)
-        {
             return false;
-        }
 
         if (!HasItemDeletionConfig())
         {
@@ -87,13 +82,16 @@ public:
 
         if (Player* onlinePlayer = player.GetConnectedPlayer())
         {
-            onlinePlayer->SendItemRetrievalMail({ { itemEntry, itemCount } });
+            onlinePlayer->SendItemRetrievalMail({
+                {itemEntry, itemCount}
+            });
         }
 
         else
         {
             MailSender sender(MAIL_CREATURE, 34337 /* The Postmaster */);
-            MailDraft draft("Recovered Item", "We recovered a lost item in the twisting nether and noted that it was yours.$B$BPlease find said object enclosed.");
+            MailDraft draft("Recovered Item",
+                "We recovered a lost item in the twisting nether and noted that it was yours.$B$BPlease find said object enclosed.");
 
             CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 
@@ -109,7 +107,8 @@ public:
         }
 
         // Remove from recovery table
-        CharacterDatabasePreparedStatement* delStmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_RECOVERY_ITEM_BY_RECOVERY_ID);
+        CharacterDatabasePreparedStatement* delStmt =
+            CharacterDatabase.GetPreparedStatement(CHAR_DEL_RECOVERY_ITEM_BY_RECOVERY_ID);
         delStmt->SetData(0, (*fields)[0].Get<uint32>());
         CharacterDatabase.Execute(delStmt);
 
@@ -138,16 +137,14 @@ public:
 
         do
         {
-            Field* fields    = disposedItems->Fetch();
-            uint32 id        = fields[0].Get<uint32>();
-            uint32 itemId    = fields[1].Get<uint32>();
-            uint32 count     = fields[2].Get<uint32>();
+            Field* fields = disposedItems->Fetch();
+            uint32 id = fields[0].Get<uint32>();
+            uint32 itemId = fields[1].Get<uint32>();
+            uint32 count = fields[2].Get<uint32>();
 
             std::string itemName = "";
             if (ItemTemplate const* item = sObjectMgr->GetItemTemplate(itemId))
-            {
                 itemName = item->Name1;
-            }
 
             handler->PSendSysMessage(LANG_ITEM_RESTORE_LIST, id, itemName, itemId, count);
         } while (disposedItems->NextRow());
@@ -180,7 +177,8 @@ public:
         return sWorld->getBoolConfig(CONFIG_ITEMDELETE_METHOD) || sWorld->getBoolConfig(CONFIG_ITEMDELETE_VENDOR);
     }
 
-    static bool HandleItemRefundCommand(ChatHandler* handler, PlayerIdentifier player, uint32 itemId, uint32 extendedCost)
+    static bool HandleItemRefundCommand(
+        ChatHandler* handler, PlayerIdentifier player, uint32 itemId, uint32 extendedCost)
     {
         ItemExtendedCostEntry const* iece = sItemExtendedCostStore.LookupEntry(extendedCost);
         if (!iece)
@@ -210,13 +208,19 @@ public:
                 uint32 honor = target->GetHonorPoints() + iece->reqhonorpoints;
                 if (honor > sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS))
                 {
-                    handler->SendErrorMessage(LANG_CMD_ITEM_REFUND_MAX_HONOR, item->Name1, item->ItemId, sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS), target->GetHonorPoints(), iece->reqhonorpoints);
+                    handler->SendErrorMessage(LANG_CMD_ITEM_REFUND_MAX_HONOR,
+                        item->Name1,
+                        item->ItemId,
+                        sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS),
+                        target->GetHonorPoints(),
+                        iece->reqhonorpoints);
                     ChatHandler(target->GetSession()).PSendSysMessage(LANG_CMD_ITEM_REFUND_HONOR_FAILED, item->Name1);
                     return false;
                 }
 
                 target->SetHonorPoints(honor);
-                ChatHandler(target->GetSession()).PSendSysMessage(LANG_CMD_ITEM_REFUNDED_HONOR, item->Name1, item->ItemId, iece->reqhonorpoints);
+                ChatHandler(target->GetSession())
+                    .PSendSysMessage(LANG_CMD_ITEM_REFUNDED_HONOR, item->Name1, item->ItemId, iece->reqhonorpoints);
                 handler->PSendSysMessage(LANG_CMD_ITEM_REFUNDED_HONOR, item->Name1, item->ItemId, iece->reqhonorpoints);
             }
 
@@ -225,13 +229,19 @@ public:
                 uint32 arenapoints = target->GetArenaPoints() + iece->reqarenapoints;
                 if (arenapoints > sWorld->getIntConfig(CONFIG_MAX_ARENA_POINTS))
                 {
-                    handler->SendErrorMessage(LANG_CMD_ITEM_REFUND_MAX_AP, item->Name1, item->ItemId, sWorld->getIntConfig(CONFIG_MAX_ARENA_POINTS), target->GetArenaPoints(), iece->reqarenapoints);
+                    handler->SendErrorMessage(LANG_CMD_ITEM_REFUND_MAX_AP,
+                        item->Name1,
+                        item->ItemId,
+                        sWorld->getIntConfig(CONFIG_MAX_ARENA_POINTS),
+                        target->GetArenaPoints(),
+                        iece->reqarenapoints);
                     ChatHandler(target->GetSession()).PSendSysMessage(LANG_CMD_ITEM_REFUND_AP_FAILED, item->Name1);
                     return false;
                 }
 
                 target->SetArenaPoints(arenapoints);
-                ChatHandler(target->GetSession()).PSendSysMessage(LANG_CMD_ITEM_REFUNDED_AP, item->Name1, item->ItemId, iece->reqarenapoints);
+                ChatHandler(target->GetSession())
+                    .PSendSysMessage(LANG_CMD_ITEM_REFUNDED_AP, item->Name1, item->ItemId, iece->reqarenapoints);
                 handler->PSendSysMessage(LANG_CMD_ITEM_REFUNDED_AP, item->Name1, item->ItemId, iece->reqarenapoints);
             }
 
@@ -239,9 +249,7 @@ public:
             for (uint32 const& reqItem : iece->reqitem)
             {
                 if (reqItem)
-                {
                     target->AddItem(reqItem, iece->reqitemcount[count]);
-                }
 
                 ++count;
             }
@@ -273,9 +281,15 @@ public:
                     if (queryResult)
                     {
                         Field* fields = queryResult->Fetch();
-                        if ((fields[0].Get<uint32>() + iece->reqhonorpoints) > sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS))
+                        if ((fields[0].Get<uint32>() + iece->reqhonorpoints) >
+                            sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS))
                         {
-                            handler->SendErrorMessage(LANG_CMD_ITEM_REFUND_MAX_HONOR, item->Name1, item->ItemId, sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS), fields[0].Get<uint32>(), iece->reqhonorpoints);
+                            handler->SendErrorMessage(LANG_CMD_ITEM_REFUND_MAX_HONOR,
+                                item->Name1,
+                                item->ItemId,
+                                sWorld->getIntConfig(CONFIG_MAX_HONOR_POINTS),
+                                fields[0].Get<uint32>(),
+                                iece->reqhonorpoints);
                             return false;
                         }
                     }
@@ -284,7 +298,8 @@ public:
                     stmt->SetData(0, iece->reqhonorpoints);
                     stmt->SetData(1, guid);
                     trans->Append(stmt);
-                    handler->PSendSysMessage(LANG_CMD_ITEM_REFUNDED_HONOR, item->Name1, item->ItemId, iece->reqhonorpoints);
+                    handler->PSendSysMessage(
+                        LANG_CMD_ITEM_REFUNDED_HONOR, item->Name1, item->ItemId, iece->reqhonorpoints);
                 }
 
                 if (iece->reqarenapoints)
@@ -297,9 +312,15 @@ public:
                     if (queryResult)
                     {
                         Field* fields = queryResult->Fetch();
-                        if ((fields[0].Get<uint32>() + iece->reqhonorpoints) > sWorld->getIntConfig(CONFIG_MAX_ARENA_POINTS))
+                        if ((fields[0].Get<uint32>() + iece->reqhonorpoints) >
+                            sWorld->getIntConfig(CONFIG_MAX_ARENA_POINTS))
                         {
-                            handler->SendErrorMessage(LANG_CMD_ITEM_REFUND_MAX_AP, item->Name1, item->ItemId, sWorld->getIntConfig(CONFIG_MAX_ARENA_POINTS), fields[0].Get<uint32>(), iece->reqarenapoints);
+                            handler->SendErrorMessage(LANG_CMD_ITEM_REFUND_MAX_AP,
+                                item->Name1,
+                                item->ItemId,
+                                sWorld->getIntConfig(CONFIG_MAX_ARENA_POINTS),
+                                fields[0].Get<uint32>(),
+                                iece->reqarenapoints);
                             return false;
                         }
                     }
@@ -308,25 +329,26 @@ public:
                     stmt->SetData(0, iece->reqarenapoints);
                     stmt->SetData(1, guid);
                     trans->Append(stmt);
-                    handler->PSendSysMessage(LANG_CMD_ITEM_REFUNDED_AP, item->Name1, item->ItemId, iece->reqarenapoints);
+                    handler->PSendSysMessage(
+                        LANG_CMD_ITEM_REFUNDED_AP, item->Name1, item->ItemId, iece->reqarenapoints);
                 }
 
                 MailSender sender(MAIL_NORMAL, guid, MAIL_STATIONERY_GM);
                 // fill mail
-                std::string msg = "Your item " + item->Name1 + " has been removed and the used currency restored. This mail contains any items used as currency.";
-                MailDraft   draft("Item Refund", msg);
+                std::string msg =
+                    "Your item " + item->Name1 +
+                    " has been removed and the used currency restored. This mail contains any items used as currency.";
+                MailDraft draft("Item Refund", msg);
 
-                uint8 count      = 0;
-                bool  foundItems = false;
+                uint8 count = 0;
+                bool foundItems = false;
                 for (uint32 const& reqItem : iece->reqitem)
                 {
                     if (reqItem)
                     {
                         // Skip invalid items.
                         if (!sObjectMgr->GetItemTemplate(reqItem))
-                        {
                             continue;
-                        }
 
                         if (Item* item = Item::CreateItem(reqItem, iece->reqitemcount[count]))
                         {
@@ -340,9 +362,7 @@ public:
                 }
 
                 if (foundItems)
-                {
                     draft.SendMailTo(trans, MailReceiver(nullptr, guid), sender);
-                }
 
                 Field* fields = result->Fetch();
 

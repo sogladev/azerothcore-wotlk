@@ -19,31 +19,28 @@
 #include "CreatureScript.h"
 #include "InstanceMapScript.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "azjol_nerub.h"
-#include "SpellScript.h"
 
-DoorData const doorData[] =
-{
-    { GO_KRIKTHIR_DOORS,    DATA_KRIKTHIR_THE_GATEWATCHER_EVENT,    DOOR_TYPE_PASSAGE },
-    { GO_ANUBARAK_DOORS1,   DATA_ANUBARAK_EVENT,    DOOR_TYPE_ROOM },
-    { GO_ANUBARAK_DOORS2,   DATA_ANUBARAK_EVENT,    DOOR_TYPE_ROOM },
-    { GO_ANUBARAK_DOORS3,   DATA_ANUBARAK_EVENT,    DOOR_TYPE_ROOM },
-    { 0,                    0,                      DOOR_TYPE_ROOM }
+DoorData const doorData[] = {
+    {GO_KRIKTHIR_DOORS,  DATA_KRIKTHIR_THE_GATEWATCHER_EVENT, DOOR_TYPE_PASSAGE},
+    {GO_ANUBARAK_DOORS1, DATA_ANUBARAK_EVENT,                 DOOR_TYPE_ROOM   },
+    {GO_ANUBARAK_DOORS2, DATA_ANUBARAK_EVENT,                 DOOR_TYPE_ROOM   },
+    {GO_ANUBARAK_DOORS3, DATA_ANUBARAK_EVENT,                 DOOR_TYPE_ROOM   },
+    {0,                  0,                                   DOOR_TYPE_ROOM   }
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_KRIKTHIR_THE_GATEWATCHER, DATA_KRIKTHIR_THE_GATEWATCHER_EVENT },
-    { NPC_HADRONOX,                 DATA_HADRONOX_EVENT                 },
-    { 0,                            0                                   }
+ObjectData const creatureData[] = {
+    {NPC_KRIKTHIR_THE_GATEWATCHER, DATA_KRIKTHIR_THE_GATEWATCHER_EVENT},
+    {NPC_HADRONOX,                 DATA_HADRONOX_EVENT                },
+    {0,                            0                                  }
 };
 
-BossBoundaryData const boundaries =
-{
-    { DATA_KRIKTHIR_THE_GATEWATCHER_EVENT, new RectangleBoundary(400.0f, 580.0f, 623.5f, 810.0f) },
-    { DATA_HADRONOX_EVENT, new ZRangeBoundary(666.0f, 776.0f) },
-    { DATA_ANUBARAK_EVENT, new CircleBoundary(Position(550.6178f, 253.5917f), 26.0f) }
+BossBoundaryData const boundaries = {
+    {DATA_KRIKTHIR_THE_GATEWATCHER_EVENT, new RectangleBoundary(400.0f, 580.0f, 623.5f, 810.0f)},
+    {DATA_HADRONOX_EVENT, new ZRangeBoundary(666.0f, 776.0f)},
+    {DATA_ANUBARAK_EVENT, new CircleBoundary(Position(550.6178f, 253.5917f), 26.0f)}
 };
 
 class instance_azjol_nerub : public InstanceMapScript
@@ -128,7 +125,8 @@ class spell_azjol_nerub_fixate : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_azjol_nerub_fixate::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_azjol_nerub_fixate::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -138,7 +136,7 @@ class spell_azjol_nerub_web_wrap_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_WEB_WRAP_TRIGGER });
+        return ValidateSpellInfo({SPELL_WEB_WRAP_TRIGGER});
     }
 
     void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -150,7 +148,8 @@ class spell_azjol_nerub_web_wrap_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_azjol_nerub_web_wrap_aura::OnRemove, EFFECT_0, SPELL_AURA_MOD_ROOT, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_azjol_nerub_web_wrap_aura::OnRemove, EFFECT_0, SPELL_AURA_MOD_ROOT, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

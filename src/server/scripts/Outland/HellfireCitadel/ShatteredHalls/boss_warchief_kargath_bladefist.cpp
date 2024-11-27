@@ -24,56 +24,52 @@
 
 enum Says
 {
-    SAY_AGGRO                   = 0,
-    SAY_SLAY                    = 1,
-    SAY_DEATH                   = 2,
-    SAY_EVADE                   = 5
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_EVADE = 5
 };
 
 enum Spells
 {
     // Blade dance
     SPELL_BLADE_DANCE_TARGETING = 30738,
-    SPELL_BLADE_DANCE_DMG       = 30739,
-    SPELL_BLADE_DANCE_CHARGE    = 30751,
+    SPELL_BLADE_DANCE_DMG = 30739,
+    SPELL_BLADE_DANCE_CHARGE = 30751,
 
     // Warchief portal
-    SPELL_SUMMON_HEATHEN        = 30737,
-    SPELL_SUMMON_REAVER         = 30785,
-    SPELL_SUMMON_SHARPSHOOTER   = 30786
+    SPELL_SUMMON_HEATHEN = 30737,
+    SPELL_SUMMON_REAVER = 30785,
+    SPELL_SUMMON_SHARPSHOOTER = 30786
 };
 
 enum Creatures
 {
-    NPC_SHATTERED_ASSASSIN      = 17695,
-    NPC_BLADE_DANCE_TARGET      = 20709
+    NPC_SHATTERED_ASSASSIN = 17695,
+    NPC_BLADE_DANCE_TARGET = 20709
 };
 
 enum PortalData
 {
-    DATA_START_FIGHT            = 1,
-    DATA_RESET_FIGHT            = 2
+    DATA_START_FIGHT = 1,
+    DATA_RESET_FIGHT = 2
 };
 
-std::array<uint32, 3> const summonSpells = { SPELL_SUMMON_HEATHEN, SPELL_SUMMON_REAVER, SPELL_SUMMON_SHARPSHOOTER };
-std::vector<Position> const assassinsPos =
-{
-    { 172.68164f, -80.65692f, 2.0834563f, 5.4279f },
-    { 167.8295f,  -86.55783f, 1.9949634f, 0.8118f },
-    { 287.0375f,  -88.17879f, 2.0663502f, 3.2490f },
-    { 292.1491f,  -82.25267f, 1.9973913f, 5.8568f }
+std::array<uint32, 3> const summonSpells = {SPELL_SUMMON_HEATHEN, SPELL_SUMMON_REAVER, SPELL_SUMMON_SHARPSHOOTER};
+std::vector<Position> const assassinsPos = {
+    {172.68164f, -80.65692f, 2.0834563f, 5.4279f},
+    {167.8295f,  -86.55783f, 1.9949634f, 0.8118f},
+    {287.0375f,  -88.17879f, 2.0663502f, 3.2490f},
+    {292.1491f,  -82.25267f, 1.9973913f, 5.8568f}
 };
 
-Position const kargathRespawnPos = { 231.25f, -83.6449f, 5.02341f };
+Position const kargathRespawnPos = {231.25f, -83.6449f, 5.02341f};
 
 struct boss_warchief_kargath_bladefist : public BossAI
 {
     boss_warchief_kargath_bladefist(Creature* creature) : BossAI(creature, DATA_KARGATH)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void InitializeAI() override
@@ -82,9 +78,7 @@ struct boss_warchief_kargath_bladefist : public BossAI
         if (instance)
         {
             if (Creature* executioner = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_EXECUTIONER)))
-            {
                 executioner->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-            }
         }
     }
 
@@ -98,14 +92,15 @@ struct boss_warchief_kargath_bladefist : public BossAI
         if (summon)
         {
             summon->SetVisible(false);
-            scheduler.Schedule(20s, [summon](TaskContext /*context*/)
+            scheduler.Schedule(20s,
+                [summon](TaskContext /*context*/)
+            {
+                if (summon)
                 {
-                    if (summon)
-                    {
-                        summon->Respawn(true);
-                        summon->SetVisible(true);
-                    }
-                });
+                    summon->Respawn(true);
+                    summon->SetVisible(true);
+                }
+            });
         }
     }
 
@@ -132,9 +127,7 @@ struct boss_warchief_kargath_bladefist : public BossAI
         if (instance)
         {
             if (Creature* executioner = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_EXECUTIONER)))
-            {
                 executioner->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-            }
         }
     }
 
@@ -145,14 +138,14 @@ struct boss_warchief_kargath_bladefist : public BossAI
         if (Creature* warchiefPortal = instance->GetCreature(DATA_WARCHIEF_PORTAL))
             warchiefPortal->AI()->SetData(DATA_START_FIGHT, 0);
         RespawnAssassins();
-        scheduler
-            .Schedule(30s, [this](TaskContext context)
-                {
-                    me->SetReactState(REACT_PASSIVE);
-                    _danceCount = 0;
-                    DoCastAOE(SPELL_BLADE_DANCE_TARGETING);
-                    context.Repeat(32850ms, 41350ms);
-                });
+        scheduler.Schedule(30s,
+            [this](TaskContext context)
+        {
+            me->SetReactState(REACT_PASSIVE);
+            _danceCount = 0;
+            DoCastAOE(SPELL_BLADE_DANCE_TARGETING);
+            context.Repeat(32850ms, 41350ms);
+        });
     }
 
     void KilledUnit(Unit* victim) override
@@ -169,10 +162,7 @@ struct boss_warchief_kargath_bladefist : public BossAI
         if (_danceCount < 8)
         {
             _danceCount++;
-            scheduler.Schedule(100ms, [this](TaskContext /*context*/)
-                {
-                    DoCastAOE(SPELL_BLADE_DANCE_TARGETING);
-                });
+            scheduler.Schedule(100ms, [this](TaskContext /*context*/) { DoCastAOE(SPELL_BLADE_DANCE_TARGETING); });
         }
         else
             me->SetReactState(REACT_AGGRESSIVE);
@@ -197,14 +187,11 @@ struct boss_warchief_kargath_bladefist : public BossAI
         if (!UpdateVictim())
             return;
 
-        scheduler.Update(diff, [this]
-            {
-                DoMeleeAttackIfReady();
-            });
+        scheduler.Update(diff, [this] { DoMeleeAttackIfReady(); });
     }
 
-    protected:
-        uint8 _danceCount;
+protected:
+    uint8 _danceCount;
 };
 
 struct npc_warchief_portal : public ScriptedAI
@@ -231,17 +218,16 @@ public:
     {
         if (type == DATA_START_FIGHT)
         {
-            _scheduler.Schedule(20600ms, [this](TaskContext context)
-                {
-                    DoCastSelf(summonSpells[context.GetRepeatCounter() % 3]);
-                    context.Repeat();
-                });
+            _scheduler.Schedule(20600ms,
+                [this](TaskContext context)
+            {
+                DoCastSelf(summonSpells[context.GetRepeatCounter() % 3]);
+                context.Repeat();
+            });
         }
 
         if (type == DATA_RESET_FIGHT)
-        {
             _scheduler.CancelAll();
-        }
     }
 
 protected:
@@ -254,7 +240,7 @@ class spell_blade_dance_targeting : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_BLADE_DANCE_CHARGE, SPELL_BLADE_DANCE_DMG });
+        return ValidateSpellInfo({SPELL_BLADE_DANCE_CHARGE, SPELL_BLADE_DANCE_DMG});
     }
 
     void FilterTargets(std::list<WorldObject*>& targets)
@@ -264,36 +250,34 @@ class spell_blade_dance_targeting : public SpellScript
             return;
 
         targets.remove_if([&](WorldObject* target) -> bool
-            {
-                float dist = caster->GetDistance2d(target);
-                // Do not target dummies that are too close or too far away
-                if (dist < 5.f || dist > 16.f)
-                    return true;
-                // Do not target anything that is not a target dummy
-                if (target->GetEntry() != NPC_BLADE_DANCE_TARGET)
-                    return true;
+        {
+            float dist = caster->GetDistance2d(target);
+            // Do not target dummies that are too close or too far away
+            if (dist < 5.f || dist > 16.f)
+                return true;
+            // Do not target anything that is not a target dummy
+            if (target->GetEntry() != NPC_BLADE_DANCE_TARGET)
+                return true;
 
-                return false;
-            });
+            return false;
+        });
 
         std::list<WorldObject*> targets2 = targets;
 
         targets.remove_if([&](WorldObject* target) -> bool
-            {
-                if (target->SelectNearestPlayer(15.f))
-                    return false;
-                return true;
-            });
+        {
+            if (target->SelectNearestPlayer(15.f))
+                return false;
+            return true;
+        });
 
         Acore::Containers::RandomResize(targets2, 1);
 
         if (urand(0, 2))
-        {
             if (targets.empty())
                 targets = targets2;
             else
                 Acore::Containers::RandomResize(targets, 1);
-        }
         else
             targets = targets2;
     }
@@ -311,7 +295,8 @@ class spell_blade_dance_targeting : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_blade_dance_targeting::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_blade_dance_targeting::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
         OnHit += SpellHitFn(spell_blade_dance_targeting::HandleOnHit);
     }
 };

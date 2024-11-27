@@ -21,38 +21,35 @@
 
 enum Supremus
 {
-    EMOTE_NEW_TARGET                = 0,
-    EMOTE_PUNCH_GROUND              = 1,
-    EMOTE_GROUND_CRACK              = 2,
-    EMOTE_BERSERK                   = 3,
+    EMOTE_NEW_TARGET = 0,
+    EMOTE_PUNCH_GROUND = 1,
+    EMOTE_GROUND_CRACK = 2,
+    EMOTE_BERSERK = 3,
 
-    SPELL_SNARE_SELF                = 41922,
-    SPELL_MOLTEN_PUNCH              = 40126,
-    SPELL_MOLTEN_FLAME              = 40980,
-    SPELL_HATEFUL_STRIKE            = 41926,
-    SPELL_VOLCANIC_ERUPTION         = 40276,
+    SPELL_SNARE_SELF = 41922,
+    SPELL_MOLTEN_PUNCH = 40126,
+    SPELL_MOLTEN_FLAME = 40980,
+    SPELL_HATEFUL_STRIKE = 41926,
+    SPELL_VOLCANIC_ERUPTION = 40276,
     SPELL_VOLCANIC_ERUPTION_TRIGGER = 40117,
-    SPELL_VOLCANIC_GEYSER           = 42055,
-    SPELL_BERSERK                   = 26662,
-    SPELL_CHARGE                    = 41581,
+    SPELL_VOLCANIC_GEYSER = 42055,
+    SPELL_BERSERK = 26662,
+    SPELL_CHARGE = 41581,
 
-    SPELL_SERVERSIDE_RANDOM_TARGET  = 41951,  // Found in 55261. Used for Fixate target
+    SPELL_SERVERSIDE_RANDOM_TARGET = 41951, // Found in 55261. Used for Fixate target
 
-    NPC_SUPREMUS_VOLCANO            = 23085,
+    NPC_SUPREMUS_VOLCANO = 23085,
 
-    GROUP_ABILITIES                 = 1,
-    GROUP_MOLTEN_PUNCH              = 2,
-    GROUP_PHASE_CHANGE              = 3
+    GROUP_ABILITIES = 1,
+    GROUP_MOLTEN_PUNCH = 2,
+    GROUP_PHASE_CHANGE = 3
 };
 
 struct boss_supremus : public BossAI
 {
     boss_supremus(Creature* creature) : BossAI(creature, DATA_SUPREMUS)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -68,16 +65,19 @@ struct boss_supremus : public BossAI
 
         SchedulePhase(true);
 
-        ScheduleTimedEvent(15min, [&]
+        ScheduleTimedEvent(15min,
+            [&]
         {
             DoCastSelf(SPELL_BERSERK, true);
             Talk(EMOTE_BERSERK);
-            scheduler.CancelGroup(GROUP_ABILITIES);  // Supremus stops all other abilities after berserking
+            scheduler.CancelGroup(GROUP_ABILITIES); // Supremus stops all other abilities after berserking
             scheduler.CancelGroup(GROUP_MOLTEN_PUNCH);
             scheduler.CancelGroup(GROUP_PHASE_CHANGE);
-        }, 5min);
+        },
+            5min);
 
-        scheduler.Schedule(20s, [this](TaskContext context)
+        scheduler.Schedule(20s,
+            [this](TaskContext context)
         {
             context.SetGroup(GROUP_MOLTEN_PUNCH);
             DoCastSelf(SPELL_MOLTEN_PUNCH);
@@ -89,7 +89,8 @@ struct boss_supremus : public BossAI
     {
         scheduler.CancelGroup(GROUP_ABILITIES);
 
-        scheduler.Schedule(1min, [this](TaskContext context)
+        scheduler.Schedule(1min,
+            [this](TaskContext context)
         {
             context.SetGroup(GROUP_PHASE_CHANGE);
             SchedulePhase(me->HasAura(SPELL_SNARE_SELF));
@@ -100,7 +101,9 @@ struct boss_supremus : public BossAI
         // Hateful Strike Phase
         if (isSnared)
         {
-            scheduler.Schedule(8s, 15s, [this](TaskContext context)
+            scheduler.Schedule(8s,
+                15s,
+                [this](TaskContext context)
             {
                 context.SetGroup(GROUP_ABILITIES);
 
@@ -122,7 +125,9 @@ struct boss_supremus : public BossAI
         {
             DoCastSelf(SPELL_SNARE_SELF, true);
 
-            scheduler.Schedule(5s, [this](TaskContext context)
+            scheduler
+                .Schedule(5s,
+                    [this](TaskContext context)
             {
                 context.SetGroup(GROUP_ABILITIES);
 
@@ -130,7 +135,9 @@ struct boss_supremus : public BossAI
                     Talk(EMOTE_GROUND_CRACK);
 
                 context.Repeat(10s, 18s);
-            }).Schedule(0s, [this](TaskContext context)
+            })
+                .Schedule(0s,
+                    [this](TaskContext context)
             {
                 context.SetGroup(GROUP_ABILITIES);
 
@@ -182,7 +189,8 @@ struct boss_supremus : public BossAI
 
     bool CheckEvadeIfOutOfCombatArea() const override
     {
-        return me->GetPositionX() < 565 || me->GetPositionX() > 865 || me->GetPositionY() < 545 || me->GetPositionY() > 1000;
+        return me->GetPositionX() < 565 || me->GetPositionX() > 865 || me->GetPositionY() < 545 ||
+               me->GetPositionY() > 1000;
     }
 };
 
@@ -198,7 +206,9 @@ struct npc_supremus_punch_invisible_stalker : public ScriptedAI
 
         DoCastSelf(SPELL_MOLTEN_FLAME, true);
 
-        scheduler.Schedule(6s, 10s, [this](TaskContext /*context*/)
+        scheduler.Schedule(6s,
+            10s,
+            [this](TaskContext /*context*/)
         {
             me->CombatStop();
             me->SetReactState(REACT_PASSIVE);

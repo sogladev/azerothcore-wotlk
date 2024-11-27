@@ -35,17 +35,15 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable battlefieldcommandTable =
-        {
-            { "start",  HandleBattlefieldStart,  SEC_ADMINISTRATOR, Console::No },
-            { "stop",   HandleBattlefieldEnd,    SEC_ADMINISTRATOR, Console::No },
-            { "switch", HandleBattlefieldSwitch, SEC_ADMINISTRATOR, Console::No },
-            { "timer",  HandleBattlefieldTimer,  SEC_ADMINISTRATOR, Console::No },
-            { "enable", HandleBattlefieldEnable, SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable battlefieldcommandTable = {
+            {"start",  HandleBattlefieldStart,  SEC_ADMINISTRATOR, Console::No},
+            {"stop",   HandleBattlefieldEnd,    SEC_ADMINISTRATOR, Console::No},
+            {"switch", HandleBattlefieldSwitch, SEC_ADMINISTRATOR, Console::No},
+            {"timer",  HandleBattlefieldTimer,  SEC_ADMINISTRATOR, Console::No},
+            {"enable", HandleBattlefieldEnable, SEC_ADMINISTRATOR, Console::No}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "bf", battlefieldcommandTable }
+        static ChatCommandTable commandTable = {
+            {"bf", battlefieldcommandTable}
         };
         return commandTable;
     }
@@ -120,9 +118,7 @@ public:
     static bool HandleBattlefieldTimer(ChatHandler* handler, uint32 battleId, std::string timeStr)
     {
         if (timeStr.empty())
-        {
             return false;
-        }
 
         if (Acore::StringTo<int32>(timeStr).value_or(0) < 0)
         {
@@ -132,9 +128,7 @@ public:
 
         int32 time = TimeStringToSecs(timeStr);
         if (time <= 0)
-        {
             time = Acore::StringTo<int32>(timeStr).value_or(0);
-        }
 
         if (time <= 0)
         {

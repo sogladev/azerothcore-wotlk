@@ -24,37 +24,37 @@
 
 enum Texts
 {
-    EMOTE_AGGRO                 = 0,
-    EMOTE_MANA_FULL             = 1,
-    EMOTE_STONE_PHASE           = 2
+    EMOTE_AGGRO = 0,
+    EMOTE_MANA_FULL = 1,
+    EMOTE_STONE_PHASE = 2
 };
 
 enum Spells
 {
-    SPELL_TRAMPLE               = 15550,
+    SPELL_TRAMPLE = 15550,
     SPELL_DRAIN_MANA_SERVERSIDE = 25676,
-    SPELL_DRAIN_MANA            = 25671,
-    SPELL_ARCANE_ERUPTION       = 25672,
-    SPELL_SUMMON_MANA_FIENDS    = 25684,
-    SPELL_SUMMON_MANA_FIEND_1   = 25681, // TARGET_DEST_CASTER_FRONT
-    SPELL_SUMMON_MANA_FIEND_2   = 25682, // TARGET_DEST_CASTER_LEFT
-    SPELL_SUMMON_MANA_FIEND_3   = 25683, // TARGET_DEST_CASTER_RIGHT
-    SPELL_ENERGIZE              = 25685,
+    SPELL_DRAIN_MANA = 25671,
+    SPELL_ARCANE_ERUPTION = 25672,
+    SPELL_SUMMON_MANA_FIENDS = 25684,
+    SPELL_SUMMON_MANA_FIEND_1 = 25681, // TARGET_DEST_CASTER_FRONT
+    SPELL_SUMMON_MANA_FIEND_2 = 25682, // TARGET_DEST_CASTER_LEFT
+    SPELL_SUMMON_MANA_FIEND_3 = 25683, // TARGET_DEST_CASTER_RIGHT
+    SPELL_ENERGIZE = 25685,
 
-    SPELL_LARGE_OBSIDIAN_CHUNK  = 27630 //  Server-side
+    SPELL_LARGE_OBSIDIAN_CHUNK = 27630 //  Server-side
 };
 
 enum Events
 {
-    EVENT_SPELL_TRAMPLE         = 1,
-    EVENT_SPELL_DRAIN_MANA      = 2,
-    EVENT_STONE_PHASE           = 3,
-    EVENT_STONE_PHASE_END       = 4
+    EVENT_SPELL_TRAMPLE = 1,
+    EVENT_SPELL_DRAIN_MANA = 2,
+    EVENT_STONE_PHASE = 3,
+    EVENT_STONE_PHASE_END = 4
 };
 
 struct boss_moam : public BossAI
 {
-    boss_moam(Creature* creature) : BossAI(creature, DATA_MOAM) {}
+    boss_moam(Creature* creature) : BossAI(creature, DATA_MOAM) { }
 
     void InitializeAI() override
     {
@@ -87,9 +87,7 @@ struct boss_moam : public BossAI
     void SummonedCreatureDies(Creature* /*creature*/, Unit* /*killer*/) override
     {
         if (!summons.IsAnyCreatureAlive() && me->HasAura(SPELL_ENERGIZE))
-        {
             events.RescheduleEvent(EVENT_STONE_PHASE_END, 1s);
-        }
     }
 
     void UpdateAI(uint32 diff) override
@@ -152,28 +150,24 @@ class spell_moam_mana_drain_filter : public SpellScript
     void FilterTargets(std::list<WorldObject*>& targets)
     {
         targets.remove_if([&](WorldObject* target) -> bool
-        {
-            return !target->IsPlayer() || target->ToPlayer()->getPowerType() != POWER_MANA;
-        });
+        { return !target->IsPlayer() || target->ToPlayer()->getPowerType() != POWER_MANA; });
 
         if (!targets.empty())
-        {
             Acore::Containers::RandomResize(targets, 6);
-        }
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
     {
         if (Unit* caster = GetCaster())
-        {
             caster->CastSpell(GetHitUnit(), SPELL_DRAIN_MANA, true);
-        }
     }
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_moam_mana_drain_filter::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENEMY);
-        OnEffectHitTarget += SpellEffectFn(spell_moam_mana_drain_filter::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_moam_mana_drain_filter::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_moam_mana_drain_filter::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -184,17 +178,16 @@ class spell_moam_summon_mana_fiends : public SpellScript
 
     void HandleScript(SpellEffIndex /*effIndex*/)
     {
-        const uint32 spellIds[3] = { SPELL_SUMMON_MANA_FIEND_1, SPELL_SUMMON_MANA_FIEND_2, SPELL_SUMMON_MANA_FIEND_3 };
+        uint32 const spellIds[3] = {SPELL_SUMMON_MANA_FIEND_1, SPELL_SUMMON_MANA_FIEND_2, SPELL_SUMMON_MANA_FIEND_3};
 
         for (uint32 spellId : spellIds)
-        {
             GetCaster()->CastSpell((Unit*)nullptr, spellId, true);
-        }
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_moam_summon_mana_fiends::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_moam_summon_mana_fiends::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

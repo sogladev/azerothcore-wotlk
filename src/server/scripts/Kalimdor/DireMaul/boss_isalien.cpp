@@ -28,10 +28,10 @@ enum Texts
 enum Spells
 {
     SPELL_CALL_EMPYREAN = 27639,
-    SPELL_MULTI_SHOT    = 14443,
-    SPELL_NET           = 12024,
-    SPELL_STARSHARDS    = 27636,
-    SPELL_REGROWTH      = 27637
+    SPELL_MULTI_SHOT = 14443,
+    SPELL_NET = 12024,
+    SPELL_STARSHARDS = 27636,
+    SPELL_REGROWTH = 27637
 };
 
 enum Phases
@@ -56,29 +56,30 @@ struct boss_isalien : public BossAI
         summons.DespawnAll();
         _phase = PHASE_NONE;
 
-        _scheduler.SetValidator([this]
-            {
-                return !me->HasUnitState(UNIT_STATE_CASTING);
-            });
+        _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
-    void DamageTaken(Unit* /*attacker*/, uint32& /*damage*/, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
+    void DamageTaken(
+        Unit* /*attacker*/, uint32& /*damage*/, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
     {
         if (_phase != PHASE_REGROWTH && me->HealthBelowPct(80.f))
         {
             _phase = PHASE_REGROWTH;
-            _scheduler.Schedule(25s, 30s, [this](TaskContext context)
+            _scheduler.Schedule(25s,
+                30s,
+                [this](TaskContext context)
+            {
+                Position randomPos = me->GetRandomPoint(me->GetPosition(), 15.f);
+                me->GetMotionMaster()->MovePoint(POINT_RANDOM, randomPos);
+                context.Schedule(3s,
+                    [this](TaskContext /*context*/)
                 {
-                    Position randomPos = me->GetRandomPoint(me->GetPosition(), 15.f);
-                    me->GetMotionMaster()->MovePoint(POINT_RANDOM, randomPos);
-                    context.Schedule(3s, [this](TaskContext /*context*/)
-                        {
-                            me->GetMotionMaster()->Clear();
-                            me->GetMotionMaster()->MoveChase(me->GetVictim());
-                            DoCastSelf(SPELL_REGROWTH);
-                        });
-                    context.Repeat(25s, 30s);
+                    me->GetMotionMaster()->Clear();
+                    me->GetMotionMaster()->MoveChase(me->GetVictim());
+                    DoCastSelf(SPELL_REGROWTH);
                 });
+                context.Repeat(25s, 30s);
+            });
         }
     }
 
@@ -90,38 +91,36 @@ struct boss_isalien : public BossAI
     void JustEngagedWith(Unit* /*who*/) override
     {
         _JustEngagedWith();
-        _scheduler.Schedule(4s, 5s, [this](TaskContext context)
-            {
-                DoCastRandomTarget(SPELL_NET);
-                context.Repeat(12s, 15s);
-            })
-        .Schedule(7s, 12s, [this](TaskContext context)
-            {
-                DoCastRandomTarget(SPELL_MULTI_SHOT);
-                context.Repeat(7s, 12s);
-            })
-        .Schedule(20s, 30s, [this](TaskContext context)
-            {
-                DoCastAOE(SPELL_STARSHARDS);
-                context.Repeat(20s, 30s);
-            })
-        .Schedule(8s, 10s, [this](TaskContext /*context*/)
-            {
-                DoCastAOE(SPELL_CALL_EMPYREAN);
-            });
+        _scheduler
+            .Schedule(4s,
+                5s,
+                [this](TaskContext context)
+        {
+            DoCastRandomTarget(SPELL_NET);
+            context.Repeat(12s, 15s);
+        })
+            .Schedule(7s,
+                12s,
+                [this](TaskContext context)
+        {
+            DoCastRandomTarget(SPELL_MULTI_SHOT);
+            context.Repeat(7s, 12s);
+        })
+            .Schedule(20s,
+                30s,
+                [this](TaskContext context)
+        {
+            DoCastAOE(SPELL_STARSHARDS);
+            context.Repeat(20s, 30s);
+        }).Schedule(8s, 10s, [this](TaskContext /*context*/) { DoCastAOE(SPELL_CALL_EMPYREAN); });
     }
 
     void UpdateAI(uint32 diff) override
     {
         if (!UpdateVictim())
-        {
             return;
-        }
 
-        _scheduler.Update(diff, [this]
-            {
-                DoMeleeAttackIfReady();
-            });
+        _scheduler.Update(diff, [this] { DoMeleeAttackIfReady(); });
     }
 
     void JustDied(Unit* /*killer*/) override

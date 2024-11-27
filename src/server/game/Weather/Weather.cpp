@@ -27,14 +27,16 @@
 #include "World.h"
 
 /// Create the Weather object
-Weather::Weather(uint32 zone, WeatherData const* weatherChances)
-    : m_zone(zone), m_weatherChances(weatherChances)
+Weather::Weather(uint32 zone, WeatherData const* weatherChances) : m_zone(zone), m_weatherChances(weatherChances)
 {
     m_timer.SetInterval(sWorld->getIntConfig(CONFIG_INTERVAL_CHANGEWEATHER));
     m_type = WEATHER_TYPE_FINE;
     m_grade = 0;
 
-    LOG_DEBUG("weather", "WORLD: Starting weather system for zone {} (change every {} minutes).", m_zone, (uint32)(m_timer.GetInterval() / (MINUTE * IN_MILLISECONDS)));
+    LOG_DEBUG("weather",
+        "WORLD: Starting weather system for zone {} (change every {} minutes).",
+        m_zone,
+        (uint32)(m_timer.GetInterval() / (MINUTE * IN_MILLISECONDS)));
 }
 
 /// Launch a weather update
@@ -90,22 +92,22 @@ bool Weather::ReGenerate()
     // season source http://aa.usno.navy.mil/data/docs/EarthSeasons.html
     uint32 season = ((Acore::Time::GetDayInYear() - 78 + 365) / 91) % 4;
 
-    static char const* seasonName[WEATHER_SEASONS] = { "spring", "summer", "fall", "winter" };
+    static char const* seasonName[WEATHER_SEASONS] = {"spring", "summer", "fall", "winter"};
     LOG_DEBUG("weather", "Generating a change in {} weather for zone {}.", seasonName[season], m_zone);
 
-    if ((u < 60) && (m_grade < 0.33333334f))                // Get fair
+    if ((u < 60) && (m_grade < 0.33333334f)) // Get fair
     {
         m_type = WEATHER_TYPE_FINE;
         m_grade = 0.0f;
     }
 
-    if ((u < 60) && (m_type != WEATHER_TYPE_FINE))          // Get better
+    if ((u < 60) && (m_type != WEATHER_TYPE_FINE)) // Get better
     {
         m_grade -= 0.33333334f;
         return true;
     }
 
-    if ((u < 90) && (m_type != WEATHER_TYPE_FINE))          // Get worse
+    if ((u < 90) && (m_type != WEATHER_TYPE_FINE)) // Get worse
     {
         m_grade += 0.33333334f;
         return true;
@@ -120,7 +122,7 @@ bool Weather::ReGenerate()
 
         if (m_grade < 0.33333334f)
         {
-            m_grade = 0.9999f;                              // go nuts
+            m_grade = 0.9999f; // go nuts
             return true;
         }
         else
@@ -135,7 +137,7 @@ bool Weather::ReGenerate()
                     return true;
                 }
             }
-            m_type = WEATHER_TYPE_FINE;                     // clear up
+            m_type = WEATHER_TYPE_FINE; // clear up
             m_grade = 0;
         }
     }

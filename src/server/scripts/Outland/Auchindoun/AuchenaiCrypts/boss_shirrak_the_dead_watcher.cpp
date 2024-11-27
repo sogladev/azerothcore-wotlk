@@ -25,32 +25,29 @@
 
 enum Spells
 {
-    SPELL_INHIBIT_MAGIC         = 32264,
-    SPELL_ATTRACT_MAGIC         = 32265,
-    SPELL_CARNIVOROUS_BITE      = 36383,
-    SPELL_FIERY_BLAST           = 32302,
-    SPELL_FOCUS_FIRE_VISUAL     = 32286,
-    SPELL_FOCUS_CAST            = 32300,
+    SPELL_INHIBIT_MAGIC = 32264,
+    SPELL_ATTRACT_MAGIC = 32265,
+    SPELL_CARNIVOROUS_BITE = 36383,
+    SPELL_FIERY_BLAST = 32302,
+    SPELL_FOCUS_FIRE_VISUAL = 32286,
+    SPELL_FOCUS_CAST = 32300,
 
-    SPELL_POSSESS_INSTANT       = 32830,
-    SPELL_POSSESS_CHANNELED     = 33401
+    SPELL_POSSESS_INSTANT = 32830,
+    SPELL_POSSESS_CHANNELED = 33401
 };
 
 enum Misc
 {
-    GROUP_BITE                  = 1,
-    ENTRY_FOCUS_FIRE            = 18374,
-    EMOTE_FOCUSED               = 0
+    GROUP_BITE = 1,
+    ENTRY_FOCUS_FIRE = 18374,
+    EMOTE_FOCUSED = 0
 };
 
 struct boss_shirrak_the_dead_watcher : public BossAI
 {
     boss_shirrak_the_dead_watcher(Creature* creature) : BossAI(creature, DATA_SHIRRAK_THE_DEAD_WATCHER)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     ObjectGuid focusGUID;
@@ -71,7 +68,9 @@ struct boss_shirrak_the_dead_watcher : public BossAI
     void JustEngagedWith(Unit*) override
     {
         _JustEngagedWith();
-        scheduler.Schedule(1ms, [this] (TaskContext context)
+        scheduler
+            .Schedule(1ms,
+                [this](TaskContext context)
         {
             Map::PlayerList const& PlayerList = me->GetMap()->GetPlayers();
             for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
@@ -83,18 +82,12 @@ struct boss_shirrak_the_dead_watcher : public BossAI
                     {
                         Aura* aura = player->GetAura(SPELL_INHIBIT_MAGIC);
                         if (!aura)
-                        {
                             aura = me->AddAura(SPELL_INHIBIT_MAGIC, player);
-                        }
                         else
-                        {
                             aura->RefreshDuration();
-                        }
 
                         if (aura)
-                        {
                             aura->SetStackAmount(getStackCount(dist));
-                        }
                     }
                     else
                     {
@@ -103,49 +96,58 @@ struct boss_shirrak_the_dead_watcher : public BossAI
                 }
             }
             context.Repeat(3s);
-        }).Schedule(28s, [this](TaskContext context)
+        })
+            .Schedule(28s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_ATTRACT_MAGIC);
             context.RescheduleGroup(GROUP_BITE, 1500ms);
             context.Repeat(30s);
-        }).Schedule(10s, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                [this](TaskContext context)
         {
             context.SetGroup(GROUP_BITE);
             DoCastSelf(SPELL_CARNIVOROUS_BITE);
             context.Repeat(10s);
-        }).Schedule(17s, [this](TaskContext context)
+        })
+            .Schedule(17s,
+                [this](TaskContext context)
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 60.0f, true))
             {
-                if (Creature* cr = me->SummonCreature(ENTRY_FOCUS_FIRE, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 7000))
+                if (Creature* cr = me->SummonCreature(ENTRY_FOCUS_FIRE,
+                        target->GetPositionX(),
+                        target->GetPositionY(),
+                        target->GetPositionZ(),
+                        0,
+                        TEMPSUMMON_TIMED_DESPAWN,
+                        7000))
                 {
                     focusGUID = cr->GetGUID();
                 }
                 Talk(EMOTE_FOCUSED, target);
             }
             context.Repeat(15s, 20s);
-            scheduler.Schedule(3s, [this](TaskContext /*context*/)
+            scheduler
+                .Schedule(3s,
+                    [this](TaskContext /*context*/)
             {
                 if (Unit* flare = ObjectAccessor::GetCreature(*me, focusGUID))
-                {
                     me->CastSpell(flare, SPELL_FOCUS_CAST, true);
-                }
-            }).Schedule(3500ms, [this](TaskContext /*context*/)
+            })
+                .Schedule(3500ms,
+                    [this](TaskContext /*context*/)
             {
                 if (Unit* flare = ObjectAccessor::GetCreature(*me, focusGUID))
-                {
                     me->CastSpell(flare, SPELL_FOCUS_CAST, true);
-                }
-            }).Schedule(4s, [this](TaskContext /*context*/)
+            })
+                .Schedule(4s,
+                    [this](TaskContext /*context*/)
             {
                 if (Unit* flare = ObjectAccessor::GetCreature(*me, focusGUID))
-                {
                     me->CastSpell(flare, SPELL_FOCUS_CAST, true);
-                }
-            }).Schedule(5s, [this](TaskContext /*context*/)
-            {
-                me->SetControlled(false, UNIT_STATE_ROOT);
-            });
+            }).Schedule(5s, [this](TaskContext /*context*/) { me->SetControlled(false, UNIT_STATE_ROOT); });
             me->SetControlled(true, UNIT_STATE_ROOT);
         });
     }
@@ -158,9 +160,7 @@ struct boss_shirrak_the_dead_watcher : public BossAI
     void SpellHitTarget(Unit* target, SpellInfo const* spellInfo) override
     {
         if (spellInfo->Id == SPELL_FOCUS_CAST)
-        {
             target->CastSpell(target, SPELL_FIERY_BLAST, false);
-        }
     }
 
     uint8 getStackCount(float dist)
@@ -191,16 +191,12 @@ class spell_auchenai_possess : public AuraScript
     void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
-        {
             return;
-        }
 
         if (Unit* caster = GetCaster())
         {
             if (Unit* target = GetTarget())
-            {
                 caster->CastSpell(target, SPELL_POSSESS_INSTANT, true);
-            }
         }
     }
 
@@ -215,9 +211,7 @@ class spell_auchenai_possess : public AuraScript
         if (Unit* owner = GetUnitOwner())
         {
             if (owner->GetHealthPct() <= 50)
-            {
                 SetDuration(0);
-            }
         }
     }
 
@@ -225,12 +219,15 @@ class spell_auchenai_possess : public AuraScript
     {
         if (m_scriptSpellId == SPELL_POSSESS_CHANNELED)
         {
-            OnEffectRemove += AuraEffectRemoveFn(spell_auchenai_possess::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+            OnEffectRemove += AuraEffectRemoveFn(
+                spell_auchenai_possess::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
         }
         else
         {
-            DoEffectCalcPeriodic += AuraEffectCalcPeriodicFn(spell_auchenai_possess::CalcPeriodic, EFFECT_0, SPELL_AURA_MOD_CHARM);
-            OnEffectUpdatePeriodic += AuraEffectUpdatePeriodicFn(spell_auchenai_possess::Update, EFFECT_0, SPELL_AURA_MOD_CHARM);
+            DoEffectCalcPeriodic +=
+                AuraEffectCalcPeriodicFn(spell_auchenai_possess::CalcPeriodic, EFFECT_0, SPELL_AURA_MOD_CHARM);
+            OnEffectUpdatePeriodic +=
+                AuraEffectUpdatePeriodicFn(spell_auchenai_possess::Update, EFFECT_0, SPELL_AURA_MOD_CHARM);
         }
     }
 };

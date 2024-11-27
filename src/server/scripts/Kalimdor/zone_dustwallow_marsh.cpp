@@ -23,10 +23,10 @@
 
 enum SpellScripts
 {
-    SPELL_OOZE_ZAP              = 42489,
-    SPELL_OOZE_ZAP_CHANNEL_END  = 42485,
-    SPELL_OOZE_CHANNEL_CREDIT   = 42486,
-    SPELL_ENERGIZED             = 42492,
+    SPELL_OOZE_ZAP = 42489,
+    SPELL_OOZE_ZAP_CHANNEL_END = 42485,
+    SPELL_OOZE_CHANNEL_CREDIT = 42486,
+    SPELL_ENERGIZED = 42492,
 };
 
 class spell_ooze_zap : public SpellScript
@@ -35,7 +35,7 @@ class spell_ooze_zap : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_OOZE_ZAP });
+        return ValidateSpellInfo({SPELL_OOZE_ZAP});
     }
 
     SpellCastResult CheckRequirement()
@@ -69,7 +69,7 @@ class spell_ooze_zap_channel_end : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_OOZE_ZAP_CHANNEL_END });
+        return ValidateSpellInfo({SPELL_OOZE_ZAP_CHANNEL_END});
     }
 
     void HandleDummy(SpellEffIndex effIndex)
@@ -92,18 +92,17 @@ class spell_energize_aoe : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_ENERGIZED });
+        return ValidateSpellInfo({SPELL_ENERGIZED});
     }
 
     void FilterTargets(std::list<WorldObject*>& targets)
     {
         for (std::list<WorldObject*>::iterator itr = targets.begin(); itr != targets.end();)
-        {
-            if ((*itr)->IsPlayer() && (*itr)->ToPlayer()->GetQuestStatus(GetSpellInfo()->Effects[EFFECT_1].CalcValue()) == QUEST_STATUS_INCOMPLETE)
+            if ((*itr)->IsPlayer() && (*itr)->ToPlayer()->GetQuestStatus(
+                                          GetSpellInfo()->Effects[EFFECT_1].CalcValue()) == QUEST_STATUS_INCOMPLETE)
                 ++itr;
             else
                 targets.erase(itr++);
-        }
         targets.push_back(GetCaster());
     }
 
@@ -116,8 +115,10 @@ class spell_energize_aoe : public SpellScript
     void Register() override
     {
         OnEffectHitTarget += SpellEffectFn(spell_energize_aoe::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_energize_aoe::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_energize_aoe::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENTRY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_energize_aoe::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_energize_aoe::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENTRY);
     }
 };
 

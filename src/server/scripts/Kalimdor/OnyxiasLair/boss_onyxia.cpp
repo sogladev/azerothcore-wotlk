@@ -23,56 +23,56 @@
 
 enum Spells
 {
-    SPELL_WINGBUFFET                = 18500,
-    SPELL_FLAMEBREATH               = 18435,
-    SPELL_CLEAVE                    = 68868,
-    SPELL_TAILSWEEP                 = 68867,
-    SPELL_FIREBALL                  = 18392,
-    SPELL_BELLOWINGROAR             = 18431,
+    SPELL_WINGBUFFET = 18500,
+    SPELL_FLAMEBREATH = 18435,
+    SPELL_CLEAVE = 68868,
+    SPELL_TAILSWEEP = 68867,
+    SPELL_FIREBALL = 18392,
+    SPELL_BELLOWINGROAR = 18431,
 
-    SPELL_SUMMON_WHELP              = 17646,
-    SPELL_SUMMON_LAIR_GUARD         = 68968,
-    SPELL_ERUPTION                  = 17731,
+    SPELL_SUMMON_WHELP = 17646,
+    SPELL_SUMMON_LAIR_GUARD = 68968,
+    SPELL_ERUPTION = 17731,
 
-    SPELL_OLG_BLASTNOVA             = 68958,
-    SPELL_OLG_IGNITEWEAPON          = 68959,
+    SPELL_OLG_BLASTNOVA = 68958,
+    SPELL_OLG_IGNITEWEAPON = 68959,
 
-    SPELL_BREATH_N_TO_S             = 17086,
-    SPELL_BREATH_S_TO_N             = 18351,
-    SPELL_BREATH_E_TO_W             = 18576,
-    SPELL_BREATH_W_TO_E             = 18609,
-    SPELL_BREATH_SE_TO_NW           = 18564,
-    SPELL_BREATH_NW_TO_SE           = 18584,
-    SPELL_BREATH_SW_TO_NE           = 18596,
-    SPELL_BREATH_NE_TO_SW           = 18617,
+    SPELL_BREATH_N_TO_S = 17086,
+    SPELL_BREATH_S_TO_N = 18351,
+    SPELL_BREATH_E_TO_W = 18576,
+    SPELL_BREATH_W_TO_E = 18609,
+    SPELL_BREATH_SE_TO_NW = 18564,
+    SPELL_BREATH_NW_TO_SE = 18584,
+    SPELL_BREATH_SW_TO_NE = 18596,
+    SPELL_BREATH_NE_TO_SW = 18617,
 };
 
 enum Events
 {
-    EVENT_SPELL_WINGBUFFET          = 1,
-    EVENT_SPELL_FLAMEBREATH         = 2,
-    EVENT_SPELL_TAILSWEEP           = 3,
-    EVENT_SPELL_CLEAVE              = 4,
-    EVENT_START_PHASE_2             = 5,
-    EVENT_SPELL_FIREBALL_FIRST      = 6,
-    EVENT_SPELL_FIREBALL_SECOND     = 7,
-    EVENT_PHASE_2_STEP_CW           = 8,
-    EVENT_PHASE_2_STEP_ACW          = 9,
-    EVENT_PHASE_2_STEP_ACROSS       = 10,
-    EVENT_SPELL_BREATH              = 11,
-    EVENT_START_PHASE_3             = 12,
-    EVENT_PHASE_3_ATTACK            = 13,
-    EVENT_SPELL_BELLOWINGROAR       = 14,
-    EVENT_WHELP_SPAM                = 15,
-    EVENT_SUMMON_LAIR_GUARD         = 16,
-    EVENT_SUMMON_WHELP              = 17,
-    EVENT_OLG_SPELL_BLASTNOVA       = 18,
-    EVENT_OLG_SPELL_IGNITEWEAPON    = 19,
-    EVENT_ERUPTION                  = 20,
+    EVENT_SPELL_WINGBUFFET = 1,
+    EVENT_SPELL_FLAMEBREATH = 2,
+    EVENT_SPELL_TAILSWEEP = 3,
+    EVENT_SPELL_CLEAVE = 4,
+    EVENT_START_PHASE_2 = 5,
+    EVENT_SPELL_FIREBALL_FIRST = 6,
+    EVENT_SPELL_FIREBALL_SECOND = 7,
+    EVENT_PHASE_2_STEP_CW = 8,
+    EVENT_PHASE_2_STEP_ACW = 9,
+    EVENT_PHASE_2_STEP_ACROSS = 10,
+    EVENT_SPELL_BREATH = 11,
+    EVENT_START_PHASE_3 = 12,
+    EVENT_PHASE_3_ATTACK = 13,
+    EVENT_SPELL_BELLOWINGROAR = 14,
+    EVENT_WHELP_SPAM = 15,
+    EVENT_SUMMON_LAIR_GUARD = 16,
+    EVENT_SUMMON_WHELP = 17,
+    EVENT_OLG_SPELL_BLASTNOVA = 18,
+    EVENT_OLG_SPELL_IGNITEWEAPON = 19,
+    EVENT_ERUPTION = 20,
 
-    EVENT_LIFTOFF                   = 31,
-    EVENT_FLY_S_TO_N                = 32,
-    EVENT_LAND                      = 33,
+    EVENT_LIFTOFF = 31,
+    EVENT_FLY_S_TO_N = 32,
+    EVENT_LAND = 33,
     EVENT_END_MANY_WHELPS_TIME
 };
 
@@ -91,27 +91,26 @@ struct sOnyxMove
     float x, y, z, o;
 };
 
-static sOnyxMove OnyxiaMoveData[] =
-{
-    {0, 0, 0, -64.496f, -214.906f, -84.4f, 0.0f}, // south ground
-    {1, 5, SPELL_BREATH_S_TO_N, -64.496f, -214.906f, -60.0f, 0.0f}, // south
-    {2, 6, SPELL_BREATH_SW_TO_NE, -59.809f, -190.758f, -60.0f, 7 * M_PI / 4}, // south-west
-    {3, 7, SPELL_BREATH_W_TO_E, -29.450f, -180.600f, -60.0f, M_PI + M_PI / 2}, // west
-    {4, 8, SPELL_BREATH_NW_TO_SE, 6.895f, -180.246f, -60.0f, M_PI + M_PI / 4}, // north-west
-    {5, 1, SPELL_BREATH_N_TO_S,  22.876f, -217.152f, -60.0f, M_PI}, // north
-    {6, 2, SPELL_BREATH_NE_TO_SW, 10.2191f, -247.912f, -60.0f, 3 * M_PI / 4}, // north-east
-    {7, 3, SPELL_BREATH_E_TO_W, -31.496f, -250.123f, -60.0f, M_PI / 2}, // east
-    {8, 4, SPELL_BREATH_SE_TO_NW, -63.5156f, -240.096f, -60.0f, M_PI / 4}, // south-east
+static sOnyxMove OnyxiaMoveData[] = {
+    {0, 0, 0,                     -64.496f,  -214.906f, -84.4f, 0.0f           }, // south ground
+    {1, 5, SPELL_BREATH_S_TO_N,   -64.496f,  -214.906f, -60.0f, 0.0f           }, // south
+    {2, 6, SPELL_BREATH_SW_TO_NE, -59.809f,  -190.758f, -60.0f, 7 * M_PI / 4   }, // south-west
+    {3, 7, SPELL_BREATH_W_TO_E,   -29.450f,  -180.600f, -60.0f, M_PI + M_PI / 2}, // west
+    {4, 8, SPELL_BREATH_NW_TO_SE, 6.895f,    -180.246f, -60.0f, M_PI + M_PI / 4}, // north-west
+    {5, 1, SPELL_BREATH_N_TO_S,   22.876f,   -217.152f, -60.0f, M_PI           }, // north
+    {6, 2, SPELL_BREATH_NE_TO_SW, 10.2191f,  -247.912f, -60.0f, 3 * M_PI / 4   }, // north-east
+    {7, 3, SPELL_BREATH_E_TO_W,   -31.496f,  -250.123f, -60.0f, M_PI / 2       }, // east
+    {8, 4, SPELL_BREATH_SE_TO_NW, -63.5156f, -240.096f, -60.0f, M_PI / 4       }, // south-east
 };
 
 enum Yells
 {
-    SAY_AGGRO                   = 0,
-    SAY_KILL                    = 1,
-    SAY_PHASE_2_TRANS           = 2,
-    SAY_PHASE_3_TRANS           = 3,
-    EMOTE_BREATH                = 4,
-    SAY_EVADE                   = 5
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_PHASE_2_TRANS = 2,
+    SAY_PHASE_3_TRANS = 3,
+    EMOTE_BREATH = 4,
+    SAY_EVADE = 5
 };
 
 struct boss_onyxia : public BossAI
@@ -170,9 +169,7 @@ public:
         {
             case -1:
                 if (bManyWhelpsAvailable)
-                {
                     instance->SetData(DATA_WHELP_SUMMONED, 1);
-                }
                 break;
         }
     }
@@ -182,11 +179,13 @@ public:
         Talk(SAY_AGGRO);
         SetPhase(PHASE_GROUNDED);
 
-        instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT); // just in case at reset some players already left the instance
+        instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT,
+            ACHIEV_TIMED_START_EVENT); // just in case at reset some players already left the instance
         instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
         BossAI::JustEngagedWith(who);
 
-        me->SummonCreature(NPC_ONYXIAN_LAIR_GUARD, -167.837936f, -200.549332f, -66.343231f, 5.598287f, TEMPSUMMON_MANUAL_DESPAWN);
+        me->SummonCreature(
+            NPC_ONYXIAN_LAIR_GUARD, -167.837936f, -200.549332f, -66.343231f, 5.598287f, TEMPSUMMON_MANUAL_DESPAWN);
     }
 
     void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
@@ -207,14 +206,10 @@ public:
         summons.Summon(summon);
 
         if (summon->GetEntry() != NPC_ONYXIAN_WHELP && summon->GetEntry() != NPC_ONYXIAN_LAIR_GUARD)
-        {
             return;
-        }
 
         if (summon->GetEntry() == NPC_ONYXIAN_LAIR_GUARD && Phase < PHASE_AIRPHASE)
-        {
             return;
-        }
 
         if (Unit* target = summon->SelectNearestTarget(300.0f))
         {
@@ -226,9 +221,7 @@ public:
     void MovementInform(uint32 type, uint32 id) override
     {
         if (type != POINT_MOTION_TYPE && type != EFFECT_MOTION_TYPE)
-        {
             return;
-        }
 
         if (id < 9)
         {
@@ -266,7 +259,7 @@ public:
         }
     }
 
-    void HandleWhelpSpam(const uint32 diff)
+    void HandleWhelpSpam(uint32 const diff)
     {
         if (whelpSpam)
         {
@@ -276,17 +269,18 @@ public:
                 if (whelpSpamTimer <= 0)
                 {
                     float angle = rand_norm() * 2 * M_PI;
-                    float dist  = rand_norm() * 4.0f;
+                    float dist = rand_norm() * 4.0f;
                     me->CastSpell(-33.18f + cos(angle) * dist, -258.80f + std::sin(angle) * dist, -89.0f, 17646, true);
-                    me->CastSpell(-32.535f + cos(angle) * dist, -170.190f + std::sin(angle) * dist, -89.0f, 17646, true);
+                    me->CastSpell(
+                        -32.535f + cos(angle) * dist, -170.190f + std::sin(angle) * dist, -89.0f, 17646, true);
                     whelpCount += 2;
                     whelpSpamTimer += 600;
                 }
             }
             else
             {
-                whelpSpam      = false;
-                whelpCount     = 0;
+                whelpSpam = false;
+                whelpCount = 0;
                 whelpSpamTimer = 0;
             }
         }
@@ -307,17 +301,13 @@ public:
     void UpdateAI(uint32 diff) override
     {
         if (!UpdateVictim() || !CheckInRoom())
-        {
             return;
-        }
 
         events.Update(diff);
         HandleWhelpSpam(diff);
 
         if (me->HasUnitState(UNIT_STATE_CASTING))
-        {
             return;
-        }
 
         DoMeleeAttackIfReady();
 
@@ -366,7 +356,8 @@ public:
                 me->SetDisableGravity(true);
                 me->SetOrientation(OnyxiaMoveData[0].o);
                 me->SendMovementFlagUpdate();
-                me->GetMotionMaster()->MoveTakeoff(11, OnyxiaMoveData[1].x + 1.0f, OnyxiaMoveData[1].y, OnyxiaMoveData[1].z, 12.0f);
+                me->GetMotionMaster()->MoveTakeoff(
+                    11, OnyxiaMoveData[1].x + 1.0f, OnyxiaMoveData[1].y, OnyxiaMoveData[1].z, 12.0f);
                 bManyWhelpsAvailable = true;
 
                 events.RescheduleEvent(EVENT_END_MANY_WHELPS_TIME, 10000);
@@ -401,7 +392,8 @@ public:
             {
                 Talk(SAY_PHASE_3_TRANS);
                 me->SendMeleeAttackStop(me->GetVictim());
-                me->GetMotionMaster()->MoveLand(13, OnyxiaMoveData[0].x + 1.0f, OnyxiaMoveData[0].y, OnyxiaMoveData[0].z, 12.0f);
+                me->GetMotionMaster()->MoveLand(
+                    13, OnyxiaMoveData[0].x + 1.0f, OnyxiaMoveData[0].y, OnyxiaMoveData[0].z, 12.0f);
                 DoResetThreatList();
                 break;
             }
@@ -426,37 +418,29 @@ public:
 
                 uint8 rand = urand(0, 99);
                 if (rand < 33)
-                {
                     events.ScheduleEvent(EVENT_PHASE_2_STEP_CW, 4000);
-                }
                 else if (rand < 66)
-                {
                     events.ScheduleEvent(EVENT_PHASE_2_STEP_ACW, 4000);
-                }
                 else
-                {
                     events.ScheduleEvent(EVENT_PHASE_2_STEP_ACROSS, 4000);
-                }
                 break;
             }
             case EVENT_PHASE_2_STEP_CW:
             {
                 uint8 newWP = CurrentWP + 1;
                 if (newWP > 8)
-                {
                     newWP = 1;
-                }
-                me->GetMotionMaster()->MovePoint(newWP, OnyxiaMoveData[newWP].x, OnyxiaMoveData[newWP].y, OnyxiaMoveData[newWP].z);
+                me->GetMotionMaster()->MovePoint(
+                    newWP, OnyxiaMoveData[newWP].x, OnyxiaMoveData[newWP].y, OnyxiaMoveData[newWP].z);
                 break;
             }
             case EVENT_PHASE_2_STEP_ACW:
             {
                 uint8 newWP = CurrentWP - 1;
                 if (newWP < 1)
-                {
                     newWP = 8;
-                }
-                me->GetMotionMaster()->MovePoint(newWP, OnyxiaMoveData[newWP].x, OnyxiaMoveData[newWP].y, OnyxiaMoveData[newWP].z);
+                me->GetMotionMaster()->MovePoint(
+                    newWP, OnyxiaMoveData[newWP].x, OnyxiaMoveData[newWP].y, OnyxiaMoveData[newWP].z);
                 break;
             }
             case EVENT_PHASE_2_STEP_ACROSS:
@@ -471,7 +455,8 @@ public:
             {
                 uint8 newWP = OnyxiaMoveData[CurrentWP].DestId;
                 me->SetSpeed(MOVE_RUN, 2.95f, false);
-                me->GetMotionMaster()->MovePoint(newWP, OnyxiaMoveData[newWP].x, OnyxiaMoveData[newWP].y, OnyxiaMoveData[newWP].z);
+                me->GetMotionMaster()->MovePoint(
+                    newWP, OnyxiaMoveData[newWP].x, OnyxiaMoveData[newWP].y, OnyxiaMoveData[newWP].z);
                 break;
             }
             case EVENT_START_PHASE_3:
@@ -485,9 +470,7 @@ public:
                 me->SetReactState(REACT_AGGRESSIVE);
 
                 if (Unit* target = SelectTarget(SelectTargetMethod::MaxThreat, 0, 0, false))
-                {
                     AttackStart(target);
-                }
 
                 DoCastAOE(SPELL_BELLOWINGROAR);
 
@@ -510,15 +493,13 @@ public:
             case EVENT_ERUPTION:
             {
                 if (Creature* trigger = me->SummonCreature(12758, *me, TEMPSUMMON_TIMED_DESPAWN, 1000))
-                {
                     trigger->CastSpell(trigger, 17731, false);
-                }
                 break;
             }
             case EVENT_SUMMON_WHELP:
             {
                 float angle = rand_norm() * 2 * M_PI;
-                float dist  = rand_norm() * 4.0f;
+                float dist = rand_norm() * 4.0f;
                 me->CastSpell(-33.18f + cos(angle) * dist, -258.80f + std::sin(angle) * dist, -89.0f, 17646, true);
                 me->CastSpell(-32.535f + cos(angle) * dist, -170.190f + std::sin(angle) * dist, -89.0f, 17646, true);
                 events.RepeatEvent(30000);
@@ -529,7 +510,9 @@ public:
 
     void SpellHitTarget(Unit* target, SpellInfo const* spell) override
     {
-        if (target->IsPlayer() && spell->DurationEntry && spell->DurationEntry->ID == 328 && spell->Effects[EFFECT_1].TargetA.GetTarget() == 1 && (spell->Effects[EFFECT_1].Amplitude == 50 || spell->Effects[EFFECT_1].Amplitude == 215)) // Deep Breath
+        if (target->IsPlayer() && spell->DurationEntry && spell->DurationEntry->ID == 328 &&
+            spell->Effects[EFFECT_1].TargetA.GetTarget() == 1 &&
+            (spell->Effects[EFFECT_1].Amplitude == 50 || spell->Effects[EFFECT_1].Amplitude == 215)) // Deep Breath
         {
             instance->SetData(DATA_DEEP_BREATH_FAILED, 1);
         }
@@ -537,18 +520,18 @@ public:
 
 private:
     uint8 Phase;
-    int8  CurrentWP;
+    int8 CurrentWP;
 
-    bool  whelpSpam;
+    bool whelpSpam;
     uint8 whelpCount;
     int32 whelpSpamTimer;
-    bool  bManyWhelpsAvailable;
+    bool bManyWhelpsAvailable;
 };
 
 struct npc_onyxian_lair_guard : public ScriptedAI
 {
 public:
-    npc_onyxian_lair_guard(Creature* creature) : ScriptedAI(creature) {}
+    npc_onyxian_lair_guard(Creature* creature) : ScriptedAI(creature) { }
 
     EventMap events;
 
@@ -562,16 +545,12 @@ public:
     void UpdateAI(uint32 diff) override
     {
         if (!UpdateVictim())
-        {
             return;
-        }
 
         events.Update(diff);
 
         if (me->HasUnitState(UNIT_STATE_CASTING))
-        {
             return;
-        }
 
         switch (events.ExecuteEvent())
         {
@@ -597,9 +576,7 @@ public:
             if (me->HasUnitFlag(UNIT_FLAG_DISARMED))
             {
                 if (me->HasAura(SPELL_OLG_IGNITEWEAPON))
-                {
                     me->RemoveAura(SPELL_OLG_IGNITEWEAPON);
-                }
             }
         }
 

@@ -19,17 +19,27 @@
 #include "Creature.h"
 #include "GameTime.h"
 #include "Map.h"
-#include "SpellInfo.h"
 #include "Player.h"
+#include "SpellInfo.h"
 #include "SpellMgr.h"
 #include "StringConvert.h"
 #include "Tokenize.h"
 #include "Unit.h"
 
-CharmInfo::CharmInfo(Unit* unit)
-    : _unit(unit), _CommandState(COMMAND_FOLLOW), _petnumber(0), _oldReactState(REACT_PASSIVE),
-      _isCommandAttack(false), _isCommandFollow(false), _isAtStay(false), _isFollowing(false), _isReturning(false),
-      _forcedSpellId(0), _stayX(0.0f), _stayY(0.0f), _stayZ(0.0f)
+CharmInfo::CharmInfo(Unit* unit) :
+    _unit(unit),
+    _CommandState(COMMAND_FOLLOW),
+    _petnumber(0),
+    _oldReactState(REACT_PASSIVE),
+    _isCommandAttack(false),
+    _isCommandFollow(false),
+    _isAtStay(false),
+    _isFollowing(false),
+    _isReturning(false),
+    _forcedSpellId(0),
+    _stayX(0.0f),
+    _stayY(0.0f),
+    _stayZ(0.0f)
 {
     for (uint8 i = 0; i < MAX_SPELL_CHARM; ++i)
         _charmspells[i].SetActionAndType(0, ACT_DISABLED);
@@ -99,7 +109,7 @@ void CharmInfo::InitCharmCreateSpells()
 {
     InitPetActionBar();
 
-    if (_unit->IsPlayer())                // charmed players don't have spells
+    if (_unit->IsPlayer()) // charmed players don't have spells
         return;
 
     for (uint32 i = 0; i < MAX_SPELL_CHARM; ++i)
@@ -126,16 +136,13 @@ void CharmInfo::InitCharmCreateSpells()
 
             if (!spellInfo->IsAutocastable())
                 newstate = ACT_PASSIVE;
-            else
+            else if (spellInfo->NeedsExplicitUnitTarget())
             {
-                if (spellInfo->NeedsExplicitUnitTarget())
-                {
-                    newstate = ACT_ENABLED;
-                    ToggleCreatureAutocast(spellInfo, true);
-                }
-                else
-                    newstate = ACT_DISABLED;
+                newstate = ACT_ENABLED;
+                ToggleCreatureAutocast(spellInfo, true);
             }
+            else
+                newstate = ACT_DISABLED;
 
             AddSpellToActionBar(spellInfo, newstate);
         }
@@ -180,25 +187,26 @@ bool CharmInfo::AddSpellToActionBar(SpellInfo const* spellInfo, ActiveStates new
             if (!spell_id && index == ACTION_BAR_INDEX_START)
                 SetActionBar(ACTION_BAR_INDEX_START, COMMAND_ATTACK, ACT_COMMAND);
             else
-                SetActionBar(i, spell_id, newstate == ACT_DECIDE ? autocastable ? ACT_DISABLED : ACT_PASSIVE : newstate);
+                SetActionBar(
+                    i, spell_id, newstate == ACT_DECIDE ? autocastable ? ACT_DISABLED : ACT_PASSIVE : newstate);
 
             if (_unit->GetCharmer() && _unit->GetCharmer()->IsPlayer())
             {
                 if (Creature* creature = _unit->ToCreature())
                 {
                     // Processing this packet needs to be delayed
-                    _unit->m_Events.AddEventAtOffset([creature, spell_id]()
+                    _unit->m_Events.AddEventAtOffset(
+                        [creature, spell_id]()
                     {
                         if (uint32 cooldown = creature->GetSpellCooldown(spell_id))
                         {
                             WorldPacket data;
                             creature->BuildCooldownPacket(data, SPELL_COOLDOWN_FLAG_NONE, spell_id, cooldown);
                             if (creature->GetCharmer() && creature->GetCharmer()->IsPlayer())
-                            {
                                 creature->GetCharmer()->ToPlayer()->SendDirectMessage(&data);
-                            }
                         }
-                    }, 500ms);
+                    },
+                        500ms);
                 }
             }
 
@@ -246,12 +254,12 @@ void CharmInfo::SetPetNumber(uint32 petnumber, bool statwindow)
         _unit->SetUInt32Value(UNIT_FIELD_PETNUMBER, 0);
 }
 
-void CharmInfo::LoadPetActionBar(const std::string& data)
+void CharmInfo::LoadPetActionBar(std::string const& data)
 {
     std::vector<std::string_view> tokens = Acore::Tokenize(data, ' ', false);
 
     if (tokens.size() != (ACTION_BAR_INDEX_END - ACTION_BAR_INDEX_START) * 2)
-        return;                                             // non critical, will reset to default
+        return; // non critical, will reset to default
 
     auto iter = tokens.begin();
     for (uint8 index = ACTION_BAR_INDEX_START; index < ACTION_BAR_INDEX_END; ++index)
@@ -260,9 +268,7 @@ void CharmInfo::LoadPetActionBar(const std::string& data)
         Optional<uint32> action = Acore::StringTo<uint32>(*(iter++));
 
         if (!type || !action)
-        {
             continue;
-        }
 
         PetActionBar[index].SetActionAndType(*action, static_cast<ActiveStates>(*type));
 
@@ -271,13 +277,9 @@ void CharmInfo::LoadPetActionBar(const std::string& data)
         {
             SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(PetActionBar[index].GetAction());
             if (!spellInfo)
-            {
                 SetActionBar(index, 0, ACT_PASSIVE);
-            }
             else if (!spellInfo->IsAutocastable())
-            {
                 SetActionBar(index, PetActionBar[index].GetAction(), ACT_PASSIVE);
-            }
         }
     }
 }
@@ -329,7 +331,8 @@ void CharmInfo::SaveStayPosition(bool atCurrentPos)
     {
         float z = INVALID_HEIGHT;
         _unit->UpdateAllowedPositionZ(_unit->GetPositionX(), _unit->GetPositionY(), z);
-        stayPos = G3D::Vector3(_unit->GetPositionX(), _unit->GetPositionY(), z != INVALID_HEIGHT ? z : _unit->GetPositionZ());
+        stayPos =
+            G3D::Vector3(_unit->GetPositionX(), _unit->GetPositionY(), z != INVALID_HEIGHT ? z : _unit->GetPositionZ());
     }
     else
         stayPos = _unit->movespline->FinalDestination();
@@ -397,7 +400,8 @@ bool CharmInfo::IsReturning()
 bool GlobalCooldownMgr::HasGlobalCooldown(SpellInfo const* spellInfo) const
 {
     GlobalCooldownList::const_iterator itr = m_GlobalCooldowns.find(spellInfo->StartRecoveryCategory);
-    return itr != m_GlobalCooldowns.end() && itr->second.duration && getMSTimeDiff(itr->second.cast_time, GameTime::GetGameTimeMS().count()) < itr->second.duration;
+    return itr != m_GlobalCooldowns.end() && itr->second.duration &&
+           getMSTimeDiff(itr->second.cast_time, GameTime::GetGameTimeMS().count()) < itr->second.duration;
 }
 
 void GlobalCooldownMgr::AddGlobalCooldown(SpellInfo const* spellInfo, uint32 gcd)

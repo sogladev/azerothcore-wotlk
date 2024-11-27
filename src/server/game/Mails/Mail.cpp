@@ -51,21 +51,23 @@ MailSender::MailSender(Object* sender, MailStationery stationery) : m_stationery
             break;
         default:
             m_messageType = MAIL_NORMAL;
-            m_senderId = 0;                                 // will show mail from not existed player
+            m_senderId = 0; // will show mail from not existed player
             LOG_ERROR("mail", "MailSender::MailSender - Mail have unexpected sender typeid ({})", sender->GetTypeId());
             break;
     }
 }
 
-MailSender::MailSender(CalendarEvent* sender)
-    : m_messageType(MAIL_CALENDAR), m_senderId(sender->GetEventId()), m_stationery(MAIL_STATIONERY_DEFAULT) // what stationery we should use here?
-{
-}
+MailSender::MailSender(CalendarEvent* sender) :
+    m_messageType(MAIL_CALENDAR),
+    m_senderId(sender->GetEventId()),
+    m_stationery(MAIL_STATIONERY_DEFAULT) // what stationery we should use here?
+{ }
 
-MailSender::MailSender(AuctionEntry* sender)
-    : m_messageType(MAIL_AUCTION), m_senderId(sender->GetHouseId()), m_stationery(MAIL_STATIONERY_AUCTION)
-{
-}
+MailSender::MailSender(AuctionEntry* sender) :
+    m_messageType(MAIL_AUCTION),
+    m_senderId(sender->GetHouseId()),
+    m_stationery(MAIL_STATIONERY_AUCTION)
+{ }
 
 MailSender::MailSender(Player* sender)
 {
@@ -81,11 +83,14 @@ MailSender::MailSender(uint32 senderEntry)
     m_stationery = MAIL_STATIONERY_DEFAULT;
 }
 
-MailReceiver::MailReceiver(Player* receiver) : m_receiver(receiver), m_receiver_lowguid(receiver->GetGUID().GetCounter())
-{
-}
+MailReceiver::MailReceiver(Player* receiver) :
+    m_receiver(receiver),
+    m_receiver_lowguid(receiver->GetGUID().GetCounter())
+{ }
 
-MailReceiver::MailReceiver(Player* receiver, ObjectGuid::LowType receiver_lowguid) : m_receiver(receiver), m_receiver_lowguid(receiver_lowguid)
+MailReceiver::MailReceiver(Player* receiver, ObjectGuid::LowType receiver_lowguid) :
+    m_receiver(receiver),
+    m_receiver_lowguid(receiver_lowguid)
 {
     ASSERT(!receiver || receiver->GetGUID().GetCounter() == receiver_lowguid);
 }
@@ -106,9 +111,7 @@ void MailDraft::prepareItems(Player* receiver, CharacterDatabaseTransaction tran
     // The mail sent after turning in the quest The Wrath of Neptulon contains 100g
     // Only quest in the game up to BFA which sends raw gold through mail. So would just be overkill to introduce a new column in the database.
     if (m_mailTemplateId == 123)
-    {
         m_money = 1000000;
-    }
 
     Loot mailLoot;
 
@@ -122,14 +125,14 @@ void MailDraft::prepareItems(Player* receiver, CharacterDatabaseTransaction tran
         {
             if (Item* item = Item::CreateItem(lootitem->itemid, lootitem->count, receiver))
             {
-                item->SaveToDB(trans);                           // save for prevent lost at next mail load, if send fail then item will deleted
+                item->SaveToDB(trans); // save for prevent lost at next mail load, if send fail then item will deleted
                 AddItem(item);
             }
         }
     }
 }
 
-void MailDraft::deleteIncludedItems(CharacterDatabaseTransaction trans, bool inDB /*= false*/ )
+void MailDraft::deleteIncludedItems(CharacterDatabaseTransaction trans, bool inDB /*= false*/)
 {
     for (MailItemMap::iterator mailItemIter = m_items.begin(); mailItemIter != m_items.end(); ++mailItemIter)
     {
@@ -148,7 +151,8 @@ void MailDraft::deleteIncludedItems(CharacterDatabaseTransaction trans, bool inD
     m_items.clear();
 }
 
-void MailDraft::SendReturnToSender(uint32 /*sender_acc*/, ObjectGuid::LowType sender_guid, ObjectGuid::LowType receiver_guid, CharacterDatabaseTransaction trans)
+void MailDraft::SendReturnToSender(uint32 /*sender_acc*/, ObjectGuid::LowType sender_guid,
+    ObjectGuid::LowType receiver_guid, CharacterDatabaseTransaction trans)
 {
     Player* receiver = ObjectAccessor::FindPlayerByLowGUID(receiver_guid);
 
@@ -167,7 +171,7 @@ void MailDraft::SendReturnToSender(uint32 /*sender_acc*/, ObjectGuid::LowType se
         for (MailItemMap::iterator mailItemIter = m_items.begin(); mailItemIter != m_items.end(); ++mailItemIter)
         {
             Item* item = mailItemIter->second;
-            item->SaveToDB(trans);                      // item not in inventory and can be save standalone
+            item->SaveToDB(trans); // item not in inventory and can be save standalone
             // owner in data will set at mail receive and item extracting
             CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ITEM_OWNER);
             stmt->SetData(0, receiver_guid);
@@ -179,12 +183,18 @@ void MailDraft::SendReturnToSender(uint32 /*sender_acc*/, ObjectGuid::LowType se
     // xinef: WowWiki: "Return mail arrives immediately."
 
     // will delete item or place to receiver mail list
-    SendMailTo(trans, MailReceiver(receiver, receiver_guid), MailSender(MAIL_NORMAL, sender_guid), MAIL_CHECK_MASK_RETURNED, 0);
+    SendMailTo(trans,
+        MailReceiver(receiver, receiver_guid),
+        MailSender(MAIL_NORMAL, sender_guid),
+        MAIL_CHECK_MASK_RETURNED,
+        0);
 }
 
-void MailDraft::SendMailTo(CharacterDatabaseTransaction trans, MailReceiver const& receiver, MailSender const& sender, MailCheckMask checked, uint32 deliver_delay, uint32 custom_expiration, bool deleteMailItemsFromDB, bool sendMail)
+void MailDraft::SendMailTo(CharacterDatabaseTransaction trans, MailReceiver const& receiver, MailSender const& sender,
+    MailCheckMask checked, uint32 deliver_delay, uint32 custom_expiration, bool deleteMailItemsFromDB, bool sendMail)
 {
-    sScriptMgr->OnBeforeMailDraftSendMailTo(this, receiver, sender, checked, deliver_delay, custom_expiration, deleteMailItemsFromDB, sendMail);
+    sScriptMgr->OnBeforeMailDraftSendMailTo(
+        this, receiver, sender, checked, deliver_delay, custom_expiration, deleteMailItemsFromDB, sendMail);
 
     if (deleteMailItemsFromDB) // can be changed in the hook
         deleteIncludedItems(trans, true);
@@ -192,10 +202,10 @@ void MailDraft::SendMailTo(CharacterDatabaseTransaction trans, MailReceiver cons
     if (!sendMail) // can be changed in the hook
         return;
 
-    Player* pReceiver = receiver.GetPlayer();               // can be nullptr
+    Player* pReceiver = receiver.GetPlayer(); // can be nullptr
 
     if (pReceiver)
-        prepareItems(pReceiver, trans);                            // generate mail template items
+        prepareItems(pReceiver, trans); // generate mail template items
 
     uint32 mailId = sObjectMgr->GenerateMailID();
 
@@ -208,7 +218,8 @@ void MailDraft::SendMailTo(CharacterDatabaseTransaction trans, MailReceiver cons
     if (sender.GetMailMessageType() == MAIL_AUCTION && m_items.empty() && !m_money)
         expire_delay = sWorld->getIntConfig(CONFIG_MAIL_DELIVERY_DELAY);
     // mail from battlemaster (rewardmarks) should last only one day
-    else if (sender.GetMailMessageType() == MAIL_CREATURE && sBattlegroundMgr->GetBattleMasterBG(sender.GetSenderId()) != BATTLEGROUND_TYPE_NONE)
+    else if (sender.GetMailMessageType() == MAIL_CREATURE &&
+             sBattlegroundMgr->GetBattleMasterBG(sender.GetSenderId()) != BATTLEGROUND_TYPE_NONE)
         expire_delay = DAY;
     // default case: expire time if COD 3 days, if no COD 30 days (or 90 days if sender is a game master)
     else if (m_COD)
@@ -226,7 +237,7 @@ void MailDraft::SendMailTo(CharacterDatabaseTransaction trans, MailReceiver cons
     // Add to DB
     uint8 index = 0;
     CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_MAIL);
-    stmt->SetData(  index, mailId);
+    stmt->SetData(index, mailId);
     stmt->SetData(++index, uint8(sender.GetMailMessageType()));
     stmt->SetData(++index, int8(sender.GetStationery()));
     stmt->SetData(++index, GetMailTemplateId());
@@ -281,15 +292,11 @@ void MailDraft::SendMailTo(CharacterDatabaseTransaction trans, MailReceiver cons
         m->checked = checked;
         m->state = MAIL_STATE_UNCHANGED;
 
-        pReceiver->AddMail(m);                           // to insert new mail to beginning of maillist
+        pReceiver->AddMail(m); // to insert new mail to beginning of maillist
 
         if (!m_items.empty())
-        {
             for (MailItemMap::iterator mailItemIter = m_items.begin(); mailItemIter != m_items.end(); ++mailItemIter)
-            {
                 pReceiver->AddMItem(mailItemIter->second);
-            }
-        }
     }
     else if (!m_items.empty())
     {

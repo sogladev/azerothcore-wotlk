@@ -21,32 +21,32 @@
 
 enum Spells
 {
-    SPELL_FRENZY                    = 8269,
-    SPELL_SUMMON_SPECTRAL_ASSASSIN  = 27249,
-    SPELL_SHADOW_BOLT_VOLLEY        = 27382,
-    SPELL_SHADOW_WRATH              = 27286
+    SPELL_FRENZY = 8269,
+    SPELL_SUMMON_SPECTRAL_ASSASSIN = 27249,
+    SPELL_SHADOW_BOLT_VOLLEY = 27382,
+    SPELL_SHADOW_WRATH = 27286
 };
 
 enum Says
 {
-    TALK_SUMMON                     = 0,
-    TALK_AGGRO                      = 1,
-    TALK_40_HP                      = 2,
-    TALK_15_HP                      = 3
+    TALK_SUMMON = 0,
+    TALK_AGGRO = 1,
+    TALK_40_HP = 2,
+    TALK_15_HP = 3
 };
 
 enum Events
 {
-    EVENT_SUMMON_SPECTRAL_ASSASSIN  = 1,
-    EVENT_SHADOW_BOLT_VOLLEY        = 2,
-    EVENT_SHADOW_WRATH              = 3,
-    EVENT_FIGHT                     = 4
+    EVENT_SUMMON_SPECTRAL_ASSASSIN = 1,
+    EVENT_SHADOW_BOLT_VOLLEY = 2,
+    EVENT_SHADOW_WRATH = 3,
+    EVENT_FIGHT = 4
 };
 
 enum EventPhase
 {
-    EVENT_PHASE_TALK                = 1,
-    EVENT_PHASE_FIGHT               = 2
+    EVENT_PHASE_TALK = 1,
+    EVENT_PHASE_FIGHT = 2
 };
 
 class boss_lord_valthalak : public CreatureScript
@@ -114,7 +114,8 @@ public:
             DoZoneInCombat();
         }
 
-        void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
+        void DamageTaken(
+            Unit* /*attacker*/, uint32& damage, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
         {
             if (!frenzy40 && me->HealthBelowPctDamaged(40, damage))
             {
@@ -139,16 +140,12 @@ public:
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim() && !events.IsInPhase(EVENT_PHASE_TALK))
-            {
                 return;
-            }
 
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             while (uint32 eventId = events.ExecuteEvent())
             {
@@ -176,6 +173,7 @@ public:
 
             DoMeleeAttackIfReady();
         }
+
     private:
         bool frenzy40;
         bool frenzy15;

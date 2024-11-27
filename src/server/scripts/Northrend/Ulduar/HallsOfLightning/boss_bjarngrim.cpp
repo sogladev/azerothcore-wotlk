@@ -23,87 +23,87 @@
 enum BjarngrimSpells
 {
     // DEFENSIVE STANCE
-    SPELL_DEFENSIVE_STANCE              = 53790,
-    SPELL_DEFENSIVE_AURA                = 41105,
-    SPELL_BJARNGRIM_REFLETION           = 36096,
-    SPELL_PUMMEL                        = 12555,
-    SPELL_KNOCK_AWAY                    = 52029,
-    SPELL_IRONFORM                      = 52022,
+    SPELL_DEFENSIVE_STANCE = 53790,
+    SPELL_DEFENSIVE_AURA = 41105,
+    SPELL_BJARNGRIM_REFLETION = 36096,
+    SPELL_PUMMEL = 12555,
+    SPELL_KNOCK_AWAY = 52029,
+    SPELL_IRONFORM = 52022,
 
     // BERSERKER STANCE
-    SPELL_BERSERKER_STANCE              = 53791,
-    SPELL_BERSERKER_AURA                = 41107,
-    SPELL_MORTAL_STRIKE                 = 16856,
-    SPELL_WHIRLWIND                     = 52027,
+    SPELL_BERSERKER_STANCE = 53791,
+    SPELL_BERSERKER_AURA = 41107,
+    SPELL_MORTAL_STRIKE = 16856,
+    SPELL_WHIRLWIND = 52027,
 
     // BATTLE STANCE
-    SPELL_BATTLE_STANCE                 = 53792,
-    SPELL_BATTLE_AURA                   = 41106,
-    SPELL_INTERCEPT                     = 58769,
-    SPELL_CLEAVE                        = 15284,
-    SPELL_SLAM                          = 52026,
+    SPELL_BATTLE_STANCE = 53792,
+    SPELL_BATTLE_AURA = 41106,
+    SPELL_INTERCEPT = 58769,
+    SPELL_CLEAVE = 15284,
+    SPELL_SLAM = 52026,
 
     //OTHER SPELLS
-    SPELL_CHARGE_UP                     = 52098,      // only used when starting walk from one platform to the other
-    SPELL_TEMPORARY_ELECTRICAL_CHARGE   = 52092,      // triggered part of above
+    SPELL_CHARGE_UP = 52098,                   // only used when starting walk from one platform to the other
+    SPELL_TEMPORARY_ELECTRICAL_CHARGE = 52092, // triggered part of above
 
     // STORMFORGED LIEUTENANT
-    SPELL_ARC_WELD                      = 59085,
-    SPELL_RENEW_STEEL_N                 = 52774,
-    SPELL_RENEW_STEEL_H                 = 59160,
+    SPELL_ARC_WELD = 59085,
+    SPELL_RENEW_STEEL_N = 52774,
+    SPELL_RENEW_STEEL_H = 59160,
 };
 
 enum BjarngrimOther
 {
     // Stances
-    STANCE_DEFENSIVE                    = 1,
-    STANCE_BERSERKER                    = 2,
-    STANCE_BATTLE                       = 3,
+    STANCE_DEFENSIVE = 1,
+    STANCE_BERSERKER = 2,
+    STANCE_BATTLE = 3,
 
     // NPCs
-    NPC_STORMFORGED_LIEUTENANT          = 29240,
+    NPC_STORMFORGED_LIEUTENANT = 29240,
 
     // Models
-    EQUIP_SWORD                         = 37871,
-    EQUIP_SHIELD                        = 35642,
-    EQUIP_MACE                          = 43623,
+    EQUIP_SWORD = 37871,
+    EQUIP_SHIELD = 35642,
+    EQUIP_MACE = 43623,
 };
 
 enum BjarngrimEvents
 {
-    EVENT_BJARNGRIM_CHANGE_STANCE       = 1,
+    EVENT_BJARNGRIM_CHANGE_STANCE = 1,
 
     // DEFENSIVE STANCE
-    EVENT_BJARNGRIM_REFLECTION          = 11,
-    EVENT_BJARNGRIM_PUMMEL              = 12,
-    EVENT_BJARNGRIM_KNOCK               = 13,
-    EVENT_BJARNGRIM_IRONFORM            = 14,
+    EVENT_BJARNGRIM_REFLECTION = 11,
+    EVENT_BJARNGRIM_PUMMEL = 12,
+    EVENT_BJARNGRIM_KNOCK = 13,
+    EVENT_BJARNGRIM_IRONFORM = 14,
 
     // BERSERKER STANCE
-    EVENT_BJARNGRIM_MORTAL_STRIKE       = 21,
-    EVENT_BJARNGRIM_WHIRLWIND           = 22,
+    EVENT_BJARNGRIM_MORTAL_STRIKE = 21,
+    EVENT_BJARNGRIM_WHIRLWIND = 22,
 
     // BATTLE STANCE
-    EVENT_BJARNGRIM_INTERCEPT           = 31,
-    EVENT_BJARNGRIM_CLEAVE              = 32,
-    EVENT_BJARNGRIM_SLAM                = 33,
+    EVENT_BJARNGRIM_INTERCEPT = 31,
+    EVENT_BJARNGRIM_CLEAVE = 32,
+    EVENT_BJARNGRIM_SLAM = 33,
 
     // STORMFORGED LIEUTENANT
-    EVENT_ARC_WELD                      = 41,
-    EVENT_RENEW_STEEL                   = 42,
+    EVENT_ARC_WELD = 41,
+    EVENT_RENEW_STEEL = 42,
 };
 
 enum Yells
 {
-    SAY_AGGRO                               = 0,
-    SAY_DEFENSIVE_STANCE                    = 1,
-    SAY_BATTLE_STANCE                       = 2,
-    SAY_BERSERKER_STANCE                    = 3,
-    SAY_SLAY                                = 4,
-    SAY_DEATH                               = 5,
-    EMOTE_DEFENSIVE_STANCE                  = 6,
-    EMOTE_BATTLE_STANCE                     = 7,
-    EMOTE_BERSEKER_STANCE                   = 8,
+    SAY_AGGRO = 0,
+    SAY_DEFENSIVE_STANCE = 1,
+    SAY_BATTLE_STANCE = 2,
+    SAY_BERSERKER_STANCE = 3,
+    SAY_SLAY = 4,
+    SAY_DEATH = 5,
+    EMOTE_DEFENSIVE_STANCE = 6,
+    EMOTE_BATTLE_STANCE = 7,
+    EMOTE_BERSEKER_STANCE = 8,
 };
 
 class boss_bjarngrim : public CreatureScript
@@ -152,7 +152,10 @@ public:
             summons.DespawnAll();
 
             for (uint8 i = 0; i < 2; ++i)
-                if (Creature* dwarf = me->SummonCreature(NPC_STORMFORGED_LIEUTENANT, me->GetPositionX() + urand(4, 12), me->GetPositionY() + urand(4, 12), me->GetPositionZ()))
+                if (Creature* dwarf = me->SummonCreature(NPC_STORMFORGED_LIEUTENANT,
+                        me->GetPositionX() + urand(4, 12),
+                        me->GetPositionY() + urand(4, 12),
+                        me->GetPositionZ()))
                 {
                     dwarf->GetMotionMaster()->MoveFollow(me, 3, rand_norm() * 2 * 3.14f);
                     summons.Summon(dwarf);
@@ -421,7 +424,8 @@ public:
                 case EVENT_RENEW_STEEL:
                     if (Creature* bjarngrim = ObjectAccessor::GetCreature(*me, BjarngrimGUID))
                         if (bjarngrim->IsAlive())
-                            me->CastSpell(bjarngrim, me->GetMap()->IsHeroic() ? SPELL_RENEW_STEEL_H : SPELL_RENEW_STEEL_N, true);
+                            me->CastSpell(
+                                bjarngrim, me->GetMap()->IsHeroic() ? SPELL_RENEW_STEEL_H : SPELL_RENEW_STEEL_N, true);
 
                     events.Repeat(10s, 14s);
                     break;

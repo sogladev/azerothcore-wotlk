@@ -23,113 +23,113 @@
 
 enum Orphans
 {
-    ORPHAN_ORACLE                           = 33533,
-    ORPHAN_WOLVAR                           = 33532,
-    ORPHAN_BLOOD_ELF                        = 22817,
-    ORPHAN_DRAENEI                          = 22818,
-    ORPHAN_HUMAN                            = 14305,
-    ORPHAN_ORCISH                           = 14444,
+    ORPHAN_ORACLE = 33533,
+    ORPHAN_WOLVAR = 33532,
+    ORPHAN_BLOOD_ELF = 22817,
+    ORPHAN_DRAENEI = 22818,
+    ORPHAN_HUMAN = 14305,
+    ORPHAN_ORCISH = 14444,
 };
 
 enum Texts
 {
-    TEXT_ORACLE_ORPHAN_1                    = 1,
-    TEXT_ORACLE_ORPHAN_2                    = 2,
-    TEXT_ORACLE_ORPHAN_3                    = 3,
-    TEXT_ORACLE_ORPHAN_4                    = 4,
-    TEXT_ORACLE_ORPHAN_5                    = 5,
-    TEXT_ORACLE_ORPHAN_6                    = 6,
-    TEXT_ORACLE_ORPHAN_7                    = 7,
-    TEXT_ORACLE_ORPHAN_8                    = 8,
-    TEXT_ORACLE_ORPHAN_9                    = 9,
-    TEXT_ORACLE_ORPHAN_10                   = 10,
-    TEXT_ORACLE_ORPHAN_11                   = 11,
-    TEXT_ORACLE_ORPHAN_12                   = 12,
-    TEXT_ORACLE_ORPHAN_13                   = 13,
-    TEXT_ORACLE_ORPHAN_14                   = 14,
+    TEXT_ORACLE_ORPHAN_1 = 1,
+    TEXT_ORACLE_ORPHAN_2 = 2,
+    TEXT_ORACLE_ORPHAN_3 = 3,
+    TEXT_ORACLE_ORPHAN_4 = 4,
+    TEXT_ORACLE_ORPHAN_5 = 5,
+    TEXT_ORACLE_ORPHAN_6 = 6,
+    TEXT_ORACLE_ORPHAN_7 = 7,
+    TEXT_ORACLE_ORPHAN_8 = 8,
+    TEXT_ORACLE_ORPHAN_9 = 9,
+    TEXT_ORACLE_ORPHAN_10 = 10,
+    TEXT_ORACLE_ORPHAN_11 = 11,
+    TEXT_ORACLE_ORPHAN_12 = 12,
+    TEXT_ORACLE_ORPHAN_13 = 13,
+    TEXT_ORACLE_ORPHAN_14 = 14,
 
-    TEXT_WOLVAR_ORPHAN_1                    = 1,
-    TEXT_WOLVAR_ORPHAN_2                    = 2,
-    TEXT_WOLVAR_ORPHAN_3                    = 3,
-    TEXT_WOLVAR_ORPHAN_4                    = 4,
-    TEXT_WOLVAR_ORPHAN_5                    = 5,
+    TEXT_WOLVAR_ORPHAN_1 = 1,
+    TEXT_WOLVAR_ORPHAN_2 = 2,
+    TEXT_WOLVAR_ORPHAN_3 = 3,
+    TEXT_WOLVAR_ORPHAN_4 = 4,
+    TEXT_WOLVAR_ORPHAN_5 = 5,
     // 6 - 9 used in Nesingwary script
-    TEXT_WOLVAR_ORPHAN_10                   = 10,
-    TEXT_WOLVAR_ORPHAN_11                   = 11,
-    TEXT_WOLVAR_ORPHAN_12                   = 12,
-    TEXT_WOLVAR_ORPHAN_13                   = 13,
+    TEXT_WOLVAR_ORPHAN_10 = 10,
+    TEXT_WOLVAR_ORPHAN_11 = 11,
+    TEXT_WOLVAR_ORPHAN_12 = 12,
+    TEXT_WOLVAR_ORPHAN_13 = 13,
 
-    TEXT_WINTERFIN_PLAYMATE_1               = 1,
-    TEXT_WINTERFIN_PLAYMATE_2               = 2,
+    TEXT_WINTERFIN_PLAYMATE_1 = 1,
+    TEXT_WINTERFIN_PLAYMATE_2 = 2,
 
-    TEXT_SNOWFALL_GLADE_PLAYMATE_1          = 1,
-    TEXT_SNOWFALL_GLADE_PLAYMATE_2          = 2,
+    TEXT_SNOWFALL_GLADE_PLAYMATE_1 = 1,
+    TEXT_SNOWFALL_GLADE_PLAYMATE_2 = 2,
 
-    TEXT_SOO_ROO_1                          = 1,
-    TEXT_ELDER_KEKEK_1                      = 1,
+    TEXT_SOO_ROO_1 = 1,
+    TEXT_ELDER_KEKEK_1 = 1,
 
-    TEXT_ALEXSTRASZA_2                      = 2,
-    TEXT_KRASUS_8                           = 8,
+    TEXT_ALEXSTRASZA_2 = 2,
+    TEXT_KRASUS_8 = 8,
 };
 
 enum Quests
 {
-    QUEST_PLAYMATE_WOLVAR                   = 13951,
-    QUEST_PLAYMATE_ORACLE                   = 13950,
-    QUEST_THE_BIGGEST_TREE_EVER             = 13929,
-    QUEST_THE_BRONZE_DRAGONSHRINE_ORACLE    = 13933,
-    QUEST_THE_BRONZE_DRAGONSHRINE_WOLVAR    = 13934,
-    QUEST_MEETING_A_GREAT_ONE               = 13956,
-    QUEST_THE_MIGHTY_HEMET_NESINGWARY       = 13957,
-    QUEST_DOWN_AT_THE_DOCKS                 = 910,
-    QUEST_GATEWAY_TO_THE_FRONTIER           = 911,
-    QUEST_BOUGHT_OF_ETERNALS                = 1479,
-    QUEST_SPOOKY_LIGHTHOUSE                 = 1687,
-    QUEST_STONEWROUGHT_DAM                  = 1558,
-    QUEST_DARK_PORTAL_H                     = 10951,
-    QUEST_DARK_PORTAL_A                     = 10952,
-    QUEST_LORDAERON_THRONE_ROOM             = 1800,
-    QUEST_AUCHINDOUN_AND_THE_RING           = 10950,
-    QUEST_TIME_TO_VISIT_THE_CAVERNS_H       = 10963,
-    QUEST_TIME_TO_VISIT_THE_CAVERNS_A       = 10962,
-    QUEST_THE_SEAT_OF_THE_NARUU             = 10956,
-    QUEST_CALL_ON_THE_FARSEER               = 10968,
-    QUEST_JHEEL_IS_AT_AERIS_LANDING         = 10954,
-    QUEST_HCHUU_AND_THE_MUSHROOM_PEOPLE     = 10945,
-    QUEST_VISIT_THE_THRONE_OF_ELEMENTS      = 10953,
-    QUEST_NOW_WHEN_I_GROW_UP                = 11975,
-    QUEST_HOME_OF_THE_BEAR_MEN              = 13930,
-    QUEST_THE_DRAGON_QUEEN_ORACLE           = 13954,
-    QUEST_THE_DRAGON_QUEEN_WOLVAR           = 13955,
+    QUEST_PLAYMATE_WOLVAR = 13951,
+    QUEST_PLAYMATE_ORACLE = 13950,
+    QUEST_THE_BIGGEST_TREE_EVER = 13929,
+    QUEST_THE_BRONZE_DRAGONSHRINE_ORACLE = 13933,
+    QUEST_THE_BRONZE_DRAGONSHRINE_WOLVAR = 13934,
+    QUEST_MEETING_A_GREAT_ONE = 13956,
+    QUEST_THE_MIGHTY_HEMET_NESINGWARY = 13957,
+    QUEST_DOWN_AT_THE_DOCKS = 910,
+    QUEST_GATEWAY_TO_THE_FRONTIER = 911,
+    QUEST_BOUGHT_OF_ETERNALS = 1479,
+    QUEST_SPOOKY_LIGHTHOUSE = 1687,
+    QUEST_STONEWROUGHT_DAM = 1558,
+    QUEST_DARK_PORTAL_H = 10951,
+    QUEST_DARK_PORTAL_A = 10952,
+    QUEST_LORDAERON_THRONE_ROOM = 1800,
+    QUEST_AUCHINDOUN_AND_THE_RING = 10950,
+    QUEST_TIME_TO_VISIT_THE_CAVERNS_H = 10963,
+    QUEST_TIME_TO_VISIT_THE_CAVERNS_A = 10962,
+    QUEST_THE_SEAT_OF_THE_NARUU = 10956,
+    QUEST_CALL_ON_THE_FARSEER = 10968,
+    QUEST_JHEEL_IS_AT_AERIS_LANDING = 10954,
+    QUEST_HCHUU_AND_THE_MUSHROOM_PEOPLE = 10945,
+    QUEST_VISIT_THE_THRONE_OF_ELEMENTS = 10953,
+    QUEST_NOW_WHEN_I_GROW_UP = 11975,
+    QUEST_HOME_OF_THE_BEAR_MEN = 13930,
+    QUEST_THE_DRAGON_QUEEN_ORACLE = 13954,
+    QUEST_THE_DRAGON_QUEEN_WOLVAR = 13955,
 };
 
 enum Areatriggers
 {
-    AT_DOWN_AT_THE_DOCKS                    = 3551,
-    AT_GATEWAY_TO_THE_FRONTIER              = 3549,
-    AT_LORDAERON_THRONE_ROOM                = 3547,
-    AT_BOUGHT_OF_ETERNALS                   = 3546,
-    AT_SPOOKY_LIGHTHOUSE                    = 3552,
-    AT_STONEWROUGHT_DAM                     = 3548,
-    AT_DARK_PORTAL                          = 4356,
+    AT_DOWN_AT_THE_DOCKS = 3551,
+    AT_GATEWAY_TO_THE_FRONTIER = 3549,
+    AT_LORDAERON_THRONE_ROOM = 3547,
+    AT_BOUGHT_OF_ETERNALS = 3546,
+    AT_SPOOKY_LIGHTHOUSE = 3552,
+    AT_STONEWROUGHT_DAM = 3548,
+    AT_DARK_PORTAL = 4356,
 
-    NPC_CAVERNS_OF_TIME_CW_TRIGGER          = 22872,
-    NPC_EXODAR_01_CW_TRIGGER                = 22851,
-    NPC_EXODAR_02_CW_TRIGGER                = 22905,
-    NPC_AERIS_LANDING_CW_TRIGGER            = 22838,
-    NPC_AUCHINDOUN_CW_TRIGGER               = 22831,
-    NPC_SPOREGGAR_CW_TRIGGER                = 22829,
-    NPC_THRONE_OF_ELEMENTS_CW_TRIGGER       = 22839,
-    NPC_SILVERMOON_01_CW_TRIGGER            = 22866,
-    NPC_KRASUS                              = 27990,
+    NPC_CAVERNS_OF_TIME_CW_TRIGGER = 22872,
+    NPC_EXODAR_01_CW_TRIGGER = 22851,
+    NPC_EXODAR_02_CW_TRIGGER = 22905,
+    NPC_AERIS_LANDING_CW_TRIGGER = 22838,
+    NPC_AUCHINDOUN_CW_TRIGGER = 22831,
+    NPC_SPOREGGAR_CW_TRIGGER = 22829,
+    NPC_THRONE_OF_ELEMENTS_CW_TRIGGER = 22839,
+    NPC_SILVERMOON_01_CW_TRIGGER = 22866,
+    NPC_KRASUS = 27990,
 };
 
 enum Misc
 {
-    SPELL_SNOWBALL                          = 21343,
-    SPELL_ORPHAN_OUT                        = 58818,
+    SPELL_SNOWBALL = 21343,
+    SPELL_ORPHAN_OUT = 58818,
 
-    DISPLAY_INVISIBLE                       = 11686,
+    DISPLAY_INVISIBLE = 11686,
 };
 
 ObjectGuid getOrphanGUID(Player* player, uint32 orphan)
@@ -188,7 +188,10 @@ struct npc_winterfin_playmate : public ScriptedAI
             switch (phase)
             {
                 case 1:
-                    orphan->GetMotionMaster()->MovePoint(0, me->GetPositionX() + cos(me->GetOrientation()) * 5, me->GetPositionY() + std::sin(me->GetOrientation()) * 5, me->GetPositionZ());
+                    orphan->GetMotionMaster()->MovePoint(0,
+                        me->GetPositionX() + cos(me->GetOrientation()) * 5,
+                        me->GetPositionY() + std::sin(me->GetOrientation()) * 5,
+                        me->GetPositionZ());
                     orphan->AI()->Talk(TEXT_ORACLE_ORPHAN_1);
                     timer = 3000;
                     break;
@@ -274,7 +277,10 @@ struct npc_snowfall_glade_playmate : public ScriptedAI
             switch (phase)
             {
                 case 1:
-                    orphan->GetMotionMaster()->MovePoint(0, me->GetPositionX() + cos(me->GetOrientation()) * 5, me->GetPositionY() + std::sin(me->GetOrientation()) * 5, me->GetPositionZ());
+                    orphan->GetMotionMaster()->MovePoint(0,
+                        me->GetPositionX() + cos(me->GetOrientation()) * 5,
+                        me->GetPositionY() + std::sin(me->GetOrientation()) * 5,
+                        me->GetPositionZ());
                     orphan->AI()->Talk(TEXT_WOLVAR_ORPHAN_1);
                     timer = 5000;
                     break;
@@ -363,7 +369,10 @@ struct npc_the_biggest_tree : public ScriptedAI
             switch (phase)
             {
                 case 1:
-                    orphan->GetMotionMaster()->MovePoint(0, me->GetPositionX() + cos(me->GetOrientation()) * 5, me->GetPositionY() + std::sin(me->GetOrientation()) * 5, me->GetPositionZ());
+                    orphan->GetMotionMaster()->MovePoint(0,
+                        me->GetPositionX() + cos(me->GetOrientation()) * 5,
+                        me->GetPositionY() + std::sin(me->GetOrientation()) * 5,
+                        me->GetPositionZ());
                     timer = 2000;
                     break;
                 case 2:
@@ -437,7 +446,10 @@ struct npc_high_oracle_soo_roo : public ScriptedAI
             switch (phase)
             {
                 case 1:
-                    orphan->GetMotionMaster()->MovePoint(0, me->GetPositionX() + cos(me->GetOrientation()) * 5, me->GetPositionY() + std::sin(me->GetOrientation()) * 5, me->GetPositionZ());
+                    orphan->GetMotionMaster()->MovePoint(0,
+                        me->GetPositionX() + cos(me->GetOrientation()) * 5,
+                        me->GetPositionY() + std::sin(me->GetOrientation()) * 5,
+                        me->GetPositionZ());
                     orphan->AI()->Talk(TEXT_ORACLE_ORPHAN_5);
                     timer = 3000;
                     break;
@@ -471,7 +483,7 @@ private:
 ######*/
 struct npc_elder_kekek : public ScriptedAI
 {
-    npc_elder_kekek(Creature* creature) : ScriptedAI(creature) {}
+    npc_elder_kekek(Creature* creature) : ScriptedAI(creature) { }
 
     void Reset() override
     {
@@ -513,7 +525,10 @@ struct npc_elder_kekek : public ScriptedAI
             switch (phase)
             {
                 case 1:
-                    orphan->GetMotionMaster()->MovePoint(0, me->GetPositionX() + cos(me->GetOrientation()) * 5, me->GetPositionY() + std::sin(me->GetOrientation()) * 5, me->GetPositionZ());
+                    orphan->GetMotionMaster()->MovePoint(0,
+                        me->GetPositionX() + cos(me->GetOrientation()) * 5,
+                        me->GetPositionY() + std::sin(me->GetOrientation()) * 5,
+                        me->GetPositionZ());
                     orphan->AI()->Talk(TEXT_WOLVAR_ORPHAN_4);
                     timer = 3000;
                     break;
@@ -547,7 +562,7 @@ private:
 ######*/
 struct npc_the_etymidian : public ScriptedAI
 {
-    npc_the_etymidian(Creature* creature) : ScriptedAI(creature) {}
+    npc_the_etymidian(Creature* creature) : ScriptedAI(creature) { }
 
     void Reset() override
     {
@@ -589,7 +604,10 @@ struct npc_the_etymidian : public ScriptedAI
             switch (phase)
             {
                 case 1:
-                    orphan->GetMotionMaster()->MovePoint(0, me->GetPositionX() + cos(me->GetOrientation()) * 5, me->GetPositionY() + std::sin(me->GetOrientation()) * 5, me->GetPositionZ());
+                    orphan->GetMotionMaster()->MovePoint(0,
+                        me->GetPositionX() + cos(me->GetOrientation()) * 5,
+                        me->GetPositionY() + std::sin(me->GetOrientation()) * 5,
+                        me->GetPositionZ());
                     orphan->AI()->Talk(TEXT_ORACLE_ORPHAN_7);
                     timer = 5000;
                     break;
@@ -630,7 +648,7 @@ private:
 ######*/
 struct npc_alexstraza_the_lifebinder : public ScriptedAI
 {
-    npc_alexstraza_the_lifebinder(Creature* creature) : ScriptedAI(creature) {}
+    npc_alexstraza_the_lifebinder(Creature* creature) : ScriptedAI(creature) { }
 
     void Reset() override
     {
@@ -698,7 +716,10 @@ struct npc_alexstraza_the_lifebinder : public ScriptedAI
             switch (phase)
             {
                 case 1:
-                    orphan->GetMotionMaster()->MovePoint(0, me->GetPositionX() + cos(me->GetOrientation()) * 5, me->GetPositionY() + std::sin(me->GetOrientation()) * 5, me->GetPositionZ());
+                    orphan->GetMotionMaster()->MovePoint(0,
+                        me->GetPositionX() + cos(me->GetOrientation()) * 5,
+                        me->GetPositionY() + std::sin(me->GetOrientation()) * 5,
+                        me->GetPositionZ());
                     orphan->AI()->Talk(TEXT_ORACLE_ORPHAN_11);
                     timer = 5000;
                     break;
@@ -729,7 +750,10 @@ struct npc_alexstraza_the_lifebinder : public ScriptedAI
                     Reset();
                     return;
                 case 7:
-                    orphan->GetMotionMaster()->MovePoint(0, me->GetPositionX() + cos(me->GetOrientation()) * 5, me->GetPositionY() + std::sin(me->GetOrientation()) * 5, me->GetPositionZ());
+                    orphan->GetMotionMaster()->MovePoint(0,
+                        me->GetPositionX() + cos(me->GetOrientation()) * 5,
+                        me->GetPositionY() + std::sin(me->GetOrientation()) * 5,
+                        me->GetPositionZ());
                     orphan->AI()->Talk(TEXT_WOLVAR_ORPHAN_11);
                     timer = 5000;
                     break;
@@ -822,7 +846,8 @@ public:
                 break;
         }
 
-        if (questId && orphanId && getOrphanGUID(player, orphanId) && player->GetQuestStatus(questId) == QUEST_STATUS_INCOMPLETE)
+        if (questId && orphanId && getOrphanGUID(player, orphanId) &&
+            player->GetQuestStatus(questId) == QUEST_STATUS_INCOMPLETE)
             player->AreaExploredOrEventHappens(questId);
 
         return true;
@@ -835,7 +860,7 @@ public:
 class npc_cw_area_trigger : public CreatureScript
 {
 public:
-    npc_cw_area_trigger() : CreatureScript("npc_cw_area_trigger") {}
+    npc_cw_area_trigger() : CreatureScript("npc_cw_area_trigger") { }
 
     struct npc_cw_area_triggerAI : public ScriptedAI
     {
@@ -855,7 +880,8 @@ public:
                         switch (me->GetEntry())
                         {
                             case NPC_CAVERNS_OF_TIME_CW_TRIGGER:
-                                questId = player->GetTeamId() == TEAM_ALLIANCE ? QUEST_TIME_TO_VISIT_THE_CAVERNS_A : QUEST_TIME_TO_VISIT_THE_CAVERNS_H;
+                                questId = player->GetTeamId() == TEAM_ALLIANCE ? QUEST_TIME_TO_VISIT_THE_CAVERNS_A
+                                                                               : QUEST_TIME_TO_VISIT_THE_CAVERNS_H;
                                 orphanId = player->GetTeamId() == TEAM_ALLIANCE ? ORPHAN_DRAENEI : ORPHAN_BLOOD_ELF;
                                 break;
                             case NPC_EXODAR_01_CW_TRIGGER:
@@ -883,7 +909,8 @@ public:
                                 orphanId = ORPHAN_BLOOD_ELF;
                                 break;
                             case NPC_SILVERMOON_01_CW_TRIGGER:
-                                if (player->GetQuestStatus(QUEST_NOW_WHEN_I_GROW_UP) == QUEST_STATUS_INCOMPLETE && getOrphanGUID(player, ORPHAN_BLOOD_ELF))
+                                if (player->GetQuestStatus(QUEST_NOW_WHEN_I_GROW_UP) == QUEST_STATUS_INCOMPLETE &&
+                                    getOrphanGUID(player, ORPHAN_BLOOD_ELF))
                                 {
                                     player->AreaExploredOrEventHappens(QUEST_NOW_WHEN_I_GROW_UP);
                                     if (player->GetQuestStatus(QUEST_NOW_WHEN_I_GROW_UP) == QUEST_STATUS_COMPLETE)
@@ -913,7 +940,8 @@ public:
                                 }
                                 break;
                         }
-                        if (questId && orphanId && getOrphanGUID(player, orphanId) && player->GetQuestStatus(questId) == QUEST_STATUS_INCOMPLETE)
+                        if (questId && orphanId && getOrphanGUID(player, orphanId) &&
+                            player->GetQuestStatus(questId) == QUEST_STATUS_INCOMPLETE)
                             player->AreaExploredOrEventHappens(questId);
                     }
         }
@@ -931,7 +959,7 @@ public:
 class npc_grizzlemaw_cw_trigger : public CreatureScript
 {
 public:
-    npc_grizzlemaw_cw_trigger() : CreatureScript("npc_grizzlemaw_cw_trigger") {}
+    npc_grizzlemaw_cw_trigger() : CreatureScript("npc_grizzlemaw_cw_trigger") { }
 
     struct npc_grizzlemaw_cw_triggerAI : public ScriptedAI
     {

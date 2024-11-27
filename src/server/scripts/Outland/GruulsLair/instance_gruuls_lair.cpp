@@ -19,26 +19,23 @@
 #include "InstanceScript.h"
 #include "gruuls_lair.h"
 
-DoorData const doorData[] =
-{
-    { GO_MAULGAR_DOOR,  DATA_MAULGAR,   DOOR_TYPE_PASSAGE },
-    { GO_GRUUL_DOOR,    DATA_GRUUL,     DOOR_TYPE_ROOM    },
-    { 0,                0,              DOOR_TYPE_ROOM    } // END
+DoorData const doorData[] = {
+    {GO_MAULGAR_DOOR, DATA_MAULGAR, DOOR_TYPE_PASSAGE},
+    {GO_GRUUL_DOOR,   DATA_GRUUL,   DOOR_TYPE_ROOM   },
+    {0,               0,            DOOR_TYPE_ROOM   }  // END
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_MAULGAR, DATA_MAULGAR },
-    { 0,           0            }
+ObjectData const creatureData[] = {
+    {NPC_MAULGAR, DATA_MAULGAR},
+    {0,           0           }
 };
 
-MinionData const minionData[] =
-{
-    { NPC_MAULGAR,              DATA_MAULGAR },
-    { NPC_KROSH_FIREHAND,       DATA_MAULGAR },
-    { NPC_OLM_THE_SUMMONER,     DATA_MAULGAR },
-    { NPC_KIGGLER_THE_CRAZED,   DATA_MAULGAR },
-    { NPC_BLINDEYE_THE_SEER,    DATA_MAULGAR }
+MinionData const minionData[] = {
+    {NPC_MAULGAR,            DATA_MAULGAR},
+    {NPC_KROSH_FIREHAND,     DATA_MAULGAR},
+    {NPC_OLM_THE_SUMMONER,   DATA_MAULGAR},
+    {NPC_KIGGLER_THE_CRAZED, DATA_MAULGAR},
+    {NPC_BLINDEYE_THE_SEER,  DATA_MAULGAR}
 };
 
 class instance_gruuls_lair : public InstanceMapScript
@@ -69,14 +66,12 @@ public:
             return true;
         }
 
-        void SetData(uint32 type, uint32  /*id*/) override
+        void SetData(uint32 type, uint32 /*id*/) override
         {
             if (type == DATA_ADDS_KILLED)
             {
                 if (Creature* maulgar = GetCreature(DATA_MAULGAR))
-                {
                     maulgar->AI()->DoAction(++_addsKilled);
-                }
             }
         }
 

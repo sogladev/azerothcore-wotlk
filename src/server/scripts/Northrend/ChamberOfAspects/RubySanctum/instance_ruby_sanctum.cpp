@@ -19,29 +19,29 @@
 #include "InstanceMapScript.h"
 #include "InstanceScript.h"
 #include "Player.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "WorldPacket.h"
 #include "ruby_sanctum.h"
-#include "SpellScript.h"
 
-BossBoundaryData const boundaries =
-{
-    { DATA_GENERAL_ZARITHRIAN, new EllipseBoundary(Position(3013.409f, 529.492f), 45.0, 100.0) },
-    { DATA_HALION, new CircleBoundary(Position(3156.037f, 533.2656f), 48.5) }
+BossBoundaryData const boundaries = {
+    {DATA_GENERAL_ZARITHRIAN, new EllipseBoundary(Position(3013.409f, 529.492f), 45.0, 100.0)},
+    {DATA_HALION, new CircleBoundary(Position(3156.037f, 533.2656f), 48.5)}
 };
 
-DoorData const doorData[] =
-{
-    {GO_FIRE_FIELD,     DATA_BALTHARUS_THE_WARBORN, DOOR_TYPE_PASSAGE },
-    {GO_FLAME_WALLS,    DATA_SAVIANA_RAGEFIRE,      DOOR_TYPE_PASSAGE },
-    {GO_FLAME_WALLS,    DATA_BALTHARUS_THE_WARBORN, DOOR_TYPE_PASSAGE },
-    {GO_FLAME_WALLS,    DATA_GENERAL_ZARITHRIAN,    DOOR_TYPE_ROOM,   },
-    {GO_BURNING_TREE_4, DATA_HALION_INTRO1,         DOOR_TYPE_PASSAGE },
-    {GO_BURNING_TREE_3, DATA_HALION_INTRO1,         DOOR_TYPE_PASSAGE },
-    {GO_BURNING_TREE_2, DATA_HALION_INTRO2,         DOOR_TYPE_PASSAGE },
-    {GO_BURNING_TREE_1, DATA_HALION_INTRO2,         DOOR_TYPE_PASSAGE },
-    {GO_TWILIGHT_FLAME_RING, DATA_HALION,           DOOR_TYPE_ROOM    },
-    {0,                 0,                          DOOR_TYPE_ROOM    },
+DoorData const doorData[] = {
+    {GO_FIRE_FIELD, DATA_BALTHARUS_THE_WARBORN, DOOR_TYPE_PASSAGE},
+    {GO_FLAME_WALLS, DATA_SAVIANA_RAGEFIRE, DOOR_TYPE_PASSAGE},
+    {GO_FLAME_WALLS, DATA_BALTHARUS_THE_WARBORN, DOOR_TYPE_PASSAGE},
+    {
+     GO_FLAME_WALLS, DATA_GENERAL_ZARITHRIAN,
+     DOOR_TYPE_ROOM, },
+    {GO_BURNING_TREE_4, DATA_HALION_INTRO1, DOOR_TYPE_PASSAGE},
+    {GO_BURNING_TREE_3, DATA_HALION_INTRO1, DOOR_TYPE_PASSAGE},
+    {GO_BURNING_TREE_2, DATA_HALION_INTRO2, DOOR_TYPE_PASSAGE},
+    {GO_BURNING_TREE_1, DATA_HALION_INTRO2, DOOR_TYPE_PASSAGE},
+    {GO_TWILIGHT_FLAME_RING, DATA_HALION, DOOR_TYPE_ROOM},
+    {0, 0, DOOR_TYPE_ROOM},
 };
 
 class instance_ruby_sanctum : public InstanceMapScript
@@ -250,7 +250,7 @@ class spell_ruby_sanctum_rallying_shout : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_RALLY });
+        return ValidateSpellInfo({SPELL_RALLY});
     }
 
     void CountAllies()

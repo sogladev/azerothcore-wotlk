@@ -58,20 +58,21 @@ public:
                     break;
             }
 
-            if (creature->IsAlive() && creature->GetSpawnId() && creature->GetCreatureType() == CREATURE_TYPE_DRAGONKIN && creature->GetEntry() != NPC_SHADE_OF_ERANIKUS)
+            if (creature->IsAlive() && creature->GetSpawnId() &&
+                creature->GetCreatureType() == CREATURE_TYPE_DRAGONKIN && creature->GetEntry() != NPC_SHADE_OF_ERANIKUS)
                 _dragonkinList.push_back(creature->GetGUID());
         }
 
         void OnUnitDeath(Unit* unit) override
         {
-            if (unit->IsCreature() && unit->GetCreatureType() == CREATURE_TYPE_DRAGONKIN && unit->GetEntry() != NPC_SHADE_OF_ERANIKUS)
+            if (unit->IsCreature() && unit->GetCreatureType() == CREATURE_TYPE_DRAGONKIN &&
+                unit->GetEntry() != NPC_SHADE_OF_ERANIKUS)
                 _dragonkinList.remove(unit->GetGUID());
             if (unit->GetEntry() == NPC_JAMMAL_AN_THE_PROPHET)
             {
                 if (Creature* cr = instance->GetCreature(_shadeOfEranikusGUID))
                     cr->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
             }
-
         }
 
         void OnGameObjectCreate(GameObject* gameobject) override
@@ -86,13 +87,23 @@ public:
                 case GO_ATALAI_STATUE6:
                     if (gameobject->GetEntry() < GO_ATALAI_STATUE1 + _statuePhase)
                     {
-                        instance->SummonGameObject(GO_ATALAI_LIGHT2, gameobject->GetPositionX(), gameobject->GetPositionY(), gameobject->GetPositionZ(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+                        instance->SummonGameObject(GO_ATALAI_LIGHT2,
+                            gameobject->GetPositionX(),
+                            gameobject->GetPositionY(),
+                            gameobject->GetPositionZ(),
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f);
                         gameobject->ReplaceAllGameObjectFlags(GO_FLAG_NOT_SELECTABLE);
                     }
                     break;
                 case GO_ATALAI_IDOL:
                     if (_statuePhase == MAX_STATUE_PHASE)
-                        gameobject->SummonGameObject(GO_IDOL_OF_HAKKAR, -480.08f, 94.29f, -189.72f, 1.571f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
+                        gameobject->SummonGameObject(
+                            GO_IDOL_OF_HAKKAR, -480.08f, 94.29f, -189.72f, 1.571f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
                     break;
                 case GO_IDOL_OF_HAKKAR:
                     if (_encounters[TYPE_ATAL_ALARION] == DONE)
@@ -166,7 +177,8 @@ public:
                 case DATA_STATUES:
                     ++_statuePhase;
                     if (_statuePhase == MAX_STATUE_PHASE)
-                        instance->SummonGameObject(GO_IDOL_OF_HAKKAR, -480.08f, 94.29f, -189.72f, 1.571f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
+                        instance->SummonGameObject(
+                            GO_IDOL_OF_HAKKAR, -480.08f, 94.29f, -189.72f, 1.571f, 0.0f, 0.0f, 0.0f, 0.0f, 0);
                     break;
             }
         }
@@ -182,11 +194,8 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << _encounters[0] << ' '
-                << _encounters[1] << ' '
-                << _encounters[2] << ' '
-                << _statuePhase << ' '
-                << _defendersKilled;
+            data << _encounters[0] << ' ' << _encounters[1] << ' ' << _encounters[2] << ' ' << _statuePhase << ' '
+                 << _defendersKilled;
         }
 
     private:
@@ -209,7 +218,7 @@ public:
 
 enum MalfurionMisc
 {
-    QUEST_ERANIKUS_TYRANT_OF_DREAMS   = 8733,
+    QUEST_ERANIKUS_TYRANT_OF_DREAMS = 8733,
     QUEST_THE_CHARGE_OF_DRAGONFLIGHTS = 8555,
 };
 
@@ -218,11 +227,18 @@ class at_malfurion_stormrage : public AreaTriggerScript
 public:
     at_malfurion_stormrage() : AreaTriggerScript("at_malfurion_stormrage") { }
 
-    bool OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (player->GetInstanceScript() && !player->FindNearestCreature(NPC_MALFURION_STORMRAGE, 15.0f) &&
-                player->GetQuestStatus(QUEST_THE_CHARGE_OF_DRAGONFLIGHTS) == QUEST_STATUS_REWARDED && player->GetQuestStatus(QUEST_ERANIKUS_TYRANT_OF_DREAMS) != QUEST_STATUS_REWARDED)
-            player->SummonCreature(NPC_MALFURION_STORMRAGE, player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), -1.52f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 100000);
+            player->GetQuestStatus(QUEST_THE_CHARGE_OF_DRAGONFLIGHTS) == QUEST_STATUS_REWARDED &&
+            player->GetQuestStatus(QUEST_ERANIKUS_TYRANT_OF_DREAMS) != QUEST_STATUS_REWARDED)
+            player->SummonCreature(NPC_MALFURION_STORMRAGE,
+                player->GetPositionX(),
+                player->GetPositionY(),
+                player->GetPositionZ(),
+                -1.52f,
+                TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,
+                100000);
         return false;
     }
 };
@@ -233,7 +249,7 @@ class spell_temple_of_atal_hakkar_hex_of_jammal_an_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ HEX_OF_JAMMAL_AN, HEX_OF_JAMMAL_AN_CHARM });
+        return ValidateSpellInfo({HEX_OF_JAMMAL_AN, HEX_OF_JAMMAL_AN_CHARM});
     }
 
     void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -248,7 +264,10 @@ class spell_temple_of_atal_hakkar_hex_of_jammal_an_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_temple_of_atal_hakkar_hex_of_jammal_an_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_temple_of_atal_hakkar_hex_of_jammal_an_aura::OnRemove,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -274,7 +293,8 @@ class spell_temple_of_atal_hakkar_awaken_the_soulflayer : public SpellScript
 
     void Register() override
     {
-        OnEffectHit += SpellEffectFn(spell_temple_of_atal_hakkar_awaken_the_soulflayer::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
+        OnEffectHit += SpellEffectFn(
+            spell_temple_of_atal_hakkar_awaken_the_soulflayer::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
     }
 };
 

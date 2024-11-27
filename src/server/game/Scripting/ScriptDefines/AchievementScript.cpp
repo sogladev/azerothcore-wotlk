@@ -24,28 +24,38 @@ void ScriptMgr::SetRealmCompleted(AchievementEntry const* achievement)
     CALL_ENABLED_HOOKS(AchievementScript, ACHIEVEMENTHOOK_SET_REALM_COMPLETED, script->SetRealmCompleted(achievement));
 }
 
-bool ScriptMgr::IsCompletedCriteria(AchievementMgr* mgr, AchievementCriteriaEntry const* achievementCriteria, AchievementEntry const* achievement, CriteriaProgress const* progress)
+bool ScriptMgr::IsCompletedCriteria(AchievementMgr* mgr, AchievementCriteriaEntry const* achievementCriteria,
+    AchievementEntry const* achievement, CriteriaProgress const* progress)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(AchievementScript, ACHIEVEMENTHOOK_IS_COMPLETED_CRITERIA, !script->IsCompletedCriteria(mgr, achievementCriteria, achievement, progress));
+    CALL_ENABLED_BOOLEAN_HOOKS(AchievementScript,
+        ACHIEVEMENTHOOK_IS_COMPLETED_CRITERIA,
+        !script->IsCompletedCriteria(mgr, achievementCriteria, achievement, progress));
 }
 
-bool ScriptMgr::IsRealmCompleted(AchievementGlobalMgr const* globalmgr, AchievementEntry const* achievement, SystemTimePoint completionTime)
+bool ScriptMgr::IsRealmCompleted(
+    AchievementGlobalMgr const* globalmgr, AchievementEntry const* achievement, SystemTimePoint completionTime)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(AchievementScript, ACHIEVEMENTHOOK_IS_REALM_COMPLETED, !script->IsRealmCompleted(globalmgr, achievement, completionTime));
+    CALL_ENABLED_BOOLEAN_HOOKS(AchievementScript,
+        ACHIEVEMENTHOOK_IS_REALM_COMPLETED,
+        !script->IsRealmCompleted(globalmgr, achievement, completionTime));
 }
 
-void ScriptMgr::OnBeforeCheckCriteria(AchievementMgr* mgr, std::list<AchievementCriteriaEntry const*> const* achievementCriteriaList)
+void ScriptMgr::OnBeforeCheckCriteria(
+    AchievementMgr* mgr, std::list<AchievementCriteriaEntry const*> const* achievementCriteriaList)
 {
-    CALL_ENABLED_HOOKS(AchievementScript, ACHIEVEMENTHOOK_ON_BEFORE_CHECK_CRITERIA, script->OnBeforeCheckCriteria(mgr, achievementCriteriaList));
+    CALL_ENABLED_HOOKS(AchievementScript,
+        ACHIEVEMENTHOOK_ON_BEFORE_CHECK_CRITERIA,
+        script->OnBeforeCheckCriteria(mgr, achievementCriteriaList));
 }
 
 bool ScriptMgr::CanCheckCriteria(AchievementMgr* mgr, AchievementCriteriaEntry const* achievementCriteria)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(AchievementScript, ACHIEVEMENTHOOK_CAN_CHECK_CRITERIA, !script->CanCheckCriteria(mgr, achievementCriteria));
+    CALL_ENABLED_BOOLEAN_HOOKS(
+        AchievementScript, ACHIEVEMENTHOOK_CAN_CHECK_CRITERIA, !script->CanCheckCriteria(mgr, achievementCriteria));
 }
 
-AchievementScript::AchievementScript(const char* name, std::vector<uint16> enabledHooks)
-    : ScriptObject(name, ACHIEVEMENTHOOK_END)
+AchievementScript::AchievementScript(char const* name, std::vector<uint16> enabledHooks) :
+    ScriptObject(name, ACHIEVEMENTHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

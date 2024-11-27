@@ -21,22 +21,22 @@
 
 enum Spells
 {
-    SPELL_PARALYZING    = 3609,
-    SPELL_BANEFUL       = 15475,
+    SPELL_PARALYZING = 3609,
+    SPELL_BANEFUL = 15475,
     SPELL_WEB_EXPLOSION = 15474
 };
 
 enum Timers
 {
-    TIMER_PARALYZING     = 20000,
-    TIMER_BANEFUL        = 24000,
-    TIMER_WEB_EXPLOSION  = 20000
+    TIMER_PARALYZING = 20000,
+    TIMER_BANEFUL = 24000,
+    TIMER_WEB_EXPLOSION = 20000
 };
 
 class boss_hedrum : public CreatureScript
 {
 public:
-    boss_hedrum() : CreatureScript("boss_hedrum") {}
+    boss_hedrum() : CreatureScript("boss_hedrum") { }
 
     CreatureAI* GetAI(Creature* creature) const override
     {
@@ -45,50 +45,45 @@ public:
 
     struct boss_hedrumAI : public BossAI
     {
-        boss_hedrumAI(Creature* creature) : BossAI(creature, DATA_HEDRUM) {}
+        boss_hedrumAI(Creature* creature) : BossAI(creature, DATA_HEDRUM) { }
 
         void JustEngagedWith(Unit* /*who*/) override
         {
             _JustEngagedWith();
-            events.ScheduleEvent(SPELL_PARALYZING, 0.2 * (int) TIMER_PARALYZING);
-            events.ScheduleEvent(SPELL_BANEFUL, 0.2 * (int) TIMER_BANEFUL);
-            events.ScheduleEvent(SPELL_WEB_EXPLOSION, 0.2 * (int) TIMER_WEB_EXPLOSION);
+            events.ScheduleEvent(SPELL_PARALYZING, 0.2 * (int)TIMER_PARALYZING);
+            events.ScheduleEvent(SPELL_BANEFUL, 0.2 * (int)TIMER_BANEFUL);
+            events.ScheduleEvent(SPELL_WEB_EXPLOSION, 0.2 * (int)TIMER_WEB_EXPLOSION);
         }
 
         void UpdateAI(uint32 diff) override
         {
             // Return since we have no target
             if (!UpdateVictim())
-            {
                 return;
-            }
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
             while (uint32 eventId = events.ExecuteEvent())
             {
                 switch (eventId)
                 {
-                case SPELL_PARALYZING:
-                    DoCastVictim(SPELL_PARALYZING);
-                    events.ScheduleEvent(SPELL_PARALYZING, urand(TIMER_PARALYZING - 2000, TIMER_PARALYZING + 2000));
-                    break;
-                case SPELL_BANEFUL:
-                    DoCastVictim(SPELL_BANEFUL);
-                    events.ScheduleEvent(SPELL_BANEFUL, urand(TIMER_BANEFUL - 2000, TIMER_BANEFUL + 2000));
-                    break;
-                case SPELL_WEB_EXPLOSION:
-                    if (me->GetDistance2d(me->GetVictim()) < 100.0f)
-                    {
-                        DoCast(SPELL_WEB_EXPLOSION);
-                    }
-                    events.ScheduleEvent(SPELL_WEB_EXPLOSION, urand(TIMER_WEB_EXPLOSION - 2000, TIMER_WEB_EXPLOSION + 2000));
-                    break;
-                default:
-                    break;
+                    case SPELL_PARALYZING:
+                        DoCastVictim(SPELL_PARALYZING);
+                        events.ScheduleEvent(SPELL_PARALYZING, urand(TIMER_PARALYZING - 2000, TIMER_PARALYZING + 2000));
+                        break;
+                    case SPELL_BANEFUL:
+                        DoCastVictim(SPELL_BANEFUL);
+                        events.ScheduleEvent(SPELL_BANEFUL, urand(TIMER_BANEFUL - 2000, TIMER_BANEFUL + 2000));
+                        break;
+                    case SPELL_WEB_EXPLOSION:
+                        if (me->GetDistance2d(me->GetVictim()) < 100.0f)
+                            DoCast(SPELL_WEB_EXPLOSION);
+                        events.ScheduleEvent(
+                            SPELL_WEB_EXPLOSION, urand(TIMER_WEB_EXPLOSION - 2000, TIMER_WEB_EXPLOSION + 2000));
+                        break;
+                    default:
+                        break;
                 }
             }
             DoMeleeAttackIfReady();

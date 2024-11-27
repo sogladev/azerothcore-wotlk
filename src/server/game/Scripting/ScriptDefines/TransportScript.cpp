@@ -25,9 +25,7 @@ void ScriptMgr::OnAddPassenger(Transport* transport, Player* player)
     ASSERT(player);
 
     if (auto tempScript = ScriptRegistry<TransportScript>::GetScriptById(transport->GetScriptId()))
-    {
         tempScript->OnAddPassenger(transport, player);
-    }
 }
 
 void ScriptMgr::OnAddCreaturePassenger(Transport* transport, Creature* creature)
@@ -36,9 +34,7 @@ void ScriptMgr::OnAddCreaturePassenger(Transport* transport, Creature* creature)
     ASSERT(creature);
 
     if (auto tempScript = ScriptRegistry<TransportScript>::GetScriptById(transport->GetScriptId()))
-    {
         tempScript->OnAddCreaturePassenger(transport, creature);
-    }
 }
 
 void ScriptMgr::OnRemovePassenger(Transport* transport, Player* player)
@@ -47,9 +43,7 @@ void ScriptMgr::OnRemovePassenger(Transport* transport, Player* player)
     ASSERT(player);
 
     if (auto tempScript = ScriptRegistry<TransportScript>::GetScriptById(transport->GetScriptId()))
-    {
         tempScript->OnRemovePassenger(transport, player);
-    }
 }
 
 void ScriptMgr::OnTransportUpdate(Transport* transport, uint32 diff)
@@ -57,21 +51,16 @@ void ScriptMgr::OnTransportUpdate(Transport* transport, uint32 diff)
     ASSERT(transport);
 
     if (auto tempScript = ScriptRegistry<TransportScript>::GetScriptById(transport->GetScriptId()))
-    {
         tempScript->OnUpdate(transport, diff);
-    }
 }
 
 void ScriptMgr::OnRelocate(Transport* transport, uint32 waypointId, uint32 mapId, float x, float y, float z)
 {
     if (auto tempScript = ScriptRegistry<TransportScript>::GetScriptById(transport->GetScriptId()))
-    {
         tempScript->OnRelocate(transport, waypointId, mapId, x, y, z);
-    }
 }
 
-TransportScript::TransportScript(const char* name)
-    : ScriptObject(name)
+TransportScript::TransportScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<TransportScript>::AddScript(this);
 }

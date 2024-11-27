@@ -67,7 +67,8 @@ ObjectGuid::LowType GroupMgr::GenerateGroupId()
     ObjectGuid::LowType newGroupId = _nextGroupId;
 
     // find the lowest available id starting from the current _nextGroupId
-    while (_nextGroupId < 0xFFFFFFFF && ++_nextGroupId < _groupIds.size() && _groupIds[_nextGroupId]);
+    while (_nextGroupId < 0xFFFFFFFF && ++_nextGroupId < _groupIds.size() && _groupIds[_nextGroupId])
+        ;
 
     if (_nextGroupId == 0xFFFFFFFF)
     {
@@ -106,18 +107,21 @@ void GroupMgr::LoadGroups()
         CharacterDatabase.DirectExecute("DELETE FROM `groups` WHERE leaderGuid NOT IN (SELECT guid FROM characters)");
 
         // Delete all groups with less than 2 members
-        CharacterDatabase.DirectExecute("DELETE FROM `groups` WHERE guid NOT IN (SELECT guid FROM group_member GROUP BY guid HAVING COUNT(guid) > 1)");
+        CharacterDatabase.DirectExecute(
+            "DELETE FROM `groups` WHERE guid NOT IN (SELECT guid FROM group_member GROUP BY guid HAVING COUNT(guid) > 1)");
 
         // Delete invalid lfg_data
-        CharacterDatabase.DirectExecute("DELETE lfg_data FROM lfg_data LEFT JOIN `groups` ON lfg_data.guid = groups.guid WHERE groups.guid IS NULL OR groups.groupType <> 12");
+        CharacterDatabase.DirectExecute(
+            "DELETE lfg_data FROM lfg_data LEFT JOIN `groups` ON lfg_data.guid = groups.guid WHERE groups.guid IS NULL OR groups.groupType <> 12");
         // CharacterDatabase.DirectExecute("DELETE `groups` FROM `groups` LEFT JOIN lfg_data ON groups.guid = lfg_data.guid WHERE groups.groupType=12 AND lfg_data.guid IS NULL"); // group should be left so binds are cleared when disbanded
 
         InitGroupIds();
 
         //                                                        0              1           2             3                 4      5          6      7         8       9
-        QueryResult result = CharacterDatabase.Query("SELECT g.leaderGuid, g.lootMethod, g.looterGuid, g.lootThreshold, g.icon1, g.icon2, g.icon3, g.icon4, g.icon5, g.icon6"
-                             //  10         11          12         13              14                  15            16        17          18
-                             ", g.icon7, g.icon8, g.groupType, g.difficulty, g.raidDifficulty, g.masterLooterGuid, g.guid, lfg.dungeon, lfg.state FROM `groups` g LEFT JOIN lfg_data lfg ON lfg.guid = g.guid ORDER BY g.guid ASC");
+        QueryResult result = CharacterDatabase.Query(
+            "SELECT g.leaderGuid, g.lootMethod, g.looterGuid, g.lootThreshold, g.icon1, g.icon2, g.icon3, g.icon4, g.icon5, g.icon6"
+            //  10         11          12         13              14                  15            16        17          18
+            ", g.icon7, g.icon8, g.groupType, g.difficulty, g.raidDifficulty, g.masterLooterGuid, g.guid, lfg.dungeon, lfg.state FROM `groups` g LEFT JOIN lfg_data lfg ON lfg.guid = g.guid ORDER BY g.guid ASC");
 
         if (!result)
         {
@@ -155,10 +159,12 @@ void GroupMgr::LoadGroups()
         // Delete all rows from group_member with no group
         CharacterDatabase.DirectExecute("DELETE FROM group_member WHERE guid NOT IN (SELECT guid FROM `groups`)");
         // Delete all members that does not exist
-        CharacterDatabase.DirectExecute("DELETE FROM group_member WHERE memberGuid NOT IN (SELECT guid FROM characters)");
+        CharacterDatabase.DirectExecute(
+            "DELETE FROM group_member WHERE memberGuid NOT IN (SELECT guid FROM characters)");
 
         //                                                    0        1           2            3       4
-        QueryResult result = CharacterDatabase.Query("SELECT guid, memberGuid, memberFlags, subgroup, roles FROM group_member ORDER BY guid");
+        QueryResult result = CharacterDatabase.Query(
+            "SELECT guid, memberGuid, memberFlags, subgroup, roles FROM group_member ORDER BY guid");
         if (!result)
         {
             LOG_WARN("server.loading", ">> Loaded 0 group members. DB table `group_member` is empty!");
@@ -173,7 +179,10 @@ void GroupMgr::LoadGroups()
                 Group* group = GetGroupByGUID(fields[0].Get<uint32>());
 
                 if (group)
-                    group->LoadMemberFromDB(fields[1].Get<uint32>(), fields[2].Get<uint8>(), fields[3].Get<uint8>(), fields[4].Get<uint8>());
+                    group->LoadMemberFromDB(fields[1].Get<uint32>(),
+                        fields[2].Get<uint8>(),
+                        fields[3].Get<uint8>(),
+                        fields[4].Get<uint8>());
 
                 ++count;
             } while (result->NextRow());

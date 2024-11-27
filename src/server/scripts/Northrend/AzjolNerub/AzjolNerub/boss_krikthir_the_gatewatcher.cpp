@@ -22,44 +22,44 @@
 
 enum Spells
 {
-    SPELL_SUBBOSS_AGGRO_TRIGGER         = 52343,
-    SPELL_SWARM                         = 52440,
-    SPELL_MIND_FLAY                     = 52586,
-    SPELL_CURSE_OF_FATIGUE              = 52592,
-    SPELL_FRENZY                        = 28747
+    SPELL_SUBBOSS_AGGRO_TRIGGER = 52343,
+    SPELL_SWARM = 52440,
+    SPELL_MIND_FLAY = 52586,
+    SPELL_CURSE_OF_FATIGUE = 52592,
+    SPELL_FRENZY = 28747
 };
 
 enum Events
 {
-    EVENT_KRIK_START_WAVE               = 1,
-    EVENT_KRIK_SUMMON                   = 2,
-    EVENT_KRIK_MIND_FLAY                = 3,
-    EVENT_KRIK_CURSE                    = 4,
-    EVENT_KRIK_HEALTH_CHECK             = 5,
-    EVENT_KRIK_ENTER_COMBAT             = 6,
-    EVENT_KILL_TALK                     = 7,
-    EVENT_CALL_ADDS                     = 8,
-    EVENT_KRIK_CHECK_EVADE              = 9
+    EVENT_KRIK_START_WAVE = 1,
+    EVENT_KRIK_SUMMON = 2,
+    EVENT_KRIK_MIND_FLAY = 3,
+    EVENT_KRIK_CURSE = 4,
+    EVENT_KRIK_HEALTH_CHECK = 5,
+    EVENT_KRIK_ENTER_COMBAT = 6,
+    EVENT_KILL_TALK = 7,
+    EVENT_CALL_ADDS = 8,
+    EVENT_KRIK_CHECK_EVADE = 9
 };
 
 enum Npcs
 {
-    NPC_WATCHER_NARJIL                  = 28729,
-    NPC_WATCHER_GASHRA                  = 28730,
-    NPC_WATCHER_SILTHIK                 = 28731,
-    NPC_WARRIOR                         = 28732,
-    NPC_SKIRMISHER                      = 28734,
-    NPC_SHADOWCASTER                    = 28733
+    NPC_WATCHER_NARJIL = 28729,
+    NPC_WATCHER_GASHRA = 28730,
+    NPC_WATCHER_SILTHIK = 28731,
+    NPC_WARRIOR = 28732,
+    NPC_SKIRMISHER = 28734,
+    NPC_SHADOWCASTER = 28733
 };
 
 enum Yells
 {
-    SAY_AGGRO                           = 0,
-    SAY_SLAY                            = 1,
-    SAY_DEATH                           = 2,
-    SAY_SWARM                           = 3,
-    SAY_PREFIGHT                        = 4,
-    SAY_SEND_GROUP                      = 5
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_SWARM = 3,
+    SAY_PREFIGHT = 4,
+    SAY_SEND_GROUP = 5
 };
 
 class boss_krik_thir : public CreatureScript
@@ -82,15 +82,21 @@ public:
             BossAI::Reset();
             events2.Reset();
 
-            me->SummonCreature(NPC_WATCHER_NARJIL, 511.8f, 666.493f, 776.278f, 0.977f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
-            me->SummonCreature(NPC_SHADOWCASTER, 511.63f, 672.44f, 775.71f, 0.90f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+            me->SummonCreature(
+                NPC_WATCHER_NARJIL, 511.8f, 666.493f, 776.278f, 0.977f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+            me->SummonCreature(
+                NPC_SHADOWCASTER, 511.63f, 672.44f, 775.71f, 0.90f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
             me->SummonCreature(NPC_WARRIOR, 506.75f, 670.7f, 776.24f, 0.92f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
-            me->SummonCreature(NPC_WATCHER_GASHRA, 526.66f, 663.605f, 775.805f, 1.23f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
-            me->SummonCreature(NPC_SKIRMISHER, 522.91f, 660.18f, 776.19f, 1.28f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+            me->SummonCreature(
+                NPC_WATCHER_GASHRA, 526.66f, 663.605f, 775.805f, 1.23f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+            me->SummonCreature(
+                NPC_SKIRMISHER, 522.91f, 660.18f, 776.19f, 1.28f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
             me->SummonCreature(NPC_WARRIOR, 528.14f, 659.72f, 776.14f, 1.37f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
-            me->SummonCreature(NPC_WATCHER_SILTHIK, 543.826f, 665.123f, 776.245f, 1.55f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+            me->SummonCreature(
+                NPC_WATCHER_SILTHIK, 543.826f, 665.123f, 776.245f, 1.55f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
             me->SummonCreature(NPC_SKIRMISHER, 547.5f, 669.96f, 776.1f, 2.3f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
-            me->SummonCreature(NPC_SHADOWCASTER, 548.64f, 664.27f, 776.74f, 1.77f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
+            me->SummonCreature(
+                NPC_SHADOWCASTER, 548.64f, 664.27f, 776.74f, 1.77f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000);
         }
 
         void MoveInLineOfSight(Unit* who) override
@@ -124,7 +130,8 @@ public:
         uint32 GetData(uint32 data) const override
         {
             if (data == me->GetEntry())
-                return summons.HasEntry(NPC_WATCHER_NARJIL) && summons.HasEntry(NPC_WATCHER_GASHRA) && summons.HasEntry(NPC_WATCHER_SILTHIK);
+                return summons.HasEntry(NPC_WATCHER_NARJIL) && summons.HasEntry(NPC_WATCHER_GASHRA) &&
+                       summons.HasEntry(NPC_WATCHER_SILTHIK);
             return 0;
         }
 
@@ -141,7 +148,7 @@ public:
             Talk(SAY_DEATH);
         }
 
-        void KilledUnit(Unit* ) override
+        void KilledUnit(Unit*) override
         {
             if (events.GetNextEventTime(EVENT_KILL_TALK) == 0)
             {
@@ -232,9 +239,7 @@ public:
 class achievement_watch_him_die : public AchievementCriteriaScript
 {
 public:
-    achievement_watch_him_die() : AchievementCriteriaScript("achievement_watch_him_die")
-    {
-    }
+    achievement_watch_him_die() : AchievementCriteriaScript("achievement_watch_him_die") { }
 
     bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {

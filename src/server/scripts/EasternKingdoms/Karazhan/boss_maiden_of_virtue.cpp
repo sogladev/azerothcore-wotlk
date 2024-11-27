@@ -21,29 +21,26 @@
 
 enum Text
 {
-    SAY_AGGRO           = 0,
-    SAY_SLAY            = 1,
-    SAY_REPENTANCE      = 2,
-    SAY_DEATH           = 3
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_REPENTANCE = 2,
+    SAY_DEATH = 3
 };
 
 enum Spells
 {
-    SPELL_REPENTANCE    = 29511,
-    SPELL_HOLY_FIRE     = 29522,
-    SPELL_HOLY_WRATH    = 32445,
-    SPELL_HOLY_GROUND   = 29523,
-    SPELL_BERSERK       = 26662
+    SPELL_REPENTANCE = 29511,
+    SPELL_HOLY_FIRE = 29522,
+    SPELL_HOLY_WRATH = 32445,
+    SPELL_HOLY_GROUND = 29523,
+    SPELL_BERSERK = 26662
 };
 
 struct boss_maiden_of_virtue : public BossAI
 {
     boss_maiden_of_virtue(Creature* creature) : BossAI(creature, DATA_MAIDEN)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void JustEngagedWith(Unit* who) override
@@ -51,31 +48,32 @@ struct boss_maiden_of_virtue : public BossAI
         BossAI::JustEngagedWith(who);
         Talk(SAY_AGGRO);
         DoCastAOE(SPELL_HOLY_GROUND, true);
-        scheduler.Schedule(25s, [this](TaskContext context)
+        scheduler
+            .Schedule(25s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_REPENTANCE);
             Talk(SAY_REPENTANCE);
             context.Repeat(25s, 35s);
-        }).Schedule(8s, [this](TaskContext context)
+        })
+            .Schedule(8s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_HOLY_FIRE, 0, 50.0f);
             context.Repeat(8s, 18s);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_HOLY_WRATH, 0, 80.0f);
             context.Repeat(20s, 25s);
-        }).Schedule(10min, [this](TaskContext /*context*/)
-        {
-            DoCastSelf(SPELL_BERSERK, true);
-        });
+        }).Schedule(10min, [this](TaskContext /*context*/) { DoCastSelf(SPELL_BERSERK, true); });
     }
 
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* killer) override

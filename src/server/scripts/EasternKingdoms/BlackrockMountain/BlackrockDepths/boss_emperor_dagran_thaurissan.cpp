@@ -22,14 +22,14 @@
 enum Yells
 {
     YELL_SENATORS_ALIVE = 0,
-    YELL_SENATORS_DEAD  = 1,
-    SAY_SLAY            = 2
+    YELL_SENATORS_DEAD = 1,
+    SAY_SLAY = 2
 };
 
 enum Spells
 {
-    SPELL_HANDOFTHAURISSAN      = 17492,
-    SPELL_AVATAROFFLAME         = 15636
+    SPELL_HANDOFTHAURISSAN = 17492,
+    SPELL_AVATAROFFLAME = 15636
 };
 
 #define DATA_PERCENT_DEAD_SENATORS 0
@@ -46,21 +46,17 @@ public:
 
     struct boss_draganthaurissanAI : public BossAI
     {
-        uint32 hasYelled       = 0;
+        uint32 hasYelled = 0;
         uint32 SenatorYells[5] = {3, 4, 5, 6, 7}; // IDs in creature_text database
 
-        boss_draganthaurissanAI(Creature* creature) : BossAI(creature, DATA_EMPEROR){}
+        boss_draganthaurissanAI(Creature* creature) : BossAI(creature, DATA_EMPEROR) { }
 
         void JustEngagedWith(Unit* /*who*/) override
         {
             if (hasYelled != 5)
-            {
                 Talk(YELL_SENATORS_ALIVE);
-            }
             else
-            {
                 Talk(YELL_SENATORS_DEAD);
-            }
 
             me->CallForHelp(VISIBLE_RANGE);
             events.ScheduleEvent(SPELL_HANDOFTHAURISSAN, 4s, 7s);
@@ -81,9 +77,7 @@ public:
                     if (hasYelled < 5)
                     {
                         if (me->IsAlive())
-                        {
                             Talk(SenatorYells[hasYelled]);
-                        }
                     }
                     hasYelled++;
                 }
@@ -115,17 +109,17 @@ public:
             {
                 switch (eventId)
                 {
-                case SPELL_HANDOFTHAURISSAN:
-                    DoCast(SelectTarget(SelectTargetMethod::Random), SPELL_HANDOFTHAURISSAN);
-                    //DoCastVictim(SPELL_HANDOFTHAURISSAN);
-                    events.ScheduleEvent(SPELL_HANDOFTHAURISSAN, 4s, 7s);
-                    break;
-                case SPELL_AVATAROFFLAME:
-                    DoCastSelf(SPELL_AVATAROFFLAME);
-                    events.ScheduleEvent(SPELL_AVATAROFFLAME, 23s, 27s);
-                    break;
-                default:
-                    break;
+                    case SPELL_HANDOFTHAURISSAN:
+                        DoCast(SelectTarget(SelectTargetMethod::Random), SPELL_HANDOFTHAURISSAN);
+                        //DoCastVictim(SPELL_HANDOFTHAURISSAN);
+                        events.ScheduleEvent(SPELL_HANDOFTHAURISSAN, 4s, 7s);
+                        break;
+                    case SPELL_AVATAROFFLAME:
+                        DoCastSelf(SPELL_AVATAROFFLAME);
+                        events.ScheduleEvent(SPELL_AVATAROFFLAME, 23s, 27s);
+                        break;
+                    default:
+                        break;
                 }
             }
             DoMeleeAttackIfReady();

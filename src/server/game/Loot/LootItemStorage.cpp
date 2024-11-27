@@ -21,13 +21,9 @@
 #include "PreparedStatement.h"
 #include "QueryResult.h"
 
-LootItemStorage::LootItemStorage()
-{
-}
+LootItemStorage::LootItemStorage() { }
 
-LootItemStorage::~LootItemStorage()
-{
-}
+LootItemStorage::~LootItemStorage() { }
 
 LootItemStorage* LootItemStorage::instance()
 {
@@ -55,8 +51,18 @@ void LootItemStorage::LoadStorageFromDB()
         Field* fields = result->Fetch();
 
         StoredLootItemList& itemList = lootItemStore[ObjectGuid::Create<HighGuid::Item>(fields[0].Get<uint32>())];
-        itemList.emplace_back(fields[1].Get<uint32>(), fields[2].Get<uint32>(), fields[3].Get<uint32>(), fields[4].Get<int32>(), fields[5].Get<uint32>(), fields[6].Get<bool>(),
-            fields[7].Get<bool>(), fields[8].Get<bool>(), fields[9].Get<bool>(), fields[10].Get<bool>(), fields[11].Get<bool>(), fields[12].Get<uint32>());
+        itemList.emplace_back(fields[1].Get<uint32>(),
+            fields[2].Get<uint32>(),
+            fields[3].Get<uint32>(),
+            fields[4].Get<int32>(),
+            fields[5].Get<uint32>(),
+            fields[6].Get<bool>(),
+            fields[7].Get<bool>(),
+            fields[8].Get<bool>(),
+            fields[9].Get<bool>(),
+            fields[10].Get<bool>(),
+            fields[11].Get<bool>(),
+            fields[12].Get<uint32>());
 
         ++count;
     } while (result->NextRow());
@@ -69,7 +75,8 @@ void LootItemStorage::RemoveEntryFromDB(ObjectGuid containerGUID, uint32 itemid,
 {
     CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 
-    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_ITEMCONTAINER_SINGLE_ITEM);
+    CharacterDatabasePreparedStatement* stmt =
+        CharacterDatabase.GetPreparedStatement(CHAR_DEL_ITEMCONTAINER_SINGLE_ITEM);
     stmt->SetData(0, containerGUID.GetCounter());
     stmt->SetData(1, itemid);
     stmt->SetData(2, count);
@@ -131,12 +138,20 @@ void LootItemStorage::AddNewStoredLoot(Loot* loot, Player* /*player*/)
 
             uint32 conditionLootId = 0;
             if (!li->conditions.empty())
-            {
                 conditionLootId = li->conditions.front()->SourceGroup;
-            }
 
-            itemList.emplace_back(li->itemid, li->itemIndex, li->count, li->randomPropertyId, li->randomSuffix, li->follow_loot_rules, li->freeforall, li->is_blocked, li->is_counted,
-                li->is_underthreshold, li->needs_quest, conditionLootId);
+            itemList.emplace_back(li->itemid,
+                li->itemIndex,
+                li->count,
+                li->randomPropertyId,
+                li->randomSuffix,
+                li->follow_loot_rules,
+                li->freeforall,
+                li->is_blocked,
+                li->is_counted,
+                li->is_underthreshold,
+                li->needs_quest,
+                conditionLootId);
 
             uint8 index = 0;
             stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_ITEMCONTAINER_SINGLE_ITEM);
@@ -144,7 +159,7 @@ void LootItemStorage::AddNewStoredLoot(Loot* loot, Player* /*player*/)
             stmt->SetData(index++, li->itemid);
             stmt->SetData(index++, li->itemIndex);
             stmt->SetData(index++, li->count);
-            stmt->SetData (index++, li->randomPropertyId);
+            stmt->SetData(index++, li->randomPropertyId);
             stmt->SetData(index++, li->randomSuffix);
             stmt->SetData(index++, li->follow_loot_rules);
             stmt->SetData(index++, li->freeforall);
@@ -164,9 +179,7 @@ bool LootItemStorage::LoadStoredLoot(Item* item, Player* player)
 {
     ItemTemplate const* proto = sObjectMgr->GetItemTemplate(item->GetEntry());
     if (!proto)
-    {
         return false;
-    }
 
     Loot* loot = &item->loot;
     LootItemContainer::iterator itr = lootItemStore.find(loot->containerGUID);
@@ -204,35 +217,28 @@ bool LootItemStorage::LoadStoredLoot(Item* item, Player* player)
             lt->CopyConditions(&li, it2->conditionLootId);
 
             if (li.needs_quest)
-            {
                 loot->quest_items.push_back(li);
-            }
             else
-            {
                 loot->items.push_back(li);
-            }
 
             // non-conditional one-player only items are counted here,
             // free for all items are counted in FillFFALoot(),
             // non-ffa conditionals are counted in FillNonQuestNonFFAConditionalLoot()
             if ((!li.needs_quest && li.conditions.empty() && !proto->HasFlag(ITEM_FLAG_MULTI_DROP)) || li.is_counted)
-            {
                 ++loot->unlootedCount;
-            }
         }
     }
 
     if (loot->unlootedCount)
-    {
         loot->FillNotNormalLootFor(player);
-    }
 
     // Mark the item if it has loot so it won't be generated again on open
     item->m_lootGenerated = true;
     return true;
 }
 
-void LootItemStorage::RemoveStoredLootItem(ObjectGuid containerGUID, uint32 itemid, uint32 count, Loot* loot, uint32 itemIndex)
+void LootItemStorage::RemoveStoredLootItem(
+    ObjectGuid containerGUID, uint32 itemid, uint32 count, Loot* loot, uint32 itemIndex)
 {
     LootItemContainer::iterator itr = lootItemStore.find(containerGUID);
     if (itr == lootItemStore.end())

@@ -15,10 +15,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "WorldState.h"
 #include "MapMgr.h"
 #include "Player.h"
 #include "SharedDefines.h"
-#include "WorldState.h"
 
 WorldState* WorldState::instance()
 {
@@ -28,14 +28,12 @@ WorldState* WorldState::instance()
 
 WorldState::WorldState() : _isMagtheridonHeadSpawnedHorde(false), _isMagtheridonHeadSpawnedAlliance(false)
 {
-    _transportStates[WORLD_STATE_CONDITION_THE_IRON_EAGLE]      = WORLD_STATE_CONDITION_STATE_NONE;
+    _transportStates[WORLD_STATE_CONDITION_THE_IRON_EAGLE] = WORLD_STATE_CONDITION_STATE_NONE;
     _transportStates[WORLD_STATE_CONDITION_THE_PURPLE_PRINCESS] = WORLD_STATE_CONDITION_STATE_NONE;
-    _transportStates[WORLD_STATE_CONDITION_THE_THUNDERCALLER]   = WORLD_STATE_CONDITION_STATE_NONE;
+    _transportStates[WORLD_STATE_CONDITION_THE_THUNDERCALLER] = WORLD_STATE_CONDITION_STATE_NONE;
 }
 
-WorldState::~WorldState()
-{
-}
+WorldState::~WorldState() { }
 
 bool WorldState::IsConditionFulfilled(WorldStateCondition conditionId, WorldStateConditionState state) const
 {
@@ -144,6 +142,7 @@ void WorldState::HandlePlayerEnterZone(Player* player, WorldStateZoneId zoneId)
             break;
     }
 };
+
 void WorldState::HandlePlayerLeaveZone(Player* player, WorldStateZoneId zoneId)
 {
     std::lock_guard<std::mutex> guard(_mutex);
@@ -181,9 +180,11 @@ void WorldState::BuffMagtheridonTeam(TeamId team)
             case 530: // Outland
                 map->DoForAllPlayers([&](Player* player)
                 {
-                    if (player->GetZoneId() == ZONEID_HELLFIRE_PENINSULA && player->GetTeamId() == TEAM_ALLIANCE && team == TEAM_ALLIANCE)
+                    if (player->GetZoneId() == ZONEID_HELLFIRE_PENINSULA && player->GetTeamId() == TEAM_ALLIANCE &&
+                        team == TEAM_ALLIANCE)
                         player->CastSpell(player, SPELL_TROLLBANES_COMMAND, true);
-                    else if (player->GetZoneId() == ZONEID_HELLFIRE_PENINSULA && player->GetTeamId() == TEAM_HORDE && team == TEAM_HORDE)
+                    else if (player->GetZoneId() == ZONEID_HELLFIRE_PENINSULA && player->GetTeamId() == TEAM_HORDE &&
+                             team == TEAM_HORDE)
                         player->CastSpell(player, SPELL_NAZGRELS_FAVOR, true);
                 });
                 break;
@@ -214,9 +215,11 @@ void WorldState::DispelMagtheridonTeam(TeamId team)
             case 530: // Outland
                 map->DoForAllPlayers([&](Player* player)
                 {
-                    if (player->GetZoneId() == ZONEID_HELLFIRE_PENINSULA && player->GetTeamId() == TEAM_ALLIANCE && team == TEAM_ALLIANCE)
+                    if (player->GetZoneId() == ZONEID_HELLFIRE_PENINSULA && player->GetTeamId() == TEAM_ALLIANCE &&
+                        team == TEAM_ALLIANCE)
                         player->RemoveAurasDueToSpell(SPELL_TROLLBANES_COMMAND);
-                    else if (player->GetZoneId() == ZONEID_HELLFIRE_PENINSULA && player->GetTeamId() == TEAM_HORDE && team == TEAM_HORDE)
+                    else if (player->GetZoneId() == ZONEID_HELLFIRE_PENINSULA && player->GetTeamId() == TEAM_HORDE &&
+                             team == TEAM_HORDE)
                         player->RemoveAurasDueToSpell(SPELL_NAZGRELS_FAVOR);
                 });
                 break;
@@ -254,10 +257,8 @@ void WorldState::BuffAdalsSongOfBattle()
             case 552: // Arcatraz
             case 553: // Botanica
             case 554: // Mechanar
-                map->DoForAllPlayers([&](Player* player)
-                {
-                    player->CastSpell(player, SPELL_ADAL_SONG_OF_BATTLE, true);
-                });
+                map->DoForAllPlayers(
+                    [&](Player* player) { player->CastSpell(player, SPELL_ADAL_SONG_OF_BATTLE, true); });
                 break;
             default:
                 break;
@@ -281,10 +282,7 @@ void WorldState::DispelAdalsSongOfBattle()
             case 552: // Arcatraz
             case 553: // Botanica
             case 554: // Mechanar
-                map->DoForAllPlayers([&](Player* player)
-                {
-                    player->RemoveAurasDueToSpell(SPELL_ADAL_SONG_OF_BATTLE);
-                });
+                map->DoForAllPlayers([&](Player* player) { player->RemoveAurasDueToSpell(SPELL_ADAL_SONG_OF_BATTLE); });
                 break;
             default:
                 break;

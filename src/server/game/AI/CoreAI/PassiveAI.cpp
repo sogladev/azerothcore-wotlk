@@ -18,9 +18,20 @@
 #include "PassiveAI.h"
 #include "Creature.h"
 
-PassiveAI::PassiveAI(Creature* c) : CreatureAI(c) { me->SetReactState(REACT_PASSIVE); }
-PossessedAI::PossessedAI(Creature* c) : CreatureAI(c) { me->SetReactState(REACT_PASSIVE); }
-NullCreatureAI::NullCreatureAI(Creature* c) : CreatureAI(c) { me->SetReactState(REACT_PASSIVE); }
+PassiveAI::PassiveAI(Creature* c) : CreatureAI(c)
+{
+    me->SetReactState(REACT_PASSIVE);
+}
+
+PossessedAI::PossessedAI(Creature* c) : CreatureAI(c)
+{
+    me->SetReactState(REACT_PASSIVE);
+}
+
+NullCreatureAI::NullCreatureAI(Creature* c) : CreatureAI(c)
+{
+    me->SetReactState(REACT_PASSIVE);
+}
 
 int32 NullCreatureAI::Permissible(Creature const* creature)
 {
@@ -61,7 +72,7 @@ void PossessedAI::JustDied(Unit* /*u*/)
     me->RemoveDynamicFlag(UNIT_DYNFLAG_LOOTABLE);
 }
 
-void PossessedAI::KilledUnit(Unit*  /*victim*/)
+void PossessedAI::KilledUnit(Unit* /*victim*/)
 {
     // We killed a creature, disable victim's loot
     //if (victim->IsCreature())
@@ -71,25 +82,19 @@ void PossessedAI::KilledUnit(Unit*  /*victim*/)
 void CritterAI::JustEngagedWith(Unit* who)
 {
     if (!me->HasUnitState(UNIT_STATE_FLEEING))
-    {
         me->SetControlled(true, UNIT_STATE_FLEEING, who);
-    }
 }
 
 void CritterAI::MovementInform(uint32 type, uint32 /*id*/)
 {
     if (type == TIMED_FLEEING_MOTION_TYPE)
-    {
         EnterEvadeMode(EVADE_REASON_OTHER);
-    }
 }
 
 void CritterAI::EnterEvadeMode(EvadeReason why)
 {
     if (me->HasUnitState(UNIT_STATE_FLEEING))
-    {
         me->SetControlled(false, UNIT_STATE_FLEEING);
-    }
 
     CreatureAI::EnterEvadeMode(why);
 }

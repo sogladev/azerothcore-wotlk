@@ -18,63 +18,62 @@
 #include "AchievementCriteriaScript.h"
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "drak_tharon_keep.h"
-#include "SpellScript.h"
 
 enum Yells
 {
-    SAY_AGGRO                           = 0,
-    SAY_KILL                            = 1,
-    SAY_DEATH                           = 2,
-    SAY_SUMMONING_ADDS                  = 3,
-    SAY_ARCANE_FIELD                    = 4,
-    EMOTE_SUMMONING_ADDS                = 5
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_DEATH = 2,
+    SAY_SUMMONING_ADDS = 3,
+    SAY_ARCANE_FIELD = 4,
+    EMOTE_SUMMONING_ADDS = 5
 };
 
 enum Spells
 {
-    SPELL_BEAM_CHANNEL                  = 52106,
-    SPELL_ARCANE_BLAST                  = 49198,
-    SPELL_ARCANE_FIELD                  = 47346,
-    SPELL_SUMMON_FETID_TROLL_CORPSE     = 49103,
-    SPELL_SUMMON_HULKING_CORPSE         = 49104,
-    SPELL_SUMMON_RISEN_SHADOWCASTER     = 49105,
-    SPELL_SUMMON_CRYSTAL_HANDLER        = 49179,
-    SPELL_DESPAWN_CRYSTAL_HANDLER       = 51403,
+    SPELL_BEAM_CHANNEL = 52106,
+    SPELL_ARCANE_BLAST = 49198,
+    SPELL_ARCANE_FIELD = 47346,
+    SPELL_SUMMON_FETID_TROLL_CORPSE = 49103,
+    SPELL_SUMMON_HULKING_CORPSE = 49104,
+    SPELL_SUMMON_RISEN_SHADOWCASTER = 49105,
+    SPELL_SUMMON_CRYSTAL_HANDLER = 49179,
+    SPELL_DESPAWN_CRYSTAL_HANDLER = 51403,
 
-    SPELL_SUMMON_MINIONS                = 59910,
-    SPELL_COPY_OF_SUMMON_MINIONS        = 59933,
-    SPELL_BLIZZARD                      = 49034,
-    SPELL_FROSTBOLT                     = 49037,
-    SPELL_TOUCH_OF_MISERY               = 50090
+    SPELL_SUMMON_MINIONS = 59910,
+    SPELL_COPY_OF_SUMMON_MINIONS = 59933,
+    SPELL_BLIZZARD = 49034,
+    SPELL_FROSTBOLT = 49037,
+    SPELL_TOUCH_OF_MISERY = 50090
 };
 
 enum Misc
 {
-    NPC_CRYSTAL_CHANNEL_TARGET              = 26712,
-    NPC_CRYSTAL_HANDLER                     = 26627,
-    NPC_SUMMON_CRYSTAL_HANDLER_TARGET       = 27583,
+    NPC_CRYSTAL_CHANNEL_TARGET = 26712,
+    NPC_CRYSTAL_HANDLER = 26627,
+    NPC_SUMMON_CRYSTAL_HANDLER_TARGET = 27583,
 
-    EVENT_SUMMON_FETID_TROLL                = 1,
-    EVENT_SUMMON_SHADOWCASTER               = 2,
-    EVENT_SUMMON_HULKING_CORPSE             = 3,
-    EVENT_SUMMON_CRYSTAL_HANDLER            = 4,
-    EVENT_CAST_OFFENSIVE_SPELL              = 5,
-    EVENT_KILL_TALK                         = 6,
-    EVENT_CHECK_PHASE                       = 7,
-    EVENT_SPELL_SUMMON_MINIONS              = 8,
+    EVENT_SUMMON_FETID_TROLL = 1,
+    EVENT_SUMMON_SHADOWCASTER = 2,
+    EVENT_SUMMON_HULKING_CORPSE = 3,
+    EVENT_SUMMON_CRYSTAL_HANDLER = 4,
+    EVENT_CAST_OFFENSIVE_SPELL = 5,
+    EVENT_KILL_TALK = 6,
+    EVENT_CHECK_PHASE = 7,
+    EVENT_SPELL_SUMMON_MINIONS = 8,
 
-    ROOM_RIGHT  = 0,
-    ROOM_LEFT   = 1,
+    ROOM_RIGHT = 0,
+    ROOM_LEFT = 1,
     ROOM_STAIRS = 2
 };
 
-std::unordered_map<uint32, std::tuple <uint32, Position>> const npcSummon =
-{
-    { ROOM_RIGHT,   { NPC_SUMMON_CRYSTAL_HANDLER_TARGET,    { -341.31f, -724.40f, 28.57f, 0.0f } } },
-    { ROOM_LEFT,    { NPC_SUMMON_CRYSTAL_HANDLER_TARGET,    { -408.87f, -730.21f, 28.58f, 0.0f } } },
-    { ROOM_STAIRS,  { NPC_CRYSTAL_CHANNEL_TARGET,           { -378.40f, -813.13f, 59.74f, 0.0f } } },
+std::unordered_map<uint32, std::tuple<uint32, Position>> const npcSummon = {
+    {ROOM_RIGHT,  {NPC_SUMMON_CRYSTAL_HANDLER_TARGET, {-341.31f, -724.40f, 28.57f, 0.0f}}},
+    {ROOM_LEFT,   {NPC_SUMMON_CRYSTAL_HANDLER_TARGET, {-408.87f, -730.21f, 28.58f, 0.0f}}},
+    {ROOM_STAIRS, {NPC_CRYSTAL_CHANNEL_TARGET, {-378.40f, -813.13f, 59.74f, 0.0f}}       },
 };
 
 class boss_novos : public CreatureScript
@@ -84,9 +83,7 @@ public:
 
     struct boss_novosAI : public BossAI
     {
-        boss_novosAI(Creature* creature) : BossAI(creature, DATA_NOVOS)
-        {
-        }
+        boss_novosAI(Creature* creature) : BossAI(creature, DATA_NOVOS) { }
 
         void Reset() override
         {
@@ -118,7 +115,7 @@ public:
                 _achievement = false;
         }
 
-        void MoveInLineOfSight(Unit*  /*who*/) override { }
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void JustEngagedWith(Unit* who) override
         {
@@ -165,7 +162,7 @@ public:
             instance->SetBossState(DATA_NOVOS_CRYSTALS, DONE);
         }
 
-        void KilledUnit(Unit*  /*victim*/) override
+        void KilledUnit(Unit* /*victim*/) override
         {
             if (events.GetNextEventTime(EVENT_KILL_TALK) == 0)
             {
@@ -177,7 +174,8 @@ public:
         void JustSummoned(Creature* summon) override
         {
             summons.Summon(summon);
-            if (me->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE) && summon->GetEntry() != NPC_CRYSTAL_CHANNEL_TARGET && summon->GetEntry() != NPC_CRYSTAL_HANDLER)
+            if (me->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE) && summon->GetEntry() != NPC_CRYSTAL_CHANNEL_TARGET &&
+                summon->GetEntry() != NPC_CRYSTAL_HANDLER)
                 summon->SetReactState(REACT_DEFENSIVE);
             else if (summon->GetEntry() != NPC_CRYSTAL_CHANNEL_TARGET)
                 summon->SetInCombatWithZone();
@@ -193,7 +191,8 @@ public:
             {
                 case EVENT_SUMMON_FETID_TROLL:
                     if (Creature* trigger = summons.GetCreatureWithEntry(NPC_CRYSTAL_CHANNEL_TARGET))
-                        trigger->CastSpell(trigger, SPELL_SUMMON_FETID_TROLL_CORPSE, true, nullptr, nullptr, me->GetGUID());
+                        trigger->CastSpell(
+                            trigger, SPELL_SUMMON_FETID_TROLL_CORPSE, true, nullptr, nullptr, me->GetGUID());
                     events.ScheduleEvent(EVENT_SUMMON_FETID_TROLL, 3s);
                     break;
                 case EVENT_SUMMON_HULKING_CORPSE:
@@ -203,7 +202,8 @@ public:
                     break;
                 case EVENT_SUMMON_SHADOWCASTER:
                     if (Creature* trigger = summons.GetCreatureWithEntry(NPC_CRYSTAL_CHANNEL_TARGET))
-                        trigger->CastSpell(trigger, SPELL_SUMMON_RISEN_SHADOWCASTER, true, nullptr, nullptr, me->GetGUID());
+                        trigger->CastSpell(
+                            trigger, SPELL_SUMMON_RISEN_SHADOWCASTER, true, nullptr, nullptr, me->GetGUID());
                     events.ScheduleEvent(EVENT_SUMMON_SHADOWCASTER, 10s);
                     break;
                 case EVENT_SUMMON_CRYSTAL_HANDLER:
@@ -211,8 +211,10 @@ public:
                     {
                         Talk(SAY_SUMMONING_ADDS);
                         Talk(EMOTE_SUMMONING_ADDS);
-                        if (Creature* target = ObjectAccessor::GetCreature(*me, _stage ? _summonTargetLeftGUID : _summonTargetRightGUID))
-                            target->CastSpell(target, SPELL_SUMMON_CRYSTAL_HANDLER, true, nullptr, nullptr, me->GetGUID());
+                        if (Creature* target = ObjectAccessor::GetCreature(
+                                *me, _stage ? _summonTargetLeftGUID : _summonTargetRightGUID))
+                            target->CastSpell(
+                                target, SPELL_SUMMON_CRYSTAL_HANDLER, true, nullptr, nullptr, me->GetGUID());
                         _stage = _stage ? 0 : 1;
                         events.ScheduleEvent(EVENT_SUMMON_CRYSTAL_HANDLER, 20s);
                     }
@@ -275,7 +277,7 @@ class spell_novos_despawn_crystal_handler : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_BEAM_CHANNEL });
+        return ValidateSpellInfo({SPELL_BEAM_CHANNEL});
     }
 
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
@@ -286,7 +288,8 @@ class spell_novos_despawn_crystal_handler : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_novos_despawn_crystal_handler::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget += SpellEffectFn(
+            spell_novos_despawn_crystal_handler::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -294,7 +297,7 @@ class spell_novos_crystal_handler_death_aura : public AuraScript
 {
     PrepareAuraScript(spell_novos_crystal_handler_death_aura);
 
-    void HandleEffectApply(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void HandleEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         GetUnitOwner()->InterruptNonMeleeSpells(false);
         if (GameObject* crystal = GetUnitOwner()->FindNearestGameObjectOfType(GAMEOBJECT_TYPE_DOOR, 5.0f))
@@ -303,7 +306,10 @@ class spell_novos_crystal_handler_death_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_novos_crystal_handler_death_aura::HandleEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_novos_crystal_handler_death_aura::HandleEffectApply,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -313,7 +319,7 @@ class spell_novos_summon_minions : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_COPY_OF_SUMMON_MINIONS });
+        return ValidateSpellInfo({SPELL_COPY_OF_SUMMON_MINIONS});
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -324,7 +330,8 @@ class spell_novos_summon_minions : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_novos_summon_minions::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_novos_summon_minions::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

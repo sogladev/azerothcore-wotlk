@@ -38,9 +38,7 @@ public:
 
     struct instance_vault_of_archavon_InstanceMapScript : public InstanceScript
     {
-        instance_vault_of_archavon_InstanceMapScript(Map* map) : InstanceScript(map)
-        {
-        }
+        instance_vault_of_archavon_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         void Initialize() override
         {
@@ -54,7 +52,7 @@ public:
             stoned = false;
         }
 
-        void OnPlayerEnter(Player* ) override
+        void OnPlayerEnter(Player*) override
         {
             if (stoned)
             {
@@ -77,7 +75,8 @@ public:
                 {
                     if (!bf->IsWarTime())
                     {
-                        if (bf->GetTimer() <= (16 * MINUTE * IN_MILLISECONDS) && bf->GetTimer() >= (15 * MINUTE * IN_MILLISECONDS))
+                        if (bf->GetTimer() <= (16 * MINUTE * IN_MILLISECONDS) &&
+                            bf->GetTimer() >= (15 * MINUTE * IN_MILLISECONDS))
                         {
                             Map::PlayerList const& PlayerList = instance->GetPlayers();
                             if (!PlayerList.IsEmpty())
@@ -85,7 +84,8 @@ public:
                                     if (Player* player = i->GetSource())
                                         player->TextEmote("This instance will reset in 15 minutes.", nullptr, true);
                         }
-                        else if (bf->GetTimer() <= (10 * MINUTE * IN_MILLISECONDS) && bf->GetTimer() >= (9 * MINUTE * IN_MILLISECONDS))
+                        else if (bf->GetTimer() <= (10 * MINUTE * IN_MILLISECONDS) &&
+                                 bf->GetTimer() >= (9 * MINUTE * IN_MILLISECONDS))
                         {
                             for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
                                 if (Creature* cr = instance->GetCreature(bossGUIDs[i]))
@@ -101,13 +101,15 @@ public:
 
                             stoned = true;
                         }
-                        else if (bf->GetTimer() <= (2 * MINUTE * IN_MILLISECONDS) && bf->GetTimer() > (MINUTE * IN_MILLISECONDS))
+                        else if (bf->GetTimer() <= (2 * MINUTE * IN_MILLISECONDS) &&
+                                 bf->GetTimer() > (MINUTE * IN_MILLISECONDS))
                         {
                             Map::PlayerList const& PlayerList = instance->GetPlayers();
                             if (!PlayerList.IsEmpty())
                                 for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                                     if (Player* player = i->GetSource())
-                                        player->TextEmote("This instance is about to reset. Prepare to be removed.", nullptr, true);
+                                        player->TextEmote(
+                                            "This instance is about to reset. Prepare to be removed.", nullptr, true);
                         }
                         else if (bf->GetTimer() <= MINUTE * IN_MILLISECONDS)
                         {
@@ -120,7 +122,11 @@ public:
                             if (!PlayerList.IsEmpty())
                                 for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                                     if (Player* player = i->GetSource())
-                                        player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->GetOrientation());
+                                        player->TeleportTo(player->m_homebindMapId,
+                                            player->m_homebindX,
+                                            player->m_homebindY,
+                                            player->m_homebindZ,
+                                            player->GetOrientation());
                         }
                     }
                 }
@@ -209,7 +215,8 @@ public:
             }
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {
@@ -219,8 +226,8 @@ public:
                     {
                         // instance difficulty check is already done in db (achievement_criteria_data)
                         // int() for Visual Studio, compile errors with std::abs(time_t)
-                        return (std::abs(int(ArchavonDeath - EmalonDeath)) < MINUTE && \
-                                std::abs(int(EmalonDeath - KoralonDeath)) < MINUTE && \
+                        return (std::abs(int(ArchavonDeath - EmalonDeath)) < MINUTE &&
+                                std::abs(int(EmalonDeath - KoralonDeath)) < MINUTE &&
                                 std::abs(int(KoralonDeath - ArchavonDeath)) < MINUTE);
                     }
                     break;
@@ -241,10 +248,8 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << m_auiEncounter[0] << ' '
-                << m_auiEncounter[1] << ' '
-                << m_auiEncounter[2] << ' '
-                << m_auiEncounter[3];
+            data << m_auiEncounter[0] << ' ' << m_auiEncounter[1] << ' ' << m_auiEncounter[2] << ' '
+                 << m_auiEncounter[3];
         }
 
     private:

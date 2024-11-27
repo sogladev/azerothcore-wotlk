@@ -21,30 +21,19 @@
 #include "Player.h"
 #include "WorldSession.h"
 
-constexpr std::array<const char*, MAX_ITEM_SUBCLASS_CONTAINER> bagSpecsToString =
-{
-    "normal",
-    "soul",
-    "herb",
-    "enchanting",
-    "engineering",
-    "gem",
-    "mining",
-    "leatherworking",
-    "inscription"
-};
+constexpr std::array<char const*, MAX_ITEM_SUBCLASS_CONTAINER> bagSpecsToString = {
+    "normal", "soul", "herb", "enchanting", "engineering", "gem", "mining", "leatherworking", "inscription"};
 
-constexpr std::array<uint32, MAX_ITEM_SUBCLASS_CONTAINER> bagSpecsColors =
-{
-    0xfff0de18,     // YELLOW - Normal
-    0xffa335ee,     // PURPLE - Souls
-    0xff1eff00,     // GREEN - Herb
-    0xffe37166,     // PINK - Enchanting
-    0xffa68b30,     // BROWN - Engineering
-    0xff0070dd,     // BLUE - Gem
-    0xffc1c8c9,     // GREY - Mining
-    0xfff5a925,     // ORANGE - Leatherworking
-    0xff54504f      // DARK GREY - Inscription
+constexpr std::array<uint32, MAX_ITEM_SUBCLASS_CONTAINER> bagSpecsColors = {
+    0xfff0de18, // YELLOW - Normal
+    0xffa335ee, // PURPLE - Souls
+    0xff1eff00, // GREEN - Herb
+    0xffe37166, // PINK - Enchanting
+    0xffa68b30, // BROWN - Engineering
+    0xff0070dd, // BLUE - Gem
+    0xffc1c8c9, // GREY - Mining
+    0xfff5a925, // ORANGE - Leatherworking
+    0xff54504f  // DARK GREY - Inscription
 };
 
 //constexpr std::array<const char*, MAX_ITEM_SUBCLASS_CONTAINER> bagSpecsColorToString =
@@ -69,14 +58,12 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable inventoryCommandTable =
-        {
-            { "count",      HandleInventoryCountCommand,   SEC_MODERATOR, Console::No }
+        static ChatCommandTable inventoryCommandTable = {
+            {"count", HandleInventoryCountCommand, SEC_MODERATOR, Console::No}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "inventory",  inventoryCommandTable }
+        static ChatCommandTable commandTable = {
+            {"inventory", inventoryCommandTable}
         };
 
         return commandTable;
@@ -85,9 +72,7 @@ public:
     static bool HandleInventoryCountCommand(ChatHandler* handler, Optional<PlayerIdentifier> player)
     {
         if (!player)
-        {
             player = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!player)
         {
@@ -102,7 +87,7 @@ public:
             return false;
         }
 
-        std::array<uint32, MAX_ITEM_SUBCLASS_CONTAINER> freeSlotsInBags = { };
+        std::array<uint32, MAX_ITEM_SUBCLASS_CONTAINER> freeSlotsInBags = {};
         uint32 freeSlotsForBags = 0;
         bool haveFreeSlot = false;
 
@@ -149,9 +134,7 @@ public:
                 {
                     std::string bagSpecString = bagSpecsToString[i];
                     if (!initialize)
-                    {
                         str << ", ";
-                    }
 
                     str << "|c";
                     str << std::hex << bagSpecsColors[i] << std::dec;
@@ -167,9 +150,7 @@ public:
         }
 
         if (freeSlotsForBags)
-        {
             str << " and also has " << freeSlotsForBags << " free slots for bags";
-        }
 
         str << ".";
 

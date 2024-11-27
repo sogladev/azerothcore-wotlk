@@ -43,18 +43,16 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable mmapCommandTable =
-        {
-            { "loadedtiles", HandleMmapLoadedTilesCommand, SEC_ADMINISTRATOR, Console::No },
-            { "loc",         HandleMmapLocCommand,         SEC_ADMINISTRATOR, Console::No },
-            { "path",        HandleMmapPathCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "stats",       HandleMmapStatsCommand,       SEC_ADMINISTRATOR, Console::No },
-            { "testarea",    HandleMmapTestArea,           SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable mmapCommandTable = {
+            {"loadedtiles", HandleMmapLoadedTilesCommand, SEC_ADMINISTRATOR, Console::No},
+            {"loc",         HandleMmapLocCommand,         SEC_ADMINISTRATOR, Console::No},
+            {"path",        HandleMmapPathCommand,        SEC_ADMINISTRATOR, Console::No},
+            {"stats",       HandleMmapStatsCommand,       SEC_ADMINISTRATOR, Console::No},
+            {"testarea",    HandleMmapTestArea,           SEC_ADMINISTRATOR, Console::No}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "mmap", mmapCommandTable }
+        static ChatCommandTable commandTable = {
+            {"mmap", mmapCommandTable}
         };
         return commandTable;
     }
@@ -84,14 +82,10 @@ public:
         {
             auto paramValue = param.value();
             if (paramValue.starts_with("true"))
-            {
                 useStraightPath = true;
-            }
 
             if (paramValue.starts_with("line") || paramValue.starts_with("ray") || paramValue.starts_with("raycast"))
-            {
                 useRaycast = true;
-            }
         }
 
         // unit locations
@@ -106,8 +100,12 @@ public:
 
         Movement::PointsArray const& pointPath = path.GetPath();
         handler->PSendSysMessage("{}'s path to {}:", target->GetName(), player->GetName());
-        handler->PSendSysMessage("Building: {}", useStraightPath ? "StraightPath" : useRaycast ? "Raycast" : "SmoothPath");
-        handler->PSendSysMessage("Result: {} - Length: {} - Type: {}", (result ? "true" : "false"), pointPath.size(), path.GetPathType());
+        handler->PSendSysMessage("Building: {}",
+            useStraightPath ? "StraightPath"
+            : useRaycast    ? "Raycast"
+                            : "SmoothPath");
+        handler->PSendSysMessage(
+            "Result: {} - Length: {} - Type: {}", (result ? "true" : "false"), pointPath.size(), path.GetPathType());
 
         G3D::Vector3 const& start = path.GetStartPosition();
         G3D::Vector3 const& end = path.GetEndPosition();
@@ -140,8 +138,10 @@ public:
         handler->PSendSysMessage("gridloc [{}, {}]", gy, gx);
 
         // calculate navmesh tile location
-        dtNavMesh const* navmesh = MMAP::MMapFactory::createOrGetMMapMgr()->GetNavMesh(handler->GetSession()->GetPlayer()->GetMapId());
-        dtNavMeshQuery const* navmeshquery = MMAP::MMapFactory::createOrGetMMapMgr()->GetNavMeshQuery(handler->GetSession()->GetPlayer()->GetMapId(), player->GetInstanceId());
+        dtNavMesh const* navmesh =
+            MMAP::MMapFactory::createOrGetMMapMgr()->GetNavMesh(handler->GetSession()->GetPlayer()->GetMapId());
+        dtNavMeshQuery const* navmeshquery = MMAP::MMapFactory::createOrGetMMapMgr()->GetNavMeshQuery(
+            handler->GetSession()->GetPlayer()->GetMapId(), player->GetInstanceId());
         if (!navmesh || !navmeshquery)
         {
             handler->PSendSysMessage("NavMesh not loaded for current map.");
@@ -193,7 +193,8 @@ public:
     {
         uint32 mapid = handler->GetSession()->GetPlayer()->GetMapId();
         dtNavMesh const* navmesh = MMAP::MMapFactory::createOrGetMMapMgr()->GetNavMesh(mapid);
-        dtNavMeshQuery const* navmeshquery = MMAP::MMapFactory::createOrGetMMapMgr()->GetNavMeshQuery(mapid, handler->GetSession()->GetPlayer()->GetInstanceId());
+        dtNavMeshQuery const* navmeshquery = MMAP::MMapFactory::createOrGetMMapMgr()->GetNavMeshQuery(
+            mapid, handler->GetSession()->GetPlayer()->GetInstanceId());
         if (!navmesh || !navmeshquery)
         {
             handler->PSendSysMessage("NavMesh not loaded for current map.");
@@ -220,7 +221,8 @@ public:
         //handler->PSendSysMessage("  global mmap pathfinding is %sabled", DisableMgr::IsPathfindingEnabled(mapId) ? "en" : "dis");
 
         MMAP::MMapMgr* manager = MMAP::MMapFactory::createOrGetMMapMgr();
-        handler->PSendSysMessage(" {} maps loaded with {} tiles overall", manager->getLoadedMapsCount(), manager->getLoadedTilesCount());
+        handler->PSendSysMessage(
+            " {} maps loaded with {} tiles overall", manager->getLoadedMapsCount(), manager->getLoadedTilesCount());
 
         dtNavMesh const* navmesh = manager->GetNavMesh(handler->GetSession()->GetPlayer()->GetMapId());
         if (!navmesh)
@@ -256,7 +258,8 @@ public:
         handler->PSendSysMessage(" {} BVTree nodes", nodeCount);
         handler->PSendSysMessage(" {} polygons ({} vertices)", polyCount, vertCount);
         handler->PSendSysMessage(" {} triangles ({} vertices)", triCount, triVertCount);
-        handler->PSendSysMessage(" {} MB of data (not including pointers)", ((float)dataSize / sizeof(unsigned char)) / 1048576);
+        handler->PSendSysMessage(
+            " {} MB of data (not including pointers)", ((float)dataSize / sizeof(unsigned char)) / 1048576);
 
         return true;
     }

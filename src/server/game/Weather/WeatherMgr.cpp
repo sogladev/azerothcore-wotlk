@@ -43,7 +43,7 @@ namespace WeatherMgr
             WeatherZoneMap::const_iterator itr = mWeatherZoneMap.find(zone_id);
             return (itr != mWeatherZoneMap.end()) ? &itr->second : nullptr;
         }
-    }
+    } // namespace
 
     /// Find a Weather object by the given zoneid
     Weather* FindWeather(uint32 id)
@@ -85,12 +85,13 @@ namespace WeatherMgr
 
         uint32 count = 0;
 
-        QueryResult result = WorldDatabase.Query("SELECT "
-                             "zone, spring_rain_chance, spring_snow_chance, spring_storm_chance,"
-                             "summer_rain_chance, summer_snow_chance, summer_storm_chance,"
-                             "fall_rain_chance, fall_snow_chance, fall_storm_chance,"
-                             "winter_rain_chance, winter_snow_chance, winter_storm_chance,"
-                             "ScriptName FROM game_weather");
+        QueryResult result = WorldDatabase.Query(
+            "SELECT "
+            "zone, spring_rain_chance, spring_snow_chance, spring_storm_chance,"
+            "summer_rain_chance, summer_snow_chance, summer_storm_chance,"
+            "fall_rain_chance, fall_snow_chance, fall_storm_chance,"
+            "winter_rain_chance, winter_snow_chance, winter_storm_chance,"
+            "ScriptName FROM game_weather");
 
         if (!result)
         {
@@ -109,8 +110,8 @@ namespace WeatherMgr
 
             for (uint8 season = 0; season < WEATHER_SEASONS; ++season)
             {
-                wzc.data[season].rainChance  = fields[season * (MAX_WEATHER_TYPE - 1) + 1].Get<uint8>();
-                wzc.data[season].snowChance  = fields[season * (MAX_WEATHER_TYPE - 1) + 2].Get<uint8>();
+                wzc.data[season].rainChance = fields[season * (MAX_WEATHER_TYPE - 1) + 1].Get<uint8>();
+                wzc.data[season].snowChance = fields[season * (MAX_WEATHER_TYPE - 1) + 2].Get<uint8>();
                 wzc.data[season].stormChance = fields[season * (MAX_WEATHER_TYPE - 1) + 3].Get<uint8>();
 
                 if (wzc.data[season].rainChance > 100)
@@ -128,7 +129,8 @@ namespace WeatherMgr
                 if (wzc.data[season].stormChance > 100)
                 {
                     wzc.data[season].stormChance = 25;
-                    LOG_ERROR("sql.sql", "Weather for zone {} season {} has wrong storm chance > 100%", zone_id, season);
+                    LOG_ERROR(
+                        "sql.sql", "Weather for zone {} season {} has wrong storm chance > 100%", zone_id, season);
                 }
             }
 
@@ -163,4 +165,4 @@ namespace WeatherMgr
         }
     }
 
-} // namespace
+} // namespace WeatherMgr

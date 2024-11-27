@@ -16,23 +16,23 @@
  */
 
 #include "CreatureScript.h"
-#include "halls_of_reflection.h"
 #include "ScriptedCreature.h"
+#include "halls_of_reflection.h"
 
 enum Yells
 {
-    SAY_AGGRO                                     = 0,
-    SAY_SLAY                                      = 1,
-    SAY_DEATH                                     = 2,
-    SAY_IMPENDING_DESPAIR                         = 3,
-    SAY_DEFILING_HORROR                           = 4,
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_IMPENDING_DESPAIR = 3,
+    SAY_DEFILING_HORROR = 4,
 };
 
 enum Spells
 {
-    SPELL_QUIVERING_STRIKE                        = 72422,
-    SPELL_IMPENDING_DESPAIR                       = 72426,
-    SPELL_DEFILING_HORROR                         = 72435,
+    SPELL_QUIVERING_STRIKE = 72422,
+    SPELL_IMPENDING_DESPAIR = 72426,
+    SPELL_DEFILING_HORROR = 72435,
 };
 
 enum Events
@@ -44,7 +44,11 @@ enum Events
     EVENT_UNROOT,
 };
 
-const uint32 hopelessnessId[3][2] = { {72395, 72390}, {72396, 72391}, {72397, 72393} };
+uint32 const hopelessnessId[3][2] = {
+    {72395, 72390},
+    {72396, 72391},
+    {72397, 72393}
+};
 
 class boss_falric : public CreatureScript
 {
@@ -140,7 +144,8 @@ public:
                     break;
             }
 
-            if ((uiHopelessnessCount == 0 && HealthBelowPct(67)) || (uiHopelessnessCount == 1 && HealthBelowPct(34)) || (uiHopelessnessCount == 2 && HealthBelowPct(11)))
+            if ((uiHopelessnessCount == 0 && HealthBelowPct(67)) || (uiHopelessnessCount == 1 && HealthBelowPct(34)) ||
+                (uiHopelessnessCount == 2 && HealthBelowPct(11)))
             {
                 if (uiHopelessnessCount)
                     me->RemoveOwnedAura(hopelessnessId[uiHopelessnessCount - 1][DUNGEON_MODE(0, 1)]);

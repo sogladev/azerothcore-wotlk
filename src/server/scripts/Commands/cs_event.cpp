@@ -15,7 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
- /* ScriptData
+/* ScriptData
  Name: event_commandscript
  %Complete: 100
  Comment: All event related commands
@@ -40,16 +40,14 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable eventCommandTable =
-        {
-            { "activelist", HandleEventActiveListCommand, SEC_GAMEMASTER, Console::Yes },
-            { "start",      HandleEventStartCommand,      SEC_GAMEMASTER, Console::Yes },
-            { "stop",       HandleEventStopCommand,       SEC_GAMEMASTER, Console::Yes },
-            { "info",       HandleEventInfoCommand,       SEC_GAMEMASTER, Console::Yes }
+        static ChatCommandTable eventCommandTable = {
+            {"activelist", HandleEventActiveListCommand, SEC_GAMEMASTER, Console::Yes},
+            {"start",      HandleEventStartCommand,      SEC_GAMEMASTER, Console::Yes},
+            {"stop",       HandleEventStopCommand,       SEC_GAMEMASTER, Console::Yes},
+            {"info",       HandleEventInfoCommand,       SEC_GAMEMASTER, Console::Yes}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "event", eventCommandTable }
+        static ChatCommandTable commandTable = {
+            {"event", eventCommandTable}
         };
         return commandTable;
     }
@@ -68,21 +66,15 @@ public:
             GameEventData const& eventData = events[eventId];
 
             if (handler->GetSession())
-            {
                 handler->PSendSysMessage(LANG_EVENT_ENTRY_LIST_CHAT, eventId, eventId, eventData.description, active);
-            }
             else
-            {
                 handler->PSendSysMessage(LANG_EVENT_ENTRY_LIST_CONSOLE, eventId, eventData.description, active);
-            }
 
             ++counter;
         }
 
         if (counter == 0)
-        {
             handler->SendSysMessage(LANG_NOEVENTFOUND);
-        }
 
         handler->SetSentErrorMessage(true);
 
@@ -115,13 +107,21 @@ public:
 
         uint32 delay = sGameEventMgr->NextCheck(eventId);
         time_t nextTime = GameTime::GetGameTime().count() + delay;
-        std::string nextStr = nextTime >= eventData.start && nextTime < eventData.end ? Acore::Time::TimeToTimestampStr(Seconds(nextTime)) : "-";
+        std::string nextStr = nextTime >= eventData.start && nextTime < eventData.end
+                                  ? Acore::Time::TimeToTimestampStr(Seconds(nextTime))
+                                  : "-";
 
         std::string occurenceStr = secsToTimeString(eventData.occurence * MINUTE, true);
         std::string lengthStr = secsToTimeString(eventData.length * MINUTE, true);
 
-        handler->PSendSysMessage(LANG_EVENT_INFO, uint16(eventId), eventData.description, activeStr,
-            startTimeStr, endTimeStr, occurenceStr, lengthStr,
+        handler->PSendSysMessage(LANG_EVENT_INFO,
+            uint16(eventId),
+            eventData.description,
+            activeStr,
+            startTimeStr,
+            endTimeStr,
+            occurenceStr,
+            lengthStr,
             nextStr);
 
         return true;

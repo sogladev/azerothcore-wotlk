@@ -28,44 +28,44 @@
 
 enum Yells
 {
-    SAY_AGGRO                               = 0,
-    SAY_SACRIFICE_1                         = 1,
-    SAY_SACRIFICE_2                         = 2,
-    SAY_SLAY                                = 3,
-    SAY_DEATH                               = 4,
-    SAY_PREACHING                           = 5,
+    SAY_AGGRO = 0,
+    SAY_SACRIFICE_1 = 1,
+    SAY_SACRIFICE_2 = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4,
+    SAY_PREACHING = 5,
 
     // Initiate
-    SAY_CHOSEN                              = 0,
-    SAY_SACRIFICED                          = 1,
+    SAY_CHOSEN = 0,
+    SAY_SACRIFICED = 1,
 };
 
 enum Spells
 {
     // VISUALS
-    SPELL_SPHERE_VISUAL                     = 56075,
-    SPELL_WHITE_SPHERE                      = 56102,
-    SPELL_LIGHTNING_BOLTS                   = 56327,
-    SPELL_ACTIVATE_INITIATE                 = 56868,
-    SPELL_SACRIFICE_VISUAL                  = 56133,
-    SPELL_SACRIFICE_BEAM                    = 56150,
-    SPELL_HOVER_FALL                        = 56100,
-    SPELL_BEAM_VISUAL_JEDOGA                = 56312,
+    SPELL_SPHERE_VISUAL = 56075,
+    SPELL_WHITE_SPHERE = 56102,
+    SPELL_LIGHTNING_BOLTS = 56327,
+    SPELL_ACTIVATE_INITIATE = 56868,
+    SPELL_SACRIFICE_VISUAL = 56133,
+    SPELL_SACRIFICE_BEAM = 56150,
+    SPELL_HOVER_FALL = 56100,
+    SPELL_BEAM_VISUAL_JEDOGA = 56312,
 
     // FIGHT
-    SPELL_GIFT_OF_THE_HERALD                = 56219,
-    SPELL_CYCLONE_STRIKE                    = 56855, // Self
-    SPELL_CYCLONE_STRIKE_H                  = 60030,
-    SPELL_LIGHTNING_BOLT                    = 56891, // 40Y
-    SPELL_LIGHTNING_BOLT_H                  = 60032, // 40Y
-    SPELL_THUNDERSHOCK                      = 56926, // 30Y
-    SPELL_THUNDERSHOCK_H                    = 60029  // 30Y
+    SPELL_GIFT_OF_THE_HERALD = 56219,
+    SPELL_CYCLONE_STRIKE = 56855, // Self
+    SPELL_CYCLONE_STRIKE_H = 60030,
+    SPELL_LIGHTNING_BOLT = 56891,   // 40Y
+    SPELL_LIGHTNING_BOLT_H = 60032, // 40Y
+    SPELL_THUNDERSHOCK = 56926,     // 30Y
+    SPELL_THUNDERSHOCK_H = 60029    // 30Y
 };
 
 enum Events
 {
     // Jedoga
-    EVENT_JEDOGA_CYCLONE                    = 1,
+    EVENT_JEDOGA_CYCLONE = 1,
     EVENT_JEDOGA_LIGHTNING_BOLT,
     EVENT_JEDOGA_THUNDERSHOCK,
     EVENT_JEDOGA_PREPARE_RITUAL,
@@ -79,25 +79,25 @@ enum Events
 
 enum Creatures
 {
-    NPC_TWILIGHT_INITIATE                   = 30114,
-    NPC_TWILIGHT_VOLUNTEER                  = 30385,
+    NPC_TWILIGHT_INITIATE = 30114,
+    NPC_TWILIGHT_VOLUNTEER = 30385,
 };
 
 enum Misc : uint32
 {
-    MAX_COMBAT_INITIATES                    = 25,
-    DATA_VOLUNTEER_WORK                     = 1,
+    MAX_COMBAT_INITIATES = 25,
+    DATA_VOLUNTEER_WORK = 1,
 };
 
 enum SummonGroups
 {
-    SUMMON_GROUP_OOC                        = 0,
-    SUMMON_GROUP_OOC_TRIGGERS               = 1,
+    SUMMON_GROUP_OOC = 0,
+    SUMMON_GROUP_OOC_TRIGGERS = 1,
 };
 
 enum Points
 {
-    POINT_DOWN                              = 1,
+    POINT_DOWN = 1,
     POINT_UP,
     POINT_RITUAL,
     POINT_INITIAL,
@@ -105,57 +105,58 @@ enum Points
 
 enum Phases
 {
-    PHASE_NORMAL                            = 0x01,
-    PHASE_RITUAL                            = 0x02,
+    PHASE_NORMAL = 0x01,
+    PHASE_RITUAL = 0x02,
 };
 
 enum Actions
 {
-    ACTION_RITUAL_BEGIN                     = 1,
+    ACTION_RITUAL_BEGIN = 1,
     ACTION_SACRAFICE,
 };
 
-const Position JedogaPosition[3] =
-{
-    { 372.330994f,  -705.278015f,   -2.459692f  },     // POINT_DOWN
-    { 372.330994f,  -705.278015f,   -16.179716f },     // POINT_UP
-    { 373.48f,      -706.00f,       -16.18f     }      // POINT_RITUAL and POINT_INITIAL. This positions also is used for visual trigger used for ritual
+Position const JedogaPosition[3] = {
+    {372.330994f, -705.278015f, -2.459692f }, // POINT_DOWN
+    {372.330994f, -705.278015f, -16.179716f}, // POINT_UP
+    {373.48f,
+     -706.00f,
+     -16.18f                               }  // POINT_RITUAL and POINT_INITIAL. This positions also is used for visual trigger used for ritual
 };
 
 // Combat summon locations
-const Position VolunteerSpotPositions[MAX_COMBAT_INITIATES][2] =
-{
-        //        Spawn position           ||            Move position
-    { { 400.7701f, -784.8928f, -31.60143f }, { 365.9514f, -719.1235f, -16.17974f } },
-    { { 397.3595f, -788.5157f, -31.59679f }, { 359.7433f, -715.017f,  -16.17974f } },
-    { { 399.3177f, -787.2599f, -31.59631f }, { 362.0263f, -719.1036f, -16.17974f } },
-    { { 460.4623f, -719.2227f, -31.58718f }, { 389.266f,  -679.3693f, -16.17973f } },
-    { { 456.0909f, -724.3412f, -31.58718f }, { 400.5992f, -691.7954f, -16.17973f } },
-    { { 452.6613f, -726.9518f, -31.58718f }, { 400.3423f, -701.5115f, -16.17974f } },
-    { { 447.8852f, -732.3298f, -31.58718f }, { 389.861f,  -710.6993f, -16.17974f } },
-    { { 457.562f,  -721.1855f, -31.58718f }, { 395.4494f, -684.5345f, -16.17973f } },
-    { { 451.7243f, -730.2181f, -31.58718f }, { 397.0945f, -708.4188f, -15.99747f } },
-    { { 413.9582f, -777.132f,  -31.58716f }, { 388.1394f, -723.124f,  -15.9938f  } },
-    { { 411.5661f, -781.2356f, -31.58716f }, { 381.7102f, -730.0745f, -15.99554f } },
-    { { 407.395f,  -786.793f,  -31.58716f }, { 366.9791f, -737.3303f, -16.17974f } },
-    { { 404.9166f, -788.3472f, -31.58716f }, { 358.6124f, -735.9944f, -15.9855f  } },
-    { { 401.5697f, -791.2033f, -31.58717f }, { 351.9383f, -729.6436f, -16.17974f } },
-    { { 410.1105f, -785.4691f, -31.58716f }, { 373.1659f, -736.2893f, -16.17974f } },
-    { { 442.5644f, -730.2499f, -31.59826f }, { 390.5955f, -714.6851f, -16.17974f } },
-    { { 445.5233f, -725.9542f, -31.60173f }, { 393.9694f, -708.1727f, -16.17974f } },
-    { { 448.5531f, -722.5888f, -31.60066f }, { 395.2702f, -702.556f,  -16.17974f } },
-    { { 449.8521f, -719.7265f, -31.58849f }, { 394.5757f, -695.1004f, -16.17974f } },
-    { { 453.5134f, -717.7018f, -31.59883f }, { 387.6152f, -690.1782f, -16.17974f } },
-    { { 457.8564f, -711.7424f, -31.59773f }, { 378.6874f, -687.1343f, -16.17973f } },
-    { { 410.0583f, -774.4119f, -31.60115f }, { 383.8151f, -723.4276f, -16.17974f } },
-    { { 408.7458f, -777.955f,  -31.59873f }, { 376.9857f, -725.0735f, -16.17974f } },
-    { { 405.2404f, -779.6614f, -31.60512f }, { 373.3736f, -722.7498f, -16.17974f } },
-    { { 404.0797f, -783.829f,  -31.59497f }, { 367.8631f, -722.5212f, -16.17974f } }
+Position const VolunteerSpotPositions[MAX_COMBAT_INITIATES][2] = {
+    //        Spawn position           ||            Move position
+    {{400.7701f, -784.8928f, -31.60143f}, {365.9514f, -719.1235f, -16.17974f}},
+    {{397.3595f, -788.5157f, -31.59679f}, {359.7433f, -715.017f, -16.17974f} },
+    {{399.3177f, -787.2599f, -31.59631f}, {362.0263f, -719.1036f, -16.17974f}},
+    {{460.4623f, -719.2227f, -31.58718f}, {389.266f, -679.3693f, -16.17973f} },
+    {{456.0909f, -724.3412f, -31.58718f}, {400.5992f, -691.7954f, -16.17973f}},
+    {{452.6613f, -726.9518f, -31.58718f}, {400.3423f, -701.5115f, -16.17974f}},
+    {{447.8852f, -732.3298f, -31.58718f}, {389.861f, -710.6993f, -16.17974f} },
+    {{457.562f, -721.1855f, -31.58718f},  {395.4494f, -684.5345f, -16.17973f}},
+    {{451.7243f, -730.2181f, -31.58718f}, {397.0945f, -708.4188f, -15.99747f}},
+    {{413.9582f, -777.132f, -31.58716f},  {388.1394f, -723.124f, -15.9938f}  },
+    {{411.5661f, -781.2356f, -31.58716f}, {381.7102f, -730.0745f, -15.99554f}},
+    {{407.395f, -786.793f, -31.58716f},   {366.9791f, -737.3303f, -16.17974f}},
+    {{404.9166f, -788.3472f, -31.58716f}, {358.6124f, -735.9944f, -15.9855f} },
+    {{401.5697f, -791.2033f, -31.58717f}, {351.9383f, -729.6436f, -16.17974f}},
+    {{410.1105f, -785.4691f, -31.58716f}, {373.1659f, -736.2893f, -16.17974f}},
+    {{442.5644f, -730.2499f, -31.59826f}, {390.5955f, -714.6851f, -16.17974f}},
+    {{445.5233f, -725.9542f, -31.60173f}, {393.9694f, -708.1727f, -16.17974f}},
+    {{448.5531f, -722.5888f, -31.60066f}, {395.2702f, -702.556f, -16.17974f} },
+    {{449.8521f, -719.7265f, -31.58849f}, {394.5757f, -695.1004f, -16.17974f}},
+    {{453.5134f, -717.7018f, -31.59883f}, {387.6152f, -690.1782f, -16.17974f}},
+    {{457.8564f, -711.7424f, -31.59773f}, {378.6874f, -687.1343f, -16.17973f}},
+    {{410.0583f, -774.4119f, -31.60115f}, {383.8151f, -723.4276f, -16.17974f}},
+    {{408.7458f, -777.955f, -31.59873f},  {376.9857f, -725.0735f, -16.17974f}},
+    {{405.2404f, -779.6614f, -31.60512f}, {373.3736f, -722.7498f, -16.17974f}},
+    {{404.0797f, -783.829f, -31.59497f},  {367.8631f, -722.5212f, -16.17974f}}
 };
 
 struct boss_jedoga_shadowseeker : public BossAI
 {
-    boss_jedoga_shadowseeker(Creature* pCreature) : BossAI(pCreature, DATA_JEDOGA_SHADOWSEEKER),
+    boss_jedoga_shadowseeker(Creature* pCreature) :
+        BossAI(pCreature, DATA_JEDOGA_SHADOWSEEKER),
         sayPreachTimer(120000),
         combatSummonsSummoned(false),
         ritualTriggered(false),
@@ -163,7 +164,7 @@ struct boss_jedoga_shadowseeker : public BossAI
     { }
 
     // Disabled events
-    void MoveInLineOfSight(Unit* /*who*/) override {}
+    void MoveInLineOfSight(Unit* /*who*/) override { }
 
     void Reset() override
     {
@@ -203,12 +204,8 @@ struct boss_jedoga_shadowseeker : public BossAI
         if (!tempOOCSummons.empty())
         {
             for (TempSummon* trigger : tempOOCSummons)
-            {
                 if (trigger)
-                {
                     oocTriggers.push_back(trigger->GetGUID());
-                }
-            }
         }
 
         sacraficeTarget_GUID.Clear();
@@ -221,9 +218,7 @@ struct boss_jedoga_shadowseeker : public BossAI
     void JustSummoned(Creature* summon) override
     {
         if (summon->GetEntry() == NPC_JEDOGA_CONTROLLER)
-        {
             summons.Summon(summon);
-        }
     }
 
     void SummonedCreatureDies(Creature* summon, Unit* killer) override
@@ -234,15 +229,11 @@ struct boss_jedoga_shadowseeker : public BossAI
             {
                 GuidList::iterator itr = std::find(oocSummons.begin(), oocSummons.end(), summon->GetGUID());
                 if (itr == oocSummons.end())
-                {
                     break;
-                }
 
                 oocSummons.erase(itr);
                 if (!oocSummons.empty())
-                {
                     break;
-                }
 
                 DespawnOOCSummons();
                 DoCastSelf(SPELL_HOVER_FALL);
@@ -254,7 +245,10 @@ struct boss_jedoga_shadowseeker : public BossAI
                     summons.DespawnEntry(NPC_TWILIGHT_VOLUNTEER);
                     for (uint8 i = 0; i < MAX_COMBAT_INITIATES; ++i)
                     {
-                        if (TempSummon* summon = me->SummonCreature(NPC_TWILIGHT_VOLUNTEER, VolunteerSpotPositions[i][0], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
+                        if (TempSummon* summon = me->SummonCreature(NPC_TWILIGHT_VOLUNTEER,
+                                VolunteerSpotPositions[i][0],
+                                TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                                5000))
                         {
                             summon->GetMotionMaster()->MovePoint(POINT_INITIAL, VolunteerSpotPositions[i][1]);
                             summon->SetReactState(REACT_PASSIVE);
@@ -271,18 +265,12 @@ struct boss_jedoga_shadowseeker : public BossAI
             case NPC_TWILIGHT_VOLUNTEER:
             {
                 if (sacraficeTarget_GUID && summon->GetGUID() != sacraficeTarget_GUID)
-                {
                     break;
-                }
 
                 if (killer != me && killer->GetGUID() != sacraficeTarget_GUID)
-                {
                     volunteerWork = false;
-                }
                 else
-                {
                     DoCastSelf(SPELL_GIFT_OF_THE_HERALD, true);
-                }
                 events.ScheduleEvent(EVENT_JEDOGA_MOVE_DOWN, 1s, 0, PHASE_RITUAL);
                 break;
             }
@@ -291,7 +279,8 @@ struct boss_jedoga_shadowseeker : public BossAI
         summons.Despawn(summon);
     }
 
-    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damageType*/, SpellSchoolMask /*school*/) override
+    void DamageTaken(
+        Unit* /*attacker*/, uint32& damage, DamageEffectType /*damageType*/, SpellSchoolMask /*school*/) override
     {
         if (!ritualTriggered && me->HealthBelowPctDamaged(55, damage) && events.IsInPhase(PHASE_NORMAL))
         {
@@ -308,9 +297,7 @@ struct boss_jedoga_shadowseeker : public BossAI
         }
 
         if (events.IsInPhase(PHASE_RITUAL))
-        {
             damage = 0;
-        }
     }
 
     void DoAction(int32 action) override
@@ -318,9 +305,7 @@ struct boss_jedoga_shadowseeker : public BossAI
         if (action == ACTION_SACRAFICE)
         {
             if (Creature* target = ObjectAccessor::GetCreature(*me, sacraficeTarget_GUID))
-            {
                 Unit::Kill(me, target);
-            }
         }
     }
 
@@ -334,9 +319,7 @@ struct boss_jedoga_shadowseeker : public BossAI
     void KilledUnit(Unit* who) override
     {
         if (!who->IsPlayer())
-        {
             return;
-        }
 
         Talk(SAY_SLAY);
     }
@@ -351,9 +334,7 @@ struct boss_jedoga_shadowseeker : public BossAI
     void MovementInform(uint32 type, uint32 pointId) override
     {
         if (!(type == POINT_MOTION_TYPE || type == EFFECT_MOTION_TYPE))
-        {
             return;
-        }
 
         switch (pointId)
         {
@@ -417,12 +398,8 @@ struct boss_jedoga_shadowseeker : public BossAI
                 if (!oocTriggers.empty())
                 {
                     for (ObjectGuid const& guid : oocTriggers)
-                    {
                         if (Creature* trigger = ObjectAccessor::GetCreature(*me, guid))
-                        {
                             trigger->CastSpell(nullptr, SPELL_BEAM_VISUAL_JEDOGA);
-                        }
-                    }
                 }
                 break;
             }
@@ -438,7 +415,7 @@ struct boss_jedoga_shadowseeker : public BossAI
                 if (sayPreachTimer <= diff)
                 {
                     Talk(SAY_PREACHING);
-                    sayPreachTimer = 120000;    // 2 min
+                    sayPreachTimer = 120000; // 2 min
                 }
                 else
                 {
@@ -450,9 +427,7 @@ struct boss_jedoga_shadowseeker : public BossAI
 
         events.Update(diff);
         if (me->HasUnitState(UNIT_STATE_CASTING))
-        {
             return;
-        }
 
         while (uint32 const eventId = events.ExecuteEvent())
         {
@@ -468,18 +443,14 @@ struct boss_jedoga_shadowseeker : public BossAI
                 case EVENT_JEDOGA_LIGHTNING_BOLT:
                 {
                     if (Unit* pTarget = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
-                    {
                         DoCast(pTarget, DUNGEON_MODE(SPELL_LIGHTNING_BOLT, SPELL_LIGHTNING_BOLT_H), false);
-                    }
                     events.Repeat(11s, 15s);
                     break;
                 }
                 case EVENT_JEDOGA_THUNDERSHOCK:
                 {
                     if (Unit* pTarget = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
-                    {
                         DoCast(pTarget, DUNGEON_MODE(SPELL_THUNDERSHOCK, SPELL_THUNDERSHOCK_H), false);
-                    }
 
                     events.Repeat(16s, 22s);
                     break;
@@ -527,9 +498,7 @@ struct boss_jedoga_shadowseeker : public BossAI
     uint32 GetData(uint32 type) const override
     {
         if (type == DATA_VOLUNTEER_WORK)
-        {
             return volunteerWork ? 1 : 0;
-        }
 
         return 0;
     }
@@ -556,24 +525,16 @@ private:
         if (!oocTriggers.empty())
         {
             for (ObjectGuid const& guid : oocTriggers)
-            {
                 if (Creature* summon = ObjectAccessor::GetCreature(*me, guid))
-                {
                     summon->DespawnOrUnsummon();
-                }
-            }
             oocTriggers.clear();
         }
 
         if (!oocSummons.empty())
         {
             for (ObjectGuid const& guid : oocSummons)
-            {
                 if (Creature* summon = ObjectAccessor::GetCreature(*me, guid))
-                {
                     summon->DespawnOrUnsummon();
-                }
-            }
             oocSummons.clear();
         }
     }
@@ -581,11 +542,11 @@ private:
 
 struct npc_twilight_volunteer : public ScriptedAI
 {
-    npc_twilight_volunteer(Creature* pCreature) : ScriptedAI(pCreature),
+    npc_twilight_volunteer(Creature* pCreature) :
+        ScriptedAI(pCreature),
         pInstance(pCreature->GetInstanceScript()),
         isSacraficeTarget(false)
-    {
-    }
+    { }
 
     void DoAction(int32 action) override
     {
@@ -611,25 +572,19 @@ struct npc_twilight_volunteer : public ScriptedAI
     void EnterEvadeMode(EvadeReason why) override
     {
         if (!isSacraficeTarget)
-        {
             ScriptedAI::EnterEvadeMode(why);
-        }
     }
 
     void AttackStart(Unit* who) override
     {
         if (!isSacraficeTarget)
-        {
             ScriptedAI::AttackStart(who);
-        }
     }
 
     void MovementInform(uint32 type, uint32 id) override
     {
         if (type != POINT_MOTION_TYPE)
-        {
             return;
-        }
 
         if (id == POINT_INITIAL)
         {
@@ -667,7 +622,8 @@ struct npc_twilight_volunteer : public ScriptedAI
 
                 if (Creature* jedoga = pInstance->GetCreature(DATA_JEDOGA_SHADOWSEEKER))
                 {
-                    if (Creature* ritualTrigger = jedoga->SummonCreature(NPC_JEDOGA_CONTROLLER, JedogaPosition[2], TEMPSUMMON_TIMED_DESPAWN, 15000))
+                    if (Creature* ritualTrigger = jedoga->SummonCreature(
+                            NPC_JEDOGA_CONTROLLER, JedogaPosition[2], TEMPSUMMON_TIMED_DESPAWN, 15000))
                     {
                         ritualTrigger->CastSpell(ritualTrigger, SPELL_SACRIFICE_VISUAL);
                     }
@@ -676,9 +632,7 @@ struct npc_twilight_volunteer : public ScriptedAI
         }
 
         if (!isSacraficeTarget && UpdateVictim())
-        {
             DoMeleeAttackIfReady();
-        }
     }
 
 private:
@@ -694,33 +648,30 @@ class spell_random_lightning_visual_effect : public SpellScript
 
     void ModDestHeight(SpellDestination& dest)
     {
-        Position const offset = { frand(-15.0f, 15.0f), frand(-15.0f, 15.0f), -19.0f, 0.0f };
+        Position const offset = {frand(-15.0f, 15.0f), frand(-15.0f, 15.0f), -19.0f, 0.0f};
         dest.RelocateOffset(offset);
     }
 
     void Register() override
     {
-        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_random_lightning_visual_effect::ModDestHeight, EFFECT_0, TARGET_DEST_CASTER_RANDOM);
+        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(
+            spell_random_lightning_visual_effect::ModDestHeight, EFFECT_0, TARGET_DEST_CASTER_RANDOM);
     }
 };
 
 // CriteriaID 7359, Volunteer Work (2056)
 class achievement_volunteer_work : public AchievementCriteriaScript
 {
-    public:
-        achievement_volunteer_work() : AchievementCriteriaScript("achievement_volunteer_work")
-        {
-        }
+public:
+    achievement_volunteer_work() : AchievementCriteriaScript("achievement_volunteer_work") { }
 
-        bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
-        {
-            if (Creature const* jedoga = target ? target->ToCreature() : nullptr)
-            {
-                return jedoga->AI()->GetData(DATA_VOLUNTEER_WORK) == 1;
-            }
+    bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
+    {
+        if (Creature const* jedoga = target ? target->ToCreature() : nullptr)
+            return jedoga->AI()->GetData(DATA_VOLUNTEER_WORK) == 1;
 
-            return false;
-        }
+        return false;
+    }
 };
 
 void AddSC_boss_jedoga_shadowseeker()

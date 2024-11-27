@@ -21,15 +21,15 @@
 
 enum HydromancerThespia
 {
-    SAY_SUMMON                  = 0, // Unused or Unknown Use
-    SAY_AGGRO                   = 1,
-    SAY_SLAY                    = 2,
-    SAY_DEAD                    = 3,
-    SAY_SPELL                   = 4,
+    SAY_SUMMON = 0, // Unused or Unknown Use
+    SAY_AGGRO = 1,
+    SAY_SLAY = 2,
+    SAY_DEAD = 3,
+    SAY_SPELL = 4,
 
-    SPELL_LIGHTNING_CLOUD       = 25033,
-    SPELL_LUNG_BURST            = 31481,
-    SPELL_ENVELOPING_WINDS      = 31718
+    SPELL_LIGHTNING_CLOUD = 25033,
+    SPELL_LUNG_BURST = 31481,
+    SPELL_ENVELOPING_WINDS = 31718
 };
 
 struct boss_hydromancer_thespia : public BossAI
@@ -41,17 +41,13 @@ struct boss_hydromancer_thespia : public BossAI
         _JustDied();
         Talk(SAY_DEAD);
 
-        instance->DoForAllMinions(DATA_HYDROMANCER_THESPIA, [&](Creature* creature) {
-            creature->DespawnOrUnsummon();
-        });
+        instance->DoForAllMinions(DATA_HYDROMANCER_THESPIA, [&](Creature* creature) { creature->DespawnOrUnsummon(); });
     }
 
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustEngagedWith(Unit* /*who*/) override
@@ -59,16 +55,22 @@ struct boss_hydromancer_thespia : public BossAI
         Talk(SAY_AGGRO);
         _JustEngagedWith();
 
-        scheduler.Schedule(9800ms, [this](TaskContext context)
+        scheduler
+            .Schedule(9800ms,
+                [this](TaskContext context)
         {
             Talk(SAY_SPELL);
             DoCastRandomTarget(SPELL_LIGHTNING_CLOUD);
             context.Repeat(12100ms, 14500ms);
-        }).Schedule(13300ms, [this](TaskContext context)
+        })
+            .Schedule(13300ms,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_LUNG_BURST);
             context.Repeat(21800ms, 25400ms);
-        }).Schedule(14500ms, [this](TaskContext context)
+        })
+            .Schedule(14500ms,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_ENVELOPING_WINDS);
             context.Repeat(30s, 40s);

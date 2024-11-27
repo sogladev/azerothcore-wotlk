@@ -24,53 +24,53 @@
 
 enum MillhouseSays
 {
-    SAY_INTRO_1                 = 0,
-    SAY_INTRO_2                 = 1,
-    SAY_WATER                   = 2,
-    SAY_BUFFS                   = 3,
-    SAY_DRINK                   = 4,
-    SAY_READY                   = 5,
-    SAY_KILL                    = 6,
-    SAY_PYRO                    = 7,
-    SAY_ICEBLOCK                = 8,
-    SAY_LOWHP                   = 9,
-    SAY_DEATH                   = 10,
-    SAY_COMPLETE                = 11,
-    SAY_INTRO_3                 = 12,
-    SAY_INTRO_4                 = 13,
+    SAY_INTRO_1 = 0,
+    SAY_INTRO_2 = 1,
+    SAY_WATER = 2,
+    SAY_BUFFS = 3,
+    SAY_DRINK = 4,
+    SAY_READY = 5,
+    SAY_KILL = 6,
+    SAY_PYRO = 7,
+    SAY_ICEBLOCK = 8,
+    SAY_LOWHP = 9,
+    SAY_DEATH = 10,
+    SAY_COMPLETE = 11,
+    SAY_INTRO_3 = 12,
+    SAY_INTRO_4 = 13,
 };
 
 enum MillhouseSpells
 {
-    SPELL_CONJURE_WATER         = 36879,
-    SPELL_ARCANE_INTELLECT      = 36880,
-    SPELL_ICE_ARMOR             = 36881,
-    SPELL_ARCANE_MISSILES       = 33832,
-    SPELL_CONE_OF_COLD          = 12611,
-    SPELL_FIRE_BLAST            = 13341,
-    SPELL_FIREBALL              = 14034,
-    SPELL_FROSTBOLT             = 15497,
-    SPELL_PYROBLAST             = 33975,
-    SPELL_ICEBLOCK              = 36911,
+    SPELL_CONJURE_WATER = 36879,
+    SPELL_ARCANE_INTELLECT = 36880,
+    SPELL_ICE_ARMOR = 36881,
+    SPELL_ARCANE_MISSILES = 33832,
+    SPELL_CONE_OF_COLD = 12611,
+    SPELL_FIRE_BLAST = 13341,
+    SPELL_FIREBALL = 14034,
+    SPELL_FROSTBOLT = 15497,
+    SPELL_PYROBLAST = 33975,
+    SPELL_ICEBLOCK = 36911,
 };
 
 enum MillhouseEvents
 {
-    EVENT_MILLHOUSE_INTRO1      = 1,
-    EVENT_MILLHOUSE_INTRO2      = 2,
-    EVENT_MILLHOUSE_INTRO3      = 3,
-    EVENT_MILLHOUSE_INTRO4      = 4,
-    EVENT_MILLHOUSE_INTRO5      = 5,
-    EVENT_MILLHOUSE_INTRO6      = 6,
-    EVENT_MILLHOUSE_INTRO7      = 7,
-    EVENT_MILLHOUSE_INTRO8      = 8,
-    EVENT_MILLHOUSE_INTRO9      = 9,
-    EVENT_SEARCH_FIGHT          = 10,
-    EVENT_TELEPORT_VISUAL       = 11,
+    EVENT_MILLHOUSE_INTRO1 = 1,
+    EVENT_MILLHOUSE_INTRO2 = 2,
+    EVENT_MILLHOUSE_INTRO3 = 3,
+    EVENT_MILLHOUSE_INTRO4 = 4,
+    EVENT_MILLHOUSE_INTRO5 = 5,
+    EVENT_MILLHOUSE_INTRO6 = 6,
+    EVENT_MILLHOUSE_INTRO7 = 7,
+    EVENT_MILLHOUSE_INTRO8 = 8,
+    EVENT_MILLHOUSE_INTRO9 = 9,
+    EVENT_SEARCH_FIGHT = 10,
+    EVENT_TELEPORT_VISUAL = 11,
 
-    EVENT_MILL_CHECK_HEALTH     = 20,
-    EVENT_MILL_PYROBLAST        = 21,
-    EVENT_MILL_BASE_SPELL       = 22
+    EVENT_MILL_CHECK_HEALTH = 20,
+    EVENT_MILL_PYROBLAST = 21,
+    EVENT_MILL_BASE_SPELL = 22
 };
 
 class npc_millhouse_manastorm : public CreatureScript
@@ -130,7 +130,8 @@ public:
             events.ScheduleEvent(EVENT_MILL_BASE_SPELL, 2000);
         }
 
-        void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
+        void DamageTaken(
+            Unit* /*attacker*/, uint32& damage, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
         {
             if (me->HealthBelowPctDamaged(50, damage) && !_usedIceblock)
             {
@@ -245,8 +246,8 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        private:
-            bool _usedIceblock;
+    private:
+        bool _usedIceblock;
     };
 
     CreatureAI* GetAI(Creature* creature) const override
@@ -257,46 +258,46 @@ public:
 
 enum WardenSays
 {
-    YELL_INTRO1             = 0,
-    YELL_INTRO2             = 1,
-    YELL_RELEASE1           = 2,
-    YELL_RELEASE2A          = 3,
-    YELL_RELEASE2B          = 4,
-    YELL_RELEASE3           = 5,
-    YELL_RELEASE4           = 6,
-    YELL_WELCOME            = 7,
+    YELL_INTRO1 = 0,
+    YELL_INTRO2 = 1,
+    YELL_RELEASE1 = 2,
+    YELL_RELEASE2A = 3,
+    YELL_RELEASE2B = 4,
+    YELL_RELEASE3 = 5,
+    YELL_RELEASE4 = 6,
+    YELL_WELCOME = 7,
 
-    SAY_HARBINGER_INTRO     = 0,
+    SAY_HARBINGER_INTRO = 0,
 };
 
 enum WardenUnits
 {
-    NPC_TRICKSTER       = 20905,
-    NPC_PH_HUNTER       = 20906,
-    NPC_MILLHOUSE       = 20977,
-    NPC_AKKIRIS         = 20908,
-    NPC_SULFURON        = 20909,
-    NPC_TW_DRAK         = 20910,
-    NPC_BL_DRAK         = 20911,
+    NPC_TRICKSTER = 20905,
+    NPC_PH_HUNTER = 20906,
+    NPC_MILLHOUSE = 20977,
+    NPC_AKKIRIS = 20908,
+    NPC_SULFURON = 20909,
+    NPC_TW_DRAK = 20910,
+    NPC_BL_DRAK = 20911,
 };
 
 enum WardenSpells
 {
-    SPELL_TARGET_ALPHA  = 36858,
-    SPELL_TARGET_BETA   = 36854,
-    SPELL_TARGET_DELTA  = 36856,
-    SPELL_TARGET_GAMMA  = 36857,
-    SPELL_TARGET_OMEGA  = 36852,
+    SPELL_TARGET_ALPHA = 36858,
+    SPELL_TARGET_BETA = 36854,
+    SPELL_TARGET_DELTA = 36856,
+    SPELL_TARGET_GAMMA = 36857,
+    SPELL_TARGET_OMEGA = 36852,
     SPELL_BUBBLE_VISUAL = 36849,
 
-    SPELL_MIND_REND     = 36859,
-    SPELL_QID10886      = 39564 // Trial of the Naaru: Tenacity
+    SPELL_MIND_REND = 36859,
+    SPELL_QID10886 = 39564 // Trial of the Naaru: Tenacity
 };
 
 enum WardenEvents
 {
-    EVENT_WARDEN_CHECK_PLAYERS  = 1,
-    EVENT_WARDEN_INTRO1         = 2,
+    EVENT_WARDEN_CHECK_PLAYERS = 1,
+    EVENT_WARDEN_INTRO1 = 2,
     EVENT_WARDEN_INTRO2,
     EVENT_WARDEN_INTRO3,
     EVENT_WARDEN_INTRO4,
@@ -334,9 +335,7 @@ public:
 
     struct npc_warden_mellicharAI : public BossAI
     {
-        npc_warden_mellicharAI(Creature* creature) : BossAI(creature, DATA_WARDEN_MELLICHAR)
-        {
-        }
+        npc_warden_mellicharAI(Creature* creature) : BossAI(creature, DATA_WARDEN_MELLICHAR) { }
 
         void JustSummoned(Creature* summon) override
         {
@@ -353,9 +352,7 @@ public:
                 if (Creature* creature = summons.GetCreatureWithEntry(NPC_MILLHOUSE))
                 {
                     if (IsHeroic())
-                    {
                         instance->DoCastSpellOnPlayers(SPELL_QID10886);
-                    }
                     creature->AI()->Talk(SAY_COMPLETE);
                     creature->ReplaceAllNpcFlags(UNIT_NPC_FLAG_GOSSIP);
                 }
@@ -363,7 +360,9 @@ public:
         }
 
         void MoveInLineOfSight(Unit*) override { }
+
         void AttackStart(Unit*) override { }
+
         void JustEngagedWith(Unit*) override { }
 
         void JustDied(Unit*) override
@@ -463,7 +462,12 @@ public:
                     events.ScheduleEvent(EVENT_WARDEN_INTRO7, 5000);
                     break;
                 case EVENT_WARDEN_INTRO7:
-                    me->SummonCreature(RAND(NPC_TRICKSTER, NPC_PH_HUNTER), 478.326f, -148.505f, 42.56f, 3.19f, TEMPSUMMON_MANUAL_DESPAWN);
+                    me->SummonCreature(RAND(NPC_TRICKSTER, NPC_PH_HUNTER),
+                        478.326f,
+                        -148.505f,
+                        42.56f,
+                        3.19f,
+                        TEMPSUMMON_MANUAL_DESPAWN);
                     // Wait for kill
                     break;
                 case EVENT_WARDEN_INTRO8:
@@ -510,7 +514,8 @@ public:
                     events.ScheduleEvent(EVENT_WARDEN_INTRO18, 6000);
                     break;
                 case EVENT_WARDEN_INTRO18:
-                    me->SummonCreature(RAND(NPC_AKKIRIS, NPC_SULFURON), 420.179f, -174.396f, 42.58f, 0.02f, TEMPSUMMON_MANUAL_DESPAWN);
+                    me->SummonCreature(
+                        RAND(NPC_AKKIRIS, NPC_SULFURON), 420.179f, -174.396f, 42.58f, 0.02f, TEMPSUMMON_MANUAL_DESPAWN);
                     // Wait for kill
                     break;
                 case EVENT_WARDEN_INTRO19:
@@ -533,7 +538,8 @@ public:
                     events.ScheduleEvent(EVENT_WARDEN_INTRO23, 6000);
                     break;
                 case EVENT_WARDEN_INTRO23:
-                    me->SummonCreature(RAND(NPC_TW_DRAK, NPC_BL_DRAK), 471.795f, -174.58f, 42.58f, 3.06f, TEMPSUMMON_MANUAL_DESPAWN);
+                    me->SummonCreature(
+                        RAND(NPC_TW_DRAK, NPC_BL_DRAK), 471.795f, -174.58f, 42.58f, 3.06f, TEMPSUMMON_MANUAL_DESPAWN);
                     // Wait for kill
                     break;
                 case EVENT_WARDEN_INTRO24:
@@ -543,7 +549,8 @@ public:
                     events.ScheduleEvent(EVENT_WARDEN_INTRO25, 8000);
                     break;
                 case EVENT_WARDEN_INTRO25:
-                    if (Creature* cr = me->SummonCreature(NPC_HARBINGER_SKYRISS, 445.763f, -191.639f, 44.64f, 1.60f, TEMPSUMMON_MANUAL_DESPAWN))
+                    if (Creature* cr = me->SummonCreature(
+                            NPC_HARBINGER_SKYRISS, 445.763f, -191.639f, 44.64f, 1.60f, TEMPSUMMON_MANUAL_DESPAWN))
                     {
                         cr->SetImmuneToAll(true);
                         cr->CastSpell(cr, SPELL_TELEPORT_VISUAL, true);
@@ -593,7 +600,7 @@ class spell_arcatraz_soul_steal_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SOUL_STEAL });
+        return ValidateSpellInfo({SPELL_SOUL_STEAL});
     }
 
     void HandleEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -610,8 +617,14 @@ class spell_arcatraz_soul_steal_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_arcatraz_soul_steal_aura::HandleEffectApply, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_DONE, AURA_EFFECT_HANDLE_REAL);
-        OnEffectRemove += AuraEffectRemoveFn(spell_arcatraz_soul_steal_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_DONE, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_arcatraz_soul_steal_aura::HandleEffectApply,
+            EFFECT_0,
+            SPELL_AURA_MOD_DAMAGE_PERCENT_DONE,
+            AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_arcatraz_soul_steal_aura::HandleEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_MOD_DAMAGE_PERCENT_DONE,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 

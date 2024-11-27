@@ -22,76 +22,73 @@
 
 enum Spells
 {
-    SPELL_DUAL_WIELD            = 29651,
-    SPELL_SABER_LASH            = 43267,
-    SPELL_FRENZY                = 43139,
-    SPELL_FLAMESHOCK            = 43303,
-    SPELL_EARTHSHOCK            = 43305,
-    SPELL_SUMMON_LYNX           = 43143,
-    SPELL_SUMMON_TOTEM          = 43302,
-    SPELL_BERSERK               = 45078,
-    SPELL_LYNX_FRENZY           = 43290, // Used by Spirit Lynx
-    SPELL_SHRED_ARMOR           = 43243, // Used by Spirit Lynx
-    SPELL_TRANSFORM_DUMMY       = 43615, // Used by Spirit Lynx
+    SPELL_DUAL_WIELD = 29651,
+    SPELL_SABER_LASH = 43267,
+    SPELL_FRENZY = 43139,
+    SPELL_FLAMESHOCK = 43303,
+    SPELL_EARTHSHOCK = 43305,
+    SPELL_SUMMON_LYNX = 43143,
+    SPELL_SUMMON_TOTEM = 43302,
+    SPELL_BERSERK = 45078,
+    SPELL_LYNX_FRENZY = 43290,     // Used by Spirit Lynx
+    SPELL_SHRED_ARMOR = 43243,     // Used by Spirit Lynx
+    SPELL_TRANSFORM_DUMMY = 43615, // Used by Spirit Lynx
 
-    SPELL_TRANSFIGURE           = 44054,
-    SPELL_TRANSFORM_TO_LYNX_75  = 43145,
-    SPELL_TRANSFORM_TO_LYNX_50  = 43271,
-    SPELL_TRANSFORM_TO_LYNX_25  = 43272
+    SPELL_TRANSFIGURE = 44054,
+    SPELL_TRANSFORM_TO_LYNX_75 = 43145,
+    SPELL_TRANSFORM_TO_LYNX_50 = 43271,
+    SPELL_TRANSFORM_TO_LYNX_25 = 43272
 };
 
 enum UniqueEvents
 {
-    EVENT_BERSERK                = 1
+    EVENT_BERSERK = 1
 };
 
 enum Hal_CreatureIds
 {
-    NPC_HALAZZI_TROLL            = 24144, // dummy creature - used to update model, stats
-    NPC_TOTEM                    = 24224
+    NPC_HALAZZI_TROLL = 24144, // dummy creature - used to update model, stats
+    NPC_TOTEM = 24224
 };
 
 enum PhaseHalazzi
 {
-    PHASE_NONE                   = 0,
-    PHASE_LYNX                   = 1,
-    PHASE_SPLIT                  = 2,
-    PHASE_HUMAN                  = 3,
-    PHASE_MERGE                  = 4,
-    PHASE_ENRAGE                 = 5
+    PHASE_NONE = 0,
+    PHASE_LYNX = 1,
+    PHASE_SPLIT = 2,
+    PHASE_HUMAN = 3,
+    PHASE_MERGE = 4,
+    PHASE_ENRAGE = 5
 };
 
 enum Yells
 {
-    SAY_AGGRO                    = 0,
-    SAY_KILL                     = 1,
-    SAY_SABER                    = 2,
-    SAY_SPLIT                    = 3,
-    SAY_MERGE                    = 4,
-    SAY_DEATH                    = 5
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_SABER = 2,
+    SAY_SPLIT = 3,
+    SAY_MERGE = 4,
+    SAY_DEATH = 5
 };
 
 enum Groups
 {
-    GROUP_LYNX                   = 0,
-    GROUP_HUMAN                  = 1,
-    GROUP_MERGE                  = 3,
-    GROUP_SPLIT                  = 4
+    GROUP_LYNX = 0,
+    GROUP_HUMAN = 1,
+    GROUP_MERGE = 3,
+    GROUP_SPLIT = 4
 };
 
 enum Actions
 {
-    ACTION_MERGE                 = 0
+    ACTION_MERGE = 0
 };
 
 struct boss_halazzi : public BossAI
 {
     boss_halazzi(Creature* creature) : BossAI(creature, DATA_HALAZZI)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -107,14 +104,12 @@ struct boss_halazzi : public BossAI
     {
         BossAI::JustEngagedWith(who);
         Talk(SAY_AGGRO);
-        ScheduleUniqueTimedEvent(10min, [&]
-        {
-            DoCastSelf(SPELL_BERSERK, true);
-        }, EVENT_BERSERK);
+        ScheduleUniqueTimedEvent(10min, [&] { DoCastSelf(SPELL_BERSERK, true); }, EVENT_BERSERK);
         EnterPhase(PHASE_LYNX);
     }
 
-    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
+    void DamageTaken(
+        Unit* attacker, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
     {
         BossAI::DamageTaken(attacker, damage, damagetype, damageSchoolMask);
 
@@ -157,7 +152,9 @@ struct boss_halazzi : public BossAI
         {
             case PHASE_ENRAGE:
                 SetInvincibility(false);
-                scheduler.Schedule(12s, GROUP_LYNX, [this](TaskContext context)
+                scheduler.Schedule(12s,
+                    GROUP_LYNX,
+                    [this](TaskContext context)
                 {
                     DoCastSelf(SPELL_SUMMON_TOTEM);
                     context.Repeat(20s);
@@ -189,11 +186,17 @@ struct boss_halazzi : public BossAI
                 }
 
                 scheduler.CancelGroup(GROUP_MERGE);
-                scheduler.Schedule(16s, GROUP_LYNX, [this](TaskContext context)
+                scheduler
+                    .Schedule(16s,
+                        GROUP_LYNX,
+                        [this](TaskContext context)
                 {
                     DoCastSelf(SPELL_FRENZY);
                     context.Repeat(10s, 15s);
-                }).Schedule(20s, GROUP_LYNX, [this](TaskContext context)
+                })
+                    .Schedule(20s,
+                        GROUP_LYNX,
+                        [this](TaskContext context)
                 {
                     Talk(SAY_SABER);
                     DoCastVictim(SPELL_SABER_LASH, true);
@@ -204,16 +207,17 @@ struct boss_halazzi : public BossAI
             case PHASE_SPLIT:
                 Talk(SAY_SPLIT);
                 DoCastSelf(SPELL_TRANSFIGURE, true);
-                scheduler.Schedule(3s, GROUP_SPLIT, [this](TaskContext /*context*/)
-                {
-                    DoCastSelf(SPELL_SUMMON_LYNX, true);
-                });
+                scheduler.Schedule(
+                    3s, GROUP_SPLIT, [this](TaskContext /*context*/) { DoCastSelf(SPELL_SUMMON_LYNX, true); });
                 nextPhase = PHASE_HUMAN;
                 [[fallthrough]];
             case PHASE_HUMAN:
                 scheduler.CancelGroup(GROUP_MERGE);
                 scheduler.CancelGroup(GROUP_LYNX);
-                scheduler.Schedule(10s, GROUP_HUMAN, [this](TaskContext context)
+                scheduler
+                    .Schedule(10s,
+                        GROUP_HUMAN,
+                        [this](TaskContext context)
                 {
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
                     {
@@ -223,7 +227,10 @@ struct boss_halazzi : public BossAI
                             DoCast(target, SPELL_FLAMESHOCK);
                     }
                     context.Repeat(10s, 15s);
-                }).Schedule(12s, GROUP_HUMAN, [this](TaskContext context)
+                })
+                    .Schedule(12s,
+                        GROUP_HUMAN,
+                        [this](TaskContext context)
                 {
                     DoCastSelf(SPELL_SUMMON_TOTEM);
                     context.Repeat(20s);
@@ -240,7 +247,9 @@ struct boss_halazzi : public BossAI
                     me->GetMotionMaster()->Clear();
                     me->GetMotionMaster()->MoveFollow(lynx, 0, 0);
                     ++_transformCount;
-                    scheduler.Schedule(2s, GROUP_MERGE, [this](TaskContext context)
+                    scheduler.Schedule(2s,
+                        GROUP_MERGE,
+                        [this](TaskContext context)
                     {
                         if (Creature* lynx = instance->GetCreature(DATA_SPIRIT_LYNX))
                             if (me->IsWithinDistInMap(lynx, 6.0f))
@@ -278,6 +287,7 @@ struct boss_halazzi : public BossAI
         BossAI::JustDied(killer);
         Talk(SAY_DEATH);
     }
+
 private:
     uint8 _transformCount;
     PhaseHalazzi _phase;

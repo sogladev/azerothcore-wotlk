@@ -66,7 +66,7 @@ void TransactionBase::Cleanup()
 
                     delete stmt;
                 }
-                catch (const std::bad_variant_access& ex)
+                catch (std::bad_variant_access const& ex)
                 {
                     LOG_FATAL("sql.sql", "> PreparedStatementBase not found in SQLElementData. {}", ex.what());
                     ABORT();
@@ -79,7 +79,7 @@ void TransactionBase::Cleanup()
                 {
                     std::get<std::string>(data.element).clear();
                 }
-                catch (const std::bad_variant_access& ex)
+                catch (std::bad_variant_access const& ex)
                 {
                     LOG_FATAL("sql.sql", "> std::string not found in SQLElementData. {}", ex.what());
                     ABORT();
@@ -110,16 +110,21 @@ bool TransactionTask::Execute()
             // Make sure only 1 async thread retries a transaction so they don't keep dead-locking each other
             std::lock_guard<std::mutex> lock(_deadlockLock);
 
-            for (Milliseconds loopDuration{}, startMSTime = GetTimeMS(); loopDuration <= DEADLOCK_MAX_RETRY_TIME_MS; loopDuration = GetMSTimeDiffToNow(startMSTime))
+            for (Milliseconds loopDuration {}, startMSTime = GetTimeMS(); loopDuration <= DEADLOCK_MAX_RETRY_TIME_MS;
+                 loopDuration = GetMSTimeDiffToNow(startMSTime))
             {
                 if (!TryExecute())
                     return true;
 
-                LOG_WARN("sql.sql", "Deadlocked SQL Transaction, retrying. Loop timer: {} ms, Thread Id: {}", loopDuration.count(), threadId);
+                LOG_WARN("sql.sql",
+                    "Deadlocked SQL Transaction, retrying. Loop timer: {} ms, Thread Id: {}",
+                    loopDuration.count(),
+                    threadId);
             }
         }
 
-        LOG_ERROR("sql.sql", "Fatal deadlocked SQL Transaction, it will not be retried anymore. Thread Id: {}", threadId);
+        LOG_ERROR(
+            "sql.sql", "Fatal deadlocked SQL Transaction, it will not be retried anymore. Thread Id: {}", threadId);
     }
 
     // Clean up now.
@@ -157,7 +162,8 @@ bool TransactionWithResultTask::Execute()
             // Make sure only 1 async thread retries a transaction so they don't keep dead-locking each other
             std::lock_guard<std::mutex> lock(_deadlockLock);
 
-            for (Milliseconds loopDuration{}, startMSTime = GetTimeMS(); loopDuration <= DEADLOCK_MAX_RETRY_TIME_MS; loopDuration = GetMSTimeDiffToNow(startMSTime))
+            for (Milliseconds loopDuration {}, startMSTime = GetTimeMS(); loopDuration <= DEADLOCK_MAX_RETRY_TIME_MS;
+                 loopDuration = GetMSTimeDiffToNow(startMSTime))
             {
                 if (!TryExecute())
                 {
@@ -165,11 +171,15 @@ bool TransactionWithResultTask::Execute()
                     return true;
                 }
 
-                LOG_WARN("sql.sql", "Deadlocked SQL Transaction, retrying. Loop timer: {} ms, Thread Id: {}", loopDuration.count(), threadId);
+                LOG_WARN("sql.sql",
+                    "Deadlocked SQL Transaction, retrying. Loop timer: {} ms, Thread Id: {}",
+                    loopDuration.count(),
+                    threadId);
             }
         }
 
-        LOG_ERROR("sql.sql", "Fatal deadlocked SQL Transaction, it will not be retried anymore. Thread Id: {}", threadId);
+        LOG_ERROR(
+            "sql.sql", "Fatal deadlocked SQL Transaction, it will not be retried anymore. Thread Id: {}", threadId);
     }
 
     // Clean up now.

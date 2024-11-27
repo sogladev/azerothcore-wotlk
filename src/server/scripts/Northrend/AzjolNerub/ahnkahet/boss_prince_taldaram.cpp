@@ -26,47 +26,47 @@
 
 enum Spells
 {
-    SPELL_BLOODTHIRST                       = 55968, //Trigger Spell + add aura
-    SPELL_CONJURE_FLAME_SPHERE              = 55931,
-    SPELL_FLAME_SPHERE_SPAWN_EFFECT         = 55891,
-    SPELL_FLAME_SPHERE_SUMMON_1             = 55895, // 1x 30106
-    SPELL_FLAME_SPHERE_SUMMON_2             = 59511, // 1x 31686
-    SPELL_FLAME_SPHERE_SUMMON_3             = 59512, // 1x 31687
-    SPELL_FLAME_SPHERE_VISUAL               = 55928,
-    SPELL_FLAME_SPHERE_PERIODIC             = 55926,
-    SPELL_FLAME_SPHERE_DEATH_EFFECT         = 55947,
-    SPELL_BEAM_VISUAL                       = 60342,
-    SPELL_VANISH                            = 55964,
-    SPELL_SHADOWSTEP                        = 55966,
-    SPELL_HOVER_FALL                        = 60425
+    SPELL_BLOODTHIRST = 55968, //Trigger Spell + add aura
+    SPELL_CONJURE_FLAME_SPHERE = 55931,
+    SPELL_FLAME_SPHERE_SPAWN_EFFECT = 55891,
+    SPELL_FLAME_SPHERE_SUMMON_1 = 55895, // 1x 30106
+    SPELL_FLAME_SPHERE_SUMMON_2 = 59511, // 1x 31686
+    SPELL_FLAME_SPHERE_SUMMON_3 = 59512, // 1x 31687
+    SPELL_FLAME_SPHERE_VISUAL = 55928,
+    SPELL_FLAME_SPHERE_PERIODIC = 55926,
+    SPELL_FLAME_SPHERE_DEATH_EFFECT = 55947,
+    SPELL_BEAM_VISUAL = 60342,
+    SPELL_VANISH = 55964,
+    SPELL_SHADOWSTEP = 55966,
+    SPELL_HOVER_FALL = 60425
 };
 
 #define SPELL_EMBRACE_OF_THE_VAMPYR         DUNGEON_MODE(55959, 59513)
 
 enum Spheres
 {
-    NPC_FLAME_SPHERE_1                      = 30106,
-    NPC_FLAME_SPHERE_2                      = 31686,
-    NPC_FLAME_SPHERE_3                      = 31687,
+    NPC_FLAME_SPHERE_1 = 30106,
+    NPC_FLAME_SPHERE_2 = 31686,
+    NPC_FLAME_SPHERE_3 = 31687,
 };
 
 enum Misc
 {
-    MAX_EMBRACE_DMG                         = 20000,
-    MAX_EMBRACE_DMG_H                       = 40000,
+    MAX_EMBRACE_DMG = 20000,
+    MAX_EMBRACE_DMG_H = 40000,
 
-    SUMMON_GROUP_TRIGGERS                   = 0,
+    SUMMON_GROUP_TRIGGERS = 0,
 };
 
 enum Actions
 {
-    ACTION_REMOVE_PRISON_AT_RESET           = 1,
+    ACTION_REMOVE_PRISON_AT_RESET = 1,
     ACTION_SPHERE,
 };
 
 enum Event
 {
-    EVENT_PRINCE_FLAME_SPHERES              = 1,
+    EVENT_PRINCE_FLAME_SPHERES = 1,
     EVENT_PRINCE_VANISH,
     EVENT_PRINCE_BLOODTHIRST,
     EVENT_PRINCE_VANISH_RUN,
@@ -76,27 +76,28 @@ enum Event
 enum Yells
 {
     //SAY_SPHERE_ACTIVATED                    = 0,
-    SAY_REMOVE_PRISON                       = 1,
-    SAY_AGGRO                               = 2,
-    SAY_SLAY                                = 3,
-    SAY_DEATH                               = 4,
-    SAY_FEED                                = 5,
-    SAY_VANISH                              = 6,
+    SAY_REMOVE_PRISON = 1,
+    SAY_AGGRO = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4,
+    SAY_FEED = 5,
+    SAY_VANISH = 6,
 };
 
 enum Points
 {
-    POINT_LAND                              = 1,
+    POINT_LAND = 1,
     POINT_ORB,
 };
 
-constexpr float DATA_GROUND_POSITION_Z     = 11.308135f;
-constexpr float DATA_SPHERE_DISTANCE       = 25.0f;
+constexpr float DATA_GROUND_POSITION_Z = 11.308135f;
+constexpr float DATA_SPHERE_DISTANCE = 25.0f;
 #define DATA_SPHERE_ANGLE_OFFSET            float(M_PI) / 2.0f
 
 struct npc_taldaram_flamesphere : public NullCreatureAI
 {
-    npc_taldaram_flamesphere(Creature *pCreature) : NullCreatureAI(pCreature),
+    npc_taldaram_flamesphere(Creature* pCreature) :
+        NullCreatureAI(pCreature),
         instance(pCreature->GetInstanceScript()),
         uiDespawnTimer(13000),
         moveTimer(0)
@@ -107,17 +108,13 @@ struct npc_taldaram_flamesphere : public NullCreatureAI
     void DoAction(int32 action) override
     {
         if (action == ACTION_SPHERE)
-        {
             moveTimer = 3000;
-        }
     }
 
     void MovementInform(uint32 type, uint32 id) override
     {
         if (type == POINT_MOTION_TYPE && id == POINT_ORB)
-        {
             me->DisappearAndDie();
-        }
     }
 
     void IsSummonedBy(WorldObject* /*summoner*/) override
@@ -203,31 +200,28 @@ private:
 
 struct boss_taldaram : public BossAI
 {
-    boss_taldaram(Creature* pCreature) : BossAI(pCreature, DATA_PRINCE_TALDARAM),
-        vanishDamage(0)
-    {
-    }
+    boss_taldaram(Creature* pCreature) : BossAI(pCreature, DATA_PRINCE_TALDARAM), vanishDamage(0) { }
 
     void InitializeAI() override
     {
         BossAI::InitializeAI();
 
         // Event not started
-        if (instance->GetPersistentData(DATA_TELDRAM_SPHERE1) != DONE || instance->GetPersistentData(DATA_TELDRAM_SPHERE2) != DONE)
+        if (instance->GetPersistentData(DATA_TELDRAM_SPHERE1) != DONE ||
+            instance->GetPersistentData(DATA_TELDRAM_SPHERE2) != DONE)
         {
             me->SetImmuneToAll(true);
             me->SetDisableGravity(true);
             me->SetHover(true);
             if (!me->HasAura(SPELL_BEAM_VISUAL))
-            {
                 DoCastSelf(SPELL_BEAM_VISUAL, true);
-            }
 
             me->SummonCreatureGroup(SUMMON_GROUP_TRIGGERS);
             return;
         }
 
-        if (instance->GetPersistentData(DATA_TELDRAM_SPHERE1) == DONE && instance->GetPersistentData(DATA_TELDRAM_SPHERE2) == DONE)
+        if (instance->GetPersistentData(DATA_TELDRAM_SPHERE1) == DONE &&
+            instance->GetPersistentData(DATA_TELDRAM_SPHERE2) == DONE)
         {
             DoAction(ACTION_REMOVE_PRISON_AT_RESET);
         }
@@ -261,7 +255,7 @@ struct boss_taldaram : public BossAI
                 me->SetDisableGravity(false);
                 me->SetHover(false);
                 me->RemoveAllAuras();
-                me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE| UNIT_FLAG_NOT_SELECTABLE);
+                me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                 me->SetImmuneToAll(false);
                 me->UpdatePosition(me->GetHomePosition(), true);
             }
@@ -276,12 +270,13 @@ struct boss_taldaram : public BossAI
             me->SetDisableGravity(false);
             me->SetHover(false);
             me->RemoveAllAuras();
-            me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE| UNIT_FLAG_NOT_SELECTABLE);
+            me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
             me->SetImmuneToAll(false);
         }
     }
 
-    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damageType*/, SpellSchoolMask /*school*/) override
+    void DamageTaken(
+        Unit* /*attacker*/, uint32& damage, DamageEffectType /*damageType*/, SpellSchoolMask /*school*/) override
     {
         if (vanishTarget_GUID)
         {
@@ -308,9 +303,7 @@ struct boss_taldaram : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (!victim->IsPlayer())
-        {
             return;
-        }
 
         Talk(SAY_SLAY);
 
@@ -334,9 +327,7 @@ struct boss_taldaram : public BossAI
     void SpellHitTarget(Unit* /*target*/, SpellInfo const* spellInfo) override
     {
         if (spellInfo->Id == SPELL_CONJURE_FLAME_SPHERE)
-        {
             summons.DoAction(ACTION_SPHERE);
-        }
     }
 
     void JustSummoned(Creature* summon) override
@@ -349,9 +340,7 @@ struct boss_taldaram : public BossAI
             case NPC_FLAME_SPHERE_3:
             {
                 if (npc_taldaram_flamesphere* summonAI = dynamic_cast<npc_taldaram_flamesphere*>(summon->AI()))
-                {
                     summonAI->SetVictimPos(victimSperePos);
-                }
 
                 break;
             }
@@ -366,16 +355,12 @@ struct boss_taldaram : public BossAI
     void UpdateAI(uint32 diff) override
     {
         if (!UpdateVictim())
-        {
             return;
-        }
 
         events.Update(diff);
 
         if (me->HasUnitState(UNIT_STATE_CASTING))
-        {
             return;
-        }
 
         while (uint32 const eventId = events.ExecuteEvent())
         {
@@ -421,9 +406,7 @@ struct boss_taldaram : public BossAI
                             {
                                 Unit const* pTarget = ObjectAccessor::GetUnit(*me, reference->getUnitGuid());
                                 if (pTarget && pTarget->IsPlayer() && pTarget->IsAlive())
-                                {
                                     ++count;
-                                }
                             }
                         }
                     }
@@ -434,9 +417,7 @@ struct boss_taldaram : public BossAI
                         Talk(SAY_VANISH);
                         DoCastSelf(SPELL_VANISH, false);
                         if (Unit* pEmbraceTarget = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
-                        {
                             vanishTarget_GUID = pEmbraceTarget->GetGUID();
-                        }
 
                         events.CancelEvent(EVENT_PRINCE_FLAME_SPHERES);
                         events.CancelEvent(EVENT_PRINCE_BLOODTHIRST);
@@ -465,15 +446,11 @@ struct boss_taldaram : public BossAI
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
         }
 
         if (me->IsVisible())
-        {
             DoMeleeAttackIfReady();
-        }
     }
 
 private:
@@ -498,16 +475,15 @@ class spell_prince_taldaram_conjure_flame_sphere : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({SPELL_FLAME_SPHERE_SUMMON_1, SPELL_FLAME_SPHERE_SUMMON_2, SPELL_FLAME_SPHERE_SUMMON_3});
+        return ValidateSpellInfo(
+            {SPELL_FLAME_SPHERE_SUMMON_1, SPELL_FLAME_SPHERE_SUMMON_2, SPELL_FLAME_SPHERE_SUMMON_3});
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
     {
         Unit* caster = GetCaster();
         if (!caster || caster->isDead())
-        {
             return;
-        }
 
         caster->CastSpell(caster, SPELL_FLAME_SPHERE_SUMMON_1, false, nullptr, nullptr, caster->GetGUID());
 
@@ -520,7 +496,8 @@ class spell_prince_taldaram_conjure_flame_sphere : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_prince_taldaram_conjure_flame_sphere::HandleScript, EFFECT_0, SPELL_EFFECT_DUMMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_prince_taldaram_conjure_flame_sphere::HandleScript, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
 
@@ -536,7 +513,8 @@ class spell_prince_taldaram_flame_sphere_summon : public SpellScript
 
     void Register() override
     {
-        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_prince_taldaram_flame_sphere_summon::SetDest, EFFECT_0, TARGET_DEST_CASTER);
+        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(
+            spell_prince_taldaram_flame_sphere_summon::SetDest, EFFECT_0, TARGET_DEST_CASTER);
     }
 };
 

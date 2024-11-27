@@ -30,15 +30,13 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable gearCommandTable =
-        {
-            { "repair",  HandleGearRepairCommand, SEC_GAMEMASTER, Console::No },
-            { "stats",   HandleGearStatsCommand,  SEC_PLAYER,     Console::No }
+        static ChatCommandTable gearCommandTable = {
+            {"repair", HandleGearRepairCommand, SEC_GAMEMASTER, Console::No},
+            {"stats",  HandleGearStatsCommand,  SEC_PLAYER,     Console::No}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "gear", gearCommandTable }
+        static ChatCommandTable commandTable = {
+            {"gear", gearCommandTable}
         };
 
         return commandTable;
@@ -47,20 +45,14 @@ public:
     static bool HandleGearRepairCommand(ChatHandler* handler, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target || !target->IsConnected())
-        {
             return false;
-        }
 
         // check online security
         if (handler->HasLowerSecurity(target->GetConnectedPlayer()))
-        {
             return false;
-        }
 
         // Repair items
         target->GetConnectedPlayer()->DurabilityRepairAll(false, 0, false);
@@ -70,9 +62,7 @@ public:
         handler->PSendSysMessage(LANG_YOU_REPAIR_ITEMS, nameLink);
 
         if (handler->needReportToTarget(target->GetConnectedPlayer()))
-        {
             ChatHandler(target->GetConnectedPlayer()->GetSession()).PSendSysMessage(LANG_YOUR_ITEMS_REPAIRED, nameLink);
-        }
 
         return true;
     }
@@ -82,12 +72,11 @@ public:
         Player* player = handler->getSelectedPlayerOrSelf();
 
         if (!player)
-        {
             return false;
-        }
 
         handler->PSendSysMessage("Character: {}", player->GetPlayerName());
-        handler->PSendSysMessage("Current equipment average item level: |cff00ffff{}|r", (int16)player->GetAverageItemLevel());
+        handler->PSendSysMessage(
+            "Current equipment average item level: |cff00ffff{}|r", (int16)player->GetAverageItemLevel());
 
         if (sWorld->getIntConfig(CONFIG_MIN_LEVEL_STAT_SAVE))
         {
@@ -112,7 +101,8 @@ public:
                 handler->PSendSysMessage("Health: |cff00ffff{}|r - Stamina: |cff00ffff{}|r", MaxHealth, Stamina);
                 handler->PSendSysMessage("Strength: |cff00ffff{}|r - Agility: |cff00ffff{}|r", Strength, Agility);
                 handler->PSendSysMessage("Intellect: |cff00ffff{}|r - Spirit: |cff00ffff{}|r", Intellect, Spirit);
-                handler->PSendSysMessage("AttackPower: |cff00ffff{}|r - SpellPower: |cff00ffff{}|r", AttackPower, SpellPower);
+                handler->PSendSysMessage(
+                    "AttackPower: |cff00ffff{}|r - SpellPower: |cff00ffff{}|r", AttackPower, SpellPower);
                 handler->PSendSysMessage("Armor: |cff00ffff{}|r - Resilience: |cff00ffff{}|r", Armor, Resilience);
             }
         }

@@ -25,10 +25,10 @@
 
 enum ePreparationsForWar
 {
-    NPC_HAMMERHEAD                  = 30585,
-    NPC_CLOUDBUSTER                 = 30470,
-    TRANSPORT_ORGRIMS_HAMMER        = 192241,
-    TRANSPORT_THE_SKYBREAKER        = 192242
+    NPC_HAMMERHEAD = 30585,
+    NPC_CLOUDBUSTER = 30470,
+    TRANSPORT_ORGRIMS_HAMMER = 192241,
+    TRANSPORT_THE_SKYBREAKER = 192242
 };
 
 struct npc_preparations_for_war_vehicle : public NullCreatureAI
@@ -67,7 +67,7 @@ struct npc_preparations_for_war_vehicle : public NullCreatureAI
         transportEntry = (me->GetEntry() == NPC_HAMMERHEAD ? TRANSPORT_ORGRIMS_HAMMER : TRANSPORT_THE_SKYBREAKER);
     }
 
-    void MovementInform(uint32 type, uint32  /*id*/) override
+    void MovementInform(uint32 type, uint32 /*id*/) override
     {
         if (type == ESCORT_MOTION_TYPE)
             if (++pointId == 17) // path size
@@ -112,8 +112,10 @@ struct npc_preparations_for_war_vehicle : public NullCreatureAI
                             if (Vehicle* vehicle = me->GetVehicleKit())
                                 if (Unit* passenger = vehicle->GetPassenger(0))
                                 {
-                                    passenger->NearTeleportTo(x, y, z - (transportEntry == TRANSPORT_ORGRIMS_HAMMER ? 19.0f : 4.0f), M_PI);
-                                    passenger->RemoveAurasDueToSpell(VEHICLE_SPELL_PARACHUTE); // maybe vehicle / seat flag should be responsible for parachute gain?
+                                    passenger->NearTeleportTo(
+                                        x, y, z - (transportEntry == TRANSPORT_ORGRIMS_HAMMER ? 19.0f : 4.0f), M_PI);
+                                    passenger->RemoveAurasDueToSpell(
+                                        VEHICLE_SPELL_PARACHUTE); // maybe vehicle / seat flag should be responsible for parachute gain?
                                 }
                         }
                         else
@@ -137,10 +139,10 @@ enum Spells
 
 enum NPCs
 {
-    NPC_TRANSITUS_SHIELD_DUMMY   = 27306,
-    NPC_WARMAGE_SARINA           = 32369,
-    NPC_WARMAGE_HALISTER         = 32371,
-    NPC_WARMAGE_ILSUDRIA         = 32372
+    NPC_TRANSITUS_SHIELD_DUMMY = 27306,
+    NPC_WARMAGE_SARINA = 32369,
+    NPC_WARMAGE_HALISTER = 32371,
+    NPC_WARMAGE_ILSUDRIA = 32372
 };
 
 struct npc_warmage_violetstand : public ScriptedAI

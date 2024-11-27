@@ -21,31 +21,28 @@
 
 enum MekgineerSteamrigger
 {
-    SAY_MECHANICS               = 0,
-    SAY_AGGRO                   = 1,
-    SAY_SLAY                    = 2,
-    SAY_DEATH                   = 3,
+    SAY_MECHANICS = 0,
+    SAY_AGGRO = 1,
+    SAY_SLAY = 2,
+    SAY_DEATH = 3,
 
-    SPELL_SUPER_SHRINK_RAY      = 31485,
-    SPELL_SAW_BLADE             = 31486,
-    SPELL_ELECTRIFIED_NET       = 35107,
-    SPELL_ENRAGE                = 26662,
+    SPELL_SUPER_SHRINK_RAY = 31485,
+    SPELL_SAW_BLADE = 31486,
+    SPELL_ELECTRIFIED_NET = 35107,
+    SPELL_ENRAGE = 26662,
 
-    SPELL_SUMMON_MECHANICS_1    = 31528,
-    SPELL_SUMMON_MECHANICS_2    = 31529,
-    SPELL_SUMMON_MECHANICS_3    = 31530,
+    SPELL_SUMMON_MECHANICS_1 = 31528,
+    SPELL_SUMMON_MECHANICS_2 = 31529,
+    SPELL_SUMMON_MECHANICS_3 = 31530,
 
-    NPC_STREAMRIGGER_MECHANIC   = 17951
+    NPC_STREAMRIGGER_MECHANIC = 17951
 };
 
 struct boss_mekgineer_steamrigger : public BossAI
 {
     boss_mekgineer_steamrigger(Creature* creature) : BossAI(creature, DATA_MEKGINEER_STEAMRIGGER)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -57,9 +54,7 @@ struct boss_mekgineer_steamrigger : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustEngagedWith(Unit* /*who*/) override
@@ -67,46 +62,47 @@ struct boss_mekgineer_steamrigger : public BossAI
         Talk(SAY_AGGRO);
         _JustEngagedWith();
 
-        scheduler.Schedule(26550ms, [this](TaskContext context)
+        scheduler
+            .Schedule(26550ms,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_SUPER_SHRINK_RAY);
             context.Repeat(35100ms, 54100ms);
-        }).Schedule(6050ms, 17650ms, [this](TaskContext context)
+        })
+            .Schedule(6050ms,
+                17650ms,
+                [this](TaskContext context)
         {
             if (DoCastRandomTarget(SPELL_SAW_BLADE, 1) != SPELL_CAST_OK)
-            {
                 DoCastVictim(SPELL_SAW_BLADE);
-            }
 
             context.Repeat(6050ms, 17650ms);
-        }).Schedule(14400ms, [this](TaskContext context)
+        })
+            .Schedule(14400ms,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_ELECTRIFIED_NET);
             context.Repeat(21800ms, 34200ms);
-        }).Schedule(5min, [this](TaskContext /*context*/)
-        {
-            DoCastSelf(SPELL_ENRAGE, true);
-        });
+        }).Schedule(5min, [this](TaskContext /*context*/) { DoCastSelf(SPELL_ENRAGE, true); });
 
         if (!IsHeroic())
         {
-            ScheduleHealthCheckEvent({ 75, 50, 25 }, [&] {
+            ScheduleHealthCheckEvent({75, 50, 25},
+                [&]
+            {
                 Talk(SAY_MECHANICS);
 
-                for (auto const& spell : { SPELL_SUMMON_MECHANICS_1, SPELL_SUMMON_MECHANICS_2, SPELL_SUMMON_MECHANICS_3 })
-                {
+                for (auto const& spell : {SPELL_SUMMON_MECHANICS_1, SPELL_SUMMON_MECHANICS_2, SPELL_SUMMON_MECHANICS_3})
                     DoCastAOE(spell, true);
-                }
             });
         }
         else
         {
-            scheduler.Schedule(15600ms, [this](TaskContext context)
+            scheduler.Schedule(15600ms,
+                [this](TaskContext context)
             {
                 if (roll_chance_i(15))
-                {
                     Talk(SAY_MECHANICS);
-                }
 
                 DoCastAOE(RAND(SPELL_SUMMON_MECHANICS_1, SPELL_SUMMON_MECHANICS_2, SPELL_SUMMON_MECHANICS_3), true);
                 context.Repeat(15600ms, 25400ms);
@@ -117,9 +113,7 @@ struct boss_mekgineer_steamrigger : public BossAI
     void JustSummoned(Creature* creature) override
     {
         if (creature->GetEntry() == NPC_STREAMRIGGER_MECHANIC)
-        {
             creature->GetMotionMaster()->MoveFollow(me, 5.0f, 0.0f);
-        }
     }
 };
 

@@ -21,32 +21,32 @@
 
 enum Yells
 {
-    SAY_AGGRO                       = 0,
-    SAY_ENERGY                      = 1,
-    SAY_OVERLOAD                    = 2,
-    SAY_KILL                        = 3,
-    EMOTE_DISCHARGE_ENERGY          = 4
+    SAY_AGGRO = 0,
+    SAY_ENERGY = 1,
+    SAY_OVERLOAD = 2,
+    SAY_KILL = 3,
+    EMOTE_DISCHARGE_ENERGY = 4
 };
 
 enum Spells
 {
     // Pure energy spell info
-    SPELL_ENERGY_FEEDBACK_CHANNEL   = 44328,
-    SPELL_ENERGY_FEEDBACK           = 44335,
+    SPELL_ENERGY_FEEDBACK_CHANNEL = 44328,
+    SPELL_ENERGY_FEEDBACK = 44335,
 
     // Vexallus spell info
-    SPELL_CHAIN_LIGHTNING           = 44318,
-    SPELL_OVERLOAD                  = 44352,
-    SPELL_ARCANE_SHOCK              = 44319,
+    SPELL_CHAIN_LIGHTNING = 44318,
+    SPELL_OVERLOAD = 44352,
+    SPELL_ARCANE_SHOCK = 44319,
 
-    SPELL_SUMMON_PURE_ENERGY_N      = 44322,
-    SPELL_SUMMON_PURE_ENERGY_H1     = 46154,
-    SPELL_SUMMON_PURE_ENERGY_H2     = 46159
+    SPELL_SUMMON_PURE_ENERGY_N = 44322,
+    SPELL_SUMMON_PURE_ENERGY_H1 = 46154,
+    SPELL_SUMMON_PURE_ENERGY_H2 = 46159
 };
 
 enum Misc
 {
-    NPC_PURE_ENERGY                 = 24745
+    NPC_PURE_ENERGY = 24745
 };
 
 struct boss_vexallus : public BossAI
@@ -57,7 +57,8 @@ struct boss_vexallus : public BossAI
     {
         _Reset();
 
-        ScheduleHealthCheckEvent({ 85, 70, 55, 40 }, [&]
+        ScheduleHealthCheckEvent({85, 70, 55, 40},
+            [&]
         {
             Talk(SAY_ENERGY);
             Talk(EMOTE_DISCHARGE_ENERGY);
@@ -71,7 +72,8 @@ struct boss_vexallus : public BossAI
                 DoCastSelf(SPELL_SUMMON_PURE_ENERGY_N);
         });
 
-        ScheduleHealthCheckEvent(20, [&]
+        ScheduleHealthCheckEvent(20,
+            [&]
         {
             scheduler.CancelAll();
             DoCastSelf(SPELL_OVERLOAD, true);
@@ -89,15 +91,9 @@ struct boss_vexallus : public BossAI
         _JustEngagedWith();
         Talk(SAY_AGGRO);
 
-        ScheduleTimedEvent(8s, [&]
-        {
-            DoCastRandomTarget(SPELL_CHAIN_LIGHTNING);
-        }, 8s, 8s);
+        ScheduleTimedEvent(8s, [&] { DoCastRandomTarget(SPELL_CHAIN_LIGHTNING); }, 8s, 8s);
 
-        ScheduleTimedEvent(5s, [&]
-        {
-            DoCastRandomTarget(SPELL_ARCANE_SHOCK);
-        }, 8s, 8s);
+        ScheduleTimedEvent(5s, [&] { DoCastRandomTarget(SPELL_ARCANE_SHOCK); }, 8s, 8s);
     }
 
     void JustSummoned(Creature* summon) override

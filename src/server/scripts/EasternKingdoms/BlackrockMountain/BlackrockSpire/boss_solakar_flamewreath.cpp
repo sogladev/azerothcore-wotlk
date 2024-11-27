@@ -31,7 +31,8 @@ enum Timer
 };
 
 constexpr float RANGE_SPELL_HATCH_EGG = 3.0f; // needed because the eggs seem to hatch if the mobs goes too close
-constexpr float RANGE_WHELP_CALL_HELP = 15.0f; // range for the hatchers to call nearby whelps after having summoned them.
+constexpr float RANGE_WHELP_CALL_HELP =
+    15.0f; // range for the hatchers to call nearby whelps after having summoned them.
 
 enum Says
 {
@@ -41,7 +42,7 @@ enum Says
 class npc_rookery_hatcher : public CreatureScript
 {
 public:
-    npc_rookery_hatcher() : CreatureScript("npc_rookery_hatcher") {}
+    npc_rookery_hatcher() : CreatureScript("npc_rookery_hatcher") { }
 
     CreatureAI* GetAI(Creature* creature) const override
     {
@@ -50,12 +51,12 @@ public:
 
     struct npc_rookery_hatcherAI : public CreatureAI
     {
-        npc_rookery_hatcherAI(Creature* creature) : CreatureAI(creature) {}
+        npc_rookery_hatcherAI(Creature* creature) : CreatureAI(creature) { }
 
         EventMap events;
         std::list<GameObject*> nearbyEggs;
-        GameObject*            targetEgg;
-        Position               targetPosition;
+        GameObject* targetEgg;
+        Position targetPosition;
 
         void InitializeAI() override
         {
@@ -73,14 +74,12 @@ public:
         void UpdateAI(uint32 diff) override
         {
             std::list<GameObject*> nearbyEggs;
-            float                  tempDist = 20;
-            float                  minDist  = 25;
-            std::list<Creature*>   nearbyWhelps;
+            float tempDist = 20;
+            float minDist = 25;
+            std::list<Creature*> nearbyWhelps;
 
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             GetCreatureListWithEntryInGrid(nearbyWhelps, me, NPC_ROOKERY_WHELP, RANGE_WHELP_CALL_HELP);
             for (auto const& whelp : nearbyWhelps)
@@ -113,7 +112,7 @@ public:
                                     tempDist = me->GetDistance2d(egg);
                                     if (tempDist < minDist)
                                     {
-                                        minDist   = tempDist;
+                                        minDist = tempDist;
                                         targetEgg = egg;
                                     }
                                 }
@@ -121,9 +120,7 @@ public:
                         }
 
                         if (targetEgg) //have a target, go to it and cast it
-                        {
                             me->GetMotionMaster()->MovePoint(0, targetEgg->GetPosition());
-                        }
                         break;
                     default:
                         break;
@@ -131,7 +128,8 @@ public:
             }
 
             // cast takes 1.5second, during which we don't have a target
-            if (targetEgg && targetEgg->getLootState() == GO_READY && me->GetDistance2d(targetEgg) < RANGE_SPELL_HATCH_EGG)
+            if (targetEgg && targetEgg->getLootState() == GO_READY &&
+                me->GetDistance2d(targetEgg) < RANGE_SPELL_HATCH_EGG)
             {
                 me->StopMovingOnCurrentPos();
                 me->SetFacingToObject(targetEgg);
@@ -140,16 +138,16 @@ public:
                 targetEgg = nullptr;
                 events.ScheduleEvent(SPELL_HATCH_EGG, 6s, 8s);
             }
-            else if (!me->HasUnitState(UNIT_STATE_CASTING)  && !targetEgg)
+            else if (!me->HasUnitState(UNIT_STATE_CASTING) && !targetEgg)
             {
                 if (Unit* victim = me->GetVictim())
-                {
                     AttackStart(victim);
-                }
 
                 if (me->GetDistance2d(me->GetVictim()) > me->GetMeleeReach())
                 {
-                    me->GetMotionMaster()->MovePoint(0, me->GetVictim()->GetPosition()); // a bit hacky, but needed to start moving once we've summoned an egg
+                    me->GetMotionMaster()->MovePoint(0,
+                        me->GetVictim()
+                            ->GetPosition()); // a bit hacky, but needed to start moving once we've summoned an egg
                 }
             }
             DoMeleeAttackIfReady();
@@ -164,7 +162,7 @@ public:
 
     struct boss_solakar_flamewreathAI : public BossAI
     {
-        boss_solakar_flamewreathAI(Creature* creature) : BossAI(creature, DATA_SOLAKAR_FLAMEWREATH) {}
+        boss_solakar_flamewreathAI(Creature* creature) : BossAI(creature, DATA_SOLAKAR_FLAMEWREATH) { }
 
         uint32 resetTimer;
 
@@ -214,22 +212,16 @@ public:
             {
                 resetTimer -= diff;
                 if (resetTimer < diff)
-                {
                     instance->SetData(DATA_SOLAKAR_FLAMEWREATH, FAIL);
-                }
                 return;
             }
             resetTimer = 10000;
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
             while (uint32 eventId = events.ExecuteEvent())
-            {
                 ExecuteEvent(eventId);
-            }
 
             DoMeleeAttackIfReady();
         }

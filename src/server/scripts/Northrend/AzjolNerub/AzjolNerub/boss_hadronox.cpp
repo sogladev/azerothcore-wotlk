@@ -19,62 +19,61 @@
 #include "CreatureScript.h"
 #include "Player.h"
 #include "ScriptedCreature.h"
-#include "SpellScriptLoader.h"
-#include "azjol_nerub.h"
 #include "SpellAuraEffects.h"
 #include "SpellScript.h"
+#include "SpellScriptLoader.h"
+#include "azjol_nerub.h"
 
 enum Spells
 {
-    SPELL_SUMMON_ANUBAR_CHAMPION            = 53064,
-    SPELL_SUMMON_ANUBAR_CRYPT_FIEND         = 53065,
-    SPELL_SUMMON_ANUBAR_NECROMANCER         = 53066,
-    SPELL_WEB_FRONT_DOORS                   = 53177,
-    SPELL_WEB_SIDE_DOORS                    = 53185,
-    SPELL_ACID_CLOUD                        = 53400,
-    SPELL_LEECH_POISON                      = 53030,
-    SPELL_LEECH_POISON_HEAL                 = 53800,
-    SPELL_WEB_GRAB                          = 57731,
-    SPELL_PIERCE_ARMOR                      = 53418,
+    SPELL_SUMMON_ANUBAR_CHAMPION = 53064,
+    SPELL_SUMMON_ANUBAR_CRYPT_FIEND = 53065,
+    SPELL_SUMMON_ANUBAR_NECROMANCER = 53066,
+    SPELL_WEB_FRONT_DOORS = 53177,
+    SPELL_WEB_SIDE_DOORS = 53185,
+    SPELL_ACID_CLOUD = 53400,
+    SPELL_LEECH_POISON = 53030,
+    SPELL_LEECH_POISON_HEAL = 53800,
+    SPELL_WEB_GRAB = 57731,
+    SPELL_PIERCE_ARMOR = 53418,
 
-    SPELL_SMASH                             = 53318,
-    SPELL_FRENZY                            = 53801
+    SPELL_SMASH = 53318,
+    SPELL_FRENZY = 53801
 };
 
 enum Events
 {
-    EVENT_HADRONOX_MOVE1        = 1,
-    EVENT_HADRONOX_MOVE2        = 2,
-    EVENT_HADRONOX_MOVE3        = 3,
-    EVENT_HADRONOX_MOVE4        = 4,
-    EVENT_HADRONOX_ACID         = 5,
-    EVENT_HADRONOX_LEECH        = 6,
-    EVENT_HADRONOX_PIERCE       = 7,
-    EVENT_HADRONOX_GRAB         = 8,
-    EVENT_HADRONOX_SUMMON       = 9,
+    EVENT_HADRONOX_MOVE1 = 1,
+    EVENT_HADRONOX_MOVE2 = 2,
+    EVENT_HADRONOX_MOVE3 = 3,
+    EVENT_HADRONOX_MOVE4 = 4,
+    EVENT_HADRONOX_ACID = 5,
+    EVENT_HADRONOX_LEECH = 6,
+    EVENT_HADRONOX_PIERCE = 7,
+    EVENT_HADRONOX_GRAB = 8,
+    EVENT_HADRONOX_SUMMON = 9,
 
-    EVENT_CRUSHER_SMASH         = 20,
-    EVENT_CHECK_HEALTH          = 21
+    EVENT_CRUSHER_SMASH = 20,
+    EVENT_CHECK_HEALTH = 21
 };
 
 enum Misc
 {
-    NPC_ANUB_AR_CRUSHER         = 28922,
+    NPC_ANUB_AR_CRUSHER = 28922,
 
-    SAY_CRUSHER_AGGRO           = 0,
-    SAY_CRUSHER_EMOTE           = 1,
-    SAY_HADRONOX_EMOTE          = 0,
+    SAY_CRUSHER_AGGRO = 0,
+    SAY_CRUSHER_EMOTE = 1,
+    SAY_HADRONOX_EMOTE = 0,
 
-    ACTION_DESPAWN_ADDS         = 1,
-    ACTION_START_EVENT          = 2
+    ACTION_DESPAWN_ADDS = 1,
+    ACTION_START_EVENT = 2
 };
 
-const Position hadronoxSteps[4] =
-{
-    {607.9f, 512.8f, 695.3f, 0.0f},
+Position const hadronoxSteps[4] = {
+    {607.9f,  512.8f,  695.3f, 0.0f},
     {611.67f, 564.11f, 720.0f, 0.0f},
-    {576.1f, 580.0f, 727.5f, 0.0f},
-    {534.87f, 554.0f, 733.0f, 0.0f}
+    {576.1f,  580.0f,  727.5f, 0.0f},
+    {534.87f, 554.0f,  733.0f, 0.0f}
 };
 
 class boss_hadronox : public CreatureScript
@@ -84,9 +83,7 @@ public:
 
     struct boss_hadronoxAI : public BossAI
     {
-        boss_hadronoxAI(Creature* creature) : BossAI(creature, DATA_HADRONOX_EVENT)
-        {
-        }
+        boss_hadronoxAI(Creature* creature) : BossAI(creature, DATA_HADRONOX_EVENT) { }
 
         void Reset() override
         {
@@ -152,25 +149,23 @@ public:
         bool AnyPlayerValid() const
         {
             Map::PlayerList const& playerList = me->GetMap()->GetPlayers();
-            for(Map::PlayerList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
-                if (me->GetDistance(itr->GetSource()) < 130.0f && itr->GetSource()->IsAlive() && !itr->GetSource()->IsGameMaster() && me->CanCreatureAttack(itr->GetSource()))
+            for (Map::PlayerList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
+                if (me->GetDistance(itr->GetSource()) < 130.0f && itr->GetSource()->IsAlive() &&
+                    !itr->GetSource()->IsGameMaster() && me->CanCreatureAttack(itr->GetSource()))
                     return true;
 
             return false;
         }
 
-        void DamageTaken(Unit* who, uint32& damage, DamageEffectType /*damageType*/, SpellSchoolMask /*damageSchoolMask*/) override
+        void DamageTaken(
+            Unit* who, uint32& damage, DamageEffectType /*damageType*/, SpellSchoolMask /*damageSchoolMask*/) override
         {
             if ((!who || !who->IsControlledByPlayer()) && me->HealthBelowPct(70))
             {
                 if (me->HealthBelowPctDamaged(5, damage))
-                {
                     damage = 0;
-                }
                 else
-                {
                     damage *= (me->GetHealthPct() - 5.0f) / 65.0f;
-                }
             }
         }
 
@@ -209,7 +204,13 @@ public:
                 case EVENT_HADRONOX_MOVE2:
                 case EVENT_HADRONOX_MOVE3:
                     Talk(SAY_HADRONOX_EMOTE);
-                    me->GetMotionMaster()->MoveCharge(hadronoxSteps[eventId - 1].GetPositionX(), hadronoxSteps[eventId - 1].GetPositionY(), hadronoxSteps[eventId - 1].GetPositionZ(), 10.0f, 0, nullptr, true);
+                    me->GetMotionMaster()->MoveCharge(hadronoxSteps[eventId - 1].GetPositionX(),
+                        hadronoxSteps[eventId - 1].GetPositionY(),
+                        hadronoxSteps[eventId - 1].GetPositionZ(),
+                        10.0f,
+                        0,
+                        nullptr,
+                        true);
                     break;
             }
 
@@ -235,7 +236,7 @@ public:
 
     struct npc_anub_ar_crusherAI : public ScriptedAI
     {
-        npc_anub_ar_crusherAI(Creature* c) : ScriptedAI(c), summons(me) {}
+        npc_anub_ar_crusherAI(Creature* c) : ScriptedAI(c), summons(me) { }
 
         EventMap events;
         SummonList summons;
@@ -249,8 +250,16 @@ public:
                 if (Unit* summoner = me->ToTempSummon()->GetSummonerUnit())
                     if (summoner->GetEntry() == me->GetEntry())
                     {
-                        me->CastSpell(me, RAND(SPELL_SUMMON_ANUBAR_CHAMPION, SPELL_SUMMON_ANUBAR_CRYPT_FIEND, SPELL_SUMMON_ANUBAR_NECROMANCER), true);
-                        me->CastSpell(me, RAND(SPELL_SUMMON_ANUBAR_CHAMPION, SPELL_SUMMON_ANUBAR_CRYPT_FIEND, SPELL_SUMMON_ANUBAR_NECROMANCER), true);
+                        me->CastSpell(me,
+                            RAND(SPELL_SUMMON_ANUBAR_CHAMPION,
+                                SPELL_SUMMON_ANUBAR_CRYPT_FIEND,
+                                SPELL_SUMMON_ANUBAR_NECROMANCER),
+                            true);
+                        me->CastSpell(me,
+                            RAND(SPELL_SUMMON_ANUBAR_CHAMPION,
+                                SPELL_SUMMON_ANUBAR_CRYPT_FIEND,
+                                SPELL_SUMMON_ANUBAR_NECROMANCER),
+                            true);
                     }
         }
 
@@ -334,7 +343,7 @@ public:
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_WEB_FRONT_DOORS });
+        return ValidateSpellInfo({SPELL_WEB_FRONT_DOORS});
     }
 
     void HandlePeriodic(AuraEffect const* /*aurEff*/)
@@ -358,8 +367,10 @@ public:
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_hadronox_summon_periodic_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
-        OnEffectApply += AuraEffectApplyFn(spell_hadronox_summon_periodic_aura::OnApply, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_hadronox_summon_periodic_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_hadronox_summon_periodic_aura::OnApply, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 
 private:
@@ -373,7 +384,7 @@ class spell_hadronox_leech_poison_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_LEECH_POISON_HEAL });
+        return ValidateSpellInfo({SPELL_LEECH_POISON_HEAL});
     }
 
     void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -385,16 +396,17 @@ class spell_hadronox_leech_poison_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_hadronox_leech_poison_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_PERIODIC_LEECH, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_hadronox_leech_poison_aura::HandleEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_LEECH,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
 class achievement_hadronox_denied : public AchievementCriteriaScript
 {
 public:
-    achievement_hadronox_denied() : AchievementCriteriaScript("achievement_hadronox_denied")
-    {
-    }
+    achievement_hadronox_denied() : AchievementCriteriaScript("achievement_hadronox_denied") { }
 
     bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {
@@ -409,9 +421,18 @@ void AddSC_boss_hadronox()
 {
     new boss_hadronox();
     new npc_anub_ar_crusher();
-    RegisterSpellScriptWithArgs(spell_hadronox_summon_periodic_aura, "spell_hadronox_summon_periodic_champion_aura", 15000, SPELL_SUMMON_ANUBAR_CHAMPION);
-    RegisterSpellScriptWithArgs(spell_hadronox_summon_periodic_aura, "spell_hadronox_summon_periodic_necromancer_aura", 10000, SPELL_SUMMON_ANUBAR_NECROMANCER);
-    RegisterSpellScriptWithArgs(spell_hadronox_summon_periodic_aura, "spell_hadronox_summon_periodic_crypt_fiend_aura", 5000, SPELL_SUMMON_ANUBAR_CRYPT_FIEND);
+    RegisterSpellScriptWithArgs(spell_hadronox_summon_periodic_aura,
+        "spell_hadronox_summon_periodic_champion_aura",
+        15000,
+        SPELL_SUMMON_ANUBAR_CHAMPION);
+    RegisterSpellScriptWithArgs(spell_hadronox_summon_periodic_aura,
+        "spell_hadronox_summon_periodic_necromancer_aura",
+        10000,
+        SPELL_SUMMON_ANUBAR_NECROMANCER);
+    RegisterSpellScriptWithArgs(spell_hadronox_summon_periodic_aura,
+        "spell_hadronox_summon_periodic_crypt_fiend_aura",
+        5000,
+        SPELL_SUMMON_ANUBAR_CRYPT_FIEND);
     RegisterSpellScript(spell_hadronox_leech_poison_aura);
     new achievement_hadronox_denied();
 }

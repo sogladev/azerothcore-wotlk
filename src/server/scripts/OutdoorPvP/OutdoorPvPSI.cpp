@@ -98,11 +98,12 @@ bool OutdoorPvPSI::HandleAreaTrigger(Player* player, uint32 trigger)
             {
                 // remove aura
                 player->RemoveAurasDueToSpell(SI_SILITHYST_FLAG);
-                ++ m_Gathered_A;
+                ++m_Gathered_A;
                 if (m_Gathered_A >= SI_MAX_RESOURCES)
                 {
                     TeamApplyBuff(TEAM_ALLIANCE, SI_CENARION_FAVOR, 0, player);
-                    sWorld->SendZoneText(OutdoorPvPSIBuffZones[0], sObjectMgr->GetAcoreStringForDBCLocale(LANG_OPVP_SI_CAPTURE_A));
+                    sWorld->SendZoneText(
+                        OutdoorPvPSIBuffZones[0], sObjectMgr->GetAcoreStringForDBCLocale(LANG_OPVP_SI_CAPTURE_A));
                     m_LastController = TEAM_ALLIANCE;
                     m_Gathered_A = 0;
                     m_Gathered_H = 0;
@@ -124,11 +125,12 @@ bool OutdoorPvPSI::HandleAreaTrigger(Player* player, uint32 trigger)
             {
                 // remove aura
                 player->RemoveAurasDueToSpell(SI_SILITHYST_FLAG);
-                ++ m_Gathered_H;
+                ++m_Gathered_H;
                 if (m_Gathered_H >= SI_MAX_RESOURCES)
                 {
                     TeamApplyBuff(TEAM_HORDE, SI_CENARION_FAVOR, 0, player);
-                    sWorld->SendZoneText(OutdoorPvPSIBuffZones[0], sObjectMgr->GetAcoreStringForDBCLocale(LANG_OPVP_SI_CAPTURE_H));
+                    sWorld->SendZoneText(
+                        OutdoorPvPSIBuffZones[0], sObjectMgr->GetAcoreStringForDBCLocale(LANG_OPVP_SI_CAPTURE_H));
                     m_LastController = TEAM_HORDE;
                     m_Gathered_A = 0;
                     m_Gathered_H = 0;
@@ -157,73 +159,97 @@ bool OutdoorPvPSI::HandleDropFlag(Player* player, uint32 spellId)
         switch (player->GetTeamId())
         {
             case TEAM_ALLIANCE:
+            {
+                AreaTrigger const* atEntry = sObjectMgr->GetAreaTrigger(SI_AREATRIGGER_A);
+                if (atEntry)
                 {
-                    AreaTrigger const* atEntry = sObjectMgr->GetAreaTrigger(SI_AREATRIGGER_A);
-                    if (atEntry)
+                    // 5.0f is safe-distance
+                    if (player->GetDistance(atEntry->x, atEntry->y, atEntry->z) > 5.0f + atEntry->radius)
                     {
-                        // 5.0f is safe-distance
-                        if (player->GetDistance(atEntry->x, atEntry->y, atEntry->z) > 5.0f + atEntry->radius)
+                        // he dropped it further, summon mound
+                        GameObject* go = sObjectMgr->IsGameObjectStaticTransport(SI_SILITHYST_MOUND)
+                                             ? new StaticTransport()
+                                             : new GameObject();
+                        Map* map = player->GetMap();
+                        if (!map)
                         {
-                            // he dropped it further, summon mound
-                            GameObject* go = sObjectMgr->IsGameObjectStaticTransport(SI_SILITHYST_MOUND) ? new StaticTransport() : new GameObject();
-                            Map* map = player->GetMap();
-                            if (!map)
-                            {
-                                delete go;
-                                return true;
-                            }
+                            delete go;
+                            return true;
+                        }
 
-                            if (!go->Create(map->GenerateLowGuid<HighGuid::GameObject>(), SI_SILITHYST_MOUND, map, player->GetPhaseMask(), player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), player->GetOrientation(), G3D::Quat(), 100, GO_STATE_READY))
-                            {
-                                delete go;
-                                return true;
-                            }
+                        if (!go->Create(map->GenerateLowGuid<HighGuid::GameObject>(),
+                                SI_SILITHYST_MOUND,
+                                map,
+                                player->GetPhaseMask(),
+                                player->GetPositionX(),
+                                player->GetPositionY(),
+                                player->GetPositionZ(),
+                                player->GetOrientation(),
+                                G3D::Quat(),
+                                100,
+                                GO_STATE_READY))
+                        {
+                            delete go;
+                            return true;
+                        }
 
-                            go->SetRespawnTime(0);
+                        go->SetRespawnTime(0);
 
-                            if (!map->AddToMap(go))
-                            {
-                                delete go;
-                                return true;
-                            }
+                        if (!map->AddToMap(go))
+                        {
+                            delete go;
+                            return true;
                         }
                     }
                 }
-                break;
+            }
+            break;
             case TEAM_HORDE:
+            {
+                AreaTrigger const* atEntry = sObjectMgr->GetAreaTrigger(SI_AREATRIGGER_H);
+                if (atEntry)
                 {
-                    AreaTrigger const* atEntry = sObjectMgr->GetAreaTrigger(SI_AREATRIGGER_H);
-                    if (atEntry)
+                    // 5.0f is safe-distance
+                    if (player->GetDistance(atEntry->x, atEntry->y, atEntry->z) > 5.0f + atEntry->radius)
                     {
-                        // 5.0f is safe-distance
-                        if (player->GetDistance(atEntry->x, atEntry->y, atEntry->z) > 5.0f + atEntry->radius)
+                        // he dropped it further, summon mound
+                        GameObject* go = sObjectMgr->IsGameObjectStaticTransport(SI_SILITHYST_MOUND)
+                                             ? new StaticTransport()
+                                             : new GameObject();
+                        Map* map = player->GetMap();
+                        if (!map)
                         {
-                            // he dropped it further, summon mound
-                            GameObject* go = sObjectMgr->IsGameObjectStaticTransport(SI_SILITHYST_MOUND) ? new StaticTransport() : new GameObject();
-                            Map* map = player->GetMap();
-                            if (!map)
-                            {
-                                delete go;
-                                return true;
-                            }
+                            delete go;
+                            return true;
+                        }
 
-                            if (!go->Create(map->GenerateLowGuid<HighGuid::GameObject>(), SI_SILITHYST_MOUND, map, player->GetPhaseMask(), player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), player->GetOrientation(), G3D::Quat(), 100, GO_STATE_READY))
-                            {
-                                delete go;
-                                return true;
-                            }
+                        if (!go->Create(map->GenerateLowGuid<HighGuid::GameObject>(),
+                                SI_SILITHYST_MOUND,
+                                map,
+                                player->GetPhaseMask(),
+                                player->GetPositionX(),
+                                player->GetPositionY(),
+                                player->GetPositionZ(),
+                                player->GetOrientation(),
+                                G3D::Quat(),
+                                100,
+                                GO_STATE_READY))
+                        {
+                            delete go;
+                            return true;
+                        }
 
-                            go->SetRespawnTime(0);
+                        go->SetRespawnTime(0);
 
-                            if (!map->AddToMap(go))
-                            {
-                                delete go;
-                                return true;
-                            }
+                        if (!map->AddToMap(go))
+                        {
+                            delete go;
+                            return true;
                         }
                     }
                 }
-                break;
+            }
+            break;
             default:
                 break;
         }
@@ -249,10 +275,7 @@ bool OutdoorPvPSI::HandleCustomSpell(Player* player, uint32 spellId, GameObject*
 class OutdoorPvP_silithus : public OutdoorPvPScript
 {
 public:
-    OutdoorPvP_silithus()
-        : OutdoorPvPScript("outdoorpvp_si")
-    {
-    }
+    OutdoorPvP_silithus() : OutdoorPvPScript("outdoorpvp_si") { }
 
     OutdoorPvP* GetOutdoorPvP() const override
     {

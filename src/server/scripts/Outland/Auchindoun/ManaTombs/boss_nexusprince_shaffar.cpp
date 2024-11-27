@@ -22,31 +22,31 @@
 
 enum Text
 {
-    SAY_INTRO                       = 0,
-    SAY_AGGRO                       = 1,
-    SAY_SLAY                        = 2,
-    SAY_SUMMON                      = 3,
-    SAY_DEAD                        = 4
+    SAY_INTRO = 0,
+    SAY_AGGRO = 1,
+    SAY_SLAY = 2,
+    SAY_SUMMON = 3,
+    SAY_DEAD = 4
 };
 
 enum Spells
 {
     // Shaffar
-    SPELL_BLINK                     = 34605,
-    SPELL_FROSTBOLT                 = 32364,
-    SPELL_FIREBALL                  = 32363,
-    SPELL_FROSTNOVA                 = 32365,
-    SPELL_ETHEREAL_BEACON           = 32371, // Summons NPC_BEACON
-    SPELL_ETHEREAL_BEACON_VISUAL    = 32368,
+    SPELL_BLINK = 34605,
+    SPELL_FROSTBOLT = 32364,
+    SPELL_FIREBALL = 32363,
+    SPELL_FROSTNOVA = 32365,
+    SPELL_ETHEREAL_BEACON = 32371, // Summons NPC_BEACON
+    SPELL_ETHEREAL_BEACON_VISUAL = 32368,
 
     // Yor
-    SPELL_DOUBLE_BREATH             = 38361,
-    SPELL_STOMP                     = 36405
+    SPELL_DOUBLE_BREATH = 38361,
+    SPELL_STOMP = 36405
 };
 
 enum Npc
 {
-    NPC_BEACON                      = 18431
+    NPC_BEACON = 18431
 };
 
 struct boss_nexusprince_shaffar : public BossAI
@@ -54,10 +54,7 @@ struct boss_nexusprince_shaffar : public BossAI
     boss_nexusprince_shaffar(Creature* creature) : BossAI(creature, DATA_NEXUSPRINCE_SHAFFAR), summons(me)
     {
         HasTaunted = false;
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     SummonList summons;
@@ -89,27 +86,28 @@ struct boss_nexusprince_shaffar : public BossAI
         _JustEngagedWith();
         Talk(SAY_AGGRO);
         summons.DoZoneInCombat();
-        scheduler.Schedule(10s, [this](TaskContext context)
+        scheduler
+            .Schedule(10s,
+                [this](TaskContext context)
         {
             if (!urand(0, 3))
-            {
                 Talk(SAY_SUMMON);
-            }
             DoCastSelf(SPELL_ETHEREAL_BEACON, true);
             context.Repeat(10s);
-        }).Schedule(4s, [this](TaskContext context)
+        })
+            .Schedule(4s,
+                [this](TaskContext context)
         {
             DoCastVictim(RAND(SPELL_FROSTBOLT, SPELL_FIREBALL));
             context.Repeat(3s, 4s);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_FROSTNOVA);
             context.Repeat(16s, 23s);
             scheduler.DelayAll(1500ms);
-            scheduler.Schedule(1500ms, [this](TaskContext /*context*/)
-            {
-                DoCastSelf(SPELL_BLINK);
-            });
+            scheduler.Schedule(1500ms, [this](TaskContext /*context*/) { DoCastSelf(SPELL_BLINK); });
         });
     }
 
@@ -119,9 +117,7 @@ struct boss_nexusprince_shaffar : public BossAI
         {
             summon->CastSpell(summon, SPELL_ETHEREAL_BEACON_VISUAL, false);
             if (Unit* target = SelectTargetFromPlayerList(50.0f))
-            {
                 summon->AI()->AttackStart(target);
-            }
         }
         summons.Summon(summon);
     }
@@ -134,9 +130,7 @@ struct boss_nexusprince_shaffar : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -167,14 +161,18 @@ struct npc_yor : public ScriptedAI
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        _scheduler.Schedule(25500ms, 30500ms, [this](TaskContext context)
+        _scheduler
+            .Schedule(25500ms,
+                30500ms,
+                [this](TaskContext context)
         {
             if (me->IsWithinDist(me->GetVictim(), ATTACK_DISTANCE))
-            {
                 DoCastVictim(SPELL_DOUBLE_BREATH);
-            }
             context.Repeat(10s, 20s);
-        }).Schedule(12s, 18s, [this](TaskContext context)
+        })
+            .Schedule(12s,
+                18s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_STOMP);
             context.Repeat(14s, 24s);

@@ -29,7 +29,7 @@ enum UnderbatSpells
 
 struct npc_underbat : public ScriptedAI
 {
-    npc_underbat(Creature* c) : ScriptedAI(c) {}
+    npc_underbat(Creature* c) : ScriptedAI(c) { }
 
     void Reset() override
     {
@@ -38,10 +38,11 @@ struct npc_underbat : public ScriptedAI
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        _scheduler.Schedule(1200ms, 12500ms, [this](TaskContext context)
+        _scheduler.Schedule(1200ms,
+            12500ms,
+            [this](TaskContext context)
         {
-            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, [&](Unit* u)
-            {
+            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, [&](Unit* u) {
                 return u->IsAlive() && !u->IsPet() && me->IsWithinCombatRange(u, 5.0f) && !me->HasInArc(M_PI, u);
             }))
             {
@@ -56,10 +57,7 @@ struct npc_underbat : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-        _scheduler.Update(diff, [this]
-        {
-            DoMeleeAttackIfReady();
-        });
+        _scheduler.Update(diff, [this] { DoMeleeAttackIfReady(); });
     }
 
 private:
@@ -82,14 +80,16 @@ class spell_fungal_decay : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_fungal_decay::OnApply, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_fungal_decay::PeriodicTick, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_fungal_decay::OnApply, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_fungal_decay::PeriodicTick, EFFECT_1, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 
 enum AllergiesEnum
 {
-    SPELL_SNEEZE    = 31428
+    SPELL_SNEEZE = 31428
 };
 
 class spell_allergies : public AuraScript
@@ -105,9 +105,7 @@ class spell_allergies : public AuraScript
     void Update(AuraEffect* /*effect*/)
     {
         if (Unit* target = GetUnitOwner())
-        {
             target->CastSpell(target, SPELL_SNEEZE, true);
-        }
     }
 
     void Register() override

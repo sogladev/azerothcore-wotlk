@@ -26,21 +26,21 @@
 
 enum Yells
 {
-    SAY_AGGRO                       = 0,
-    SAY_HP_66                       = 1,
-    SAY_HP_33                       = 2,
-    SAY_DEATH                       = 3,
-    SAY_SLAY                        = 4,
-    SAY_BOULDER_HIT                 = 5,
-    WHISPER_BOULDER                 = 6,
-    EMOTE_DEEP_FREEZE               = 7,
+    SAY_AGGRO = 0,
+    SAY_HP_66 = 1,
+    SAY_HP_33 = 2,
+    SAY_DEATH = 3,
+    SAY_SLAY = 4,
+    SAY_BOULDER_HIT = 5,
+    WHISPER_BOULDER = 6,
+    EMOTE_DEEP_FREEZE = 7,
 };
 
 enum MiscData
 {
-    EQUIP_ID_SWORD                  = 49345,
-    EQUIP_ID_MACE                   = 49344,
-    GO_SARONITE_ROCK                = 196485,
+    EQUIP_ID_SWORD = 49345,
+    EQUIP_ID_MACE = 49344,
+    GO_SARONITE_ROCK = 196485,
 };
 
 Position const northForgePos = {722.5643f, -234.1615f, 527.182f, 2.16421f};
@@ -48,12 +48,12 @@ Position const southForgePos = {639.257f, -210.1198f, 529.015f, 0.523599f};
 
 enum Spells
 {
-    SPELL_PERMAFROST                = 70326,
-    SPELL_THROW_SARONITE            = 68788,
-    SPELL_THUNDERING_STOMP          = 68771,
+    SPELL_PERMAFROST = 70326,
+    SPELL_THROW_SARONITE = 68788,
+    SPELL_THUNDERING_STOMP = 68771,
 
-    SPELL_CHILLING_WAVE             = 68778,
-    SPELL_DEEP_FREEZE               = 70381,
+    SPELL_CHILLING_WAVE = 68778,
+    SPELL_DEEP_FREEZE = 70381,
 };
 
 #define SPELL_FORGE_BLADE           RAID_MODE(68774, 70334)
@@ -62,7 +62,7 @@ enum Spells
 
 enum Events
 {
-    EVENT_SPELL_THROW_SARONITE  = 1,
+    EVENT_SPELL_THROW_SARONITE = 1,
     EVENT_JUMP,
     EVENT_SPELL_CHILLING_WAVE,
     EVENT_SPELL_DEEP_FREEZE,
@@ -100,7 +100,7 @@ public:
                 pInstance->SetData(DATA_GARFROST, NOT_STARTED);
         }
 
-        void SetData(uint32 id, uint32  /*data*/) override
+        void SetData(uint32 id, uint32 /*data*/) override
         {
             if (id == 1 && pInstance)
                 pInstance->SetData(DATA_ACHIEV_ELEVEN, 0);
@@ -118,7 +118,8 @@ public:
                 pInstance->SetData(DATA_GARFROST, IN_PROGRESS);
         }
 
-        void DamageTaken(Unit*, uint32& /*damage*/, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
+        void DamageTaken(
+            Unit*, uint32& /*damage*/, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
         {
             if (phase == 0 && !HealthAbovePct(66) && !me->HasUnitState(UNIT_STATE_ROOT))
             {
@@ -166,7 +167,7 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit*  /*target*/, SpellInfo const* spell) override
+        void SpellHitTarget(Unit* /*target*/, SpellInfo const* spell) override
         {
             if (spell->Id == uint32(SPELL_SARONITE_TRIGGERED))
             {
@@ -219,9 +220,11 @@ public:
                     EnterEvadeMode(EVADE_REASON_OTHER);
                     if (CreatureGroup* f = me->GetFormation())
                     {
-                        const CreatureGroup::CreatureGroupMemberType& m = f->GetMembers();
-                        for (CreatureGroup::CreatureGroupMemberType::const_iterator itr = m.begin(); itr != m.end(); ++itr)
-                            if (itr->first->IsAlive() && itr->first->IsInCombat() && !itr->first->IsInEvadeMode() && itr->first->IsAIEnabled)
+                        CreatureGroup::CreatureGroupMemberType const& m = f->GetMembers();
+                        for (CreatureGroup::CreatureGroupMemberType::const_iterator itr = m.begin(); itr != m.end();
+                             ++itr)
+                            if (itr->first->IsAlive() && itr->first->IsInCombat() && !itr->first->IsInEvadeMode() &&
+                                itr->first->IsAIEnabled)
                                 itr->first->AI()->EnterEvadeMode();
                     }
                     return;
@@ -249,9 +252,19 @@ public:
                 case EVENT_JUMP:
                     me->DisableRotate(true);
                     if (phase == 1)
-                        me->GetMotionMaster()->MoveJump(northForgePos.GetPositionX(), northForgePos.GetPositionY(), northForgePos.GetPositionZ(), 25.0f, 15.0f, 0);
+                        me->GetMotionMaster()->MoveJump(northForgePos.GetPositionX(),
+                            northForgePos.GetPositionY(),
+                            northForgePos.GetPositionZ(),
+                            25.0f,
+                            15.0f,
+                            0);
                     else if (phase == 2)
-                        me->GetMotionMaster()->MoveJump(southForgePos.GetPositionX(), southForgePos.GetPositionY(), southForgePos.GetPositionZ(), 25.0f, 15.0f, 0);
+                        me->GetMotionMaster()->MoveJump(southForgePos.GetPositionX(),
+                            southForgePos.GetPositionY(),
+                            southForgePos.GetPositionZ(),
+                            25.0f,
+                            15.0f,
+                            0);
 
                     break;
                 case EVENT_SPELL_CHILLING_WAVE:
@@ -323,7 +336,8 @@ class spell_garfrost_permafrost : public SpellScript
                     {
                         bool valid = true;
                         if (!caster->IsWithinMeleeRange(target->ToUnit()))
-                            for (std::list<GameObject*>::const_iterator itr = blockList.begin(); itr != blockList.end(); ++itr)
+                            for (std::list<GameObject*>::const_iterator itr = blockList.begin(); itr != blockList.end();
+                                 ++itr)
                                 if (!(*itr)->IsInvisibleDueToDespawn())
                                     if ((*itr)->IsInBetween(caster, target, 4.0f))
                                     {
@@ -356,9 +370,12 @@ class spell_garfrost_permafrost : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_garfrost_permafrost::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_garfrost_permafrost::FilterTargetsNext, EFFECT_1, TARGET_UNIT_DEST_AREA_ENEMY);
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_garfrost_permafrost::FilterTargetsNext, EFFECT_2, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_garfrost_permafrost::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_garfrost_permafrost::FilterTargetsNext, EFFECT_1, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_garfrost_permafrost::FilterTargetsNext, EFFECT_2, TARGET_UNIT_DEST_AREA_ENEMY);
     }
 };
 

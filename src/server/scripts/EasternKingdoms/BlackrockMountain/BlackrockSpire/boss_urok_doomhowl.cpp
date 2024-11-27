@@ -21,23 +21,23 @@
 
 enum Spells
 {
-    SPELL_REND                      = 16509,
-    SPELL_STRIKE                    = 15580,
-    SPELL_INTIMIDATING_ROAR         = 16508,
-    SPELL_UROK_SPAWN                = 16473,
+    SPELL_REND = 16509,
+    SPELL_STRIKE = 15580,
+    SPELL_INTIMIDATING_ROAR = 16508,
+    SPELL_UROK_SPAWN = 16473,
 };
 
 enum Says
 {
-    SAY_SUMMON                      = 0,
-    SAY_AGGRO                       = 1,
+    SAY_SUMMON = 0,
+    SAY_AGGRO = 1,
 };
 
 enum Events
 {
-    EVENT_REND                      = 1,
-    EVENT_STRIKE                    = 2,
-    EVENT_INTIMIDATING_ROAR         = 3
+    EVENT_REND = 1,
+    EVENT_STRIKE = 2,
+    EVENT_INTIMIDATING_ROAR = 3
 };
 
 class boss_urok_doomhowl : public CreatureScript
@@ -47,7 +47,7 @@ public:
 
     struct boss_urok_doomhowlAI : public BossAI
     {
-        boss_urok_doomhowlAI(Creature* creature) : BossAI(creature, DATA_UROK_DOOMHOWL) {}
+        boss_urok_doomhowlAI(Creature* creature) : BossAI(creature, DATA_UROK_DOOMHOWL) { }
 
         void InitializeAI() override
         {
@@ -57,14 +57,10 @@ public:
             DoZoneInCombat(nullptr, 100.0f);
 
             if (GameObject* challenge = instance->instance->GetGameObject(instance->GetGuidData(GO_UROK_CHALLENGE)))
-            {
                 challenge->Delete();
-            }
 
             if (GameObject* pile = instance->instance->GetGameObject(instance->GetGuidData(GO_UROK_PILE)))
-            {
                 pile->DespawnOrUnsummon(0ms, Seconds(MONTH));
-            }
         }
 
         void JustEngagedWith(Unit* /*who*/) override

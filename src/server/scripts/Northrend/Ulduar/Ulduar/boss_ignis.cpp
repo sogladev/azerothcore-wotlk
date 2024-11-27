@@ -60,14 +60,14 @@
 
 enum Texts
 {
-    SAY_AGGRO       = 0,
-    SAY_SUMMON      = 1,
-    SAY_SLAG_POT    = 2,
-    SAY_SCORCH      = 3,
-    SAY_SLAY        = 4,
-    SAY_BERSERK     = 5,
-    SAY_DEATH       = 6,
-    EMOTE_JETS      = 7,
+    SAY_AGGRO = 0,
+    SAY_SUMMON = 1,
+    SAY_SLAG_POT = 2,
+    SAY_SCORCH = 3,
+    SAY_SLAY = 4,
+    SAY_BERSERK = 5,
+    SAY_DEATH = 6,
+    EMOTE_JETS = 7,
 };
 
 #define ACHIEV_STOKIN_THE_FURNACE_EVENT 20951
@@ -135,9 +135,7 @@ public:
                     if (heat->GetStackAmount() >= 10)
                     {
                         if (heat->GetStackAmount() > 10)
-                        {
                             heat->ModStackAmount(-1);
-                        }
                         me->CastSpell(me, SPELL_MOLTEN, true);
                         me->GetThreatMgr().ResetAllThreat();
                     }
@@ -158,7 +156,7 @@ public:
             }
         }
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
             if (InstanceScript* instance = me->GetInstanceScript())
                 if (Creature* ignis = ObjectAccessor::GetCreature(*me, instance->GetGuidData(TYPE_IGNIS)))
@@ -186,7 +184,7 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
     };
 };
 
@@ -225,13 +223,13 @@ public:
             }
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             me->setActive(true);
 
             std::list<Creature*> icl;
             me->GetCreaturesWithEntryInRange(icl, 300.0f, NPC_IRON_CONSTRUCT);
-            for( std::list<Creature*>::iterator itr = icl.begin(); itr != icl.end(); ++itr )
+            for (std::list<Creature*>::iterator itr = icl.begin(); itr != icl.end(); ++itr)
             {
                 if (!(*itr)->IsAlive())
                 {
@@ -263,7 +261,7 @@ public:
             }
         }
 
-        void SetData(uint32 id, uint32  /*value*/) override
+        void SetData(uint32 id, uint32 /*value*/) override
         {
             if (id == 1337)
             {
@@ -302,7 +300,7 @@ public:
 
             std::list<Creature*> icl;
             me->GetCreaturesWithEntryInRange(icl, 300.0f, NPC_IRON_CONSTRUCT);
-            for( std::list<Creature*>::iterator itr = icl.begin(); itr != icl.end(); ++itr )
+            for (std::list<Creature*>::iterator itr = icl.begin(); itr != icl.end(); ++itr)
                 if ((*itr)->IsAlive() && (*itr)->IsInCombat())
                     Unit::Kill(*itr, *itr);
         }
@@ -316,14 +314,15 @@ public:
             }
         }
 
-        void MoveInLineOfSight(Unit*  /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
                 return;
 
-            if (me->GetPositionX() < 490.0f || me->GetPositionX() > 690.0f || me->GetPositionY() < 130.0f || me->GetPositionY() > 410.0f )
+            if (me->GetPositionX() < 490.0f || me->GetPositionX() > 690.0f || me->GetPositionY() < 130.0f ||
+                me->GetPositionY() > 410.0f)
             {
                 EnterEvadeMode(EVADE_REASON_OTHER);
                 return;
@@ -368,49 +367,49 @@ public:
                     events.Repeat(25s);
                     break;
                 case EVENT_GRAB:
+                {
+                    std::list<Creature*> icl;
+                    me->GetCreaturesWithEntryInRange(icl, 300.0f, NPC_IRON_CONSTRUCT);
+
+                    GuidVector playerGUIDs;
+                    Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                    Player* temp = nullptr;
+
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                     {
-                        std::list<Creature*> icl;
-                        me->GetCreaturesWithEntryInRange(icl, 300.0f, NPC_IRON_CONSTRUCT);
-
-                        GuidVector playerGUIDs;
-                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                        Player* temp = nullptr;
-
-                        for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
+                        temp = itr->GetSource();
+                        if (!temp->IsAlive() || temp->GetExactDist2d(me) > 90.0f)
+                            continue;
+                        if (me->GetVictim() && temp->GetGUID() == me->GetVictim()->GetGUID())
+                            continue;
+                        bool found = false;
+                        for (std::list<Creature*>::iterator iterator = icl.begin(); iterator != icl.end(); ++iterator)
                         {
-                            temp = itr->GetSource();
-                            if (!temp->IsAlive() || temp->GetExactDist2d(me) > 90.0f )
-                                continue;
-                            if (me->GetVictim() && temp->GetGUID() == me->GetVictim()->GetGUID())
-                                continue;
-                            bool found = false;
-                            for (std::list<Creature*>::iterator iterator = icl.begin(); iterator != icl.end(); ++iterator)
+                            if ((*iterator)->GetVictim() && (*iterator)->GetVictim()->GetGUID() == temp->GetGUID())
                             {
-                                if ((*iterator)->GetVictim() && (*iterator)->GetVictim()->GetGUID() == temp->GetGUID())
-                                {
-                                    found = true;
-                                    break;
-                                }
-                            }
-
-                            if (!found)
-                                playerGUIDs.push_back(temp->GetGUID());
-                        }
-
-                        if (!playerGUIDs.empty())
-                        {
-                            int8 pos = urand(0, playerGUIDs.size() - 1);
-                            if (Player* pTarget = ObjectAccessor::GetPlayer(*me, playerGUIDs.at(pos)))
-                            {
-                                Talk(SAY_SLAG_POT);
-                                me->CastSpell(pTarget, SPELL_GRAB, false);
+                                found = true;
+                                break;
                             }
                         }
 
-                        events.Repeat(24s);
-                        events.DelayEvents(6s);
+                        if (!found)
+                            playerGUIDs.push_back(temp->GetGUID());
                     }
-                    break;
+
+                    if (!playerGUIDs.empty())
+                    {
+                        int8 pos = urand(0, playerGUIDs.size() - 1);
+                        if (Player* pTarget = ObjectAccessor::GetPlayer(*me, playerGUIDs.at(pos)))
+                        {
+                            Talk(SAY_SLAG_POT);
+                            me->CastSpell(pTarget, SPELL_GRAB, false);
+                        }
+                    }
+
+                    events.Repeat(24s);
+                    events.DelayEvents(6s);
+                }
+                break;
             }
 
             DoMeleeAttackIfReady();
@@ -431,23 +430,32 @@ class spell_ignis_scorch_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SCORCHED_GROUND_10, SPELL_SCORCHED_GROUND_25 });
+        return ValidateSpellInfo({SPELL_SCORCHED_GROUND_10, SPELL_SCORCHED_GROUND_25});
     }
 
     void HandleEffectPeriodic(AuraEffect const* aurEff)
     {
         if (aurEff->GetTotalTicks() >= 0 && aurEff->GetTickNumber() == uint32(aurEff->GetTotalTicks()))
             if (Unit* caster = GetCaster())
-                if (Creature* summon = caster->SummonCreature(NPC_SCORCHED_GROUND, caster->GetPositionX() + 20.0f * cos(caster->GetOrientation()), caster->GetPositionY() + 20.0f * std::sin(caster->GetOrientation()), 361.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 30000))
+                if (Creature* summon = caster->SummonCreature(NPC_SCORCHED_GROUND,
+                        caster->GetPositionX() + 20.0f * cos(caster->GetOrientation()),
+                        caster->GetPositionY() + 20.0f * std::sin(caster->GetOrientation()),
+                        361.0f,
+                        0.0f,
+                        TEMPSUMMON_TIMED_DESPAWN,
+                        30000))
                 {
                     if (!summon->FindNearestCreature(NPC_WATER_TRIGGER, 25.0f, true)) // must be away from the water
-                        summon->CastSpell(summon, (aurEff->GetId() == SPELL_SCORCH_10 ? SPELL_SCORCHED_GROUND_10 : SPELL_SCORCHED_GROUND_25), true);
+                        summon->CastSpell(summon,
+                            (aurEff->GetId() == SPELL_SCORCH_10 ? SPELL_SCORCHED_GROUND_10 : SPELL_SCORCHED_GROUND_25),
+                            true);
                 }
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_ignis_scorch_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_ignis_scorch_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -457,10 +465,10 @@ class spell_ignis_grab_initial : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_GRAB_TRIGGERED });
+        return ValidateSpellInfo({SPELL_GRAB_TRIGGERED});
     }
 
-    void HandleScript(SpellEffIndex  /*effIndex*/)
+    void HandleScript(SpellEffIndex /*effIndex*/)
     {
         if (Unit* target = GetHitUnit())
             target->CastSpell(target, SPELL_GRAB_TRIGGERED, true);
@@ -468,7 +476,8 @@ class spell_ignis_grab_initial : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_ignis_grab_initial::HandleScript, EFFECT_2, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_ignis_grab_initial::HandleScript, EFFECT_2, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -476,10 +485,10 @@ enum SlagPot
 {
     SPELL_SLAG_POT_DAMAGE_1 = 65722,
     SPELL_SLAG_POT_DAMAGE_2 = 65723,
-    SPELL_SCORCH_DAMAGE_1   = 62549,
-    SPELL_SCORCH_DAMAGE_2   = 63475,
-    SPELL_SLAG_IMBUED_1     = 62836,
-    SPELL_SLAG_IMBUED_2     = 63536
+    SPELL_SCORCH_DAMAGE_1 = 62549,
+    SPELL_SCORCH_DAMAGE_2 = 63475,
+    SPELL_SLAG_IMBUED_1 = 62836,
+    SPELL_SLAG_IMBUED_2 = 63536
 };
 
 class spell_ignis_slag_pot_aura : public AuraScript
@@ -488,22 +497,20 @@ class spell_ignis_slag_pot_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo(
-            {
-                SPELL_SLAG_POT_DAMAGE_1,
-                SPELL_SLAG_POT_DAMAGE_2,
-                SPELL_SCORCH_DAMAGE_1,
-                SPELL_SCORCH_DAMAGE_2,
-                SPELL_SLAG_IMBUED_1,
-                SPELL_SLAG_IMBUED_2
-            });
+        return ValidateSpellInfo({SPELL_SLAG_POT_DAMAGE_1,
+            SPELL_SLAG_POT_DAMAGE_2,
+            SPELL_SCORCH_DAMAGE_1,
+            SPELL_SCORCH_DAMAGE_2,
+            SPELL_SLAG_IMBUED_1,
+            SPELL_SLAG_IMBUED_2});
     }
 
-    void HandleEffectPeriodic(AuraEffect const*   /*aurEff*/)
+    void HandleEffectPeriodic(AuraEffect const* /*aurEff*/)
     {
         if (Unit* caster = GetCaster())
             if (Unit* target = GetTarget())
-                caster->CastSpell(target, (GetId() == SPELL_SLAG_POT_10 ? SPELL_SLAG_POT_DAMAGE_1 : SPELL_SLAG_POT_DAMAGE_2), true);
+                caster->CastSpell(
+                    target, (GetId() == SPELL_SLAG_POT_10 ? SPELL_SLAG_POT_DAMAGE_1 : SPELL_SLAG_POT_DAMAGE_2), true);
     }
 
     void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -522,24 +529,28 @@ class spell_ignis_slag_pot_aura : public AuraScript
             target->ApplySpellImmune(GetId(), IMMUNITY_ID, SPELL_SCORCH_DAMAGE_1, false);
             target->ApplySpellImmune(GetId(), IMMUNITY_ID, SPELL_SCORCH_DAMAGE_2, false);
             if (target->IsAlive())
-                target->CastSpell(target, (GetId() == SPELL_SLAG_POT_10 ? SPELL_SLAG_IMBUED_1 : SPELL_SLAG_IMBUED_2), true);
+                target->CastSpell(
+                    target, (GetId() == SPELL_SLAG_POT_10 ? SPELL_SLAG_IMBUED_1 : SPELL_SLAG_IMBUED_2), true);
         }
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_ignis_slag_pot_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
-        OnEffectApply += AuraEffectApplyFn(spell_ignis_slag_pot_aura::OnApply, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_ignis_slag_pot_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_ignis_slag_pot_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_ignis_slag_pot_aura::OnApply, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_ignis_slag_pot_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
 class achievement_ignis_shattered : public AchievementCriteriaScript
 {
 public:
-    achievement_ignis_shattered() : AchievementCriteriaScript("achievement_ignis_shattered") {}
+    achievement_ignis_shattered() : AchievementCriteriaScript("achievement_ignis_shattered") { }
 
-    bool OnCheck(Player*  /*player*/, Unit* target, uint32 /*criteria_id*/) override
+    bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {
         if (!target || !target->IsCreature())
             return false;

@@ -17,100 +17,100 @@
 
 #include "CreatureScript.h"
 #include "ObjectMgr.h"
+#include "PassiveAI.h"
 #include "Player.h"
 #include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
 #include "SpellScriptLoader.h"
 #include "icecrown_citadel.h"
-#include "PassiveAI.h"
 
 enum Texts
 {
     // Blood Queen Lana'Thel
-    SAY_INTRO_1                 = 0,
-    SAY_INTRO_2                 = 1,
+    SAY_INTRO_1 = 0,
+    SAY_INTRO_2 = 1,
 
     // Prince Keleseth
-    SAY_KELESETH_INVOCATION     = 0,
-    EMOTE_KELESETH_INVOCATION   = 1,
-    SAY_KELESETH_SPECIAL        = 2,
-    SAY_KELESETH_KILL           = 3,
-    EMOTE_KELESETH_BERSERK      = 4,
-    SAY_KELESETH_DEATH          = 5,
+    SAY_KELESETH_INVOCATION = 0,
+    EMOTE_KELESETH_INVOCATION = 1,
+    SAY_KELESETH_SPECIAL = 2,
+    SAY_KELESETH_KILL = 3,
+    EMOTE_KELESETH_BERSERK = 4,
+    SAY_KELESETH_DEATH = 5,
 
     // Prince Taldaram
-    SAY_TALDARAM_INVOCATION     = 0,
-    EMOTE_TALDARAM_INVOCATION   = 1,
-    SAY_TALDARAM_SPECIAL        = 2,
-    EMOTE_TALDARAM_FLAME        = 3,
-    SAY_TALDARAM_KILL           = 4,
-    EMOTE_TALDARAM_BERSERK      = 5,
-    EMOTE_TALDARAM_DEATH        = 6,
+    SAY_TALDARAM_INVOCATION = 0,
+    EMOTE_TALDARAM_INVOCATION = 1,
+    SAY_TALDARAM_SPECIAL = 2,
+    EMOTE_TALDARAM_FLAME = 3,
+    SAY_TALDARAM_KILL = 4,
+    EMOTE_TALDARAM_BERSERK = 5,
+    EMOTE_TALDARAM_DEATH = 6,
 
     // Prince Valanar
-    SAY_VALANAR_INVOCATION      = 0,
-    EMOTE_VALANAR_INVOCATION    = 1,
-    SAY_VALANAR_SPECIAL         = 2,
-    EMOTE_VALANAR_SHOCK_VORTEX  = 3,
-    SAY_VALANAR_KILL            = 4,
-    SAY_VALANAR_BERSERK         = 5,
-    SAY_VALANAR_DEATH           = 6,
+    SAY_VALANAR_INVOCATION = 0,
+    EMOTE_VALANAR_INVOCATION = 1,
+    SAY_VALANAR_SPECIAL = 2,
+    EMOTE_VALANAR_SHOCK_VORTEX = 3,
+    SAY_VALANAR_KILL = 4,
+    SAY_VALANAR_BERSERK = 5,
+    SAY_VALANAR_DEATH = 6,
 };
 
 enum Spells
 {
-    SPELL_FEIGN_DEATH                   = 71598,
-    SPELL_OOC_INVOCATION_VISUAL         = 70934,
-    SPELL_INVOCATION_VISUAL_ACTIVE      = 71596,
-    SPELL_INVOCATION_OF_BLOOD_KELESETH  = 70981,
-    SPELL_INVOCATION_OF_BLOOD_TALDARAM  = 70982,
-    SPELL_INVOCATION_OF_BLOOD_VALANAR   = 70952,
+    SPELL_FEIGN_DEATH = 71598,
+    SPELL_OOC_INVOCATION_VISUAL = 70934,
+    SPELL_INVOCATION_VISUAL_ACTIVE = 71596,
+    SPELL_INVOCATION_OF_BLOOD_KELESETH = 70981,
+    SPELL_INVOCATION_OF_BLOOD_TALDARAM = 70982,
+    SPELL_INVOCATION_OF_BLOOD_VALANAR = 70952,
 
     // Heroic mode
-    SPELL_SHADOW_PRISON                 = 72998,
-    SPELL_SHADOW_PRISON_DAMAGE          = 72999,
-    SPELL_SHADOW_PRISON_DUMMY           = 73001,
+    SPELL_SHADOW_PRISON = 72998,
+    SPELL_SHADOW_PRISON_DAMAGE = 72999,
+    SPELL_SHADOW_PRISON_DUMMY = 73001,
 
     // Prince Keleseth
-    SPELL_SHADOW_RESONANCE              = 71943,
-    SPELL_SHADOW_LANCE                  = 71405,
-    SPELL_EMPOWERED_SHADOW_LANCE        = 71815,
+    SPELL_SHADOW_RESONANCE = 71943,
+    SPELL_SHADOW_LANCE = 71405,
+    SPELL_EMPOWERED_SHADOW_LANCE = 71815,
 
     // Dark Nucleus
-    SPELL_SHADOW_RESONANCE_AURA         = 72980,
-    SPELL_SHADOW_RESONANCE_RESIST       = 71822,
+    SPELL_SHADOW_RESONANCE_AURA = 72980,
+    SPELL_SHADOW_RESONANCE_RESIST = 71822,
 
     // Prince Taldaram
-    SPELL_GLITTERING_SPARKS             = 71806,
-    SPELL_CONJURE_FLAME                 = 71718,
-    SPELL_CONJURE_EMPOWERED_FLAME       = 72040,
+    SPELL_GLITTERING_SPARKS = 71806,
+    SPELL_CONJURE_FLAME = 71718,
+    SPELL_CONJURE_EMPOWERED_FLAME = 72040,
 
     // Ball of Flame
-    SPELL_FLAME_SPHERE_SPAWN_EFFECT     = 55891, // cast from creature_template_addon (needed cast before entering world)
-    SPELL_BALL_OF_FLAMES_VISUAL         = 71706,
-    SPELL_BALL_OF_FLAMES                = 71714,
-    SPELL_FLAMES                        = 71393,
-    SPELL_FLAME_SPHERE_DEATH_EFFECT     = 55947,
+    SPELL_FLAME_SPHERE_SPAWN_EFFECT = 55891, // cast from creature_template_addon (needed cast before entering world)
+    SPELL_BALL_OF_FLAMES_VISUAL = 71706,
+    SPELL_BALL_OF_FLAMES = 71714,
+    SPELL_FLAMES = 71393,
+    SPELL_FLAME_SPHERE_DEATH_EFFECT = 55947,
 
     // Ball of Inferno Flame
-    SPELL_BALL_OF_FLAMES_PROC           = 71756,
-    SPELL_BALL_OF_FLAMES_PERIODIC       = 71709,
+    SPELL_BALL_OF_FLAMES_PROC = 71756,
+    SPELL_BALL_OF_FLAMES_PERIODIC = 71709,
 
     // Prince Valanar
-    SPELL_KINETIC_BOMB_TARGET           = 72053,
-    SPELL_KINETIC_BOMB                  = 72080,
-    SPELL_SHOCK_VORTEX                  = 72037,
-    SPELL_EMPOWERED_SHOCK_VORTEX        = 72039,
+    SPELL_KINETIC_BOMB_TARGET = 72053,
+    SPELL_KINETIC_BOMB = 72080,
+    SPELL_SHOCK_VORTEX = 72037,
+    SPELL_EMPOWERED_SHOCK_VORTEX = 72039,
 
     // Kinetic Bomb
-    SPELL_UNSTABLE                      = 72059,
-    SPELL_KINETIC_BOMB_VISUAL           = 72054,
-    SPELL_KINETIC_BOMB_EXPLOSION        = 72052,
-    SPELL_KINETIC_BOMB_KNOCKBACK        = 72087,
+    SPELL_UNSTABLE = 72059,
+    SPELL_KINETIC_BOMB_VISUAL = 72054,
+    SPELL_KINETIC_BOMB_EXPLOSION = 72052,
+    SPELL_KINETIC_BOMB_KNOCKBACK = 72087,
 
     // Shock Vortex
-    SPELL_SHOCK_VORTEX_PERIODIC         = 71945,
-    SPELL_SHOCK_VORTEX_DUMMY            = 72633,
+    SPELL_SHOCK_VORTEX_PERIODIC = 71945,
+    SPELL_SHOCK_VORTEX_DUMMY = 72633,
 };
 
 enum Events
@@ -138,16 +138,16 @@ enum Events
 
 enum Actions
 {
-    ACTION_STAND_UP             = 1,
-    ACTION_CAST_INVOCATION      = 2,
-    ACTION_REMOVE_INVOCATION    = 3,
-    ACTION_FLAME_BALL_CHASE     = 4,
-    ACTION_KINETIC_BOMB_JUMP    = 5,
+    ACTION_STAND_UP = 1,
+    ACTION_CAST_INVOCATION = 2,
+    ACTION_REMOVE_INVOCATION = 3,
+    ACTION_FLAME_BALL_CHASE = 4,
+    ACTION_KINETIC_BOMB_JUMP = 5,
 };
 
 enum Points
 {
-    POINT_INTRO_DESPAWN         = 380040,
+    POINT_INTRO_DESPAWN = 380040,
 };
 
 class StandUpEvent : public BasicEvent
@@ -181,7 +181,7 @@ private:
 };
 
 Position const introFinalPos = {4660.490f, 2769.200f, 430.0000f, 0.000000f};
-Position const triggerPos    = {4680.231f, 2769.134f, 379.9256f, 3.121708f};
+Position const triggerPos = {4680.231f, 2769.134f, 379.9256f, 3.121708f};
 Position const triggerEndPos = {4680.180f, 2769.150f, 365.5000f, 3.121708f};
 
 class boss_prince_keleseth_icc : public CreatureScript
@@ -191,7 +191,10 @@ public:
 
     struct boss_prince_kelesethAI : public ScriptedAI
     {
-        boss_prince_kelesethAI(Creature* creature) : ScriptedAI(creature), summons(creature), instance(creature->GetInstanceScript())
+        boss_prince_kelesethAI(Creature* creature) :
+            ScriptedAI(creature),
+            summons(creature),
+            instance(creature->GetInstanceScript())
         {
             if (!instance)
             {
@@ -342,7 +345,7 @@ public:
             }
         }
 
-        void DamageDealt(Unit* target, uint32& damage, DamageEffectType  /*damageType*/) override
+        void DamageDealt(Unit* target, uint32& damage, DamageEffectType /*damageType*/) override
         {
             if (!target->IsPlayer())
                 return;
@@ -374,7 +377,7 @@ public:
                     me->RemoveDynamicFlag(UNIT_DYNFLAG_DEAD);
                     me->RemoveUnitFlag2(UNIT_FLAG2_FEIGN_DEATH);
                     me->SetReactState(REACT_AGGRESSIVE);
-                    me->ForceValuesUpdateAtIndex(UNIT_NPC_FLAGS);   // was in sniff. don't ask why
+                    me->ForceValuesUpdateAtIndex(UNIT_NPC_FLAGS); // was in sniff. don't ask why
                     me->m_Events.AddEvent(new StandUpEvent(*me), me->m_Events.CalculateTime(1000));
                     DoAction(ACTION_REMOVE_INVOCATION);
                     me->SetHealth(1);
@@ -451,7 +454,10 @@ public:
 
     struct boss_prince_taldaramAI : public ScriptedAI
     {
-        boss_prince_taldaramAI(Creature* creature) : ScriptedAI(creature), summons(creature), instance(creature->GetInstanceScript())
+        boss_prince_taldaramAI(Creature* creature) :
+            ScriptedAI(creature),
+            summons(creature),
+            instance(creature->GetInstanceScript())
         {
             if (!instance)
             {
@@ -612,7 +618,7 @@ public:
             }
         }
 
-        void DamageDealt(Unit* target, uint32& damage, DamageEffectType  /*damageType*/) override
+        void DamageDealt(Unit* target, uint32& damage, DamageEffectType /*damageType*/) override
         {
             if (!target->IsPlayer())
                 return;
@@ -644,7 +650,7 @@ public:
                     me->RemoveDynamicFlag(UNIT_DYNFLAG_DEAD);
                     me->RemoveUnitFlag2(UNIT_FLAG2_FEIGN_DEATH);
                     me->SetReactState(REACT_AGGRESSIVE);
-                    me->ForceValuesUpdateAtIndex(UNIT_NPC_FLAGS);   // was in sniff. don't ask why
+                    me->ForceValuesUpdateAtIndex(UNIT_NPC_FLAGS); // was in sniff. don't ask why
                     me->m_Events.AddEvent(new StandUpEvent(*me), me->m_Events.CalculateTime(1000));
                     DoAction(ACTION_REMOVE_INVOCATION);
                     me->SetHealth(1);
@@ -889,7 +895,8 @@ public:
                     summon->CastSpell(summon, SPELL_KINETIC_BOMB, true, nullptr, nullptr, me->GetGUID());
                     break;
                 case NPC_SHOCK_VORTEX:
-                    summon->m_Events.AddEvent(new ShockVortexExplodeEvent(*summon), summon->m_Events.CalculateTime(4500));
+                    summon->m_Events.AddEvent(
+                        new ShockVortexExplodeEvent(*summon), summon->m_Events.CalculateTime(4500));
                     break;
                 default:
                     break;
@@ -906,7 +913,7 @@ public:
             }
         }
 
-        void DamageDealt(Unit* target, uint32& damage, DamageEffectType  /*damageType*/) override
+        void DamageDealt(Unit* target, uint32& damage, DamageEffectType /*damageType*/) override
         {
             if (!target->IsPlayer())
                 return;
@@ -938,7 +945,7 @@ public:
                     me->RemoveDynamicFlag(UNIT_DYNFLAG_DEAD);
                     me->RemoveUnitFlag2(UNIT_FLAG2_FEIGN_DEATH);
                     me->SetReactState(REACT_AGGRESSIVE);
-                    me->ForceValuesUpdateAtIndex(UNIT_NPC_FLAGS);   // was in sniff. don't ask why
+                    me->ForceValuesUpdateAtIndex(UNIT_NPC_FLAGS); // was in sniff. don't ask why
                     me->m_Events.AddEvent(new StandUpEvent(*me), me->m_Events.CalculateTime(1000));
                     me->SetHealth(me->GetMaxHealth());
                     DoAction(ACTION_CAST_INVOCATION);
@@ -984,35 +991,37 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_INVOCATION_OF_BLOOD:
+                {
+                    uint32 visualSpellId = 0;
+                    Creature* current =
+                        instance->instance->GetCreature(instance->GetGuidData(invocationOrder[currentInvocationIndex]));
+                    if (++currentInvocationIndex >= 3)
+                        currentInvocationIndex = 0;
+                    Creature* next =
+                        instance->instance->GetCreature(instance->GetGuidData(invocationOrder[currentInvocationIndex]));
+                    switch (invocationOrder[currentInvocationIndex])
                     {
-                        uint32 visualSpellId = 0;
-                        Creature* current = instance->instance->GetCreature(instance->GetGuidData(invocationOrder[currentInvocationIndex]));
-                        if (++currentInvocationIndex >= 3)
-                            currentInvocationIndex = 0;
-                        Creature* next = instance->instance->GetCreature(instance->GetGuidData(invocationOrder[currentInvocationIndex]));
-                        switch (invocationOrder[currentInvocationIndex])
-                        {
-                            case DATA_PRINCE_KELESETH_GUID:
-                                visualSpellId = 71080;
-                                break;
-                            case DATA_PRINCE_TALDARAM_GUID:
-                                visualSpellId = 71081;
-                                break;
-                            case DATA_PRINCE_VALANAR_GUID:
-                                visualSpellId = 71070;
-                                break;
-                        }
-                        if (!visualSpellId || !current || !next || !current->IsInCombat() || !next->IsInCombat())
-                        {
-                            EnterEvadeMode(EVADE_REASON_OTHER);
-                            return;
-                        }
-                        next->SetHealth(current->GetHealth());
-                        current->AI()->DoAction(ACTION_REMOVE_INVOCATION);
-                        current->SetHealth(1);
-                        current->CastSpell((Unit*)nullptr, visualSpellId, true);
-                        next->AI()->Talk(1);
+                        case DATA_PRINCE_KELESETH_GUID:
+                            visualSpellId = 71080;
+                            break;
+                        case DATA_PRINCE_TALDARAM_GUID:
+                            visualSpellId = 71081;
+                            break;
+                        case DATA_PRINCE_VALANAR_GUID:
+                            visualSpellId = 71070;
+                            break;
                     }
+                    if (!visualSpellId || !current || !next || !current->IsInCombat() || !next->IsInCombat())
+                    {
+                        EnterEvadeMode(EVADE_REASON_OTHER);
+                        return;
+                    }
+                    next->SetHealth(current->GetHealth());
+                    current->AI()->DoAction(ACTION_REMOVE_INVOCATION);
+                    current->SetHealth(1);
+                    current->CastSpell((Unit*)nullptr, visualSpellId, true);
+                    next->AI()->Talk(1);
+                }
                     events.ScheduleEvent(EVENT_INVOCATION_OF_BLOOD, 46s);
                     break;
                 case EVENT_BERSERK:
@@ -1104,9 +1113,7 @@ public:
                 return;
 
             if (!who->IsPlayer() || me->GetExactDist2d(who) > 100.0f)
-            {
                 return;
-            }
 
             _introDone = true;
             Talk(SAY_INTRO_1);
@@ -1125,17 +1132,13 @@ public:
         void MovementInform(uint32 type, uint32 id) override
         {
             if (type == POINT_MOTION_TYPE && id == POINT_INTRO_DESPAWN)
-            {
                 me->SetVisible(false);
-            }
         }
 
         void UpdateAI(uint32 diff) override
         {
             if (!_events.GetPhaseMask())
-            {
                 return;
-            }
 
             _events.Update(diff);
 
@@ -1145,15 +1148,18 @@ public:
                 me->GetMotionMaster()->MovePoint(POINT_INTRO_DESPAWN, introFinalPos);
                 _events.Reset();
 
-                if (Creature* keleseth = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_PRINCE_KELESETH_GUID)))
+                if (Creature* keleseth =
+                        ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_PRINCE_KELESETH_GUID)))
                 {
                     keleseth->AI()->DoAction(ACTION_STAND_UP);
                 }
-                if (Creature* taldaram = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_PRINCE_TALDARAM_GUID)))
+                if (Creature* taldaram =
+                        ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_PRINCE_TALDARAM_GUID)))
                 {
                     taldaram->AI()->DoAction(ACTION_STAND_UP);
                 }
-                if (Creature* valanar = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_PRINCE_VALANAR_GUID)))
+                if (Creature* valanar =
+                        ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_PRINCE_VALANAR_GUID)))
                 {
                     valanar->AI()->DoAction(ACTION_STAND_UP);
                 }
@@ -1179,7 +1185,7 @@ public:
 
     struct npc_dark_nucleusAI : public ScriptedAI
     {
-        npc_dark_nucleusAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_dark_nucleusAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint16 timer;
 
@@ -1204,7 +1210,8 @@ public:
 
         void DamageTaken(Unit* attacker, uint32& /*damage*/, DamageEffectType det, SpellSchoolMask) override
         {
-            if (!attacker || attacker == me || attacker == me->GetVictim() || (det != DIRECT_DAMAGE && det != SPELL_DIRECT_DAMAGE))
+            if (!attacker || attacker == me || attacker == me->GetVictim() ||
+                (det != DIRECT_DAMAGE && det != SPELL_DIRECT_DAMAGE))
                 return;
 
             me->GetThreatMgr().ClearAllThreat();
@@ -1219,16 +1226,15 @@ public:
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             if (timer <= diff)
             {
                 timer = 1000;
                 if (Unit* victim = me->GetVictim())
                 {
-                    if (me->GetDistance(victim) < 15.0f && !victim->HasAura(SPELL_SHADOW_RESONANCE_RESIST, me->GetGUID()))
+                    if (me->GetDistance(victim) < 15.0f &&
+                        !victim->HasAura(SPELL_SHADOW_RESONANCE_RESIST, me->GetGUID()))
                     {
                         me->InterruptNonMeleeSpells(true, 0, true);
                         me->CastSpell(victim, SPELL_SHADOW_RESONANCE_RESIST, false);
@@ -1276,9 +1282,9 @@ public:
                 ScriptedAI::AttackStart(who);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
-        void MovementInform(uint32 type, uint32  /*id*/) override
+        void MovementInform(uint32 type, uint32 /*id*/) override
         {
             if (type == CHASE_MOTION_TYPE && !_exploded)
             {
@@ -1301,20 +1307,14 @@ public:
         void DoAction(int32 action) override
         {
             if (action != ACTION_FLAME_BALL_CHASE || me->IsInCombat())
-            {
                 return;
-            }
 
             Player* target = nullptr;
 
             if (_chaseGUID)
-            {
                 target = ObjectAccessor::GetPlayer(*me, _chaseGUID);
-            }
             if (!target)
-            {
                 target = ScriptedAI::SelectTargetFromPlayerList(150.0f, 0, true);
-            }
             if (target)
             {
                 // need to clear states now because this call is before AuraEffect is fully removed
@@ -1334,17 +1334,13 @@ public:
             me->DespawnOrUnsummon(1);
         }
 
-        void DamageDealt(Unit* target, uint32& damage, DamageEffectType  /*damageType*/) override
+        void DamageDealt(Unit* target, uint32& damage, DamageEffectType /*damageType*/) override
         {
             if (!target->IsPlayer())
-            {
                 return;
-            }
 
             if (damage > RAID_MODE<uint32>(23000, 25000, 23000, 25000))
-            {
                 _instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, 0);
-            }
         }
     };
 
@@ -1361,9 +1357,7 @@ public:
 
     struct npc_kinetic_bombAI : public NullCreatureAI
     {
-        npc_kinetic_bombAI(Creature* creature) : NullCreatureAI(creature)
-        {
-        }
+        npc_kinetic_bombAI(Creature* creature) : NullCreatureAI(creature) { }
 
         EventMap _events;
         float _x;
@@ -1375,7 +1369,8 @@ public:
         {
             if (InstanceScript* instance = me->GetInstanceScript())
             {
-                if (Creature* valanar = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_PRINCE_VALANAR_GUID)))
+                if (Creature* valanar =
+                        ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_PRINCE_VALANAR_GUID)))
                 {
                     valanar->AI()->JustSummoned(me);
                 }
@@ -1447,20 +1442,19 @@ class spell_blood_council_shadow_prison_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SHADOW_PRISON_DAMAGE });
+        return ValidateSpellInfo({SPELL_SHADOW_PRISON_DAMAGE});
     }
 
     void HandleDummyTick(AuraEffect const* aurEff)
     {
         if (GetTarget()->IsPlayer() && GetTarget()->isMoving())
-        {
             GetTarget()->CastSpell(GetTarget(), SPELL_SHADOW_PRISON_DAMAGE, true, nullptr, aurEff);
-        }
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_blood_council_shadow_prison_aura::HandleDummyTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_blood_council_shadow_prison_aura::HandleDummyTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -1473,9 +1467,7 @@ class spell_blood_council_shadow_prison_damage : public SpellScript
         if (Aura* aur = GetHitUnit()->GetAura(GetSpellInfo()->Id))
         {
             if (AuraEffect const* eff = aur->GetEffect(EFFECT_1))
-            {
                 SetHitDamage(GetHitDamage() + eff->GetAmount());
-            }
         }
     }
 
@@ -1497,7 +1489,8 @@ class spell_taldaram_glittering_sparks : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_taldaram_glittering_sparks::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_taldaram_glittering_sparks::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -1508,9 +1501,7 @@ class spell_taldaram_summon_flame_ball : public SpellScript
     bool Load() override
     {
         if (!GetCaster()->IsCreature())
-        {
             return false;
-        }
         GetCaster()->CastSpell(GetCaster(), uint32(GetSpellInfo()->Effects[0].CalcValue()), true);
         return true;
     }
@@ -1523,7 +1514,8 @@ class spell_taldaram_summon_flame_ball : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_taldaram_summon_flame_ball::HandleScript, EFFECT_0, SPELL_EFFECT_DUMMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_taldaram_summon_flame_ball::HandleScript, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
 
@@ -1568,7 +1560,7 @@ class spell_valanar_kinetic_bomb_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_KINETIC_BOMB_EXPLOSION, SPELL_KINETIC_BOMB_VISUAL });
+        return ValidateSpellInfo({SPELL_KINETIC_BOMB_EXPLOSION, SPELL_KINETIC_BOMB_VISUAL});
     }
 
     void HandleDummyTick(AuraEffect const* /*aurEff*/)
@@ -1588,7 +1580,8 @@ class spell_valanar_kinetic_bomb_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_valanar_kinetic_bomb_aura::HandleDummyTick, EFFECT_1, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_valanar_kinetic_bomb_aura::HandleDummyTick, EFFECT_1, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -1616,9 +1609,7 @@ class spell_valanar_kinetic_bomb_knockback : public SpellScript
     void KnockIntoAir(SpellMissInfo missInfo)
     {
         if (missInfo != SPELL_MISS_NONE)
-        {
             return;
-        }
 
         if (Creature* target = GetHitCreature())
             target->AI()->DoAction(ACTION_KINETIC_BOMB_JUMP);
@@ -1669,11 +1660,19 @@ class spell_blood_council_summon_shadow_resonance : public SpellScript
             {
                 float destX = summoner->GetPositionX() + cos(angle + a * M_PI) * i * 10.0f;
                 float destY = summoner->GetPositionY() + std::sin(angle + a * M_PI) * i * 10.0f;
-                if (summoner->GetMap()->isInLineOfSight(summoner->GetPositionX(), summoner->GetPositionY(), summoner->GetPositionZ() + 10.0f, destX, destY,
-                    summoner->GetPositionZ() + 10.0f, summoner->GetPhaseMask(), LINEOFSIGHT_ALL_CHECKS, VMAP::ModelIgnoreFlags::Nothing) &&
+                if (summoner->GetMap()->isInLineOfSight(summoner->GetPositionX(),
+                        summoner->GetPositionY(),
+                        summoner->GetPositionZ() + 10.0f,
+                        destX,
+                        destY,
+                        summoner->GetPositionZ() + 10.0f,
+                        summoner->GetPhaseMask(),
+                        LINEOFSIGHT_ALL_CHECKS,
+                        VMAP::ModelIgnoreFlags::Nothing) &&
                     destX > 4585.0f && destY > 2716.0f && destY < 2822.0f)
                 {
-                    float destZ = summoner->GetMapHeight(summoner->GetPhaseMask(), destX, destY, summoner->GetPositionZ());
+                    float destZ =
+                        summoner->GetMapHeight(summoner->GetPhaseMask(), destX, destY, summoner->GetPositionZ());
                     if (std::fabs(destZ - summoner->GetPositionZ()) < 10.0f) // valid z found
                     {
                         dest._position.Relocate(destX, destY, destZ);
@@ -1687,7 +1686,8 @@ class spell_blood_council_summon_shadow_resonance : public SpellScript
 
     void Register() override
     {
-        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_blood_council_summon_shadow_resonance::SetDest, EFFECT_0, TARGET_DEST_CASTER_RANDOM);
+        OnDestinationTargetSelect += SpellDestinationTargetSelectFn(
+            spell_blood_council_summon_shadow_resonance::SetDest, EFFECT_0, TARGET_DEST_CASTER_RANDOM);
     }
 };
 

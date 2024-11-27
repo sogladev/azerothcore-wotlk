@@ -37,45 +37,51 @@ Of course as was said above player can be pulled towards 2 times in a row but th
 
 enum eBlackStalker
 {
-    SPELL_LEVITATE                  = 31704,
-    SPELL_CHAIN_LIGHTNING           = 31717,
-    SPELL_STATIC_CHARGE             = 31715,
-    SPELL_SUMMON_SPORE_STRIDER      = 38755,
+    SPELL_LEVITATE = 31704,
+    SPELL_CHAIN_LIGHTNING = 31717,
+    SPELL_STATIC_CHARGE = 31715,
+    SPELL_SUMMON_SPORE_STRIDER = 38755,
 
-    SPELL_LEVITATION_PULSE          = 31701,
-    SPELL_SOMEONE_GRAB_ME           = 31702,
-    SPELL_MAGNETIC_PULL             = 31703,
-    SPELL_SUSPENSION_PRIMER         = 31720,
-    SPELL_SUSPENSION                = 31719,
+    SPELL_LEVITATION_PULSE = 31701,
+    SPELL_SOMEONE_GRAB_ME = 31702,
+    SPELL_MAGNETIC_PULL = 31703,
+    SPELL_SUSPENSION_PRIMER = 31720,
+    SPELL_SUSPENSION = 31719,
 
-    ENTRY_SPORE_STRIDER             = 22299
+    ENTRY_SPORE_STRIDER = 22299
 };
 
 struct boss_the_black_stalker : public BossAI
 {
     boss_the_black_stalker(Creature* creature) : BossAI(creature, DATA_BLACK_STALKER)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        scheduler.Schedule(8s, 12s, [this](TaskContext context)
+        scheduler
+            .Schedule(8s,
+                12s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_LEVITATE);
             context.Repeat(18s, 24s);
-        }).Schedule(6s, [this](TaskContext context)
+        })
+            .Schedule(6s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_CHAIN_LIGHTNING, false);
             context.Repeat(9s);
-        }).Schedule(10s, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_STATIC_CHARGE, false);
             context.Repeat(10s);
-        }).Schedule(5s, [this](TaskContext /*context*/)
+        })
+            .Schedule(5s,
+                [this](TaskContext /*context*/)
         {
             float x, y, z, o = 0.f;
             me->GetHomePosition(x, y, z, o);
@@ -88,7 +94,9 @@ struct boss_the_black_stalker : public BossAI
 
         if (IsHeroic())
         {
-            scheduler.Schedule(10s, 15s, [this](TaskContext context)
+            scheduler.Schedule(10s,
+                15s,
+                [this](TaskContext context)
             {
                 DoCastSelf(SPELL_SUMMON_SPORE_STRIDER, false);
                 context.Repeat(10s, 15s);
@@ -131,7 +139,7 @@ class spell_the_black_stalker_levitate : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_LEVITATION_PULSE });
+        return ValidateSpellInfo({SPELL_LEVITATION_PULSE});
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -141,7 +149,8 @@ class spell_the_black_stalker_levitate : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_the_black_stalker_levitate::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_the_black_stalker_levitate::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -152,7 +161,7 @@ class spell_the_black_stalker_levitation_pulse : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SOMEONE_GRAB_ME });
+        return ValidateSpellInfo({SPELL_SOMEONE_GRAB_ME});
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -162,7 +171,8 @@ class spell_the_black_stalker_levitation_pulse : public SpellScript
 
     void Register() override
     {
-        OnEffectHit += SpellEffectFn(spell_the_black_stalker_levitation_pulse::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHit +=
+            SpellEffectFn(spell_the_black_stalker_levitation_pulse::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -173,7 +183,7 @@ class spell_the_black_stalker_someone_grab_me : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_MAGNETIC_PULL, SPELL_SUSPENSION });
+        return ValidateSpellInfo({SPELL_MAGNETIC_PULL, SPELL_SUSPENSION});
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -184,7 +194,8 @@ class spell_the_black_stalker_someone_grab_me : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_the_black_stalker_someone_grab_me::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_the_black_stalker_someone_grab_me::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -195,7 +206,7 @@ class spell_the_black_stalker_magnetic_pull : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUSPENSION_PRIMER });
+        return ValidateSpellInfo({SPELL_SUSPENSION_PRIMER});
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -205,7 +216,8 @@ class spell_the_black_stalker_magnetic_pull : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_the_black_stalker_magnetic_pull::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_the_black_stalker_magnetic_pull::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

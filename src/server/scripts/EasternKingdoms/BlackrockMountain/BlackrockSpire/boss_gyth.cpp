@@ -23,32 +23,32 @@
 
 enum Spells
 {
-    SPELL_REND_MOUNTS                 = 16167, // Change model
-    SPELL_CORROSIVE_ACID              = 16359, // Combat (self cast)
-    SPELL_FLAMEBREATH                 = 16390, // Combat (Self cast)
-    SPELL_FREEZE                      = 16350, // Combat (Self cast)
-    SPELL_KNOCK_AWAY                  = 10101, // Combat
-    SPELL_SUMMON_REND                 = 16328, // Summons Rend near death
-    SPELL_CHROMATIC_PROTECTION_FIRE   = 16373,
-    SPELL_CHROMATIC_PROTECTION_FROST  = 16392,
+    SPELL_REND_MOUNTS = 16167,    // Change model
+    SPELL_CORROSIVE_ACID = 16359, // Combat (self cast)
+    SPELL_FLAMEBREATH = 16390,    // Combat (Self cast)
+    SPELL_FREEZE = 16350,         // Combat (Self cast)
+    SPELL_KNOCK_AWAY = 10101,     // Combat
+    SPELL_SUMMON_REND = 16328,    // Summons Rend near death
+    SPELL_CHROMATIC_PROTECTION_FIRE = 16373,
+    SPELL_CHROMATIC_PROTECTION_FROST = 16392,
     SPELL_CHROMATIC_PROTECTION_NATURE = 16391,
 };
 
 enum Misc
 {
-    NEFARIUS_PATH_2                 = 1379671,
-    NEFARIUS_PATH_3                 = 1379672,
-    GYTH_PATH_1                     = 1379681,
+    NEFARIUS_PATH_2 = 1379671,
+    NEFARIUS_PATH_3 = 1379672,
+    GYTH_PATH_1 = 1379681,
 };
 
 enum Events
 {
-    EVENT_CORROSIVE_ACID            = 1,
-    EVENT_FREEZE                    = 2,
-    EVENT_FLAME_BREATH              = 3,
-    EVENT_KNOCK_AWAY                = 4,
-    EVENT_SUMMONED_1                = 5,
-    EVENT_SUMMONED_2                = 6
+    EVENT_CORROSIVE_ACID = 1,
+    EVENT_FREEZE = 2,
+    EVENT_FLAME_BREATH = 3,
+    EVENT_KNOCK_AWAY = 4,
+    EVENT_SUMMONED_1 = 5,
+    EVENT_SUMMONED_2 = 6
 };
 
 class boss_gyth : public CreatureScript
@@ -71,7 +71,9 @@ public:
 
             SetInvincibility(true); // Don't let boss die before summoning Rend.
 
-            ScheduleHealthCheckEvent(25, [&] {
+            ScheduleHealthCheckEvent(25,
+                [&]
+            {
                 DoCastAOE(SPELL_SUMMON_REND, true);
                 me->RemoveAura(SPELL_REND_MOUNTS);
                 SetInvincibility(false);
@@ -180,7 +182,7 @@ class spell_gyth_chromatic_protection : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CORROSIVE_ACID, SPELL_FLAMEBREATH, SPELL_FREEZE });
+        return ValidateSpellInfo({SPELL_CORROSIVE_ACID, SPELL_FLAMEBREATH, SPELL_FREEZE});
     }
 
     bool CheckProc(ProcEventInfo& eventInfo)

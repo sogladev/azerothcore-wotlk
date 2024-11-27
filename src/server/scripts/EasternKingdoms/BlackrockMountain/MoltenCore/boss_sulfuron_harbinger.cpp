@@ -22,21 +22,21 @@
 enum Spells
 {
     // Sulfuron Harbringer
-    SPELL_DEMORALIZING_SHOUT    = 19778,
-    SPELL_INSPIRE               = 19779,
-    SPELL_KNOCKDOWN             = 19780,
-    SPELL_FLAMESPEAR            = 19781,
+    SPELL_DEMORALIZING_SHOUT = 19778,
+    SPELL_INSPIRE = 19779,
+    SPELL_KNOCKDOWN = 19780,
+    SPELL_FLAMESPEAR = 19781,
 
     // Adds
-    SPELL_DARK_MENDING          = 19775,
-    SPELL_SHADOW_WORD_PAIN      = 19776,
-    SPELL_DARK_STRIKE           = 19777,
-    SPELL_IMMOLATE              = 20294,
+    SPELL_DARK_MENDING = 19775,
+    SPELL_SHADOW_WORD_PAIN = 19776,
+    SPELL_DARK_STRIKE = 19777,
+    SPELL_IMMOLATE = 20294,
 };
 
 enum Events
 {
-    EVENT_DEMORALIZING_SHOUT    = 1,
+    EVENT_DEMORALIZING_SHOUT = 1,
     EVENT_INSPIRE,
     EVENT_KNOCKDOWN,
     EVENT_FLAMESPEAR,
@@ -50,11 +50,11 @@ enum Events
 class boss_sulfuron : public CreatureScript
 {
 public:
-    boss_sulfuron() : CreatureScript("boss_sulfuron") {}
+    boss_sulfuron() : CreatureScript("boss_sulfuron") { }
 
     struct boss_sulfuronAI : public BossAI
     {
-        boss_sulfuronAI(Creature* creature) : BossAI(creature, DATA_SULFURON) {}
+        boss_sulfuronAI(Creature* creature) : BossAI(creature, DATA_SULFURON) { }
 
         void JustEngagedWith(Unit* /*who*/) override
         {
@@ -79,9 +79,7 @@ public:
                 {
                     std::list<Creature*> healers = DoFindFriendlyMissingBuff(45.0f, SPELL_INSPIRE);
                     if (!healers.empty())
-                    {
                         DoCast(Acore::Containers::SelectRandomContainerElement(healers), SPELL_INSPIRE);
-                    }
 
                     DoCastSelf(SPELL_INSPIRE);
                     events.RepeatEvent(urand(13000, 20000));
@@ -112,11 +110,11 @@ public:
 class npc_flamewaker_priest : public CreatureScript
 {
 public:
-    npc_flamewaker_priest() : CreatureScript("npc_flamewaker_priest") {}
+    npc_flamewaker_priest() : CreatureScript("npc_flamewaker_priest") { }
 
     struct npc_flamewaker_priestAI : public ScriptedAI
     {
-        npc_flamewaker_priestAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_flamewaker_priestAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() override
         {
@@ -139,16 +137,12 @@ public:
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             while (uint32 const eventId = events.ExecuteEvent())
             {
@@ -165,16 +159,15 @@ public:
                         if (Unit* target = DoSelectLowestHpFriendly(60.0f, 1))
                         {
                             if (target->GetGUID() != me->GetGUID())
-                            {
                                 DoCast(target, SPELL_DARK_MENDING);
-                            }
                         }
                         events.RepeatEvent(urand(15000, 20000));
                         break;
                     }
                     case EVENT_SHADOW_WORD_PAIN:
                     {
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true, true, -SPELL_SHADOW_WORD_PAIN))
+                        if (Unit* target =
+                                SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true, true, -SPELL_SHADOW_WORD_PAIN))
                         {
                             DoCast(target, SPELL_SHADOW_WORD_PAIN);
                         }
@@ -183,7 +176,8 @@ public:
                     }
                     case EVENT_IMMOLATE:
                     {
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true, true, -SPELL_IMMOLATE))
+                        if (Unit* target =
+                                SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true, true, -SPELL_IMMOLATE))
                         {
                             DoCast(target, SPELL_IMMOLATE);
                         }
@@ -193,9 +187,7 @@ public:
                 }
 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
-                {
                     return;
-                }
             }
 
             DoMeleeAttackIfReady();

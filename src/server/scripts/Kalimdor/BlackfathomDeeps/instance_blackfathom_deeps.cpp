@@ -42,15 +42,17 @@ public:
 
         void OnCreatureCreate(Creature* creature) override
         {
-            if (creature->IsSummon() && (creature->GetEntry() == NPC_BARBED_CRUSTACEAN || creature->GetEntry() == NPC_AKU_MAI_SERVANT ||
-                                         creature->GetEntry() == NPC_MURKSHALLOW_SOFTSHELL || creature->GetEntry() == NPC_AKU_MAI_SNAPJAW))
+            if (creature->IsSummon() &&
+                (creature->GetEntry() == NPC_BARBED_CRUSTACEAN || creature->GetEntry() == NPC_AKU_MAI_SERVANT ||
+                    creature->GetEntry() == NPC_MURKSHALLOW_SOFTSHELL || creature->GetEntry() == NPC_AKU_MAI_SNAPJAW))
                 ++_requiredDeaths;
         }
 
         void OnUnitDeath(Unit* unit) override
         {
-            if (unit->IsSummon() && (unit->GetEntry() == NPC_BARBED_CRUSTACEAN || unit->GetEntry() == NPC_AKU_MAI_SERVANT ||
-                                     unit->GetEntry() == NPC_MURKSHALLOW_SOFTSHELL || unit->GetEntry() == NPC_AKU_MAI_SNAPJAW))
+            if (unit->IsSummon() &&
+                (unit->GetEntry() == NPC_BARBED_CRUSTACEAN || unit->GetEntry() == NPC_AKU_MAI_SERVANT ||
+                    unit->GetEntry() == NPC_MURKSHALLOW_SOFTSHELL || unit->GetEntry() == NPC_AKU_MAI_SNAPJAW))
             {
                 if (--_requiredDeaths == 0)
                 {
@@ -124,17 +126,14 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << _encounters[0] << ' '
-                << _encounters[1] << ' '
-                << _encounters[2] << ' '
-                << _encounters[3] << ' '
-                << _encounters[4] << ' '
-                << _encounters[5];
+            data << _encounters[0] << ' ' << _encounters[1] << ' ' << _encounters[2] << ' ' << _encounters[3] << ' '
+                 << _encounters[4] << ' ' << _encounters[5];
         }
 
         bool IsFireEventDone()
         {
-            return _encounters[TYPE_FIRE1] == DONE && _encounters[TYPE_FIRE2] == DONE && _encounters[TYPE_FIRE3] == DONE && _encounters[TYPE_FIRE4] == DONE;
+            return _encounters[TYPE_FIRE1] == DONE && _encounters[TYPE_FIRE2] == DONE &&
+                   _encounters[TYPE_FIRE3] == DONE && _encounters[TYPE_FIRE4] == DONE;
         }
 
     private:

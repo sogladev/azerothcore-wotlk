@@ -26,35 +26,37 @@ static constexpr char HYPERLINK_DATA_DELIMITER = ':';
 
 class HyperlinkDataTokenizer
 {
-    public:
-        HyperlinkDataTokenizer(std::string_view str) : _str(str) {}
+public:
+    HyperlinkDataTokenizer(std::string_view str) : _str(str) { }
 
-        template <typename T>
-        bool TryConsumeTo(T& val)
+    template <typename T> bool TryConsumeTo(T& val)
+    {
+        if (IsEmpty())
+            return false;
+
+        if (std::size_t off = _str.find(HYPERLINK_DATA_DELIMITER); off != std::string_view::npos)
         {
-            if (IsEmpty())
+            if (!Acore::Hyperlinks::LinkTags::base_tag::StoreTo(val, _str.substr(0, off)))
                 return false;
-
-            if (std::size_t off = _str.find(HYPERLINK_DATA_DELIMITER); off != std::string_view::npos)
-            {
-                if (!Acore::Hyperlinks::LinkTags::base_tag::StoreTo(val, _str.substr(0, off)))
-                    return false;
-                _str = _str.substr(off+1);
-            }
-            else
-            {
-                if (!Acore::Hyperlinks::LinkTags::base_tag::StoreTo(val, _str))
-                    return false;
-                _str = std::string_view();
-            }
-
-            return true;
+            _str = _str.substr(off + 1);
+        }
+        else
+        {
+            if (!Acore::Hyperlinks::LinkTags::base_tag::StoreTo(val, _str))
+                return false;
+            _str = std::string_view();
         }
 
-        bool IsEmpty() { return _str.empty(); }
+        return true;
+    }
 
-    private:
-        std::string_view _str;
+    bool IsEmpty()
+    {
+        return _str.empty();
+    }
+
+private:
+    std::string_view _str;
 };
 
 bool Acore::Hyperlinks::LinkTags::achievement::StoreTo(AchievementLinkData& val, std::string_view text)
@@ -67,7 +69,8 @@ bool Acore::Hyperlinks::LinkTags::achievement::StoreTo(AchievementLinkData& val,
 
     val.Achievement = sAchievementMgr->GetAchievement(achievementId);
 
-    if (!(val.Achievement && t.TryConsumeTo(val.CharacterId) && t.TryConsumeTo(val.IsFinished) && t.TryConsumeTo(val.Month) && t.TryConsumeTo(val.Day)))
+    if (!(val.Achievement && t.TryConsumeTo(val.CharacterId) && t.TryConsumeTo(val.IsFinished) &&
+            t.TryConsumeTo(val.Month) && t.TryConsumeTo(val.Day)))
         return false;
 
     if ((12 < val.Month) || (31 < val.Day))
@@ -87,7 +90,8 @@ bool Acore::Hyperlinks::LinkTags::achievement::StoreTo(AchievementLinkData& val,
     else
         val.Year = 0;
 
-    return (t.TryConsumeTo(val.Criteria[0]) && t.TryConsumeTo(val.Criteria[1]) && t.TryConsumeTo(val.Criteria[2]) && t.TryConsumeTo(val.Criteria[3]) && t.IsEmpty());
+    return (t.TryConsumeTo(val.Criteria[0]) && t.TryConsumeTo(val.Criteria[1]) && t.TryConsumeTo(val.Criteria[2]) &&
+            t.TryConsumeTo(val.Criteria[3]) && t.IsEmpty());
 }
 
 bool Acore::Hyperlinks::LinkTags::enchant::StoreTo(SpellInfo const*& val, std::string_view text)
@@ -135,12 +139,14 @@ bool Acore::Hyperlinks::LinkTags::item::StoreTo(ItemLinkData& val, std::string_v
     // this results in the wrong value being sent in the link; DBC lookup clientside fails, so it sends the link without suffix
     // to detect and allow these invalid links, we first read randomPropertyId as a full int32
     int32 randomPropertyId;
-    if (!(val.Item && t.TryConsumeTo(val.EnchantId) && t.TryConsumeTo(val.GemEnchantId[0]) && t.TryConsumeTo(val.GemEnchantId[1]) &&
-        t.TryConsumeTo(val.GemEnchantId[2]) && t.TryConsumeTo(dummy) && t.TryConsumeTo(randomPropertyId) && t.TryConsumeTo(val.RandomSuffixBaseAmount) &&
-        t.TryConsumeTo(val.RenderLevel) && t.IsEmpty() && !dummy))
+    if (!(val.Item && t.TryConsumeTo(val.EnchantId) && t.TryConsumeTo(val.GemEnchantId[0]) &&
+            t.TryConsumeTo(val.GemEnchantId[1]) && t.TryConsumeTo(val.GemEnchantId[2]) && t.TryConsumeTo(dummy) &&
+            t.TryConsumeTo(randomPropertyId) && t.TryConsumeTo(val.RandomSuffixBaseAmount) &&
+            t.TryConsumeTo(val.RenderLevel) && t.IsEmpty() && !dummy))
         return false;
 
-    if ((static_cast<int32>(std::numeric_limits<int16>::max()) < randomPropertyId) && (randomPropertyId <= std::numeric_limits<uint16>::max()))
+    if ((static_cast<int32>(std::numeric_limits<int16>::max()) < randomPropertyId) &&
+        (randomPropertyId <= std::numeric_limits<uint16>::max()))
     { // this is the bug case, the id we received is actually static_cast<uint16>(i16RandomPropertyId)
         randomPropertyId = static_cast<int16>(randomPropertyId);
         val.IsBuggedInspectLink = true;
@@ -195,7 +201,8 @@ bool Acore::Hyperlinks::LinkTags::quest::StoreTo(QuestLinkData& val, std::string
     if (!t.TryConsumeTo(questId))
         return false;
 
-    return (val.Quest = sObjectMgr->GetQuestTemplate(questId)) && t.TryConsumeTo(val.QuestLevel) && (val.QuestLevel >= -1) && t.IsEmpty();
+    return (val.Quest = sObjectMgr->GetQuestTemplate(questId)) && t.TryConsumeTo(val.QuestLevel) &&
+           (val.QuestLevel >= -1) && t.IsEmpty();
 }
 
 bool Acore::Hyperlinks::LinkTags::spell::StoreTo(SpellInfo const*& val, std::string_view text)
@@ -222,7 +229,7 @@ bool Acore::Hyperlinks::LinkTags::talent::StoreTo(TalentLinkData& val, std::stri
         return false;
 
     val.Talent = sTalentStore.LookupEntry(talentId);
-    val.Rank = rank+1;
+    val.Rank = rank + 1;
 
     if (!val.Talent)
         return false;
@@ -257,5 +264,6 @@ bool Acore::Hyperlinks::LinkTags::trade::StoreTo(TradeskillLinkData& val, std::s
     val.Spell = sSpellMgr->GetSpellInfo(spellId);
 
     return (val.Spell && val.Spell->Effects[0].Effect == SPELL_EFFECT_TRADE_SKILL && t.TryConsumeTo(val.CurValue) &&
-        t.TryConsumeTo(val.MaxValue) && t.TryConsumeTo(val.Owner) && t.TryConsumeTo(val.KnownRecipes) && t.IsEmpty());
+            t.TryConsumeTo(val.MaxValue) && t.TryConsumeTo(val.Owner) && t.TryConsumeTo(val.KnownRecipes) &&
+            t.IsEmpty());
 }

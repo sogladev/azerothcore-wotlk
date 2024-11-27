@@ -23,32 +23,31 @@
 enum Spells
 {
     // Old fireblast value 15573
-    SPELL_FIREBLAST         = 13342,
-    SPELL_BURNING_SPIRIT    = 14744,
+    SPELL_FIREBLAST = 13342,
+    SPELL_BURNING_SPIRIT = 14744,
 };
 
 enum AmbassadorEvents
 {
-    AGGRO_TEXT              = 0,
-    EVENT_SPELL_FIREBLAST   = 1,
-    EVENT_SUMMON_SPIRITS    = 2,
-    EVENT_KILL_SPIRIT       = 3
+    AGGRO_TEXT = 0,
+    EVENT_SPELL_FIREBLAST = 1,
+    EVENT_SUMMON_SPIRITS = 2,
+    EVENT_KILL_SPIRIT = 3
 };
 
-const uint32 NPC_FIRE_SPIRIT = 9178;
+uint32 const NPC_FIRE_SPIRIT = 9178;
 
-const Position SummonPositions[7] =
-{
+Position const SummonPositions[7] = {
     {1028.786987f, -224.787186f, -61.840500f, 3.617599f},
     {1045.144775f, -241.108292f, -61.967422f, 3.617599f},
     {1028.852905f, -257.484222f, -61.981380f, 3.617599f},
     {1012.461060f, -273.803406f, -61.994171f, 3.617599f},
-    { 995.503052f, -257.563751f, -62.013153f, 3.617599f},
-    { 979.358704f, -240.535309f, -61.983044f, 3.617599f},
+    {995.503052f,  -257.563751f, -62.013153f, 3.617599f},
+    {979.358704f,  -240.535309f, -61.983044f, 3.617599f},
     {1012.252747f, -206.696487f, -61.980618f, 3.617599f},
 };
 
-std::vector<int> gobjectDwarfRunesEntry { 170578, 170579, 170580, 170581, 170582, 170583, 170584 };
+std::vector<int> gobjectDwarfRunesEntry {170578, 170579, 170580, 170581, 170582, 170583, 170584};
 
 class boss_ambassador_flamelash : public CreatureScript
 {
@@ -73,7 +72,10 @@ public:
         std::vector<int> validPosition;
         bool foundValidPosition = false;
 
-        void JustSummoned(Creature* cr) override { summons.Summon(cr); }
+        void JustSummoned(Creature* cr) override
+        {
+            summons.Summon(cr);
+        }
 
         void DoAction(int32 param) override
         {
@@ -182,7 +184,10 @@ public:
         void SummonSpirits()
         {
             // Make the Spirits chase Ambassador Flamelash
-            me->SummonCreature(NPC_FIRE_SPIRIT, SummonPositions[getValidRandomPosition()], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60 * IN_MILLISECONDS);
+            me->SummonCreature(NPC_FIRE_SPIRIT,
+                SummonPositions[getValidRandomPosition()],
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                60 * IN_MILLISECONDS);
             _events.ScheduleEvent(EVENT_SUMMON_SPIRITS, 12s, 14s);
         }
 
@@ -217,14 +222,12 @@ public:
 
     struct npc_burning_spiritAI : public ScriptedAI
     {
-        npc_burning_spiritAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_burning_spiritAI(Creature* creature) : ScriptedAI(creature) { }
 
         void IsSummonedBy(WorldObject* summoner) override
         {
             if (!summoner->IsCreature())
-            {
                 return;
-            }
 
             _flamelasherGUID = summoner->GetGUID();
             me->GetMotionMaster()->MoveFollow(summoner->ToCreature(), 0.f, 0.f);
@@ -233,9 +236,7 @@ public:
         void EnterEvadeMode(EvadeReason /*why*/) override
         {
             if (Creature* flamelasher = ObjectAccessor::GetCreature(*me, _flamelasherGUID))
-            {
                 me->GetMotionMaster()->MoveFollow(flamelasher, 5.f, 0.f);
-            }
         }
 
         void MovementInform(uint32 type, uint32 /*id*/) override
@@ -251,7 +252,7 @@ public:
         }
 
     private:
-        EventMap   _events;
+        EventMap _events;
         ObjectGuid _flamelasherGUID;
     };
 

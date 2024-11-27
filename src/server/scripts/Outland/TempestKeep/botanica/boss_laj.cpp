@@ -21,33 +21,33 @@
 
 enum Spells
 {
-    SPELL_ALLERGIC_REACTION    = 34697,
-    SPELL_TELEPORT_SELF        = 34673,
+    SPELL_ALLERGIC_REACTION = 34697,
+    SPELL_TELEPORT_SELF = 34673,
 
-    SPELL_SUMMON_LASHER_1      = 34681,
-    SPELL_SUMMON_FLAYER_1      = 34682,
-    SPELL_SUMMON_LASHER_2      = 34684,
-    SPELL_SUMMON_FLAYER_2      = 34685,
-    SPELL_SUMMON_LASHER_3      = 34686,
-    SPELL_SUMMON_FLAYER_4      = 34687,
-    SPELL_SUMMON_LASHER_4      = 34688,
-    SPELL_SUMMON_FLAYER_3      = 34690,
+    SPELL_SUMMON_LASHER_1 = 34681,
+    SPELL_SUMMON_FLAYER_1 = 34682,
+    SPELL_SUMMON_LASHER_2 = 34684,
+    SPELL_SUMMON_FLAYER_2 = 34685,
+    SPELL_SUMMON_LASHER_3 = 34686,
+    SPELL_SUMMON_FLAYER_4 = 34687,
+    SPELL_SUMMON_LASHER_4 = 34688,
+    SPELL_SUMMON_FLAYER_3 = 34690,
 
-    SPELL_DAMAGE_IMMUNE_ARCANE  = 34304,
-    SPELL_DAMAGE_IMMUNE_FIRE    = 34305,
-    SPELL_DAMAGE_IMMUNE_FROST   = 34306,
-    SPELL_DAMAGE_IMMUNE_NATURE  = 34308,
-    SPELL_DAMAGE_IMMUNE_SHADOW  = 34309
+    SPELL_DAMAGE_IMMUNE_ARCANE = 34304,
+    SPELL_DAMAGE_IMMUNE_FIRE = 34305,
+    SPELL_DAMAGE_IMMUNE_FROST = 34306,
+    SPELL_DAMAGE_IMMUNE_NATURE = 34308,
+    SPELL_DAMAGE_IMMUNE_SHADOW = 34309
 };
 
 enum Misc
 {
-    EMOTE_SUMMON               = 0,
-    MODEL_DEFAULT              = 13109,
-    MODEL_ARCANE               = 14213,
-    MODEL_FIRE                 = 13110,
-    MODEL_FROST                = 14112,
-    MODEL_NATURE               = 14214,
+    EMOTE_SUMMON = 0,
+    MODEL_DEFAULT = 13109,
+    MODEL_ARCANE = 14213,
+    MODEL_FIRE = 13110,
+    MODEL_FROST = 14112,
+    MODEL_NATURE = 14214,
 };
 
 struct LajTransformData
@@ -56,13 +56,12 @@ struct LajTransformData
     uint32 modelId;
 };
 
-LajTransformData const LajTransform[5] =
-{
-    { SPELL_DAMAGE_IMMUNE_SHADOW, MODEL_DEFAULT },
-    { SPELL_DAMAGE_IMMUNE_ARCANE, MODEL_ARCANE  },
-    { SPELL_DAMAGE_IMMUNE_FIRE,   MODEL_FIRE    },
-    { SPELL_DAMAGE_IMMUNE_FROST,  MODEL_FROST   },
-    { SPELL_DAMAGE_IMMUNE_NATURE, MODEL_NATURE  }
+LajTransformData const LajTransform[5] = {
+    {SPELL_DAMAGE_IMMUNE_SHADOW, MODEL_DEFAULT},
+    {SPELL_DAMAGE_IMMUNE_ARCANE, MODEL_ARCANE },
+    {SPELL_DAMAGE_IMMUNE_FIRE,   MODEL_FIRE   },
+    {SPELL_DAMAGE_IMMUNE_FROST,  MODEL_FROST  },
+    {SPELL_DAMAGE_IMMUNE_NATURE, MODEL_NATURE }
 };
 
 struct boss_laj : public BossAI
@@ -77,36 +76,34 @@ struct boss_laj : public BossAI
         DoCastSelf(SPELL_DAMAGE_IMMUNE_SHADOW, true);
 
         if (_transformContainer.empty())
-        {
             for (auto const& val : LajTransform)
-            {
                 _transformContainer.push_back(val);
-            }
-        }
     }
 
     void ScheduleTasks() override
     {
-        ScheduleTimedEvent(5s, [&] {
-            DoCastVictim(SPELL_ALLERGIC_REACTION);
-        }, 25s);
+        ScheduleTimedEvent(5s, [&] { DoCastVictim(SPELL_ALLERGIC_REACTION); }, 25s);
 
-        ScheduleTimedEvent(30s, [&] {
+        ScheduleTimedEvent(30s,
+            [&]
+        {
             me->RemoveAurasDueToSpell(_lastTransform.spellId);
-            _lastTransform = Acore::Containers::SelectRandomContainerElementIf(_transformContainer, [&](LajTransformData data) -> bool
-            {
-                return data.spellId != _lastTransform.spellId;
-            });
+            _lastTransform = Acore::Containers::SelectRandomContainerElementIf(_transformContainer,
+                [&](LajTransformData data) -> bool { return data.spellId != _lastTransform.spellId; });
             me->SetDisplayId(_lastTransform.modelId);
             DoCastSelf(_lastTransform.spellId, true);
-        }, 35s);
+        },
+            35s);
 
-        ScheduleTimedEvent(20s, [&] {
+        ScheduleTimedEvent(20s,
+            [&]
+        {
             DoCastSelf(SPELL_TELEPORT_SELF);
             me->SetReactState(REACT_PASSIVE);
             me->GetMotionMaster()->Clear();
 
-            scheduler.Schedule(2500ms, [this](TaskContext)
+            scheduler.Schedule(2500ms,
+                [this](TaskContext)
             {
                 Talk(EMOTE_SUMMON);
                 DoCastAOE(SPELL_SUMMON_LASHER_1, true);
@@ -114,7 +111,8 @@ struct boss_laj : public BossAI
                 me->SetReactState(REACT_AGGRESSIVE);
                 me->ResumeChasingVictim();
             });
-        }, 30s);
+        },
+            30s);
     }
 
 private:

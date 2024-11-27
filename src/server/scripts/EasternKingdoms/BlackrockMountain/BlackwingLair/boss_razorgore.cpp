@@ -25,49 +25,49 @@
 
 enum Say
 {
-    SAY_EGGS_BROKEN1            = 0,
-    SAY_EGGS_BROKEN2            = 1,
-    SAY_EGGS_BROKEN3            = 2,
-    SAY_DEATH                   = 3,
+    SAY_EGGS_BROKEN1 = 0,
+    SAY_EGGS_BROKEN2 = 1,
+    SAY_EGGS_BROKEN3 = 2,
+    SAY_DEATH = 3,
 
-    EMOTE_TROOPS_RETREAT        = 0
+    EMOTE_TROOPS_RETREAT = 0
 };
 
 enum Spells
 {
-    SPELL_MINDCONTROL           = 19832,
-    SPELL_MINDCONTROL_VISUAL    = 45537,
-    SPELL_EGG_DESTROY           = 19873,
-    SPELL_MIND_EXHAUSTION       = 23958,
+    SPELL_MINDCONTROL = 19832,
+    SPELL_MINDCONTROL_VISUAL = 45537,
+    SPELL_EGG_DESTROY = 19873,
+    SPELL_MIND_EXHAUSTION = 23958,
 
-    SPELL_CLEAVE                = 19632,
-    SPELL_WARSTOMP              = 24375,
-    SPELL_FIREBALLVOLLEY        = 22425,
-    SPELL_CONFLAGRATION         = 23023,
+    SPELL_CLEAVE = 19632,
+    SPELL_WARSTOMP = 24375,
+    SPELL_FIREBALLVOLLEY = 22425,
+    SPELL_CONFLAGRATION = 23023,
 
-    SPELL_EXPLODE_ORB           = 20037,
-    SPELL_EXPLOSION             = 20038, // Instakill everything.
+    SPELL_EXPLODE_ORB = 20037,
+    SPELL_EXPLOSION = 20038, // Instakill everything.
 
-    SPELL_WARMING_FLAMES        = 23040,
+    SPELL_WARMING_FLAMES = 23040,
 };
 
 enum Summons
 {
-    NPC_ELITE_DRACHKIN          = 12422,
-    NPC_ELITE_WARRIOR           = 12458,
-    NPC_WARRIOR                 = 12416,
-    NPC_MAGE                    = 12420,
-    NPC_WARLOCK                 = 12459,
+    NPC_ELITE_DRACHKIN = 12422,
+    NPC_ELITE_WARRIOR = 12458,
+    NPC_WARRIOR = 12416,
+    NPC_MAGE = 12420,
+    NPC_WARLOCK = 12459,
 
-    GO_EGG                      = 177807
+    GO_EGG = 177807
 };
 
 enum EVENTS
 {
-    EVENT_CLEAVE                = 1,
-    EVENT_STOMP                 = 2,
-    EVENT_FIREBALL              = 3,
-    EVENT_CONFLAGRATION         = 4
+    EVENT_CLEAVE = 1,
+    EVENT_STOMP = 2,
+    EVENT_FIREBALL = 3,
+    EVENT_CONFLAGRATION = 4
 };
 
 class boss_razorgore : public CreatureScript
@@ -111,20 +111,17 @@ public:
         bool CanAIAttack(Unit const* target) const override
         {
             if (target->IsCreature() && !secondPhase)
-            {
                 return false;
-            }
 
             if (me->GetThreatMgr().GetThreatListSize() > 1)
             {
-                ThreatContainer::StorageType::const_iterator lastRef = me->GetThreatMgr().GetOnlineContainer().GetThreatList().end();
+                ThreatContainer::StorageType::const_iterator lastRef =
+                    me->GetThreatMgr().GetOnlineContainer().GetThreatList().end();
                 --lastRef;
                 if (Unit* lastTarget = (*lastRef)->getTarget())
                 {
                     if (lastTarget != target)
-                    {
                         return !target->HasAura(SPELL_CONFLAGRATION);
-                    }
                 }
             }
 
@@ -152,9 +149,7 @@ public:
             DoCastSelf(SPELL_WARMING_FLAMES, true);
 
             if (Creature* troops = instance->GetCreature(DATA_NEFARIAN_TROOPS))
-            {
                 troops->AI()->Talk(EMOTE_TROOPS_RETREAT);
-            }
 
             for (ObjectGuid const& guid : _summonGUIDS)
             {
@@ -164,7 +159,8 @@ public:
                     {
                         creature->CombatStop(true);
                         creature->SetReactState(REACT_PASSIVE);
-                        creature->GetMotionMaster()->MovePoint(0, Position(-7560.568848f, -1028.553345f, 408.491211f, 0.523858f));
+                        creature->GetMotionMaster()->MovePoint(
+                            0, Position(-7560.568848f, -1028.553345f, 408.491211f, 0.523858f));
                     }
                 }
             }
@@ -185,27 +181,20 @@ public:
                     charmer->CastSpell(me, SPELL_MINDCONTROL_VISUAL, false);
                 }
             }
-            else
+            else if (Unit* charmer = ObjectAccessor::GetUnit(*me, _charmerGUID))
             {
-                if (Unit* charmer = ObjectAccessor::GetUnit(*me, _charmerGUID))
-                {
-                    charmer->RemoveAurasDueToSpell(SPELL_MINDCONTROL_VISUAL);
-                    me->TauntApply(charmer);
-                }
+                charmer->RemoveAurasDueToSpell(SPELL_MINDCONTROL_VISUAL);
+                me->TauntApply(charmer);
             }
         }
 
         void DoAction(int32 action) override
         {
             if (action == ACTION_PHASE_TWO)
-            {
                 DoChangePhase();
-            }
 
             if (action == TALK_EGG_BROKEN_RAND)
-            {
                 Talk(urand(SAY_EGGS_BROKEN1, SAY_EGGS_BROKEN3));
-            }
         }
 
         void JustSummoned(Creature* summon) override
@@ -218,9 +207,7 @@ public:
         void SummonMovementInform(Creature* summon, uint32 movementType, uint32 /*pathId*/) override
         {
             if (movementType == POINT_MOTION_TYPE)
-            {
                 summon->DespawnOrUnsummon();
-            }
         }
 
         void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
@@ -239,9 +226,7 @@ public:
                 return;
 
             if (!me->IsCharmed())
-            {
                 events.Update(diff);
-            }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
@@ -292,8 +277,10 @@ public:
     bool OnGossipHello(Player* player, GameObject* go) override
     {
         if (InstanceScript* instance = go->GetInstanceScript())
-            if (instance->GetData(DATA_EGG_EVENT) != DONE && !player->HasAura(SPELL_MIND_EXHAUSTION) && !player->GetPet())
-                if (Creature* razor = ObjectAccessor::GetCreature(*go, instance->GetGuidData(DATA_RAZORGORE_THE_UNTAMED)))
+            if (instance->GetData(DATA_EGG_EVENT) != DONE && !player->HasAura(SPELL_MIND_EXHAUSTION) &&
+                !player->GetPet())
+                if (Creature* razor =
+                        ObjectAccessor::GetCreature(*go, instance->GetGuidData(DATA_RAZORGORE_THE_UNTAMED)))
                 {
                     razor->AI()->SetGUID(player->GetGUID());
                     razor->Attack(player, true);
@@ -310,9 +297,7 @@ class spell_egg_event : public SpellScript
     void HandleOnHit()
     {
         if (InstanceScript* instance = GetCaster()->GetInstanceScript())
-        {
             instance->SetData(DATA_EGG_EVENT, SPECIAL);
-        }
 
         if (Creature* razorgore = GetCaster()->ToCreature())
         {

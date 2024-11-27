@@ -23,82 +23,81 @@
 enum Spells
 {
     // SJONNIR
-    SPELL_FRENZY                            = 28747, //at 20% hp
-    SPELL_CHAIN_LIGHTNING                   = 50830,
-    SPELL_CHAIN_LIGHTNING_H                 = 59844,
-    SPELL_LIGHTNING_SHIELD                  = 50831,
-    SPELL_LIGHTNING_SHIELD_H                = 59845,
-    SPELL_STATIC_CHARGE                     = 50834,
-    SPELL_STATIC_CHARGE_H                   = 59846,
-    SPELL_LIGHTNING_RING                    = 50840,
-    SPELL_LIGHTNING_RING_H                  = 59848,
+    SPELL_FRENZY = 28747, //at 20% hp
+    SPELL_CHAIN_LIGHTNING = 50830,
+    SPELL_CHAIN_LIGHTNING_H = 59844,
+    SPELL_LIGHTNING_SHIELD = 50831,
+    SPELL_LIGHTNING_SHIELD_H = 59845,
+    SPELL_STATIC_CHARGE = 50834,
+    SPELL_STATIC_CHARGE_H = 59846,
+    SPELL_LIGHTNING_RING = 50840,
+    SPELL_LIGHTNING_RING_H = 59848,
 
     // IRON SLUDGE
-    SPELL_TOXIC_VOLLEY                      = 50838,
-    SPELL_TOXIC_VOLLEY_H                    = 59853,
+    SPELL_TOXIC_VOLLEY = 50838,
+    SPELL_TOXIC_VOLLEY_H = 59853,
 
     // FORGED IRON DWARF
-    SPELL_LIGHTNING_TETHER                  = 50895,
-    SPELL_LIGHTNING_TETHER_H                = 59851,
+    SPELL_LIGHTNING_TETHER = 50895,
+    SPELL_LIGHTNING_TETHER_H = 59851,
 
     // FORGED IRON TROGG
-    SPELL_LIGHTNING_SHOCK                   = 50900,
-    SPELL_LIGHTNING_SHOCK_H                 = 59852,
+    SPELL_LIGHTNING_SHOCK = 50900,
+    SPELL_LIGHTNING_SHOCK_H = 59852,
 };
 
 enum Npc
 {
-    NPC_IRON_SLUDGE                         = 28165, // if 2 ooze then spawn 1 iron_sludge
-    NPC_DWARFES_FRIENDLY                    = 27980, //after fix the machine by Brann
-    NPC_OOZE                                = 27981, //spawn after killing dwarf
-    NPC_FORGED_IRON_DWARF                   = 27982,
-    NPC_FORGED_IRON_TROGG                   = 27979,
+    NPC_IRON_SLUDGE = 28165,      // if 2 ooze then spawn 1 iron_sludge
+    NPC_DWARFES_FRIENDLY = 27980, //after fix the machine by Brann
+    NPC_OOZE = 27981,             //spawn after killing dwarf
+    NPC_FORGED_IRON_DWARF = 27982,
+    NPC_FORGED_IRON_TROGG = 27979,
 };
 
 enum Yells
 {
-    SAY_AGGRO                                              = 0,
-    SAY_SLAY                                               = 1,
-    SAY_DEATH                                              = 2
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2
 };
 
 enum Events
 {
     // SJONNIR
-    EVENT_SHIELD                            = 1,
-    EVENT_CHAIN_LIGHTNING                   = 2,
-    EVENT_STATIC_CHARGE                     = 3,
-    EVENT_LIGHTNING_RING                    = 4,
-    EVENT_CHECK_HEALTH                      = 5,
-    EVENT_SUMMON                            = 6,
-    EVENT_SUMMON_SPEACH                     = 7,
+    EVENT_SHIELD = 1,
+    EVENT_CHAIN_LIGHTNING = 2,
+    EVENT_STATIC_CHARGE = 3,
+    EVENT_LIGHTNING_RING = 4,
+    EVENT_CHECK_HEALTH = 5,
+    EVENT_SUMMON = 6,
+    EVENT_SUMMON_SPEACH = 7,
 
     // TRASH
-    EVENT_MALFORMED_OOZE_CHECK              = 10,
-    EVENT_TOXIC_VOLLEY                      = 11,
-    EVENT_FORGED_LIGHTNING_SHOCK            = 12,
-    EVENT_FORGED_LIGHTNING_TETHER           = 13,
+    EVENT_MALFORMED_OOZE_CHECK = 10,
+    EVENT_TOXIC_VOLLEY = 11,
+    EVENT_FORGED_LIGHTNING_SHOCK = 12,
+    EVENT_FORGED_LIGHTNING_TETHER = 13,
 };
 
 enum Misc
 {
-    POS_GEN_RIGHT                           = 0,
-    POS_GEN_LEFT                            = 1,
-    POS_ROOM_CENTER                         = 2,
+    POS_GEN_RIGHT = 0,
+    POS_GEN_LEFT = 1,
+    POS_ROOM_CENTER = 2,
 
     // ACTIONS
-    ACTION_SLUG_KILLED                      = 1,
+    ACTION_SLUG_KILLED = 1,
 };
 
 enum SummonPhases
 {
-    PHASE_SUMMON_UNFRIENDLY_DWARFES         = 0,
-    PHASE_SUMMON_OOZE                       = 1,
-    PHASE_SUMMON_FRIENDLY_DWARFES           = 2,
+    PHASE_SUMMON_UNFRIENDLY_DWARFES = 0,
+    PHASE_SUMMON_OOZE = 1,
+    PHASE_SUMMON_FRIENDLY_DWARFES = 2,
 };
 
-static Position RoomPosition[] =
-{
+static Position RoomPosition[] = {
     {1293.0f, 610.0f, 199.3f, 0.0f},
     {1294.2f, 724.3f, 199.3f, 0.0f},
     {1295.2f, 667.1f, 189.7f, 0.0f},
@@ -148,7 +147,7 @@ public:
                     if (GameObject* doors = me->GetMap()->GetGameObject(pInstance->GetGuidData(GO_SJONNIR_DOOR)))
                         doors->SetGoState(GO_STATE_ACTIVE);
 
-                    if (GameObject* console = me->GetMap()->GetGameObject( pInstance->GetGuidData(GO_SJONNIR_CONSOLE)))
+                    if (GameObject* console = me->GetMap()->GetGameObject(pInstance->GetGuidData(GO_SJONNIR_CONSOLE)))
                         console->SetGoState(GO_STATE_READY);
 
                     if (Creature* brann = ObjectAccessor::GetCreature(*me, pInstance->GetGuidData(NPC_BRANN)))
@@ -161,7 +160,7 @@ public:
             }
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             Talk(SAY_AGGRO);
 
@@ -209,117 +208,128 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_CHECK_HEALTH:
+                {
+                    if (SummonPhase == PHASE_SUMMON_UNFRIENDLY_DWARFES && HealthBelowPct(50))
                     {
-                        if (SummonPhase == PHASE_SUMMON_UNFRIENDLY_DWARFES && HealthBelowPct(50))
-                        {
-                            SummonPhase = PHASE_SUMMON_OOZE;
-                            events.CancelEvent(EVENT_SUMMON);
-                            events.ScheduleEvent(EVENT_SUMMON, 0ms);
-                            events.ScheduleEvent(EVENT_SUMMON, 1500ms);
+                        SummonPhase = PHASE_SUMMON_OOZE;
+                        events.CancelEvent(EVENT_SUMMON);
+                        events.ScheduleEvent(EVENT_SUMMON, 0ms);
+                        events.ScheduleEvent(EVENT_SUMMON, 1500ms);
 
-                            if (pInstance)
-                                if (Creature* brann = ObjectAccessor::GetCreature(*me, pInstance->GetGuidData(NPC_BRANN)))
-                                {
-                                    brann->Yell("What in the name o' Madoran did THAT do? Oh! Wait: I just about got it...", LANG_UNIVERSAL);
-                                    brann->PlayDirectSound(14276);
-                                }
-                        }
-
-                        if (HealthBelowPct(20))
-                        {
+                        if (pInstance)
                             if (Creature* brann = ObjectAccessor::GetCreature(*me, pInstance->GetGuidData(NPC_BRANN)))
                             {
-                                brann->Yell("Ha, that did it! Help's a-comin'! Take this, ya glowin' iron brute!", LANG_UNIVERSAL);
-                                brann->PlayDirectSound(14277);
+                                brann->Yell("What in the name o' Madoran did THAT do? Oh! Wait: I just about got it...",
+                                    LANG_UNIVERSAL);
+                                brann->PlayDirectSound(14276);
                             }
-                            SummonPhase = PHASE_SUMMON_FRIENDLY_DWARFES;
-                            me->CastSpell(me, SPELL_FRENZY, false);
+                    }
 
-                            events.CancelEvent(EVENT_SUMMON);
-                            events.ScheduleEvent(EVENT_SUMMON, 0ms);
-                            break;
-                        }
-
-                        events.Repeat(1s);
-                        break;
-                    }
-                case EVENT_SHIELD:
-                    {
-                        me->CastSpell(me, DUNGEON_MODE(SPELL_LIGHTNING_SHIELD, SPELL_LIGHTNING_SHIELD_H), false);
-                        events.Repeat(14s, 19s);
-                        break;
-                    }
-                case EVENT_CHAIN_LIGHTNING:
-                    {
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
-                            me->CastSpell(target, DUNGEON_MODE(SPELL_CHAIN_LIGHTNING, SPELL_CHAIN_LIGHTNING_H), false);
-
-                        events.Repeat(6s, 12s);
-                        break;
-                    }
-                case EVENT_STATIC_CHARGE:
-                    {
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
-                            me->CastSpell(target, DUNGEON_MODE(SPELL_STATIC_CHARGE, SPELL_STATIC_CHARGE_H), false);
-
-                        events.Repeat(20s);
-                        break;
-                    }
-                case EVENT_LIGHTNING_RING:
-                    {
-                        me->CastSpell(me, DUNGEON_MODE(SPELL_LIGHTNING_RING, SPELL_LIGHTNING_RING_H), false);
-                        events.Repeat(25s, 31s);
-                        events.DelayEvents(10s); // Channel duration
-                        break;
-                    }
-                case EVENT_SUMMON_SPEACH:
+                    if (HealthBelowPct(20))
                     {
                         if (Creature* brann = ObjectAccessor::GetCreature(*me, pInstance->GetGuidData(NPC_BRANN)))
                         {
-                            brann->Yell("This is a wee bit trickier that before... Oh, bloody--incomin'!", LANG_UNIVERSAL);
-                            brann->PlayDirectSound(14275);
+                            brann->Yell(
+                                "Ha, that did it! Help's a-comin'! Take this, ya glowin' iron brute!", LANG_UNIVERSAL);
+                            brann->PlayDirectSound(14277);
                         }
+                        SummonPhase = PHASE_SUMMON_FRIENDLY_DWARFES;
+                        me->CastSpell(me, SPELL_FRENZY, false);
 
+                        events.CancelEvent(EVENT_SUMMON);
+                        events.ScheduleEvent(EVENT_SUMMON, 0ms);
                         break;
                     }
-                case EVENT_SUMMON:
+
+                    events.Repeat(1s);
+                    break;
+                }
+                case EVENT_SHIELD:
+                {
+                    me->CastSpell(me, DUNGEON_MODE(SPELL_LIGHTNING_SHIELD, SPELL_LIGHTNING_SHIELD_H), false);
+                    events.Repeat(14s, 19s);
+                    break;
+                }
+                case EVENT_CHAIN_LIGHTNING:
+                {
+                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
+                        me->CastSpell(target, DUNGEON_MODE(SPELL_CHAIN_LIGHTNING, SPELL_CHAIN_LIGHTNING_H), false);
+
+                    events.Repeat(6s, 12s);
+                    break;
+                }
+                case EVENT_STATIC_CHARGE:
+                {
+                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
+                        me->CastSpell(target, DUNGEON_MODE(SPELL_STATIC_CHARGE, SPELL_STATIC_CHARGE_H), false);
+
+                    events.Repeat(20s);
+                    break;
+                }
+                case EVENT_LIGHTNING_RING:
+                {
+                    me->CastSpell(me, DUNGEON_MODE(SPELL_LIGHTNING_RING, SPELL_LIGHTNING_RING_H), false);
+                    events.Repeat(25s, 31s);
+                    events.DelayEvents(10s); // Channel duration
+                    break;
+                }
+                case EVENT_SUMMON_SPEACH:
+                {
+                    if (Creature* brann = ObjectAccessor::GetCreature(*me, pInstance->GetGuidData(NPC_BRANN)))
                     {
-                        switch (SummonPhase)
-                        {
-                            case PHASE_SUMMON_UNFRIENDLY_DWARFES:
-                                {
-                                    SummonDwarfes(false);
-                                    events.Repeat(20s);
-                                    break;
-                                }
-                            case PHASE_SUMMON_OOZE:
-                                {
-                                    for (uint8 i = POS_GEN_RIGHT; i <= POS_GEN_LEFT; i++)
-                                    {
-                                        if (Creature* ooze = me->SummonCreature(NPC_OOZE, RoomPosition[i].GetPositionX(), RoomPosition[i].GetPositionY(), RoomPosition[i].GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
-                                        {
-                                            ActivatePipe(i);
-                                            ooze->GetMotionMaster()->MovePoint(0, RoomPosition[POS_ROOM_CENTER].GetPositionX(), RoomPosition[POS_ROOM_CENTER].GetPositionY(), RoomPosition[POS_ROOM_CENTER].GetPositionZ());
-                                            summons.Summon(ooze);
-                                        }
-                                    }
-                                    events.Repeat(10s);
-                                    break;
-                                }
-                            case PHASE_SUMMON_FRIENDLY_DWARFES:
-                                {
-                                    SummonDwarfes(true);
-                                    break;
-                                }
-                        }
-                        break;
+                        brann->Yell("This is a wee bit trickier that before... Oh, bloody--incomin'!", LANG_UNIVERSAL);
+                        brann->PlayDirectSound(14275);
                     }
+
+                    break;
+                }
+                case EVENT_SUMMON:
+                {
+                    switch (SummonPhase)
+                    {
+                        case PHASE_SUMMON_UNFRIENDLY_DWARFES:
+                        {
+                            SummonDwarfes(false);
+                            events.Repeat(20s);
+                            break;
+                        }
+                        case PHASE_SUMMON_OOZE:
+                        {
+                            for (uint8 i = POS_GEN_RIGHT; i <= POS_GEN_LEFT; i++)
+                            {
+                                if (Creature* ooze = me->SummonCreature(NPC_OOZE,
+                                        RoomPosition[i].GetPositionX(),
+                                        RoomPosition[i].GetPositionY(),
+                                        RoomPosition[i].GetPositionZ(),
+                                        0,
+                                        TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                                        20000))
+                                {
+                                    ActivatePipe(i);
+                                    ooze->GetMotionMaster()->MovePoint(0,
+                                        RoomPosition[POS_ROOM_CENTER].GetPositionX(),
+                                        RoomPosition[POS_ROOM_CENTER].GetPositionY(),
+                                        RoomPosition[POS_ROOM_CENTER].GetPositionZ());
+                                    summons.Summon(ooze);
+                                }
+                            }
+                            events.Repeat(10s);
+                            break;
+                        }
+                        case PHASE_SUMMON_FRIENDLY_DWARFES:
+                        {
+                            SummonDwarfes(true);
+                            break;
+                        }
+                    }
+                    break;
+                }
             }
 
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
             Talk(SAY_DEATH);
 
@@ -346,7 +356,8 @@ public:
         void ActivatePipe(uint8 side)
         {
             if (pInstance)
-                if (GameObject* pipe = me->GetMap()->GetGameObject(pInstance->GetGuidData(side == POS_GEN_RIGHT ? GO_RIGHT_PIPE : GO_LEFT_PIPE)))
+                if (GameObject* pipe = me->GetMap()->GetGameObject(
+                        pInstance->GetGuidData(side == POS_GEN_RIGHT ? GO_RIGHT_PIPE : GO_LEFT_PIPE)))
                     pipe->SendCustomAnim(0);
         }
 
@@ -357,7 +368,13 @@ public:
                 for (int i = 0; i < 3; i++)
                 {
                     uint8 Pos = urand(POS_GEN_RIGHT, POS_GEN_LEFT);
-                    if (Creature* dwarf = me->SummonCreature(NPC_DWARFES_FRIENDLY, RoomPosition[Pos].GetPositionX(), RoomPosition[Pos].GetPositionY(), RoomPosition[Pos].GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                    if (Creature* dwarf = me->SummonCreature(NPC_DWARFES_FRIENDLY,
+                            RoomPosition[Pos].GetPositionX(),
+                            RoomPosition[Pos].GetPositionY(),
+                            RoomPosition[Pos].GetPositionZ(),
+                            0,
+                            TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                            20000))
                     {
                         if (Player* plr = SelectTargetFromPlayerList(100.0f))
                             dwarf->SetFaction(plr->GetFaction());
@@ -373,7 +390,14 @@ public:
                 for (int i = 0; i < 2; i++)
                 {
                     uint8 Pos = urand(POS_GEN_RIGHT, POS_GEN_LEFT);
-                    if (Creature* dwarf = me->SummonCreature(urand(0, 1) ? NPC_FORGED_IRON_TROGG : NPC_FORGED_IRON_DWARF, RoomPosition[Pos].GetPositionX(), RoomPosition[Pos].GetPositionY(), RoomPosition[Pos].GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                    if (Creature* dwarf =
+                            me->SummonCreature(urand(0, 1) ? NPC_FORGED_IRON_TROGG : NPC_FORGED_IRON_DWARF,
+                                RoomPosition[Pos].GetPositionX(),
+                                RoomPosition[Pos].GetPositionY(),
+                                RoomPosition[Pos].GetPositionZ(),
+                                0,
+                                TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                                20000))
                     {
                         ActivatePipe(Pos);
                         dwarf->SetInCombatWithZone();
@@ -399,12 +423,14 @@ public:
     {
         boss_sjonnir_dwarfAI(Creature* c) : ScriptedAI(c) { }
 
-        void UpdateAI(uint32  /*diff*/) override
+        void UpdateAI(uint32 /*diff*/) override
         {
             if (!UpdateVictim())
                 return;
 
-            DoSpellAttackIfReady((me->GetEntry() == NPC_FORGED_IRON_DWARF) ? DUNGEON_MODE(SPELL_LIGHTNING_TETHER, SPELL_LIGHTNING_TETHER_H) : DUNGEON_MODE(SPELL_LIGHTNING_SHOCK, SPELL_LIGHTNING_SHOCK_H));
+            DoSpellAttackIfReady((me->GetEntry() == NPC_FORGED_IRON_DWARF)
+                                     ? DUNGEON_MODE(SPELL_LIGHTNING_TETHER, SPELL_LIGHTNING_TETHER_H)
+                                     : DUNGEON_MODE(SPELL_LIGHTNING_SHOCK, SPELL_LIGHTNING_SHOCK_H));
         }
     };
 };
@@ -424,6 +450,7 @@ public:
         boss_sjonnir_iron_sludgeAI(Creature* c) : ScriptedAI(c) { }
 
         EventMap events;
+
         void Reset() override
         {
             events.Reset();
@@ -433,12 +460,14 @@ public:
         {
             events.ScheduleEvent(EVENT_TOXIC_VOLLEY, 5000);
         }
-        void JustDied(Unit*  /*killer*/) override
+
+        void JustDied(Unit* /*killer*/) override
         {
             if (InstanceScript* pInstance = me->GetInstanceScript())
                 if (Creature* sjonnir = ObjectAccessor::GetCreature(*me, pInstance->GetGuidData(NPC_SJONNIR)))
                     sjonnir->AI()->DoAction(ACTION_SLUG_KILLED);
         }
+
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
@@ -452,11 +481,11 @@ public:
             {
                 // Every 5 seconds
                 case EVENT_TOXIC_VOLLEY:
-                    {
-                        me->CastSpell(me, DUNGEON_MODE(SPELL_TOXIC_VOLLEY, SPELL_TOXIC_VOLLEY_H), false);
-                        events.Repeat(5s);
-                        break;
-                    }
+                {
+                    me->CastSpell(me, DUNGEON_MODE(SPELL_TOXIC_VOLLEY, SPELL_TOXIC_VOLLEY_H), false);
+                    events.Repeat(5s);
+                    break;
+                }
             }
 
             DoMeleeAttackIfReady();
@@ -477,9 +506,10 @@ public:
 
     struct boss_sjonnir_malformed_oozeAI : public ScriptedAI
     {
-        boss_sjonnir_malformed_oozeAI(Creature* c) : ScriptedAI(c) {    }
+        boss_sjonnir_malformed_oozeAI(Creature* c) : ScriptedAI(c) { }
 
         EventMap events;
+
         void MovementInform(uint32 type, uint32 point) override
         {
             if (type == POINT_MOTION_TYPE && point == 0)
@@ -487,6 +517,7 @@ public:
         }
 
         void JustEngagedWith(Unit*) override { }
+
         void MoveInLineOfSight(Unit*) override { }
 
         void UpdateAI(uint32 diff) override
@@ -495,22 +526,28 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_MALFORMED_OOZE_CHECK:
-                    {
-                        std::list<Creature*> oozeList;
-                        me->GetCreaturesWithEntryInRange(oozeList, 5.0f, NPC_OOZE);
-                        for (std::list<Creature*>::const_iterator itr = oozeList.begin(); itr != oozeList.end(); ++itr)
-                            if ((*itr)->GetGUID() != me->GetGUID() && (*itr)->IsAlive() && me->IsAlive())
-                                if (Creature* is = me->SummonCreature(NPC_IRON_SLUDGE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000))
-                                {
-                                    me->KillSelf();
-                                    Unit::Kill(*itr, *itr);
-                                    is->SetInCombatWithZone();
-                                    break;
-                                }
+                {
+                    std::list<Creature*> oozeList;
+                    me->GetCreaturesWithEntryInRange(oozeList, 5.0f, NPC_OOZE);
+                    for (std::list<Creature*>::const_iterator itr = oozeList.begin(); itr != oozeList.end(); ++itr)
+                        if ((*itr)->GetGUID() != me->GetGUID() && (*itr)->IsAlive() && me->IsAlive())
+                            if (Creature* is = me->SummonCreature(NPC_IRON_SLUDGE,
+                                    me->GetPositionX(),
+                                    me->GetPositionY(),
+                                    me->GetPositionZ(),
+                                    0,
+                                    TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                                    20000))
+                            {
+                                me->KillSelf();
+                                Unit::Kill(*itr, *itr);
+                                is->SetInCombatWithZone();
+                                break;
+                            }
 
-                        events.Repeat(1s);
-                        break;
-                    }
+                    events.Repeat(1s);
+                    break;
+                }
             }
         }
     };

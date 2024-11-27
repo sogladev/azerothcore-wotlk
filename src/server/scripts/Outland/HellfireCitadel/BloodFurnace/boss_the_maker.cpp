@@ -21,25 +21,22 @@
 
 enum Says
 {
-    SAY_AGGRO               = 0,
-    SAY_KILL                = 1,
-    SAY_DIE                 = 2
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_DIE = 2
 };
 
 enum Spells
 {
-    SPELL_EXPLODING_BEAKER  = 30925,
-    SPELL_DOMINATION        = 30923
+    SPELL_EXPLODING_BEAKER = 30925,
+    SPELL_DOMINATION = 30923
 };
 
 struct boss_the_maker : public BossAI
 {
     boss_the_maker(Creature* creature) : BossAI(creature, DATA_THE_MAKER)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -58,11 +55,15 @@ struct boss_the_maker : public BossAI
         _JustEngagedWith();
         instance->SetData(DATA_THE_MAKER, IN_PROGRESS);
         instance->HandleGameObject(instance->GetGuidData(DATA_DOOR2), false);
-        scheduler.Schedule(6s, [this](TaskContext context)
+        scheduler
+            .Schedule(6s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_EXPLODING_BEAKER);
             context.Repeat(7s, 11s);
-        }).Schedule(2min, [this](TaskContext context)
+        })
+            .Schedule(2min,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_DOMINATION);
             context.Repeat(2min);
@@ -72,9 +73,7 @@ struct boss_the_maker : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer() && urand(0, 1))
-        {
             Talk(SAY_KILL);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override

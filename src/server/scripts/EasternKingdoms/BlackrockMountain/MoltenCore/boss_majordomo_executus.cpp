@@ -26,64 +26,65 @@
 
 enum Texts
 {
-    SAY_AGGRO                               = 0,
-    SAY_SPAWN                               = 1,
-    SAY_SLAY                                = 2,
-    SAY_DEFEAT                              = 3,
-    SAY_SUMMON_MAJ                          = 4,
-    SAY_ARRIVAL2_MAJ                        = 5,
-    SAY_LAST_ADD                            = 6,
+    SAY_AGGRO = 0,
+    SAY_SPAWN = 1,
+    SAY_SLAY = 2,
+    SAY_DEFEAT = 3,
+    SAY_SUMMON_MAJ = 4,
+    SAY_ARRIVAL2_MAJ = 5,
+    SAY_LAST_ADD = 6,
 
-    SAY_DEFEAT_2                            = 7,
-    SAY_DEFEAT_3                            = 8,
+    SAY_DEFEAT_2 = 7,
+    SAY_DEFEAT_3 = 8,
 
     // Ragnaros event
     // Majordomo
-    SAY_RAG_SUM_1                           = 9,
-    SAY_RAG_SUM_2                           = 10,
-    SAY_DEATH                               = 11,
+    SAY_RAG_SUM_1 = 9,
+    SAY_RAG_SUM_2 = 10,
+    SAY_DEATH = 11,
 
     // Ragnaros
-    SAY_ARRIVAL1_RAG                        = 1,
-    SAY_ARRIVAL3_RAG                        = 3,
+    SAY_ARRIVAL1_RAG = 1,
+    SAY_ARRIVAL3_RAG = 3,
 };
 
 enum Spells
 {
-    SPELL_MAGIC_REFLECTION                  = 20619,
-    SPELL_DAMAGE_REFLECTION                 = 21075,
-    SPELL_BLAST_WAVE                        = 20229,
-    SPELL_AEGIS_OF_RAGNAROS                 = 20620,
-    SPELL_TELEPORT_RANDOM                   = 20618,    // Teleport random target
-    SPELL_TELEPORT_TARGET                   = 20534,    // Teleport Victim
-    SPELL_ENCOURAGEMENT                     = 21086,
-    SPELL_CHAMPION                          = 21090,    // Server side
-    SPELL_IMMUNE_POLY                       = 21087,    // Server side
-    SPELL_HATE_TO_ZERO                      = 20538,    // Threat reset after each teleport. Server side
-    SPELL_SEPARATION_ANXIETY                = 21094,    // Aura cast on himself by Majordomo Executus, if adds move out of range, they will cast spell 21095 on themselves
-    SPELL_SEPARATION_ANXIETY_MINION         = 21095,
+    SPELL_MAGIC_REFLECTION = 20619,
+    SPELL_DAMAGE_REFLECTION = 21075,
+    SPELL_BLAST_WAVE = 20229,
+    SPELL_AEGIS_OF_RAGNAROS = 20620,
+    SPELL_TELEPORT_RANDOM = 20618, // Teleport random target
+    SPELL_TELEPORT_TARGET = 20534, // Teleport Victim
+    SPELL_ENCOURAGEMENT = 21086,
+    SPELL_CHAMPION = 21090,     // Server side
+    SPELL_IMMUNE_POLY = 21087,  // Server side
+    SPELL_HATE_TO_ZERO = 20538, // Threat reset after each teleport. Server side
+    SPELL_SEPARATION_ANXIETY =
+        21094, // Aura cast on himself by Majordomo Executus, if adds move out of range, they will cast spell 21095 on themselves
+    SPELL_SEPARATION_ANXIETY_MINION = 21095,
 
     // Outro & Ragnaros intro
-    SPELL_TELEPORT_SELF                     = 19484,
-    SPELL_SUMMON_RAGNAROS                   = 19774,
-    SPELL_ELEMENTAL_FIRE                    = 19773,
-    SPELL_RAGNA_EMERGE                      = 20568,
-    SPELL_RAGNAROS_FADE                     = 21107,
-    SPELL_RAGNAROS_SUBMERGE_EFFECT          = 21859,    // Applies pacify state and applies all schools immunity
+    SPELL_TELEPORT_SELF = 19484,
+    SPELL_SUMMON_RAGNAROS = 19774,
+    SPELL_ELEMENTAL_FIRE = 19773,
+    SPELL_RAGNA_EMERGE = 20568,
+    SPELL_RAGNAROS_FADE = 21107,
+    SPELL_RAGNAROS_SUBMERGE_EFFECT = 21859, // Applies pacify state and applies all schools immunity
 };
 
 enum Events
 {
-    EVENT_SHIELD_REFLECTION                 = 1,
+    EVENT_SHIELD_REFLECTION = 1,
     EVENT_TELEPORT_RANDOM,
     EVENT_TELEPORT_TARGET,
     EVENT_AEGIS_OF_RAGNAROS,
 
-    EVENT_DEFEAT_OUTRO_1                    = 1,
+    EVENT_DEFEAT_OUTRO_1 = 1,
     EVENT_DEFEAT_OUTRO_2,
     EVENT_DEFEAT_OUTRO_3,
 
-    EVENT_RAGNAROS_SUMMON_1                 = 1,
+    EVENT_RAGNAROS_SUMMON_1 = 1,
     EVENT_RAGNAROS_SUMMON_2,
     EVENT_RAGNAROS_SUMMON_3,
     EVENT_RAGNAROS_SUMMON_4,
@@ -95,31 +96,32 @@ enum Events
 
 enum Misc
 {
-    TEXT_ID_SUMMON_1                        = 4995,
-    TEXT_ID_SUMMON_2                        = 5011,
-    TEXT_ID_SUMMON_3                        = 5012,
+    TEXT_ID_SUMMON_1 = 4995,
+    TEXT_ID_SUMMON_2 = 5011,
+    TEXT_ID_SUMMON_3 = 5012,
 
-    GOSSIP_ITEM_SUMMON_1                    = 4093,
-    GOSSIP_ITEM_SUMMON_2                    = 4109,
-    GOSSIP_ITEM_SUMMON_3                    = 4108,
+    GOSSIP_ITEM_SUMMON_1 = 4093,
+    GOSSIP_ITEM_SUMMON_2 = 4109,
+    GOSSIP_ITEM_SUMMON_3 = 4108,
 
-    FACTION_MAJORDOMO_FRIENDLY              = 1080,
-    SUMMON_GROUP_ADDS                       = 1,
+    FACTION_MAJORDOMO_FRIENDLY = 1080,
+    SUMMON_GROUP_ADDS = 1,
 
     // Points
-    POINT_RAGNAROS_SUMMON                   = 1,
+    POINT_RAGNAROS_SUMMON = 1,
 
     // Event phases
-    PHASE_NONE                              = 1,
-    PHASE_COMBAT                            = 2,
-    PHASE_DEFEAT_OUTRO                      = 3,
-    PHASE_RAGNAROS_SUMMONING                = 4,
+    PHASE_NONE = 1,
+    PHASE_COMBAT = 2,
+    PHASE_DEFEAT_OUTRO = 3,
+    PHASE_RAGNAROS_SUMMONING = 4,
 };
 
-Position const MajordomoRagnaros = { 848.933f, -812.875f, -229.601f, 4.046f };
-Position const MajordomoSummonPos = {759.542f, -1173.43f, -118.974f, 3.3048f };
-Position const MajordomoMoveRagPos = { 830.9636f, -814.7055f, -228.9733f, 0.0f };   // Position used at Ragnaros summoning event
-Position const RagnarosSummonPos = { 838.3082f, -831.4665f, -232.1853f, 2.199115f };
+Position const MajordomoRagnaros = {848.933f, -812.875f, -229.601f, 4.046f};
+Position const MajordomoSummonPos = {759.542f, -1173.43f, -118.974f, 3.3048f};
+Position const MajordomoMoveRagPos = {
+    830.9636f, -814.7055f, -228.9733f, 0.0f}; // Position used at Ragnaros summoning event
+Position const RagnarosSummonPos = {838.3082f, -831.4665f, -232.1853f, 2.199115f};
 
 struct MajordomoAddData
 {
@@ -128,17 +130,22 @@ struct MajordomoAddData
     Position spawnPos;
 
     MajordomoAddData() { }
-    MajordomoAddData(ObjectGuid _guid, uint32 _creatureEntry, Position _spawnPos) : guid(_guid), creatureEntry(_creatureEntry), spawnPos(_spawnPos) { }
+
+    MajordomoAddData(ObjectGuid _guid, uint32 _creatureEntry, Position _spawnPos) :
+        guid(_guid),
+        creatureEntry(_creatureEntry),
+        spawnPos(_spawnPos)
+    { }
 };
 
 class boss_majordomo : public CreatureScript
 {
 public:
-    boss_majordomo() : CreatureScript("boss_majordomo") {}
+    boss_majordomo() : CreatureScript("boss_majordomo") { }
 
     struct boss_majordomoAI : public BossAI
     {
-        boss_majordomoAI(Creature* creature) : BossAI(creature, DATA_MAJORDOMO_EXECUTUS) {}
+        boss_majordomoAI(Creature* creature) : BossAI(creature, DATA_MAJORDOMO_EXECUTUS) { }
 
         void JustDied(Unit* /*killer*/) override
         {
@@ -174,7 +181,8 @@ public:
                         if (summon)
                         {
                             static_minionsGUIDS.insert(summon->GetGUID());
-                            majordomoSummonsData[summon->GetGUID().GetCounter()] = MajordomoAddData(summon->GetGUID(), summon->GetEntry(), summon->GetPosition());
+                            majordomoSummonsData[summon->GetGUID().GetCounter()] =
+                                MajordomoAddData(summon->GetGUID(), summon->GetEntry(), summon->GetPosition());
                         }
                     }
                 }
@@ -202,16 +210,16 @@ public:
                 for (auto const& summon : majordomoSummonsData)
                 {
                     if (ObjectAccessor::GetCreature(*me, summon.second.guid))
-                    {
                         continue;
-                    }
 
                     if (Creature* spawn = me->SummonCreature(summon.second.creatureEntry, summon.second.spawnPos))
                     {
-                        static_minionsGUIDS.erase(summon.second.guid); // Erase the guid from the previous, no longer existing, spawn.
+                        static_minionsGUIDS.erase(
+                            summon.second.guid); // Erase the guid from the previous, no longer existing, spawn.
                         static_minionsGUIDS.insert(spawn->GetGUID());
                         majordomoSummonsData.erase(summon.second.guid.GetCounter());
-                        majordomoSummonsData[spawn->GetGUID().GetCounter()] = MajordomoAddData(spawn->GetGUID(), spawn->GetEntry(), spawn->GetPosition());
+                        majordomoSummonsData[spawn->GetGUID().GetCounter()] =
+                            MajordomoAddData(spawn->GetGUID(), spawn->GetEntry(), spawn->GetPosition());
                     }
                 }
 
@@ -233,17 +241,13 @@ public:
         void KilledUnit(Unit* victim) override
         {
             if (roll_chance_i(25) && victim->IsPlayer())
-            {
                 Talk(SAY_SLAY);
-            }
         }
 
         void JustEngagedWith(Unit* /*attacker*/) override
         {
             if (!events.IsInPhase(PHASE_COMBAT))
-            {
                 return;
-            }
 
             _JustEngagedWith();
             DoCastAOE(SPELL_SEPARATION_ANXIETY);
@@ -263,9 +267,10 @@ public:
             aliveMinionsGUIDS.erase(summon->GetGUID());
             if (summon->GetEntry() == NPC_FLAMEWAKER_HEALER || summon->GetEntry() == NPC_FLAMEWAKER_ELITE)
             {
-                uint32 const remainingAdds = std::count_if(aliveMinionsGUIDS.begin(), aliveMinionsGUIDS.end(), [](ObjectGuid const& summonGuid)
-                {
-                    return summonGuid.GetEntry() == NPC_FLAMEWAKER_HEALER || summonGuid.GetEntry() == NPC_FLAMEWAKER_ELITE;
+                uint32 const remainingAdds =
+                    std::count_if(aliveMinionsGUIDS.begin(), aliveMinionsGUIDS.end(), [](ObjectGuid const& summonGuid) {
+                    return summonGuid.GetEntry() == NPC_FLAMEWAKER_HEALER ||
+                           summonGuid.GetEntry() == NPC_FLAMEWAKER_ELITE;
                 });
 
                 // Last remaining add
@@ -307,12 +312,11 @@ public:
             }
         }
 
-        void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*dmgType*/, SpellSchoolMask /*school*/) override
+        void DamageTaken(
+            Unit* /*attacker*/, uint32& damage, DamageEffectType /*dmgType*/, SpellSchoolMask /*school*/) override
         {
             if (events.IsInPhase(PHASE_COMBAT) && me->GetHealth() <= damage)
-            {
                 damage = 0;
-            }
         }
 
         void UpdateAI(uint32 diff) override
@@ -320,19 +324,15 @@ public:
 
             switch (events.GetPhaseMask())
             {
-                case  (1 << (PHASE_COMBAT - 1)):
+                case (1 << (PHASE_COMBAT - 1)):
                 {
                     if (!UpdateVictim())
-                    {
                         return;
-                    }
 
                     events.Update(diff);
 
                     if (me->HasUnitState(UNIT_STATE_CASTING))
-                    {
                         return;
-                    }
 
                     while (uint32 const eventId = events.ExecuteEvent())
                     {
@@ -341,13 +341,9 @@ public:
                             case EVENT_SHIELD_REFLECTION:
                             {
                                 if (rand_chance() <= 50.f)
-                                {
                                     DoCastSelf(SPELL_MAGIC_REFLECTION);
-                                }
                                 else
-                                {
                                     DoCastSelf(SPELL_DAMAGE_REFLECTION);
-                                }
                                 events.RepeatEvent(30000);
                                 break;
                             }
@@ -372,9 +368,7 @@ public:
                         }
 
                         if (me->HasUnitState(UNIT_STATE_CASTING))
-                        {
                             return;
-                        }
                     }
 
                     DoMeleeAttackIfReady();
@@ -396,7 +390,8 @@ public:
                             case EVENT_DEFEAT_OUTRO_2:
                             {
                                 Talk(SAY_DEFEAT_3);
-                                events.ScheduleEvent(EVENT_DEFEAT_OUTRO_3, 21500ms, PHASE_DEFEAT_OUTRO, PHASE_DEFEAT_OUTRO);
+                                events.ScheduleEvent(
+                                    EVENT_DEFEAT_OUTRO_3, 21500ms, PHASE_DEFEAT_OUTRO, PHASE_DEFEAT_OUTRO);
                                 break;
                             }
                             case EVENT_DEFEAT_OUTRO_3:
@@ -417,12 +412,14 @@ public:
                         {
                             case EVENT_RAGNAROS_SUMMON_1:
                             {
-                                if (GameObject* lavaSplash = ObjectAccessor::GetGameObject(*me, instance->GetGuidData(DATA_LAVA_SPLASH)))
+                                if (GameObject* lavaSplash =
+                                        ObjectAccessor::GetGameObject(*me, instance->GetGuidData(DATA_LAVA_SPLASH)))
                                 {
                                     lavaSplash->SetRespawnTime(900);
                                     lavaSplash->Refresh();
                                 }
-                                if (GameObject* lavaSteam = ObjectAccessor::GetGameObject(*me, instance->GetGuidData(DATA_LAVA_STEAM)))
+                                if (GameObject* lavaSteam =
+                                        ObjectAccessor::GetGameObject(*me, instance->GetGuidData(DATA_LAVA_STEAM)))
                                 {
                                     lavaSteam->SetRespawnTime(900);
                                     lavaSteam->Refresh();
@@ -430,49 +427,67 @@ public:
                                 Talk(SAY_RAG_SUM_2);
                                 // Next event will get triggered in MovementInform
                                 me->SetWalk(true);
-                                me->GetMotionMaster()->MovePoint(POINT_RAGNAROS_SUMMON, MajordomoMoveRagPos, true, false);
+                                me->GetMotionMaster()->MovePoint(
+                                    POINT_RAGNAROS_SUMMON, MajordomoMoveRagPos, true, false);
                                 break;
                             }
                             case EVENT_RAGNAROS_SUMMON_2:
                             {
-                                if (GameObject* lavaSteam = ObjectAccessor::GetGameObject(*me, instance->GetGuidData(DATA_LAVA_STEAM)))
+                                if (GameObject* lavaSteam =
+                                        ObjectAccessor::GetGameObject(*me, instance->GetGuidData(DATA_LAVA_STEAM)))
                                 {
                                     me->SetFacingToObject(lavaSteam);
                                 }
 
                                 Talk(SAY_SUMMON_MAJ);
-                                events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_3, 16700ms, PHASE_RAGNAROS_SUMMONING, PHASE_RAGNAROS_SUMMONING);
-                                events.ScheduleEvent(EVENT_RAGNAROS_EMERGE, 15s, PHASE_RAGNAROS_SUMMONING, PHASE_RAGNAROS_SUMMONING);
+                                events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_3,
+                                    16700ms,
+                                    PHASE_RAGNAROS_SUMMONING,
+                                    PHASE_RAGNAROS_SUMMONING);
+                                events.ScheduleEvent(
+                                    EVENT_RAGNAROS_EMERGE, 15s, PHASE_RAGNAROS_SUMMONING, PHASE_RAGNAROS_SUMMONING);
                                 break;
                             }
                             case EVENT_RAGNAROS_SUMMON_3:
                             {
-                                if (Creature* ragnaros = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_RAGNAROS)))
+                                if (Creature* ragnaros =
+                                        ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_RAGNAROS)))
                                 {
                                     ragnaros->AI()->Talk(SAY_ARRIVAL1_RAG);
                                 }
-                                events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_4, 11700ms, PHASE_RAGNAROS_SUMMONING, PHASE_RAGNAROS_SUMMONING);
+                                events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_4,
+                                    11700ms,
+                                    PHASE_RAGNAROS_SUMMONING,
+                                    PHASE_RAGNAROS_SUMMONING);
                                 break;
                             }
                             case EVENT_RAGNAROS_SUMMON_4:
                             {
                                 Talk(SAY_ARRIVAL2_MAJ);
-                                events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_5, 8700ms, PHASE_RAGNAROS_SUMMONING, PHASE_RAGNAROS_SUMMONING);
+                                events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_5,
+                                    8700ms,
+                                    PHASE_RAGNAROS_SUMMONING,
+                                    PHASE_RAGNAROS_SUMMONING);
                                 break;
                             }
                             case EVENT_RAGNAROS_SUMMON_5:
                             {
-                                if (Creature* ragnaros = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_RAGNAROS)))
+                                if (Creature* ragnaros =
+                                        ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_RAGNAROS)))
                                 {
                                     ragnaros->AI()->Talk(SAY_ARRIVAL3_RAG);
                                 }
 
-                                events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_6, 16500ms, PHASE_RAGNAROS_SUMMONING, PHASE_RAGNAROS_SUMMONING);
+                                events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_6,
+                                    16500ms,
+                                    PHASE_RAGNAROS_SUMMONING,
+                                    PHASE_RAGNAROS_SUMMONING);
                                 break;
                             }
                             case EVENT_RAGNAROS_SUMMON_6:
                             {
-                                if (Creature* ragnaros = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_RAGNAROS)))
+                                if (Creature* ragnaros =
+                                        ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_RAGNAROS)))
                                 {
                                     ragnaros->CastSpell(me, SPELL_ELEMENTAL_FIRE, true);
                                     ragnaros->AI()->DoAction(ACTION_FINISH_RAGNAROS_INTRO);
@@ -482,12 +497,14 @@ public:
                             // Additional events
                             case EVENT_RAGNAROS_EMERGE:
                             {
-                                if (Creature* ragnaros = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_RAGNAROS)))
+                                if (Creature* ragnaros =
+                                        ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_RAGNAROS)))
                                 {
                                     ragnaros->RemoveAurasDueToSpell(SPELL_RAGNAROS_FADE);
                                     ragnaros->CastSpell(ragnaros, SPELL_RAGNA_EMERGE);
                                 }
-                            }break;
+                            }
+                            break;
                         }
                     }
                     break;
@@ -500,7 +517,8 @@ public:
             if (type == POINT_MOTION_TYPE && pointId == POINT_RAGNAROS_SUMMON)
             {
                 DoCastAOE(SPELL_SUMMON_RAGNAROS);
-                events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_2, 11500ms, PHASE_RAGNAROS_SUMMONING, PHASE_RAGNAROS_SUMMONING);
+                events.ScheduleEvent(
+                    EVENT_RAGNAROS_SUMMON_2, 11500ms, PHASE_RAGNAROS_SUMMONING, PHASE_RAGNAROS_SUMMONING);
             }
         }
 
@@ -510,7 +528,10 @@ public:
             {
                 me->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
                 me->SetHomePosition(MajordomoRagnaros);
-                me->NearTeleportTo(MajordomoRagnaros.GetPositionX(), MajordomoRagnaros.GetPositionY(), MajordomoRagnaros.GetPositionZ(), MajordomoRagnaros.GetOrientation());
+                me->NearTeleportTo(MajordomoRagnaros.GetPositionX(),
+                    MajordomoRagnaros.GetPositionY(),
+                    MajordomoRagnaros.GetPositionZ(),
+                    MajordomoRagnaros.GetOrientation());
                 events.SetPhase(PHASE_NONE);
             }
         }
@@ -523,9 +544,10 @@ public:
                 events.ScheduleEvent(EVENT_RAGNAROS_SUMMON_1, 5s, PHASE_RAGNAROS_SUMMONING, PHASE_RAGNAROS_SUMMONING);
             }
         }
+
     private:
-        GuidSet static_minionsGUIDS;    // contained data should be changed on encounter completion
-        GuidSet aliveMinionsGUIDS;      // used for calculations
+        GuidSet static_minionsGUIDS; // contained data should be changed on encounter completion
+        GuidSet aliveMinionsGUIDS;   // used for calculations
         std::unordered_map<uint32, MajordomoAddData> majordomoSummonsData;
     };
 
@@ -547,19 +569,19 @@ public:
                 SendGossipMenuFor(player, TEXT_ID_SUMMON_2, creature->GetGUID());
                 break;
             }
-            case GOSSIP_ACTION_INFO_DEF+1:
+            case GOSSIP_ACTION_INFO_DEF + 1:
             {
                 AddGossipItemFor(player, GOSSIP_ITEM_SUMMON_2, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                 SendGossipMenuFor(player, TEXT_ID_SUMMON_2, creature->GetGUID());
                 break;
             }
-            case GOSSIP_ACTION_INFO_DEF+2:
+            case GOSSIP_ACTION_INFO_DEF + 2:
             {
                 AddGossipItemFor(player, GOSSIP_ITEM_SUMMON_3, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
                 SendGossipMenuFor(player, TEXT_ID_SUMMON_3, creature->GetGUID());
                 break;
             }
-            case GOSSIP_ACTION_INFO_DEF+3:
+            case GOSSIP_ACTION_INFO_DEF + 3:
             {
                 CloseGossipMenuFor(player);
                 creature->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
@@ -595,9 +617,7 @@ class spell_hate_to_zero : public SpellScript
         if (Unit* caster = GetCaster())
         {
             if (Creature* creatureCaster = caster->ToCreature())
-            {
                 creatureCaster->GetThreatMgr().ResetAllThreat();
-            }
         }
     }
 
@@ -614,14 +634,15 @@ class spell_majordomo_separation_anxiety_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_SEPARATION_ANXIETY_MINION });
+        return ValidateSpellInfo({SPELL_SEPARATION_ANXIETY_MINION});
     }
 
     void HandlePeriodic(AuraEffect const* aurEff)
     {
         Unit const* caster = GetCaster();
         Unit* target = GetTarget();
-        if (caster && target && target->GetDistance(caster) > 40.0f && !target->HasAura(SPELL_SEPARATION_ANXIETY_MINION))
+        if (caster && target && target->GetDistance(caster) > 40.0f &&
+            !target->HasAura(SPELL_SEPARATION_ANXIETY_MINION))
         {
             target->CastSpell(target, SPELL_SEPARATION_ANXIETY_MINION, true, nullptr, aurEff);
         }
@@ -629,7 +650,8 @@ class spell_majordomo_separation_anxiety_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_majordomo_separation_anxiety_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_majordomo_separation_anxiety_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -642,7 +664,8 @@ class spell_summon_ragnaros : public SpellScript
     {
         if (Unit* caster = GetCaster())
         {
-            caster->SummonCreature(NPC_RAGNAROS, RagnarosSummonPos, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 2 * HOUR * IN_MILLISECONDS);
+            caster->SummonCreature(
+                NPC_RAGNAROS, RagnarosSummonPos, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 2 * HOUR * IN_MILLISECONDS);
         }
     }
 

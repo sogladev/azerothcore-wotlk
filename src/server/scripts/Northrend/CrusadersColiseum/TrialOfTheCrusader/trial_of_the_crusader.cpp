@@ -23,10 +23,10 @@
 
 enum MenuTexts
 {
-    MSG_TESTED                      = 724001,
-    MSG_NEXT_STAGE                  = 724002,
-    MSG_CRUSADERS                   = 724003,
-    MSG_ANUBARAK                    = 724005,
+    MSG_TESTED = 724001,
+    MSG_NEXT_STAGE = 724002,
+    MSG_CRUSADERS = 724003,
+    MSG_ANUBARAK = 724005,
 };
 
 class npc_announcer_toc10 : public CreatureScript

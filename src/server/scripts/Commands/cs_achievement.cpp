@@ -35,14 +35,12 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable achievementCommandTable =
-        {
-            { "add",      HandleAchievementAddCommand,      SEC_GAMEMASTER,    Console::No },
-            { "checkall", HandleAchievementCheckAllCommand, SEC_ADMINISTRATOR, Console::Yes }
+        static ChatCommandTable achievementCommandTable = {
+            {"add",      HandleAchievementAddCommand,      SEC_GAMEMASTER,    Console::No },
+            {"checkall", HandleAchievementCheckAllCommand, SEC_ADMINISTRATOR, Console::Yes}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "achievement", achievementCommandTable }
+        static ChatCommandTable commandTable = {
+            {"achievement", achievementCommandTable}
         };
         return commandTable;
     }
@@ -63,9 +61,7 @@ public:
     static bool HandleAchievementCheckAllCommand(ChatHandler* handler, Optional<PlayerIdentifier> player)
     {
         if (!player)
-        {
             player = PlayerIdentifier::FromTarget(handler);
-        }
 
         if (!player)
         {

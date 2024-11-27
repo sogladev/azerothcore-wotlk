@@ -21,17 +21,17 @@
 
 enum eSpells
 {
-    SPELL_BLOODLUST                             = 54516,
-    SPELL_BREAK_BONDS                           = 59463,
-    SPELL_CHAIN_HEAL_N                          = 54481,
-    SPELL_CHAIN_HEAL_H                          = 59473,
-    SPELL_EARTH_SHIELD_N                        = 54479,
-    SPELL_EARTH_SHIELD_H                        = 59471,
+    SPELL_BLOODLUST = 54516,
+    SPELL_BREAK_BONDS = 59463,
+    SPELL_CHAIN_HEAL_N = 54481,
+    SPELL_CHAIN_HEAL_H = 59473,
+    SPELL_EARTH_SHIELD_N = 54479,
+    SPELL_EARTH_SHIELD_H = 59471,
     //SPELL_EARTH_SHIELD_TRIGGERED_N            = 54480,
     //SPELL_EARTH_SHIELD_TRIGGERED_H            = 59472,
-    SPELL_EARTH_SHOCK                           = 54511,
-    SPELL_LIGHTNING_BOLT                        = 53044,
-    SPELL_STORMSTRIKE                           = 51876,
+    SPELL_EARTH_SHOCK = 54511,
+    SPELL_LIGHTNING_BOLT = 53044,
+    SPELL_STORMSTRIKE = 51876,
 };
 
 #define SPELL_CHAIN_HEAL                        DUNGEON_MODE(SPELL_CHAIN_HEAL_N, SPELL_CHAIN_HEAL_H)
@@ -39,12 +39,12 @@ enum eSpells
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_SLAY                                    = 1,
-    SAY_DEATH                                   = 2,
-    SAY_SPAWN                                   = 3,
-    SAY_ADD_KILLED                              = 4,
-    SAY_BOTH_ADDS_KILLED                        = 5
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_SPAWN = 3,
+    SAY_ADD_KILLED = 4,
+    SAY_BOTH_ADDS_KILLED = 5
 };
 
 enum eEvents
@@ -135,8 +135,10 @@ public:
                             if (Creature* target = pInstance->instance->GetCreature(TargetGUID))
                                 me->CastSpell(target, SPELL_CHAIN_HEAL, false);
 
-                            Creature* pGuard1 = pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_EREKEM_GUARD_1_GUID));
-                            Creature* pGuard2 = pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_EREKEM_GUARD_2_GUID));
+                            Creature* pGuard1 =
+                                pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_EREKEM_GUARD_1_GUID));
+                            Creature* pGuard2 =
+                                pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_EREKEM_GUARD_2_GUID));
                             if ((pGuard1 && !pGuard1->IsAlive()) || (pGuard2 && !pGuard2->IsAlive()))
                             {
                                 events.Repeat(3s, 6s);
@@ -159,14 +161,16 @@ public:
                     events.Repeat(15s, 25s);
                     break;
                 case EVENT_SPELL_STORMSTRIKE:
-                    {
-                        Creature* pGuard1 = pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_EREKEM_GUARD_1_GUID));
-                        Creature* pGuard2 = pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_EREKEM_GUARD_2_GUID));
-                        if (pGuard1 && !pGuard1->IsAlive() && pGuard2 && !pGuard2->IsAlive()) // both dead
-                            me->CastSpell(me->GetVictim(), SPELL_STORMSTRIKE, false);
-                        events.Repeat(3s);
-                    }
-                    break;
+                {
+                    Creature* pGuard1 =
+                        pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_EREKEM_GUARD_1_GUID));
+                    Creature* pGuard2 =
+                        pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_EREKEM_GUARD_2_GUID));
+                    if (pGuard1 && !pGuard1->IsAlive() && pGuard2 && !pGuard2->IsAlive()) // both dead
+                        me->CastSpell(me->GetVictim(), SPELL_STORMSTRIKE, false);
+                    events.Repeat(3s);
+                }
+                break;
             }
 
             DoMeleeAttackIfReady();
@@ -186,7 +190,7 @@ public:
             Talk(SAY_SLAY);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void EnterEvadeMode(EvadeReason why) override
         {
@@ -220,9 +224,9 @@ public:
 
 enum GuardSpells
 {
-    SPELL_GUSHING_WOUND                         = 39215,
-    SPELL_HOWLING_SCREECH                       = 54462,
-    SPELL_STRIKE                                = 14516
+    SPELL_GUSHING_WOUND = 39215,
+    SPELL_HOWLING_SCREECH = 54462,
+    SPELL_STRIKE = 14516
 };
 
 enum eGuardEvents
@@ -301,7 +305,7 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
     };
 };
 

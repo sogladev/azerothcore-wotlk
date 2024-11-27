@@ -33,9 +33,7 @@ std::vector<std::string_view> Acore::Module::GetEnableModulesList()
     std::vector<std::string_view> _list;
 
     for (auto const& modName : Acore::Tokenize(_modulesList, ',', false))
-    {
         _list.emplace_back(modName);
-    }
 
     return _list;
 }

@@ -19,8 +19,12 @@
 
 WorldPackets::Misc::Weather::Weather() : ServerPacket(SMSG_WEATHER, 4 + 4 + 1) { }
 
-WorldPackets::Misc::Weather::Weather(WeatherState weatherID, float intensity /*= 0.0f*/, bool abrupt /*= false*/)
-    : ServerPacket(SMSG_WEATHER, 4 + 4 + 1), Abrupt(abrupt), Intensity(intensity), WeatherID(weatherID) { }
+WorldPackets::Misc::Weather::Weather(WeatherState weatherID, float intensity /*= 0.0f*/, bool abrupt /*= false*/) :
+    ServerPacket(SMSG_WEATHER, 4 + 4 + 1),
+    Abrupt(abrupt),
+    Intensity(intensity),
+    WeatherID(weatherID)
+{ }
 
 WorldPacket const* WorldPackets::Misc::Weather::Write()
 {

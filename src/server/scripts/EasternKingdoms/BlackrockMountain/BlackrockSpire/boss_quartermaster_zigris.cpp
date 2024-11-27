@@ -22,15 +22,15 @@
 
 enum Spells
 {
-    SPELL_SHOOT                     = 16496,
-    SPELL_STUNBOMB                  = 16497,
-    SPELL_HEALING_POTION            = 15504,
-    SPELL_HOOKEDNET                 = 15609
+    SPELL_SHOOT = 16496,
+    SPELL_STUNBOMB = 16497,
+    SPELL_HEALING_POTION = 15504,
+    SPELL_HOOKEDNET = 15609
 };
 
 enum Events
 {
-    EVENT_STUN_BOMB                 = 1,
+    EVENT_STUN_BOMB = 1,
     EVENT_HOOKED_NET,
     EVENT_SHOOT
 };
@@ -57,7 +57,8 @@ struct boss_quartermaster_zigris : public BossAI
         events.ScheduleEvent(EVENT_SHOOT, 1s);
     }
 
-    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*effType*/, SpellSchoolMask /*schoolMask*/) override
+    void DamageTaken(
+        Unit* /*attacker*/, uint32& damage, DamageEffectType /*effType*/, SpellSchoolMask /*schoolMask*/) override
     {
         if (!_hasDrunkPotion && me->HealthBelowPctDamaged(50, damage))
         {
@@ -76,25 +77,19 @@ struct boss_quartermaster_zigris : public BossAI
         if (spellInfo->Id == SPELL_STUNBOMB || spellInfo->Id == SPELL_HOOKEDNET)
         {
             if (me->IsWithinMeleeRange(me->GetVictim()))
-            {
                 me->GetMotionMaster()->MoveBackwards(me->GetVictim(), 10.0f);
-            }
         }
     }
 
     void UpdateAI(uint32 diff) override
     {
         if (!UpdateVictim())
-        {
             return;
-        }
 
         events.Update(diff);
 
         if (me->HasUnitState(UNIT_STATE_CASTING))
-        {
             return;
-        }
 
         while (uint32 eventId = events.ExecuteEvent())
         {
@@ -133,16 +128,14 @@ struct boss_quartermaster_zigris : public BossAI
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
         }
 
         DoMeleeAttackIfReady();
     }
 
-    private:
-        bool _hasDrunkPotion;
+private:
+    bool _hasDrunkPotion;
 };
 
 void AddSC_boss_quartermasterzigris()

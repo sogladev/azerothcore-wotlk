@@ -23,13 +23,9 @@
 #include "QueryResult.h"
 #include "Timer.h"
 
-PetitionMgr::PetitionMgr()
-{
-}
+PetitionMgr::PetitionMgr() { }
 
-PetitionMgr::~PetitionMgr()
-{
-}
+PetitionMgr::~PetitionMgr() { }
 
 PetitionMgr* PetitionMgr::instance()
 {
@@ -54,7 +50,10 @@ void PetitionMgr::LoadPetitions()
     do
     {
         Field* fields = result->Fetch();
-        AddPetition(ObjectGuid::Create<HighGuid::Item>(fields[1].Get<uint32>()), ObjectGuid::Create<HighGuid::Player>(fields[0].Get<uint32>()), fields[2].Get<std::string>(), fields[3].Get<uint8>());
+        AddPetition(ObjectGuid::Create<HighGuid::Item>(fields[1].Get<uint32>()),
+            ObjectGuid::Create<HighGuid::Player>(fields[0].Get<uint32>()),
+            fields[2].Get<std::string>(),
+            fields[3].Get<uint8>());
         ++count;
     } while (result->NextRow());
 
@@ -79,7 +78,9 @@ void PetitionMgr::LoadSignatures()
     do
     {
         Field* fields = result->Fetch();
-        AddSignature(ObjectGuid::Create<HighGuid::Item>(fields[0].Get<uint32>()), fields[2].Get<uint32>(), ObjectGuid::Create<HighGuid::Player>(fields[1].Get<uint32>()));
+        AddSignature(ObjectGuid::Create<HighGuid::Item>(fields[0].Get<uint32>()),
+            fields[2].Get<uint32>(),
+            ObjectGuid::Create<HighGuid::Player>(fields[1].Get<uint32>()));
         ++count;
     } while (result->NextRow());
 
@@ -120,9 +121,7 @@ void PetitionMgr::RemovePetitionByOwnerAndType(ObjectGuid ownerGuid, uint8 type)
                 if (Player* owner = ObjectAccessor::FindConnectedPlayer(ownerGuid))
                 {
                     if (Item* item = owner->GetItemByGuid(itr->first))
-                    {
                         owner->DestroyItem(item->GetBagSlot(), item->GetSlot(), true);
-                    }
                 }
             }
 

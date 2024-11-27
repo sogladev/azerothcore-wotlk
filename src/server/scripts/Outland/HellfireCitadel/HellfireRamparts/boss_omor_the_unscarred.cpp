@@ -21,20 +21,20 @@
 
 enum Says
 {
-    SAY_AGGRO                   = 0,
-    SAY_SUMMON                  = 1,
-    SAY_CURSE                   = 2,
-    SAY_KILL                    = 3,
-    SAY_DIE                     = 4,
-    SAY_WIPE                    = 5
+    SAY_AGGRO = 0,
+    SAY_SUMMON = 1,
+    SAY_CURSE = 2,
+    SAY_KILL = 3,
+    SAY_DIE = 4,
+    SAY_WIPE = 5
 };
 
 enum Spells
 {
-    SPELL_SHADOW_BOLT           = 30686,
+    SPELL_SHADOW_BOLT = 30686,
     SPELL_SUMMON_FIENDISH_HOUND = 30707,
-    SPELL_TREACHEROUS_AURA      = 30695,
-    SPELL_DEMONIC_SHIELD        = 31901
+    SPELL_TREACHEROUS_AURA = 30695,
+    SPELL_DEMONIC_SHIELD = 31901
 };
 
 struct boss_omor_the_unscarred : public BossAI
@@ -42,10 +42,7 @@ struct boss_omor_the_unscarred : public BossAI
     boss_omor_the_unscarred(Creature* creature) : BossAI(creature, DATA_OMOR_THE_UNSCARRED)
     {
         me->SetCombatMovement(false);
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -53,9 +50,12 @@ struct boss_omor_the_unscarred : public BossAI
         Talk(SAY_WIPE);
         _Reset();
         _targetGUID.Clear();
-        ScheduleHealthCheckEvent(21, [&]{
+        ScheduleHealthCheckEvent(21,
+            [&]
+        {
             DoCastSelf(SPELL_DEMONIC_SHIELD);
-            scheduler.Schedule(15s, [this](TaskContext context)
+            scheduler.Schedule(15s,
+                [this](TaskContext context)
             {
                 DoCastSelf(SPELL_DEMONIC_SHIELD);
                 context.Repeat(15s);
@@ -67,18 +67,18 @@ struct boss_omor_the_unscarred : public BossAI
     {
         Talk(SAY_AGGRO);
         _JustEngagedWith();
-        scheduler.Schedule(6s, [this](TaskContext context)
+        scheduler
+            .Schedule(6s,
+                [this](TaskContext context)
         {
             if (roll_chance_i(33))
-            {
                 Talk(SAY_CURSE);
-            }
             DoCastRandomTarget(SPELL_TREACHEROUS_AURA);
             context.Repeat(12s, 18s);
-        }).Schedule(10s, [this](TaskContext /*context*/)
-        {
-            DoCastSelf(SPELL_SUMMON_FIENDISH_HOUND);
-        }).Schedule(25s, [this](TaskContext context)
+        })
+            .Schedule(10s, [this](TaskContext /*context*/) { DoCastSelf(SPELL_SUMMON_FIENDISH_HOUND); })
+            .Schedule(25s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_SUMMON_FIENDISH_HOUND);
             context.Repeat(15s);
@@ -92,10 +92,7 @@ struct boss_omor_the_unscarred : public BossAI
             _hasSpoken = true;
             Talk(SAY_KILL);
         }
-        scheduler.Schedule(6s, [this](TaskContext /*context*/)
-        {
-            _hasSpoken = false;
-        });
+        scheduler.Schedule(6s, [this](TaskContext /*context*/) { _hasSpoken = false; });
     }
 
     void JustSummoned(Creature* summon) override

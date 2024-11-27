@@ -38,7 +38,8 @@ void HostileRefMgr::threatAssist(Unit* victim, float baseThreat, SpellInfo const
         return;
 
     HostileReference* ref = getFirst();
-    float threat = ThreatCalcHelper::calcThreat(victim, baseThreat, (threatSpell ? threatSpell->GetSchoolMask() : SPELL_SCHOOL_MASK_NORMAL), threatSpell);
+    float threat = ThreatCalcHelper::calcThreat(
+        victim, baseThreat, (threatSpell ? threatSpell->GetSchoolMask() : SPELL_SCHOOL_MASK_NORMAL), threatSpell);
     threat /= getSize();
     while (ref)
     {
@@ -48,9 +49,7 @@ void HostileRefMgr::threatAssist(Unit* victim, float baseThreat, SpellInfo const
             if (Creature* hatingCreature = refOwner->ToCreature())
             {
                 if (hatingCreature->IsAIEnabled)
-                {
                     hatingCreature->AI()->CalculateThreat(victim, threat, threatSpell);
-                }
             }
 
             ref->GetSource()->DoAddThreat(victim, threat);
@@ -139,9 +138,7 @@ void HostileRefMgr::deleteReferences(bool removeFromMap /*= false*/)
                 if (threatMgr->areThreatListsEmpty())
                 {
                     if (Creature* creature = threatMgr->GetOwner()->ToCreature())
-                    {
                         creaturesToEvade.push_back(creature);
-                    }
                 }
             }
         }
@@ -151,9 +148,7 @@ void HostileRefMgr::deleteReferences(bool removeFromMap /*= false*/)
     }
 
     for (Creature* creature : creaturesToEvade)
-    {
         creature->AI()->EnterEvadeMode();
-    }
 }
 
 //=================================================

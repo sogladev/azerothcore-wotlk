@@ -40,28 +40,24 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable teleNameNpcCommandTable =
-        {
-            { "id",     HandleTeleNameNpcIdCommand,      SEC_GAMEMASTER,    Console::Yes },
-            { "guid",   HandleTeleNameNpcSpawnIdCommand, SEC_GAMEMASTER,    Console::Yes },
-            { "name",   HandleTeleNameNpcNameCommand,    SEC_GAMEMASTER,    Console::Yes },
+        static ChatCommandTable teleNameNpcCommandTable = {
+            {"id",   HandleTeleNameNpcIdCommand,      SEC_GAMEMASTER, Console::Yes},
+            {"guid", HandleTeleNameNpcSpawnIdCommand, SEC_GAMEMASTER, Console::Yes},
+            {"name", HandleTeleNameNpcNameCommand,    SEC_GAMEMASTER, Console::Yes},
         };
-        static ChatCommandTable teleNameCommandTable =
-        {
-            { "npc",    teleNameNpcCommandTable },
-            { "",       HandleTeleNameCommand,           SEC_GAMEMASTER,    Console::Yes },
+        static ChatCommandTable teleNameCommandTable = {
+            {"npc", teleNameNpcCommandTable},
+            {"", HandleTeleNameCommand, SEC_GAMEMASTER, Console::Yes},
         };
-        static ChatCommandTable teleCommandTable =
-        {
-            { "add",    HandleTeleAddCommand,            SEC_ADMINISTRATOR, Console::No },
-            { "del",    HandleTeleDelCommand,            SEC_ADMINISTRATOR, Console::Yes },
-            { "name",   teleNameCommandTable },
-            { "group",  HandleTeleGroupCommand,          SEC_GAMEMASTER,    Console::No },
-            { "",       HandleTeleCommand,               SEC_GAMEMASTER,    Console::No }
+        static ChatCommandTable teleCommandTable = {
+            {"add", HandleTeleAddCommand, SEC_ADMINISTRATOR, Console::No},
+            {"del", HandleTeleDelCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"name", teleNameCommandTable},
+            {"group", HandleTeleGroupCommand, SEC_GAMEMASTER, Console::No},
+            {"", HandleTeleCommand, SEC_GAMEMASTER, Console::No}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "teleport", teleCommandTable }
+        static ChatCommandTable commandTable = {
+            {"teleport", teleCommandTable}
         };
         return commandTable;
     }
@@ -79,12 +75,12 @@ public:
         }
 
         GameTele tele;
-        tele.position_x  = player->GetPositionX();
-        tele.position_y  = player->GetPositionY();
-        tele.position_z  = player->GetPositionZ();
+        tele.position_x = player->GetPositionX();
+        tele.position_y = player->GetPositionY();
+        tele.position_z = player->GetPositionZ();
         tele.orientation = player->GetOrientation();
-        tele.mapId       = player->GetMapId();
-        tele.name        = name;
+        tele.mapId = player->GetMapId();
+        tele.name = name;
 
         if (sObjectMgr->AddGameTele(tele))
         {
@@ -112,7 +108,8 @@ public:
         return true;
     }
 
-    static bool DoNameTeleport(ChatHandler* handler, PlayerIdentifier player, uint32 mapId, Position const& pos, std::string const& locationName)
+    static bool DoNameTeleport(ChatHandler* handler, PlayerIdentifier player, uint32 mapId, Position const& pos,
+        std::string const& locationName)
     {
         if (!MapMgr::IsValidMapCoord(mapId, pos) || sObjectMgr->IsTransportMap(mapId))
         {
@@ -147,7 +144,7 @@ public:
             else // save only in non-flight case
                 target->SaveRecallPosition();
 
-            target->TeleportTo({ mapId, pos });
+            target->TeleportTo({mapId, pos});
         }
         else
         {
@@ -157,36 +154,48 @@ public:
 
             std::string nameLink = handler->playerLink(player.GetName());
 
-            handler->PSendSysMessage(LANG_TELEPORTING_TO, nameLink, handler->GetAcoreString(LANG_OFFLINE), locationName);
+            handler->PSendSysMessage(
+                LANG_TELEPORTING_TO, nameLink, handler->GetAcoreString(LANG_OFFLINE), locationName);
 
-            Player::SavePositionInDB({ mapId, pos }, sMapMgr->GetZoneId(PHASEMASK_NORMAL, { mapId, pos }), player.GetGUID(), nullptr);
+            Player::SavePositionInDB(
+                {mapId, pos}, sMapMgr->GetZoneId(PHASEMASK_NORMAL, {mapId, pos}), player.GetGUID(), nullptr);
         }
 
         return true;
     }
 
     // teleport player to given game_tele.entry
-    static bool HandleTeleNameCommand(ChatHandler* handler, Optional<PlayerIdentifier> player, Variant<GameTele const*, EXACT_SEQUENCE("$home")> where)
+    static bool HandleTeleNameCommand(ChatHandler* handler, Optional<PlayerIdentifier> player,
+        Variant<GameTele const*, EXACT_SEQUENCE("$home")> where)
     {
         if (!player)
             player = PlayerIdentifier::FromTargetOrSelf(handler);
         if (!player)
             return false;
 
-        if (where.index() == 1)    // References target's homebind
+        if (where.index() == 1) // References target's homebind
         {
             if (Player* target = player->GetConnectedPlayer())
-                target->TeleportTo(target->m_homebindMapId, target->m_homebindX, target->m_homebindY, target->m_homebindZ, target->GetOrientation());
+                target->TeleportTo(target->m_homebindMapId,
+                    target->m_homebindX,
+                    target->m_homebindY,
+                    target->m_homebindZ,
+                    target->GetOrientation());
             else
             {
-                CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_HOMEBIND);
+                CharacterDatabasePreparedStatement* stmt =
+                    CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_HOMEBIND);
                 stmt->SetData(0, player->GetGUID().GetCounter());
                 PreparedQueryResult resultDB = CharacterDatabase.Query(stmt);
 
                 if (resultDB)
                 {
                     Field* fieldsDB = resultDB->Fetch();
-                    WorldLocation loc(fieldsDB[0].Get<uint16>(), fieldsDB[2].Get<float>(), fieldsDB[3].Get<float>(), fieldsDB[4].Get<float>(), 0.0f);
+                    WorldLocation loc(fieldsDB[0].Get<uint16>(),
+                        fieldsDB[2].Get<float>(),
+                        fieldsDB[3].Get<float>(),
+                        fieldsDB[4].Get<float>(),
+                        0.0f);
                     uint32 zoneId = fieldsDB[1].Get<uint16>();
 
                     Player::SavePositionInDB(loc, zoneId, player->GetGUID(), nullptr);
@@ -198,7 +207,11 @@ public:
 
         // id, or string, or [name] Shift-click form |color|Htele:id|h[name]|h|r
         GameTele const* tele = where.get<GameTele const*>();
-        return DoNameTeleport(handler, *player, tele->mapId, { tele->position_x, tele->position_y, tele->position_z, tele->orientation }, tele->name);
+        return DoNameTeleport(handler,
+            *player,
+            tele->mapId,
+            {tele->position_x, tele->position_y, tele->position_z, tele->orientation},
+            tele->name);
     }
 
     //Teleport group to given game_tele.entry
@@ -310,7 +323,8 @@ public:
         return true;
     }
 
-    static bool HandleTeleNameNpcIdCommand(ChatHandler* handler, PlayerIdentifier player, Variant<Hyperlink<creature_entry>, uint32> creatureId)
+    static bool HandleTeleNameNpcIdCommand(
+        ChatHandler* handler, PlayerIdentifier player, Variant<Hyperlink<creature_entry>, uint32> creatureId)
     {
         CreatureData const* spawnpoint = nullptr;
         for (auto const& pair : sObjectMgr->GetAllCreatureData())
@@ -335,10 +349,15 @@ public:
 
         CreatureTemplate const* creatureTemplate = ASSERT_NOTNULL(sObjectMgr->GetCreatureTemplate(*creatureId));
 
-        return DoNameTeleport(handler, player, spawnpoint->mapid, { spawnpoint->posX, spawnpoint->posY, spawnpoint->posZ }, creatureTemplate->Name);
+        return DoNameTeleport(handler,
+            player,
+            spawnpoint->mapid,
+            {spawnpoint->posX, spawnpoint->posY, spawnpoint->posZ},
+            creatureTemplate->Name);
     }
 
-    static bool HandleTeleNameNpcSpawnIdCommand(ChatHandler* handler, PlayerIdentifier player, Variant<Hyperlink<creature>, ObjectGuid::LowType> spawnId)
+    static bool HandleTeleNameNpcSpawnIdCommand(
+        ChatHandler* handler, PlayerIdentifier player, Variant<Hyperlink<creature>, ObjectGuid::LowType> spawnId)
     {
         CreatureData const* spawnpoint = sObjectMgr->GetCreatureData(spawnId);
         if (!spawnpoint)
@@ -349,7 +368,11 @@ public:
 
         CreatureTemplate const* creatureTemplate = ASSERT_NOTNULL(sObjectMgr->GetCreatureTemplate(spawnpoint->id1));
 
-        return DoNameTeleport(handler, player, spawnpoint->mapid, { spawnpoint->posX, spawnpoint->posY, spawnpoint->posZ }, creatureTemplate->Name);
+        return DoNameTeleport(handler,
+            player,
+            spawnpoint->mapid,
+            {spawnpoint->posX, spawnpoint->posY, spawnpoint->posZ},
+            creatureTemplate->Name);
     }
 
     static bool HandleTeleNameNpcNameCommand(ChatHandler* handler, PlayerIdentifier player, Tail name)
@@ -358,7 +381,9 @@ public:
         WorldDatabase.EscapeString(normalizedName);
 
         // May need work //PussyWizardEliteMalcrom
-        QueryResult result = WorldDatabase.Query("SELECT c.position_x, c.position_y, c.position_z, c.orientation, c.map, ct.name FROM creature c INNER JOIN creature_template ct ON c.id1 = ct.entry WHERE ct.name LIKE '{}'", normalizedName);
+        QueryResult result = WorldDatabase.Query(
+            "SELECT c.position_x, c.position_y, c.position_z, c.orientation, c.map, ct.name FROM creature c INNER JOIN creature_template ct ON c.id1 = ct.entry WHERE ct.name LIKE '{}'",
+            normalizedName);
         if (!result)
         {
             handler->SendErrorMessage(LANG_COMMAND_GOCREATNOTFOUND);
@@ -369,7 +394,11 @@ public:
             handler->SendSysMessage(LANG_COMMAND_GOCREATMULTIPLE);
 
         Field* fields = result->Fetch();
-        return DoNameTeleport(handler, player, fields[4].Get<uint16>(), { fields[0].Get<float>(), fields[1].Get<float>(), fields[2].Get<float>(), fields[3].Get<float>() }, fields[5].Get<std::string>());
+        return DoNameTeleport(handler,
+            player,
+            fields[4].Get<uint16>(),
+            {fields[0].Get<float>(), fields[1].Get<float>(), fields[2].Get<float>(), fields[3].Get<float>()},
+            fields[5].Get<std::string>());
     }
 };
 

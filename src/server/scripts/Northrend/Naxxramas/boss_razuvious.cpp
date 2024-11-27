@@ -17,56 +17,56 @@
 
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
-#include "naxxramas.h"
 #include "SpellInfo.h"
+#include "naxxramas.h"
 
 enum Says
 {
-    SAY_AGGRO                       = 0,
-    SAY_SLAY                        = 1,
-    SAY_TAUNTED                     = 2,
-    SAY_DEATH                       = 3,
-    SAY_PATHETIC                    = 4,
-    SAY_TARGET_DUMMY                = 5,
-    SAY_DEATH_KNIGHT_UNDERSTUDY     = 0,
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_TAUNTED = 2,
+    SAY_DEATH = 3,
+    SAY_PATHETIC = 4,
+    SAY_TARGET_DUMMY = 5,
+    SAY_DEATH_KNIGHT_UNDERSTUDY = 0,
 };
 
 enum Spells
 {
-    SPELL_UNBALANCING_STRIKE        = 26613,
-    SPELL_DISRUPTING_SHOUT_10       = 55543,
-    SPELL_DISRUPTING_SHOUT_25       = 29107,
-    SPELL_JAGGED_KNIFE              = 55550,
-    SPELL_HOPELESS                  = 29125,
-    SPELL_TAUNT                     = 29060
+    SPELL_UNBALANCING_STRIKE = 26613,
+    SPELL_DISRUPTING_SHOUT_10 = 55543,
+    SPELL_DISRUPTING_SHOUT_25 = 29107,
+    SPELL_JAGGED_KNIFE = 55550,
+    SPELL_HOPELESS = 29125,
+    SPELL_TAUNT = 29060
 };
 
 enum Events
 {
-    EVENT_UNBALANCING_STRIKE        = 1,
-    EVENT_DISRUPTING_SHOUT          = 2,
-    EVENT_JAGGED_KNIFE              = 3
+    EVENT_UNBALANCING_STRIKE = 1,
+    EVENT_DISRUPTING_SHOUT = 2,
+    EVENT_JAGGED_KNIFE = 3
 };
 
 enum NPCs
 {
-    NPC_DEATH_KNIGHT_UNDERSTUDY     = 16803,
-    NPC_TARGET_DUMMY                = 16211,
+    NPC_DEATH_KNIGHT_UNDERSTUDY = 16803,
+    NPC_TARGET_DUMMY = 16211,
 };
 
 enum Actions
 {
-    ACTION_FACE_ME                 = 0,
-    ACTION_TALK                    = 1,
-    ACTION_EMOTE                   = 2,
-    ACTION_SALUTE                  = 3,
-    ACTION_BACK_TO_TRAINING        = 4,
+    ACTION_FACE_ME = 0,
+    ACTION_TALK = 1,
+    ACTION_EMOTE = 2,
+    ACTION_SALUTE = 3,
+    ACTION_BACK_TO_TRAINING = 4,
 };
 
 enum Misc
 {
-    GROUP_OOC_RP                    = 0,
-    POINT_DEATH_KNIGHT              = 0,
+    GROUP_OOC_RP = 0,
+    POINT_DEATH_KNIGHT = 0,
 };
 
 class boss_razuvious : public CreatureScript
@@ -121,13 +121,18 @@ public:
                 if (Creature* understudy = ObjectAccessor::GetCreature(*me, _rpBuddyGUID))
                     me->SetFacingToObject(understudy);
 
-            scheduler.Schedule(2s, GROUP_OOC_RP, [this](TaskContext /*context*/)
+            scheduler
+                .Schedule(2s,
+                    GROUP_OOC_RP,
+                    [this](TaskContext /*context*/)
             {
                 if (roll_chance_i(75))
                 {
                     bool longText = roll_chance_i(50);
                     Talk(longText ? SAY_TARGET_DUMMY : SAY_PATHETIC);
-                    scheduler.Schedule(4s, GROUP_OOC_RP, [this](TaskContext /*context*/)
+                    scheduler.Schedule(4s,
+                        GROUP_OOC_RP,
+                        [this](TaskContext /*context*/)
                     {
                         if (_rpBuddyGUID)
                             if (Creature* understudy = ObjectAccessor::GetCreature(*me, _rpBuddyGUID))
@@ -139,7 +144,9 @@ public:
                 else
                 {
                     me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-                    scheduler.Schedule(4s, GROUP_OOC_RP, [this](TaskContext /*context*/)
+                    scheduler.Schedule(4s,
+                        GROUP_OOC_RP,
+                        [this](TaskContext /*context*/)
                     {
                         if (_rpBuddyGUID)
                             if (Creature* understudy = ObjectAccessor::GetCreature(*me, _rpBuddyGUID))
@@ -151,20 +158,27 @@ public:
                             }
                     });
                 }
-            }).Schedule(4s, GROUP_OOC_RP, [this](TaskContext /*context*/)
+            })
+                .Schedule(4s,
+                    GROUP_OOC_RP,
+                    [this](TaskContext /*context*/)
             {
                 if (_rpBuddyGUID)
                     if (Creature* understudy = ObjectAccessor::GetCreature(*me, _rpBuddyGUID))
                         understudy->AI()->DoAction(ACTION_FACE_ME);
-            }).Schedule(10s, GROUP_OOC_RP, [this](TaskContext /*context*/)
+            })
+                .Schedule(10s,
+                    GROUP_OOC_RP,
+                    [this](TaskContext /*context*/)
             {
                 if (_rpBuddyGUID)
                     if (Creature* understudy = ObjectAccessor::GetCreature(*me, _rpBuddyGUID))
                         understudy->AI()->DoAction(ACTION_SALUTE);
-            }).Schedule(13s, GROUP_OOC_RP, [this](TaskContext /*context*/)
-            {
-                me->ResumeMovement();
-            }).Schedule(16s, GROUP_OOC_RP, [this](TaskContext /*context*/)
+            })
+                .Schedule(13s, GROUP_OOC_RP, [this](TaskContext /*context*/) { me->ResumeMovement(); })
+                .Schedule(16s,
+                    GROUP_OOC_RP,
+                    [this](TaskContext /*context*/)
             {
                 if (_rpBuddyGUID)
                     if (Creature* understudy = ObjectAccessor::GetCreature(*me, _rpBuddyGUID))
@@ -176,15 +190,16 @@ public:
         void MovementInform(uint32 type, uint32 id) override
         {
             if (type == POINT_MOTION_TYPE && id == POINT_DEATH_KNIGHT)
-            {
                 ScheduleInteractWithDeathKnight();
-            }
         }
 
         void ScheduleRP()
         {
             _rpBuddyGUID = Acore::Containers::SelectRandomContainerElement(summons);
-            scheduler.Schedule(60s, 80s, GROUP_OOC_RP, [this](TaskContext context)
+            scheduler.Schedule(60s,
+                80s,
+                GROUP_OOC_RP,
+                [this](TaskContext context)
             {
                 if (_rpBuddyGUID)
                 {
@@ -193,11 +208,14 @@ public:
                         if (me->GetDistance2d(understudy) <= 6.0f)
                         {
                             me->PauseMovement();
-                            scheduler.Schedule(500ms, GROUP_OOC_RP, [this](TaskContext /*context*/)
+                            scheduler.Schedule(500ms,
+                                GROUP_OOC_RP,
+                                [this](TaskContext /*context*/)
                             {
                                 if (_rpBuddyGUID)
                                     if (Creature* understudy = ObjectAccessor::GetCreature(*me, _rpBuddyGUID))
-                                        me->GetMotionMaster()->MovePoint(POINT_DEATH_KNIGHT, understudy->GetNearPosition(3.2f, understudy->GetRelativeAngle(me)));
+                                        me->GetMotionMaster()->MovePoint(POINT_DEATH_KNIGHT,
+                                            understudy->GetNearPosition(3.2f, understudy->GetRelativeAngle(me)));
                             });
                             return;
                         }
@@ -210,25 +228,19 @@ public:
         void KilledUnit(Unit* who) override
         {
             if (roll_chance_i(30))
-            {
                 Talk(SAY_SLAY);
-            }
             if (who->IsPlayer() && pInstance)
-            {
                 pInstance->SetData(DATA_IMMORTAL_FAIL, 0);
-            }
         }
 
         void DamageTaken(Unit* who, uint32& damage, DamageEffectType, SpellSchoolMask) override
         {
             // Damage done by the controlled Death Knight understudies should also count toward damage done by players
             if (who && who->IsCreature() && who->GetEntry() == NPC_DEATH_KNIGHT_UNDERSTUDY)
-            {
                 me->LowerPlayerDamageReq(damage);
-            }
         }
 
-        void JustDied(Unit*  killer) override
+        void JustDied(Unit* killer) override
         {
             BossAI::JustDied(killer);
             Talk(SAY_DEATH);
@@ -238,9 +250,7 @@ public:
         void SpellHit(Unit* caster, SpellInfo const* spell) override
         {
             if (spell->Id == SPELL_TAUNT)
-            {
                 Talk(SAY_TAUNTED, caster);
-            }
         }
 
         void JustEngagedWith(Unit* who) override
@@ -278,9 +288,7 @@ public:
                     break;
                 case EVENT_JAGGED_KNIFE:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 45.0f))
-                    {
                         me->CastSpell(target, SPELL_JAGGED_KNIFE, false);
-                    }
                     events.Repeat(10s);
                     break;
             }
@@ -316,10 +324,11 @@ public:
         {
             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY1H);
             if (Creature* targetDummy = me->FindNearestCreature(NPC_TARGET_DUMMY, 10.0f))
-            {
                 me->SetFacingToObject(targetDummy);
-            }
-            scheduler.Schedule(6s, 9s, GROUP_OOC_RP, [this](TaskContext context)
+            scheduler.Schedule(6s,
+                9s,
+                GROUP_OOC_RP,
+                [this](TaskContext context)
             {
                 me->HandleEmoteCommand(EMOTE_ONESHOT_ATTACK1H);
                 context.Repeat(6s, 9s);
@@ -337,9 +346,7 @@ public:
                     if (InstanceScript* instance = me->GetInstanceScript())
                     {
                         if (Creature* creature = instance->GetCreature(DATA_RAZUVIOUS))
-                        {
                             me->SetFacingToObject(creature);
-                        }
                     }
                     break;
                 case ACTION_TALK:
@@ -361,9 +368,7 @@ public:
         void KilledUnit(Unit* who) override
         {
             if (who->IsPlayer() && me->GetInstanceScript())
-            {
                 me->GetInstanceScript()->SetData(DATA_IMMORTAL_FAIL, 0);
-            }
         }
 
         void JustEngagedWith(Unit* who) override
@@ -386,9 +391,7 @@ public:
             if (UpdateVictim())
             {
                 if (!me->HasUnitState(UNIT_STATE_CASTING) || !me->IsCharmed())
-                {
                     DoMeleeAttackIfReady();
-                }
             }
         }
     };

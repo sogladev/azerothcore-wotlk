@@ -19,8 +19,7 @@
 #include "Log.h"
 #include "ScriptMgr.h"
 
-WorldMapScript::WorldMapScript(const char* name, uint32 mapId) :
-    ScriptObject(name), MapScript<Map>(mapId)
+WorldMapScript::WorldMapScript(char const* name, uint32 mapId) : ScriptObject(name), MapScript<Map>(mapId)
 {
     ScriptRegistry<WorldMapScript>::AddScript(this);
 }
@@ -30,9 +29,7 @@ void WorldMapScript::checkValidity()
     checkMap();
 
     if (GetEntry() && !GetEntry()->IsWorldMap())
-    {
         LOG_ERROR("maps.script", "WorldMapScript for map {} is invalid.", GetEntry()->MapID);
-    }
 }
 
 template class AC_GAME_API ScriptRegistry<WorldMapScript>;

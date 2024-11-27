@@ -98,17 +98,17 @@ void Player::SetSheath(SheathState sheathed)
 {
     switch (sheathed)
     {
-        case SHEATH_STATE_UNARMED:                          // no prepared weapon
+        case SHEATH_STATE_UNARMED: // no prepared weapon
             SetVirtualItemSlot(0, nullptr);
             SetVirtualItemSlot(1, nullptr);
             SetVirtualItemSlot(2, nullptr);
             break;
-        case SHEATH_STATE_MELEE:                            // prepared melee weapon
+        case SHEATH_STATE_MELEE: // prepared melee weapon
             SetVirtualItemSlot(0, GetWeaponForAttack(BASE_ATTACK, true));
             SetVirtualItemSlot(1, GetWeaponForAttack(OFF_ATTACK, true));
             SetVirtualItemSlot(2, nullptr);
             break;
-        case SHEATH_STATE_RANGED:                           // prepared ranged weapon
+        case SHEATH_STATE_RANGED: // prepared ranged weapon
             SetVirtualItemSlot(0, nullptr);
             SetVirtualItemSlot(1, nullptr);
             SetVirtualItemSlot(2, GetWeaponForAttack(RANGED_ATTACK, true));
@@ -119,7 +119,7 @@ void Player::SetSheath(SheathState sheathed)
             SetVirtualItemSlot(2, nullptr);
             break;
     }
-    Unit::SetSheath(sheathed);                              // this must visualize Sheath changing for other players...
+    Unit::SetSheath(sheathed); // this must visualize Sheath changing for other players...
 }
 
 uint8 Player::FindEquipSlot(ItemTemplate const* proto, uint32 slot, bool swap) const
@@ -195,10 +195,13 @@ uint8 Player::FindEquipSlot(ItemTemplate const* proto, uint32 slot, bool swap) c
             break;
         case INVTYPE_2HWEAPON:
             slots[0] = EQUIPMENT_SLOT_MAINHAND;
-            if (CanDualWield() && CanTitanGrip() && proto->SubClass != ITEM_SUBCLASS_WEAPON_POLEARM && proto->SubClass != ITEM_SUBCLASS_WEAPON_STAFF && proto->SubClass != ITEM_SUBCLASS_WEAPON_FISHING_POLE)
+            if (CanDualWield() && CanTitanGrip() && proto->SubClass != ITEM_SUBCLASS_WEAPON_POLEARM &&
+                proto->SubClass != ITEM_SUBCLASS_WEAPON_STAFF && proto->SubClass != ITEM_SUBCLASS_WEAPON_FISHING_POLE)
                 if (Item* mhWeapon = GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND))
                     if (ItemTemplate const* mhWeaponProto = mhWeapon->GetTemplate())
-                        if (mhWeaponProto->SubClass != ITEM_SUBCLASS_WEAPON_POLEARM && mhWeaponProto->SubClass != ITEM_SUBCLASS_WEAPON_STAFF && mhWeaponProto->SubClass != ITEM_SUBCLASS_WEAPON_FISHING_POLE)
+                        if (mhWeaponProto->SubClass != ITEM_SUBCLASS_WEAPON_POLEARM &&
+                            mhWeaponProto->SubClass != ITEM_SUBCLASS_WEAPON_STAFF &&
+                            mhWeaponProto->SubClass != ITEM_SUBCLASS_WEAPON_FISHING_POLE)
                             slots[1] = EQUIPMENT_SLOT_OFFHAND;
             break;
         case INVTYPE_TABARD:
@@ -329,7 +332,7 @@ uint32 Player::GetItemCount(uint32 item, bool inBankAlso, Item* skipItem) const
     uint32 count = 0;
     for (uint8 i = EQUIPMENT_SLOT_START; i < INVENTORY_SLOT_ITEM_END; i++)
         if (Item* pItem = GetItemByPos(INVENTORY_SLOT_BAG_0, i))
-            if (pItem != skipItem &&  pItem->GetEntry() == item)
+            if (pItem != skipItem && pItem->GetEntry() == item)
                 count += pItem->GetCount();
 
     for (uint8 i = KEYRING_SLOT_START; i < CURRENCYTOKEN_SLOT_END; ++i)
@@ -447,7 +450,8 @@ Item* Player::GetItemByPos(uint16 pos) const
 
 Item* Player::GetItemByPos(uint8 bag, uint8 slot) const
 {
-    if (bag == INVENTORY_SLOT_BAG_0 && (slot < BANK_SLOT_BAG_END || (slot >= KEYRING_SLOT_START && slot < CURRENCYTOKEN_SLOT_END)))
+    if (bag == INVENTORY_SLOT_BAG_0 &&
+        (slot < BANK_SLOT_BAG_END || (slot >= KEYRING_SLOT_START && slot < CURRENCYTOKEN_SLOT_END)))
         return m_items[slot];
     else if (Bag* pBag = GetBagByPos(bag))
         return pBag->GetItemByPos(slot);
@@ -456,8 +460,8 @@ Item* Player::GetItemByPos(uint8 bag, uint8 slot) const
 
 Bag* Player::GetBagByPos(uint8 bag) const
 {
-    if ((bag >= INVENTORY_SLOT_BAG_START && bag < INVENTORY_SLOT_BAG_END)
-        || (bag >= BANK_SLOT_BAG_START && bag < BANK_SLOT_BAG_END))
+    if ((bag >= INVENTORY_SLOT_BAG_START && bag < INVENTORY_SLOT_BAG_END) ||
+        (bag >= BANK_SLOT_BAG_START && bag < BANK_SLOT_BAG_END))
         if (Item* item = GetItemByPos(INVENTORY_SLOT_BAG_0, bag))
             return item->ToBag();
     return nullptr;
@@ -477,10 +481,8 @@ uint32 Player::GetFreeInventorySpace() const
 
     // Check bags
     for (uint8 i = INVENTORY_SLOT_BAG_START; i < INVENTORY_SLOT_BAG_END; i++)
-    {
         if (Bag* bag = GetBagByPos(i))
             freeSpace += bag->GetFreeSlots();
-    }
 
     return freeSpace;
 }
@@ -906,7 +908,8 @@ bool Player::IsTotemCategoryCompatiableWith(ItemTemplate const* pProto, uint32 r
     return true;
 }
 
-InventoryResult Player::CanStoreItem_InSpecificSlot(uint8 bag, uint8 slot, ItemPosCountVec& dest, ItemTemplate const* pProto, uint32& count, bool swap, Item* pSrcItem) const
+InventoryResult Player::CanStoreItem_InSpecificSlot(uint8 bag, uint8 slot, ItemPosCountVec& dest,
+    ItemTemplate const* pProto, uint32& count, bool swap, Item* pSrcItem) const
 {
     Item* pItem2 = GetItemByPos(bag, slot);
 
@@ -922,7 +925,8 @@ InventoryResult Player::CanStoreItem_InSpecificSlot(uint8 bag, uint8 slot, ItemP
         if (bag == INVENTORY_SLOT_BAG_0)
         {
             // keyring case
-            if (slot >= KEYRING_SLOT_START && slot < KEYRING_SLOT_START + GetMaxKeyringSize() && !(pProto->BagFamily & BAG_FAMILY_MASK_KEYS))
+            if (slot >= KEYRING_SLOT_START && slot < KEYRING_SLOT_START + GetMaxKeyringSize() &&
+                !(pProto->BagFamily & BAG_FAMILY_MASK_KEYS))
                 return EQUIP_ERR_ITEM_DOESNT_GO_INTO_BAG;
 
             // currencytoken case
@@ -953,11 +957,11 @@ InventoryResult Player::CanStoreItem_InSpecificSlot(uint8 bag, uint8 slot, ItemP
         // non empty stack with space
         need_space = pProto->GetMaxStackSize();
     }
-        // non empty slot, check item type
+    // non empty slot, check item type
     else
     {
         // can be merged at least partly
-        InventoryResult res  = pItem2->CanBeMergedPartlyWith(pProto);
+        InventoryResult res = pItem2->CanBeMergedPartlyWith(pProto);
         if (res != EQUIP_ERR_OK)
             return res;
 
@@ -977,7 +981,8 @@ InventoryResult Player::CanStoreItem_InSpecificSlot(uint8 bag, uint8 slot, ItemP
     return EQUIP_ERR_OK;
 }
 
-InventoryResult Player::CanStoreItem_InBag(uint8 bag, ItemPosCountVec& dest, ItemTemplate const* pProto, uint32& count, bool merge, bool non_specialized, Item* pSrcItem, uint8 skip_bag, uint8 skip_slot) const
+InventoryResult Player::CanStoreItem_InBag(uint8 bag, ItemPosCountVec& dest, ItemTemplate const* pProto, uint32& count,
+    bool merge, bool non_specialized, Item* pSrcItem, uint8 skip_bag, uint8 skip_slot) const
 {
     // skip specific bag already processed in first called CanStoreItem_InBag
     if (bag == skip_bag)
@@ -1023,7 +1028,7 @@ InventoryResult Player::CanStoreItem_InBag(uint8 bag, ItemPosCountVec& dest, Ite
         if (pItem2)
         {
             // can be merged at least partly
-            uint8 res  = pItem2->CanBeMergedPartlyWith(pProto);
+            uint8 res = pItem2->CanBeMergedPartlyWith(pProto);
             if (res != EQUIP_ERR_OK)
                 continue;
 
@@ -1047,7 +1052,8 @@ InventoryResult Player::CanStoreItem_InBag(uint8 bag, ItemPosCountVec& dest, Ite
     return EQUIP_ERR_OK;
 }
 
-InventoryResult Player::CanStoreItem_InInventorySlots(uint8 slot_begin, uint8 slot_end, ItemPosCountVec& dest, ItemTemplate const* pProto, uint32& count, bool merge, Item* pSrcItem, uint8 skip_bag, uint8 skip_slot) const
+InventoryResult Player::CanStoreItem_InInventorySlots(uint8 slot_begin, uint8 slot_end, ItemPosCountVec& dest,
+    ItemTemplate const* pProto, uint32& count, bool merge, Item* pSrcItem, uint8 skip_bag, uint8 skip_slot) const
 {
     //this is never called for non-bag slots so we can do this
     if (pSrcItem && pSrcItem->IsNotEmptyBag())
@@ -1074,7 +1080,7 @@ InventoryResult Player::CanStoreItem_InInventorySlots(uint8 slot_begin, uint8 sl
         if (pItem2)
         {
             // can be merged at least partly
-            uint8 res  = pItem2->CanBeMergedPartlyWith(pProto);
+            uint8 res = pItem2->CanBeMergedPartlyWith(pProto);
             if (res != EQUIP_ERR_OK)
                 continue;
 
@@ -1098,9 +1104,15 @@ InventoryResult Player::CanStoreItem_InInventorySlots(uint8 slot_begin, uint8 sl
     return EQUIP_ERR_OK;
 }
 
-InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& dest, uint32 entry, uint32 count, Item* pItem, bool swap, uint32* no_space_count) const
+InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& dest, uint32 entry, uint32 count,
+    Item* pItem, bool swap, uint32* no_space_count) const
 {
-    LOG_DEBUG("entities.player.items", "STORAGE: CanStoreItem bag = {}, slot = {}, item = {}, count = {}", bag, slot, entry, count);
+    LOG_DEBUG("entities.player.items",
+        "STORAGE: CanStoreItem bag = {}, slot = {}, item = {}, count = {}",
+        bag,
+        slot,
+        entry,
+        count);
 
     ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(entry);
     if (!pProto)
@@ -1134,7 +1146,7 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
     }
 
     // check count of items (skip for auto move for same player from bank)
-    uint32 no_similar_count = 0;                            // can't store this amount similar items
+    uint32 no_similar_count = 0; // can't store this amount similar items
     InventoryResult res = CanTakeMoreSimilarItems(entry, count, pItem, &no_similar_count);
     if (res != EQUIP_ERR_OK)
     {
@@ -1177,9 +1189,10 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
         // search stack in bag for merge to
         if (pProto->Stackable != 1)
         {
-            if (bag == INVENTORY_SLOT_BAG_0)               // inventory
+            if (bag == INVENTORY_SLOT_BAG_0) // inventory
             {
-                res = CanStoreItem_InInventorySlots(KEYRING_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, true, pItem, bag, slot);
+                res = CanStoreItem_InInventorySlots(
+                    KEYRING_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, true, pItem, bag, slot);
                 if (res != EQUIP_ERR_OK)
                 {
                     if (no_space_count)
@@ -1197,7 +1210,8 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
                     return EQUIP_ERR_CANT_CARRY_MORE_OF_THIS;
                 }
 
-                res = CanStoreItem_InInventorySlots(INVENTORY_SLOT_ITEM_START, INVENTORY_SLOT_ITEM_END, dest, pProto, count, true, pItem, bag, slot);
+                res = CanStoreItem_InInventorySlots(
+                    INVENTORY_SLOT_ITEM_START, INVENTORY_SLOT_ITEM_END, dest, pProto, count, true, pItem, bag, slot);
                 if (res != EQUIP_ERR_OK)
                 {
                     if (no_space_count)
@@ -1215,7 +1229,7 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
                     return EQUIP_ERR_CANT_CARRY_MORE_OF_THIS;
                 }
             }
-            else                                            // equipped bag
+            else // equipped bag
             {
                 // we need check 2 time (specialized/non_specialized), use NULL_BAG to prevent skipping bag
                 res = CanStoreItem_InBag(bag, dest, pProto, count, true, false, pItem, NULL_BAG, slot);
@@ -1242,13 +1256,14 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
         }
 
         // search free slot in bag for place to
-        if (bag == INVENTORY_SLOT_BAG_0)                     // inventory
+        if (bag == INVENTORY_SLOT_BAG_0) // inventory
         {
             // search free slot - keyring case
             if (pProto->BagFamily & BAG_FAMILY_MASK_KEYS)
             {
                 uint32 keyringSize = GetMaxKeyringSize();
-                res = CanStoreItem_InInventorySlots(KEYRING_SLOT_START, KEYRING_SLOT_START + keyringSize, dest, pProto, count, false, pItem, bag, slot);
+                res = CanStoreItem_InInventorySlots(
+                    KEYRING_SLOT_START, KEYRING_SLOT_START + keyringSize, dest, pProto, count, false, pItem, bag, slot);
                 if (res != EQUIP_ERR_OK)
                 {
                     if (no_space_count)
@@ -1266,7 +1281,8 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
                     return EQUIP_ERR_CANT_CARRY_MORE_OF_THIS;
                 }
 
-                res = CanStoreItem_InInventorySlots(CURRENCYTOKEN_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, false, pItem, bag, slot);
+                res = CanStoreItem_InInventorySlots(
+                    CURRENCYTOKEN_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, false, pItem, bag, slot);
                 if (res != EQUIP_ERR_OK)
                 {
                     if (no_space_count)
@@ -1286,7 +1302,8 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
             }
             else if (pProto->IsCurrencyToken())
             {
-                res = CanStoreItem_InInventorySlots(CURRENCYTOKEN_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, false, pItem, bag, slot);
+                res = CanStoreItem_InInventorySlots(
+                    CURRENCYTOKEN_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, false, pItem, bag, slot);
                 if (res != EQUIP_ERR_OK)
                 {
                     if (no_space_count)
@@ -1305,7 +1322,8 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
                 }
             }
 
-            res = CanStoreItem_InInventorySlots(INVENTORY_SLOT_ITEM_START, INVENTORY_SLOT_ITEM_END, dest, pProto, count, false, pItem, bag, slot);
+            res = CanStoreItem_InInventorySlots(
+                INVENTORY_SLOT_ITEM_START, INVENTORY_SLOT_ITEM_END, dest, pProto, count, false, pItem, bag, slot);
             if (res != EQUIP_ERR_OK)
             {
                 if (no_space_count)
@@ -1323,7 +1341,7 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
                 return EQUIP_ERR_CANT_CARRY_MORE_OF_THIS;
             }
         }
-        else                                                // equipped bag
+        else // equipped bag
         {
             res = CanStoreItem_InBag(bag, dest, pProto, count, false, false, pItem, NULL_BAG, slot);
             if (res != EQUIP_ERR_OK)
@@ -1353,7 +1371,8 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
     // search stack for merge to
     if (pProto->Stackable != 1)
     {
-        res = CanStoreItem_InInventorySlots(KEYRING_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, true, pItem, bag, slot);
+        res = CanStoreItem_InInventorySlots(
+            KEYRING_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, true, pItem, bag, slot);
         if (res != EQUIP_ERR_OK)
         {
             if (no_space_count)
@@ -1371,7 +1390,8 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
             return EQUIP_ERR_CANT_CARRY_MORE_OF_THIS;
         }
 
-        res = CanStoreItem_InInventorySlots(INVENTORY_SLOT_ITEM_START, INVENTORY_SLOT_ITEM_END, dest, pProto, count, true, pItem, bag, slot);
+        res = CanStoreItem_InInventorySlots(
+            INVENTORY_SLOT_ITEM_START, INVENTORY_SLOT_ITEM_END, dest, pProto, count, true, pItem, bag, slot);
         if (res != EQUIP_ERR_OK)
         {
             if (no_space_count)
@@ -1433,7 +1453,8 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
         if (pProto->BagFamily & BAG_FAMILY_MASK_KEYS)
         {
             uint32 keyringSize = GetMaxKeyringSize();
-            res = CanStoreItem_InInventorySlots(KEYRING_SLOT_START, KEYRING_SLOT_START + keyringSize, dest, pProto, count, false, pItem, bag, slot);
+            res = CanStoreItem_InInventorySlots(
+                KEYRING_SLOT_START, KEYRING_SLOT_START + keyringSize, dest, pProto, count, false, pItem, bag, slot);
             if (res != EQUIP_ERR_OK)
             {
                 if (no_space_count)
@@ -1453,7 +1474,8 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
         }
         else if (pProto->IsCurrencyToken())
         {
-            res = CanStoreItem_InInventorySlots(CURRENCYTOKEN_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, false, pItem, bag, slot);
+            res = CanStoreItem_InInventorySlots(
+                CURRENCYTOKEN_SLOT_START, CURRENCYTOKEN_SLOT_END, dest, pProto, count, false, pItem, bag, slot);
             if (res != EQUIP_ERR_OK)
             {
                 if (no_space_count)
@@ -1494,7 +1516,8 @@ InventoryResult Player::CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec& des
         return EQUIP_ERR_NONEMPTY_BAG_OVER_OTHER_BAG;
 
     // search free slot
-    res = CanStoreItem_InInventorySlots(INVENTORY_SLOT_ITEM_START, INVENTORY_SLOT_ITEM_END, dest, pProto, count, false, pItem, bag, slot);
+    res = CanStoreItem_InInventorySlots(
+        INVENTORY_SLOT_ITEM_START, INVENTORY_SLOT_ITEM_END, dest, pProto, count, false, pItem, bag, slot);
     if (res != EQUIP_ERR_OK)
     {
         if (no_space_count)
@@ -1590,7 +1613,11 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
         if (!pItem)
             continue;
 
-        LOG_DEBUG("entities.player.items", "STORAGE: CanStoreItems {}. item = {}, count = {}", k + 1, pItem->GetEntry(), pItem->GetCount());
+        LOG_DEBUG("entities.player.items",
+            "STORAGE: CanStoreItems {}. item = {}, count = {}",
+            k + 1,
+            pItem->GetEntry(),
+            pItem->GetCount());
         ItemTemplate const* pProto = pItem->GetTemplate();
 
         // strange item
@@ -1620,7 +1647,8 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
             for (uint8 t = KEYRING_SLOT_START; t < KEYRING_SLOT_END; ++t)
             {
                 pItem2 = GetItemByPos(INVENTORY_SLOT_BAG_0, t);
-                if (pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_keys[t - KEYRING_SLOT_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
+                if (pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK &&
+                    inv_keys[t - KEYRING_SLOT_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
                 {
                     inv_keys[t - KEYRING_SLOT_START] += pItem->GetCount();
                     b_found = true;
@@ -1633,7 +1661,8 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
             for (int t = CURRENCYTOKEN_SLOT_START; t < CURRENCYTOKEN_SLOT_END; ++t)
             {
                 pItem2 = GetItemByPos(INVENTORY_SLOT_BAG_0, t);
-                if (pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_tokens[t - CURRENCYTOKEN_SLOT_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
+                if (pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK &&
+                    inv_tokens[t - CURRENCYTOKEN_SLOT_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
                 {
                     inv_tokens[t - CURRENCYTOKEN_SLOT_START] += pItem->GetCount();
                     b_found = true;
@@ -1646,7 +1675,8 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
             for (int t = INVENTORY_SLOT_ITEM_START; t < INVENTORY_SLOT_ITEM_END; ++t)
             {
                 pItem2 = GetItemByPos(INVENTORY_SLOT_BAG_0, t);
-                if (pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_slot_items[t - INVENTORY_SLOT_ITEM_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
+                if (pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK &&
+                    inv_slot_items[t - INVENTORY_SLOT_ITEM_START] + pItem->GetCount() <= pProto->GetMaxStackSize())
                 {
                     inv_slot_items[t - INVENTORY_SLOT_ITEM_START] += pItem->GetCount();
                     b_found = true;
@@ -1665,7 +1695,9 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
                         for (uint32 j = 0; j < bag->GetBagSize(); j++)
                         {
                             pItem2 = GetItemByPos(t, j);
-                            if (pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK && inv_bags[t - INVENTORY_SLOT_BAG_START][j] + pItem->GetCount() <= pProto->GetMaxStackSize())
+                            if (pItem2 && pItem2->CanBeMergedPartlyWith(pProto) == EQUIP_ERR_OK &&
+                                inv_bags[t - INVENTORY_SLOT_BAG_START][j] + pItem->GetCount() <=
+                                    pProto->GetMaxStackSize())
                             {
                                 inv_bags[t - INVENTORY_SLOT_BAG_START][j] += pItem->GetCount();
                                 b_found = true;
@@ -1723,7 +1755,8 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
                     pBagProto = bag->GetTemplate();
 
                     // not plain container check
-                    if (pBagProto && (pBagProto->Class != ITEM_CLASS_CONTAINER || pBagProto->SubClass != ITEM_SUBCLASS_CONTAINER) &&
+                    if (pBagProto &&
+                        (pBagProto->Class != ITEM_CLASS_CONTAINER || pBagProto->SubClass != ITEM_SUBCLASS_CONTAINER) &&
                         ItemCanGoIntoBag(pProto, pBagProto))
                     {
                         for (uint32 j = 0; j < bag->GetBagSize(); j++)
@@ -1764,7 +1797,8 @@ InventoryResult Player::CanStoreItems(Item** pItems, int count) const
                 pBagProto = bag->GetTemplate();
 
                 // special bag already checked
-                if (pBagProto && (pBagProto->Class != ITEM_CLASS_CONTAINER || pBagProto->SubClass != ITEM_SUBCLASS_CONTAINER))
+                if (pBagProto &&
+                    (pBagProto->Class != ITEM_CLASS_CONTAINER || pBagProto->SubClass != ITEM_SUBCLASS_CONTAINER))
                     continue;
 
                 for (uint32 j = 0; j < bag->GetBagSize(); j++)
@@ -1807,7 +1841,11 @@ InventoryResult Player::CanEquipItem(uint8 slot, uint16& dest, Item* pItem, bool
     dest = 0;
     if (pItem)
     {
-        LOG_DEBUG("entities.player.items", "STORAGE: CanEquipItem slot = {}, item = {}, count = {}", slot, pItem->GetEntry(), pItem->GetCount());
+        LOG_DEBUG("entities.player.items",
+            "STORAGE: CanEquipItem slot = {}, item = {}, count = {}",
+            slot,
+            pItem->GetEntry(),
+            pItem->GetCount());
         ItemTemplate const* pProto = pItem->GetTemplate();
         if (pProto)
         {
@@ -1847,14 +1885,18 @@ InventoryResult Player::CanEquipItem(uint8 slot, uint16& dest, Item* pItem, bool
                             return EQUIP_ERR_NOT_DURING_ARENA_MATCH;
                 }
 
-                if (IsInCombat() && (pProto->Class == ITEM_CLASS_WEAPON || pProto->InventoryType == INVTYPE_RELIC) && m_weaponChangeTimer != 0)
-                    return EQUIP_ERR_CANT_DO_RIGHT_NOW;         // maybe exist better err
+                if (IsInCombat() && (pProto->Class == ITEM_CLASS_WEAPON || pProto->InventoryType == INVTYPE_RELIC) &&
+                    m_weaponChangeTimer != 0)
+                    return EQUIP_ERR_CANT_DO_RIGHT_NOW; // maybe exist better err
 
                 if (IsNonMeleeSpellCast(false))
                     return EQUIP_ERR_CANT_DO_RIGHT_NOW;
             }
 
-            ScalingStatDistributionEntry const* ssd = pProto->ScalingStatDistribution ? sScalingStatDistributionStore.LookupEntry(pProto->ScalingStatDistribution) : 0;
+            ScalingStatDistributionEntry const* ssd =
+                pProto->ScalingStatDistribution
+                    ? sScalingStatDistributionStore.LookupEntry(pProto->ScalingStatDistribution)
+                    : 0;
             // check allowed level (extend range to upper values if MaxLevel more or equal max player level, this let GM set high level with 1...max range items)
             if (ssd && ssd->MaxLevel < DEFAULT_MAX_LEVEL && ssd->MaxLevel < GetLevel())
                 return EQUIP_ERR_ITEM_CANT_BE_EQUIPPED;
@@ -1916,8 +1958,8 @@ InventoryResult Player::CanEquipItem(uint8 slot, uint16& dest, Item* pItem, bool
                             if (ItemTemplate const* pBagProto = pBag->GetTemplate())
                                 if (pBagProto->Class == pProto->Class && (!swap || pBag->GetSlot() != eslot))
                                     return (pBagProto->SubClass == ITEM_SUBCLASS_AMMO_POUCH)
-                                           ? EQUIP_ERR_CAN_EQUIP_ONLY1_AMMOPOUCH
-                                           : EQUIP_ERR_CAN_EQUIP_ONLY1_QUIVER;
+                                               ? EQUIP_ERR_CAN_EQUIP_ONLY1_AMMOPOUCH
+                                               : EQUIP_ERR_CAN_EQUIP_ONLY1_QUIVER;
 
             uint32 type = pProto->InventoryType;
 
@@ -1925,7 +1967,8 @@ InventoryResult Player::CanEquipItem(uint8 slot, uint16& dest, Item* pItem, bool
             {
                 // Do not allow polearm to be equipped in the offhand (rare case for the only 1h polearm 41750)
                 // xinef: same for fishing poles
-                if (type == INVTYPE_WEAPON && (pProto->SubClass == ITEM_SUBCLASS_WEAPON_POLEARM || pProto->SubClass == ITEM_SUBCLASS_WEAPON_FISHING_POLE))
+                if (type == INVTYPE_WEAPON && (pProto->SubClass == ITEM_SUBCLASS_WEAPON_POLEARM ||
+                                                  pProto->SubClass == ITEM_SUBCLASS_WEAPON_FISHING_POLE))
                     return EQUIP_ERR_ITEM_DOESNT_GO_TO_SLOT;
 
                 else if (type == INVTYPE_WEAPON || type == INVTYPE_WEAPONOFFHAND)
@@ -1962,14 +2005,17 @@ InventoryResult Player::CanEquipItem(uint8 slot, uint16& dest, Item* pItem, bool
                 else if (eslot != EQUIPMENT_SLOT_MAINHAND)
                     return EQUIP_ERR_ITEM_CANT_BE_EQUIPPED;
 
-                if (!CanTitanGrip() || (pProto->SubClass == ITEM_SUBCLASS_WEAPON_POLEARM || pProto->SubClass == ITEM_SUBCLASS_WEAPON_STAFF || pProto->SubClass == ITEM_SUBCLASS_WEAPON_FISHING_POLE))
+                if (!CanTitanGrip() || (pProto->SubClass == ITEM_SUBCLASS_WEAPON_POLEARM ||
+                                           pProto->SubClass == ITEM_SUBCLASS_WEAPON_STAFF ||
+                                           pProto->SubClass == ITEM_SUBCLASS_WEAPON_FISHING_POLE))
                 {
                     // offhand item must can be stored in inventory for offhand item and it also must be unequipped
                     Item* offItem = GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND);
                     ItemPosCountVec off_dest;
                     if (offItem && (!not_loading ||
-                                    CanUnequipItem(uint16(INVENTORY_SLOT_BAG_0) << 8 | EQUIPMENT_SLOT_OFFHAND, false) != EQUIP_ERR_OK ||
-                                    CanStoreItem(NULL_BAG, NULL_SLOT, off_dest, offItem, false) != EQUIP_ERR_OK))
+                                       CanUnequipItem(uint16(INVENTORY_SLOT_BAG_0) << 8 | EQUIPMENT_SLOT_OFFHAND,
+                                           false) != EQUIP_ERR_OK ||
+                                       CanStoreItem(NULL_BAG, NULL_SLOT, off_dest, offItem, false) != EQUIP_ERR_OK))
                         return swap ? EQUIP_ERR_ITEMS_CANT_BE_SWAPPED : EQUIP_ERR_INVENTORY_FULL;
                 }
             }
@@ -1996,7 +2042,11 @@ InventoryResult Player::CanUnequipItem(uint16 pos, bool swap) const
     if (!pItem)
         return EQUIP_ERR_OK;
 
-    LOG_DEBUG("entities.player.items", "STORAGE: CanUnequipItem slot = {}, item = {}, count = {}", pos, pItem->GetEntry(), pItem->GetCount());
+    LOG_DEBUG("entities.player.items",
+        "STORAGE: CanUnequipItem slot = {}, item = {}, count = {}",
+        pos,
+        pItem->GetEntry(),
+        pItem->GetCount());
 
     ItemTemplate const* pProto = pItem->GetTemplate();
     if (!pProto)
@@ -2029,14 +2079,20 @@ InventoryResult Player::CanUnequipItem(uint16 pos, bool swap) const
     return EQUIP_ERR_OK;
 }
 
-InventoryResult Player::CanBankItem(uint8 bag, uint8 slot, ItemPosCountVec& dest, Item* pItem, bool swap, bool not_loading) const
+InventoryResult Player::CanBankItem(
+    uint8 bag, uint8 slot, ItemPosCountVec& dest, Item* pItem, bool swap, bool not_loading) const
 {
     if (!pItem)
         return swap ? EQUIP_ERR_ITEMS_CANT_BE_SWAPPED : EQUIP_ERR_ITEM_NOT_FOUND;
 
     uint32 count = pItem->GetCount();
 
-    LOG_DEBUG("entities.player.items", "STORAGE: CanBankItem bag = {}, slot = {}, item = {}, count = {}", bag, slot, pItem->GetEntry(), pItem->GetCount());
+    LOG_DEBUG("entities.player.items",
+        "STORAGE: CanBankItem bag = {}, slot = {}, item = {}, count = {}",
+        bag,
+        slot,
+        pItem->GetEntry(),
+        pItem->GetCount());
     ItemTemplate const* pProto = pItem->GetTemplate();
     if (!pProto)
         return swap ? EQUIP_ERR_ITEMS_CANT_BE_SWAPPED : EQUIP_ERR_ITEM_NOT_FOUND;
@@ -2052,8 +2108,12 @@ InventoryResult Player::CanBankItem(uint8 bag, uint8 slot, ItemPosCountVec& dest
     uint8 pItemslot = pItem->GetSlot();
     if (pItemslot >= CURRENCYTOKEN_SLOT_START && pItemslot < CURRENCYTOKEN_SLOT_END)
     {
-        LOG_ERROR("entities.player", "Possible hacking attempt: Player {} [{}] tried to move token [{}, entry: {}] out of the currency bag!",
-                  GetName(), GetGUID().ToString(), pItem->GetGUID().ToString(), pProto->ItemId);
+        LOG_ERROR("entities.player",
+            "Possible hacking attempt: Player {} [{}] tried to move token [{}, entry: {}] out of the currency bag!",
+            GetName(),
+            GetGUID().ToString(),
+            pItem->GetGUID().ToString(),
+            pProto->ItemId);
         return EQUIP_ERR_ITEMS_CANT_BE_SWAPPED;
     }
 
@@ -2099,7 +2159,8 @@ InventoryResult Player::CanBankItem(uint8 bag, uint8 slot, ItemPosCountVec& dest
         {
             if (bag == INVENTORY_SLOT_BAG_0)
             {
-                res = CanStoreItem_InInventorySlots(BANK_SLOT_ITEM_START, BANK_SLOT_ITEM_END, dest, pProto, count, true, pItem, bag, slot);
+                res = CanStoreItem_InInventorySlots(
+                    BANK_SLOT_ITEM_START, BANK_SLOT_ITEM_END, dest, pProto, count, true, pItem, bag, slot);
                 if (res != EQUIP_ERR_OK)
                     return res;
 
@@ -2123,7 +2184,8 @@ InventoryResult Player::CanBankItem(uint8 bag, uint8 slot, ItemPosCountVec& dest
         // search free slot in bag
         if (bag == INVENTORY_SLOT_BAG_0)
         {
-            res = CanStoreItem_InInventorySlots(BANK_SLOT_ITEM_START, BANK_SLOT_ITEM_END, dest, pProto, count, false, pItem, bag, slot);
+            res = CanStoreItem_InInventorySlots(
+                BANK_SLOT_ITEM_START, BANK_SLOT_ITEM_END, dest, pProto, count, false, pItem, bag, slot);
             if (res != EQUIP_ERR_OK)
                 return res;
 
@@ -2150,7 +2212,8 @@ InventoryResult Player::CanBankItem(uint8 bag, uint8 slot, ItemPosCountVec& dest
     if (pProto->Stackable != 1)
     {
         // in slots
-        res = CanStoreItem_InInventorySlots(BANK_SLOT_ITEM_START, BANK_SLOT_ITEM_END, dest, pProto, count, true, pItem, bag, slot);
+        res = CanStoreItem_InInventorySlots(
+            BANK_SLOT_ITEM_START, BANK_SLOT_ITEM_END, dest, pProto, count, true, pItem, bag, slot);
         if (res != EQUIP_ERR_OK)
             return res;
 
@@ -2197,7 +2260,8 @@ InventoryResult Player::CanBankItem(uint8 bag, uint8 slot, ItemPosCountVec& dest
     }
 
     // search free space
-    res = CanStoreItem_InInventorySlots(BANK_SLOT_ITEM_START, BANK_SLOT_ITEM_END, dest, pProto, count, false, pItem, bag, slot);
+    res = CanStoreItem_InInventorySlots(
+        BANK_SLOT_ITEM_START, BANK_SLOT_ITEM_END, dest, pProto, count, false, pItem, bag, slot);
     if (res != EQUIP_ERR_OK)
         return res;
 
@@ -2243,18 +2307,21 @@ InventoryResult Player::CanUseItem(Item* pItem, bool not_loading) const
                 bool allowEquip = false;
                 uint32 itemSkill = pItem->GetSkill();
                 // Armor that is binded to account can "morph" from plate to mail, etc. if skill is not learned yet.
-                if (pProto->Quality == ITEM_QUALITY_HEIRLOOM && pProto->Class == ITEM_CLASS_ARMOR && !HasSkill(itemSkill))
+                if (pProto->Quality == ITEM_QUALITY_HEIRLOOM && pProto->Class == ITEM_CLASS_ARMOR &&
+                    !HasSkill(itemSkill))
                 {
                     /// @todo: when you right-click already equipped item it throws EQUIP_ERR_NO_REQUIRED_PROFICIENCY.
 
                     // In fact it's a visual bug, everything works properly... I need sniffs of operations with
                     // binded to account items from off server.
 
-                    if (IsClass(CLASS_PALADIN, CLASS_CONTEXT_EQUIP_ARMOR_CLASS) || IsClass(CLASS_WARRIOR, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
+                    if (IsClass(CLASS_PALADIN, CLASS_CONTEXT_EQUIP_ARMOR_CLASS) ||
+                        IsClass(CLASS_WARRIOR, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
                     {
                         allowEquip = (itemSkill == SKILL_PLATE_MAIL);
                     }
-                    else if (IsClass(CLASS_HUNTER, CLASS_CONTEXT_EQUIP_ARMOR_CLASS) || IsClass(CLASS_SHAMAN, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
+                    else if (IsClass(CLASS_HUNTER, CLASS_CONTEXT_EQUIP_ARMOR_CLASS) ||
+                             IsClass(CLASS_SHAMAN, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
                     {
                         allowEquip = (itemSkill == SKILL_MAIL);
                     }
@@ -2263,7 +2330,8 @@ InventoryResult Player::CanUseItem(Item* pItem, bool not_loading) const
                     return EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
             }
 
-            if (pProto->RequiredReputationFaction && uint32(GetReputationRank(pProto->RequiredReputationFaction)) < pProto->RequiredReputationRank)
+            if (pProto->RequiredReputationFaction &&
+                uint32(GetReputationRank(pProto->RequiredReputationFaction)) < pProto->RequiredReputationRank)
                 return EQUIP_ERR_CANT_EQUIP_REPUTATION;
 
             return EQUIP_ERR_OK;
@@ -2277,59 +2345,39 @@ InventoryResult Player::CanUseItem(ItemTemplate const* proto) const
     // Used by group, function NeedBeforeGreed, to know if a prototype can be used by a player
 
     if (!proto)
-    {
         return EQUIP_ERR_ITEM_NOT_FOUND;
-    }
 
     if (proto->HasFlag2(ITEM_FLAG2_FACTION_HORDE) && GetTeamId(true) != TEAM_HORDE)
-    {
         return EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
-    }
 
     if (proto->HasFlag2(ITEM_FLAG2_FACTION_ALLIANCE) && GetTeamId(true) != TEAM_ALLIANCE)
-    {
         return EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
-    }
 
     if ((proto->AllowableClass & getClassMask()) == 0 || (proto->AllowableRace & getRaceMask()) == 0)
-    {
         return EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
-    }
 
     if (proto->RequiredSkill != 0)
     {
         if (GetSkillValue(proto->RequiredSkill) == 0)
-        {
             return EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
-        }
         else if (GetSkillValue(proto->RequiredSkill) < proto->RequiredSkillRank)
-        {
             return EQUIP_ERR_CANT_EQUIP_SKILL;
-        }
     }
 
     if (proto->RequiredSpell != 0 && !HasSpell(proto->RequiredSpell))
-    {
         return EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
-    }
 
     if (GetLevel() < proto->RequiredLevel)
-    {
         return EQUIP_ERR_CANT_EQUIP_LEVEL_I;
-    }
 
     // If World Event is not active, prevent using event dependant items
     if (proto->HolidayId && !IsHolidayActive((HolidayIds)proto->HolidayId))
-    {
         return EQUIP_ERR_CANT_DO_RIGHT_NOW;
-    }
 
     InventoryResult result = EQUIP_ERR_OK;
 
     if (!sScriptMgr->CanUseItem(const_cast<Player*>(this), proto, result))
-    {
         return result;
-    }
 
     return EQUIP_ERR_OK;
 }
@@ -2337,7 +2385,7 @@ InventoryResult Player::CanUseItem(ItemTemplate const* proto) const
 InventoryResult Player::CanRollForItemInLFG(ItemTemplate const* proto, WorldObject const* lootedObject) const
 {
     if (!GetGroup() || !GetGroup()->isLFGGroup(true))
-        return EQUIP_ERR_OK;    // not in LFG group
+        return EQUIP_ERR_OK; // not in LFG group
 
     // check if looted object is inside the lfg dungeon
     Map const* map = lootedObject->GetMap();
@@ -2348,14 +2396,27 @@ InventoryResult Player::CanRollForItemInLFG(ItemTemplate const* proto, WorldObje
         return EQUIP_ERR_ITEM_NOT_FOUND;
     // Used by group, function NeedBeforeGreed, to know if a prototype can be used by a player
 
-    const static uint32 item_weapon_skills[MAX_ITEM_SUBCLASS_WEAPON] =
-    {
-        SKILL_AXES,     SKILL_2H_AXES,  SKILL_BOWS,          SKILL_GUNS,        SKILL_MACES,
-        SKILL_2H_MACES, SKILL_POLEARMS, SKILL_SWORDS,        SKILL_2H_SWORDS,   0,
-        SKILL_STAVES,   0,              0,                   SKILL_FIST_WEAPONS,0,
-        SKILL_DAGGERS,  SKILL_THROWN,   SKILL_ASSASSINATION, SKILL_CROSSBOWS,   SKILL_WANDS,
-        SKILL_FISHING
-    }; //Copy from function Item::GetSkill()
+    static uint32 const item_weapon_skills[MAX_ITEM_SUBCLASS_WEAPON] = {SKILL_AXES,
+        SKILL_2H_AXES,
+        SKILL_BOWS,
+        SKILL_GUNS,
+        SKILL_MACES,
+        SKILL_2H_MACES,
+        SKILL_POLEARMS,
+        SKILL_SWORDS,
+        SKILL_2H_SWORDS,
+        0,
+        SKILL_STAVES,
+        0,
+        0,
+        SKILL_FIST_WEAPONS,
+        0,
+        SKILL_DAGGERS,
+        SKILL_THROWN,
+        SKILL_ASSASSINATION,
+        SKILL_CROSSBOWS,
+        SKILL_WANDS,
+        SKILL_FISHING}; //Copy from function Item::GetSkill()
 
     if ((proto->AllowableClass & getClassMask()) == 0 || (proto->AllowableRace & getRaceMask()) == 0)
         return EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
@@ -2377,56 +2438,47 @@ InventoryResult Player::CanRollForItemInLFG(ItemTemplate const* proto, WorldObje
     if (proto->Class == ITEM_CLASS_ARMOR)
     {
         // Check for shields
-        if (proto->SubClass == ITEM_SUBCLASS_ARMOR_SHIELD && !(
-            IsClass(CLASS_PALADIN, CLASS_CONTEXT_EQUIP_SHIELDS)
-            || IsClass(CLASS_WARRIOR, CLASS_CONTEXT_EQUIP_SHIELDS)
-            || IsClass(CLASS_SHAMAN, CLASS_CONTEXT_EQUIP_SHIELDS)))
+        if (proto->SubClass == ITEM_SUBCLASS_ARMOR_SHIELD && !(IsClass(CLASS_PALADIN, CLASS_CONTEXT_EQUIP_SHIELDS) ||
+                                                                 IsClass(CLASS_WARRIOR, CLASS_CONTEXT_EQUIP_SHIELDS) ||
+                                                                 IsClass(CLASS_SHAMAN, CLASS_CONTEXT_EQUIP_SHIELDS)))
         {
             return EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
         }
 
         // Check for librams.
         if (proto->SubClass == ITEM_SUBCLASS_ARMOR_LIBRAM && !IsClass(CLASS_PALADIN, CLASS_CONTEXT_EQUIP_RELIC))
-        {
             return EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
-        }
 
         // CHeck for idols.
         if (proto->SubClass == ITEM_SUBCLASS_ARMOR_IDOL && !IsClass(CLASS_DRUID, CLASS_CONTEXT_EQUIP_RELIC))
-        {
             return EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
-        }
 
         // Check for totems.
         if (proto->SubClass == ITEM_SUBCLASS_ARMOR_TOTEM && !IsClass(CLASS_SHAMAN, CLASS_CONTEXT_EQUIP_RELIC))
-        {
             return EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
-        }
 
         // Check for sigils.
         if (proto->SubClass == ITEM_SUBCLASS_ARMOR_SIGIL && !IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_EQUIP_RELIC))
-        {
             return EQUIP_ERR_YOU_CAN_NEVER_USE_THAT_ITEM;
-        }
     }
 
-    if (proto->Class == ITEM_CLASS_ARMOR && proto->SubClass > ITEM_SUBCLASS_ARMOR_MISC && proto->SubClass < ITEM_SUBCLASS_ARMOR_BUCKLER &&
-        proto->InventoryType != INVTYPE_CLOAK)
+    if (proto->Class == ITEM_CLASS_ARMOR && proto->SubClass > ITEM_SUBCLASS_ARMOR_MISC &&
+        proto->SubClass < ITEM_SUBCLASS_ARMOR_BUCKLER && proto->InventoryType != INVTYPE_CLOAK)
     {
         uint32 subclassToCompare = ITEM_SUBCLASS_ARMOR_CLOTH;
-        if (IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_EQUIP_ARMOR_CLASS) || IsClass(CLASS_PALADIN, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
+        if (IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_EQUIP_ARMOR_CLASS) ||
+            IsClass(CLASS_PALADIN, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
         {
             subclassToCompare = ITEM_SUBCLASS_ARMOR_PLATE;
         }
         else if (IsClass(CLASS_WARRIOR, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
         {
             if ((proto->HasStat(ITEM_MOD_SPELL_POWER) || proto->HasSpellPowerStat()))
-            {
                 return EQUIP_ERR_CANT_DO_RIGHT_NOW;
-            }
             subclassToCompare = ITEM_SUBCLASS_ARMOR_PLATE;
         }
-        else if (IsClass(CLASS_HUNTER, CLASS_CONTEXT_EQUIP_ARMOR_CLASS) || IsClass(CLASS_SHAMAN, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
+        else if (IsClass(CLASS_HUNTER, CLASS_CONTEXT_EQUIP_ARMOR_CLASS) ||
+                 IsClass(CLASS_SHAMAN, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
         {
             subclassToCompare = ITEM_SUBCLASS_ARMOR_MAIL;
         }
@@ -2437,9 +2489,7 @@ InventoryResult Player::CanRollForItemInLFG(ItemTemplate const* proto, WorldObje
         else if (IsClass(CLASS_ROGUE, CLASS_CONTEXT_EQUIP_ARMOR_CLASS))
         {
             if (proto->HasStat(ITEM_MOD_SPELL_POWER) || proto->HasSpellPowerStat())
-            {
                 return EQUIP_ERR_CANT_DO_RIGHT_NOW;
-            }
             subclassToCompare = ITEM_SUBCLASS_ARMOR_LEATHER;
         }
 
@@ -2447,12 +2497,11 @@ InventoryResult Player::CanRollForItemInLFG(ItemTemplate const* proto, WorldObje
         {
             return EQUIP_ERR_CANT_DO_RIGHT_NOW;
         }
-        else if (sWorld->getIntConfig(CONFIG_LOOT_NEED_BEFORE_GREED_ILVL_RESTRICTION) && proto->ItemLevel > sWorld->getIntConfig(CONFIG_LOOT_NEED_BEFORE_GREED_ILVL_RESTRICTION))
+        else if (sWorld->getIntConfig(CONFIG_LOOT_NEED_BEFORE_GREED_ILVL_RESTRICTION) &&
+                 proto->ItemLevel > sWorld->getIntConfig(CONFIG_LOOT_NEED_BEFORE_GREED_ILVL_RESTRICTION))
         {
             if (proto->SubClass < subclassToCompare)
-            {
                 return EQUIP_ERR_CANT_DO_RIGHT_NOW;
-            }
         }
     }
 
@@ -2528,7 +2577,8 @@ Item* Player::StoreNewItem(ItemPosCountVec const& dest, uint32 item, bool update
 }
 
 // Return stored item (if stored to stack, it can diff. from pItem). And pItem ca be deleted in this case.
-Item* Player::StoreNewItem(ItemPosCountVec const& dest, uint32 item, bool update, int32 randomPropertyId, AllowedLooterSet& allowedLooters)
+Item* Player::StoreNewItem(
+    ItemPosCountVec const& dest, uint32 item, bool update, int32 randomPropertyId, AllowedLooterSet& allowedLooters)
 {
     uint32 count = 0;
     for (ItemPosCountVec::const_iterator itr = dest.begin(); itr != dest.end(); ++itr)
@@ -2547,7 +2597,8 @@ Item* Player::StoreNewItem(ItemPosCountVec const& dest, uint32 item, bool update
         UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_OWN_ITEM, item, count);
         pItem = StoreItem(dest, pItem, update);
 
-        if (allowedLooters.size() > 1 && pItem->GetTemplate()->GetMaxStackSize() == 1 && pItem->IsSoulBound() && sWorld->getBoolConfig(CONFIG_SET_BOP_ITEM_TRADEABLE))
+        if (allowedLooters.size() > 1 && pItem->GetTemplate()->GetMaxStackSize() == 1 && pItem->IsSoulBound() &&
+            sWorld->getBoolConfig(CONFIG_SET_BOP_ITEM_TRADEABLE))
         {
             pItem->SetSoulboundTradeable(allowedLooters);
             pItem->SetUInt32Value(ITEM_FIELD_CREATE_PLAYED_TIME, GetTotalPlayedTime());
@@ -2598,7 +2649,8 @@ Item* Player::StoreItem(ItemPosCountVec const& dest, Item* pItem, bool update)
     // cast after item storing - some checks in checkcast requires item to be present!!
     if (lastItem)
         for (uint8 i = 0; i < MAX_ITEM_PROTO_SPELLS; ++i)
-            if (proto->Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_ON_NO_DELAY_USE && proto->Spells[i].SpellId > 0) // On obtain trigger
+            if (proto->Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_ON_NO_DELAY_USE &&
+                proto->Spells[i].SpellId > 0) // On obtain trigger
                 if (!HasAura(proto->Spells[i].SpellId))
                     CastSpell(this, proto->Spells[i].SpellId, true, lastItem);
 
@@ -2614,7 +2666,13 @@ Item* Player::_StoreItem(uint16 pos, Item* pItem, uint32 count, bool clone, bool
     uint8 bag = pos >> 8;
     uint8 slot = pos & 255;
 
-    LOG_DEBUG("entities.player.items", "STORAGE: StoreItem bag = {}, slot = {}, item = {}, count = {}, {}", bag, slot, pItem->GetEntry(), count, pItem->GetGUID().ToString());
+    LOG_DEBUG("entities.player.items",
+        "STORAGE: StoreItem bag = {}, slot = {}, item = {}, count = {}, {}",
+        bag,
+        slot,
+        pItem->GetEntry(),
+        count,
+        pItem->GetGUID().ToString());
 
     Item* pItem2 = GetItemByPos(bag, slot);
 
@@ -2628,8 +2686,7 @@ Item* Player::_StoreItem(uint16 pos, Item* pItem, uint32 count, bool clone, bool
         if (!pItem)
             return nullptr;
 
-        if (pItem->GetTemplate()->Bonding == BIND_WHEN_PICKED_UP ||
-            pItem->GetTemplate()->Bonding == BIND_QUEST_ITEM ||
+        if (pItem->GetTemplate()->Bonding == BIND_WHEN_PICKED_UP || pItem->GetTemplate()->Bonding == BIND_QUEST_ITEM ||
             (pItem->GetTemplate()->Bonding == BIND_WHEN_EQUIPPED && IsBagPos(pos)))
             pItem->SetBinding(true);
 
@@ -2689,7 +2746,7 @@ Item* Player::_StoreItem(uint16 pos, Item* pItem, uint32 count, bool clone, bool
             RemoveEnchantmentDurations(pItem);
             RemoveItemDurations(pItem);
 
-            pItem->SetOwnerGUID(GetGUID());                 // prevent error at next SetState in case trade/mail/buy from vendor
+            pItem->SetOwnerGUID(GetGUID()); // prevent error at next SetState in case trade/mail/buy from vendor
             pItem->SetNotRefundable(this);
             pItem->ClearSoulboundTradeable(this);
             RemoveTradeableItem(pItem);
@@ -2748,13 +2805,17 @@ Item* Player::EquipItem(uint16 pos, Item* pItem, bool update)
 
             _ApplyItemMods(pItem, slot, true);
 
-            if (pProto && IsInCombat() && (pProto->Class == ITEM_CLASS_WEAPON || pProto->InventoryType == INVTYPE_RELIC) && m_weaponChangeTimer == 0)
+            if (pProto && IsInCombat() &&
+                (pProto->Class == ITEM_CLASS_WEAPON || pProto->InventoryType == INVTYPE_RELIC) &&
+                m_weaponChangeTimer == 0)
             {
                 uint32 cooldownSpell = IsClass(CLASS_ROGUE, CLASS_CONTEXT_WEAPON_SWAP) ? 6123 : 6119;
                 SpellInfo const* spellProto = sSpellMgr->GetSpellInfo(cooldownSpell);
 
                 if (!spellProto)
-                    LOG_ERROR("entities.player", "Weapon switch cooldown spell {} couldn't be found in Spell.dbc", cooldownSpell);
+                    LOG_ERROR("entities.player",
+                        "Weapon switch cooldown spell {} couldn't be found in Spell.dbc",
+                        cooldownSpell);
                 else
                 {
                     m_weaponChangeTimer = spellProto->StartRecoveryTime;
@@ -2811,7 +2872,7 @@ Item* Player::EquipItem(uint16 pos, Item* pItem, bool update)
         RemoveEnchantmentDurations(pItem);
         RemoveItemDurations(pItem);
 
-        pItem->SetOwnerGUID(GetGUID());                     // prevent error at next SetState in case trade/mail/buy from vendor
+        pItem->SetOwnerGUID(GetGUID()); // prevent error at next SetState in case trade/mail/buy from vendor
         pItem->SetNotRefundable(this);
         pItem->ClearSoulboundTradeable(this);
         RemoveTradeableItem(pItem);
@@ -2860,8 +2921,10 @@ void Player::SetVisibleItemSlot(uint8 slot, Item* pItem)
     if (pItem)
     {
         SetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + (slot * 2), pItem->GetEntry());
-        SetUInt16Value(PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (slot * 2), 0, pItem->GetEnchantmentId(PERM_ENCHANTMENT_SLOT));
-        SetUInt16Value(PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (slot * 2), 1, pItem->GetEnchantmentId(TEMP_ENCHANTMENT_SLOT));
+        SetUInt16Value(
+            PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (slot * 2), 0, pItem->GetEnchantmentId(PERM_ENCHANTMENT_SLOT));
+        SetUInt16Value(
+            PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (slot * 2), 1, pItem->GetEnchantmentId(TEMP_ENCHANTMENT_SLOT));
     }
     else
     {
@@ -2878,7 +2941,8 @@ void Player::VisualizeItem(uint8 slot, Item* pItem)
         return;
 
     // check also  BIND_WHEN_PICKED_UP and BIND_QUEST_ITEM for .additem or .additemset case by GM (not binded at adding to inventory)
-    if (pItem->GetTemplate()->Bonding == BIND_WHEN_EQUIPPED || pItem->GetTemplate()->Bonding == BIND_WHEN_PICKED_UP || pItem->GetTemplate()->Bonding == BIND_QUEST_ITEM)
+    if (pItem->GetTemplate()->Bonding == BIND_WHEN_EQUIPPED || pItem->GetTemplate()->Bonding == BIND_WHEN_PICKED_UP ||
+        pItem->GetTemplate()->Bonding == BIND_QUEST_ITEM)
         pItem->SetBinding(true);
 
     LOG_DEBUG("entities.player.items", "STORAGE: EquipItem slot = {}, item = {}", slot, pItem->GetEntry());
@@ -2906,7 +2970,11 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update, bool swap)
     Item* pItem = GetItemByPos(bag, slot);
     if (pItem)
     {
-        LOG_DEBUG("entities.player.items", "STORAGE: RemoveItem bag = {}, slot = {}, item = {}", bag, slot, pItem->GetEntry());
+        LOG_DEBUG("entities.player.items",
+            "STORAGE: RemoveItem bag = {}, slot = {}, item = {}",
+            bag,
+            slot,
+            pItem->GetEntry());
 
         RemoveEnchantmentDurations(pItem);
         RemoveItemDurations(pItem);
@@ -2932,19 +3000,13 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update, bool swap)
             {
                 // Xinef: Ensure that this function is called for places with swap=true
                 if (!swap)
-                {
                     RemoveItemDependentAurasAndCasts(pItem);
-                }
 
                 // remove held enchantments, update expertise
                 if (slot == EQUIPMENT_SLOT_MAINHAND)
-                {
                     UpdateExpertise(BASE_ATTACK);
-                }
                 else if (slot == EQUIPMENT_SLOT_OFFHAND)
-                {
                     UpdateExpertise(OFF_ATTACK);
-                }
 
                 // update armor penetration - passive auras may need it
                 switch (slot)
@@ -3025,7 +3087,11 @@ void Player::DestroyItem(uint8 bag, uint8 slot, bool update)
     Item* pItem = GetItemByPos(bag, slot);
     if (pItem)
     {
-        LOG_DEBUG("entities.player.items", "STORAGE: DestroyItem bag = {}, slot = {}, item = {}", bag, slot, pItem->GetEntry());
+        LOG_DEBUG("entities.player.items",
+            "STORAGE: DestroyItem bag = {}, slot = {}, item = {}",
+            bag,
+            slot,
+            pItem->GetEntry());
         // Also remove all contained items if the item is a bag.
         // This if () prevents item saving crashes if the condition for a bag to be empty before being destroyed was bypassed somehow.
         if (pItem->IsNotEmptyBag())
@@ -3048,7 +3114,8 @@ void Player::DestroyItem(uint8 bag, uint8 slot, bool update)
 
         ItemTemplate const* proto = pItem->GetTemplate();
         for (uint8 i = 0; i < MAX_ITEM_PROTO_SPELLS; ++i)
-            if (proto->Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_ON_NO_DELAY_USE && proto->Spells[i].SpellId > 0) // On obtain trigger
+            if (proto->Spells[i].SpellTrigger == ITEM_SPELLTRIGGER_ON_NO_DELAY_USE &&
+                proto->Spells[i].SpellId > 0) // On obtain trigger
                 RemoveAurasDueToSpell(proto->Spells[i].SpellId);
 
         ItemRemovedQuestCheck(pItem->GetEntry(), pItem->GetCount());
@@ -3399,7 +3466,11 @@ void Player::DestroyItemCount(Item* pItem, uint32& count, bool update)
     if (!pItem)
         return;
 
-    LOG_DEBUG("entities.player.items", "STORAGE: DestroyItemCount item ({}, Entry: {}) count = {}", pItem->GetGUID().ToString(), pItem->GetEntry(), count);
+    LOG_DEBUG("entities.player.items",
+        "STORAGE: DestroyItemCount item ({}, Entry: {}) count = {}",
+        pItem->GetGUID().ToString(),
+        pItem->GetEntry(),
+        count);
 
     if (pItem->GetCount() <= count)
     {
@@ -3433,7 +3504,7 @@ void Player::SplitItem(uint16 src, uint16 dst, uint32 count)
         return;
     }
 
-    if (pSrcItem->m_lootGenerated)                           // prevent split looting item (item
+    if (pSrcItem->m_lootGenerated) // prevent split looting item (item
     {
         //best error message found for attempting to split while looting
         SendEquipError(EQUIP_ERR_COULDNT_SPLIT_ITEMS, pSrcItem, nullptr);
@@ -3462,7 +3533,12 @@ void Player::SplitItem(uint16 src, uint16 dst, uint32 count)
             return;
     }
 
-    LOG_DEBUG("entities.player.items", "STORAGE: SplitItem bag = {}, slot = {}, item = {}, count = {}", dstbag, dstslot, pSrcItem->GetEntry(), count);
+    LOG_DEBUG("entities.player.items",
+        "STORAGE: SplitItem bag = {}, slot = {}, item = {}, count = {}",
+        dstbag,
+        dstslot,
+        pSrcItem->GetEntry(),
+        count);
     Item* pNewItem = pSrcItem->CloneItem(count, this);
     if (!pNewItem)
     {
@@ -3547,7 +3623,11 @@ void Player::SwapItem(uint16 src, uint16 dst)
     if (!pSrcItem)
         return;
 
-    LOG_DEBUG("entities.player.items", "STORAGE: SwapItem bag = {}, slot = {}, item = {}", dstbag, dstslot, pSrcItem->GetEntry());
+    LOG_DEBUG("entities.player.items",
+        "STORAGE: SwapItem bag = {}, slot = {}, item = {}",
+        dstbag,
+        dstslot,
+        pSrcItem->GetEntry());
 
     if (!IsAlive())
     {
@@ -3557,7 +3637,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
 
     // SRC checks
 
-    if (GetLootGUID() == pSrcItem->GetGUID())                           // prevent swap looting item
+    if (GetLootGUID() == pSrcItem->GetGUID()) // prevent swap looting item
     {
         //best error message found for attempting to swap while looting
         SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pSrcItem, nullptr);
@@ -3568,7 +3648,8 @@ void Player::SwapItem(uint16 src, uint16 dst)
     if (IsEquipmentPos(src) || IsBagPos(src))
     {
         // bags can be swapped with empty bag slots, or with empty bag (items move possibility checked later)
-        InventoryResult msg = CanUnequipItem(src, !IsBagPos(src) || IsBagPos(dst) || (pDstItem && pDstItem->ToBag() && pDstItem->ToBag()->IsEmpty()));
+        InventoryResult msg = CanUnequipItem(
+            src, !IsBagPos(src) || IsBagPos(dst) || (pDstItem && pDstItem->ToBag() && pDstItem->ToBag()->IsEmpty()));
         if (msg != EQUIP_ERR_OK)
         {
             SendEquipError(msg, pSrcItem, pDstItem);
@@ -3602,7 +3683,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
     if (pDstItem)
     {
         // Xinef: Removed next loot generated check
-        if (pDstItem->GetGUID() == GetLootGUID())                       // prevent swap looting item
+        if (pDstItem->GetGUID() == GetLootGUID()) // prevent swap looting item
         {
             //best error message found for attempting to swap while looting
             SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, pDstItem, nullptr);
@@ -3613,7 +3694,8 @@ void Player::SwapItem(uint16 src, uint16 dst)
         if (IsEquipmentPos(dst) || IsBagPos(dst))
         {
             // bags can be swapped with empty bag slots, or with empty bag (items move possibility checked later)
-            InventoryResult msg = CanUnequipItem(dst, !IsBagPos(dst) || IsBagPos(src) || (pSrcItem->ToBag() && pSrcItem->ToBag()->IsEmpty()));
+            InventoryResult msg = CanUnequipItem(
+                dst, !IsBagPos(dst) || IsBagPos(src) || (pSrcItem->ToBag() && pSrcItem->ToBag()->IsEmpty()));
             if (msg != EQUIP_ERR_OK)
             {
                 SendEquipError(msg, pSrcItem, pDstItem);
@@ -3711,7 +3793,8 @@ void Player::SwapItem(uint16 src, uint16 dst)
             }
             else
             {
-                pSrcItem->SetCount(pSrcItem->GetCount() + pDstItem->GetCount() - pSrcItem->GetTemplate()->GetMaxStackSize());
+                pSrcItem->SetCount(
+                    pSrcItem->GetCount() + pDstItem->GetCount() - pSrcItem->GetTemplate()->GetMaxStackSize());
                 pDstItem->SetCount(pSrcItem->GetTemplate()->GetMaxStackSize());
                 pSrcItem->SetState(ITEM_CHANGED, this);
                 pDstItem->SetState(ITEM_CHANGED, this);
@@ -3730,9 +3813,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
     // Needed for swap sanity checks
     ApplyEnchantment(pSrcItem, false);
     if (pDstItem)
-    {
         ApplyEnchantment(pDstItem, false);
-    }
 
     // impossible merge/fill, do real swap
     InventoryResult msg = EQUIP_ERR_OK;
@@ -3756,9 +3837,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
         // Restore enchantments
         ApplyEnchantment(pSrcItem, true);
         if (pDstItem)
-        {
             ApplyEnchantment(pDstItem, true);
-        }
 
         SendEquipError(msg, pSrcItem, pDstItem);
         return;
@@ -3783,9 +3862,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
         // Restore enchantments
         ApplyEnchantment(pSrcItem, true);
         if (pDstItem)
-        {
             ApplyEnchantment(pDstItem, true);
-        }
 
         SendEquipError(msg, pDstItem, pSrcItem);
         return;
@@ -3794,9 +3871,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
     // Restore enchantments
     ApplyEnchantment(pSrcItem, true);
     if (pDstItem)
-    {
         ApplyEnchantment(pDstItem, true);
-    }
 
     // Check bag swap with item exchange (one from empty in not bag possition (equipped (not possible in fact) or store)
     if (Bag* srcBag = pSrcItem->ToBag())
@@ -3808,12 +3883,12 @@ void Player::SwapItem(uint16 src, uint16 dst)
             if (srcBag->IsEmpty() && !IsBagPos(src))
             {
                 emptyBag = srcBag;
-                fullBag  = dstBag;
+                fullBag = dstBag;
             }
             else if (dstBag->IsEmpty() && !IsBagPos(dst))
             {
                 emptyBag = dstBag;
-                fullBag  = srcBag;
+                fullBag = srcBag;
             }
 
             // bag swap (with items exchange) case
@@ -3848,7 +3923,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
                 }
 
                 // Items swap
-                count = 0;                                      // will pos in new bag
+                count = 0; // will pos in new bag
                 for (uint32 i = 0; i < fullBag->GetBagSize(); ++i)
                 {
                     Item* bagItem = fullBag->GetItemByPos(i);
@@ -3904,7 +3979,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
                     if (bagItem->GetGUID() == GetLootGUID())
                     {
                         m_session->DoLootRelease(GetLootGUID());
-                        released = true;                    // so we don't need to look at dstBag
+                        released = true; // so we don't need to look at dstBag
                         break;
                     }
                 }
@@ -3922,7 +3997,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
                     if (bagItem->GetGUID() == GetLootGUID())
                     {
                         m_session->DoLootRelease(GetLootGUID());
-                        released = true;                    // not realy needed here
+                        released = true; // not realy needed here
                         break;
                     }
                 }
@@ -3967,7 +4042,8 @@ void Player::AddItemToBuyBackSlot(Item* pItem, uint32 money)
         }
 
         RemoveItemFromBuyBackSlot(slot, true);
-        LOG_DEBUG("entities.player.items", "STORAGE: AddItemToBuyBackSlot item = {}, slot = {}", pItem->GetEntry(), slot);
+        LOG_DEBUG(
+            "entities.player.items", "STORAGE: AddItemToBuyBackSlot item = {}, slot = {}", pItem->GetEntry(), slot);
 
         m_items[slot] = pItem;
         time_t base = GameTime::GetGameTime().count();
@@ -4028,7 +4104,8 @@ void Player::SendEquipError(InventoryResult msg, Item* pItem, Item* pItem2, uint
     {
         data << (pItem ? pItem->GetGUID() : ObjectGuid::Empty);
         data << (pItem2 ? pItem2->GetGUID() : ObjectGuid::Empty);
-        data << uint8(0);                                   // bag type subclass, used with EQUIP_ERR_EVENT_AUTOEQUIP_BIND_CONFIRM and EQUIP_ERR_ITEM_DOESNT_GO_INTO_BAG2
+        data << uint8(
+            0); // bag type subclass, used with EQUIP_ERR_EVENT_AUTOEQUIP_BIND_CONFIRM and EQUIP_ERR_ITEM_DOESNT_GO_INTO_BAG2
 
         switch (msg)
         {
@@ -4039,11 +4116,11 @@ void Player::SendEquipError(InventoryResult msg, Item* pItem, Item* pItem2, uint
                 data << uint32(proto ? proto->RequiredLevel : 0);
                 break;
             }
-            case EQUIP_ERR_EVENT_AUTOEQUIP_BIND_CONFIRM:    // no idea about this one...
+            case EQUIP_ERR_EVENT_AUTOEQUIP_BIND_CONFIRM: // no idea about this one...
             {
-                data << ObjectGuid::Empty;  // item guid
-                data << uint32(0);          // slot
-                data << ObjectGuid::Empty;  // container
+                data << ObjectGuid::Empty; // item guid
+                data << uint32(0);         // slot
+                data << ObjectGuid::Empty; // container
                 break;
             }
             case EQUIP_ERR_ITEM_MAX_LIMIT_CATEGORY_COUNT_EXCEEDED:
@@ -4152,7 +4229,7 @@ void Player::UpdateItemDuration(uint32 time, bool realtimeonly)
     for (ItemDurationList::const_iterator itr = m_itemDuration.begin(); itr != m_itemDuration.end();)
     {
         Item* item = *itr;
-        ++itr;                                              // current element can be erased in UpdateDuration
+        ++itr; // current element can be erased in UpdateDuration
 
         if (!realtimeonly || item->GetTemplate()->HasFlagCu(ITEM_FLAGS_CU_DURATION_REAL_TIME))
             item->UpdateDuration(this, time);
@@ -4161,7 +4238,8 @@ void Player::UpdateItemDuration(uint32 time, bool realtimeonly)
 
 void Player::UpdateEnchantTime(uint32 time)
 {
-    for (EnchantDurationList::iterator itr = m_enchantDuration.begin(), next; itr != m_enchantDuration.end(); itr = next)
+    for (EnchantDurationList::iterator itr = m_enchantDuration.begin(), next; itr != m_enchantDuration.end();
+         itr = next)
     {
         ASSERT(itr->item);
         next = itr;
@@ -4199,7 +4277,6 @@ void Player::AddEnchantmentDurations(Item* item)
 void Player::RemoveEnchantmentDurations(Item* item)
 {
     for (EnchantDurationList::iterator itr = m_enchantDuration.begin(); itr != m_enchantDuration.end();)
-    {
         if (itr->item == item)
         {
             // save duration in item
@@ -4208,24 +4285,22 @@ void Player::RemoveEnchantmentDurations(Item* item)
         }
         else
             ++itr;
-    }
 }
 
 void Player::RemoveEnchantmentDurationsReferences(Item* item)
 {
     for (EnchantDurationList::iterator itr = m_enchantDuration.begin(); itr != m_enchantDuration.end();)
-    {
         if (itr->item == item)
             itr = m_enchantDuration.erase(itr);
         else
             ++itr;
-    }
 }
 
 void Player::RemoveArenaEnchantments(EnchantmentSlot slot)
 {
     // remove enchantments from equipped items first to clean up the m_enchantDuration list
-    for (EnchantDurationList::iterator itr = m_enchantDuration.begin(), next; itr != m_enchantDuration.end(); itr = next)
+    for (EnchantDurationList::iterator itr = m_enchantDuration.begin(), next; itr != m_enchantDuration.end();
+         itr = next)
     {
         next = itr;
         if (itr->slot == slot)
@@ -4317,7 +4392,8 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
     if (!pEnchant)
         return;
 
-    if (!ignore_condition && pEnchant->EnchantmentCondition && !EnchantmentFitsRequirements(pEnchant->EnchantmentCondition, -1))
+    if (!ignore_condition && pEnchant->EnchantmentCondition &&
+        !EnchantmentFitsRequirements(pEnchant->EnchantmentCondition, -1))
         return;
 
     if (pEnchant->requiredLevel > GetLevel())
@@ -4331,12 +4407,15 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
 
     // If we're dealing with a gem inside a prismatic socket we need to check the prismatic socket requirements
     // rather than the gem requirements itself. If the socket has no color it is a prismatic socket.
-    if ((slot == SOCK_ENCHANTMENT_SLOT || slot == SOCK_ENCHANTMENT_SLOT_2 || slot == SOCK_ENCHANTMENT_SLOT_3)
-        && !item->GetTemplate()->Socket[slot - SOCK_ENCHANTMENT_SLOT].Color)
+    if ((slot == SOCK_ENCHANTMENT_SLOT || slot == SOCK_ENCHANTMENT_SLOT_2 || slot == SOCK_ENCHANTMENT_SLOT_3) &&
+        !item->GetTemplate()->Socket[slot - SOCK_ENCHANTMENT_SLOT].Color)
     {
         // Check if the requirements for the prismatic socket are met before applying the gem stats
-        SpellItemEnchantmentEntry const* pPrismaticEnchant = sSpellItemEnchantmentStore.LookupEntry(item->GetEnchantmentId(PRISMATIC_ENCHANTMENT_SLOT));
-        if (!pPrismaticEnchant || (pPrismaticEnchant->requiredSkill > 0 && pPrismaticEnchant->requiredSkillValue > GetSkillValue(pPrismaticEnchant->requiredSkill)))
+        SpellItemEnchantmentEntry const* pPrismaticEnchant =
+            sSpellItemEnchantmentStore.LookupEntry(item->GetEnchantmentId(PRISMATIC_ENCHANTMENT_SLOT));
+        if (!pPrismaticEnchant ||
+            (pPrismaticEnchant->requiredSkill > 0 &&
+                pPrismaticEnchant->requiredSkillValue > GetSkillValue(pPrismaticEnchant->requiredSkill)))
             return;
     }
 
@@ -4372,7 +4451,8 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
                             // Random Property Exist - try found basepoints for spell (basepoints depends from item suffix factor)
                             if (item->GetItemRandomPropertyId())
                             {
-                                ItemRandomSuffixEntry const* item_rand = sItemRandomSuffixStore.LookupEntry(std::abs(item->GetItemRandomPropertyId()));
+                                ItemRandomSuffixEntry const* item_rand =
+                                    sItemRandomSuffixStore.LookupEntry(std::abs(item->GetItemRandomPropertyId()));
                                 if (item_rand)
                                 {
                                     // Search enchant_amount
@@ -4380,7 +4460,8 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
                                     {
                                         if (item_rand->Enchantment[k] == enchant_id)
                                         {
-                                            basepoints = int32((item_rand->AllocationPct[k] * item->GetItemSuffixFactor()) / 10000);
+                                            basepoints = int32(
+                                                (item_rand->AllocationPct[k] * item->GetItemSuffixFactor()) / 10000);
                                             break;
                                         }
                                     }
@@ -4388,7 +4469,8 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
                             }
                             // Cast custom spell vs all equal basepoints got from enchant_amount
                             if (basepoints)
-                                CastCustomSpell(this, enchant_spell_id, &basepoints, &basepoints, &basepoints, true, item);
+                                CastCustomSpell(
+                                    this, enchant_spell_id, &basepoints, &basepoints, &basepoints, true, item);
                             else
                                 CastSpell(this, enchant_spell_id, true, item);
                         }
@@ -4399,41 +4481,49 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
                 case ITEM_ENCHANTMENT_TYPE_RESISTANCE:
                     if (!enchant_amount)
                     {
-                        ItemRandomSuffixEntry const* item_rand = sItemRandomSuffixStore.LookupEntry(std::abs(item->GetItemRandomPropertyId()));
+                        ItemRandomSuffixEntry const* item_rand =
+                            sItemRandomSuffixStore.LookupEntry(std::abs(item->GetItemRandomPropertyId()));
                         if (item_rand)
                         {
                             for (int k = 0; k < MAX_ITEM_ENCHANTMENT_EFFECTS; ++k)
                             {
                                 if (item_rand->Enchantment[k] == enchant_id)
                                 {
-                                    enchant_amount = uint32((item_rand->AllocationPct[k] * item->GetItemSuffixFactor()) / 10000);
+                                    enchant_amount =
+                                        uint32((item_rand->AllocationPct[k] * item->GetItemSuffixFactor()) / 10000);
                                     break;
                                 }
                             }
                         }
                     }
 
-                    HandleStatModifier(UnitMods(UNIT_MOD_RESISTANCE_START + enchant_spell_id), TOTAL_VALUE, float(enchant_amount), apply);
+                    HandleStatModifier(UnitMods(UNIT_MOD_RESISTANCE_START + enchant_spell_id),
+                        TOTAL_VALUE,
+                        float(enchant_amount),
+                        apply);
                     break;
                 case ITEM_ENCHANTMENT_TYPE_STAT:
                 {
                     if (!enchant_amount)
                     {
-                        ItemRandomSuffixEntry const* item_rand_suffix = sItemRandomSuffixStore.LookupEntry(std::abs(item->GetItemRandomPropertyId()));
+                        ItemRandomSuffixEntry const* item_rand_suffix =
+                            sItemRandomSuffixStore.LookupEntry(std::abs(item->GetItemRandomPropertyId()));
                         if (item_rand_suffix)
                         {
                             for (int k = 0; k < MAX_ITEM_ENCHANTMENT_EFFECTS; ++k)
                             {
                                 if (item_rand_suffix->Enchantment[k] == enchant_id)
                                 {
-                                    enchant_amount = uint32((item_rand_suffix->AllocationPct[k] * item->GetItemSuffixFactor()) / 10000);
+                                    enchant_amount = uint32(
+                                        (item_rand_suffix->AllocationPct[k] * item->GetItemSuffixFactor()) / 10000);
                                     break;
                                 }
                             }
                         }
                     }
 
-                    sScriptMgr->OnApplyEnchantmentItemModsBefore(this, item, slot, apply, enchant_spell_id, enchant_amount);
+                    sScriptMgr->OnApplyEnchantmentItemModsBefore(
+                        this, item, slot, apply, enchant_spell_id, enchant_amount);
 
                     LOG_DEBUG("entities.player.items", "Adding {} to stat nb {}", enchant_amount, enchant_spell_id);
                     switch (enchant_spell_id)
@@ -4475,7 +4565,7 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
                             ApplyRatingMod(CR_DEFENSE_SKILL, enchant_amount, apply);
                             LOG_DEBUG("entities.player.items", "+ {} DEFENCE", enchant_amount);
                             break;
-                        case  ITEM_MOD_DODGE_RATING:
+                        case ITEM_MOD_DODGE_RATING:
                             ApplyRatingMod(CR_DODGE, enchant_amount, apply);
                             LOG_DEBUG("entities.player.items", "+ {} DODGE", enchant_amount);
                             break;
@@ -4616,14 +4706,14 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
                             HandleBaseModValue(SHIELD_BLOCK_VALUE, FLAT_MOD, float(enchant_amount), apply);
                             LOG_DEBUG("entities.player.items", "+ {} BLOCK_VALUE", enchant_amount);
                             break;
-                        case ITEM_MOD_SPELL_HEALING_DONE:   // deprecated
-                        case ITEM_MOD_SPELL_DAMAGE_DONE:    // deprecated
+                        case ITEM_MOD_SPELL_HEALING_DONE: // deprecated
+                        case ITEM_MOD_SPELL_DAMAGE_DONE:  // deprecated
                         default:
                             break;
                     }
                     break;
                 }
-                case ITEM_ENCHANTMENT_TYPE_TOTEM:           // Shaman Rockbiter Weapon
+                case ITEM_ENCHANTMENT_TYPE_TOTEM: // Shaman Rockbiter Weapon
                 {
                     if (IsClass(CLASS_SHAMAN, CLASS_CONTEXT_ABILITY))
                     {
@@ -4648,18 +4738,23 @@ void Player::ApplyEnchantment(Item* item, EnchantmentSlot slot, bool apply, bool
                     // nothing do..
                     break;
                 default:
-                    LOG_ERROR("entities.player", "Unknown item enchantment (id = {}) display type: {}", enchant_id, enchant_display_type);
+                    LOG_ERROR("entities.player",
+                        "Unknown item enchantment (id = {}) display type: {}",
+                        enchant_id,
+                        enchant_display_type);
                     break;
-            }                                               /*switch (enchant_display_type)*/
-        }                                                   /*for*/
+            } /*switch (enchant_display_type)*/
+        } /*for*/
     }
 
     // visualize enchantment at player and equipped items
     if (slot == PERM_ENCHANTMENT_SLOT)
-        SetUInt16Value(PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (item->GetSlot() * 2), 0, apply ? item->GetEnchantmentId(slot) : 0);
+        SetUInt16Value(
+            PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (item->GetSlot() * 2), 0, apply ? item->GetEnchantmentId(slot) : 0);
 
     if (slot == TEMP_ENCHANTMENT_SLOT)
-        SetUInt16Value(PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (item->GetSlot() * 2), 1, apply ? item->GetEnchantmentId(slot) : 0);
+        SetUInt16Value(
+            PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (item->GetSlot() * 2), 1, apply ? item->GetEnchantmentId(slot) : 0);
 
     if (apply_dur)
     {
@@ -4705,16 +4800,20 @@ void Player::UpdateSkillEnchantments(uint16 skill_id, uint16 curr_value, uint16 
 
                 // If we're dealing with a gem inside a prismatic socket we need to check the prismatic socket requirements
                 // rather than the gem requirements itself. If the socket has no color it is a prismatic socket.
-                if ((slot == SOCK_ENCHANTMENT_SLOT || slot == SOCK_ENCHANTMENT_SLOT_2 || slot == SOCK_ENCHANTMENT_SLOT_3)
-                    && !m_items[i]->GetTemplate()->Socket[slot - SOCK_ENCHANTMENT_SLOT].Color)
+                if ((slot == SOCK_ENCHANTMENT_SLOT || slot == SOCK_ENCHANTMENT_SLOT_2 ||
+                        slot == SOCK_ENCHANTMENT_SLOT_3) &&
+                    !m_items[i]->GetTemplate()->Socket[slot - SOCK_ENCHANTMENT_SLOT].Color)
                 {
-                    SpellItemEnchantmentEntry const* pPrismaticEnchant = sSpellItemEnchantmentStore.LookupEntry(m_items[i]->GetEnchantmentId(PRISMATIC_ENCHANTMENT_SLOT));
+                    SpellItemEnchantmentEntry const* pPrismaticEnchant = sSpellItemEnchantmentStore.LookupEntry(
+                        m_items[i]->GetEnchantmentId(PRISMATIC_ENCHANTMENT_SLOT));
 
                     if (pPrismaticEnchant && pPrismaticEnchant->requiredSkill == skill_id)
                     {
-                        if (curr_value < pPrismaticEnchant->requiredSkillValue && new_value >= pPrismaticEnchant->requiredSkillValue)
+                        if (curr_value < pPrismaticEnchant->requiredSkillValue &&
+                            new_value >= pPrismaticEnchant->requiredSkillValue)
                             ApplyEnchantment(m_items[i], EnchantmentSlot(slot), true);
-                        else if (new_value < pPrismaticEnchant->requiredSkillValue && curr_value >= pPrismaticEnchant->requiredSkillValue)
+                        else if (new_value < pPrismaticEnchant->requiredSkillValue &&
+                                 curr_value >= pPrismaticEnchant->requiredSkillValue)
                             ApplyEnchantment(m_items[i], EnchantmentSlot(slot), false);
                     }
                 }
@@ -4727,45 +4826,42 @@ void Player::SendEnchantmentDurations()
 {
     for (EnchantDurationList::const_iterator itr = m_enchantDuration.begin(); itr != m_enchantDuration.end(); ++itr)
     {
-        GetSession()->SendItemEnchantTimeUpdate(GetGUID(), itr->item->GetGUID(), itr->slot, uint32(itr->leftduration) / 1000);
+        GetSession()->SendItemEnchantTimeUpdate(
+            GetGUID(), itr->item->GetGUID(), itr->slot, uint32(itr->leftduration) / 1000);
     }
 }
 
 void Player::UpdateEnchantmentDurations()
 {
     for (EnchantDurationList::iterator itr = m_enchantDuration.begin(); itr != m_enchantDuration.end(); ++itr)
-    {
         itr->item->SetEnchantmentDuration(itr->slot, itr->leftduration, this);
-    }
 }
 
 void Player::SendItemDurations()
 {
     for (ItemDurationList::const_iterator itr = m_itemDuration.begin(); itr != m_itemDuration.end(); ++itr)
-    {
         (*itr)->SendTimeUpdate(this);
-    }
 }
 
 void Player::SendNewItem(Item* item, uint32 count, bool received, bool created, bool broadcast, bool sendChatMessage)
 {
-    if (!item)                                               // prevent crash
+    if (!item) // prevent crash
         return;
 
     // last check 2.0.10
     WorldPacket data(SMSG_ITEM_PUSH_RESULT, (8 + 4 + 4 + 4 + 1 + 4 + 4 + 4 + 4 + 4));
-    data << GetGUID();                                      // player GUID
-    data << uint32(received);                               // 0=looted, 1=from npc
-    data << uint32(created);                                // 0=received, 1=created
-    data << uint32(sendChatMessage);                        // bool print message to chat
-    data << uint8(item->GetBagSlot());                      // bagslot
+    data << GetGUID();                 // player GUID
+    data << uint32(received);          // 0=looted, 1=from npc
+    data << uint32(created);           // 0=received, 1=created
+    data << uint32(sendChatMessage);   // bool print message to chat
+    data << uint8(item->GetBagSlot()); // bagslot
     // item slot, but when added to stack: 0xFFFFFFFF
     data << uint32((item->GetCount() == count) ? item->GetSlot() : -1);
-    data << uint32(item->GetEntry());                       // item id
-    data << uint32(item->GetItemSuffixFactor());            // SuffixFactor
-    data << int32(item->GetItemRandomPropertyId());         // random item property id
-    data << uint32(count);                                  // count of items
-    data << uint32(GetItemCount(item->GetEntry()));         // count of items in inventory
+    data << uint32(item->GetEntry());               // item id
+    data << uint32(item->GetItemSuffixFactor());    // SuffixFactor
+    data << int32(item->GetItemRandomPropertyId()); // random item property id
+    data << uint32(count);                          // count of items
+    data << uint32(GetItemCount(item->GetEntry())); // count of items in inventory
 
     if (broadcast && GetGroup())
         GetGroup()->BroadcastPacket(&data, true);
@@ -4795,7 +4891,8 @@ void Player::_LoadDeclinedNames(PreparedQueryResult result)
 
 void Player::_LoadArenaTeamInfo()
 {
-    memset((void*)&m_uint32Values[PLAYER_FIELD_ARENA_TEAM_INFO_1_1], 0, sizeof(uint32) * MAX_ARENA_SLOT * ARENA_TEAM_END);
+    memset(
+        (void*)&m_uint32Values[PLAYER_FIELD_ARENA_TEAM_INFO_1_1], 0, sizeof(uint32) * MAX_ARENA_SLOT * ARENA_TEAM_END);
 
     for (auto const& itr : ArenaTeam::ArenaSlotByType)
         if (uint32 arenaTeamId = sCharacterCache->GetCharacterArenaTeamIdByGuid(GetGUID(), itr.second))
@@ -4809,7 +4906,9 @@ void Player::_LoadArenaTeamInfo()
             ArenaTeamMember const* member = arenaTeam->GetMember(GetGUID());
             if (!member)
             {
-                LOG_ERROR("bg.arena", "Player::_LoadArenaTeamInfo: No members in the arena team ({}) was found.", arenaTeamId);
+                LOG_ERROR("bg.arena",
+                    "Player::_LoadArenaTeamInfo: No members in the arena team ({}) was found.",
+                    arenaTeamId);
                 continue;
             }
             uint8 slot = itr.second;
@@ -4836,12 +4935,12 @@ void Player::_LoadEquipmentSets(PreparedQueryResult result)
         Field* fields = result->Fetch();
         EquipmentSet eqSet;
 
-        eqSet.Guid      = fields[0].Get<uint64>();
-        uint8 index    = fields[1].Get<uint8>();
-        eqSet.Name      = fields[2].Get<std::string>();
-        eqSet.IconName  = fields[3].Get<std::string>();
+        eqSet.Guid = fields[0].Get<uint64>();
+        uint8 index = fields[1].Get<uint8>();
+        eqSet.Name = fields[2].Get<std::string>();
+        eqSet.IconName = fields[3].Get<std::string>();
         eqSet.IgnoreMask = fields[4].Get<uint32>();
-        eqSet.state     = EQUIPMENT_SET_UNCHANGED;
+        eqSet.state = EQUIPMENT_SET_UNCHANGED;
 
         for (uint32 i = 0; i < EQUIPMENT_SLOT_END; ++i)
             eqSet.Items[i] = ObjectGuid::Create<HighGuid::Item>(fields[5 + i].Get<uint32>());
@@ -4850,7 +4949,7 @@ void Player::_LoadEquipmentSets(PreparedQueryResult result)
 
         ++count;
 
-        if (count >= MAX_EQUIPMENT_SET_INDEX)                // client limit
+        if (count >= MAX_EQUIPMENT_SET_INDEX) // client limit
             break;
     } while (result->NextRow());
 }
@@ -4861,18 +4960,19 @@ void Player::_LoadEntryPointData(PreparedQueryResult result)
         return;
 
     Field* fields = result->Fetch();
-    m_entryPointData.joinPos = WorldLocation(fields[4].Get<uint32>(),  // Map
-                                             fields[0].Get<float>(),   // X
-                                             fields[1].Get<float>(),   // Y
-                                             fields[2].Get<float>(),   // Z
-                                             fields[3].Get<float>());  // Orientation
+    m_entryPointData.joinPos = WorldLocation(fields[4].Get<uint32>(), // Map
+        fields[0].Get<float>(),                                       // X
+        fields[1].Get<float>(),                                       // Y
+        fields[2].Get<float>(),                                       // Z
+        fields[3].Get<float>());                                      // Orientation
 
     m_entryPointData.taxiPath[0] = fields[5].Get<uint32>();
     m_entryPointData.taxiPath[1] = fields[6].Get<uint32>();
     m_entryPointData.mountSpell = fields[7].Get<uint32>();
 }
 
-bool Player::LoadPositionFromDB(uint32& mapid, float& x, float& y, float& z, float& o, bool& in_flight, ObjectGuid::LowType guid)
+bool Player::LoadPositionFromDB(
+    uint32& mapid, float& x, float& y, float& z, float& o, bool& in_flight, ObjectGuid::LowType guid)
 {
     CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_POSITION);
     stmt->SetData(0, guid);
@@ -4903,9 +5003,9 @@ void Player::SetHomebind(WorldLocation const& loc, uint32 areaId)
     CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_PLAYER_HOMEBIND);
     stmt->SetData(0, m_homebindMapId);
     stmt->SetData(1, m_homebindAreaId);
-    stmt->SetData (2, m_homebindX);
-    stmt->SetData (3, m_homebindY);
-    stmt->SetData (4, m_homebindZ);
+    stmt->SetData(2, m_homebindX);
+    stmt->SetData(3, m_homebindY);
+    stmt->SetData(4, m_homebindZ);
     stmt->SetData(5, GetGUID().GetCounter());
     CharacterDatabase.Execute(stmt);
 }
@@ -4933,7 +5033,8 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
 
     if (!result)
     {
-        LOG_ERROR("entities.player", "Player ({}) not found in table `characters`, can't load. ", playerGuid.ToString());
+        LOG_ERROR(
+            "entities.player", "Player ({}) not found in table `characters`, can't load. ", playerGuid.ToString());
         return false;
     }
 
@@ -4945,7 +5046,11 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     // player should be able to load/delete character only with correct account!
     if (dbAccountId != GetSession()->GetAccountId())
     {
-        LOG_ERROR("entities.player", "Player ({}) loading from wrong account (is: {}, should be: {})", playerGuid.ToString(), GetSession()->GetAccountId(), dbAccountId);
+        LOG_ERROR("entities.player",
+            "Player ({}) loading from wrong account (is: {}, should be: {})",
+            playerGuid.ToString(),
+            GetSession()->GetAccountId(),
+            dbAccountId);
         return false;
     }
 
@@ -4980,25 +5085,31 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
 
     // overwrite some data fields
     uint32 bytes0 = 0;
-    bytes0 |= fields[3].Get<uint8>();                         // race
-    bytes0 |= fields[4].Get<uint8>() << 8;                    // class
-    bytes0 |= Gender << 16;                                 // gender
+    bytes0 |= fields[3].Get<uint8>();      // race
+    bytes0 |= fields[4].Get<uint8>() << 8; // class
+    bytes0 |= Gender << 16;                // gender
     SetUInt32Value(UNIT_FIELD_BYTES_0, bytes0);
 
     m_realRace = fields[3].Get<uint8>(); // set real race
-    m_race = fields[3].Get<uint8>(); // set real race
+    m_race = fields[3].Get<uint8>();     // set real race
 
     SetUInt32Value(UNIT_FIELD_LEVEL, fields[6].Get<uint8>());
     SetUInt32Value(PLAYER_XP, fields[7].Get<uint32>());
 
     if (!_LoadIntoDataField(fields[66].Get<std::string>(), PLAYER_EXPLORED_ZONES_1, PLAYER_EXPLORED_ZONES_SIZE))
     {
-        LOG_WARN("entities.player.loading", "Player::LoadFromDB: Player ({}) has invalid exploredzones data ({}). Forcing partial load.", guid, fields[66].Get<std::string_view>());
+        LOG_WARN("entities.player.loading",
+            "Player::LoadFromDB: Player ({}) has invalid exploredzones data ({}). Forcing partial load.",
+            guid,
+            fields[66].Get<std::string_view>());
     }
 
     if (!_LoadIntoDataField(fields[69].Get<std::string>(), PLAYER__FIELD_KNOWN_TITLES, KNOWN_TITLES_SIZE * 2))
     {
-        LOG_WARN("entities.player.loading", "Player::LoadFromDB: Player ({}) has invalid knowntitles mask ({}). Forcing partial load.", guid, fields[69].Get<std::string_view>());
+        LOG_WARN("entities.player.loading",
+            "Player::LoadFromDB: Player ({}) has invalid knowntitles mask ({}). Forcing partial load.",
+            guid,
+            fields[69].Get<std::string_view>());
     }
 
     SetObjectScale(1.0f);
@@ -5008,7 +5119,9 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     SetCreationTime(fields[74].Get<Seconds>());
 
     // load achievements before anything else to prevent multiple gains for the same achievement/criteria on every loading (as loading does call UpdateAchievementCriteria)
-    m_achievementMgr->LoadFromDB(holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_ACHIEVEMENTS), holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_CRITERIA_PROGRESS), holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_OFFLINE_ACHIEVEMENTS_UPDATES));
+    m_achievementMgr->LoadFromDB(holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_ACHIEVEMENTS),
+        holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_CRITERIA_PROGRESS),
+        holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_OFFLINE_ACHIEVEMENTS_UPDATES));
 
     uint32 money = fields[8].Get<uint32>();
     if (money > MAX_MONEY_AMOUNT)
@@ -5060,7 +5173,7 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     if (!_LoadHomeBind(holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_HOME_BIND)))
         return false;
 
-    InitPrimaryProfessions();                               // to max set before any spell loaded
+    InitPrimaryProfessions(); // to max set before any spell loaded
 
     // init saved position, and fix it later if problematic
     int32 transLowGUID = fields[35].Get<int32>();
@@ -5074,12 +5187,17 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     uint32 raidDiff = (fields[43].Get<uint8>() >> 4) & 0x0F;
     if (raidDiff >= MAX_RAID_DIFFICULTY)
         raidDiff = RAID_DIFFICULTY_10MAN_NORMAL;
-    SetDungeonDifficulty(Difficulty(dungeonDiff));          // may be changed in _LoadGroup
-    SetRaidDifficulty(Difficulty(raidDiff));                // may be changed in _LoadGroup
+    SetDungeonDifficulty(Difficulty(dungeonDiff)); // may be changed in _LoadGroup
+    SetRaidDifficulty(Difficulty(raidDiff));       // may be changed in _LoadGroup
 
     std::string taxi_nodes = fields[42].Get<std::string>();
 
-    auto RelocateToHomebind = [this, &mapId, &instanceId]() { mapId = m_homebindMapId; instanceId = 0; Relocate(m_homebindX, m_homebindY, m_homebindZ); };
+    auto RelocateToHomebind = [this, &mapId, &instanceId]()
+    {
+        mapId = m_homebindMapId;
+        instanceId = 0;
+        Relocate(m_homebindX, m_homebindY, m_homebindZ);
+    };
 
     _LoadGroup();
 
@@ -5103,10 +5221,12 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     Map* map = nullptr;
 
     // pussywizard: group changed difficulty when player was offline, teleport to the enterance of new difficulty
-    if (mapEntry && ((mapEntry->IsNonRaidDungeon() && dungeonDiff != GetDungeonDifficulty()) || (mapEntry->IsRaid() && raidDiff != GetRaidDifficulty())))
+    if (mapEntry && ((mapEntry->IsNonRaidDungeon() && dungeonDiff != GetDungeonDifficulty()) ||
+                        (mapEntry->IsRaid() && raidDiff != GetRaidDifficulty())))
     {
         bool fixed = false;
-        if (uint32 destInstId = sInstanceSaveMgr->PlayerGetDestinationInstanceId(this, mapId, GetDifficulty(mapEntry->IsRaid())))
+        if (uint32 destInstId =
+                sInstanceSaveMgr->PlayerGetDestinationInstanceId(this, mapId, GetDifficulty(mapEntry->IsRaid())))
         {
             instanceId = destInstId;
             if (AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(mapId))
@@ -5124,10 +5244,17 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
 
     if (!mapEntry || !IsPositionValid())
     {
-        LOG_ERROR("entities.player", "Player (guidlow {}) have invalid coordinates (MapId: {} X: {} Y: {} Z: {} O: {}). Teleport to default race/class locations.", guid, mapId, GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation());
+        LOG_ERROR("entities.player",
+            "Player (guidlow {}) have invalid coordinates (MapId: {} X: {} Y: {} Z: {} O: {}). Teleport to default race/class locations.",
+            guid,
+            mapId,
+            GetPositionX(),
+            GetPositionY(),
+            GetPositionZ(),
+            GetOrientation());
         RelocateToHomebind();
     }
-        // Player was saved in Arena or Bg
+    // Player was saved in Arena or Bg
     else if (mapEntry->IsBattlegroundOrArena())
     {
         // xinef: resurrect player, cant log in dead without corpse
@@ -5138,7 +5265,7 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
                 ResurrectPlayer(1.0f);
         }
 
-        const WorldLocation& _loc = GetEntryPoint();
+        WorldLocation const& _loc = GetEntryPoint();
         mapId = _loc.GetMapId();
         instanceId = 0;
 
@@ -5159,7 +5286,7 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
             }
         }
     }
-        // currently we do not support transport in bg
+    // currently we do not support transport in bg
     else if (transLowGUID != 0)
     {
         // transLowGUID > 0 ---> motion transport guid
@@ -5187,12 +5314,15 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
 
         if (m_transport)
         {
-            float x = fields[31].Get<float>(), y = fields[32].Get<float>(), z = fields[33].Get<float>(), o = fields[34].Get<float>();
+            float x = fields[31].Get<float>(), y = fields[32].Get<float>(), z = fields[33].Get<float>(),
+                  o = fields[34].Get<float>();
             m_movementInfo.transport.guid = m_transport->GetGUID();
             m_movementInfo.transport.pos.Relocate(x, y, z, o);
             m_transport->CalculatePassengerPosition(x, y, z, &o);
 
-            if (!Acore::IsValidMapCoord(x, y, z, o) || std::fabs(m_movementInfo.transport.pos.GetPositionX()) > 75.0f || std::fabs(m_movementInfo.transport.pos.GetPositionY()) > 75.0f || std::fabs(m_movementInfo.transport.pos.GetPositionZ()) > 75.0f)
+            if (!Acore::IsValidMapCoord(x, y, z, o) || std::fabs(m_movementInfo.transport.pos.GetPositionX()) > 75.0f ||
+                std::fabs(m_movementInfo.transport.pos.GetPositionY()) > 75.0f ||
+                std::fabs(m_movementInfo.transport.pos.GetPositionZ()) > 75.0f)
             {
                 m_transport = nullptr;
                 m_movementInfo.transport.Reset();
@@ -5217,10 +5347,10 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
                     Relocate(at->target_X, at->target_Y, at->target_Z, at->target_Orientation);
                 }
             if (!fixed)
-            RelocateToHomebind();
+                RelocateToHomebind();
         }
     }
-        // currently we do not support taxi in instance
+    // currently we do not support taxi in instance
     else if (!taxi_nodes.empty())
     {
         instanceId = 0;
@@ -5239,21 +5369,26 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     {
         if (GetSession()->Expansion() < mapEntry->Expansion())
         {
-            LOG_DEBUG("entities.player.loading", "Player {} using client without required expansion tried login at non accessible map {}", GetName(), mapId);
+            LOG_DEBUG("entities.player.loading",
+                "Player {} using client without required expansion tried login at non accessible map {}",
+                GetName(),
+                mapId);
             RelocateToHomebind();
         }
 
         // check whether player was unbound or is bound to another instance
         if (instanceId)
         {
-            InstanceSave* save = sInstanceSaveMgr->PlayerGetInstanceSave(GetGUID(), mapId, GetDifficulty(mapEntry->IsRaid()));
+            InstanceSave* save =
+                sInstanceSaveMgr->PlayerGetInstanceSave(GetGUID(), mapId, GetDifficulty(mapEntry->IsRaid()));
             if (!save || save->GetInstanceId() != instanceId)
                 instanceId = 0;
         }
     }
 
     // if the player is in an instance and it has been reset in the meantime teleport him to the entrance
-    if ((instanceId && !sInstanceSaveMgr->GetInstanceSave(instanceId) && !mapEntry->IsBattlegroundOrArena()) || (!instanceId && mapEntry->IsDungeon()))
+    if ((instanceId && !sInstanceSaveMgr->GetInstanceSave(instanceId) && !mapEntry->IsBattlegroundOrArena()) ||
+        (!instanceId && mapEntry->IsDungeon()))
     {
         AreaTriggerTeleport const* at = sObjectMgr->GetMapEntranceTrigger(mapId);
         if (at)
@@ -5273,13 +5408,27 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
         AreaTriggerTeleport const* at = sObjectMgr->GetGoBackTrigger(mapId);
         if (at)
         {
-            LOG_ERROR("entities.player", "Player (guidlow {}) is teleported to gobacktrigger (Map: {} X: {} Y: {} Z: {} O: {}).", guid, mapId, GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation());
+            LOG_ERROR("entities.player",
+                "Player (guidlow {}) is teleported to gobacktrigger (Map: {} X: {} Y: {} Z: {} O: {}).",
+                guid,
+                mapId,
+                GetPositionX(),
+                GetPositionY(),
+                GetPositionZ(),
+                GetOrientation());
             Relocate(at->target_X, at->target_Y, at->target_Z, GetOrientation());
             mapId = at->target_mapId;
         }
         else
         {
-            LOG_ERROR("entities.player", "Player (guidlow {}) is teleported to home (Map: {} X: {} Y: {} Z: {} O: {}).", guid, mapId, GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation());
+            LOG_ERROR("entities.player",
+                "Player (guidlow {}) is teleported to home (Map: {} X: {} Y: {} Z: {} O: {}).",
+                guid,
+                mapId,
+                GetPositionX(),
+                GetPositionY(),
+                GetPositionZ(),
+                GetOrientation());
             RelocateToHomebind();
         }
 
@@ -5289,11 +5438,23 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
             PlayerInfo const* info = sObjectMgr->GetPlayerInfo(getRace(true), getClass());
             mapId = info->mapId;
             Relocate(info->positionX, info->positionY, info->positionZ, 0.0f);
-            LOG_ERROR("entities.player", "Player (guidlow {}) have invalid coordinates (X: {} Y: {} Z: {} O: {}). Teleport to default race/class locations.", guid, GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation());
+            LOG_ERROR("entities.player",
+                "Player (guidlow {}) have invalid coordinates (X: {} Y: {} Z: {} O: {}). Teleport to default race/class locations.",
+                guid,
+                GetPositionX(),
+                GetPositionY(),
+                GetPositionZ(),
+                GetOrientation());
             map = sMapMgr->CreateMap(mapId, this);
             if (!map)
             {
-                LOG_ERROR("entities.player", "Player (guidlow {}) has invalid default map coordinates (X: {} Y: {} Z: {} O: {}). or instance couldn't be created", guid, GetPositionX(), GetPositionY(), GetPositionZ(), GetOrientation());
+                LOG_ERROR("entities.player",
+                    "Player (guidlow {}) has invalid default map coordinates (X: {} Y: {} Z: {} O: {}). or instance couldn't be created",
+                    guid,
+                    GetPositionX(),
+                    GetPositionY(),
+                    GetPositionZ(),
+                    GetOrientation());
                 return false;
             }
         }
@@ -5310,7 +5471,8 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     time_t logoutTime = time_t(fields[27].Get<uint32>());
 
     // since last logout (in seconds)
-    uint32 time_diff = uint32(now - logoutTime); //uint64 is excessive for a time_diff in seconds.. uint32 allows for 136~ year difference.
+    uint32 time_diff = uint32(
+        now - logoutTime); //uint64 is excessive for a time_diff in seconds.. uint32 allows for 136~ year difference.
 
     // randomize first save time in range [CONFIG_INTERVAL_SAVE] around [CONFIG_INTERVAL_SAVE]
     // this must help in case next save after mass player load after server startup
@@ -5331,7 +5493,7 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     m_resetTalentsCost = fields[29].Get<uint32>();
     m_resetTalentsTime = time_t(fields[30].Get<uint32>());
 
-    m_taxi.LoadTaxiMask(fields[22].Get<std::string_view>());            // must be before InitTaxiNodesForLevel
+    m_taxi.LoadTaxiMask(fields[22].Get<std::string_view>()); // must be before InitTaxiNodesForLevel
 
     uint32 extraflags = fields[36].Get<uint16>();
 
@@ -5341,7 +5503,8 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
 
     if (HasAtLoginFlag(AT_LOGIN_RENAME))
     {
-        LOG_ERROR("entities.player", "Player {} tried to login while forced to rename, can't load.'", GetGUID().ToString());
+        LOG_ERROR(
+            "entities.player", "Player {} tried to login while forced to rename, can't load.'", GetGUID().ToString());
         return false;
     }
 
@@ -5397,19 +5560,16 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
         float bubble0 = 0.031f;
         //speed collect rest bonus in offline, in logout, in tavern, city (section/in hour)
         float bubble1 = 0.125f;
-        float bubble  = fields[28].Get<uint8>() > 0
-                       ? bubble1 * sWorld->getRate(RATE_REST_OFFLINE_IN_TAVERN_OR_CITY)
-                       : bubble0 * sWorld->getRate(RATE_REST_OFFLINE_IN_WILDERNESS);
+        float bubble = fields[28].Get<uint8>() > 0 ? bubble1 * sWorld->getRate(RATE_REST_OFFLINE_IN_TAVERN_OR_CITY)
+                                                   : bubble0 * sWorld->getRate(RATE_REST_OFFLINE_IN_WILDERNESS);
 
         // Client automatically doubles the value sent so we have to divide it by 2
-        SetRestBonus(GetRestBonus() + time_diff * ((float)GetUInt32Value(PLAYER_NEXT_LEVEL_XP) / 144000)*bubble);
+        SetRestBonus(GetRestBonus() + time_diff * ((float)GetUInt32Value(PLAYER_NEXT_LEVEL_XP) / 144000) * bubble);
     }
 
     uint32 innTriggerId = fields[72].Get<uint32>();
     if (innTriggerId)
-    {
         SetRestFlag(REST_FLAG_IN_TAVERN, innTriggerId);
-    }
 
     // load skills after InitStatsForLevel because it triggering aura apply also
     _LoadSkills(holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_SKILLS));
@@ -5458,7 +5618,8 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
     m_reputationMgr->LoadFromDB(holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_REPUTATION));
 
     // xinef: load mails before inventory, so problematic items can be added to already loaded mails
-    _LoadMail(holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_MAILS), holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_MAIL_ITEMS));
+    _LoadMail(holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_MAILS),
+        holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_MAIL_ITEMS));
 
     _LoadInventory(holder.GetPreparedResult(PLAYER_LOGIN_QUERY_LOAD_INVENTORY), time_diff);
 
@@ -5512,11 +5673,11 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
         {
             default:
             case 0:
-                break;             // disable
+                break; // disable
             case 1:
                 SetGameMaster(true);
-                break;             // enable
-            case 2:                                         // save state
+                break; // enable
+            case 2:    // save state
                 if (extraflags & PLAYER_EXTRA_GM_ON)
                     SetGameMaster(true);
                 break;
@@ -5527,10 +5688,10 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
             default:
             case 0:
                 SetGMVisible(false);
-                break;             // invisible
+                break; // invisible
             case 1:
-                break;             // visible
-            case 2:                                         // save state
+                break; // visible
+            case 2:    // save state
                 if (extraflags & PLAYER_EXTRA_GM_INVISIBLE)
                     SetGMVisible(false);
                 break;
@@ -5540,11 +5701,11 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
         {
             default:
             case 0:
-                break;                 // disable
+                break; // disable
             case 1:
                 SetGMChat(true);
-                break;                 // enable
-            case 2:                                         // save state
+                break; // enable
+            case 2:    // save state
                 if (extraflags & PLAYER_EXTRA_GM_CHAT)
                     SetGMChat(true);
                 break;
@@ -5554,11 +5715,11 @@ bool Player::LoadFromDB(ObjectGuid playerGuid, CharacterDatabaseQueryHolder cons
         {
             default:
             case 0:
-                break;         // disable
+                break; // disable
             case 1:
                 SetAcceptWhispers(true);
-                break;         // enable
-            case 2:                                         // save state
+                break; // enable
+            case 2:    // save state
                 if (extraflags & PLAYER_EXTRA_ACCEPT_WHISPERS)
                     SetAcceptWhispers(true);
                 break;
@@ -5625,7 +5786,7 @@ bool Player::isAllowedToLoot(Creature const* creature)
     if (HasPendingBind())
         return false;
 
-    const Loot* loot = &creature->loot;
+    Loot const* loot = &creature->loot;
     if (loot->isLooted()) // nothing to loot or everything looted.
         return false;
 
@@ -5744,7 +5905,10 @@ void Player::_LoadAuras(PreparedQueryResult result, uint32 timediff)
             }
 
             // negative effects should continue counting down after logout
-            if (remaintime != -1 && ((!spellInfo->IsPositive() && spellInfo->Id != 15007) || spellInfo->HasAttribute(SPELL_ATTR4_AURA_EXPIRES_OFFLINE))) // Xinef: resurrection sickness should not tick when logged off
+            if (remaintime != -1 &&
+                ((!spellInfo->IsPositive() && spellInfo->Id != 15007) ||
+                    spellInfo->HasAttribute(
+                        SPELL_ATTR4_AURA_EXPIRES_OFFLINE))) // Xinef: resurrection sickness should not tick when logged off
             {
                 if (remaintime / IN_MILLISECONDS <= int32(timediff))
                     continue;
@@ -5757,13 +5921,14 @@ void Player::_LoadAuras(PreparedQueryResult result, uint32 timediff)
             {
                 // we have no control over the order of applying auras and modifiers allow auras
                 // to have more charges than value in SpellInfo
-                if (remaincharges <= 0/* || remaincharges > spellproto->procCharges*/)
+                if (remaincharges <= 0 /* || remaincharges > spellproto->procCharges*/)
                     remaincharges = spellInfo->ProcCharges;
             }
             else
                 remaincharges = 0;
 
-            if (Aura* aura = Aura::TryCreate(spellInfo, effmask, this, nullptr, &baseDamage[0], nullptr, caster_guid, itemGuid))
+            if (Aura* aura =
+                    Aura::TryCreate(spellInfo, effmask, this, nullptr, &baseDamage[0], nullptr, caster_guid, itemGuid))
             {
                 if (!aura->CanBeSaved())
                 {
@@ -5793,14 +5958,25 @@ void Player::_LoadGlyphAuras()
                     if (glyphEntry->TypeFlags == glyphSlotEntry->TypeFlags)
                     {
                         if (!spellInfo->Stances)
-                            CastSpell(this, glyphEntry->SpellId, TriggerCastFlags(TRIGGERED_FULL_MASK & ~(TRIGGERED_IGNORE_SHAPESHIFT | TRIGGERED_IGNORE_CASTER_AURASTATE)));
+                            CastSpell(this,
+                                glyphEntry->SpellId,
+                                TriggerCastFlags(TRIGGERED_FULL_MASK &
+                                                 ~(TRIGGERED_IGNORE_SHAPESHIFT | TRIGGERED_IGNORE_CASTER_AURASTATE)));
                         continue;
                     }
                     else
-                        LOG_ERROR("entities.player", "Player {} has glyph with typeflags {} in slot with typeflags {}, removing.", m_name, glyphEntry->TypeFlags, glyphSlotEntry->TypeFlags);
+                        LOG_ERROR("entities.player",
+                            "Player {} has glyph with typeflags {} in slot with typeflags {}, removing.",
+                            m_name,
+                            glyphEntry->TypeFlags,
+                            glyphSlotEntry->TypeFlags);
                 }
                 else
-                    LOG_ERROR("entities.player", "Player {} has not existing glyph slot entry {} on index {}", m_name, GetGlyphSlot(i), i);
+                    LOG_ERROR("entities.player",
+                        "Player {} has not existing glyph slot entry {} on index {}",
+                        m_name,
+                        GetGlyphSlot(i),
+                        i);
             }
             else
                 LOG_ERROR("entities.player", "Player {} has not existing glyph entry {} on index {}", m_name, glyph, i);
@@ -5821,8 +5997,14 @@ void Player::LoadCorpse(PreparedQueryResult result)
         if (result && !HasAtLoginFlag(AT_LOGIN_RESURRECT))
         {
             Field* fields = result->Fetch();
-            _corpseLocation.WorldRelocate(fields[0].Get<uint16>(), fields[1].Get<float>(), fields[2].Get<float>(), fields[3].Get<float>(), fields[4].Get<float>());
-            ApplyModFlag(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTE_RELEASE_TIMER, !sMapStore.LookupEntry(_corpseLocation.GetMapId())->Instanceable());
+            _corpseLocation.WorldRelocate(fields[0].Get<uint16>(),
+                fields[1].Get<float>(),
+                fields[2].Get<float>(),
+                fields[3].Get<float>(),
+                fields[4].Get<float>());
+            ApplyModFlag(PLAYER_FIELD_BYTES,
+                PLAYER_FIELD_BYTE_RELEASE_TIMER,
+                !sMapStore.LookupEntry(_corpseLocation.GetMapId())->Instanceable());
         }
         else
             ResurrectPlayer(0.5f);
@@ -5843,8 +6025,8 @@ void Player::_LoadInventory(PreparedQueryResult result, uint32 timeDiff)
     {
         uint32 zoneId = GetZoneId();
 
-        std::map<ObjectGuid::LowType, Bag*> bagMap;                 // fast guid lookup for bags
-        std::map<ObjectGuid::LowType, Item*> invalidBagMap;         // fast guid lookup for bags
+        std::map<ObjectGuid::LowType, Bag*> bagMap;         // fast guid lookup for bags
+        std::map<ObjectGuid::LowType, Item*> invalidBagMap; // fast guid lookup for bags
         std::list<Item*> problematicItems;
         CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 
@@ -5855,8 +6037,8 @@ void Player::_LoadInventory(PreparedQueryResult result, uint32 timeDiff)
             Field* fields = result->Fetch();
             if (Item* item = _LoadItem(trans, zoneId, timeDiff, fields))
             {
-                ObjectGuid::LowType bagGuid  = fields[11].Get<uint32>();
-                uint8  slot     = fields[12].Get<uint8>();
+                ObjectGuid::LowType bagGuid = fields[11].Get<uint32>();
+                uint8 slot = fields[12].Get<uint8>();
 
                 uint8 err = EQUIP_ERR_OK;
                 // Item is not in bag
@@ -5914,15 +6096,22 @@ void Player::_LoadInventory(PreparedQueryResult result, uint32 timeDiff)
                     else if (invalidBagMap.find(bagGuid) != invalidBagMap.end())
                     {
                         std::map<ObjectGuid::LowType, Item*>::iterator iterator = invalidBagMap.find(bagGuid);
-                        if (std::find(problematicItems.begin(), problematicItems.end(), iterator->second) != problematicItems.end())
+                        if (std::find(problematicItems.begin(), problematicItems.end(), iterator->second) !=
+                            problematicItems.end())
                         {
                             err = EQUIP_ERR_INT_BAG_ERROR;
                         }
                     }
                     else
                     {
-                        LOG_ERROR("entities.player", "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) which doesnt have a valid bag (Bag GUID: {}, slot: {}). Possible cheat?",
-                                  GetGUID().ToString(), GetName(), item->GetGUID().ToString(), item->GetEntry(), bagGuid, slot);
+                        LOG_ERROR("entities.player",
+                            "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) which doesnt have a valid bag (Bag GUID: {}, slot: {}). Possible cheat?",
+                            GetGUID().ToString(),
+                            GetName(),
+                            item->GetGUID().ToString(),
+                            item->GetEntry(),
+                            bagGuid,
+                            slot);
                         item->DeleteFromInventoryDB(trans);
                         delete item;
                         continue;
@@ -5934,8 +6123,15 @@ void Player::_LoadInventory(PreparedQueryResult result, uint32 timeDiff)
                     item->SetState(ITEM_UNCHANGED, this);
                 else
                 {
-                    LOG_ERROR("entities.player", "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) which can't be loaded into inventory (Bag GUID: {}, slot: {}) by reason {}. Item will be sent by mail.",
-                              GetGUID().ToString(), GetName(), item->GetGUID().ToString(), item->GetEntry(), bagGuid, slot, err);
+                    LOG_ERROR("entities.player",
+                        "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) which can't be loaded into inventory (Bag GUID: {}, slot: {}) by reason {}. Item will be sent by mail.",
+                        GetGUID().ToString(),
+                        GetName(),
+                        item->GetGUID().ToString(),
+                        item->GetEntry(),
+                        bagGuid,
+                        slot,
+                        err);
                     item->DeleteFromInventoryDB(trans);
                     problematicItems.push_back(item);
                 }
@@ -5966,7 +6162,7 @@ void Player::_LoadInventory(PreparedQueryResult result, uint32 timeDiff)
 Item* Player::_LoadItem(CharacterDatabaseTransaction trans, uint32 zoneId, uint32 timeDiff, Field* fields)
 {
     Item* item = nullptr;
-    ObjectGuid::LowType itemGuid  = fields[13].Get<uint32>();
+    ObjectGuid::LowType itemGuid = fields[13].Get<uint32>();
     uint32 itemEntry = fields[14].Get<uint32>();
     if (ItemTemplate const* proto = sObjectMgr->GetItemTemplate(itemEntry))
     {
@@ -5979,23 +6175,39 @@ Item* Player::_LoadItem(CharacterDatabaseTransaction trans, uint32 zoneId, uint3
             // Do not allow to have item limited to another map/zone in alive state
             if (IsAlive() && item->IsLimitedToAnotherMapOrZone(GetMapId(), zoneId))
             {
-                LOG_DEBUG("entities.player.loading", "Player::_LoadInventory: player ({}, name: '{}', map: {}) has item ({}, entry: {}) limited to another map ({}). Deleting item.",
-                          GetGUID().ToString(), GetName(), GetMapId(), item->GetGUID().ToString(), item->GetEntry(), zoneId);
+                LOG_DEBUG("entities.player.loading",
+                    "Player::_LoadInventory: player ({}, name: '{}', map: {}) has item ({}, entry: {}) limited to another map ({}). Deleting item.",
+                    GetGUID().ToString(),
+                    GetName(),
+                    GetMapId(),
+                    item->GetGUID().ToString(),
+                    item->GetEntry(),
+                    zoneId);
                 remove = true;
             }
-                // "Conjured items disappear if you are logged out for more than 15 minutes"
+            // "Conjured items disappear if you are logged out for more than 15 minutes"
             else if (timeDiff > 15 * MINUTE && proto->HasFlag(ITEM_FLAG_CONJURED))
             {
-                LOG_DEBUG("entities.player.loading", "Player::_LoadInventory: player ({}, name: '{}', diff: {}) has conjured item ({}, entry: {}) with expired lifetime (15 minutes). Deleting item.",
-                          GetGUID().ToString(), GetName(), timeDiff, item->GetGUID().ToString(), item->GetEntry());
+                LOG_DEBUG("entities.player.loading",
+                    "Player::_LoadInventory: player ({}, name: '{}', diff: {}) has conjured item ({}, entry: {}) with expired lifetime (15 minutes). Deleting item.",
+                    GetGUID().ToString(),
+                    GetName(),
+                    timeDiff,
+                    item->GetGUID().ToString(),
+                    item->GetEntry());
                 remove = true;
             }
             else if (item->IsRefundable())
             {
                 if (item->GetPlayedTime() > (2 * HOUR))
                 {
-                    LOG_DEBUG("entities.player.loading", "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) with expired refund time ({}). Deleting refund data and removing refundable flag.",
-                              GetGUID().ToString(), GetName(), item->GetGUID().ToString(), item->GetEntry(), item->GetPlayedTime());
+                    LOG_DEBUG("entities.player.loading",
+                        "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) with expired refund time ({}). Deleting refund data and removing refundable flag.",
+                        GetGUID().ToString(),
+                        GetName(),
+                        item->GetGUID().ToString(),
+                        item->GetEntry(),
+                        item->GetPlayedTime());
                     stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_ITEM_REFUND_INSTANCE);
                     stmt->SetData(0, item->GetGUID().GetCounter());
                     trans->Append(stmt);
@@ -6017,8 +6229,12 @@ Item* Player::_LoadItem(CharacterDatabaseTransaction trans, uint32 zoneId, uint3
                     }
                     else
                     {
-                        LOG_DEBUG("entities.player.loading", "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) with refundable flags, but without data in item_refund_instance. Removing flag.",
-                                  GetGUID().ToString(), GetName(), item->GetGUID().ToString(), item->GetEntry());
+                        LOG_DEBUG("entities.player.loading",
+                            "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) with refundable flags, but without data in item_refund_instance. Removing flag.",
+                            GetGUID().ToString(),
+                            GetName(),
+                            item->GetGUID().ToString(),
+                            item->GetEntry());
                         item->RemoveFlag(ITEM_FIELD_FLAGS, ITEM_FIELD_FLAG_REFUNDABLE);
                     }
                 }
@@ -6039,7 +6255,10 @@ Item* Player::_LoadItem(CharacterDatabaseTransaction trans, uint32 zoneId, uint3
                         }
                         else
                         {
-                            LOG_WARN("entities.player.loading", "Player::_LoadInventory: invalid item_soulbound_trade_data GUID '{}' for item {}. Skipped.", guidStr, item->GetGUID().ToString());
+                            LOG_WARN("entities.player.loading",
+                                "Player::_LoadInventory: invalid item_soulbound_trade_data GUID '{}' for item {}. Skipped.",
+                                guidStr,
+                                item->GetGUID().ToString());
                         }
                     }
 
@@ -6053,8 +6272,12 @@ Item* Player::_LoadItem(CharacterDatabaseTransaction trans, uint32 zoneId, uint3
                 }
                 else
                 {
-                    LOG_DEBUG("entities.player.loading", "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) with ITEM_FIELD_FLAG_BOP_TRADEABLE flag, but without data in item_soulbound_trade_data. Removing flag.",
-                              GetGUID().ToString(), GetName(), item->GetGUID().ToString(), item->GetEntry());
+                    LOG_DEBUG("entities.player.loading",
+                        "Player::_LoadInventory: player ({}, name: '{}') has item ({}, entry: {}) with ITEM_FIELD_FLAG_BOP_TRADEABLE flag, but without data in item_soulbound_trade_data. Removing flag.",
+                        GetGUID().ToString(),
+                        GetName(),
+                        item->GetGUID().ToString(),
+                        item->GetEntry());
                     item->RemoveFlag(ITEM_FIELD_FLAGS, ITEM_FIELD_FLAG_BOP_TRADEABLE);
                 }
             }
@@ -6063,7 +6286,9 @@ Item* Player::_LoadItem(CharacterDatabaseTransaction trans, uint32 zoneId, uint3
                 remove = true;
                 GameEventMgr::GameEventDataMap const& events = sGameEventMgr->GetEventMap();
                 GameEventMgr::ActiveEvents const& activeEventsList = sGameEventMgr->GetActiveEventList();
-                for (GameEventMgr::ActiveEvents::const_iterator itr = activeEventsList.begin(); itr != activeEventsList.end(); ++itr)
+                for (GameEventMgr::ActiveEvents::const_iterator itr = activeEventsList.begin();
+                     itr != activeEventsList.end();
+                     ++itr)
                 {
                     if (uint32(events[*itr].holiday_id) == proto->HolidayId)
                     {
@@ -6075,8 +6300,12 @@ Item* Player::_LoadItem(CharacterDatabaseTransaction trans, uint32 zoneId, uint3
         }
         else
         {
-            LOG_ERROR("entities.player", "Player::_LoadInventory: player ({}, name: '{}') has broken item (GUID: {}, entry: {}) in inventory. Deleting item.",
-                      GetGUID().ToString(), GetName(), itemGuid, itemEntry);
+            LOG_ERROR("entities.player",
+                "Player::_LoadInventory: player ({}, name: '{}') has broken item (GUID: {}, entry: {}) in inventory. Deleting item.",
+                GetGUID().ToString(),
+                GetName(),
+                itemGuid,
+                itemEntry);
             remove = true;
         }
         // Remove item from inventory if necessary
@@ -6084,14 +6313,17 @@ Item* Player::_LoadItem(CharacterDatabaseTransaction trans, uint32 zoneId, uint3
         {
             Item::DeleteFromInventoryDB(trans, itemGuid);
             item->FSetState(ITEM_REMOVED);
-            item->SaveToDB(trans);                           // it also deletes item object!
+            item->SaveToDB(trans); // it also deletes item object!
             item = nullptr;
         }
     }
     else
     {
-        LOG_ERROR("entities.player", "Player::_LoadInventory: player ({}, name: '{}') has unknown item (entry: {}) in inventory. Deleting item.",
-                  GetGUID().ToString(), GetName(), itemEntry);
+        LOG_ERROR("entities.player",
+            "Player::_LoadInventory: player ({}, name: '{}') has unknown item (entry: {}) in inventory. Deleting item.",
+            GetGUID().ToString(),
+            GetName(),
+            itemEntry);
         Item::DeleteFromInventoryDB(trans, itemGuid);
         Item::DeleteFromDB(trans, itemGuid);
     }
@@ -6107,8 +6339,13 @@ Item* Player::_LoadMailedItem(ObjectGuid const& playerGuid, Player* player, uint
     ItemTemplate const* proto = sObjectMgr->GetItemTemplate(itemEntry);
     if (!proto)
     {
-        LOG_ERROR("entities.player", "Player {} ({}) has unknown item in mailed items (GUID: {}, Entry: {}) in mail ({}), deleted.",
-            player ? player->GetName() : "<unknown>", playerGuid.ToString(), itemGuid, itemEntry, mailId);
+        LOG_ERROR("entities.player",
+            "Player {} ({}) has unknown item in mailed items (GUID: {}, Entry: {}) in mail ({}), deleted.",
+            player ? player->GetName() : "<unknown>",
+            playerGuid.ToString(),
+            itemGuid,
+            itemEntry,
+            mailId);
 
         CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 
@@ -6122,10 +6359,14 @@ Item* Player::_LoadMailedItem(ObjectGuid const& playerGuid, Player* player, uint
 
     Item* item = NewItemOrBag(proto);
 
-    ObjectGuid ownerGuid = fields[13].Get<uint32>() ? ObjectGuid::Create<HighGuid::Player>(fields[13].Get<uint32>()) : ObjectGuid::Empty;
+    ObjectGuid ownerGuid =
+        fields[13].Get<uint32>() ? ObjectGuid::Create<HighGuid::Player>(fields[13].Get<uint32>()) : ObjectGuid::Empty;
     if (!item->LoadFromDB(itemGuid, ownerGuid, fields, itemEntry))
     {
-        LOG_ERROR("entities.player", "Player::_LoadMailedItems: Item (GUID: {}) in mail ({}) doesn't exist, deleted from mail.", itemGuid, mailId);
+        LOG_ERROR("entities.player",
+            "Player::_LoadMailedItems: Item (GUID: {}) in mail ({}) doesn't exist, deleted from mail.",
+            itemGuid,
+            mailId);
 
         CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_MAIL_ITEM);
         stmt->SetData(0, itemGuid);
@@ -6139,14 +6380,10 @@ Item* Player::_LoadMailedItem(ObjectGuid const& playerGuid, Player* player, uint
     }
 
     if (mail)
-    {
         mail->AddItem(itemGuid, itemEntry);
-    }
 
     if (player)
-    {
         player->AddMItem(item);
-    }
 
     return item;
 }
@@ -6166,18 +6403,18 @@ void Player::_LoadMail(PreparedQueryResult mailsResult, PreparedQueryResult mail
             Field* fields = mailsResult->Fetch();
             Mail* m = new Mail;
 
-            m->messageID      = fields[0].Get<uint32>();
-            m->messageType    = fields[1].Get<uint8>();
-            m->sender         = fields[2].Get<uint32>();
-            m->receiver       = fields[3].Get<uint32>();
-            m->subject        = fields[4].Get<std::string>();
-            m->body           = fields[5].Get<std::string>();
-            m->expire_time    = time_t(fields[6].Get<uint32>());
-            m->deliver_time   = time_t(fields[7].Get<uint32>());
-            m->money          = fields[8].Get<uint32>();
-            m->COD            = fields[9].Get<uint32>();
-            m->checked        = fields[10].Get<uint8>();
-            m->stationery     = fields[11].Get<uint8>();
+            m->messageID = fields[0].Get<uint32>();
+            m->messageType = fields[1].Get<uint8>();
+            m->sender = fields[2].Get<uint32>();
+            m->receiver = fields[3].Get<uint32>();
+            m->subject = fields[4].Get<std::string>();
+            m->body = fields[5].Get<std::string>();
+            m->expire_time = time_t(fields[6].Get<uint32>());
+            m->deliver_time = time_t(fields[7].Get<uint32>());
+            m->money = fields[8].Get<uint32>();
+            m->COD = fields[9].Get<uint32>();
+            m->checked = fields[10].Get<uint8>();
+            m->stationery = fields[11].Get<uint8>();
             m->mailTemplateId = fields[12].Get<int16>();
 
             if (cur_time > m->expire_time)
@@ -6188,7 +6425,10 @@ void Player::_LoadMail(PreparedQueryResult mailsResult, PreparedQueryResult mail
 
             if (m->mailTemplateId && !sMailTemplateStore.LookupEntry(m->mailTemplateId))
             {
-                LOG_ERROR("entities.player", "Player::_LoadMail: Mail ({}) has nonexistent MailTemplateId ({}), remove at load", m->messageID, m->mailTemplateId);
+                LOG_ERROR("entities.player",
+                    "Player::_LoadMail: Mail ({}) has nonexistent MailTemplateId ({}), remove at load",
+                    m->messageID,
+                    m->mailTemplateId);
                 m->mailTemplateId = 0;
             }
 
@@ -6253,8 +6493,12 @@ void Player::_LoadQuestStatus(PreparedQueryResult result)
                 else
                 {
                     questStatusData.Status = QUEST_STATUS_INCOMPLETE;
-                    LOG_ERROR("entities.player", "Player {} ({}) has invalid quest {} status ({}), replaced by QUEST_STATUS_INCOMPLETE(3).",
-                              GetName(), GetGUID().ToString(), quest_id, qstatus);
+                    LOG_ERROR("entities.player",
+                        "Player {} ({}) has invalid quest {} status ({}), replaced by QUEST_STATUS_INCOMPLETE(3).",
+                        GetName(),
+                        GetGUID().ToString(),
+                        quest_id,
+                        qstatus);
                 }
 
                 questStatusData.Explored = (fields[2].Get<uint8>() > 0);
@@ -6268,7 +6512,8 @@ void Player::_LoadQuestStatus(PreparedQueryResult result)
                     if (quest_time <= GameTime::GetGameTime().count())
                         questStatusData.Timer = 1;
                     else
-                        questStatusData.Timer = uint32((quest_time - GameTime::GetGameTime().count()) * IN_MILLISECONDS);
+                        questStatusData.Timer =
+                            uint32((quest_time - GameTime::GetGameTime().count()) * IN_MILLISECONDS);
                 }
                 else
                     quest_time = 0;
@@ -6301,7 +6546,11 @@ void Player::_LoadQuestStatus(PreparedQueryResult result)
                     ++slot;
                 }
 
-                LOG_DEBUG("entities.player.loading", "Quest status is {{}} for quest {{}} for player ({})", questStatusData.Status, quest_id, GetGUID().ToString());
+                LOG_DEBUG("entities.player.loading",
+                    "Quest status is {{}} for quest {{}} for player ({})",
+                    questStatusData.Status,
+                    quest_id,
+                    GetGUID().ToString());
             }
         } while (result->NextRow());
     }
@@ -6372,9 +6621,11 @@ void Player::_LoadDailyQuestStatus(PreparedQueryResult result)
                 }
             }
 
-            if (quest_daily_idx >= PLAYER_MAX_DAILY_QUESTS)  // max amount with exist data in query
+            if (quest_daily_idx >= PLAYER_MAX_DAILY_QUESTS) // max amount with exist data in query
             {
-                LOG_ERROR("entities.player", "Player ({}) have more 25 daily quest records in `charcter_queststatus_daily`", GetGUID().ToString());
+                LOG_ERROR("entities.player",
+                    "Player ({}) have more 25 daily quest records in `charcter_queststatus_daily`",
+                    GetGUID().ToString());
                 break;
             }
 
@@ -6390,7 +6641,8 @@ void Player::_LoadDailyQuestStatus(PreparedQueryResult result)
             SetUInt32Value(PLAYER_FIELD_DAILY_QUESTS_1 + quest_daily_idx, quest_id);
             ++quest_daily_idx;
 
-            LOG_DEBUG("entities.player.loading", "Daily quest ({}) cooldown for player ({})", quest_id, GetGUID().ToString());
+            LOG_DEBUG(
+                "entities.player.loading", "Daily quest ({}) cooldown for player ({})", quest_id, GetGUID().ToString());
         } while (result->NextRow());
     }
 
@@ -6412,7 +6664,10 @@ void Player::_LoadWeeklyQuestStatus(PreparedQueryResult result)
                 continue;
 
             m_weeklyquests.insert(quest_id);
-            LOG_DEBUG("entities.player.loading", "Weekly quest {{}} cooldown for player ({})", quest_id, GetGUID().ToString());
+            LOG_DEBUG("entities.player.loading",
+                "Weekly quest {{}} cooldown for player ({})",
+                quest_id,
+                GetGUID().ToString());
         } while (result->NextRow());
     }
 
@@ -6435,7 +6690,10 @@ void Player::_LoadSeasonalQuestStatus(PreparedQueryResult result)
                 continue;
 
             m_seasonalquests[event_id].insert(quest_id);
-            LOG_DEBUG("entities.player.loading", "Seasonal quest {{}} cooldown for player ({})", quest_id, GetGUID().ToString());
+            LOG_DEBUG("entities.player.loading",
+                "Seasonal quest {{}} cooldown for player ({})",
+                quest_id,
+                GetGUID().ToString());
         } while (result->NextRow());
     }
 
@@ -6457,7 +6715,10 @@ void Player::_LoadMonthlyQuestStatus(PreparedQueryResult result)
                 continue;
 
             m_monthlyquests.insert(quest_id);
-            LOG_DEBUG("entities.player.loading", "Monthly quest {{}} cooldown for player ({})", quest_id, GetGUID().ToString());
+            LOG_DEBUG("entities.player.loading",
+                "Monthly quest {{}} cooldown for player ({})",
+                quest_id,
+                GetGUID().ToString());
         } while (result->NextRow());
     }
 
@@ -6486,9 +6747,7 @@ void Player::_LoadGroup()
             if (group->GetMemberGroup(GetGUID()) <= MAX_RAID_SUBGROUPS)
             {
                 if (group->IsLeader(GetGUID()))
-                {
                     SetPlayerFlag(PLAYER_FLAGS_GROUP_LEADER);
-                }
 
                 uint8 subgroup = group->GetMemberGroup(GetGUID());
                 SetGroup(group, subgroup);
@@ -6523,7 +6782,7 @@ void Player::SendRaidInfo()
     WorldPacket data(SMSG_RAID_INSTANCE_INFO, 4);
 
     std::size_t p_counter = data.wpos();
-    data << uint32(counter);                                // placeholder
+    data << uint32(counter); // placeholder
 
     time_t now = GameTime::GetGameTime().count();
 
@@ -6536,12 +6795,12 @@ void Player::SendRaidInfo()
             {
                 InstanceSave* save = itr->second.save;
                 time_t resetTime = itr->second.extended ? save->GetExtendedResetTime() : save->GetResetTime();
-                data << uint32(save->GetMapId());           // map id
-                data << uint32(save->GetDifficulty());      // difficulty
+                data << uint32(save->GetMapId());                                      // map id
+                data << uint32(save->GetDifficulty());                                 // difficulty
                 data << ObjectGuid::Create<HighGuid::Instance>(save->GetInstanceId()); // instance id
-                data << uint8(1);                           // expired = 0
-                data << uint8(itr->second.extended ? 1 : 0);// extended = 1
-                data << uint32(resetTime >= now ? resetTime - now : 0); // reset time
+                data << uint8(1);                                                      // expired = 0
+                data << uint8(itr->second.extended ? 1 : 0);                           // extended = 1
+                data << uint32(resetTime >= now ? resetTime - now : 0);                // reset time
                 ++counter;
             }
         }
@@ -6563,7 +6822,7 @@ void Player::SendSavedInstances()
         BoundInstancesMap const& m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(GetGUID(), Difficulty(i));
         for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end(); ++itr)
         {
-            if (itr->second.perm)                               // only permanent binds are sent
+            if (itr->second.perm) // only permanent binds are sent
             {
                 hasBeenSaved = true;
                 break;
@@ -6594,22 +6853,18 @@ void Player::SendSavedInstances()
     }
 }
 
-void Player::PrettyPrintRequirementsQuestList(const std::vector<const ProgressionRequirement*>& missingQuests) const
+void Player::PrettyPrintRequirementsQuestList(std::vector<ProgressionRequirement const*> const& missingQuests) const
 {
     LocaleConstant loc_idx = GetSession()->GetSessionDbLocaleIndex();
-    for (const ProgressionRequirement* missingReq : missingQuests)
+    for (ProgressionRequirement const* missingReq : missingQuests)
     {
         Quest const* questTemplate = sObjectMgr->GetQuestTemplate(missingReq->id);
         if (!questTemplate)
-        {
             continue;
-        }
 
         std::string questTitle = questTemplate->GetTitle();
         if (QuestLocale const* questLocale = sObjectMgr->GetQuestLocale(questTemplate->GetQuestId()))
-        {
             ObjectMgr::GetLocaleString(questLocale->Title, loc_idx, questTitle);
-        }
 
         std::stringstream stream;
         stream << "|cffff7c0a|Hquest:";
@@ -6626,21 +6881,24 @@ void Player::PrettyPrintRequirementsQuestList(const std::vector<const Progressio
         }
         else
         {
-            ChatHandler(GetSession()).PSendSysMessage("    - {} {} {}", stream.str(), sObjectMgr->GetAcoreString(LANG_ACCESS_REQUIREMENT_NOTE, loc_idx), missingReq->note);
+            ChatHandler(GetSession())
+                .PSendSysMessage("    - {} {} {}",
+                    stream.str(),
+                    sObjectMgr->GetAcoreString(LANG_ACCESS_REQUIREMENT_NOTE, loc_idx),
+                    missingReq->note);
         }
     }
 }
 
-void Player::PrettyPrintRequirementsAchievementsList(const std::vector<const ProgressionRequirement*>& missingAchievements) const
+void Player::PrettyPrintRequirementsAchievementsList(
+    std::vector<ProgressionRequirement const*> const& missingAchievements) const
 {
     LocaleConstant loc_idx = GetSession()->GetSessionDbLocaleIndex();
-    for (const ProgressionRequirement* missingReq : missingAchievements)
+    for (ProgressionRequirement const* missingReq : missingAchievements)
     {
         AchievementEntry const* achievementEntry = sAchievementStore.LookupEntry(missingReq->id);
         if (!achievementEntry)
-        {
             continue;
-        }
 
         std::string name = achievementEntry->name[sObjectMgr->GetDBCLocaleIndex()];
 
@@ -6659,28 +6917,28 @@ void Player::PrettyPrintRequirementsAchievementsList(const std::vector<const Pro
         }
         else
         {
-            ChatHandler(GetSession()).PSendSysMessage("    - {} {} {}", stream.str(), sObjectMgr->GetAcoreString(LANG_ACCESS_REQUIREMENT_NOTE, loc_idx), missingReq->note);
+            ChatHandler(GetSession())
+                .PSendSysMessage("    - {} {} {}",
+                    stream.str(),
+                    sObjectMgr->GetAcoreString(LANG_ACCESS_REQUIREMENT_NOTE, loc_idx),
+                    missingReq->note);
         }
     }
 }
 
-void Player::PrettyPrintRequirementsItemsList(const std::vector<const ProgressionRequirement*>& missingItems) const
+void Player::PrettyPrintRequirementsItemsList(std::vector<ProgressionRequirement const*> const& missingItems) const
 {
     LocaleConstant loc_idx = GetSession()->GetSessionDbLocaleIndex();
-    for (const ProgressionRequirement* missingReq : missingItems)
+    for (ProgressionRequirement const* missingReq : missingItems)
     {
         ItemTemplate const* itemTemplate = sObjectMgr->GetItemTemplate(missingReq->id);
         if (!itemTemplate)
-        {
             continue;
-        }
 
         //Get the localised name
         std::string name = itemTemplate->Name1;
         if (ItemLocale const* il = sObjectMgr->GetItemLocale(itemTemplate->ItemId))
-        {
             ObjectMgr::GetLocaleString(il->Name, loc_idx, name);
-        }
 
         std::stringstream stream;
         stream << "|c";
@@ -6697,7 +6955,11 @@ void Player::PrettyPrintRequirementsItemsList(const std::vector<const Progressio
         }
         else
         {
-            ChatHandler(GetSession()).PSendSysMessage("    - {} {} {}", stream.str(), sObjectMgr->GetAcoreString(LANG_ACCESS_REQUIREMENT_NOTE, loc_idx), missingReq->note);
+            ChatHandler(GetSession())
+                .PSendSysMessage("    - {} {} {}",
+                    stream.str(),
+                    sObjectMgr->GetAcoreString(LANG_ACCESS_REQUIREMENT_NOTE, loc_idx),
+                    missingReq->note);
         }
     }
 }
@@ -6735,20 +6997,18 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
             if (leaderGuid != GetGUID())
             {
                 if (tempLeader != nullptr)
-                {
                     partyLeader = tempLeader;
-                }
                 leaderName = GetGroup()->GetLeaderName();
             }
         }
 
         //Check all items
-        std::vector<const ProgressionRequirement*> missingPlayerItems;
-        std::vector<const ProgressionRequirement*> missingLeaderItems;
-        for (const ProgressionRequirement* itemRequirement : ar->items)
+        std::vector<ProgressionRequirement const*> missingPlayerItems;
+        std::vector<ProgressionRequirement const*> missingLeaderItems;
+        for (ProgressionRequirement const* itemRequirement : ar->items)
         {
             Player* checkPlayer = this;
-            std::vector<const ProgressionRequirement*>* missingItems = &missingPlayerItems;
+            std::vector<ProgressionRequirement const*>* missingItems = &missingPlayerItems;
             if (itemRequirement->checkLeaderOnly)
             {
                 checkPlayer = partyLeader;
@@ -6758,19 +7018,17 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
             if (itemRequirement->faction == TEAM_NEUTRAL || itemRequirement->faction == checkPlayer->GetTeamId(true))
             {
                 if (!checkPlayer->HasItemCount(itemRequirement->id, 1))
-                {
                     missingItems->push_back(itemRequirement);
-                }
             }
         }
 
         //Check all achievements
-        std::vector<const ProgressionRequirement*> missingPlayerAchievements;
-        std::vector<const ProgressionRequirement*> missingLeaderAchievements;
-        for (const ProgressionRequirement* achievementRequirement : ar->achievements)
+        std::vector<ProgressionRequirement const*> missingPlayerAchievements;
+        std::vector<ProgressionRequirement const*> missingLeaderAchievements;
+        for (ProgressionRequirement const* achievementRequirement : ar->achievements)
         {
             Player* checkPlayer = this;
-            std::vector<const ProgressionRequirement*>* missingAchievements = &missingPlayerAchievements;
+            std::vector<ProgressionRequirement const*>* missingAchievements = &missingPlayerAchievements;
             if (achievementRequirement->checkLeaderOnly)
             {
                 checkPlayer = partyLeader;
@@ -6780,19 +7038,17 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
             if (achievementRequirement->faction == TEAM_NEUTRAL || achievementRequirement->faction == GetTeamId(true))
             {
                 if (!checkPlayer || !checkPlayer->HasAchieved(achievementRequirement->id))
-                {
                     missingAchievements->push_back(achievementRequirement);
-                }
             }
         }
 
         //Check all quests
-        std::vector<const ProgressionRequirement*> missingPlayerQuests;
-        std::vector<const ProgressionRequirement*> missingLeaderQuests;
-        for (const ProgressionRequirement* questRequirement : ar->quests)
+        std::vector<ProgressionRequirement const*> missingPlayerQuests;
+        std::vector<ProgressionRequirement const*> missingLeaderQuests;
+        for (ProgressionRequirement const* questRequirement : ar->quests)
         {
             Player* checkPlayer = this;
-            std::vector<const ProgressionRequirement*>* missingQuests = &missingPlayerQuests;
+            std::vector<ProgressionRequirement const*>* missingQuests = &missingPlayerQuests;
             if (questRequirement->checkLeaderOnly)
             {
                 checkPlayer = partyLeader;
@@ -6802,9 +7058,7 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
             if (questRequirement->faction == TEAM_NEUTRAL || questRequirement->faction == checkPlayer->GetTeamId(true))
             {
                 if (!checkPlayer->GetQuestRewardStatus(questRequirement->id))
-                {
                     missingQuests->push_back(questRequirement);
-                }
             }
         }
 
@@ -6812,18 +7066,16 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
         bool ilvlRequirementNotMet = false;
         if (sWorld->getBoolConfig(CONFIG_DUNGEON_ACCESS_REQUIREMENTS_PORTAL_CHECK_ILVL))
         {
-            const int32 currentIlvl = (int32)GetAverageItemLevelForDF();
+            int32 const currentIlvl = (int32)GetAverageItemLevelForDF();
             if (ar->reqItemLevel > currentIlvl)
-            {
                 ilvlRequirementNotMet = true;
-            }
         }
 
         Difficulty target_difficulty = GetDifficulty(mapEntry->IsRaid());
         MapDifficulty const* mapDiff = GetDownscaledMapDifficultyData(target_map, target_difficulty);
-        if (LevelMin || LevelMax || ilvlRequirementNotMet
-            || missingPlayerItems.size() || missingPlayerQuests.size() || missingPlayerAchievements.size()
-            || missingLeaderItems.size() || missingLeaderQuests.size() || missingLeaderAchievements.size())
+        if (LevelMin || LevelMax || ilvlRequirementNotMet || missingPlayerItems.size() || missingPlayerQuests.size() ||
+            missingPlayerAchievements.size() || missingLeaderItems.size() || missingLeaderQuests.size() ||
+            missingLeaderAchievements.size())
         {
             if (!sScriptMgr->NotAvoidSatisfy(partyLeader, ar, target_map, report))
                 return true;
@@ -6858,18 +7110,21 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
                         LocaleConstant loc_idx = GetSession()->GetSessionDbLocaleIndex();
                         std::string name = sObjectMgr->GetItemTemplate(missingPlayerItems[0]->id)->Name1;
                         if (ItemLocale const* il = sObjectMgr->GetItemLocale(missingPlayerItems[0]->id))
-                        {
                             ObjectMgr::GetLocaleString(il->Name, loc_idx, name);
-                        }
-                        GetSession()->SendAreaTriggerMessage(GetSession()->GetAcoreString(LANG_LEVEL_MINREQUIRED_AND_ITEM), ar->levelMin, name.c_str());
+                        GetSession()->SendAreaTriggerMessage(
+                            GetSession()->GetAcoreString(LANG_LEVEL_MINREQUIRED_AND_ITEM), ar->levelMin, name.c_str());
                     }
                     else if (LevelMin)
                     {
-                        GetSession()->SendAreaTriggerMessage(GetSession()->GetAcoreString(LANG_LEVEL_MINREQUIRED), LevelMin);
+                        GetSession()->SendAreaTriggerMessage(
+                            GetSession()->GetAcoreString(LANG_LEVEL_MINREQUIRED), LevelMin);
                     }
                     else if (ilvlRequirementNotMet)
                     {
-                        ChatHandler(GetSession()).PSendSysMessage(LANG_ACCESS_REQUIREMENT_AVERAGE_ILVL_NOT_MET, ar->reqItemLevel, (uint16)GetAverageItemLevelForDF());
+                        ChatHandler(GetSession())
+                            .PSendSysMessage(LANG_ACCESS_REQUIREMENT_AVERAGE_ILVL_NOT_MET,
+                                ar->reqItemLevel,
+                                (uint16)GetAverageItemLevelForDF());
                     }
                 }
                 else
@@ -6884,7 +7139,8 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
                     }
                     if (missingLeaderQuests.size())
                     {
-                        ChatHandler(GetSession()).PSendSysMessage(LANG_ACCESS_REQUIREMENT_LEADER_COMPLETE_QUESTS, leaderName);
+                        ChatHandler(GetSession())
+                            .PSendSysMessage(LANG_ACCESS_REQUIREMENT_LEADER_COMPLETE_QUESTS, leaderName);
                         PrettyPrintRequirementsQuestList(missingLeaderQuests);
                         errorAlreadyPrinted = true;
                     }
@@ -6897,7 +7153,8 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
                     }
                     if (missingLeaderAchievements.size())
                     {
-                        ChatHandler(GetSession()).PSendSysMessage(LANG_ACCESS_REQUIREMENT_LEADER_COMPLETE_ACHIEVEMENTS, leaderName);
+                        ChatHandler(GetSession())
+                            .PSendSysMessage(LANG_ACCESS_REQUIREMENT_LEADER_COMPLETE_ACHIEVEMENTS, leaderName);
                         PrettyPrintRequirementsAchievementsList(missingLeaderAchievements);
                         errorAlreadyPrinted = true;
                     }
@@ -6911,23 +7168,29 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
 
                     if (missingLeaderItems.size())
                     {
-                        ChatHandler(GetSession()).PSendSysMessage(LANG_ACCESS_REQUIREMENT_LEADER_OBTAIN_ITEMS, leaderName);
+                        ChatHandler(GetSession())
+                            .PSendSysMessage(LANG_ACCESS_REQUIREMENT_LEADER_OBTAIN_ITEMS, leaderName);
                         PrettyPrintRequirementsItemsList(missingLeaderItems);
                         errorAlreadyPrinted = true;
                     }
 
                     if (ilvlRequirementNotMet)
                     {
-                        ChatHandler(GetSession()).PSendSysMessage(LANG_ACCESS_REQUIREMENT_AVERAGE_ILVL_NOT_MET, ar->reqItemLevel, (uint16)GetAverageItemLevelForDF());
+                        ChatHandler(GetSession())
+                            .PSendSysMessage(LANG_ACCESS_REQUIREMENT_AVERAGE_ILVL_NOT_MET,
+                                ar->reqItemLevel,
+                                (uint16)GetAverageItemLevelForDF());
                     }
 
                     if (LevelMin)
                     {
-                        GetSession()->SendAreaTriggerMessage(GetSession()->GetAcoreString(LANG_LEVEL_MINREQUIRED), LevelMin);
+                        GetSession()->SendAreaTriggerMessage(
+                            GetSession()->GetAcoreString(LANG_LEVEL_MINREQUIRED), LevelMin);
                     }
                     else if (LevelMax)
                     {
-                        GetSession()->SendAreaTriggerMessage(GetSession()->GetAcoreString(LANG_ACCESS_REQUIREMENT_MAX_LEVEL), LevelMax);
+                        GetSession()->SendAreaTriggerMessage(
+                            GetSession()->GetAcoreString(LANG_ACCESS_REQUIREMENT_MAX_LEVEL), LevelMax);
                     }
                     else if (mapDiff->hasErrorMessage && !errorAlreadyPrinted)
                     {
@@ -6938,9 +7201,7 @@ bool Player::Satisfy(DungeonProgressionRequirements const* ar, uint32 target_map
                 //Print the extra string
                 uint32 optionalStringID = sWorld->getIntConfig(CONFIG_DUNGEON_ACCESS_REQUIREMENTS_OPTIONAL_STRING_ID);
                 if (optionalStringID > 0)
-                {
                     ChatHandler(GetSession()).SendSysMessage(optionalStringID);
-                }
             }
             return false;
         }
@@ -7031,14 +7292,19 @@ bool Player::_LoadHomeBind(PreparedQueryResult result)
         stmt->SetData(0, GetGUID().GetCounter());
         stmt->SetData(1, m_homebindMapId);
         stmt->SetData(2, m_homebindAreaId);
-        stmt->SetData (3, m_homebindX);
-        stmt->SetData (4, m_homebindY);
-        stmt->SetData (5, m_homebindZ);
+        stmt->SetData(3, m_homebindX);
+        stmt->SetData(4, m_homebindY);
+        stmt->SetData(5, m_homebindZ);
         CharacterDatabase.Execute(stmt);
     }
 
-    LOG_DEBUG("entities.player", "Setting player home position - mapid: {}, areaid: {}, X: {}, Y: {}, Z: {}",
-              m_homebindMapId, m_homebindAreaId, m_homebindX, m_homebindY, m_homebindZ);
+    LOG_DEBUG("entities.player",
+        "Setting player home position - mapid: {}, areaid: {}, X: {}, Y: {}, Z: {}",
+        m_homebindMapId,
+        m_homebindAreaId,
+        m_homebindX,
+        m_homebindY,
+        m_homebindZ);
     return true;
 }
 
@@ -7082,7 +7348,7 @@ void Player::SaveToDB(CharacterDatabaseTransaction trans, bool create, bool logo
 
     _SaveCharacter(create, trans);
 
-    if (m_mailsUpdated)                                     //save mails only when needed
+    if (m_mailsUpdated) //save mails only when needed
         _SaveMail(trans);
 
     _SaveEntryPoint(trans);
@@ -7101,7 +7367,7 @@ void Player::SaveToDB(CharacterDatabaseTransaction trans, bool create, bool logo
     m_achievementMgr->SaveToDB(trans);
     m_reputationMgr->SaveToDB(trans);
     _SaveEquipmentSets(trans);
-    GetSession()->SaveTutorialsData(trans);                 // changed only while character in game
+    GetSession()->SaveTutorialsData(trans); // changed only while character in game
     _SaveGlyphs(trans);
     _SaveInstanceTimeRestrictions(trans);
     _SavePlayerSettings(trans);
@@ -7191,7 +7457,7 @@ void Player::_SaveAuras(CharacterDatabaseTransaction trans, bool logout)
             continue;
 
         Aura* aura = itr->second;
-        if (!logout && aura->GetDuration() < 60 * IN_MILLISECONDS )
+        if (!logout && aura->GetDuration() < 60 * IN_MILLISECONDS)
             continue;
 
         int32 damage[MAX_SPELL_EFFECTS];
@@ -7289,7 +7555,10 @@ void Player::_SaveInventory(CharacterDatabaseTransaction trans)
         }
         else
         {
-            LOG_ERROR("entities.player", "Can't find item {} but is in refundable storage for player {} ! Removing.", (*itr).ToString(), GetGUID().ToString());
+            LOG_ERROR("entities.player",
+                "Can't find item {} but is in refundable storage for player {} ! Removing.",
+                (*itr).ToString(),
+                GetGUID().ToString());
             m_refundableItems.erase(itr);
         }
     }
@@ -7320,8 +7589,14 @@ void Player::_SaveInventory(CharacterDatabaseTransaction trans)
                 ObjectGuid::LowType bagTestGUID = 0;
                 if (Item* test2 = GetItemByPos(INVENTORY_SLOT_BAG_0, item->GetBagSlot()))
                     bagTestGUID = test2->GetGUID().GetCounter();
-                LOG_ERROR("entities.player", "Player(GUID: {} Name: {})::_SaveInventory - the bag({}) and slot({}) values for the item {} (state {}) are incorrect, the player doesn't have an item at that position!",
-                          lowGuid, GetName(), item->GetBagSlot(), item->GetSlot(), item->GetGUID().ToString(), (int32)item->GetState());
+                LOG_ERROR("entities.player",
+                    "Player(GUID: {} Name: {})::_SaveInventory - the bag({}) and slot({}) values for the item {} (state {}) are incorrect, the player doesn't have an item at that position!",
+                    lowGuid,
+                    GetName(),
+                    item->GetBagSlot(),
+                    item->GetSlot(),
+                    item->GetGUID().ToString(),
+                    (int32)item->GetState());
                 // according to the test that was just performed nothing should be in this slot, delete
                 stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_CHAR_INVENTORY_BY_BAG_SLOT);
                 stmt->SetData(0, bagTestGUID);
@@ -7329,20 +7604,27 @@ void Player::_SaveInventory(CharacterDatabaseTransaction trans)
                 stmt->SetData(2, lowGuid);
                 trans->Append(stmt);
 
-                RemoveTradeableItem(item); // pussywizard
+                RemoveTradeableItem(item);                  // pussywizard
                 RemoveEnchantmentDurationsReferences(item); // pussywizard
-                RemoveItemDurations(item); // pussywizard
+                RemoveItemDurations(item);                  // pussywizard
 
                 // also THIS item should be somewhere else, cheat attempt
-                item->FSetState(ITEM_REMOVED); // we are IN updateQueue right now, can't use SetState which modifies the queue
+                item->FSetState(
+                    ITEM_REMOVED); // we are IN updateQueue right now, can't use SetState which modifies the queue
                 DeleteRefundReference(item->GetGUID());
                 // don't skip, let the switch delete it
                 continue;
             }
             else if (test != item)
             {
-                LOG_ERROR("entities.player", "Player(GUID: {} Name: {})::_SaveInventory - the bag({}) and slot({}) values for the item ({}) are incorrect, the item ({}) is there instead!",
-                          lowGuid, GetName(), item->GetBagSlot(), item->GetSlot(), item->GetGUID().ToString(), test->GetGUID().ToString());
+                LOG_ERROR("entities.player",
+                    "Player(GUID: {} Name: {})::_SaveInventory - the bag({}) and slot({}) values for the item ({}) are incorrect, the item ({}) is there instead!",
+                    lowGuid,
+                    GetName(),
+                    item->GetBagSlot(),
+                    item->GetSlot(),
+                    item->GetGUID().ToString(),
+                    test->GetGUID().ToString());
                 // save all changes to the item...
                 if (item->GetState() != ITEM_NEW) // only for existing items, no dupes
                     item->SaveToDB(trans);
@@ -7358,7 +7640,7 @@ void Player::_SaveInventory(CharacterDatabaseTransaction trans)
                 stmt = CharacterDatabase.GetPreparedStatement(CHAR_REP_INVENTORY_ITEM);
                 stmt->SetData(0, lowGuid);
                 stmt->SetData(1, bag_guid);
-                stmt->SetData (2, item->GetSlot());
+                stmt->SetData(2, item->GetSlot());
                 stmt->SetData(3, item->GetGUID().GetCounter());
                 trans->Append(stmt);
                 break;
@@ -7370,7 +7652,7 @@ void Player::_SaveInventory(CharacterDatabaseTransaction trans)
                 break;
         }
 
-        item->SaveToDB(trans);                                   // item have unchanged inventory record and can be save standalone
+        item->SaveToDB(trans); // item have unchanged inventory record and can be save standalone
     }
     m_itemUpdateQueue.clear();
 }
@@ -7378,9 +7660,7 @@ void Player::_SaveInventory(CharacterDatabaseTransaction trans)
 void Player::_SaveMail(CharacterDatabaseTransaction trans)
 {
     if (!GetMailSize() || !m_mailsUpdated)
-    {
         return;
-    }
 
     CharacterDatabasePreparedStatement* stmt = nullptr;
 
@@ -7402,7 +7682,8 @@ void Player::_SaveMail(CharacterDatabaseTransaction trans)
 
             if (!m->removedItems.empty())
             {
-                for (std::vector<uint32>::iterator itr2 = m->removedItems.begin(); itr2 != m->removedItems.end(); ++itr2)
+                for (std::vector<uint32>::iterator itr2 = m->removedItems.begin(); itr2 != m->removedItems.end();
+                     ++itr2)
                 {
                     stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_MAIL_ITEM);
                     stmt->SetData(0, *itr2);
@@ -7435,7 +7716,6 @@ void Player::_SaveMail(CharacterDatabaseTransaction trans)
 
     //deallocate deleted mails...
     for (PlayerMails::iterator itr = m_mail.begin(); itr != m_mail.end();)
-    {
         if ((*itr)->state == MAIL_STATE_DELETED)
         {
             Mail* m = *itr;
@@ -7445,7 +7725,6 @@ void Player::_SaveMail(CharacterDatabaseTransaction trans)
         }
         else
             ++itr;
-    }
 
     m_mailsUpdated = false;
 }
@@ -7476,7 +7755,8 @@ void Player::_SaveQuestStatus(CharacterDatabaseTransaction trans)
                 stmt->SetData(index++, statusItr->first);
                 stmt->SetData(index++, uint8(statusItr->second.Status));
                 stmt->SetData(index++, statusItr->second.Explored);
-                stmt->SetData(index++, uint32(statusItr->second.Timer / IN_MILLISECONDS + GameTime::GetGameTime().count()));
+                stmt->SetData(
+                    index++, uint32(statusItr->second.Timer / IN_MILLISECONDS + GameTime::GetGameTime().count()));
 
                 for (uint8 i = 0; i < QUEST_OBJECTIVES_COUNT; i++)
                     stmt->SetData(index++, statusItr->second.CreatureOrGOCount[i]);
@@ -7561,13 +7841,14 @@ void Player::_SaveWeeklyQuestStatus(CharacterDatabaseTransaction trans)
         return;
 
     // we don't need transactions here.
-    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_QUEST_STATUS_WEEKLY_CHAR);
+    CharacterDatabasePreparedStatement* stmt =
+        CharacterDatabase.GetPreparedStatement(CHAR_DEL_QUEST_STATUS_WEEKLY_CHAR);
     stmt->SetData(0, GetGUID().GetCounter());
     trans->Append(stmt);
 
     for (QuestSet::const_iterator iter = m_weeklyquests.begin(); iter != m_weeklyquests.end(); ++iter)
     {
-        uint32 quest_id  = *iter;
+        uint32 quest_id = *iter;
 
         stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CHARACTER_WEEKLYQUESTSTATUS);
         stmt->SetData(0, GetGUID().GetCounter());
@@ -7581,21 +7862,18 @@ void Player::_SaveWeeklyQuestStatus(CharacterDatabaseTransaction trans)
 void Player::_SaveSeasonalQuestStatus(CharacterDatabaseTransaction trans)
 {
     if (!m_SeasonalQuestChanged)
-    {
         return;
-    }
 
     // we don't need transactions here.
-    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_QUEST_STATUS_SEASONAL_CHAR);
+    CharacterDatabasePreparedStatement* stmt =
+        CharacterDatabase.GetPreparedStatement(CHAR_DEL_QUEST_STATUS_SEASONAL_CHAR);
     stmt->SetData(0, GetGUID().GetCounter());
     trans->Append(stmt);
 
     m_SeasonalQuestChanged = false;
 
     if (m_seasonalquests.empty())
-    {
         return;
-    }
 
     for (SeasonalEventQuestMap::const_iterator iter = m_seasonalquests.begin(); iter != m_seasonalquests.end(); ++iter)
     {
@@ -7618,7 +7896,8 @@ void Player::_SaveMonthlyQuestStatus(CharacterDatabaseTransaction trans)
         return;
 
     // we don't need transactions here.
-    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_QUEST_STATUS_MONTHLY_CHAR);
+    CharacterDatabasePreparedStatement* stmt =
+        CharacterDatabase.GetPreparedStatement(CHAR_DEL_QUEST_STATUS_MONTHLY_CHAR);
     stmt->SetData(0, GetGUID().GetCounter());
     trans->Append(stmt);
 
@@ -7740,7 +8019,8 @@ void Player::_SaveSpells(CharacterDatabaseTransaction trans)
 void Player::_SaveStats(CharacterDatabaseTransaction trans)
 {
     // check if stat saving is enabled and if char level is high enough
-    if (!sWorld->getIntConfig(CONFIG_MIN_LEVEL_STAT_SAVE) || GetLevel() < sWorld->getIntConfig(CONFIG_MIN_LEVEL_STAT_SAVE))
+    if (!sWorld->getIntConfig(CONFIG_MIN_LEVEL_STAT_SAVE) ||
+        GetLevel() < sWorld->getIntConfig(CONFIG_MIN_LEVEL_STAT_SAVE))
         return;
 
     CharacterDatabasePreparedStatement* stmt = nullptr;
@@ -7780,19 +8060,43 @@ void Player::_SaveStats(CharacterDatabaseTransaction trans)
 
 void Player::outDebugValues() const
 {
-    if (!sLog->ShouldLog("entities.player", LogLevel::LOG_LEVEL_DEBUG))                                  // optimize disabled debug output
+    if (!sLog->ShouldLog("entities.player", LogLevel::LOG_LEVEL_DEBUG)) // optimize disabled debug output
         return;
 
     LOG_DEBUG("entities.player", "HP is: \t\t\t{}\t\tMP is: \t\t\t{}", GetMaxHealth(), GetMaxPower(POWER_MANA));
-    LOG_DEBUG("entities.player", "AGILITY is: \t\t{}\t\tSTRENGTH is: \t\t{}", GetStat(STAT_AGILITY), GetStat(STAT_STRENGTH));
-    LOG_DEBUG("entities.player", "INTELLECT is: \t\t{}\t\tSPIRIT is: \t\t{}", GetStat(STAT_INTELLECT), GetStat(STAT_SPIRIT));
+    LOG_DEBUG(
+        "entities.player", "AGILITY is: \t\t{}\t\tSTRENGTH is: \t\t{}", GetStat(STAT_AGILITY), GetStat(STAT_STRENGTH));
+    LOG_DEBUG(
+        "entities.player", "INTELLECT is: \t\t{}\t\tSPIRIT is: \t\t{}", GetStat(STAT_INTELLECT), GetStat(STAT_SPIRIT));
     LOG_DEBUG("entities.player", "STAMINA is: \t\t{}", GetStat(STAT_STAMINA));
-    LOG_DEBUG("entities.player", "Armor is: \t\t{}\t\tBlock is: \t\t{}", GetArmor(), GetFloatValue(PLAYER_BLOCK_PERCENTAGE));
-    LOG_DEBUG("entities.player", "HolyRes is: \t\t{}\t\tFireRes is: \t\t{}", GetResistance(SPELL_SCHOOL_HOLY), GetResistance(SPELL_SCHOOL_FIRE));
-    LOG_DEBUG("entities.player", "NatureRes is: \t\t{}\t\tFrostRes is: \t\t{}", GetResistance(SPELL_SCHOOL_NATURE), GetResistance(SPELL_SCHOOL_FROST));
-    LOG_DEBUG("entities.player", "ShadowRes is: \t\t{}\t\tArcaneRes is: \t\t{}", GetResistance(SPELL_SCHOOL_SHADOW), GetResistance(SPELL_SCHOOL_ARCANE));
-    LOG_DEBUG("entities.player", "MIN_DAMAGE is: \t\t{}\tMAX_DAMAGE is: \t\t{}", GetFloatValue(UNIT_FIELD_MINDAMAGE), GetFloatValue(UNIT_FIELD_MAXDAMAGE));
-    LOG_DEBUG("entities.player", "MIN_OFFHAND_DAMAGE is: \t{}\tMAX_OFFHAND_DAMAGE is: \t{}", GetFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE), GetFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE));
-    LOG_DEBUG("entities.player", "MIN_RANGED_DAMAGE is: \t{}\tMAX_RANGED_DAMAGE is: \t{}", GetFloatValue(UNIT_FIELD_MINRANGEDDAMAGE), GetFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE));
-    LOG_DEBUG("entities.player", "ATTACK_TIME is: \t{}\t\tRANGE_ATTACK_TIME is: \t{}", GetAttackTime(BASE_ATTACK), GetAttackTime(RANGED_ATTACK));
+    LOG_DEBUG(
+        "entities.player", "Armor is: \t\t{}\t\tBlock is: \t\t{}", GetArmor(), GetFloatValue(PLAYER_BLOCK_PERCENTAGE));
+    LOG_DEBUG("entities.player",
+        "HolyRes is: \t\t{}\t\tFireRes is: \t\t{}",
+        GetResistance(SPELL_SCHOOL_HOLY),
+        GetResistance(SPELL_SCHOOL_FIRE));
+    LOG_DEBUG("entities.player",
+        "NatureRes is: \t\t{}\t\tFrostRes is: \t\t{}",
+        GetResistance(SPELL_SCHOOL_NATURE),
+        GetResistance(SPELL_SCHOOL_FROST));
+    LOG_DEBUG("entities.player",
+        "ShadowRes is: \t\t{}\t\tArcaneRes is: \t\t{}",
+        GetResistance(SPELL_SCHOOL_SHADOW),
+        GetResistance(SPELL_SCHOOL_ARCANE));
+    LOG_DEBUG("entities.player",
+        "MIN_DAMAGE is: \t\t{}\tMAX_DAMAGE is: \t\t{}",
+        GetFloatValue(UNIT_FIELD_MINDAMAGE),
+        GetFloatValue(UNIT_FIELD_MAXDAMAGE));
+    LOG_DEBUG("entities.player",
+        "MIN_OFFHAND_DAMAGE is: \t{}\tMAX_OFFHAND_DAMAGE is: \t{}",
+        GetFloatValue(UNIT_FIELD_MINOFFHANDDAMAGE),
+        GetFloatValue(UNIT_FIELD_MAXOFFHANDDAMAGE));
+    LOG_DEBUG("entities.player",
+        "MIN_RANGED_DAMAGE is: \t{}\tMAX_RANGED_DAMAGE is: \t{}",
+        GetFloatValue(UNIT_FIELD_MINRANGEDDAMAGE),
+        GetFloatValue(UNIT_FIELD_MAXRANGEDDAMAGE));
+    LOG_DEBUG("entities.player",
+        "ATTACK_TIME is: \t{}\t\tRANGE_ATTACK_TIME is: \t{}",
+        GetAttackTime(BASE_ATTACK),
+        GetAttackTime(RANGED_ATTACK));
 }

@@ -21,21 +21,21 @@
 
 enum Spells
 {
-    SPELL_ECK_BERSERK                   = 55816,
-    SPELL_ECK_BITE                      = 55813,
-    SPELL_ECK_SPIT                      = 55814,
-    SPELL_ECK_SPRING                    = 55815,
-    SPELL_ECK_SPRING_INIT               = 55837
+    SPELL_ECK_BERSERK = 55816,
+    SPELL_ECK_BITE = 55813,
+    SPELL_ECK_SPIT = 55814,
+    SPELL_ECK_SPRING = 55815,
+    SPELL_ECK_SPRING_INIT = 55837
 };
 
 enum Misc
 {
-    POINT_START                         = 0,
-    EVENT_ECK_BERSERK                   = 1,
-    EVENT_ECK_BITE                      = 2,
-    EVENT_ECK_SPIT                      = 3,
-    EVENT_ECK_SPRING                    = 4,
-    EVENT_ECK_HEALTH                    = 5
+    POINT_START = 0,
+    EVENT_ECK_BERSERK = 1,
+    EVENT_ECK_BITE = 2,
+    EVENT_ECK_SPIT = 3,
+    EVENT_ECK_SPRING = 4,
+    EVENT_ECK_HEALTH = 5
 };
 
 class boss_eck : public CreatureScript
@@ -50,9 +50,7 @@ public:
 
     struct boss_eckAI : public BossAI
     {
-        boss_eckAI(Creature* creature) : BossAI(creature, DATA_ECK_THE_FEROCIOUS)
-        {
-        }
+        boss_eckAI(Creature* creature) : BossAI(creature, DATA_ECK_THE_FEROCIOUS) { }
 
         void InitializeAI() override
         {

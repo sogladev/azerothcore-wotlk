@@ -21,18 +21,18 @@
 
 enum Spells
 {
-    SPELL_THRASH                    = 3391,
-    SPELL_SNAPKICK                  = 15618,
-    SPELL_CLEAVE                    = 15284,
-    SPELL_UPPERCUT                  = 10966,
-    SPELL_MORTALSTRIKE              = 16856,
-    SPELL_PUMMEL                    = 15615,
-    SPELL_THROWAXE                  = 16075
+    SPELL_THRASH = 3391,
+    SPELL_SNAPKICK = 15618,
+    SPELL_CLEAVE = 15284,
+    SPELL_UPPERCUT = 10966,
+    SPELL_MORTALSTRIKE = 16856,
+    SPELL_PUMMEL = 15615,
+    SPELL_THROWAXE = 16075
 };
 
 enum Events
 {
-    EVENT_SNAP_KICK                 = 1,
+    EVENT_SNAP_KICK = 1,
     EVENT_CLEAVE,
     EVENT_UPPERCUT,
     EVENT_MORTAL_STRIKE,
@@ -73,7 +73,8 @@ public:
             events.ScheduleEvent(EVENT_THROW_AXE, 1s, GROUP_BRAWLER, PHASE_BRAWLER);
         }
 
-        void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
+        void DamageTaken(
+            Unit* /*attacker*/, uint32& damage, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
         {
             if (me->HealthBelowPctDamaged(65, damage) && events.IsInPhase(PHASE_BRAWLER))
             {

@@ -22,70 +22,69 @@
 
 enum Spells
 {
-    SPELL_EVOCATION                             = 51602,
-    SPELL_SUMMON_MENAGERIE_1                    = 50476,
-    SPELL_SUMMON_MENAGERIE_2                    = 50495,
-    SPELL_SUMMON_MENAGERIE_3                    = 50496,
-    SPELL_TELEPORT                              = 51112,
+    SPELL_EVOCATION = 51602,
+    SPELL_SUMMON_MENAGERIE_1 = 50476,
+    SPELL_SUMMON_MENAGERIE_2 = 50495,
+    SPELL_SUMMON_MENAGERIE_3 = 50496,
+    SPELL_TELEPORT = 51112,
 
-    SPELL_FROSTBOMB                             = 51103,
-    SPELL_TIME_BOMB_N                           = 51121,
-    SPELL_TIME_BOMB_H                           = 59376,
-    SPELL_EMPOWERED_ARCANE_EXPLOSION_N          = 51110,
-    SPELL_EMPOWERED_ARCANE_EXPLOSION_H          = 59377,
+    SPELL_FROSTBOMB = 51103,
+    SPELL_TIME_BOMB_N = 51121,
+    SPELL_TIME_BOMB_H = 59376,
+    SPELL_EMPOWERED_ARCANE_EXPLOSION_N = 51110,
+    SPELL_EMPOWERED_ARCANE_EXPLOSION_H = 59377,
 };
 
 #define SPELL_EMPOWERED_ARCANE_EXPLOSION        DUNGEON_MODE(SPELL_EMPOWERED_ARCANE_EXPLOSION_N, SPELL_EMPOWERED_ARCANE_EXPLOSION_H)
+
 //#define SPELL_TIME_BOMB                         DUNGEON_MODE(SPELL_TIME_BOMB_N, SPELL_TIME_BOMB_H)
 
 enum UromNPCs
 {
-    NPC_PHANTASMAL_CLOUDSCRAPER                 = 27645,
-    NPC_PHANTASMAL_MAMMOTH                      = 27642,
-    NPC_PHANTASMAL_WOLF                         = 27644,
+    NPC_PHANTASMAL_CLOUDSCRAPER = 27645,
+    NPC_PHANTASMAL_MAMMOTH = 27642,
+    NPC_PHANTASMAL_WOLF = 27644,
 
-    NPC_PHANTASMAL_AIR                          = 27650,
-    NPC_PHANTASMAL_FIRE                         = 27651,
-    NPC_PHANTASMAL_WATER                        = 27653,
+    NPC_PHANTASMAL_AIR = 27650,
+    NPC_PHANTASMAL_FIRE = 27651,
+    NPC_PHANTASMAL_WATER = 27653,
 
-    NPC_PHANTASMAL_MURLOC                       = 27649,
-    NPC_PHANTASMAL_NAGAL                        = 27648,
-    NPC_PHANTASMAL_OGRE                         = 27647,
+    NPC_PHANTASMAL_MURLOC = 27649,
+    NPC_PHANTASMAL_NAGAL = 27648,
+    NPC_PHANTASMAL_OGRE = 27647,
 };
 
 enum Events
 {
-    EVENT_FROSTBOMB                             = 1,
-    EVENT_TELEPORT_TO_CENTER                    = 2,
-    EVENT_TELE_BACK                             = 3,
-    EVENT_TIME_BOMB                             = 4,
+    EVENT_FROSTBOMB = 1,
+    EVENT_TELEPORT_TO_CENTER = 2,
+    EVENT_TELE_BACK = 3,
+    EVENT_TIME_BOMB = 4,
 };
 
 enum Yells
 {
-    SAY_SUMMON_1                                  = 0,
-    SAY_SUMMON_2                                  = 1,
-    SAY_SUMMON_3                                  = 2,
-    SAY_AGGRO                                     = 3,
-    EMOTE_ARCANE_EXPLOSION                        = 4,
-    SAY_ARCANE_EXPLOSION                          = 5,
-    SAY_DEATH                                     = 6,
-    SAY_PLAYER_KILL                               = 7
+    SAY_SUMMON_1 = 0,
+    SAY_SUMMON_2 = 1,
+    SAY_SUMMON_3 = 2,
+    SAY_AGGRO = 3,
+    EMOTE_ARCANE_EXPLOSION = 4,
+    SAY_ARCANE_EXPLOSION = 5,
+    SAY_DEATH = 6,
+    SAY_PLAYER_KILL = 7
 };
 
-float summons[3][4] =
-{
-    {NPC_PHANTASMAL_AIR, NPC_PHANTASMAL_AIR, NPC_PHANTASMAL_WATER, NPC_PHANTASMAL_FIRE},
-    {NPC_PHANTASMAL_OGRE, NPC_PHANTASMAL_OGRE, NPC_PHANTASMAL_NAGAL, NPC_PHANTASMAL_MURLOC},
-    {NPC_PHANTASMAL_CLOUDSCRAPER, NPC_PHANTASMAL_CLOUDSCRAPER, NPC_PHANTASMAL_MAMMOTH, NPC_PHANTASMAL_WOLF}
+float summons[3][4] = {
+    {NPC_PHANTASMAL_AIR,          NPC_PHANTASMAL_AIR,          NPC_PHANTASMAL_WATER,   NPC_PHANTASMAL_FIRE  },
+    {NPC_PHANTASMAL_OGRE,         NPC_PHANTASMAL_OGRE,         NPC_PHANTASMAL_NAGAL,   NPC_PHANTASMAL_MURLOC},
+    {NPC_PHANTASMAL_CLOUDSCRAPER, NPC_PHANTASMAL_CLOUDSCRAPER, NPC_PHANTASMAL_MAMMOTH, NPC_PHANTASMAL_WOLF  }
 };
 
-float cords[4][4] =
-{
-    {1177.47f, 937.722f, 527.405f, 2.21657f},
-    {968.66f, 1042.53f, 527.32f, 0.077f},
-    {1164.02f, 1170.85f, 527.321f, 3.66f},
-    {1118.31f, 1080.377f, 508.361f, 4.25f}
+float cords[4][4] = {
+    {1177.47f, 937.722f,  527.405f, 2.21657f},
+    {968.66f,  1042.53f,  527.32f,  0.077f  },
+    {1164.02f, 1170.85f,  527.321f, 3.66f   },
+    {1118.31f, 1080.377f, 508.361f, 4.25f   }
 };
 
 class boss_urom : public CreatureScript
@@ -125,7 +124,7 @@ public:
             if (pInstance)
             {
                 pInstance->SetData(DATA_UROM, NOT_STARTED);
-                if (pInstance->GetData(DATA_VAROS) != DONE )
+                if (pInstance->GetData(DATA_VAROS) != DONE)
                     me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 else
                     me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
@@ -219,9 +218,7 @@ public:
         {
             Talk(SAY_DEATH);
             if (pInstance)
-            {
                 pInstance->SetData(DATA_UROM, DONE);
-            }
             me->SetCanFly(false);
             me->SetDisableGravity(false);
             me->NearTeleportTo(x, y, z, 0.0f);
@@ -237,41 +234,62 @@ public:
             switch (spell->Id)
             {
                 case SPELL_SUMMON_MENAGERIE_1:
-                    {
-                        for( uint8 i = 0; i < 4; ++i )
-                            me->SummonCreature(summons[0][i], cords[0][0] + ((i % 2) ? 4.0f : -4.0f), cords[0][1] + (i < 2 ? 4.0f : -4.0f), cords[0][2], 0.0f, TEMPSUMMON_TIMED_DESPAWN, 300000);
-                        uint8 phase = GetPhaseByCurrentPosition();
-                        me->SetHomePosition(cords[phase + 1][0], cords[phase + 1][1], cords[phase + 1][2], cords[phase + 1][3]);
-                        me->DestroyForNearbyPlayers();
-                        LeaveCombat();
-                        me->CastSpell(me, SPELL_EVOCATION, true);
-                        releaseLockTimer = 1;
-                    }
-                    break;
+                {
+                    for (uint8 i = 0; i < 4; ++i)
+                        me->SummonCreature(summons[0][i],
+                            cords[0][0] + ((i % 2) ? 4.0f : -4.0f),
+                            cords[0][1] + (i < 2 ? 4.0f : -4.0f),
+                            cords[0][2],
+                            0.0f,
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            300000);
+                    uint8 phase = GetPhaseByCurrentPosition();
+                    me->SetHomePosition(
+                        cords[phase + 1][0], cords[phase + 1][1], cords[phase + 1][2], cords[phase + 1][3]);
+                    me->DestroyForNearbyPlayers();
+                    LeaveCombat();
+                    me->CastSpell(me, SPELL_EVOCATION, true);
+                    releaseLockTimer = 1;
+                }
+                break;
                 case SPELL_SUMMON_MENAGERIE_2:
-                    {
-                        for( uint8 i = 0; i < 4; ++i )
-                            me->SummonCreature(summons[1][i], cords[1][0] + ((i % 2) ? 4.0f : -4.0f), cords[1][1] + (i < 2 ? 4.0f : -4.0f), cords[1][2], 0.0f, TEMPSUMMON_TIMED_DESPAWN, 300000);
-                        uint8 phase = GetPhaseByCurrentPosition();
-                        me->SetHomePosition(cords[phase + 1][0], cords[phase + 1][1], cords[phase + 1][2], cords[phase + 1][3]);
-                        me->DestroyForNearbyPlayers();
-                        LeaveCombat();
-                        me->CastSpell(me, SPELL_EVOCATION, true);
-                        releaseLockTimer = 1;
-                    }
-                    break;
+                {
+                    for (uint8 i = 0; i < 4; ++i)
+                        me->SummonCreature(summons[1][i],
+                            cords[1][0] + ((i % 2) ? 4.0f : -4.0f),
+                            cords[1][1] + (i < 2 ? 4.0f : -4.0f),
+                            cords[1][2],
+                            0.0f,
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            300000);
+                    uint8 phase = GetPhaseByCurrentPosition();
+                    me->SetHomePosition(
+                        cords[phase + 1][0], cords[phase + 1][1], cords[phase + 1][2], cords[phase + 1][3]);
+                    me->DestroyForNearbyPlayers();
+                    LeaveCombat();
+                    me->CastSpell(me, SPELL_EVOCATION, true);
+                    releaseLockTimer = 1;
+                }
+                break;
                 case SPELL_SUMMON_MENAGERIE_3:
-                    {
-                        for( uint8 i = 0; i < 4; ++i )
-                            me->SummonCreature(summons[2][i], cords[2][0] + ((i % 2) ? 4.0f : -4.0f), cords[2][1] + (i < 2 ? 4.0f : -4.0f), cords[2][2], 0.0f, TEMPSUMMON_TIMED_DESPAWN, 300000);
-                        uint8 phase = GetPhaseByCurrentPosition();
-                        me->SetHomePosition(cords[phase + 1][0], cords[phase + 1][1], cords[phase + 1][2], cords[phase + 1][3]);
-                        me->DestroyForNearbyPlayers();
-                        LeaveCombat();
-                        me->CastSpell(me, SPELL_EVOCATION, true);
-                        releaseLockTimer = 1;
-                    }
-                    break;
+                {
+                    for (uint8 i = 0; i < 4; ++i)
+                        me->SummonCreature(summons[2][i],
+                            cords[2][0] + ((i % 2) ? 4.0f : -4.0f),
+                            cords[2][1] + (i < 2 ? 4.0f : -4.0f),
+                            cords[2][2],
+                            0.0f,
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            300000);
+                    uint8 phase = GetPhaseByCurrentPosition();
+                    me->SetHomePosition(
+                        cords[phase + 1][0], cords[phase + 1][1], cords[phase + 1][2], cords[phase + 1][3]);
+                    me->DestroyForNearbyPlayers();
+                    LeaveCombat();
+                    me->CastSpell(me, SPELL_EVOCATION, true);
+                    releaseLockTimer = 1;
+                }
+                break;
                 case SPELL_TELEPORT:
                     me->GetMotionMaster()->Clear();
                     me->GetMotionMaster()->MoveIdle();
@@ -295,7 +313,7 @@ public:
             }
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void UpdateAI(uint32 diff) override
         {

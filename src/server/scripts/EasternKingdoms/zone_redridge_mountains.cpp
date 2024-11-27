@@ -29,13 +29,13 @@ Script Data End */
 enum CorporalKeeshan
 {
     QUEST_MISSING_IN_ACTION = 219,
-    SAY_CORPORAL_1          = 0,
-    SAY_CORPORAL_2          = 1,
-    SAY_CORPORAL_3          = 2,
-    SAY_CORPORAL_4          = 3,
-    SAY_CORPORAL_5          = 4,
-    SPELL_MOCKING_BLOW      = 21008,
-    SPELL_SHIELD_BASH       = 11972
+    SAY_CORPORAL_1 = 0,
+    SAY_CORPORAL_2 = 1,
+    SAY_CORPORAL_3 = 2,
+    SAY_CORPORAL_4 = 3,
+    SAY_CORPORAL_5 = 4,
+    SPELL_MOCKING_BLOW = 21008,
+    SPELL_SHIELD_BASH = 11972
 };
 
 class npc_corporal_keeshan : public CreatureScript
@@ -52,7 +52,7 @@ public:
             timer = 0;
             phase = 0;
             mockingBlowTimer = 5000;
-            shieldBashTimer  = 8000;
+            shieldBashTimer = 8000;
             me->SetImmuneToNPC(true);
         }
 
@@ -136,7 +136,8 @@ public:
                             break;
                     }
                 }
-                else timer -= diff;
+                else
+                    timer -= diff;
             }
 
             if (!UpdateVictim())
@@ -147,14 +148,16 @@ public:
                 DoCastVictim(SPELL_MOCKING_BLOW);
                 mockingBlowTimer = 5000;
             }
-            else mockingBlowTimer -= diff;
+            else
+                mockingBlowTimer -= diff;
 
             if (shieldBashTimer <= diff)
             {
                 DoCastVictim(SPELL_MOCKING_BLOW);
                 shieldBashTimer = 8000;
             }
-            else shieldBashTimer -= diff;
+            else
+                shieldBashTimer -= diff;
 
             DoMeleeAttackIfReady();
         }

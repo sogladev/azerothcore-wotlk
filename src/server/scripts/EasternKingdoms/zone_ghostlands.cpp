@@ -27,18 +27,18 @@
 
 enum RangerLilatha
 {
-    SAY_START                           = 0,
-    SAY_PROGRESS1                       = 1,
-    SAY_PROGRESS2                       = 2,
-    SAY_PROGRESS3                       = 3,
-    SAY_END1                            = 4,
-    SAY_END2                            = 5,
-    SAY_CAPTAIN_ANSWER                  = 0,
-    QUEST_ESCAPE_FROM_THE_CATACOMBS     = 9212,
-    GO_CAGE                             = 181152,
-    NPC_CAPTAIN_HELIOS                  = 16220,
-    NPC_MUMMIFIED_HEADHUNTER            = 16342,
-    NPC_SHADOWPINE_ORACLE               = 16343
+    SAY_START = 0,
+    SAY_PROGRESS1 = 1,
+    SAY_PROGRESS2 = 2,
+    SAY_PROGRESS3 = 3,
+    SAY_END1 = 4,
+    SAY_END2 = 5,
+    SAY_CAPTAIN_ANSWER = 0,
+    QUEST_ESCAPE_FROM_THE_CATACOMBS = 9212,
+    GO_CAGE = 181152,
+    NPC_CAPTAIN_HELIOS = 16220,
+    NPC_MUMMIFIED_HEADHUNTER = 16342,
+    NPC_SHADOWPINE_ORACLE = 16343
 };
 
 struct npc_ranger_lilatha : public npc_escortAI
@@ -53,52 +53,64 @@ struct npc_ranger_lilatha : public npc_escortAI
 
         switch (waypointId)
         {
-        case 0:
-            me->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_STAND);
-            if (GameObject* Cage = me->FindNearestGameObject(GO_CAGE, 20.0f))
-                Cage->SetGoState(GO_STATE_ACTIVE);
-            Talk(SAY_START, player);
-            break;
-        case 5:
-            Talk(SAY_PROGRESS1, player);
-            break;
-        case 11:
-            Talk(SAY_PROGRESS2, player);
-            me->SetFacingTo(4.762841f);
-            break;
-        case 18:
-        {
-            Talk(SAY_PROGRESS3, player);
-            Creature* Summ1 = me->SummonCreature(NPC_MUMMIFIED_HEADHUNTER, 7627.083984f, -7532.538086f, 152.128616f, 1.082733f, TEMPSUMMON_DEAD_DESPAWN, 0);
-            Creature* Summ2 = me->SummonCreature(NPC_SHADOWPINE_ORACLE, 7620.432129f, -7532.550293f, 152.454865f, 0.827478f, TEMPSUMMON_DEAD_DESPAWN, 0);
-            if (Summ1 && Summ2)
+            case 0:
+                me->SetUInt32Value(UNIT_FIELD_BYTES_1, UNIT_STAND_STATE_STAND);
+                if (GameObject* Cage = me->FindNearestGameObject(GO_CAGE, 20.0f))
+                    Cage->SetGoState(GO_STATE_ACTIVE);
+                Talk(SAY_START, player);
+                break;
+            case 5:
+                Talk(SAY_PROGRESS1, player);
+                break;
+            case 11:
+                Talk(SAY_PROGRESS2, player);
+                me->SetFacingTo(4.762841f);
+                break;
+            case 18:
             {
-                Summ1->Attack(me, true);
-                Summ2->Attack(player, true);
+                Talk(SAY_PROGRESS3, player);
+                Creature* Summ1 = me->SummonCreature(NPC_MUMMIFIED_HEADHUNTER,
+                    7627.083984f,
+                    -7532.538086f,
+                    152.128616f,
+                    1.082733f,
+                    TEMPSUMMON_DEAD_DESPAWN,
+                    0);
+                Creature* Summ2 = me->SummonCreature(NPC_SHADOWPINE_ORACLE,
+                    7620.432129f,
+                    -7532.550293f,
+                    152.454865f,
+                    0.827478f,
+                    TEMPSUMMON_DEAD_DESPAWN,
+                    0);
+                if (Summ1 && Summ2)
+                {
+                    Summ1->Attack(me, true);
+                    Summ2->Attack(player, true);
+                }
+                AttackStart(Summ1);
             }
-            AttackStart(Summ1);
-        }
-        break;
-        case 19:
-            me->SetWalk(false);
             break;
-        case 25:
-            me->SetWalk(true);
-            break;
-        case 30:
-            player->GroupEventHappens(QUEST_ESCAPE_FROM_THE_CATACOMBS, me);
-            break;
-        case 32:
-            me->SetFacingTo(2.978281f);
-            Talk(SAY_END1, player);
-            break;
-        case 33:
-            me->SetFacingTo(5.858011f);
-            Talk(SAY_END2, player);
-            Creature* CaptainHelios = me->FindNearestCreature(NPC_CAPTAIN_HELIOS, 50.0f);
-            if (CaptainHelios)
-                CaptainHelios->AI()->Talk(SAY_CAPTAIN_ANSWER, player);
-            break;
+            case 19:
+                me->SetWalk(false);
+                break;
+            case 25:
+                me->SetWalk(true);
+                break;
+            case 30:
+                player->GroupEventHappens(QUEST_ESCAPE_FROM_THE_CATACOMBS, me);
+                break;
+            case 32:
+                me->SetFacingTo(2.978281f);
+                Talk(SAY_END1, player);
+                break;
+            case 33:
+                me->SetFacingTo(5.858011f);
+                Talk(SAY_END2, player);
+                Creature* CaptainHelios = me->FindNearestCreature(NPC_CAPTAIN_HELIOS, 50.0f);
+                if (CaptainHelios)
+                    CaptainHelios->AI()->Talk(SAY_CAPTAIN_ANSWER, player);
+                break;
         }
     }
 
@@ -124,18 +136,18 @@ struct npc_ranger_lilatha : public npc_escortAI
 
 enum SentinelLeader
 {
-    EVENT_QUESTION        = 1,
-    EVENT_TALK            = 2,
+    EVENT_QUESTION = 1,
+    EVENT_TALK = 2,
     EVENT_SINISTER_STRIKE = 3,
-    EVENT_BACKSTAB        = 4,
-    NPC_SENTINEL_SPY      = 16330,
+    EVENT_BACKSTAB = 4,
+    NPC_SENTINEL_SPY = 16330,
     SPELL_SINISTER_STRIKE = 14873,
-    SPELL_BACKSTAB        = 7159
+    SPELL_BACKSTAB = 7159
 };
 
 struct npc_sentinel_leader : public ScriptedAI
 {
-    npc_sentinel_leader(Creature* creature) : ScriptedAI(creature) {}
+    npc_sentinel_leader(Creature* creature) : ScriptedAI(creature) { }
 
     void Reset() override
     {
@@ -148,21 +160,21 @@ struct npc_sentinel_leader : public ScriptedAI
         {
             switch (id)
             {
-            case 1:
-            case 4:
-            case 7:
-            case 8:
-            case 13:
-            case 14:
-            case 17:
-                Creature* SentinelSpy = me->FindNearestCreature(NPC_SENTINEL_SPY, 2.0f, true);
-                if (SentinelSpy)
-                {
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                    SentinelSpy->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                    _events.ScheduleEvent(EVENT_QUESTION, 5s);
-                }
-                break;
+                case 1:
+                case 4:
+                case 7:
+                case 8:
+                case 13:
+                case 14:
+                case 17:
+                    Creature* SentinelSpy = me->FindNearestCreature(NPC_SENTINEL_SPY, 2.0f, true);
+                    if (SentinelSpy)
+                    {
+                        me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                        SentinelSpy->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                        _events.ScheduleEvent(EVENT_QUESTION, 5s);
+                    }
+                    break;
             }
         }
     }
@@ -183,23 +195,21 @@ struct npc_sentinel_leader : public ScriptedAI
             {
                 switch (eventId)
                 {
-                case EVENT_QUESTION:
-                {
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
-                    _events.ScheduleEvent(EVENT_TALK, 1s);
-                    break;
-                }
-                case EVENT_TALK:
-                {
-                    Creature* SentinelSpy = me->FindNearestCreature(NPC_SENTINEL_SPY, 2.0f, true);
-                    if (SentinelSpy)
+                    case EVENT_QUESTION:
                     {
-                        SentinelSpy->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
+                        me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
+                        _events.ScheduleEvent(EVENT_TALK, 1s);
+                        break;
                     }
-                    break;
-                }
-                default:
-                    break;
+                    case EVENT_TALK:
+                    {
+                        Creature* SentinelSpy = me->FindNearestCreature(NPC_SENTINEL_SPY, 2.0f, true);
+                        if (SentinelSpy)
+                            SentinelSpy->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
+                        break;
+                    }
+                    default:
+                        break;
                 }
             }
             return;
@@ -209,16 +219,16 @@ struct npc_sentinel_leader : public ScriptedAI
         {
             switch (eventId)
             {
-            case EVENT_SINISTER_STRIKE:
-                DoCastVictim(SPELL_SINISTER_STRIKE, true);
-                _events.ScheduleEvent(EVENT_SINISTER_STRIKE, 5s, 9s);
-                break;
-            case EVENT_BACKSTAB:
-                DoCastVictim(SPELL_BACKSTAB, true);
-                _events.ScheduleEvent(EVENT_BACKSTAB, 7s, 11s);
-                break;
-            default:
-                break;
+                case EVENT_SINISTER_STRIKE:
+                    DoCastVictim(SPELL_SINISTER_STRIKE, true);
+                    _events.ScheduleEvent(EVENT_SINISTER_STRIKE, 5s, 9s);
+                    break;
+                case EVENT_BACKSTAB:
+                    DoCastVictim(SPELL_BACKSTAB, true);
+                    _events.ScheduleEvent(EVENT_BACKSTAB, 7s, 11s);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -233,7 +243,7 @@ struct npc_sentinel_leader : public ScriptedAI
 
 private:
     EventMap _events;
-    bool     _helpCalled;
+    bool _helpCalled;
 };
 
 /*######
@@ -242,17 +252,17 @@ private:
 
 enum SentinelInfiltrator
 {
-    EMOTE_FLEE               = 0,
-    EVENT_TALK2              = 1,
-    EVENT_QUESTION2          = 2,
-    EVENT_EXCLAMATION        = 3,
-    EVENT_SALUTE             = 4,
-    EVENT_GOUGE2             = 5,
-    EVENT_BACKSTAB2          = 6,
+    EMOTE_FLEE = 0,
+    EVENT_TALK2 = 1,
+    EVENT_QUESTION2 = 2,
+    EVENT_EXCLAMATION = 3,
+    EVENT_SALUTE = 4,
+    EVENT_GOUGE2 = 5,
+    EVENT_BACKSTAB2 = 6,
     NPC_SENTINEL_INFILTRATOR = 16333,
-    PATH_ONE                 = 841030,
-    PATH_TWO                 = 859400,
-    SPELL_GOUGE              = 12540
+    PATH_ONE = 841030,
+    PATH_TWO = 859400,
+    SPELL_GOUGE = 12540
 };
 
 struct npc_sentinel_infiltrator : public ScriptedAI
@@ -278,40 +288,42 @@ struct npc_sentinel_infiltrator : public ScriptedAI
         {
             switch (_path)
             {
-            case PATH_ONE:
-                switch (id)
-                {
-                    case 5:
-                    case 8:
-                    case 14:
-                    case 18:
-                        Creature* SentinelInfiltrator = me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
-                        if (SentinelInfiltrator)
-                        {
-                            me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                            SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                            _events.ScheduleEvent(EVENT_TALK2, 2s);
-                        }
-                        break;
-                }
-                break;
-            case PATH_TWO:
-                switch (id)
-                {
-                    case 5:
-                    case 7:
-                    case 14:
-                    case 17:
-                        Creature* SentinelInfiltrator = me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
-                        if (SentinelInfiltrator)
-                        {
-                            me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                            SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                            _events.ScheduleEvent(EVENT_TALK, 2s);
-                        }
-                        break;
-                }
-                break;
+                case PATH_ONE:
+                    switch (id)
+                    {
+                        case 5:
+                        case 8:
+                        case 14:
+                        case 18:
+                            Creature* SentinelInfiltrator =
+                                me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
+                            if (SentinelInfiltrator)
+                            {
+                                me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                                SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                                _events.ScheduleEvent(EVENT_TALK2, 2s);
+                            }
+                            break;
+                    }
+                    break;
+                case PATH_TWO:
+                    switch (id)
+                    {
+                        case 5:
+                        case 7:
+                        case 14:
+                        case 17:
+                            Creature* SentinelInfiltrator =
+                                me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
+                            if (SentinelInfiltrator)
+                            {
+                                me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                                SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                                _events.ScheduleEvent(EVENT_TALK, 2s);
+                            }
+                            break;
+                    }
+                    break;
             }
         }
     }
@@ -332,44 +344,40 @@ struct npc_sentinel_infiltrator : public ScriptedAI
             {
                 switch (eventId)
                 {
-                case EVENT_TALK2:
-                {
-                    Creature* SentinelInfiltrator = me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
-                    if (SentinelInfiltrator)
+                    case EVENT_TALK2:
                     {
-                        SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
-                    }
-                    _events.ScheduleEvent(EVENT_QUESTION, 2s);
-                    break;
-                }
-                case EVENT_QUESTION2:
-                {
-                    me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
-                    _events.ScheduleEvent(EVENT_EXCLAMATION, 1s);
-                    break;
-                }
-                case EVENT_EXCLAMATION:
-                {
-                    Creature* SentinelInfiltrator = me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
-                    if (SentinelInfiltrator)
-                    {
-                        SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
-                    }
-                    _events.ScheduleEvent(EVENT_SALUTE, 3s);
-                    break;
-                }
-                case EVENT_SALUTE:
-                {
-                    Creature* SentinelInfiltrator = me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
-                    if (SentinelInfiltrator)
-                    {
-                        me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
-                        SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                        Creature* SentinelInfiltrator = me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
+                        if (SentinelInfiltrator)
+                            SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
+                        _events.ScheduleEvent(EVENT_QUESTION, 2s);
                         break;
                     }
-                }
-                default:
-                    break;
+                    case EVENT_QUESTION2:
+                    {
+                        me->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
+                        _events.ScheduleEvent(EVENT_EXCLAMATION, 1s);
+                        break;
+                    }
+                    case EVENT_EXCLAMATION:
+                    {
+                        Creature* SentinelInfiltrator = me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
+                        if (SentinelInfiltrator)
+                            SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
+                        _events.ScheduleEvent(EVENT_SALUTE, 3s);
+                        break;
+                    }
+                    case EVENT_SALUTE:
+                    {
+                        Creature* SentinelInfiltrator = me->FindNearestCreature(NPC_SENTINEL_INFILTRATOR, 3.5f, true);
+                        if (SentinelInfiltrator)
+                        {
+                            me->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                            SentinelInfiltrator->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
+                            break;
+                        }
+                    }
+                    default:
+                        break;
                 }
             }
             return;
@@ -379,16 +387,16 @@ struct npc_sentinel_infiltrator : public ScriptedAI
         {
             switch (eventId)
             {
-            case EVENT_GOUGE2:
-                DoCastVictim(SPELL_GOUGE, true);
-                _events.ScheduleEvent(EVENT_GOUGE2, 9s, 15s);
-                break;
-            case EVENT_BACKSTAB2:
-                DoCastVictim(SPELL_BACKSTAB, true);
-                _events.ScheduleEvent(EVENT_BACKSTAB, 7s, 11s);
-                break;
-            default:
-                break;
+                case EVENT_GOUGE2:
+                    DoCastVictim(SPELL_GOUGE, true);
+                    _events.ScheduleEvent(EVENT_GOUGE2, 9s, 15s);
+                    break;
+                case EVENT_BACKSTAB2:
+                    DoCastVictim(SPELL_BACKSTAB, true);
+                    _events.ScheduleEvent(EVENT_BACKSTAB, 7s, 11s);
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -403,8 +411,8 @@ struct npc_sentinel_infiltrator : public ScriptedAI
 
 private:
     EventMap _events;
-    bool     _fleedForAssistance;
-    int32    _path;
+    bool _fleedForAssistance;
+    int32 _path;
 };
 
 void AddSC_ghostlands()

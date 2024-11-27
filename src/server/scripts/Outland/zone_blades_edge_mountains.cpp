@@ -48,25 +48,25 @@ EndContentData */
 // Ours
 enum deathsdoorfell
 {
-    SPELL_ARTILLERY_ON_THE_WRAP_GATE            = 39221,
-    SPELL_IMP_AURA                              = 39227,
-    SPELL_HOUND_AURA                            = 39275,
-    SPELL_EXPLOSION                             = 30934,
+    SPELL_ARTILLERY_ON_THE_WRAP_GATE = 39221,
+    SPELL_IMP_AURA = 39227,
+    SPELL_HOUND_AURA = 39275,
+    SPELL_EXPLOSION = 30934,
 
-    NPC_DEATHS_DOOR_FEL_CANNON_TARGET_BUNNY     = 22495,
-    NPC_DEATHS_DOOR_FEL_CANNON                  = 22443,
-    NPC_EXPLOSION_BUNNY                         = 22502,
-    NPC_FEL_IMP                                 = 22474,
-    NPC_HOUND                                   = 22500,
-    NPC_NORTH_GATE                              = 22471,
-    NPC_SOUTH_GATE                              = 22472,
-    NPC_NORTH_GATE_CREDIT                       = 22503,
-    NPC_SOUTH_GATE_CREDIT                       = 22504,
+    NPC_DEATHS_DOOR_FEL_CANNON_TARGET_BUNNY = 22495,
+    NPC_DEATHS_DOOR_FEL_CANNON = 22443,
+    NPC_EXPLOSION_BUNNY = 22502,
+    NPC_FEL_IMP = 22474,
+    NPC_HOUND = 22500,
+    NPC_NORTH_GATE = 22471,
+    NPC_SOUTH_GATE = 22472,
+    NPC_NORTH_GATE_CREDIT = 22503,
+    NPC_SOUTH_GATE_CREDIT = 22504,
 
-    GO_FIRE                                     = 185317,
-    GO_BIG_FIRE                                 = 185319,
+    GO_FIRE = 185317,
+    GO_BIG_FIRE = 185319,
 
-    EVENT_PARTY_TIMER                           = 1
+    EVENT_PARTY_TIMER = 1
 };
 
 class npc_deaths_door_fell_cannon_target_bunny : public CreatureScript
@@ -115,7 +115,16 @@ public:
                 }
 
                 if (count >= 3)
-                    me->SummonGameObject(GO_FIRE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 130);
+                    me->SummonGameObject(GO_FIRE,
+                        me->GetPositionX(),
+                        me->GetPositionY(),
+                        me->GetPositionZ(),
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        130);
 
                 if (count > 6)
                 {
@@ -132,7 +141,16 @@ public:
                             cannon->DespawnOrUnsummon(5000);
                     }
 
-                    me->SummonGameObject(GO_BIG_FIRE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 60);
+                    me->SummonGameObject(GO_BIG_FIRE,
+                        me->GetPositionX(),
+                        me->GetPositionY(),
+                        me->GetPositionZ(),
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        60);
                     Reset();
                 }
             }
@@ -233,10 +251,10 @@ class spell_npc22275_crystal_prison_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CRYSTAL_SHATTER });
+        return ValidateSpellInfo({SPELL_CRYSTAL_SHATTER});
     }
 
-    void OnPeriodic(AuraEffect const*  /*aurEff*/)
+    void OnPeriodic(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction();
         SetDuration(0);
@@ -245,7 +263,8 @@ class spell_npc22275_crystal_prison_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_npc22275_crystal_prison_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_npc22275_crystal_prison_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -258,23 +277,23 @@ class spell_npc22275_crystal_prison_aura : public AuraScript
 enum Netherdrake
 {
     //Used by 20021, 21817, 21820, 21821, 21823 but not existing in database
-    SAY_NIHIL_1                 = 0,
-    SAY_NIHIL_2                 = 1,
-    SAY_NIHIL_3                 = 2,
-    SAY_NIHIL_4                 = 3,
-    SAY_NIHIL_INTERRUPT         = 4,
+    SAY_NIHIL_1 = 0,
+    SAY_NIHIL_2 = 1,
+    SAY_NIHIL_3 = 2,
+    SAY_NIHIL_4 = 3,
+    SAY_NIHIL_INTERRUPT = 4,
 
-    ENTRY_WHELP                 = 20021,
-    ENTRY_PROTO                 = 21821,
-    ENTRY_ADOLE                 = 21817,
-    ENTRY_MATUR                 = 21820,
-    ENTRY_NIHIL                 = 21823,
+    ENTRY_WHELP = 20021,
+    ENTRY_PROTO = 21821,
+    ENTRY_ADOLE = 21817,
+    ENTRY_MATUR = 21820,
+    ENTRY_NIHIL = 21823,
 
-    SPELL_T_PHASE_MODULATOR     = 37573,
+    SPELL_T_PHASE_MODULATOR = 37573,
 
-    SPELL_ARCANE_BLAST          = 38881,
-    SPELL_MANA_BURN             = 38884,
-    SPELL_INTANGIBLE_PRESENCE   = 36513
+    SPELL_ARCANE_BLAST = 38881,
+    SPELL_MANA_BURN = 38884,
+    SPELL_INTANGIBLE_PRESENCE = 36513
 };
 
 class npc_nether_drake : public CreatureScript
@@ -334,7 +353,7 @@ public:
         {
             if (spell->Id == SPELL_T_PHASE_MODULATOR && caster->IsPlayer())
             {
-                const uint32 entry_list[4] = {ENTRY_PROTO, ENTRY_ADOLE, ENTRY_MATUR, ENTRY_NIHIL};
+                uint32 const entry_list[4] = {ENTRY_PROTO, ENTRY_ADOLE, ENTRY_MATUR, ENTRY_NIHIL};
                 int cid = rand() % (4 - 1);
 
                 if (entry_list[cid] == me->GetEntry())
@@ -389,13 +408,15 @@ public:
                         case 4:
                             me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                             //take off to location above
-                            me->GetMotionMaster()->MovePoint(0, me->GetPositionX() + 50.0f, me->GetPositionY(), me->GetPositionZ() + 50.0f);
+                            me->GetMotionMaster()->MovePoint(
+                                0, me->GetPositionX() + 50.0f, me->GetPositionY(), me->GetPositionZ() + 50.0f);
                             ++NihilSpeech_Phase;
                             break;
                     }
                     NihilSpeech_Timer = 5000;
                 }
-                else NihilSpeech_Timer -= diff;
+                else
+                    NihilSpeech_Timer -= diff;
 
                 //anything below here is not interesting for Nihil, so skip it
                 return;
@@ -409,7 +430,8 @@ public:
                 DoCastVictim(SPELL_INTANGIBLE_PRESENCE);
                 IntangiblePresence_Timer = 15000 + rand() % 15000;
             }
-            else IntangiblePresence_Timer -= diff;
+            else
+                IntangiblePresence_Timer -= diff;
 
             if (ManaBurn_Timer <= diff)
             {
@@ -418,14 +440,16 @@ public:
                     DoCast(target, SPELL_MANA_BURN);
                 ManaBurn_Timer = 8000 + rand() % 8000;
             }
-            else ManaBurn_Timer -= diff;
+            else
+                ManaBurn_Timer -= diff;
 
             if (ArcaneBlast_Timer <= diff)
             {
                 DoCastVictim(SPELL_ARCANE_BLAST);
                 ArcaneBlast_Timer = 2500 + rand() % 5000;
             }
-            else ArcaneBlast_Timer -= diff;
+            else
+                ArcaneBlast_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -443,11 +467,11 @@ public:
 
 enum Daranelle
 {
-    SAY_SPELL_INFLUENCE       = 0,
-    SPELL_LASHHAN_CHANNEL     = 36904,
+    SAY_SPELL_INFLUENCE = 0,
+    SPELL_LASHHAN_CHANNEL = 36904,
     SPELL_DISPELLING_ANALYSIS = 37028,
 
-    NPC_KALIRI_TOTEM          = 21468
+    NPC_KALIRI_TOTEM = 21468
 };
 
 class npc_daranelle : public CreatureScript
@@ -492,73 +516,73 @@ public:
 
 enum SimonGame
 {
-    NPC_SIMON_BUNNY                 = 22923,
-    NPC_APEXIS_GUARDIAN             = 22275,
+    NPC_SIMON_BUNNY = 22923,
+    NPC_APEXIS_GUARDIAN = 22275,
 
-    GO_APEXIS_RELIC                 = 185890,
-    GO_APEXIS_MONUMENT              = 185944,
-    GO_AURA_BLUE                    = 185872,
-    GO_AURA_GREEN                   = 185873,
-    GO_AURA_RED                     = 185874,
-    GO_AURA_YELLOW                  = 185875,
+    GO_APEXIS_RELIC = 185890,
+    GO_APEXIS_MONUMENT = 185944,
+    GO_AURA_BLUE = 185872,
+    GO_AURA_GREEN = 185873,
+    GO_AURA_RED = 185874,
+    GO_AURA_YELLOW = 185875,
 
-    GO_BLUE_CLUSTER_DISPLAY         = 7369,
-    GO_GREEN_CLUSTER_DISPLAY        = 7371,
-    GO_RED_CLUSTER_DISPLAY          = 7373,
-    GO_YELLOW_CLUSTER_DISPLAY       = 7375,
-    GO_BLUE_CLUSTER_DISPLAY_LARGE   = 7364,
-    GO_GREEN_CLUSTER_DISPLAY_LARGE  = 7365,
-    GO_RED_CLUSTER_DISPLAY_LARGE    = 7366,
+    GO_BLUE_CLUSTER_DISPLAY = 7369,
+    GO_GREEN_CLUSTER_DISPLAY = 7371,
+    GO_RED_CLUSTER_DISPLAY = 7373,
+    GO_YELLOW_CLUSTER_DISPLAY = 7375,
+    GO_BLUE_CLUSTER_DISPLAY_LARGE = 7364,
+    GO_GREEN_CLUSTER_DISPLAY_LARGE = 7365,
+    GO_RED_CLUSTER_DISPLAY_LARGE = 7366,
     GO_YELLOW_CLUSTER_DISPLAY_LARGE = 7367,
 
-    SPELL_PRE_GAME_BLUE             = 40176,
-    SPELL_PRE_GAME_GREEN            = 40177,
-    SPELL_PRE_GAME_RED              = 40178,
-    SPELL_PRE_GAME_YELLOW           = 40179,
-    SPELL_VISUAL_BLUE               = 40244,
-    SPELL_VISUAL_GREEN              = 40245,
-    SPELL_VISUAL_RED                = 40246,
-    SPELL_VISUAL_YELLOW             = 40247,
+    SPELL_PRE_GAME_BLUE = 40176,
+    SPELL_PRE_GAME_GREEN = 40177,
+    SPELL_PRE_GAME_RED = 40178,
+    SPELL_PRE_GAME_YELLOW = 40179,
+    SPELL_VISUAL_BLUE = 40244,
+    SPELL_VISUAL_GREEN = 40245,
+    SPELL_VISUAL_RED = 40246,
+    SPELL_VISUAL_YELLOW = 40247,
 
-    SOUND_BLUE                      = 11588,
-    SOUND_GREEN                     = 11589,
-    SOUND_RED                       = 11590,
-    SOUND_YELLOW                    = 11591,
-    SOUND_DISABLE_NODE              = 11758,
+    SOUND_BLUE = 11588,
+    SOUND_GREEN = 11589,
+    SOUND_RED = 11590,
+    SOUND_YELLOW = 11591,
+    SOUND_DISABLE_NODE = 11758,
 
-    SPELL_AUDIBLE_GAME_TICK         = 40391,
+    SPELL_AUDIBLE_GAME_TICK = 40391,
     SPELL_VISUAL_START_PLAYER_LEVEL = 40436,
-    SPELL_VISUAL_START_AI_LEVEL     = 40387,
+    SPELL_VISUAL_START_AI_LEVEL = 40387,
 
-    SPELL_BAD_PRESS_TRIGGER         = 41241,
-    SPELL_BAD_PRESS_DAMAGE          = 40065,
-    SPELL_REWARD_BUFF_1             = 40310,
-    SPELL_REWARD_BUFF_2             = 40311,
-    SPELL_REWARD_BUFF_3             = 40312,
+    SPELL_BAD_PRESS_TRIGGER = 41241,
+    SPELL_BAD_PRESS_DAMAGE = 40065,
+    SPELL_REWARD_BUFF_1 = 40310,
+    SPELL_REWARD_BUFF_2 = 40311,
+    SPELL_REWARD_BUFF_3 = 40312,
 };
 
 enum SimonEvents
 {
-    EVENT_SIMON_SETUP_PRE_GAME         = 1,
-    EVENT_SIMON_PLAY_SEQUENCE          = 2,
-    EVENT_SIMON_RESET_CLUSTERS         = 3,
-    EVENT_SIMON_PERIODIC_PLAYER_CHECK  = 4,
-    EVENT_SIMON_TOO_LONG_TIME          = 5,
-    EVENT_SIMON_GAME_TICK              = 6,
-    EVENT_SIMON_ROUND_FINISHED         = 7,
+    EVENT_SIMON_SETUP_PRE_GAME = 1,
+    EVENT_SIMON_PLAY_SEQUENCE = 2,
+    EVENT_SIMON_RESET_CLUSTERS = 3,
+    EVENT_SIMON_PERIODIC_PLAYER_CHECK = 4,
+    EVENT_SIMON_TOO_LONG_TIME = 5,
+    EVENT_SIMON_GAME_TICK = 6,
+    EVENT_SIMON_ROUND_FINISHED = 7,
 
     ACTION_SIMON_CORRECT_FULL_SEQUENCE = 8,
-    ACTION_SIMON_WRONG_SEQUENCE        = 9,
-    ACTION_SIMON_ROUND_FINISHED        = 10,
+    ACTION_SIMON_WRONG_SEQUENCE = 9,
+    ACTION_SIMON_ROUND_FINISHED = 10,
 };
 
 enum SimonColors
 {
-    SIMON_BLUE          = 0,
-    SIMON_RED           = 1,
-    SIMON_GREEN         = 2,
-    SIMON_YELLOW        = 3,
-    SIMON_MAX_COLORS    = 4,
+    SIMON_BLUE = 0,
+    SIMON_RED = 1,
+    SIMON_GREEN = 2,
+    SIMON_YELLOW = 3,
+    SIMON_MAX_COLORS = 4,
 };
 
 class npc_simon_bunny : public CreatureScript
@@ -770,7 +794,8 @@ public:
             _events.ScheduleEvent(EVENT_SIMON_ROUND_FINISHED, 1000);
             _events.ScheduleEvent(EVENT_SIMON_PERIODIC_PLAYER_CHECK, 2000);
 
-            if (GameObject* relic = me->FindNearestGameObject(large ? GO_APEXIS_MONUMENT : GO_APEXIS_RELIC, searchDistance))
+            if (GameObject* relic =
+                    me->FindNearestGameObject(large ? GO_APEXIS_MONUMENT : GO_APEXIS_RELIC, searchDistance))
                 relic->SetGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
         }
 
@@ -787,7 +812,8 @@ public:
                 if (GameObject* auraGo = me->FindNearestGameObject(auraId, searchDistance))
                     auraGo->RemoveFromWorld();
 
-            if (GameObject* relic = me->FindNearestGameObject(large ? GO_APEXIS_MONUMENT : GO_APEXIS_RELIC, searchDistance))
+            if (GameObject* relic =
+                    me->FindNearestGameObject(large ? GO_APEXIS_MONUMENT : GO_APEXIS_RELIC, searchDistance))
                 relic->RemoveGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
 
             me->DespawnOrUnsummon(1000);
@@ -802,7 +828,9 @@ public:
         {
             bool correct = true;
             if (playerSequence.size() <= colorSequence.size())
-                for (std::list<uint8>::const_iterator i = playerSequence.begin(), j = colorSequence.begin(); i != playerSequence.end(); ++i, ++j)
+                for (std::list<uint8>::const_iterator i = playerSequence.begin(), j = colorSequence.begin();
+                     i != playerSequence.end();
+                     ++i, ++j)
                     if ((*i) != (*j))
                         correct = false;
 
@@ -904,13 +932,15 @@ public:
                         preGameSpellId = SPELL_PRE_GAME_GREEN;
                     else if (cluster->GetEntry() == clusterIds[SIMON_YELLOW])
                         preGameSpellId = SPELL_PRE_GAME_YELLOW;
-                    else break;
+                    else
+                        break;
 
                     me->CastSpell(cluster, preGameSpellId, true);
                 }
             }
 
-            if (GameObject* relic = me->FindNearestGameObject(large ? GO_APEXIS_MONUMENT : GO_APEXIS_RELIC, searchDistance))
+            if (GameObject* relic =
+                    me->FindNearestGameObject(large ? GO_APEXIS_MONUMENT : GO_APEXIS_RELIC, searchDistance))
             {
                 float x, y, z, o;
                 relic->GetPosition(x, y, z, o);
@@ -957,7 +987,13 @@ public:
             if (large)
             {
                 if (Player* player = ObjectAccessor::GetPlayer(*me, playerGUID))
-                    if (Creature* guardian = me->SummonCreature(NPC_APEXIS_GUARDIAN, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() - zCoordCorrection, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000))
+                    if (Creature* guardian = me->SummonCreature(NPC_APEXIS_GUARDIAN,
+                            me->GetPositionX(),
+                            me->GetPositionY(),
+                            me->GetPositionZ() - zCoordCorrection,
+                            0.0f,
+                            TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                            20000))
                         guardian->AI()->AttackStart(player);
 
                 ResetNode();
@@ -1030,11 +1066,11 @@ public:
 
 enum ApexisRelic
 {
-    QUEST_CRYSTALS            = 11025,
-    GOSSIP_TEXT_ID            = 10948,
+    QUEST_CRYSTALS = 11025,
+    GOSSIP_TEXT_ID = 10948,
 
-    ITEM_APEXIS_SHARD         = 32569,
-    SPELL_TAKE_REAGENTS_SOLO  = 41145,
+    ITEM_APEXIS_SHARD = 32569,
+    SPELL_TAKE_REAGENTS_SOLO = 41145,
     SPELL_TAKE_REAGENTS_GROUP = 41146,
 };
 
@@ -1059,7 +1095,8 @@ public:
         {
             player->CastSpell(player, large ? SPELL_TAKE_REAGENTS_GROUP : SPELL_TAKE_REAGENTS_SOLO, false);
 
-            if (Creature* bunny = player->SummonCreature(NPC_SIMON_BUNNY, go->GetPositionX(), go->GetPositionY(), go->GetPositionZ()))
+            if (Creature* bunny =
+                    player->SummonCreature(NPC_SIMON_BUNNY, go->GetPositionX(), go->GetPositionY(), go->GetPositionZ()))
                 bunny->AI()->SetGUID(player->GetGUID(), large);
         }
 
@@ -1074,15 +1111,16 @@ public:
 enum ScannerMasterBunny
 {
     NPC_OSCILLATING_FREQUENCY_SCANNER_TOP_BUNNY = 21759,
-    GO_OSCILLATING_FREQUENCY_SCANNER            = 184926,
-    SPELL_OSCILLATION_FIELD                     = 37408,
-    QUEST_GAUGING_THE_RESONANT_FREQUENCY        = 10594
+    GO_OSCILLATING_FREQUENCY_SCANNER = 184926,
+    SPELL_OSCILLATION_FIELD = 37408,
+    QUEST_GAUGING_THE_RESONANT_FREQUENCY = 10594
 };
 
 class npc_oscillating_frequency_scanner_master_bunny : public CreatureScript
 {
 public:
-    npc_oscillating_frequency_scanner_master_bunny() : CreatureScript("npc_oscillating_frequency_scanner_master_bunny") { }
+    npc_oscillating_frequency_scanner_master_bunny() : CreatureScript("npc_oscillating_frequency_scanner_master_bunny")
+    { }
 
     struct npc_oscillating_frequency_scanner_master_bunnyAI : public ScriptedAI
     {
@@ -1099,8 +1137,23 @@ public:
             else
             {
                 // Spell 37392 does not exist in dbc, manually spawning
-                me->SummonCreature(NPC_OSCILLATING_FREQUENCY_SCANNER_TOP_BUNNY, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 50000);
-                me->SummonGameObject(GO_OSCILLATING_FREQUENCY_SCANNER, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation(), 0, 0, 0, 0, 50);
+                me->SummonCreature(NPC_OSCILLATING_FREQUENCY_SCANNER_TOP_BUNNY,
+                    me->GetPositionX(),
+                    me->GetPositionY(),
+                    me->GetPositionZ(),
+                    me->GetOrientation(),
+                    TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,
+                    50000);
+                me->SummonGameObject(GO_OSCILLATING_FREQUENCY_SCANNER,
+                    me->GetPositionX(),
+                    me->GetPositionY(),
+                    me->GetPositionZ(),
+                    me->GetOrientation(),
+                    0,
+                    0,
+                    0,
+                    0,
+                    50);
                 me->DespawnOrUnsummon(50000);
             }
 
@@ -1143,13 +1196,14 @@ class spell_oscillating_field : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_OSCILLATION_FIELD });
+        return ValidateSpellInfo({SPELL_OSCILLATION_FIELD});
     }
 
     void HandleEffect(SpellEffIndex /*effIndex*/)
     {
         if (Player* player = GetHitPlayer())
-            if (player->GetAuraCount(SPELL_OSCILLATION_FIELD) == 5 && player->GetQuestStatus(QUEST_GAUGING_THE_RESONANT_FREQUENCY) == QUEST_STATUS_INCOMPLETE)
+            if (player->GetAuraCount(SPELL_OSCILLATION_FIELD) == 5 &&
+                player->GetQuestStatus(QUEST_GAUGING_THE_RESONANT_FREQUENCY) == QUEST_STATUS_INCOMPLETE)
                 player->CompleteQuest(QUEST_GAUGING_THE_RESONANT_FREQUENCY);
     }
 

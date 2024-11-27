@@ -25,24 +25,24 @@
 
 enum Yells
 {
-    SAY_JAINA_INTRO_1                           = 0,
-    SAY_JAINA_INTRO_2                           = 1,
-    SAY_JAINA_INTRO_3                           = 2,
-    SAY_JAINA_INTRO_4                           = 3,
-    SAY_JAINA_INTRO_5                           = 4,
-    SAY_JAINA_INTRO_6                           = 5,
-    SAY_JAINA_INTRO_7                           = 6,
-    SAY_JAINA_INTRO_8                           = 7,
+    SAY_JAINA_INTRO_1 = 0,
+    SAY_JAINA_INTRO_2 = 1,
+    SAY_JAINA_INTRO_3 = 2,
+    SAY_JAINA_INTRO_4 = 3,
+    SAY_JAINA_INTRO_5 = 4,
+    SAY_JAINA_INTRO_6 = 5,
+    SAY_JAINA_INTRO_7 = 6,
+    SAY_JAINA_INTRO_8 = 7,
 
-    SAY_SYLVANAS_INTRO_1                        = 0,
-    SAY_SYLVANAS_INTRO_2                        = 1,
-    SAY_SYLVANAS_INTRO_3                        = 2,
-    SAY_SYLVANAS_INTRO_4                        = 3,
-    SAY_SYLVANAS_INTRO_5                        = 4,
-    SAY_SYLVANAS_INTRO_6                        = 5,
+    SAY_SYLVANAS_INTRO_1 = 0,
+    SAY_SYLVANAS_INTRO_2 = 1,
+    SAY_SYLVANAS_INTRO_3 = 2,
+    SAY_SYLVANAS_INTRO_4 = 3,
+    SAY_SYLVANAS_INTRO_5 = 4,
+    SAY_SYLVANAS_INTRO_6 = 5,
 
-    SAY_JAINA_OUTRO                             = 0,
-    SAY_SYLVANAS_OUTRO                          = 0
+    SAY_JAINA_OUTRO = 0,
+    SAY_SYLVANAS_OUTRO = 0
 };
 
 enum FOS_Gossip
@@ -56,9 +56,9 @@ class npc_fos_leader : public CreatureScript
 public:
     npc_fos_leader() : CreatureScript("npc_fos_leader") { }
 
-    struct npc_fos_leaderAI: public ScriptedAI
+    struct npc_fos_leaderAI : public ScriptedAI
     {
-        npc_fos_leaderAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_fos_leaderAI(Creature* creature) : ScriptedAI(creature) { }
 
         EventMap events;
 
@@ -173,9 +173,7 @@ public:
                 case 8:
 
                     if (me->GetEntry() == NPC_JAINA_PART1)
-                    {
                         Talk(SAY_JAINA_INTRO_8);
-                    }
                     break;
             }
 
@@ -208,7 +206,7 @@ public:
         ClearGossipMenuFor(player);
         switch (uiAction)
         {
-            case GOSSIP_ACTION_INFO_DEF+1:
+            case GOSSIP_ACTION_INFO_DEF + 1:
                 CloseGossipMenuFor(player);
                 if (creature->AI())
                     creature->AI()->DoAction(1);
@@ -229,7 +227,7 @@ class npc_fos_leader_second : public CreatureScript
 public:
     npc_fos_leader_second() : CreatureScript("npc_fos_leader_second") { }
 
-    struct npc_fos_leader_secondAI: public ScriptedAI
+    struct npc_fos_leader_secondAI : public ScriptedAI
     {
         npc_fos_leader_secondAI(Creature* creature) : ScriptedAI(creature)
         {
@@ -267,7 +265,7 @@ class spell_shield_of_bones_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SHIELD_OF_BONES_DAMAGE });
+        return ValidateSpellInfo({SPELL_SHIELD_OF_BONES_DAMAGE});
     }
 
     int32 amount;

@@ -43,19 +43,17 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable gmCommandTable =
-        {
-            { "chat",    HandleGMChatCommand,       SEC_GAMEMASTER,     Console::No  },
-            { "fly",     HandleGMFlyCommand,        SEC_GAMEMASTER,     Console::No  },
-            { "ingame",  HandleGMListIngameCommand, SEC_PLAYER,         Console::Yes },
-            { "list",    HandleGMListFullCommand,   SEC_ADMINISTRATOR,  Console::Yes },
-            { "visible", HandleGMVisibleCommand,    SEC_GAMEMASTER,     Console::No  },
-            { "on",      HandleGMOnCommand,         SEC_MODERATOR,      Console::No  },
-            { "off",     HandleGMOffCommand,        SEC_MODERATOR,      Console::No  }
+        static ChatCommandTable gmCommandTable = {
+            {"chat",    HandleGMChatCommand,       SEC_GAMEMASTER,    Console::No },
+            {"fly",     HandleGMFlyCommand,        SEC_GAMEMASTER,    Console::No },
+            {"ingame",  HandleGMListIngameCommand, SEC_PLAYER,        Console::Yes},
+            {"list",    HandleGMListFullCommand,   SEC_ADMINISTRATOR, Console::Yes},
+            {"visible", HandleGMVisibleCommand,    SEC_GAMEMASTER,    Console::No },
+            {"on",      HandleGMOnCommand,         SEC_MODERATOR,     Console::No },
+            {"off",     HandleGMOffCommand,        SEC_MODERATOR,     Console::No }
         };
-        static ChatCommandTable commandTable =
-        {
-            { "gm", gmCommandTable }
+        static ChatCommandTable commandTable = {
+            {"gm", gmCommandTable}
         };
         return commandTable;
     }
@@ -105,7 +103,7 @@ public:
             data.SetOpcode(SMSG_MOVE_UNSET_CAN_FLY);
 
         data << target->GetPackGUID();
-        data << uint32(0);                                      // unknown
+        data << uint32(0); // unknown
         target->SendMessageToSet(&data, true);
         handler->PSendSysMessage(LANG_COMMAND_FLYMODE_STATUS, handler->GetNameLink(target), enable ? "on" : "off");
         return true;
@@ -121,7 +119,8 @@ public:
         {
             AccountTypes playerSec = player->GetSession()->GetSecurity();
             if ((player->IsGameMaster() ||
-                 (!AccountMgr::IsPlayerAccount(playerSec) && playerSec <= AccountTypes(sWorld->getIntConfig(CONFIG_GM_LEVEL_IN_GM_LIST)))) &&
+                    (!AccountMgr::IsPlayerAccount(playerSec) &&
+                        playerSec <= AccountTypes(sWorld->getIntConfig(CONFIG_GM_LEVEL_IN_GM_LIST)))) &&
                 (!handler->GetSession() || player->IsVisibleGloballyFor(handler->GetSession()->GetPlayer())))
             {
                 if (first)
@@ -193,11 +192,13 @@ public:
 
         if (!visibleArg)
         {
-            handler->PSendSysMessage(LANG_YOU_ARE, _player->isGMVisible() ? handler->GetAcoreString(LANG_VISIBLE) : handler->GetAcoreString(LANG_INVISIBLE));
+            handler->PSendSysMessage(LANG_YOU_ARE,
+                _player->isGMVisible() ? handler->GetAcoreString(LANG_VISIBLE)
+                                       : handler->GetAcoreString(LANG_INVISIBLE));
             return true;
         }
 
-        const uint32 VISUAL_AURA = 37800;
+        uint32 const VISUAL_AURA = 37800;
 
         if (*visibleArg)
         {

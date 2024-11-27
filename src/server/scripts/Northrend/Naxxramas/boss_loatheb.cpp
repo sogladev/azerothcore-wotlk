@@ -21,31 +21,31 @@
 
 enum Spells
 {
-    SPELL_NECROTIC_AURA                         = 55593,
-    SPELL_SUMMON_SPORE                          = 29234,
-    SPELL_DEATHBLOOM_10                         = 29865,
-    SPELL_DEATHBLOOM_25                         = 55053,
-    SPELL_INEVITABLE_DOOM_10                    = 29204,
-    SPELL_INEVITABLE_DOOM_25                    = 55052,
-    SPELL_BERSERK                               = 26662
+    SPELL_NECROTIC_AURA = 55593,
+    SPELL_SUMMON_SPORE = 29234,
+    SPELL_DEATHBLOOM_10 = 29865,
+    SPELL_DEATHBLOOM_25 = 55053,
+    SPELL_INEVITABLE_DOOM_10 = 29204,
+    SPELL_INEVITABLE_DOOM_25 = 55052,
+    SPELL_BERSERK = 26662
 };
 
 enum Events
 {
-    EVENT_NECROTIC_AURA                         = 1,
-    EVENT_DEATHBLOOM                            = 2,
-    EVENT_INEVITABLE_DOOM                       = 3,
-    EVENT_BERSERK                               = 4,
-    EVENT_SUMMON_SPORE                          = 5,
-    EVENT_NECROTIC_AURA_FADING                  = 6,
-    EVENT_NECROTIC_AURA_REMOVED                 = 7
+    EVENT_NECROTIC_AURA = 1,
+    EVENT_DEATHBLOOM = 2,
+    EVENT_INEVITABLE_DOOM = 3,
+    EVENT_BERSERK = 4,
+    EVENT_SUMMON_SPORE = 5,
+    EVENT_NECROTIC_AURA_FADING = 6,
+    EVENT_NECROTIC_AURA_REMOVED = 7
 };
 
 enum Texts
 {
-    SAY_NECROTIC_AURA_APPLIED                   = 0,
-    SAY_NECROTIC_AURA_REMOVED                   = 1,
-    SAY_NECROTIC_AURA_FADING                    = 2
+    SAY_NECROTIC_AURA_APPLIED = 0,
+    SAY_NECROTIC_AURA_REMOVED = 1,
+    SAY_NECROTIC_AURA_FADING = 2
 };
 
 class boss_loatheb : public CreatureScript
@@ -81,9 +81,7 @@ public:
             {
                 pInstance->SetData(BOSS_LOATHEB, NOT_STARTED);
                 if (GameObject* go = me->GetMap()->GetGameObject(pInstance->GetGuidData(DATA_LOATHEB_GATE)))
-                {
                     go->SetGoState(GO_STATE_ACTIVE);
-                }
             }
         }
 
@@ -93,20 +91,16 @@ public:
             summons.Summon(cr);
         }
 
-        void SummonedCreatureDies(Creature*  /*cr*/, Unit*) override
+        void SummonedCreatureDies(Creature* /*cr*/, Unit*) override
         {
             if (pInstance)
-            {
                 pInstance->SetData(DATA_SPORE_KILLED, 0);
-            }
         }
 
         void KilledUnit(Unit* who) override
         {
             if (who->IsPlayer() && pInstance)
-            {
                 pInstance->SetData(DATA_IMMORTAL_FAIL, 0);
-            }
         }
 
         void JustEngagedWith(Unit* who) override
@@ -122,9 +116,7 @@ public:
             {
                 pInstance->SetData(BOSS_LOATHEB, IN_PROGRESS);
                 if (GameObject* go = me->GetMap()->GetGameObject(pInstance->GetGuidData(DATA_LOATHEB_GATE)))
-                {
                     go->SetGoState(GO_STATE_READY);
-                }
             }
         }
 
@@ -133,9 +125,7 @@ public:
             BossAI::JustDied(killer);
             summons.DespawnAll();
             if (pInstance)
-            {
                 pInstance->SetData(BOSS_LOATHEB, DONE);
-            }
         }
 
         void UpdateAI(uint32 diff) override
@@ -186,8 +176,8 @@ public:
         {
             // Calculate the distance between his home position to the gate
             if (me->GetExactDist(me->GetHomePosition().GetPositionX(),
-                                 me->GetHomePosition().GetPositionY(),
-                                 me->GetHomePosition().GetPositionZ()) > 50.0f)
+                    me->GetHomePosition().GetPositionY(),
+                    me->GetHomePosition().GetPositionZ()) > 50.0f)
             {
                 EnterEvadeMode();
                 return false;

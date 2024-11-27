@@ -43,37 +43,34 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable lookupPlayerCommandTable =
-        {
-            { "ip",      HandleLookupPlayerIpCommand,      SEC_GAMEMASTER, Console::Yes  },
-            { "account", HandleLookupPlayerAccountCommand, SEC_GAMEMASTER, Console::Yes  },
-            { "email",   HandleLookupPlayerEmailCommand,   SEC_GAMEMASTER, Console::Yes  }
+        static ChatCommandTable lookupPlayerCommandTable = {
+            {"ip",      HandleLookupPlayerIpCommand,      SEC_GAMEMASTER, Console::Yes},
+            {"account", HandleLookupPlayerAccountCommand, SEC_GAMEMASTER, Console::Yes},
+            {"email",   HandleLookupPlayerEmailCommand,   SEC_GAMEMASTER, Console::Yes}
         };
 
-        static ChatCommandTable lookupCommandTable =
-        {
-            { "area",     HandleLookupAreaCommand,         SEC_MODERATOR, Console::Yes  },
-            { "creature", HandleLookupCreatureCommand,     SEC_MODERATOR, Console::Yes  },
-            { "event",    HandleLookupEventCommand,        SEC_MODERATOR, Console::Yes  },
-            { "faction",  HandleLookupFactionCommand,      SEC_MODERATOR, Console::Yes  },
-            { "item",     HandleLookupItemCommand,         SEC_MODERATOR, Console::Yes  },
-            { "item set", HandleLookupItemSetCommand,      SEC_MODERATOR, Console::Yes  },
-            { "map",      HandleLookupMapCommand,          SEC_MODERATOR, Console::Yes  },
-            { "object",   HandleLookupObjectCommand,       SEC_MODERATOR, Console::Yes  },
-            { "gobject",  HandleLookupObjectCommand,       SEC_MODERATOR, Console::Yes  },
-            { "quest",    HandleLookupQuestCommand,        SEC_MODERATOR, Console::Yes  },
-            { "skill",    HandleLookupSkillCommand,        SEC_MODERATOR, Console::Yes  },
-            { "taxinode", HandleLookupTaxiNodeCommand,     SEC_MODERATOR, Console::Yes  },
-            { "teleport", HandleLookupTeleCommand,         SEC_MODERATOR, Console::Yes  },
-            { "title",    HandleLookupTitleCommand,        SEC_MODERATOR, Console::Yes  },
-            { "spell",    HandleLookupSpellCommand,        SEC_MODERATOR, Console::Yes  },
-            { "spell id", HandleLookupSpellIdCommand,      SEC_MODERATOR, Console::Yes  },
-            { "player",   lookupPlayerCommandTable },
+        static ChatCommandTable lookupCommandTable = {
+            {"area", HandleLookupAreaCommand, SEC_MODERATOR, Console::Yes},
+            {"creature", HandleLookupCreatureCommand, SEC_MODERATOR, Console::Yes},
+            {"event", HandleLookupEventCommand, SEC_MODERATOR, Console::Yes},
+            {"faction", HandleLookupFactionCommand, SEC_MODERATOR, Console::Yes},
+            {"item", HandleLookupItemCommand, SEC_MODERATOR, Console::Yes},
+            {"item set", HandleLookupItemSetCommand, SEC_MODERATOR, Console::Yes},
+            {"map", HandleLookupMapCommand, SEC_MODERATOR, Console::Yes},
+            {"object", HandleLookupObjectCommand, SEC_MODERATOR, Console::Yes},
+            {"gobject", HandleLookupObjectCommand, SEC_MODERATOR, Console::Yes},
+            {"quest", HandleLookupQuestCommand, SEC_MODERATOR, Console::Yes},
+            {"skill", HandleLookupSkillCommand, SEC_MODERATOR, Console::Yes},
+            {"taxinode", HandleLookupTaxiNodeCommand, SEC_MODERATOR, Console::Yes},
+            {"teleport", HandleLookupTeleCommand, SEC_MODERATOR, Console::Yes},
+            {"title", HandleLookupTitleCommand, SEC_MODERATOR, Console::Yes},
+            {"spell", HandleLookupSpellCommand, SEC_MODERATOR, Console::Yes},
+            {"spell id", HandleLookupSpellIdCommand, SEC_MODERATOR, Console::Yes},
+            {"player", lookupPlayerCommandTable},
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "lookup", lookupCommandTable }
+        static ChatCommandTable commandTable = {
+            {"lookup", lookupCommandTable}
         };
 
         return commandTable;
@@ -82,16 +79,12 @@ public:
     static bool HandleLookupAreaCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         std::wstring wNamePart;
 
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         bool found = false;
         uint32 count = 0;
@@ -107,9 +100,7 @@ public:
             std::string name = areaEntry->area_name[locale];
 
             if (name.empty())
-            {
                 continue;
-            }
 
             if (!Utf8FitTo(name, wNamePart))
             {
@@ -117,20 +108,14 @@ public:
                 for (; locale < TOTAL_LOCALES; ++locale)
                 {
                     if (locale == handler->GetSessionDbcLocale())
-                    {
                         continue;
-                    }
 
                     name = areaEntry->area_name[locale];
                     if (name.empty())
-                    {
                         continue;
-                    }
 
                     if (Utf8FitTo(name, wNamePart))
-                    {
                         break;
-                    }
                 }
             }
 
@@ -146,7 +131,8 @@ public:
                 std::ostringstream ss;
                 if (handler->GetSession())
                 {
-                    ss << areaEntry->ID << " - |cffffffff|Harea:" << areaEntry->ID << "|h[" << name << ' ' << localeNames[locale] << "]|h|r";
+                    ss << areaEntry->ID << " - |cffffffff|Harea:" << areaEntry->ID << "|h[" << name << ' '
+                       << localeNames[locale] << "]|h|r";
                 }
                 else
                 {
@@ -156,16 +142,12 @@ public:
                 handler->SendSysMessage(ss.str().c_str());
 
                 if (!found)
-                {
                     found = true;
-                }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOAREAFOUND);
-        }
 
         return true;
     }
@@ -173,17 +155,13 @@ public:
     static bool HandleLookupCreatureCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         std::wstring wNamePart;
 
         // converting string that we try to find to lower case
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         wstrToLower(wNamePart);
 
@@ -210,18 +188,12 @@ public:
                         }
 
                         if (handler->GetSession())
-                        {
                             handler->PSendSysMessage(LANG_CREATURE_ENTRY_LIST_CHAT, id, id, name);
-                        }
                         else
-                        {
                             handler->PSendSysMessage(LANG_CREATURE_ENTRY_LIST_CONSOLE, id, name);
-                        }
 
                         if (!found)
-                        {
                             found = true;
-                        }
 
                         continue;
                     }
@@ -230,9 +202,7 @@ public:
 
             std::string name = creatureTemplate.Name;
             if (name.empty())
-            {
                 continue;
-            }
 
             if (Utf8FitTo(name, wNamePart))
             {
@@ -243,25 +213,17 @@ public:
                 }
 
                 if (handler->GetSession())
-                {
                     handler->PSendSysMessage(LANG_CREATURE_ENTRY_LIST_CHAT, id, id, name);
-                }
                 else
-                {
                     handler->PSendSysMessage(LANG_CREATURE_ENTRY_LIST_CONSOLE, id, name);
-                }
 
                 if (!found)
-                {
                     found = true;
-                }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOCREATUREFOUND);
-        }
 
         return true;
     }
@@ -269,17 +231,13 @@ public:
     static bool HandleLookupEventCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         std::wstring wNamePart;
 
         // converting string that we try to find to lower case
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         wstrToLower(wNamePart);
 
@@ -296,9 +254,7 @@ public:
 
             std::string descr = eventData.description;
             if (descr.empty())
-            {
                 continue;
-            }
 
             if (Utf8FitTo(descr, wNamePart))
             {
@@ -308,28 +264,21 @@ public:
                     return true;
                 }
 
-                char const* active = activeEvents.find(id) != activeEvents.end() ? handler->GetAcoreString(LANG_ACTIVE) : "";
+                char const* active =
+                    activeEvents.find(id) != activeEvents.end() ? handler->GetAcoreString(LANG_ACTIVE) : "";
 
                 if (handler->GetSession())
-                {
                     handler->PSendSysMessage(LANG_EVENT_ENTRY_LIST_CHAT, id, id, eventData.description, active);
-                }
                 else
-                {
                     handler->PSendSysMessage(LANG_EVENT_ENTRY_LIST_CONSOLE, id, eventData.description, active);
-                }
 
                 if (!found)
-                {
                     found = true;
-                }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_NOEVENTFOUND);
-        }
 
         return true;
     }
@@ -337,9 +286,7 @@ public:
     static bool HandleLookupFactionCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         // Can be nullptr at console call
         Player* target = handler->getSelectedPlayer();
@@ -347,9 +294,7 @@ public:
         std::wstring wNamePart;
 
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         // converting string that we try to find to lower case
         wstrToLower(wNamePart);
@@ -365,9 +310,7 @@ public:
             int locale = handler->GetSessionDbcLocale();
             std::string name = factionEntry->name[locale];
             if (name.empty())
-            {
                 continue;
-            }
 
             if (!Utf8FitTo(name, wNamePart))
             {
@@ -376,20 +319,14 @@ public:
                 for (; locale < TOTAL_LOCALES; ++locale)
                 {
                     if (locale == handler->GetSessionDbcLocale())
-                    {
                         continue;
-                    }
 
                     name = factionEntry->name[locale];
                     if (name.empty())
-                    {
                         continue;
-                    }
 
                     if (Utf8FitTo(name, wNamePart))
-                    {
                         break;
-                    }
                 }
             }
 
@@ -406,7 +343,8 @@ public:
                 std::ostringstream ss;
                 if (handler->GetSession())
                 {
-                    ss << factionEntry->ID << " - |cffffffff|Hfaction:" << factionEntry->ID << "|h[" << name << ' ' << localeNames[locale] << "]|h|r";
+                    ss << factionEntry->ID << " - |cffffffff|Hfaction:" << factionEntry->ID << "|h[" << name << ' '
+                       << localeNames[locale] << "]|h|r";
                 }
                 else
                 {
@@ -421,34 +359,22 @@ public:
                     ss << ' ' << rankName << "|h|r (" << target->GetReputationMgr().GetReputation(factionEntry) << ')';
 
                     if (factionState->Flags & FACTION_FLAG_VISIBLE)
-                    {
                         ss << handler->GetAcoreString(LANG_FACTION_VISIBLE);
-                    }
 
                     if (factionState->Flags & FACTION_FLAG_AT_WAR)
-                    {
                         ss << handler->GetAcoreString(LANG_FACTION_ATWAR);
-                    }
 
                     if (factionState->Flags & FACTION_FLAG_PEACE_FORCED)
-                    {
                         ss << handler->GetAcoreString(LANG_FACTION_PEACE_FORCED);
-                    }
 
                     if (factionState->Flags & FACTION_FLAG_HIDDEN)
-                    {
                         ss << handler->GetAcoreString(LANG_FACTION_HIDDEN);
-                    }
 
                     if (factionState->Flags & FACTION_FLAG_INVISIBLE_FORCED)
-                    {
                         ss << handler->GetAcoreString(LANG_FACTION_INVISIBLE_FORCED);
-                    }
 
                     if (factionState->Flags & FACTION_FLAG_INACTIVE)
-                    {
                         ss << handler->GetAcoreString(LANG_FACTION_INACTIVE);
-                    }
                 }
                 else
                 {
@@ -458,16 +384,12 @@ public:
                 handler->SendSysMessage(ss.str().c_str());
 
                 if (!found)
-                {
                     found = true;
-                }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_FACTION_NOTFOUND);
-        }
 
         return true;
     }
@@ -475,17 +397,13 @@ public:
     static bool HandleLookupItemCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         std::wstring wNamePart;
 
         // converting string that we try to find to lower case
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         wstrToLower(wNamePart);
 
@@ -518,7 +436,8 @@ public:
                             {
                                 std::ostringstream color;
                                 color << std::hex << ItemQualityColors[itemTemplate.Quality];
-                                handler->PSendSysMessage(LANG_ITEM_LIST_CHAT, itemTemplate.ItemId, color.str(), itemTemplate.ItemId, name);
+                                handler->PSendSysMessage(
+                                    LANG_ITEM_LIST_CHAT, itemTemplate.ItemId, color.str(), itemTemplate.ItemId, name);
                             }
                             else
                             {
@@ -526,9 +445,7 @@ public:
                             }
 
                             if (!found)
-                            {
                                 found = true;
-                            }
 
                             continue;
                         }
@@ -538,9 +455,7 @@ public:
 
             std::string name = itemTemplate.Name1;
             if (name.empty())
-            {
                 continue;
-            }
 
             if (Utf8FitTo(name, wNamePart))
             {
@@ -554,7 +469,8 @@ public:
                 {
                     std::ostringstream color;
                     color << std::hex << ItemQualityColors[itemTemplate.Quality];
-                    handler->PSendSysMessage(LANG_ITEM_LIST_CHAT, itemTemplate.ItemId, color.str(), itemTemplate.ItemId, name);
+                    handler->PSendSysMessage(
+                        LANG_ITEM_LIST_CHAT, itemTemplate.ItemId, color.str(), itemTemplate.ItemId, name);
                 }
                 else
                 {
@@ -562,16 +478,12 @@ public:
                 }
 
                 if (!found)
-                {
                     found = true;
-                }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOITEMFOUND);
-        }
 
         return true;
     }
@@ -579,16 +491,12 @@ public:
     static bool HandleLookupItemSetCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         std::wstring wNamePart;
 
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         // converting string that we try to find to lower case
         wstrToLower(wNamePart);
@@ -606,9 +514,7 @@ public:
                 int locale = handler->GetSessionDbcLocale();
                 std::string name = set->name[locale];
                 if (name.empty())
-                {
                     continue;
-                }
 
                 if (!Utf8FitTo(name, wNamePart))
                 {
@@ -616,20 +522,14 @@ public:
                     for (; locale < TOTAL_LOCALES; ++locale)
                     {
                         if (locale == handler->GetSessionDbcLocale())
-                        {
                             continue;
-                        }
 
                         name = set->name[locale];
                         if (name.empty())
-                        {
                             continue;
-                        }
 
                         if (Utf8FitTo(name, wNamePart))
-                        {
                             break;
-                        }
                     }
                 }
 
@@ -643,26 +543,18 @@ public:
 
                     // send item set in "id - [namedlink locale]" format
                     if (handler->GetSession())
-                    {
                         handler->PSendSysMessage(LANG_ITEMSET_LIST_CHAT, id, id, name, localeNames[locale]);
-                    }
                     else
-                    {
                         handler->PSendSysMessage(LANG_ITEMSET_LIST_CONSOLE, id, name, localeNames[locale]);
-                    }
 
                     if (!found)
-                    {
                         found = true;
-                    }
                 }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOITEMSETFOUND);
-        }
 
         return true;
     }
@@ -670,17 +562,13 @@ public:
     static bool HandleLookupObjectCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         std::wstring wNamePart;
 
         // converting string that we try to find to lower case
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         wstrToLower(wNamePart);
 
@@ -707,7 +595,8 @@ public:
 
                         if (handler->GetSession())
                         {
-                            handler->PSendSysMessage(LANG_GO_ENTRY_LIST_CHAT, gameObjectTemplate.entry, gameObjectTemplate.entry, name);
+                            handler->PSendSysMessage(
+                                LANG_GO_ENTRY_LIST_CHAT, gameObjectTemplate.entry, gameObjectTemplate.entry, name);
                         }
                         else
                         {
@@ -715,9 +604,7 @@ public:
                         }
 
                         if (!found)
-                        {
                             found = true;
-                        }
 
                         continue;
                     }
@@ -726,9 +613,7 @@ public:
 
             std::string name = gameObjectTemplate.name;
             if (name.empty())
-            {
                 continue;
-            }
 
             if (Utf8FitTo(name, wNamePart))
             {
@@ -740,7 +625,8 @@ public:
 
                 if (handler->GetSession())
                 {
-                    handler->PSendSysMessage(LANG_GO_ENTRY_LIST_CHAT, gameObjectTemplate.entry, gameObjectTemplate.entry, name);
+                    handler->PSendSysMessage(
+                        LANG_GO_ENTRY_LIST_CHAT, gameObjectTemplate.entry, gameObjectTemplate.entry, name);
                 }
                 else
                 {
@@ -748,16 +634,12 @@ public:
                 }
 
                 if (!found)
-                {
                     found = true;
-                }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOGAMEOBJECTFOUND);
-        }
 
         return true;
     }
@@ -765,9 +647,7 @@ public:
     static bool HandleLookupQuestCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         // can be nullptr at console call
         Player* target = handler->getSelectedPlayer();
@@ -776,9 +656,7 @@ public:
 
         // converting string that we try to find to lower case
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         wstrToLower(wNamePart);
 
@@ -830,17 +708,21 @@ public:
 
                             if (handler->GetSession())
                             {
-                                handler->PSendSysMessage(LANG_QUEST_LIST_CHAT, qInfo->GetQuestId(), qInfo->GetQuestId(), qInfo->GetQuestLevel(), title, statusStr);
+                                handler->PSendSysMessage(LANG_QUEST_LIST_CHAT,
+                                    qInfo->GetQuestId(),
+                                    qInfo->GetQuestId(),
+                                    qInfo->GetQuestLevel(),
+                                    title,
+                                    statusStr);
                             }
                             else
                             {
-                                handler->PSendSysMessage(LANG_QUEST_LIST_CONSOLE, qInfo->GetQuestId(), title, statusStr);
+                                handler->PSendSysMessage(
+                                    LANG_QUEST_LIST_CONSOLE, qInfo->GetQuestId(), title, statusStr);
                             }
 
                             if (!found)
-                            {
                                 found = true;
-                            }
 
                             continue;
                         }
@@ -850,9 +732,7 @@ public:
 
             std::string title = qInfo->GetTitle();
             if (title.empty())
-            {
                 continue;
-            }
 
             if (Utf8FitTo(title, wNamePart))
             {
@@ -886,7 +766,12 @@ public:
 
                 if (handler->GetSession())
                 {
-                    handler->PSendSysMessage(LANG_QUEST_LIST_CHAT, qInfo->GetQuestId(), qInfo->GetQuestId(), qInfo->GetQuestLevel(), title, statusStr);
+                    handler->PSendSysMessage(LANG_QUEST_LIST_CHAT,
+                        qInfo->GetQuestId(),
+                        qInfo->GetQuestId(),
+                        qInfo->GetQuestLevel(),
+                        title,
+                        statusStr);
                 }
                 else
                 {
@@ -894,16 +779,12 @@ public:
                 }
 
                 if (!found)
-                {
                     found = true;
-                }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOQUESTFOUND);
-        }
 
         return true;
     }
@@ -911,9 +792,7 @@ public:
     static bool HandleLookupSkillCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         // can be nullptr in console call
         Player* target = handler->getSelectedPlayer();
@@ -921,9 +800,7 @@ public:
         std::wstring wNamePart;
 
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         // converting string that we try to find to lower case
         wstrToLower(wNamePart);
@@ -939,9 +816,7 @@ public:
             std::string name = skillInfo->name[locale];
 
             if (name.empty())
-            {
                 continue;
-            }
 
             if (!Utf8FitTo(name, wNamePart))
             {
@@ -949,20 +824,14 @@ public:
                 for (; locale < TOTAL_LOCALES; ++locale)
                 {
                     if (locale == handler->GetSessionDbcLocale())
-                    {
                         continue;
-                    }
 
                     name = skillInfo->name[locale];
                     if (name.empty())
-                    {
                         continue;
-                    }
 
                     if (Utf8FitTo(name, wNamePart))
-                    {
                         break;
-                    }
                 }
             }
 
@@ -985,30 +854,34 @@ public:
                     uint32 permValue = target->GetSkillPermBonusValue(skillInfo->id);
                     uint32 tempValue = target->GetSkillTempBonusValue(skillInfo->id);
 
-                    valStr = Acore::StringFormat(handler->GetAcoreString(LANG_SKILL_VALUES), curValue, maxValue, permValue, tempValue);
+                    valStr = Acore::StringFormat(
+                        handler->GetAcoreString(LANG_SKILL_VALUES), curValue, maxValue, permValue, tempValue);
                 }
 
                 // send skill in "id - [namedlink locale]" format
                 if (handler->GetSession())
                 {
-                    handler->PSendSysMessage(LANG_SKILL_LIST_CHAT, skillInfo->id, skillInfo->id, name, localeNames[locale], knownStr, valStr);
+                    handler->PSendSysMessage(LANG_SKILL_LIST_CHAT,
+                        skillInfo->id,
+                        skillInfo->id,
+                        name,
+                        localeNames[locale],
+                        knownStr,
+                        valStr);
                 }
                 else
                 {
-                    handler->PSendSysMessage(LANG_SKILL_LIST_CONSOLE, skillInfo->id, name, localeNames[locale], knownStr, valStr);
+                    handler->PSendSysMessage(
+                        LANG_SKILL_LIST_CONSOLE, skillInfo->id, name, localeNames[locale], knownStr, valStr);
                 }
 
                 if (!found)
-                {
                     found = true;
-                }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOSKILLFOUND);
-        }
 
         return true;
     }
@@ -1016,9 +889,7 @@ public:
     static bool HandleLookupSpellCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         // can be nullptr at console call
         Player* target = handler->getSelectedPlayer();
@@ -1026,9 +897,7 @@ public:
         std::wstring wNamePart;
 
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         // converting string that we try to find to lower case
         wstrToLower(wNamePart);
@@ -1046,9 +915,7 @@ public:
                 int locale = handler->GetSessionDbcLocale();
                 std::string name = spellInfo->SpellName[locale];
                 if (name.empty())
-                {
                     continue;
-                }
 
                 if (!Utf8FitTo(name, wNamePart))
                 {
@@ -1056,20 +923,14 @@ public:
                     for (; locale < TOTAL_LOCALES; ++locale)
                     {
                         if (locale == handler->GetSessionDbcLocale())
-                        {
                             continue;
-                        }
 
                         name = spellInfo->SpellName[locale];
                         if (name.empty())
-                        {
                             continue;
-                        }
 
                         if (Utf8FitTo(name, wNamePart))
-                        {
                             break;
-                        }
                     }
                 }
 
@@ -1094,73 +955,51 @@ public:
 
                     // unit32 used to prevent interpreting uint8 as char at output
                     // find rank of learned spell for learning spell, or talent rank
-                    uint32 rank = talentCost ? talentCost : learn && learnSpellInfo ? learnSpellInfo->GetRank() : spellInfo->GetRank();
+                    uint32 rank = talentCost                ? talentCost
+                                  : learn && learnSpellInfo ? learnSpellInfo->GetRank()
+                                                            : spellInfo->GetRank();
 
                     // send spell in "id - [name, rank N] [talent] [passive] [learn] [known]" format
                     std::ostringstream ss;
                     if (handler->GetSession())
-                    {
                         ss << id << " - |cffffffff|Hspell:" << id << "|h[" << name;
-                    }
                     else
-                    {
                         ss << id << " - " << name;
-                    }
 
                     // include rank in link name
                     if (rank)
-                    {
                         ss << handler->GetAcoreString(LANG_SPELL_RANK) << rank;
-                    }
 
                     if (handler->GetSession())
-                    {
                         ss << ' ' << localeNames[locale] << "]|h|r";
-                    }
                     else
-                    {
                         ss << ' ' << localeNames[locale];
-                    }
 
                     if (talent)
-                    {
                         ss << handler->GetAcoreString(LANG_TALENT);
-                    }
 
                     if (passive)
-                    {
                         ss << handler->GetAcoreString(LANG_PASSIVE);
-                    }
 
                     if (learn)
-                    {
                         ss << handler->GetAcoreString(LANG_LEARN);
-                    }
 
                     if (known)
-                    {
                         ss << handler->GetAcoreString(LANG_KNOWN);
-                    }
 
                     if (active)
-                    {
                         ss << handler->GetAcoreString(LANG_ACTIVE);
-                    }
 
                     handler->SendSysMessage(ss.str().c_str());
 
                     if (!found)
-                    {
                         found = true;
-                    }
                 }
             }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOSPELLFOUND);
-        }
 
         return true;
     }
@@ -1209,71 +1048,49 @@ public:
 
             // unit32 used to prevent interpreting uint8 as char at output
             // find rank of learned spell for learning spell, or talent rank
-            uint32 rank = talentCost ? talentCost : learn && learnSpellInfo ? learnSpellInfo->GetRank() : spell->GetRank();
+            uint32 rank = talentCost                ? talentCost
+                          : learn && learnSpellInfo ? learnSpellInfo->GetRank()
+                                                    : spell->GetRank();
 
             // send spell in "id - [name, rank N] [talent] [passive] [learn] [known]" format
             std::ostringstream ss;
             if (handler->GetSession())
-            {
                 ss << spell->Id << " - |cffffffff|Hspell:" << spell->Id << "|h[" << name;
-            }
             else
-            {
                 ss << spell->Id << " - " << name;
-            }
 
             // include rank in link name
             if (rank)
-            {
                 ss << handler->GetAcoreString(LANG_SPELL_RANK) << rank;
-            }
 
             if (handler->GetSession())
-            {
                 ss << ' ' << localeNames[locale] << "]|h|r";
-            }
             else
-            {
                 ss << ' ' << localeNames[locale];
-            }
 
             if (talent)
-            {
                 ss << handler->GetAcoreString(LANG_TALENT);
-            }
 
             if (passive)
-            {
                 ss << handler->GetAcoreString(LANG_PASSIVE);
-            }
 
             if (learn)
-            {
                 ss << handler->GetAcoreString(LANG_LEARN);
-            }
 
             if (known)
-            {
                 ss << handler->GetAcoreString(LANG_KNOWN);
-            }
 
             if (active)
-            {
                 ss << handler->GetAcoreString(LANG_ACTIVE);
-            }
 
             handler->SendSysMessage(ss.str().c_str());
 
             if (!found)
-            {
                 found = true;
-            }
         }
 
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOSPELLFOUND);
-        }
 
         return true;
     }
@@ -1281,16 +1098,12 @@ public:
     static bool HandleLookupTaxiNodeCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         std::wstring wNamePart;
 
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         // converting string that we try to find to lower case
         wstrToLower(wNamePart);
@@ -1306,9 +1119,7 @@ public:
             std::string name = nodeEntry->name[locale];
 
             if (name.empty())
-            {
                 continue;
-            }
 
             if (!Utf8FitTo(name, wNamePart))
             {
@@ -1317,20 +1128,14 @@ public:
                 for (; locale < TOTAL_LOCALES; ++locale)
                 {
                     if (locale == handler->GetSessionDbcLocale())
-                    {
                         continue;
-                    }
 
                     name = nodeEntry->name[locale];
                     if (name.empty())
-                    {
                         continue;
-                    }
 
                     if (Utf8FitTo(name, wNamePart))
-                    {
                         break;
-                    }
                 }
             }
 
@@ -1345,25 +1150,34 @@ public:
                 // send taxinode in "id - [name] (Map:m X:x Y:y Z:z)" format
                 if (handler->GetSession())
                 {
-                    handler->PSendSysMessage(LANG_TAXINODE_ENTRY_LIST_CHAT, nodeEntry->ID, nodeEntry->ID, name, localeNames[locale],
-                                             nodeEntry->map_id, nodeEntry->x, nodeEntry->y, nodeEntry->z);
+                    handler->PSendSysMessage(LANG_TAXINODE_ENTRY_LIST_CHAT,
+                        nodeEntry->ID,
+                        nodeEntry->ID,
+                        name,
+                        localeNames[locale],
+                        nodeEntry->map_id,
+                        nodeEntry->x,
+                        nodeEntry->y,
+                        nodeEntry->z);
                 }
                 else
                 {
-                    handler->PSendSysMessage(LANG_TAXINODE_ENTRY_LIST_CONSOLE, nodeEntry->ID, name, localeNames[locale],
-                                             nodeEntry->map_id, nodeEntry->x, nodeEntry->y, nodeEntry->z);
+                    handler->PSendSysMessage(LANG_TAXINODE_ENTRY_LIST_CONSOLE,
+                        nodeEntry->ID,
+                        name,
+                        localeNames[locale],
+                        nodeEntry->map_id,
+                        nodeEntry->x,
+                        nodeEntry->y,
+                        nodeEntry->z);
                 }
 
                 if (!found)
-                {
                     found = true;
-                }
             }
         }
         if (!found)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOTAXINODEFOUND);
-        }
 
         return true;
     }
@@ -1372,16 +1186,12 @@ public:
     static bool HandleLookupTeleCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         std::wstring wNamePart;
 
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         // converting string that we try to find to lower case
         wstrToLower(wNamePart);
@@ -1394,9 +1204,7 @@ public:
         for (auto const& [id, tele] : sObjectMgr->GetGameTeleMap())
         {
             if (tele.wnameLow.find(wNamePart) == std::wstring::npos)
-            {
                 continue;
-            }
 
             if (maxResults && count++ == maxResults)
             {
@@ -1405,28 +1213,18 @@ public:
             }
 
             if (handler->GetSession())
-            {
                 reply << "  |cffffffff|Htele:" << id << "|h[" << tele.name << "]|h|r\n";
-            }
             else
-            {
                 reply << "  " << id << ' ' << tele.name << "\n";
-            }
         }
 
         if (reply.str().empty())
-        {
             handler->SendSysMessage(LANG_COMMAND_TELE_NOLOCATION);
-        }
         else
-        {
             handler->PSendSysMessage(LANG_COMMAND_TELE_LOCATION, reply.str());
-        }
 
         if (limitReached)
-        {
             handler->PSendSysMessage(LANG_COMMAND_LOOKUP_MAX_RESULTS, maxResults);
-        }
 
         return true;
     }
@@ -1434,9 +1232,7 @@ public:
     static bool HandleLookupTitleCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         // can be nullptr in console call
         Player* target = handler->getSelectedPlayer();
@@ -1447,14 +1243,12 @@ public:
         std::wstring wNamePart;
 
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         // converting string that we try to find to lower case
         wstrToLower(wNamePart);
 
-        uint32 counter = 0;                                     // Counter for figure out that we found smth.
+        uint32 counter = 0; // Counter for figure out that we found smth.
         uint32 maxResults = sWorld->getIntConfig(CONFIG_MAX_RESULTS_LOOKUP_COMMANDS);
 
         // Search in CharTitles.dbc
@@ -1463,9 +1257,7 @@ public:
             int locale = handler->GetSessionDbcLocale();
             std::string name = titleInfo->nameMale[locale];
             if (name.empty())
-            {
                 continue;
-            }
 
             if (!Utf8FitTo(name, wNamePart))
             {
@@ -1473,20 +1265,14 @@ public:
                 for (; locale < TOTAL_LOCALES; ++locale)
                 {
                     if (locale == handler->GetSessionDbcLocale())
-                    {
                         continue;
-                    }
 
                     name = titleInfo->nameMale[locale];
                     if (name.empty())
-                    {
                         continue;
-                    }
 
                     if (Utf8FitTo(name, wNamePart))
-                    {
                         break;
-                    }
                 }
             }
 
@@ -1499,28 +1285,41 @@ public:
                 }
 
                 char const* knownStr = target && target->HasTitle(titleInfo) ? handler->GetAcoreString(LANG_KNOWN) : "";
-                char const* activeStr = target && target->GetUInt32Value(PLAYER_CHOSEN_TITLE) == titleInfo->bit_index ? handler->GetAcoreString(LANG_ACTIVE) : "";
+                char const* activeStr = target && target->GetUInt32Value(PLAYER_CHOSEN_TITLE) == titleInfo->bit_index
+                                            ? handler->GetAcoreString(LANG_ACTIVE)
+                                            : "";
 
                 std::string titleNameStr = Acore::StringFormat(name, targetName);
 
                 // send title in "id (idx:idx) - [namedlink locale]" format
                 if (handler->GetSession())
                 {
-                    handler->PSendSysMessage(LANG_TITLE_LIST_CHAT, titleInfo->ID, titleInfo->bit_index, titleInfo->ID, titleNameStr, localeNames[locale], knownStr, activeStr);
+                    handler->PSendSysMessage(LANG_TITLE_LIST_CHAT,
+                        titleInfo->ID,
+                        titleInfo->bit_index,
+                        titleInfo->ID,
+                        titleNameStr,
+                        localeNames[locale],
+                        knownStr,
+                        activeStr);
                 }
                 else
                 {
-                    handler->PSendSysMessage(LANG_TITLE_LIST_CONSOLE, titleInfo->ID, titleInfo->bit_index, titleNameStr, localeNames[locale], knownStr, activeStr);
+                    handler->PSendSysMessage(LANG_TITLE_LIST_CONSOLE,
+                        titleInfo->ID,
+                        titleInfo->bit_index,
+                        titleNameStr,
+                        localeNames[locale],
+                        knownStr,
+                        activeStr);
                 }
 
                 ++counter;
             }
         }
 
-        if (!counter)  // if counter == 0 then we found nth
-        {
+        if (!counter) // if counter == 0 then we found nth
             handler->SendSysMessage(LANG_COMMAND_NOTITLEFOUND);
-        }
 
         return true;
     }
@@ -1528,22 +1327,19 @@ public:
     static bool HandleLookupMapCommand(ChatHandler* handler, Tail namePart)
     {
         if (namePart.empty())
-        {
             return false;
-        }
 
         std::wstring wNamePart;
 
         if (!Utf8toWStr(namePart, wNamePart))
-        {
             return false;
-        }
 
         wstrToLower(wNamePart);
 
         uint32 counter = 0;
         uint32 maxResults = sWorld->getIntConfig(CONFIG_MAX_RESULTS_LOOKUP_COMMANDS);
-        uint8 locale = handler->GetSession() ? handler->GetSession()->GetSessionDbcLocale() : sWorld->GetDefaultDbcLocale();
+        uint8 locale =
+            handler->GetSession() ? handler->GetSession()->GetSessionDbcLocale() : sWorld->GetDefaultDbcLocale();
 
         // search in Map.dbc
         for (auto mapInfo : sMapStore)
@@ -1551,9 +1347,7 @@ public:
             std::string name = mapInfo->name[locale];
 
             if (name.empty())
-            {
                 continue;
-            }
 
             if (Utf8FitTo(name, wNamePart) && locale < TOTAL_LOCALES)
             {
@@ -1567,9 +1361,7 @@ public:
                 ss << mapInfo->MapID << " - [" << name << ']';
 
                 if (mapInfo->IsContinent())
-                {
                     ss << handler->GetAcoreString(LANG_CONTINENT);
-                }
 
                 switch (mapInfo->map_type)
                 {
@@ -1594,9 +1386,7 @@ public:
         }
 
         if (!counter)
-        {
             handler->SendSysMessage(LANG_COMMAND_NOMAPFOUND);
-        }
 
         return true;
     }
@@ -1608,9 +1398,7 @@ public:
         {
             // nullptr only if used from console
             if (!target || target == handler->GetSession()->GetPlayer())
-            {
                 return false;
-            }
 
             *ip = target->GetSession()->GetRemoteAddress();
         }
@@ -1629,9 +1417,7 @@ public:
     static bool HandleLookupPlayerAccountCommand(ChatHandler* handler, std::string account, Optional<int32> limit)
     {
         if (!Utf8ToUpperOnlyLatin(account))
-        {
             return false;
-        }
 
         LoginDatabasePreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_LIST_BY_NAME);
         stmt->SetData(0, account);
@@ -1669,11 +1455,12 @@ public:
                 return true;
             }
 
-            Field* fields           = result->Fetch();
-            uint32 accountId        = fields[0].Get<uint32>();
+            Field* fields = result->Fetch();
+            uint32 accountId = fields[0].Get<uint32>();
             std::string accountName = fields[1].Get<std::string>();
 
-            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_GUID_NAME_BY_ACC);
+            CharacterDatabasePreparedStatement* stmt =
+                CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_GUID_NAME_BY_ACC);
             stmt->SetData(0, accountId);
             PreparedQueryResult result2 = CharacterDatabase.Query(stmt);
 
@@ -1683,9 +1470,9 @@ public:
 
                 do
                 {
-                    Field* characterFields   = result2->Fetch();
+                    Field* characterFields = result2->Fetch();
                     ObjectGuid::LowType guid = characterFields[0].Get<uint32>();
-                    std::string name         = characterFields[1].Get<std::string>();
+                    std::string name = characterFields[1].Get<std::string>();
                     uint8 plevel = 0, prace = 0, pclass = 0;
                     bool online = ObjectAccessor::FindPlayerByLowGUID(guid) != nullptr;
 
@@ -1698,7 +1485,13 @@ public:
 
                     if (plevel > 0 && prace > 0 && prace <= RACE_DRAENEI && pclass > 0 && pclass <= CLASS_DRUID)
                     {
-                        handler->PSendSysMessage("  {} (GUID {}) - {} - {} - {}{}", name, guid, EnumUtils::ToTitle(Races(prace)), EnumUtils::ToTitle(Classes(pclass)), plevel, (online ? " - [ONLINE]" : ""));
+                        handler->PSendSysMessage("  {} (GUID {}) - {} - {} - {}{}",
+                            name,
+                            guid,
+                            EnumUtils::ToTitle(Races(prace)),
+                            EnumUtils::ToTitle(Classes(pclass)),
+                            plevel,
+                            (online ? " - [ONLINE]" : ""));
                     }
                     else
                     {

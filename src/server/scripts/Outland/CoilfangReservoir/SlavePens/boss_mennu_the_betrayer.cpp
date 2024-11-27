@@ -21,37 +21,32 @@
 
 enum Spells
 {
-    SPELL_LIGHTNING_BOLT        = 35010,
-    SPELL_HEALING_WARD          = 34980,
-    SPELL_EARTHGRAB_TOTEM       = 31981,
-    SPELL_STONESKIN_TOTEM       = 31985,
-    SPELL_NOVA_TOTEM            = 31991
+    SPELL_LIGHTNING_BOLT = 35010,
+    SPELL_HEALING_WARD = 34980,
+    SPELL_EARTHGRAB_TOTEM = 31981,
+    SPELL_STONESKIN_TOTEM = 31985,
+    SPELL_NOVA_TOTEM = 31991
 };
 
 enum Text
 {
-    SAY_AGGRO       = 1,
-    SAY_KILL        = 2,
-    SAY_JUST_DIED   = 3
+    SAY_AGGRO = 1,
+    SAY_KILL = 2,
+    SAY_JUST_DIED = 3
 };
 
 struct boss_mennu_the_betrayer : public BossAI
 {
     boss_mennu_the_betrayer(Creature* creature) : BossAI(creature, DATA_MENNU_THE_BETRAYER)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
     {
         _Reset();
 
-        ScheduleHealthCheckEvent(60, [&] {
-            DoCastSelf(SPELL_HEALING_WARD);
-        });
+        ScheduleHealthCheckEvent(60, [&] { DoCastSelf(SPELL_HEALING_WARD); });
     }
 
     void JustSummoned(Creature* summon) override
@@ -64,19 +59,28 @@ struct boss_mennu_the_betrayer : public BossAI
         _JustEngagedWith();
         Talk(SAY_AGGRO);
 
-        scheduler.Schedule(5s, 8s, [this](TaskContext context)
+        scheduler
+            .Schedule(5s,
+                8s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_LIGHTNING_BOLT);
             context.Repeat(7s, 10s);
-        }).Schedule(20s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_NOVA_TOTEM);
             context.Repeat(26s);
-        }).Schedule(19200ms, [this](TaskContext context)
+        })
+            .Schedule(19200ms,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_EARTHGRAB_TOTEM);
             context.Repeat(26s);
-        }).Schedule(18s, [this](TaskContext context)
+        })
+            .Schedule(18s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_STONESKIN_TOTEM);
             context.Repeat(26s);

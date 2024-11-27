@@ -39,7 +39,7 @@ public:
                     me->GetMotionMaster()->MovePoint(0, *owner);
         }
 
-        void MovementInform(uint32  /*type*/, uint32  /*id*/) override
+        void MovementInform(uint32 /*type*/, uint32 /*id*/) override
         {
             if (Creature* cow = me->FindNearestCreature(24797, 5.0f, true))
             {
@@ -69,10 +69,10 @@ public:
 // The cleansing
 enum TurmoilTexts
 {
-    SAY_TURMOIL_0                = 0,
-    SAY_TURMOIL_1                = 1,
-    SAY_TURMOIL_HALF_HP          = 2,
-    SAY_TURMOIL_DEATH            = 3,
+    SAY_TURMOIL_0 = 0,
+    SAY_TURMOIL_1 = 1,
+    SAY_TURMOIL_HALF_HP = 2,
+    SAY_TURMOIL_DEATH = 3,
 };
 
 class npc_your_inner_turmoil : public CreatureScript
@@ -82,7 +82,7 @@ public:
 
     struct npc_your_inner_turmoilAI : public ScriptedAI
     {
-        npc_your_inner_turmoilAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_your_inner_turmoilAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 timer;
         short phase;
@@ -109,16 +109,15 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void DamageTaken(Unit*, uint32& /*damage*/, DamageEffectType  /*damagetype*/, SpellSchoolMask  /*damageSchoolMask*/) override
+        void DamageTaken(
+            Unit*, uint32& /*damage*/, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
         {
             if (HealthBelowPct(50) && !health50)
             {
                 if (TempSummon const* tempSummon = me->ToTempSummon())
                 {
                     if (WorldObject* summoner = tempSummon->GetSummonerUnit())
-                    {
                         Talk(SAY_TURMOIL_HALF_HP, summoner);
-                    }
                 }
 
                 health50 = true;
@@ -130,9 +129,7 @@ public:
             if (TempSummon const* tempSummon = me->ToTempSummon())
             {
                 if (WorldObject* summoner = tempSummon->GetSummonerUnit())
-                {
                     Talk(SAY_TURMOIL_DEATH, summoner);
-                }
             }
         }
 
@@ -154,7 +151,8 @@ public:
                     me->SetFaction(FACTION_MONSTER);
                     if (me->GetExactDist(summoner) < 50.0f)
                     {
-                        me->UpdatePosition(summoner->GetPositionX(), summoner->GetPositionY(), summoner->GetPositionZ(), 0.0f, true);
+                        me->UpdatePosition(
+                            summoner->GetPositionX(), summoner->GetPositionY(), summoner->GetPositionZ(), 0.0f, true);
                         summoner->CastSpell(me, 50218, true); // clone caster
                         AttackStart(summoner);
                     }
@@ -175,11 +173,11 @@ public:
 ######*/
 enum Entries
 {
-    NPC_APOTHECARY_HANES         = 23784,
-    NPC_HANES_FIRE_TRIGGER       = 23968,
-    QUEST_TRAIL_OF_FIRE          = 11241,
+    NPC_APOTHECARY_HANES = 23784,
+    NPC_HANES_FIRE_TRIGGER = 23968,
+    QUEST_TRAIL_OF_FIRE = 11241,
     SPELL_COSMETIC_LOW_POLY_FIRE = 56274,
-    SPELL_HEALING_POTION         = 17534
+    SPELL_HEALING_POTION = 17534
 };
 
 class npc_apothecary_hanes : public CreatureScript
@@ -191,7 +189,8 @@ public:
     {
         if (quest->GetQuestId() == QUEST_TRAIL_OF_FIRE)
         {
-            creature->SetFaction(player->GetTeamId() == TEAM_ALLIANCE ? FACTION_ESCORTEE_A_PASSIVE : FACTION_ESCORTEE_H_PASSIVE);
+            creature->SetFaction(
+                player->GetTeamId() == TEAM_ALLIANCE ? FACTION_ESCORTEE_A_PASSIVE : FACTION_ESCORTEE_H_PASSIVE);
             CAST_AI(npc_escortAI, (creature->AI()))->Start(true, false, player->GetGUID());
         }
         return true;
@@ -200,6 +199,7 @@ public:
     struct npc_Apothecary_HanesAI : public npc_escortAI
     {
         npc_Apothecary_HanesAI(Creature* creature) : npc_escortAI(creature) { }
+
         uint32 PotTimer;
 
         void Reset() override
@@ -223,7 +223,8 @@ public:
                     DoCast(me, SPELL_HEALING_POTION, true);
                     PotTimer = 10000;
                 }
-                else PotTimer -= diff;
+                else
+                    PotTimer -= diff;
             }
             if (GetAttack() && UpdateVictim())
                 DoMeleeAttackIfReady();

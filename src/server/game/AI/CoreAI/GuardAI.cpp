@@ -26,9 +26,7 @@ int32 GuardAI::Permissible(Creature const* creature)
     return PERMIT_BASE_NO;
 }
 
-GuardAI::GuardAI(Creature* creature) : ScriptedAI(creature)
-{
-}
+GuardAI::GuardAI(Creature* creature) : ScriptedAI(creature) { }
 
 void GuardAI::Reset()
 {

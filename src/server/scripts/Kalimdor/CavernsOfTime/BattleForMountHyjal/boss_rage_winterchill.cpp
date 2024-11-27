@@ -21,27 +21,27 @@
 
 enum Spells
 {
-    SPELL_FROST_ARMOR           = 31256,
-    SPELL_DEATH_AND_DECAY       = 31258,
-    SPELL_FROST_NOVA            = 31250,
-    SPELL_ICEBOLT               = 31249,
-    SPELL_ENRAGE                = 26662
+    SPELL_FROST_ARMOR = 31256,
+    SPELL_DEATH_AND_DECAY = 31258,
+    SPELL_FROST_NOVA = 31250,
+    SPELL_ICEBOLT = 31249,
+    SPELL_ENRAGE = 26662
 };
 
 enum Texts
 {
-    SAY_ONDEATH                 = 0,
-    SAY_ONSLAY                  = 1,
-    SAY_DECAY                   = 2,
-    SAY_NOVA                    = 3,
-    SAY_ONSPAWN                 = 4
+    SAY_ONDEATH = 0,
+    SAY_ONSLAY = 1,
+    SAY_DECAY = 2,
+    SAY_NOVA = 3,
+    SAY_ONSPAWN = 4
 };
 
 enum Misc
 {
-    GROUP_FROST                 = 1,
-    PATH_RAGE_WINTERCHILL       = 177670,
-    POINT_COMBAT_START          = 7
+    GROUP_FROST = 1,
+    PATH_RAGE_WINTERCHILL = 177670,
+    POINT_COMBAT_START = 7
 };
 
 struct boss_rage_winterchill : public BossAI
@@ -50,29 +50,35 @@ public:
     boss_rage_winterchill(Creature* creature) : BossAI(creature, DATA_WINTERCHILL)
     {
         _recentlySpoken = false;
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void JustEngagedWith(Unit* who) override
     {
         BossAI::JustEngagedWith(who);
 
-        scheduler.Schedule(18s, 24s, [this](TaskContext context)
+        scheduler
+            .Schedule(18s,
+                24s,
+                [this](TaskContext context)
         {
             context.SetGroup(GROUP_FROST);
 
             DoCastSelf(SPELL_FROST_ARMOR);
             context.Repeat(30s, 45s);
-        }).Schedule(5s, 9s, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                9s,
+                [this](TaskContext context)
         {
             context.SetGroup(GROUP_FROST);
 
             DoCastRandomTarget(SPELL_ICEBOLT);
             context.Repeat(9s, 15s);
-        }).Schedule(12s, 17s, [this](TaskContext context)
+        })
+            .Schedule(12s,
+                17s,
+                [this](TaskContext context)
         {
             context.SetGroup(GROUP_FROST);
 
@@ -80,7 +86,10 @@ public:
                 Talk(SAY_NOVA);
 
             context.Repeat(25s, 30s);
-        }).Schedule(21s, 28s, [this](TaskContext context)
+        })
+            .Schedule(21s,
+                28s,
+                [this](TaskContext context)
         {
             if (DoCastRandomTarget(SPELL_DEATH_AND_DECAY, 0, 40.f) == SPELL_CAST_OK)
             {
@@ -89,7 +98,9 @@ public:
             }
 
             context.Repeat(45s);
-        }).Schedule(10min, [this](TaskContext context)
+        })
+            .Schedule(10min,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_ENRAGE);
             context.Repeat(5min);
@@ -108,14 +119,13 @@ public:
     {
         switch (pathId)
         {
-        case ALLIANCE_BASE_CHARGE_1:
-        case ALLIANCE_BASE_CHARGE_2:
-        case ALLIANCE_BASE_CHARGE_3:
-            me->m_Events.AddEventAtOffset([this]()
-            {
-                me->GetMotionMaster()->MovePath(urand(ALLIANCE_BASE_PATROL_1, ALLIANCE_BASE_PATROL_3), true);
-            }, 1s);
-            break;
+            case ALLIANCE_BASE_CHARGE_1:
+            case ALLIANCE_BASE_CHARGE_2:
+            case ALLIANCE_BASE_CHARGE_3:
+                me->m_Events.AddEventAtOffset([this]() {
+                    me->GetMotionMaster()->MovePath(urand(ALLIANCE_BASE_PATROL_1, ALLIANCE_BASE_PATROL_3), true);
+                }, 1s);
+                break;
         }
     }
 
@@ -126,10 +136,7 @@ public:
             Talk(SAY_ONSLAY);
             _recentlySpoken = true;
 
-            scheduler.Schedule(6s, [this](TaskContext)
-            {
-                _recentlySpoken = false;
-            });
+            scheduler.Schedule(6s, [this](TaskContext) { _recentlySpoken = false; });
         }
     }
 

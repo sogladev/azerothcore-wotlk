@@ -31,13 +31,13 @@
 
 enum Texts
 {
-    GOSSIP_MENU_START_EVENT     = 9998,
-    GOSSIP_MENU_ITEM            = 9997,
-    GOSSIP_MENU_LATE_JOIN       = 10275,
+    GOSSIP_MENU_START_EVENT = 9998,
+    GOSSIP_MENU_ITEM = 9997,
+    GOSSIP_MENU_LATE_JOIN = 10275,
 
-    NPC_TEXT_SINCLARI_IN        = 13853,
-    NPC_TEXT_SINCLARI_ITEM      = 13854,
-    NPC_TEXT_SINCLARI_DONE      = 13910,
+    NPC_TEXT_SINCLARI_IN = 13853,
+    NPC_TEXT_SINCLARI_ITEM = 13854,
+    NPC_TEXT_SINCLARI_DONE = 13910,
     NPC_TEXT_SINCLARI_LATE_JOIN = 14271,
 };
 
@@ -50,7 +50,7 @@ class go_vh_activation_crystal : public GameObjectScript
 public:
     go_vh_activation_crystal() : GameObjectScript("go_vh_activation_crystal") { }
 
-    bool OnGossipHello(Player*  /*player*/, GameObject* go) override
+    bool OnGossipHello(Player* /*player*/, GameObject* go) override
     {
         if (InstanceScript* pInstance = go->GetInstanceScript())
             pInstance->SetData(DATA_ACTIVATE_DEFENSE_SYSTEM, 1);
@@ -74,7 +74,8 @@ public:
             {
                 case NOT_STARTED:
                     AddGossipItemFor(player, GOSSIP_MENU_ITEM, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                    AddGossipItemFor(player, GOSSIP_MENU_START_EVENT, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                    AddGossipItemFor(
+                        player, GOSSIP_MENU_START_EVENT, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
                     SendGossipMenuFor(player, NPC_TEXT_SINCLARI_IN, creature->GetGUID());
                     break;
                 case IN_PROGRESS:
@@ -93,16 +94,20 @@ public:
 
         switch (uiAction)
         {
-            case GOSSIP_ACTION_INFO_DEF+1:
+            case GOSSIP_ACTION_INFO_DEF + 1:
                 CloseGossipMenuFor(player);
                 if (InstanceScript* pInstance = creature->GetInstanceScript())
                     pInstance->SetData(DATA_START_INSTANCE, 1);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+2:
+            case GOSSIP_ACTION_INFO_DEF + 2:
                 SendGossipMenuFor(player, NPC_TEXT_SINCLARI_ITEM, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+3:
-                player->NearTeleportTo(playerTeleportPosition.GetPositionX(), playerTeleportPosition.GetPositionY(), playerTeleportPosition.GetPositionZ(), playerTeleportPosition.GetOrientation(), true);
+            case GOSSIP_ACTION_INFO_DEF + 3:
+                player->NearTeleportTo(playerTeleportPosition.GetPositionX(),
+                    playerTeleportPosition.GetPositionY(),
+                    playerTeleportPosition.GetPositionZ(),
+                    playerTeleportPosition.GetOrientation(),
+                    true);
                 CloseGossipMenuFor(player);
                 break;
         }
@@ -179,14 +184,22 @@ public:
                 case EVENT_SUMMON_KEEPER_OR_GUARDIAN:
                     bKorG = true;
                     spawned = true;
-                    if (Creature* c = DoSummon(RAND(NPC_PORTAL_GUARDIAN, NPC_PORTAL_KEEPER), me, 2.0f, 0, TEMPSUMMON_DEAD_DESPAWN))
+                    if (Creature* c = DoSummon(
+                            RAND(NPC_PORTAL_GUARDIAN, NPC_PORTAL_KEEPER), me, 2.0f, 0, TEMPSUMMON_DEAD_DESPAWN))
                         me->CastSpell(c, SPELL_PORTAL_CHANNEL, false);
                     events.RescheduleEvent(EVENT_SUMMON_KEEPER_TRASH, 20s);
                     break;
                 case EVENT_SUMMON_KEEPER_TRASH:
                     for (uint8 i = 0; i < 3 + addValue; ++i)
                     {
-                        uint32 entry = RAND(NPC_AZURE_INVADER_1, NPC_AZURE_INVADER_2, NPC_AZURE_SPELLBREAKER_1, NPC_AZURE_SPELLBREAKER_2, NPC_AZURE_MAGE_SLAYER_1, NPC_AZURE_MAGE_SLAYER_2, NPC_AZURE_BINDER_1, NPC_AZURE_BINDER_2);
+                        uint32 entry = RAND(NPC_AZURE_INVADER_1,
+                            NPC_AZURE_INVADER_2,
+                            NPC_AZURE_SPELLBREAKER_1,
+                            NPC_AZURE_SPELLBREAKER_2,
+                            NPC_AZURE_MAGE_SLAYER_1,
+                            NPC_AZURE_MAGE_SLAYER_2,
+                            NPC_AZURE_BINDER_1,
+                            NPC_AZURE_BINDER_2);
                         DoSummon(entry, me, 2.0f, 20000, TEMPSUMMON_DEAD_DESPAWN);
                     }
                     events.Repeat(20s);
@@ -217,7 +230,8 @@ public:
                     if (pInstance)
                         for (SummonList::iterator itr = listOfMobs.begin(); itr != listOfMobs.end(); ++itr)
                             if (Creature* c = pInstance->instance->GetCreature(*itr))
-                                if (c->IsAlive() && (c->GetEntry() == NPC_PORTAL_GUARDIAN || c->GetEntry() == NPC_PORTAL_KEEPER))
+                                if (c->IsAlive() &&
+                                    (c->GetEntry() == NPC_PORTAL_GUARDIAN || c->GetEntry() == NPC_PORTAL_KEEPER))
                                 {
                                     me->CastSpell(c, SPELL_PORTAL_CHANNEL, false);
                                     return;
@@ -328,44 +342,83 @@ struct violet_hold_trashAI : public npc_escortAI
             switch (PLoc)
             {
                 case 0:
-                    for(int i = 0; i < 6; i++)
-                        AddWaypoint(i, FirstPortalTrashWPs[i][0] + irand(-1, 1), FirstPortalTrashWPs[i][1] + irand(-1, 1), FirstPortalTrashWPs[i][2] + irand(-1, 1), 0);
-                    me->SetHomePosition(FirstPortalTrashWPs[5][0], FirstPortalTrashWPs[5][1], FirstPortalTrashWPs[5][2], 3.149439f);
+                    for (int i = 0; i < 6; i++)
+                        AddWaypoint(i,
+                            FirstPortalTrashWPs[i][0] + irand(-1, 1),
+                            FirstPortalTrashWPs[i][1] + irand(-1, 1),
+                            FirstPortalTrashWPs[i][2] + irand(-1, 1),
+                            0);
+                    me->SetHomePosition(
+                        FirstPortalTrashWPs[5][0], FirstPortalTrashWPs[5][1], FirstPortalTrashWPs[5][2], 3.149439f);
                     break;
                 case 1:
                     bAlt = (bool)urand(0, 1);
                     if (!bAlt)
                     {
-                        for(int i = 0; i < 9; i++)
-                            AddWaypoint(i, SecondPortalTrashWPs1[i][0] + irand(-1, 1), SecondPortalTrashWPs1[i][1] + irand(-1, 1), SecondPortalTrashWPs1[i][2], 0);
-                        me->SetHomePosition(SecondPortalTrashWPs1[8][0] + irand(-1, 1), SecondPortalTrashWPs1[8][1] + irand(-1, 1), SecondPortalTrashWPs1[8][2] + irand(-1, 1), 3.149439f);
+                        for (int i = 0; i < 9; i++)
+                            AddWaypoint(i,
+                                SecondPortalTrashWPs1[i][0] + irand(-1, 1),
+                                SecondPortalTrashWPs1[i][1] + irand(-1, 1),
+                                SecondPortalTrashWPs1[i][2],
+                                0);
+                        me->SetHomePosition(SecondPortalTrashWPs1[8][0] + irand(-1, 1),
+                            SecondPortalTrashWPs1[8][1] + irand(-1, 1),
+                            SecondPortalTrashWPs1[8][2] + irand(-1, 1),
+                            3.149439f);
                     }
                     else
                     {
-                        for(int i = 0; i < 8; i++)
-                            AddWaypoint(i, SecondPortalTrashWPs2[i][0] + irand(-1, 1), SecondPortalTrashWPs2[i][1] + irand(-1, 1), SecondPortalTrashWPs2[i][2], 0);
-                        me->SetHomePosition(SecondPortalTrashWPs2[7][0], SecondPortalTrashWPs2[7][1], SecondPortalTrashWPs2[7][2], 3.149439f);
+                        for (int i = 0; i < 8; i++)
+                            AddWaypoint(i,
+                                SecondPortalTrashWPs2[i][0] + irand(-1, 1),
+                                SecondPortalTrashWPs2[i][1] + irand(-1, 1),
+                                SecondPortalTrashWPs2[i][2],
+                                0);
+                        me->SetHomePosition(SecondPortalTrashWPs2[7][0],
+                            SecondPortalTrashWPs2[7][1],
+                            SecondPortalTrashWPs2[7][2],
+                            3.149439f);
                     }
                     break;
                 case 2:
-                    for(int i = 0; i < 8; i++)
-                        AddWaypoint(i, ThirdPortalTrashWPs[i][0] + irand(-1, 1), ThirdPortalTrashWPs[i][1] + irand(-1, 1), ThirdPortalTrashWPs[i][2], 0);
-                    me->SetHomePosition(ThirdPortalTrashWPs[7][0], ThirdPortalTrashWPs[7][1], ThirdPortalTrashWPs[7][2], 3.149439f);
+                    for (int i = 0; i < 8; i++)
+                        AddWaypoint(i,
+                            ThirdPortalTrashWPs[i][0] + irand(-1, 1),
+                            ThirdPortalTrashWPs[i][1] + irand(-1, 1),
+                            ThirdPortalTrashWPs[i][2],
+                            0);
+                    me->SetHomePosition(
+                        ThirdPortalTrashWPs[7][0], ThirdPortalTrashWPs[7][1], ThirdPortalTrashWPs[7][2], 3.149439f);
                     break;
                 case 3:
-                    for(int i = 0; i < 9; i++)
-                        AddWaypoint(i, FourthPortalTrashWPs[i][0] + irand(-1, 1), FourthPortalTrashWPs[i][1] + irand(-1, 1), FourthPortalTrashWPs[i][2], 0);
-                    me->SetHomePosition(FourthPortalTrashWPs[8][0], FourthPortalTrashWPs[8][1], FourthPortalTrashWPs[8][2], 3.149439f);
+                    for (int i = 0; i < 9; i++)
+                        AddWaypoint(i,
+                            FourthPortalTrashWPs[i][0] + irand(-1, 1),
+                            FourthPortalTrashWPs[i][1] + irand(-1, 1),
+                            FourthPortalTrashWPs[i][2],
+                            0);
+                    me->SetHomePosition(
+                        FourthPortalTrashWPs[8][0], FourthPortalTrashWPs[8][1], FourthPortalTrashWPs[8][2], 3.149439f);
                     break;
                 case 4:
-                    for(int i = 0; i < 6; i++)
-                        AddWaypoint(i, FifthPortalTrashWPs[i][0] + irand(-1, 1), FifthPortalTrashWPs[i][1] + irand(-1, 1), FifthPortalTrashWPs[i][2], 0);
-                    me->SetHomePosition(FifthPortalTrashWPs[5][0], FifthPortalTrashWPs[5][1], FifthPortalTrashWPs[5][2], 3.149439f);
+                    for (int i = 0; i < 6; i++)
+                        AddWaypoint(i,
+                            FifthPortalTrashWPs[i][0] + irand(-1, 1),
+                            FifthPortalTrashWPs[i][1] + irand(-1, 1),
+                            FifthPortalTrashWPs[i][2],
+                            0);
+                    me->SetHomePosition(
+                        FifthPortalTrashWPs[5][0], FifthPortalTrashWPs[5][1], FifthPortalTrashWPs[5][2], 3.149439f);
                     break;
                 case 5:
-                    for(int i = 0; i < 4; i++)
-                        AddWaypoint(i, SixthPoralTrashWPs[i][0] + irand(-1, 1), SixthPoralTrashWPs[i][1] + irand(-1, 1), SixthPoralTrashWPs[i][2], 0);
-                    me->SetHomePosition(SixthPoralTrashWPs[3][0], SixthPoralTrashWPs[3][1], SixthPoralTrashWPs[3][2], 3.149439f);
+                    for (int i = 0; i < 4; i++)
+                        AddWaypoint(i,
+                            SixthPoralTrashWPs[i][0] + irand(-1, 1),
+                            SixthPoralTrashWPs[i][1] + irand(-1, 1),
+                            SixthPoralTrashWPs[i][2],
+                            0);
+                    me->SetHomePosition(
+                        SixthPoralTrashWPs[3][0], SixthPoralTrashWPs[3][1], SixthPoralTrashWPs[3][2], 3.149439f);
                     break;
             }
             SetDespawnAtEnd(false);
@@ -378,7 +431,8 @@ struct violet_hold_trashAI : public npc_escortAI
     void JustDied(Unit* /*unit*/) override
     {
         if (pInstance)
-            if (Creature* portal = ObjectAccessor::GetCreature((*me), pInstance->GetGuidData(DATA_TELEPORTATION_PORTAL_GUID)))
+            if (Creature* portal =
+                    ObjectAccessor::GetCreature((*me), pInstance->GetGuidData(DATA_TELEPORTATION_PORTAL_GUID)))
                 CAST_AI(npc_vh_teleportation_portal::npc_vh_teleportation_portalAI, portal->AI())->SummonedMobDied(me);
     }
 
@@ -394,7 +448,8 @@ struct violet_hold_trashAI : public npc_escortAI
         if (!HasEscortState(STATE_ESCORT_ESCORTING))
         {
             me->SetImmuneToNPC(false);
-            me->SetHomePosition(1845.577759f + rand_norm() * 5 - 2.5f, 800.681152f + rand_norm() * 5 - 2.5f, 44.104248f, M_PI);
+            me->SetHomePosition(
+                1845.577759f + rand_norm() * 5 - 2.5f, 800.681152f + rand_norm() * 5 - 2.5f, 44.104248f, M_PI);
         }
 
         me->GetThreatMgr().ClearAllThreat();
@@ -425,6 +480,7 @@ enum AzureInvaderSpells
     SPELL_BRUTAL_STRIKE = 58460,
     SPELL_SUNDER_ARMOR = 58461,
 };
+
 #define SPELL_IMPALE                DUNGEON_MODE(SPELL_IMPALE_N, SPELL_IMPALE_H)
 
 enum AzureSpellbreakerSpells
@@ -436,6 +492,7 @@ enum AzureSpellbreakerSpells
     SPELL_CONE_OF_COLD_N = 58463,
     SPELL_CONE_OF_COLD_H = 59258
 };
+
 #define SPELL_ARCANE_BLAST          DUNGEON_MODE(SPELL_ARCANE_BLAST_N, SPELL_ARCANE_BLAST_H)
 #define SPELL_CONE_OF_COLD          DUNGEON_MODE(SPELL_CONE_OF_COLD_N, SPELL_CONE_OF_COLD_H)
 
@@ -450,6 +507,7 @@ enum AzureBinderSpells
     SPELL_FROSTBOLT_N = 58457,
     SPELL_FROSTBOLT_H = 59251,
 };
+
 #define SPELL_ARCANE_BARRAGE        DUNGEON_MODE(SPELL_ARCANE_BARRAGE_N, SPELL_ARCANE_BARRAGE_H)
 #define SPELL_ARCANE_EXPLOSION      DUNGEON_MODE(SPELL_ARCANE_EXPLOSION_N, SPELL_ARCANE_EXPLOSION_H)
 #define SPELL_FROST_NOVA            DUNGEON_MODE(SPELL_FROST_NOVA_N, SPELL_FROST_NOVA_H)
@@ -474,6 +532,7 @@ enum AzureSorcerorSpells
     SPELL_MANA_DETONATION_N = 60182,
     SPELL_MANA_DETONATION_H = 60205
 };
+
 #define SPELL_ARCANE_STREAM         DUNGEON_MODE(SPELL_ARCANE_STREAM_N, SPELL_ARCANE_STREAM_H)
 #define SPELL_MANA_DETONATION       DUNGEON_MODE(SPELL_MANA_DETONATION_N, SPELL_MANA_DETONATION_H)
 
@@ -505,7 +564,7 @@ public:
 
     struct npc_azure_invaderAI : public violet_hold_trashAI
     {
-        npc_azure_invaderAI(Creature* c) : violet_hold_trashAI(c) {}
+        npc_azure_invaderAI(Creature* c) : violet_hold_trashAI(c) { }
 
         uint32 uiCleaveTimer;
         uint32 uiImpaleTimer;
@@ -534,7 +593,8 @@ public:
                     DoCast(me->GetVictim(), SPELL_CLEAVE);
                     uiCleaveTimer = 5000;
                 }
-                else uiCleaveTimer -= diff;
+                else
+                    uiCleaveTimer -= diff;
 
                 if (uiImpaleTimer <= diff)
                 {
@@ -543,7 +603,8 @@ public:
                         DoCast(pTarget, SPELL_IMPALE);
                     uiImpaleTimer = 4000;
                 }
-                else uiImpaleTimer -= diff;
+                else
+                    uiImpaleTimer -= diff;
             }
 
             if (me->GetEntry() == NPC_AZURE_INVADER_2)
@@ -553,14 +614,16 @@ public:
                     DoCast(me->GetVictim(), SPELL_BRUTAL_STRIKE);
                     uiBrutalStrikeTimer = 5000;
                 }
-                else uiBrutalStrikeTimer -= diff;
+                else
+                    uiBrutalStrikeTimer -= diff;
 
                 if (uiSunderArmorTimer <= diff)
                 {
                     DoCast(me->GetVictim(), SPELL_SUNDER_ARMOR);
                     uiSunderArmorTimer = urand(8000, 10000);
                 }
-                else uiSunderArmorTimer -= diff;
+                else
+                    uiSunderArmorTimer -= diff;
             }
 
             DoMeleeAttackIfReady();
@@ -580,7 +643,7 @@ public:
 
     struct npc_azure_binderAI : public violet_hold_trashAI
     {
-        npc_azure_binderAI(Creature* c) : violet_hold_trashAI(c) {}
+        npc_azure_binderAI(Creature* c) : violet_hold_trashAI(c) { }
 
         uint32 uiArcaneExplosionTimer;
         uint32 uiArcainBarrageTimer;
@@ -609,7 +672,8 @@ public:
                     DoCast(SPELL_ARCANE_EXPLOSION);
                     uiArcaneExplosionTimer = 5000;
                 }
-                else uiArcaneExplosionTimer -= diff;
+                else
+                    uiArcaneExplosionTimer -= diff;
 
                 if (uiArcainBarrageTimer <= diff)
                 {
@@ -618,7 +682,8 @@ public:
                         DoCast(pTarget, SPELL_ARCANE_BARRAGE);
                     uiArcainBarrageTimer = 6000;
                 }
-                else uiArcainBarrageTimer -= diff;
+                else
+                    uiArcainBarrageTimer -= diff;
             }
 
             if (me->GetEntry() == NPC_AZURE_BINDER_2)
@@ -628,7 +693,8 @@ public:
                     DoCast(SPELL_FROST_NOVA);
                     uiFrostNovaTimer = 5000;
                 }
-                else uiFrostNovaTimer -= diff;
+                else
+                    uiFrostNovaTimer -= diff;
 
                 if (uiFrostboltTimer <= diff)
                 {
@@ -637,7 +703,8 @@ public:
                         DoCast(pTarget, SPELL_FROSTBOLT);
                     uiFrostboltTimer = 6000;
                 }
-                else uiFrostboltTimer -= diff;
+                else
+                    uiFrostboltTimer -= diff;
             }
 
             DoMeleeAttackIfReady();
@@ -657,7 +724,7 @@ public:
 
     struct npc_azure_mage_slayerAI : public violet_hold_trashAI
     {
-        npc_azure_mage_slayerAI(Creature* c) : violet_hold_trashAI(c) {}
+        npc_azure_mage_slayerAI(Creature* c) : violet_hold_trashAI(c) { }
 
         uint32 uiArcaneEmpowermentTimer;
         uint32 uiSpellLockTimer;
@@ -682,7 +749,8 @@ public:
                     DoCast(me, SPELL_ARCANE_EMPOWERMENT);
                     uiArcaneEmpowermentTimer = 14000;
                 }
-                else uiArcaneEmpowermentTimer -= diff;
+                else
+                    uiArcaneEmpowermentTimer -= diff;
             }
 
             if (me->GetEntry() == NPC_AZURE_MAGE_SLAYER_2)
@@ -694,7 +762,8 @@ public:
                         DoCast(pTarget, SPELL_SPELL_LOCK);
                     uiSpellLockTimer = 9000;
                 }
-                else uiSpellLockTimer -= diff;
+                else
+                    uiSpellLockTimer -= diff;
             }
 
             DoMeleeAttackIfReady();
@@ -709,12 +778,12 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return GetVioletHoldAI<npc_azure_raiderAI> (creature);
+        return GetVioletHoldAI<npc_azure_raiderAI>(creature);
     }
 
     struct npc_azure_raiderAI : public violet_hold_trashAI
     {
-        npc_azure_raiderAI(Creature* c) : violet_hold_trashAI(c) {}
+        npc_azure_raiderAI(Creature* c) : violet_hold_trashAI(c) { }
 
         uint32 uiConcussionBlowTimer;
         uint32 uiMagicReflectionTimer;
@@ -737,14 +806,16 @@ public:
                 DoCast(me->GetVictim(), SPELL_CONCUSSION_BLOW);
                 uiConcussionBlowTimer = 5000;
             }
-            else uiConcussionBlowTimer -= diff;
+            else
+                uiConcussionBlowTimer -= diff;
 
             if (uiMagicReflectionTimer <= diff)
             {
                 DoCast(SPELL_MAGIC_REFLECTION);
                 uiMagicReflectionTimer = urand(10000, 15000);
             }
-            else uiMagicReflectionTimer -= diff;
+            else
+                uiMagicReflectionTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -763,7 +834,7 @@ public:
 
     struct npc_azure_stalkerAI : public violet_hold_trashAI
     {
-        npc_azure_stalkerAI(Creature* c) : violet_hold_trashAI(c) {}
+        npc_azure_stalkerAI(Creature* c) : violet_hold_trashAI(c) { }
 
         uint32 uiBackstabTimer;
         uint32 uiTacticalBlinkTimer;
@@ -805,7 +876,8 @@ public:
                     TacticalBlinkCasted = false;
                     uiBackstabTimer = 4000;
                 }
-                else uiBackstabTimer -= diff;
+                else
+                    uiBackstabTimer -= diff;
             }
 
             DoMeleeAttackIfReady();
@@ -825,7 +897,7 @@ public:
 
     struct npc_azure_spellbreakerAI : public violet_hold_trashAI
     {
-        npc_azure_spellbreakerAI(Creature* c) : violet_hold_trashAI(c) {}
+        npc_azure_spellbreakerAI(Creature* c) : violet_hold_trashAI(c) { }
 
         uint32 uiArcaneBlastTimer;
         uint32 uiSlowTimer;
@@ -856,7 +928,8 @@ public:
                         DoCast(pTarget, SPELL_ARCANE_BLAST);
                     uiArcaneBlastTimer = 6000;
                 }
-                else uiArcaneBlastTimer -= diff;
+                else
+                    uiArcaneBlastTimer -= diff;
 
                 if (uiSlowTimer <= diff)
                 {
@@ -865,7 +938,8 @@ public:
                         DoCast(pTarget, SPELL_SLOW);
                     uiSlowTimer = 5000;
                 }
-                else uiSlowTimer -= diff;
+                else
+                    uiSlowTimer -= diff;
             }
 
             if (me->GetEntry() == NPC_AZURE_SPELLBREAKER_2)
@@ -877,14 +951,16 @@ public:
                         DoCast(pTarget, SPELL_CHAINS_OF_ICE);
                     uiChainsOfIceTimer = 7000;
                 }
-                else uiChainsOfIceTimer -= diff;
+                else
+                    uiChainsOfIceTimer -= diff;
 
                 if (uiConeOfColdTimer <= diff)
                 {
                     DoCast(SPELL_CONE_OF_COLD);
                     uiConeOfColdTimer = 5000;
                 }
-                else uiConeOfColdTimer -= diff;
+                else
+                    uiConeOfColdTimer -= diff;
             }
 
             DoMeleeAttackIfReady();
@@ -902,9 +978,9 @@ public:
         return GetVioletHoldAI<npc_azure_captainAI>(creature);
     }
 
-    struct  npc_azure_captainAI : public violet_hold_trashAI
+    struct npc_azure_captainAI : public violet_hold_trashAI
     {
-        npc_azure_captainAI(Creature* c) : violet_hold_trashAI(c) {}
+        npc_azure_captainAI(Creature* c) : violet_hold_trashAI(c) { }
 
         uint32 uiMortalStrikeTimer;
         uint32 uiWhirlwindTimer;
@@ -927,14 +1003,16 @@ public:
                 DoCast(me->GetVictim(), SPELL_MORTAL_STRIKE);
                 uiMortalStrikeTimer = 5000;
             }
-            else uiMortalStrikeTimer -= diff;
+            else
+                uiMortalStrikeTimer -= diff;
 
             if (uiWhirlwindTimer <= diff)
             {
                 DoCastAOE(SPELL_WHIRLWIND_OF_STEEL);
                 uiWhirlwindTimer = 8000;
             }
-            else uiWhirlwindTimer -= diff;
+            else
+                uiWhirlwindTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -951,9 +1029,9 @@ public:
         return GetVioletHoldAI<npc_azure_sorcerorAI>(creature);
     }
 
-    struct  npc_azure_sorcerorAI : public violet_hold_trashAI
+    struct npc_azure_sorcerorAI : public violet_hold_trashAI
     {
-        npc_azure_sorcerorAI(Creature* c) : violet_hold_trashAI(c) {}
+        npc_azure_sorcerorAI(Creature* c) : violet_hold_trashAI(c) { }
 
         uint32 uiArcaneStreamTimer;
         uint32 uiArcaneStreamTimerStartingValueHolder;
@@ -981,14 +1059,17 @@ public:
                 uiArcaneStreamTimer = urand(0, 5000) + 5000;
                 uiArcaneStreamTimerStartingValueHolder = uiArcaneStreamTimer;
             }
-            else uiArcaneStreamTimer -= diff;
+            else
+                uiArcaneStreamTimer -= diff;
 
-            if (uiManaDetonationTimer <= diff && uiArcaneStreamTimer >= 1500 && uiArcaneStreamTimer <= uiArcaneStreamTimerStartingValueHolder / 2)
+            if (uiManaDetonationTimer <= diff && uiArcaneStreamTimer >= 1500 &&
+                uiArcaneStreamTimer <= uiArcaneStreamTimerStartingValueHolder / 2)
             {
                 DoCastAOE(SPELL_MANA_DETONATION);
                 uiManaDetonationTimer = urand(2000, 6000);
             }
-            else uiManaDetonationTimer -= diff;
+            else
+                uiManaDetonationTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -1023,7 +1104,8 @@ public:
             pInstance = c->GetInstanceScript();
             uiBoss = 0;
             if (pInstance)
-                uiBoss = pInstance->GetData(DATA_WAVE_COUNT) == 6 ? pInstance->GetData(DATA_FIRST_BOSS_NUMBER) : pInstance->GetData(DATA_SECOND_BOSS_NUMBER);
+                uiBoss = pInstance->GetData(DATA_WAVE_COUNT) == 6 ? pInstance->GetData(DATA_FIRST_BOSS_NUMBER)
+                                                                  : pInstance->GetData(DATA_SECOND_BOSS_NUMBER);
             bAddedWPs = false;
             bOpening = false;
         }
@@ -1079,32 +1161,42 @@ public:
                 switch (uiBoss)
                 {
                     case 1:
-                        for(int i = 0; i < 3; i++)
-                            AddWaypoint(i, SaboteurFinalPos1[i][0], SaboteurFinalPos1[i][1], SaboteurFinalPos1[i][2], 0);
-                        me->SetHomePosition(SaboteurFinalPos1[2][0], SaboteurFinalPos1[2][1], SaboteurFinalPos1[2][2], 4.762346f);
+                        for (int i = 0; i < 3; i++)
+                            AddWaypoint(
+                                i, SaboteurFinalPos1[i][0], SaboteurFinalPos1[i][1], SaboteurFinalPos1[i][2], 0);
+                        me->SetHomePosition(
+                            SaboteurFinalPos1[2][0], SaboteurFinalPos1[2][1], SaboteurFinalPos1[2][2], 4.762346f);
                         break;
                     case 2:
-                        for(int i = 0; i < 3; i++)
-                            AddWaypoint(i, SaboteurFinalPos2[i][0], SaboteurFinalPos2[i][1], SaboteurFinalPos2[i][2], 0);
-                        me->SetHomePosition(SaboteurFinalPos2[2][0], SaboteurFinalPos2[2][1], SaboteurFinalPos2[2][2], 1.862674f);
+                        for (int i = 0; i < 3; i++)
+                            AddWaypoint(
+                                i, SaboteurFinalPos2[i][0], SaboteurFinalPos2[i][1], SaboteurFinalPos2[i][2], 0);
+                        me->SetHomePosition(
+                            SaboteurFinalPos2[2][0], SaboteurFinalPos2[2][1], SaboteurFinalPos2[2][2], 1.862674f);
                         break;
                     case 3:
-                        for(int i = 0; i < 2; i++)
-                            AddWaypoint(i, SaboteurFinalPos3[i][0], SaboteurFinalPos3[i][1], SaboteurFinalPos3[i][2], 0);
-                        me->SetHomePosition(SaboteurFinalPos3[1][0], SaboteurFinalPos3[1][1], SaboteurFinalPos3[1][2], 5.500638f);
+                        for (int i = 0; i < 2; i++)
+                            AddWaypoint(
+                                i, SaboteurFinalPos3[i][0], SaboteurFinalPos3[i][1], SaboteurFinalPos3[i][2], 0);
+                        me->SetHomePosition(
+                            SaboteurFinalPos3[1][0], SaboteurFinalPos3[1][1], SaboteurFinalPos3[1][2], 5.500638f);
                         break;
                     case 4:
                         AddWaypoint(0, SaboteurFinalPos4[0], SaboteurFinalPos4[1], SaboteurFinalPos4[2], 0);
-                        me->SetHomePosition(SaboteurFinalPos4[0], SaboteurFinalPos4[1], SaboteurFinalPos4[2], 3.991108f);
+                        me->SetHomePosition(
+                            SaboteurFinalPos4[0], SaboteurFinalPos4[1], SaboteurFinalPos4[2], 3.991108f);
                         break;
                     case 5:
                         AddWaypoint(0, SaboteurFinalPos5[0], SaboteurFinalPos5[1], SaboteurFinalPos5[2], 0);
-                        me->SetHomePosition(SaboteurFinalPos5[0], SaboteurFinalPos5[1], SaboteurFinalPos5[2], 1.100841f);
+                        me->SetHomePosition(
+                            SaboteurFinalPos5[0], SaboteurFinalPos5[1], SaboteurFinalPos5[2], 1.100841f);
                         break;
                     case 6:
-                        for(int i = 0; i < 5; i++)
-                            AddWaypoint(i, SaboteurFinalPos6[i][0], SaboteurFinalPos6[i][1], SaboteurFinalPos6[i][2], 0);
-                        me->SetHomePosition(SaboteurFinalPos6[4][0], SaboteurFinalPos6[4][1], SaboteurFinalPos6[4][2], 0.983031f);
+                        for (int i = 0; i < 5; i++)
+                            AddWaypoint(
+                                i, SaboteurFinalPos6[i][0], SaboteurFinalPos6[i][1], SaboteurFinalPos6[i][2], 0);
+                        me->SetHomePosition(
+                            SaboteurFinalPos6[4][0], SaboteurFinalPos6[4][1], SaboteurFinalPos6[4][2], 0.983031f);
                         break;
                 }
                 SetDespawnAtEnd(false);
@@ -1137,7 +1229,8 @@ public:
                     }
                     ++count;
                 }
-                else timer -= diff;
+                else
+                    timer -= diff;
             }
         }
 
@@ -1149,7 +1242,7 @@ public:
             me->CastSpell(me, SABOTEUR_SHIELD_DISRUPTION, false);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
     };
 };
 
@@ -1161,7 +1254,7 @@ class spell_destroy_door_seal_aura : public AuraScript
 {
     PrepareAuraScript(spell_destroy_door_seal_aura);
 
-    void HandleEffectPeriodic(AuraEffect const*   /*aurEff*/)
+    void HandleEffectPeriodic(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction();
         if (Unit* target = GetTarget())
@@ -1171,7 +1264,8 @@ class spell_destroy_door_seal_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_destroy_door_seal_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_destroy_door_seal_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 

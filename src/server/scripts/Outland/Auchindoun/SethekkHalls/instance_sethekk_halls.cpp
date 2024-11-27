@@ -19,25 +19,22 @@
 #include "InstanceScript.h"
 #include "sethekk_halls.h"
 
-DoorData const doorData[] =
-{
-    { GO_IKISS_DOOR, DATA_IKISS, DOOR_TYPE_PASSAGE },
-    { 0,                      0, DOOR_TYPE_ROOM    }  // END
+DoorData const doorData[] = {
+    {GO_IKISS_DOOR, DATA_IKISS, DOOR_TYPE_PASSAGE},
+    {0,             0,          DOOR_TYPE_ROOM   }  // END
 };
 
-ObjectData const gameObjectData[] =
-{
-    { GO_THE_TALON_KINGS_COFFER, DATA_GO_TALON_KING_COFFER },
-    { 0,                         0                         }
+ObjectData const gameObjectData[] = {
+    {GO_THE_TALON_KINGS_COFFER, DATA_GO_TALON_KING_COFFER},
+    {0,                         0                        }
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_VOICE_OF_THE_RAVEN_GOD, DATA_VOICE_OF_THE_RAVEN_GOD },
-    { 0,                          0                           }
+ObjectData const creatureData[] = {
+    {NPC_VOICE_OF_THE_RAVEN_GOD, DATA_VOICE_OF_THE_RAVEN_GOD},
+    {0,                          0                          }
 };
 
-const uint32 anzuSummonEventId = 14797;
+uint32 const anzuSummonEventId = 14797;
 
 class instance_sethekk_halls : public InstanceMapScript
 {

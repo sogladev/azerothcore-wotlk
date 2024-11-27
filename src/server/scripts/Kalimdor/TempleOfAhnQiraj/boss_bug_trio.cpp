@@ -23,48 +23,51 @@
 
 enum Spells
 {
-    SPELL_BLOODY_DEATH   = 25770,
-    SPELL_FULL_HEAL      = 17683,
+    SPELL_BLOODY_DEATH = 25770,
+    SPELL_FULL_HEAL = 17683,
 
     // Kri
-    SPELL_CLEAVE         = 26350,
-    SPELL_THRASH         = 3391,
-    SPELL_TOXIC_VOLLEY   = 25812,
-    SPELL_POISON_CLOUD   = 26590,
+    SPELL_CLEAVE = 26350,
+    SPELL_THRASH = 3391,
+    SPELL_TOXIC_VOLLEY = 25812,
+    SPELL_POISON_CLOUD = 26590,
 
     // Vem
-    SPELL_CHARGE         = 26561,
-    SPELL_KNOCKBACK      = 18670,
-    SPELL_KNOCKDOWN      = 19128,
-    SPELL_VENGEANCE      = 25790,
+    SPELL_CHARGE = 26561,
+    SPELL_KNOCKBACK = 18670,
+    SPELL_KNOCKDOWN = 19128,
+    SPELL_VENGEANCE = 25790,
 
     // Yauj
-    SPELL_HEAL           = 25807,
-    SPELL_FEAR           = 26580,
-    SPELL_RAVAGE         = 3242,
-    SPELL_DISPEL         = 25808,
+    SPELL_HEAL = 25807,
+    SPELL_FEAR = 26580,
+    SPELL_RAVAGE = 3242,
+    SPELL_DISPEL = 25808,
 
-    NPC_YAUJ_BROOD       = 15621
+    NPC_YAUJ_BROOD = 15621
 };
 
 enum Misc
 {
-    ACTION_CONSUME       = 0,
-    ACTION_EXPLODE       = 1,
+    ACTION_CONSUME = 0,
+    ACTION_EXPLODE = 1,
 
-    EMOTE_DEVOURED       = 0,
+    EMOTE_DEVOURED = 0,
 
-    POINT_CONSUME        = 0,
+    POINT_CONSUME = 0,
 
-    VEM_WAYPOINT_PATH    = 876030
+    VEM_WAYPOINT_PATH = 876030
 };
 
-const Position resetPoint = { -8582.0f, 2047.0f, -1.62f }; // Taken from CMangos
+Position const resetPoint = {-8582.0f, 2047.0f, -1.62f}; // Taken from CMangos
 
 struct boss_bug_trio : public BossAI
 {
 public:
-    boss_bug_trio(Creature* creature) : BossAI(creature, DATA_BUG_TRIO) { Reset(); }
+    boss_bug_trio(Creature* creature) : BossAI(creature, DATA_BUG_TRIO)
+    {
+        Reset();
+    }
 
     bool CheckInRoom() override
     {
@@ -84,23 +87,17 @@ public:
         if (Creature* vem = instance->GetCreature(DATA_VEM))
         {
             if (vem->GetGUID() != me->GetGUID())
-            {
                 vem->GetAI()->AttackStart(who);
-            }
         }
         if (Creature* kri = instance->GetCreature(DATA_KRI))
         {
             if (kri->GetGUID() != me->GetGUID())
-            {
                 kri->GetAI()->AttackStart(who);
-            }
         }
         if (Creature* yauj = instance->GetCreature(DATA_YAUJ))
         {
             if (yauj->GetGUID() != me->GetGUID())
-            {
                 yauj->GetAI()->AttackStart(who);
-            }
         }
     }
 
@@ -163,7 +160,7 @@ public:
             return;
 
         me->GetMotionMaster()->MoveIdle();
-        me->SetSpeed(MOVE_RUN, 15.f/7.f); // From sniffs
+        me->SetSpeed(MOVE_RUN, 15.f / 7.f); // From sniffs
         DoCastSelf(SPELL_FULL_HEAL, true);
         if (me->GetThreatMgr().GetThreatListSize())
             DoResetThreatList();
@@ -173,7 +170,8 @@ public:
             me->SetTarget(dying->GetGUID());
         }
 
-        _scheduler.Schedule(2s, [this](TaskContext /*context*/)
+        _scheduler.Schedule(2s,
+            [this](TaskContext /*context*/)
         {
             me->SetReactState(REACT_AGGRESSIVE);
             _isEating = false;
@@ -203,9 +201,7 @@ public:
         me->SetSpeed(MOVE_RUN, 15.f / 7.f); // From sniffs
 
         if (me->GetEntry() == NPC_VEM)
-        {
             me->GetMotionMaster()->MovePath(VEM_WAYPOINT_PATH, true);
-        }
     }
 
     void UpdateAI(uint32 diff) override
@@ -213,7 +209,8 @@ public:
         if (!UpdateVictim() || !CheckInRoom())
             return;
 
-        _scheduler.Update(diff, [this]
+        _scheduler.Update(diff,
+            [this]
         {
             if (!_dying && !_isEating)
                 DoMeleeAttackIfReady();
@@ -247,7 +244,8 @@ public:
                         vem->GetMotionMaster()->MovePoint(POINT_CONSUME, x, y, z);
                     }
                 }
-                else _creatureDying = DATA_VEM;
+                else
+                    _creatureDying = DATA_VEM;
             }
             if (Creature* kri = instance->GetCreature(DATA_KRI))
             {
@@ -260,7 +258,8 @@ public:
                         kri->GetMotionMaster()->MovePoint(POINT_CONSUME, x, y, z);
                     }
                 }
-                else _creatureDying = DATA_KRI;
+                else
+                    _creatureDying = DATA_KRI;
             }
             if (Creature* yauj = instance->GetCreature(DATA_YAUJ))
             {
@@ -273,7 +272,8 @@ public:
                         yauj->GetMotionMaster()->MovePoint(POINT_CONSUME, x, y, z);
                     }
                 }
-                else _creatureDying = DATA_YAUJ;
+                else
+                    _creatureDying = DATA_YAUJ;
             }
         }
     }
@@ -327,25 +327,30 @@ uint32 boss_bug_trio::_creatureDying = 0;
 
 struct boss_kri : public boss_bug_trio
 {
-    boss_kri(Creature* creature) : boss_bug_trio(creature)
-    {
-    }
+    boss_kri(Creature* creature) : boss_bug_trio(creature) { }
 
     void JustEngagedWith(Unit* who) override
     {
         EnterCombatWithTrio(who);
 
-        _scheduler.Schedule(7s, 18s, [this](TaskContext context)
+        _scheduler
+            .Schedule(7s,
+                18s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_CLEAVE);
             context.Repeat();
         })
-        .Schedule(8s, 17s, [this](TaskContext context)
+            .Schedule(8s,
+                17s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_TOXIC_VOLLEY);
             context.Repeat();
         })
-        .Schedule(7s, 16s, [this](TaskContext context)
+            .Schedule(7s,
+                16s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_THRASH);
             context.Repeat();
@@ -355,45 +360,54 @@ struct boss_kri : public boss_bug_trio
 
 struct boss_vem : public boss_bug_trio
 {
-    boss_vem(Creature* creature) : boss_bug_trio(creature)
-    {
-    }
+    boss_vem(Creature* creature) : boss_bug_trio(creature) { }
 
     void JustEngagedWith(Unit* who) override
     {
         EnterCombatWithTrio(who);
 
-        _scheduler.Schedule(15s, 27s, [this](TaskContext context)
+        _scheduler
+            .Schedule(15s,
+                27s,
+                [this](TaskContext context)
         {
-            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, [this](Unit* target) -> bool
-                {
-                    if (!target->IsPlayer())
-                        return false;
-                    if (me->IsWithinMeleeRange(target) || target == me->GetVictim())
-                        return false;
-                    if (!me->IsWithinLOS(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()))
-                        return false;
+            if (Unit* target = SelectTarget(SelectTargetMethod::Random,
+                    0,
+                    [this](Unit* target) -> bool
+            {
+                if (!target->IsPlayer())
+                    return false;
+                if (me->IsWithinMeleeRange(target) || target == me->GetVictim())
+                    return false;
+                if (!me->IsWithinLOS(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ()))
+                    return false;
 
-                    return true;
-                }))
+                return true;
+            }))
             {
                 DoCast(target, SPELL_CHARGE);
             }
             context.Repeat();
         })
-        .Schedule(10s, 24s, [this](TaskContext context)
+            .Schedule(10s,
+                24s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_KNOCKBACK);
             context.Repeat();
         })
-        .Schedule(10s, 23s, [this](TaskContext context)
+            .Schedule(10s,
+                23s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_KNOCKDOWN);
             context.Repeat();
         })
-        .Schedule(1s, [this](TaskContext context)
+            .Schedule(1s,
+                [this](TaskContext context)
         {
-            if (instance->GetData(DATA_BUG_TRIO_DEATH) == 2 && !me->HasAura(SPELL_VENGEANCE)) // Vem is the only one left.
+            if (instance->GetData(DATA_BUG_TRIO_DEATH) == 2 &&
+                !me->HasAura(SPELL_VENGEANCE)) // Vem is the only one left.
             {
                 DoCastSelf(SPELL_VENGEANCE, true);
             }
@@ -404,40 +418,41 @@ struct boss_vem : public boss_bug_trio
 
 struct boss_yauj : public boss_bug_trio
 {
-    boss_yauj(Creature* creature) : boss_bug_trio(creature)
-    {
-    }
+    boss_yauj(Creature* creature) : boss_bug_trio(creature) { }
 
     void JustEngagedWith(Unit* who) override
     {
         EnterCombatWithTrio(who);
 
-        _scheduler.Schedule(12100ms, [this](TaskContext context)
+        _scheduler
+            .Schedule(12100ms,
+                [this](TaskContext context)
         {
             if (me->GetHealthPct() <= 93.f)
-            {
                 DoCastSelf(SPELL_HEAL);
-            }
             else if (Unit* friendly = DoSelectLowestHpFriendly(100.f))
-            {
                 DoCast(friendly, SPELL_HEAL);
-            }
             context.Repeat();
         })
-        .Schedule(12s, [this](TaskContext context)
+            .Schedule(12s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_FEAR);
             DoResetThreatList();
             context.Repeat(20600ms);
         })
-        .Schedule(11s, 14500ms, [this](TaskContext context)
+            .Schedule(11s,
+                14500ms,
+                [this](TaskContext context)
         {
             if (DoCastVictim(SPELL_RAVAGE) == SPELL_CAST_OK)
                 context.Repeat(10s, 15s);
             else
                 context.Repeat(1200ms);
         })
-        .Schedule(10s, 30s, [this](TaskContext context)
+            .Schedule(10s,
+                30s,
+                [this](TaskContext context)
         {
             std::list<Creature*> targets = DoFindFriendlyCC(50.f);
             if (!targets.empty())
@@ -460,15 +475,14 @@ class spell_vem_knockback : public SpellScript
         if (Unit* target = GetHitUnit())
         {
             if (Creature* cCaster = GetCaster()->ToCreature())
-            {
                 cCaster->GetThreatMgr().ModifyThreatByPercent(target, -80);
-            }
         }
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_vem_knockback::HandleScriptEffect, EFFECT_2, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_vem_knockback::HandleScriptEffect, EFFECT_2, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -479,14 +493,13 @@ class spell_vem_vengeance : public SpellScript
     void FilterTargets(std::list<WorldObject*>& targets)
     {
         targets.remove_if([&](WorldObject const* target) -> bool
-            {
-                return target->GetEntry() != NPC_YAUJ && target->GetEntry() != NPC_VEM && target->GetEntry() != NPC_KRI;
-            });
+        { return target->GetEntry() != NPC_YAUJ && target->GetEntry() != NPC_VEM && target->GetEntry() != NPC_KRI; });
     }
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_vem_vengeance::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENTRY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_vem_vengeance::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENTRY);
     }
 };
 

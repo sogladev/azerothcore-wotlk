@@ -30,40 +30,41 @@
 class ObjectWorldLoader
 {
 public:
-    explicit ObjectWorldLoader(ObjectGridLoader& gloader)
-        : i_cell(gloader.i_cell), i_map(gloader.i_map), i_grid(gloader.i_grid), i_corpses(gloader.i_corpses)
-    {}
+    explicit ObjectWorldLoader(ObjectGridLoader& gloader) :
+        i_cell(gloader.i_cell),
+        i_map(gloader.i_map),
+        i_grid(gloader.i_grid),
+        i_corpses(gloader.i_corpses)
+    { }
 
     void Visit(CorpseMapType& m);
 
-    template<class T> void Visit(GridRefMgr<T>&) { }
+    template <class T> void Visit(GridRefMgr<T>&) { }
 
 private:
     Cell i_cell;
     Map* i_map;
     NGridType& i_grid;
+
 public:
     uint32& i_corpses;
 };
 
-template<class T> void ObjectGridLoader::SetObjectCell(T* /*obj*/, CellCoord const& /*cellCoord*/)
-{
-}
+template <class T> void ObjectGridLoader::SetObjectCell(T* /*obj*/, CellCoord const& /*cellCoord*/) { }
 
-template<> void ObjectGridLoader::SetObjectCell(Creature* obj, CellCoord const& cellCoord)
+template <> void ObjectGridLoader::SetObjectCell(Creature* obj, CellCoord const& cellCoord)
 {
     Cell cell(cellCoord);
     obj->SetCurrentCell(cell);
 }
 
-template<> void ObjectGridLoader::SetObjectCell(GameObject* obj, CellCoord const& cellCoord)
+template <> void ObjectGridLoader::SetObjectCell(GameObject* obj, CellCoord const& cellCoord)
 {
     Cell cell(cellCoord);
     obj->SetCurrentCell(cell);
 }
 
-template <class T>
-void AddObjectHelper(CellCoord& cell, GridRefMgr<T>& m, uint32& count, Map* /*map*/, T* obj)
+template <class T> void AddObjectHelper(CellCoord& cell, GridRefMgr<T>& m, uint32& count, Map* /*map*/, T* obj)
 {
     obj->AddToGrid(m);
     ObjectGridLoader::SetObjectCell(obj, cell);
@@ -71,8 +72,7 @@ void AddObjectHelper(CellCoord& cell, GridRefMgr<T>& m, uint32& count, Map* /*ma
     ++count;
 }
 
-template <>
-void AddObjectHelper(CellCoord& cell, CreatureMapType& m, uint32& count, Map* map, Creature* obj)
+template <> void AddObjectHelper(CellCoord& cell, CreatureMapType& m, uint32& count, Map* map, Creature* obj)
 {
     obj->AddToGrid(m);
     ObjectGridLoader::SetObjectCell(obj, cell);
@@ -83,8 +83,7 @@ void AddObjectHelper(CellCoord& cell, CreatureMapType& m, uint32& count, Map* ma
     ++count;
 }
 
-template <>
-void AddObjectHelper(CellCoord& cell, GameObjectMapType& m, uint32& count, Map* map, GameObject* obj)
+template <> void AddObjectHelper(CellCoord& cell, GameObjectMapType& m, uint32& count, Map* map, GameObject* obj)
 {
     obj->AddToGrid(m);
     ObjectGridLoader::SetObjectCell(obj, cell);
@@ -95,10 +94,9 @@ void AddObjectHelper(CellCoord& cell, GameObjectMapType& m, uint32& count, Map* 
     ++count;
 }
 
-template <class T>
-void LoadHelper(CellGuidSet const& /*guid_set*/, CellCoord& /*cell*/, GridRefMgr<T>& /*m*/, uint32& /*count*/, Map* /*map*/)
-{
-}
+template <class T> void LoadHelper(
+    CellGuidSet const& /*guid_set*/, CellCoord& /*cell*/, GridRefMgr<T>& /*m*/, uint32& /*count*/, Map* /*map*/)
+{ }
 
 template <>
 void LoadHelper(CellGuidSet const& guid_set, CellCoord& cell, GridRefMgr<Creature>& m, uint32& count, Map* map)
@@ -115,9 +113,11 @@ void LoadHelper(CellGuidSet const& guid_set, CellCoord& cell, GridRefMgr<Creatur
 
         AddObjectHelper(cell, m, count, map, obj);
 
-        if (!obj->IsMoveInLineOfSightDisabled() && obj->GetDefaultMovementType() == IDLE_MOTION_TYPE && !obj->isNeedNotify(NOTIFY_VISIBILITY_CHANGED | NOTIFY_AI_RELOCATION))
+        if (!obj->IsMoveInLineOfSightDisabled() && obj->GetDefaultMovementType() == IDLE_MOTION_TYPE &&
+            !obj->isNeedNotify(NOTIFY_VISIBILITY_CHANGED | NOTIFY_AI_RELOCATION))
         {
-            if (obj->IsAlive() && !obj->HasUnitState(UNIT_STATE_SIGHTLESS) && obj->HasReactState(REACT_AGGRESSIVE) && !obj->IsImmuneToNPC())
+            if (obj->IsAlive() && !obj->HasUnitState(UNIT_STATE_SIGHTLESS) && obj->HasReactState(REACT_AGGRESSIVE) &&
+                !obj->IsImmuneToNPC())
             {
                 // call MoveInLineOfSight for nearby grid creatures
                 Acore::AIRelocationNotifier notifier(*obj);
@@ -134,7 +134,8 @@ void LoadHelper(CellGuidSet const& guid_set, CellCoord& cell, GridRefMgr<GameObj
     {
         ObjectGuid::LowType guid = *i_guid;
         GameObjectData const* data = sObjectMgr->GetGameObjectData(guid);
-        GameObject* obj = data && sObjectMgr->IsGameObjectStaticTransport(data->id) ? new StaticTransport() : new GameObject();
+        GameObject* obj =
+            data && sObjectMgr->IsGameObjectStaticTransport(data->id) ? new StaticTransport() : new GameObject();
 
         if (!obj->LoadFromDB(guid, map))
         {
@@ -149,14 +150,16 @@ void LoadHelper(CellGuidSet const& guid_set, CellCoord& cell, GridRefMgr<GameObj
 void ObjectGridLoader::Visit(GameObjectMapType& m)
 {
     CellCoord cellCoord = i_cell.GetCellCoord();
-    CellObjectGuids const& cell_guids = sObjectMgr->GetCellObjectGuids(i_map->GetId(), i_map->GetSpawnMode(), cellCoord.GetId());
+    CellObjectGuids const& cell_guids =
+        sObjectMgr->GetCellObjectGuids(i_map->GetId(), i_map->GetSpawnMode(), cellCoord.GetId());
     LoadHelper(cell_guids.gameobjects, cellCoord, m, i_gameObjects, i_map);
 }
 
 void ObjectGridLoader::Visit(CreatureMapType& m)
 {
     CellCoord cellCoord = i_cell.GetCellCoord();
-    CellObjectGuids const& cell_guids = sObjectMgr->GetCellObjectGuids(i_map->GetId(), i_map->GetSpawnMode(), cellCoord.GetId());
+    CellObjectGuids const& cell_guids =
+        sObjectMgr->GetCellObjectGuids(i_map->GetId(), i_map->GetSpawnMode(), cellCoord.GetId());
     LoadHelper(cell_guids.creatures, cellCoord, m, i_creatures, i_map);
 }
 
@@ -206,11 +209,16 @@ void ObjectGridLoader::LoadN(void)
             }
         }
     }
-    LOG_DEBUG("maps", "{} GameObjects, {} Creatures, and {} Corpses/Bones loaded for grid {} on map {}", i_gameObjects, i_creatures, i_corpses, i_grid.GetGridId(), i_map->GetId());
+    LOG_DEBUG("maps",
+        "{} GameObjects, {} Creatures, and {} Corpses/Bones loaded for grid {} on map {}",
+        i_gameObjects,
+        i_creatures,
+        i_corpses,
+        i_grid.GetGridId(),
+        i_map->GetId());
 }
 
-template<class T>
-void ObjectGridUnloader::Visit(GridRefMgr<T>& m)
+template <class T> void ObjectGridUnloader::Visit(GridRefMgr<T>& m)
 {
     while (!m.IsEmpty())
     {
@@ -228,8 +236,7 @@ void ObjectGridUnloader::Visit(GridRefMgr<T>& m)
     }
 }
 
-template<class T>
-void ObjectGridCleaner::Visit(GridRefMgr<T>& m)
+template <class T> void ObjectGridCleaner::Visit(GridRefMgr<T>& m)
 {
     for (typename GridRefMgr<T>::iterator iter = m.begin(); iter != m.end(); ++iter)
         iter->GetSource()->CleanupsBeforeDelete();

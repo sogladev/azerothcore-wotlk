@@ -22,38 +22,38 @@
 
 enum Yells
 {
-    SAY_GREET                           = 0,
-    SAY_AGGRO                           = 1,
-    SAY_SLAY                            = 2,
-    SAY_DEATH                           = 3,
-    EMOTE_WIDOWS_EMBRACE                = 4,
-    EMOTE_FRENZY                        = 5,
-    SAY_FRENZY                          = 6
+    SAY_GREET = 0,
+    SAY_AGGRO = 1,
+    SAY_SLAY = 2,
+    SAY_DEATH = 3,
+    EMOTE_WIDOWS_EMBRACE = 4,
+    EMOTE_FRENZY = 5,
+    SAY_FRENZY = 6
 };
 
 enum Spells
 {
-    SPELL_POISON_BOLT_VOLLEY_10         = 28796,
-    SPELL_POISON_BOLT_VOLLEY_25         = 54098,
-    SPELL_RAIN_OF_FIRE_10               = 28794,
-    SPELL_RAIN_OF_FIRE_25               = 54099,
-    SPELL_FRENZY_10                     = 28798,
-    SPELL_FRENZY_25                     = 54100,
-    SPELL_WIDOWS_EMBRACE                = 28732,
-    SPELL_MINION_WIDOWS_EMBRACE         = 54097
+    SPELL_POISON_BOLT_VOLLEY_10 = 28796,
+    SPELL_POISON_BOLT_VOLLEY_25 = 54098,
+    SPELL_RAIN_OF_FIRE_10 = 28794,
+    SPELL_RAIN_OF_FIRE_25 = 54099,
+    SPELL_FRENZY_10 = 28798,
+    SPELL_FRENZY_25 = 54100,
+    SPELL_WIDOWS_EMBRACE = 28732,
+    SPELL_MINION_WIDOWS_EMBRACE = 54097
 };
 
 enum Events
 {
-    EVENT_POISON_BOLT                   = 1,
-    EVENT_RAIN_OF_FIRE                  = 2,
-    EVENT_FRENZY                        = 3
+    EVENT_POISON_BOLT = 1,
+    EVENT_RAIN_OF_FIRE = 2,
+    EVENT_FRENZY = 3
 };
 
 enum Misc
 {
-    NPC_NAXXRAMAS_WORSHIPPER            = 16506,
-    NPC_NAXXRAMAS_FOLLOWER              = 16505
+    NPC_NAXXRAMAS_WORSHIPPER = 16506,
+    NPC_NAXXRAMAS_FOLLOWER = 16505
 };
 
 class boss_faerlina : public CreatureScript
@@ -106,9 +106,7 @@ public:
             if (pInstance)
             {
                 if (GameObject* go = me->GetMap()->GetGameObject(pInstance->GetGuidData(DATA_FAERLINA_WEB)))
-                {
                     go->SetGoState(GO_STATE_ACTIVE);
-                }
             }
         }
 
@@ -125,9 +123,7 @@ public:
             if (pInstance)
             {
                 if (GameObject* go = me->GetMap()->GetGameObject(pInstance->GetGuidData(DATA_FAERLINA_WEB)))
-                {
                     go->SetGoState(GO_STATE_READY);
-                }
             }
         }
 
@@ -147,25 +143,19 @@ public:
                 return;
 
             if (!urand(0, 3))
-            {
                 Talk(SAY_SLAY);
-            }
             if (pInstance)
-            {
                 pInstance->SetData(DATA_IMMORTAL_FAIL, 0);
-            }
         }
 
-        void JustDied(Unit*  killer) override
+        void JustDied(Unit* killer) override
         {
             BossAI::JustDied(killer);
             Talk(SAY_DEATH);
             if (pInstance)
             {
                 if (GameObject* go = me->GetMap()->GetGameObject(pInstance->GetGuidData(DATA_FAERLINA_WEB)))
-                {
                     go->SetGoState(GO_STATE_ACTIVE);
-                }
             }
         }
 
@@ -198,15 +188,17 @@ public:
                 case EVENT_POISON_BOLT:
                     if (!me->HasAura(RAID_MODE(SPELL_WIDOWS_EMBRACE, SPELL_MINION_WIDOWS_EMBRACE)))
                     {
-                        me->CastCustomSpell(RAID_MODE(SPELL_POISON_BOLT_VOLLEY_10, SPELL_POISON_BOLT_VOLLEY_25), SPELLVALUE_MAX_TARGETS, RAID_MODE(3, 10), me, false);
+                        me->CastCustomSpell(RAID_MODE(SPELL_POISON_BOLT_VOLLEY_10, SPELL_POISON_BOLT_VOLLEY_25),
+                            SPELLVALUE_MAX_TARGETS,
+                            RAID_MODE(3, 10),
+                            me,
+                            false);
                     }
                     events.Repeat(7s, 15s);
                     break;
                 case EVENT_RAIN_OF_FIRE:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
-                    {
                         me->CastSpell(target, RAID_MODE(SPELL_RAIN_OF_FIRE_10, SPELL_RAIN_OF_FIRE_25), false);
-                    }
                     events.Repeat(8s, 18s);
                     break;
                 case EVENT_FRENZY:
@@ -238,9 +230,7 @@ public:
                 }
                 pInstance->SetData(DATA_FRENZY_REMOVED, 0);
                 if (Is25ManRaid())
-                {
                     Unit::Kill(caster, caster);
-                }
             }
         }
     };

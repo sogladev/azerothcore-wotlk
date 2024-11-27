@@ -50,9 +50,7 @@ BattlegroundEY::BattlegroundEY()
     _flagCapturedObject = 0;
 }
 
-BattlegroundEY::~BattlegroundEY()
-{
-}
+BattlegroundEY::~BattlegroundEY() { }
 
 void BattlegroundEY::PostUpdateImpl(uint32 diff)
 {
@@ -67,7 +65,8 @@ void BattlegroundEY::PostUpdateImpl(uint32 diff)
                         AddPoints(TEAM_ALLIANCE, BG_EY_TickPoints[_ownedPointsCount[TEAM_ALLIANCE] - 1]);
                     if (_ownedPointsCount[TEAM_HORDE] > 0)
                         AddPoints(TEAM_HORDE, BG_EY_TickPoints[_ownedPointsCount[TEAM_HORDE] - 1]);
-                    _bgEvents.ScheduleEvent(BG_EY_EVENT_ADD_POINTS, BG_EY_FPOINTS_TICK_TIME - (GameTime::GetGameTimeMS().count() % BG_EY_FPOINTS_TICK_TIME));
+                    _bgEvents.ScheduleEvent(BG_EY_EVENT_ADD_POINTS,
+                        BG_EY_FPOINTS_TICK_TIME - (GameTime::GetGameTimeMS().count() % BG_EY_FPOINTS_TICK_TIME));
                     break;
                 case BG_EY_EVENT_FLAG_ON_GROUND:
                     RespawnFlagAfterDrop();
@@ -77,7 +76,8 @@ void BattlegroundEY::PostUpdateImpl(uint32 diff)
                     break;
                 case BG_EY_EVENT_CHECK_CPOINTS:
                     UpdatePointsState();
-                    _bgEvents.ScheduleEvent(BG_EY_EVENT_CHECK_CPOINTS, BG_EY_FPOINTS_CHECK_TIME - (GameTime::GetGameTimeMS().count() % BG_EY_FPOINTS_CHECK_TIME));
+                    _bgEvents.ScheduleEvent(BG_EY_EVENT_CHECK_CPOINTS,
+                        BG_EY_FPOINTS_CHECK_TIME - (GameTime::GetGameTimeMS().count() % BG_EY_FPOINTS_CHECK_TIME));
                     break;
             }
     }
@@ -119,7 +119,8 @@ void BattlegroundEY::AddPoints(TeamId teamId, uint32 points)
     for (; honorRewards < uint8(m_TeamScores[teamId] / _honorTics); ++honorRewards)
         RewardHonorToTeam(GetBonusHonorFromKill(1), teamId);
 
-    UpdateWorldState(teamId == TEAM_ALLIANCE ? EY_ALLIANCE_RESOURCES : EY_HORDE_RESOURCES, std::min<uint32>(m_TeamScores[teamId], BG_EY_MAX_TEAM_SCORE));
+    UpdateWorldState(teamId == TEAM_ALLIANCE ? EY_ALLIANCE_RESOURCES : EY_HORDE_RESOURCES,
+        std::min<uint32>(m_TeamScores[teamId], BG_EY_MAX_TEAM_SCORE));
     if (m_TeamScores[teamId] >= BG_EY_MAX_TEAM_SCORE)
         EndBattleground(teamId);
 }
@@ -134,13 +135,14 @@ void BattlegroundEY::UpdatePointsState()
         _capturePointInfo[point]._playersCount[TEAM_HORDE] = 0;
     }
 
-    const BattlegroundPlayerMap& bgPlayerMap = GetPlayers();
+    BattlegroundPlayerMap const& bgPlayerMap = GetPlayers();
     for (BattlegroundPlayerMap::const_iterator itr = bgPlayerMap.begin(); itr != bgPlayerMap.end(); ++itr)
     {
         itr->second->SendUpdateWorldState(PROGRESS_BAR_SHOW, BG_EY_PROGRESS_BAR_DONT_SHOW);
         for (uint8 point = 0; point < EY_POINTS_MAX; ++point)
             if (GameObject* pointObject = pointsVec[point])
-                if (itr->second->CanCaptureTowerPoint() && itr->second->IsWithinDistInMap(pointObject, BG_EY_POINT_RADIUS))
+                if (itr->second->CanCaptureTowerPoint() &&
+                    itr->second->IsWithinDistInMap(pointObject, BG_EY_POINT_RADIUS))
                 {
                     itr->second->SendUpdateWorldState(PROGRESS_BAR_SHOW, BG_EY_PROGRESS_BAR_SHOW);
                     itr->second->SendUpdateWorldState(PROGRESS_BAR_PERCENT_GREY, BG_EY_PROGRESS_BAR_PERCENT_GREY);
@@ -149,15 +151,22 @@ void BattlegroundEY::UpdatePointsState()
                     _capturePointInfo[point].player = itr->second;
 
                     // Xinef: ugly hax... area trigger is no longer called by client...
-                    if (pointObject->GetEntry() == BG_OBJECT_FR_TOWER_CAP_EY_ENTRY && itr->second->GetDistance2d(2043.96f, 1729.68f) < 3.0f)
+                    if (pointObject->GetEntry() == BG_OBJECT_FR_TOWER_CAP_EY_ENTRY &&
+                        itr->second->GetDistance2d(2043.96f, 1729.68f) < 3.0f)
                         HandleAreaTrigger(itr->second, AT_FEL_REAVER_POINT);
                 }
     }
 
     for (uint8 point = 0; point < EY_POINTS_MAX; ++point)
     {
-        _capturePointInfo[point]._barStatus += std::max<int8>(std::min<int8>(_capturePointInfo[point]._playersCount[TEAM_ALLIANCE] - _capturePointInfo[point]._playersCount[TEAM_HORDE], BG_EY_POINT_MAX_CAPTURERS_COUNT), -BG_EY_POINT_MAX_CAPTURERS_COUNT);
-        _capturePointInfo[point]._barStatus = std::max<int8>(std::min<int8>(_capturePointInfo[point]._barStatus, BG_EY_PROGRESS_BAR_ALI_CONTROLLED), BG_EY_PROGRESS_BAR_HORDE_CONTROLLED);
+        _capturePointInfo[point]._barStatus +=
+            std::max<int8>(std::min<int8>(_capturePointInfo[point]._playersCount[TEAM_ALLIANCE] -
+                                              _capturePointInfo[point]._playersCount[TEAM_HORDE],
+                               BG_EY_POINT_MAX_CAPTURERS_COUNT),
+                -BG_EY_POINT_MAX_CAPTURERS_COUNT);
+        _capturePointInfo[point]._barStatus =
+            std::max<int8>(std::min<int8>(_capturePointInfo[point]._barStatus, BG_EY_PROGRESS_BAR_ALI_CONTROLLED),
+                BG_EY_PROGRESS_BAR_HORDE_CONTROLLED);
 
         TeamId pointOwnerTeamId = TEAM_NEUTRAL;
         if (_capturePointInfo[point]._barStatus <= BG_EY_PROGRESS_BAR_NEUTRAL_LOW)
@@ -195,8 +204,10 @@ void BattlegroundEY::UpdatePointsIcons(uint32 point)
     if (_capturePointInfo[point].IsUnderControl())
     {
         UpdateWorldState(m_PointsIconStruct[point].WorldStateControlIndex, 0);
-        UpdateWorldState(m_PointsIconStruct[point].WorldStateAllianceControlledIndex, _capturePointInfo[point].IsUnderControl(TEAM_ALLIANCE));
-        UpdateWorldState(m_PointsIconStruct[point].WorldStateHordeControlledIndex, _capturePointInfo[point].IsUnderControl(TEAM_HORDE));
+        UpdateWorldState(m_PointsIconStruct[point].WorldStateAllianceControlledIndex,
+            _capturePointInfo[point].IsUnderControl(TEAM_ALLIANCE));
+        UpdateWorldState(m_PointsIconStruct[point].WorldStateHordeControlledIndex,
+            _capturePointInfo[point].IsUnderControl(TEAM_HORDE));
     }
     else
     {
@@ -263,65 +274,565 @@ void BattlegroundEY::HandleAreaTrigger(Player* player, uint32 trigger)
 bool BattlegroundEY::SetupBattleground()
 {
     // doors
-    AddObject(BG_EY_OBJECT_DOOR_A, BG_OBJECT_A_DOOR_EY_ENTRY, 2527.6f, 1596.91f, 1262.13f, -3.12414f, -0.173642f, -0.001515f, 0.98477f, -0.008594f, RESPAWN_IMMEDIATELY);
-    AddObject(BG_EY_OBJECT_DOOR_H, BG_OBJECT_H_DOOR_EY_ENTRY, 1803.21f, 1539.49f, 1261.09f, 3.14159f, 0.173648f, 0, 0.984808f, 0, RESPAWN_IMMEDIATELY);
+    AddObject(BG_EY_OBJECT_DOOR_A,
+        BG_OBJECT_A_DOOR_EY_ENTRY,
+        2527.6f,
+        1596.91f,
+        1262.13f,
+        -3.12414f,
+        -0.173642f,
+        -0.001515f,
+        0.98477f,
+        -0.008594f,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_EY_OBJECT_DOOR_H,
+        BG_OBJECT_H_DOOR_EY_ENTRY,
+        1803.21f,
+        1539.49f,
+        1261.09f,
+        3.14159f,
+        0.173648f,
+        0,
+        0.984808f,
+        0,
+        RESPAWN_IMMEDIATELY);
     // banners (alliance)
-    AddObject(BG_EY_OBJECT_A_BANNER_FEL_REAVER_CENTER, BG_OBJECT_A_BANNER_EY_ENTRY, 2057.46f, 1735.07f, 1187.91f, -0.925024f, 0, 0, 0.446198f, -0.894934f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_FEL_REAVER_LEFT, BG_OBJECT_A_BANNER_EY_ENTRY, 2032.25f, 1729.53f, 1190.33f, 1.8675f, 0, 0, 0.803857f, 0.594823f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_FEL_REAVER_RIGHT, BG_OBJECT_A_BANNER_EY_ENTRY, 2092.35f, 1775.46f, 1187.08f, -0.401426f, 0, 0, 0.199368f, -0.979925f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_BLOOD_ELF_CENTER, BG_OBJECT_A_BANNER_EY_ENTRY, 2047.19f, 1349.19f, 1189.0f, -1.62316f, 0, 0, 0.725374f, -0.688354f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_BLOOD_ELF_LEFT, BG_OBJECT_A_BANNER_EY_ENTRY, 2074.32f, 1385.78f, 1194.72f, 0.488692f, 0, 0, 0.241922f, 0.970296f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_BLOOD_ELF_RIGHT, BG_OBJECT_A_BANNER_EY_ENTRY, 2025.13f, 1386.12f, 1192.74f, 2.3911f, 0, 0, 0.930418f, 0.366501f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_DRAENEI_RUINS_CENTER, BG_OBJECT_A_BANNER_EY_ENTRY, 2276.8f, 1400.41f, 1196.33f, 2.44346f, 0, 0, 0.939693f, 0.34202f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_DRAENEI_RUINS_LEFT, BG_OBJECT_A_BANNER_EY_ENTRY, 2305.78f, 1404.56f, 1199.38f, 1.74533f, 0, 0, 0.766044f, 0.642788f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_DRAENEI_RUINS_RIGHT, BG_OBJECT_A_BANNER_EY_ENTRY, 2245.4f, 1366.41f, 1195.28f, 2.21657f, 0, 0, 0.894934f, 0.446198f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_MAGE_TOWER_CENTER, BG_OBJECT_A_BANNER_EY_ENTRY, 2270.84f, 1784.08f, 1186.76f, 2.42601f, 0, 0, 0.936672f, 0.350207f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_MAGE_TOWER_LEFT, BG_OBJECT_A_BANNER_EY_ENTRY, 2269.13f, 1737.7f, 1186.66f, 0.994838f, 0, 0, 0.477159f, 0.878817f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_A_BANNER_MAGE_TOWER_RIGHT, BG_OBJECT_A_BANNER_EY_ENTRY, 2300.86f, 1741.25f, 1187.7f, -0.785398f, 0, 0, 0.382683f, -0.92388f, RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_FEL_REAVER_CENTER,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2057.46f,
+        1735.07f,
+        1187.91f,
+        -0.925024f,
+        0,
+        0,
+        0.446198f,
+        -0.894934f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_FEL_REAVER_LEFT,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2032.25f,
+        1729.53f,
+        1190.33f,
+        1.8675f,
+        0,
+        0,
+        0.803857f,
+        0.594823f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_FEL_REAVER_RIGHT,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2092.35f,
+        1775.46f,
+        1187.08f,
+        -0.401426f,
+        0,
+        0,
+        0.199368f,
+        -0.979925f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_BLOOD_ELF_CENTER,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2047.19f,
+        1349.19f,
+        1189.0f,
+        -1.62316f,
+        0,
+        0,
+        0.725374f,
+        -0.688354f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_BLOOD_ELF_LEFT,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2074.32f,
+        1385.78f,
+        1194.72f,
+        0.488692f,
+        0,
+        0,
+        0.241922f,
+        0.970296f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_BLOOD_ELF_RIGHT,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2025.13f,
+        1386.12f,
+        1192.74f,
+        2.3911f,
+        0,
+        0,
+        0.930418f,
+        0.366501f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_DRAENEI_RUINS_CENTER,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2276.8f,
+        1400.41f,
+        1196.33f,
+        2.44346f,
+        0,
+        0,
+        0.939693f,
+        0.34202f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_DRAENEI_RUINS_LEFT,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2305.78f,
+        1404.56f,
+        1199.38f,
+        1.74533f,
+        0,
+        0,
+        0.766044f,
+        0.642788f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_DRAENEI_RUINS_RIGHT,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2245.4f,
+        1366.41f,
+        1195.28f,
+        2.21657f,
+        0,
+        0,
+        0.894934f,
+        0.446198f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_MAGE_TOWER_CENTER,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2270.84f,
+        1784.08f,
+        1186.76f,
+        2.42601f,
+        0,
+        0,
+        0.936672f,
+        0.350207f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_MAGE_TOWER_LEFT,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2269.13f,
+        1737.7f,
+        1186.66f,
+        0.994838f,
+        0,
+        0,
+        0.477159f,
+        0.878817f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_A_BANNER_MAGE_TOWER_RIGHT,
+        BG_OBJECT_A_BANNER_EY_ENTRY,
+        2300.86f,
+        1741.25f,
+        1187.7f,
+        -0.785398f,
+        0,
+        0,
+        0.382683f,
+        -0.92388f,
+        RESPAWN_ONE_DAY);
     // banners (horde)
-    AddObject(BG_EY_OBJECT_H_BANNER_FEL_REAVER_CENTER, BG_OBJECT_H_BANNER_EY_ENTRY, 2057.46f, 1735.07f, 1187.91f, -0.925024f, 0, 0, 0.446198f, -0.894934f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_FEL_REAVER_LEFT, BG_OBJECT_H_BANNER_EY_ENTRY, 2032.25f, 1729.53f, 1190.33f, 1.8675f, 0, 0, 0.803857f, 0.594823f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_FEL_REAVER_RIGHT, BG_OBJECT_H_BANNER_EY_ENTRY, 2092.35f, 1775.46f, 1187.08f, -0.401426f, 0, 0, 0.199368f, -0.979925f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_BLOOD_ELF_CENTER, BG_OBJECT_H_BANNER_EY_ENTRY, 2047.19f, 1349.19f, 1189.0f, -1.62316f, 0, 0, 0.725374f, -0.688354f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_BLOOD_ELF_LEFT, BG_OBJECT_H_BANNER_EY_ENTRY, 2074.32f, 1385.78f, 1194.72f, 0.488692f, 0, 0, 0.241922f, 0.970296f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_BLOOD_ELF_RIGHT, BG_OBJECT_H_BANNER_EY_ENTRY, 2025.13f, 1386.12f, 1192.74f, 2.3911f, 0, 0, 0.930418f, 0.366501f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_DRAENEI_RUINS_CENTER, BG_OBJECT_H_BANNER_EY_ENTRY, 2276.8f, 1400.41f, 1196.33f, 2.44346f, 0, 0, 0.939693f, 0.34202f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_DRAENEI_RUINS_LEFT, BG_OBJECT_H_BANNER_EY_ENTRY, 2305.78f, 1404.56f, 1199.38f, 1.74533f, 0, 0, 0.766044f, 0.642788f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_DRAENEI_RUINS_RIGHT, BG_OBJECT_H_BANNER_EY_ENTRY, 2245.4f, 1366.41f, 1195.28f, 2.21657f, 0, 0, 0.894934f, 0.446198f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_MAGE_TOWER_CENTER, BG_OBJECT_H_BANNER_EY_ENTRY, 2270.84f, 1784.08f, 1186.76f, 2.42601f, 0, 0, 0.936672f, 0.350207f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_MAGE_TOWER_LEFT, BG_OBJECT_H_BANNER_EY_ENTRY, 2269.13f, 1737.7f, 1186.66f, 0.994838f, 0, 0, 0.477159f, 0.878817f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_H_BANNER_MAGE_TOWER_RIGHT, BG_OBJECT_H_BANNER_EY_ENTRY, 2300.86f, 1741.25f, 1187.7f, -0.785398f, 0, 0, 0.382683f, -0.92388f, RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_FEL_REAVER_CENTER,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2057.46f,
+        1735.07f,
+        1187.91f,
+        -0.925024f,
+        0,
+        0,
+        0.446198f,
+        -0.894934f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_FEL_REAVER_LEFT,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2032.25f,
+        1729.53f,
+        1190.33f,
+        1.8675f,
+        0,
+        0,
+        0.803857f,
+        0.594823f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_FEL_REAVER_RIGHT,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2092.35f,
+        1775.46f,
+        1187.08f,
+        -0.401426f,
+        0,
+        0,
+        0.199368f,
+        -0.979925f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_BLOOD_ELF_CENTER,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2047.19f,
+        1349.19f,
+        1189.0f,
+        -1.62316f,
+        0,
+        0,
+        0.725374f,
+        -0.688354f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_BLOOD_ELF_LEFT,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2074.32f,
+        1385.78f,
+        1194.72f,
+        0.488692f,
+        0,
+        0,
+        0.241922f,
+        0.970296f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_BLOOD_ELF_RIGHT,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2025.13f,
+        1386.12f,
+        1192.74f,
+        2.3911f,
+        0,
+        0,
+        0.930418f,
+        0.366501f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_DRAENEI_RUINS_CENTER,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2276.8f,
+        1400.41f,
+        1196.33f,
+        2.44346f,
+        0,
+        0,
+        0.939693f,
+        0.34202f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_DRAENEI_RUINS_LEFT,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2305.78f,
+        1404.56f,
+        1199.38f,
+        1.74533f,
+        0,
+        0,
+        0.766044f,
+        0.642788f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_DRAENEI_RUINS_RIGHT,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2245.4f,
+        1366.41f,
+        1195.28f,
+        2.21657f,
+        0,
+        0,
+        0.894934f,
+        0.446198f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_MAGE_TOWER_CENTER,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2270.84f,
+        1784.08f,
+        1186.76f,
+        2.42601f,
+        0,
+        0,
+        0.936672f,
+        0.350207f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_MAGE_TOWER_LEFT,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2269.13f,
+        1737.7f,
+        1186.66f,
+        0.994838f,
+        0,
+        0,
+        0.477159f,
+        0.878817f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_H_BANNER_MAGE_TOWER_RIGHT,
+        BG_OBJECT_H_BANNER_EY_ENTRY,
+        2300.86f,
+        1741.25f,
+        1187.7f,
+        -0.785398f,
+        0,
+        0,
+        0.382683f,
+        -0.92388f,
+        RESPAWN_ONE_DAY);
     // banners (natural)
-    AddObject(BG_EY_OBJECT_N_BANNER_FEL_REAVER_CENTER, BG_OBJECT_N_BANNER_EY_ENTRY, 2057.46f, 1735.07f, 1187.91f, -0.925024f, 0, 0, 0.446198f, -0.894934f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_FEL_REAVER_LEFT, BG_OBJECT_N_BANNER_EY_ENTRY, 2032.25f, 1729.53f, 1190.33f, 1.8675f, 0, 0, 0.803857f, 0.594823f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_FEL_REAVER_RIGHT, BG_OBJECT_N_BANNER_EY_ENTRY, 2092.35f, 1775.46f, 1187.08f, -0.401426f, 0, 0, 0.199368f, -0.979925f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_BLOOD_ELF_CENTER, BG_OBJECT_N_BANNER_EY_ENTRY, 2047.19f, 1349.19f, 1189.0f, -1.62316f, 0, 0, 0.725374f, -0.688354f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_BLOOD_ELF_LEFT, BG_OBJECT_N_BANNER_EY_ENTRY, 2074.32f, 1385.78f, 1194.72f, 0.488692f, 0, 0, 0.241922f, 0.970296f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_BLOOD_ELF_RIGHT, BG_OBJECT_N_BANNER_EY_ENTRY, 2025.13f, 1386.12f, 1192.74f, 2.3911f, 0, 0, 0.930418f, 0.366501f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_DRAENEI_RUINS_CENTER, BG_OBJECT_N_BANNER_EY_ENTRY, 2276.8f, 1400.41f, 1196.33f, 2.44346f, 0, 0, 0.939693f, 0.34202f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_DRAENEI_RUINS_LEFT, BG_OBJECT_N_BANNER_EY_ENTRY, 2305.78f, 1404.56f, 1199.38f, 1.74533f, 0, 0, 0.766044f, 0.642788f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_DRAENEI_RUINS_RIGHT, BG_OBJECT_N_BANNER_EY_ENTRY, 2245.4f, 1366.41f, 1195.28f, 2.21657f, 0, 0, 0.894934f, 0.446198f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_MAGE_TOWER_CENTER, BG_OBJECT_N_BANNER_EY_ENTRY, 2270.84f, 1784.08f, 1186.76f, 2.42601f, 0, 0, 0.936672f, 0.350207f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_MAGE_TOWER_LEFT, BG_OBJECT_N_BANNER_EY_ENTRY, 2269.13f, 1737.7f, 1186.66f, 0.994838f, 0, 0, 0.477159f, 0.878817f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_N_BANNER_MAGE_TOWER_RIGHT, BG_OBJECT_N_BANNER_EY_ENTRY, 2300.86f, 1741.25f, 1187.7f, -0.785398f, 0, 0, 0.382683f, -0.92388f, RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_FEL_REAVER_CENTER,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2057.46f,
+        1735.07f,
+        1187.91f,
+        -0.925024f,
+        0,
+        0,
+        0.446198f,
+        -0.894934f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_FEL_REAVER_LEFT,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2032.25f,
+        1729.53f,
+        1190.33f,
+        1.8675f,
+        0,
+        0,
+        0.803857f,
+        0.594823f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_FEL_REAVER_RIGHT,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2092.35f,
+        1775.46f,
+        1187.08f,
+        -0.401426f,
+        0,
+        0,
+        0.199368f,
+        -0.979925f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_BLOOD_ELF_CENTER,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2047.19f,
+        1349.19f,
+        1189.0f,
+        -1.62316f,
+        0,
+        0,
+        0.725374f,
+        -0.688354f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_BLOOD_ELF_LEFT,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2074.32f,
+        1385.78f,
+        1194.72f,
+        0.488692f,
+        0,
+        0,
+        0.241922f,
+        0.970296f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_BLOOD_ELF_RIGHT,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2025.13f,
+        1386.12f,
+        1192.74f,
+        2.3911f,
+        0,
+        0,
+        0.930418f,
+        0.366501f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_DRAENEI_RUINS_CENTER,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2276.8f,
+        1400.41f,
+        1196.33f,
+        2.44346f,
+        0,
+        0,
+        0.939693f,
+        0.34202f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_DRAENEI_RUINS_LEFT,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2305.78f,
+        1404.56f,
+        1199.38f,
+        1.74533f,
+        0,
+        0,
+        0.766044f,
+        0.642788f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_DRAENEI_RUINS_RIGHT,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2245.4f,
+        1366.41f,
+        1195.28f,
+        2.21657f,
+        0,
+        0,
+        0.894934f,
+        0.446198f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_MAGE_TOWER_CENTER,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2270.84f,
+        1784.08f,
+        1186.76f,
+        2.42601f,
+        0,
+        0,
+        0.936672f,
+        0.350207f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_MAGE_TOWER_LEFT,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2269.13f,
+        1737.7f,
+        1186.66f,
+        0.994838f,
+        0,
+        0,
+        0.477159f,
+        0.878817f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_N_BANNER_MAGE_TOWER_RIGHT,
+        BG_OBJECT_N_BANNER_EY_ENTRY,
+        2300.86f,
+        1741.25f,
+        1187.7f,
+        -0.785398f,
+        0,
+        0,
+        0.382683f,
+        -0.92388f,
+        RESPAWN_ONE_DAY);
     // flags
-    AddObject(BG_EY_OBJECT_FLAG_NETHERSTORM, BG_OBJECT_FLAG2_EY_ENTRY, 2174.782227f, 1569.054688f, 1160.361938f, -1.448624f, 0, 0, 0.662620f, -0.748956f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_FLAG_FEL_REAVER, BG_OBJECT_FLAG1_EY_ENTRY, 2044.28f, 1729.68f, 1189.96f, -0.017453f, 0, 0, 0.008727f, -0.999962f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_FLAG_BLOOD_ELF, BG_OBJECT_FLAG1_EY_ENTRY, 2048.83f, 1393.65f, 1194.49f, 0.20944f, 0, 0, 0.104528f, 0.994522f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_FLAG_DRAENEI_RUINS, BG_OBJECT_FLAG1_EY_ENTRY, 2286.56f, 1402.36f, 1197.11f, 3.72381f, 0, 0, 0.957926f, -0.287016f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_FLAG_MAGE_TOWER, BG_OBJECT_FLAG1_EY_ENTRY, 2284.48f, 1731.23f, 1189.99f, 2.89725f, 0, 0, 0.992546f, 0.121869f, RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_FLAG_NETHERSTORM,
+        BG_OBJECT_FLAG2_EY_ENTRY,
+        2174.782227f,
+        1569.054688f,
+        1160.361938f,
+        -1.448624f,
+        0,
+        0,
+        0.662620f,
+        -0.748956f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_FLAG_FEL_REAVER,
+        BG_OBJECT_FLAG1_EY_ENTRY,
+        2044.28f,
+        1729.68f,
+        1189.96f,
+        -0.017453f,
+        0,
+        0,
+        0.008727f,
+        -0.999962f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_FLAG_BLOOD_ELF,
+        BG_OBJECT_FLAG1_EY_ENTRY,
+        2048.83f,
+        1393.65f,
+        1194.49f,
+        0.20944f,
+        0,
+        0,
+        0.104528f,
+        0.994522f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_FLAG_DRAENEI_RUINS,
+        BG_OBJECT_FLAG1_EY_ENTRY,
+        2286.56f,
+        1402.36f,
+        1197.11f,
+        3.72381f,
+        0,
+        0,
+        0.957926f,
+        -0.287016f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_FLAG_MAGE_TOWER,
+        BG_OBJECT_FLAG1_EY_ENTRY,
+        2284.48f,
+        1731.23f,
+        1189.99f,
+        2.89725f,
+        0,
+        0,
+        0.992546f,
+        0.121869f,
+        RESPAWN_ONE_DAY);
     // tower cap
-    AddObject(BG_EY_OBJECT_TOWER_CAP_FEL_REAVER, BG_OBJECT_FR_TOWER_CAP_EY_ENTRY, 2024.600708f, 1742.819580f, 1195.157715f, 2.443461f, 0, 0, 0.939693f, 0.342020f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_TOWER_CAP_BLOOD_ELF, BG_OBJECT_BE_TOWER_CAP_EY_ENTRY, 2050.493164f, 1372.235962f, 1194.563477f, 1.710423f, 0, 0, 0.754710f, 0.656059f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_TOWER_CAP_DRAENEI_RUINS, BG_OBJECT_DR_TOWER_CAP_EY_ENTRY, 2301.010498f, 1386.931641f, 1197.183472f, 1.570796f, 0, 0, 0.707107f, 0.707107f, RESPAWN_ONE_DAY);
-    AddObject(BG_EY_OBJECT_TOWER_CAP_MAGE_TOWER, BG_OBJECT_HU_TOWER_CAP_EY_ENTRY, 2282.121582f, 1760.006958f, 1189.707153f, 1.919862f, 0, 0, 0.819152f, 0.573576f, RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_TOWER_CAP_FEL_REAVER,
+        BG_OBJECT_FR_TOWER_CAP_EY_ENTRY,
+        2024.600708f,
+        1742.819580f,
+        1195.157715f,
+        2.443461f,
+        0,
+        0,
+        0.939693f,
+        0.342020f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_TOWER_CAP_BLOOD_ELF,
+        BG_OBJECT_BE_TOWER_CAP_EY_ENTRY,
+        2050.493164f,
+        1372.235962f,
+        1194.563477f,
+        1.710423f,
+        0,
+        0,
+        0.754710f,
+        0.656059f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_TOWER_CAP_DRAENEI_RUINS,
+        BG_OBJECT_DR_TOWER_CAP_EY_ENTRY,
+        2301.010498f,
+        1386.931641f,
+        1197.183472f,
+        1.570796f,
+        0,
+        0,
+        0.707107f,
+        0.707107f,
+        RESPAWN_ONE_DAY);
+    AddObject(BG_EY_OBJECT_TOWER_CAP_MAGE_TOWER,
+        BG_OBJECT_HU_TOWER_CAP_EY_ENTRY,
+        2282.121582f,
+        1760.006958f,
+        1189.707153f,
+        1.919862f,
+        0,
+        0,
+        0.819152f,
+        0.573576f,
+        RESPAWN_ONE_DAY);
 
     for (uint8 i = 0; i < EY_POINTS_MAX; ++i)
     {
         AreaTrigger const* at = sObjectMgr->GetAreaTrigger(_capturePointInfo[i]._areaTrigger);
-        AddObject(BG_EY_OBJECT_SPEEDBUFF_FEL_REAVER + i * 3 + 0, Buff_Entries[0], at->x, at->y, at->z, 0.907571f, 0, 0, 0.438371f, 0.898794f, RESPAWN_ONE_DAY);
-        AddObject(BG_EY_OBJECT_SPEEDBUFF_FEL_REAVER + i * 3 + 1, Buff_Entries[1], at->x, at->y, at->z, 0.907571f, 0, 0, 0.438371f, 0.898794f, RESPAWN_ONE_DAY);
-        AddObject(BG_EY_OBJECT_SPEEDBUFF_FEL_REAVER + i * 3 + 2, Buff_Entries[2], at->x, at->y, at->z, 0.907571f, 0, 0, 0.438371f, 0.898794f, RESPAWN_ONE_DAY);
+        AddObject(BG_EY_OBJECT_SPEEDBUFF_FEL_REAVER + i * 3 + 0,
+            Buff_Entries[0],
+            at->x,
+            at->y,
+            at->z,
+            0.907571f,
+            0,
+            0,
+            0.438371f,
+            0.898794f,
+            RESPAWN_ONE_DAY);
+        AddObject(BG_EY_OBJECT_SPEEDBUFF_FEL_REAVER + i * 3 + 1,
+            Buff_Entries[1],
+            at->x,
+            at->y,
+            at->z,
+            0.907571f,
+            0,
+            0,
+            0.438371f,
+            0.898794f,
+            RESPAWN_ONE_DAY);
+        AddObject(BG_EY_OBJECT_SPEEDBUFF_FEL_REAVER + i * 3 + 2,
+            Buff_Entries[2],
+            at->x,
+            at->y,
+            at->z,
+            0.907571f,
+            0,
+            0,
+            0.438371f,
+            0.898794f,
+            RESPAWN_ONE_DAY);
     }
 
     GraveyardStruct const* sg = nullptr;
@@ -435,7 +946,8 @@ void BattlegroundEY::EventPlayerClickedOnFlag(Player* player, GameObject* gameOb
     player->CastSpell(player, BG_EY_NETHERSTORM_FLAG_SPELL, true);
     player->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_ENTER_PVP_COMBAT);
 
-    PlaySoundToAll(player->GetTeamId() == TEAM_ALLIANCE ? BG_EY_SOUND_FLAG_PICKED_UP_ALLIANCE : BG_EY_SOUND_FLAG_PICKED_UP_HORDE);
+    PlaySoundToAll(
+        player->GetTeamId() == TEAM_ALLIANCE ? BG_EY_SOUND_FLAG_PICKED_UP_ALLIANCE : BG_EY_SOUND_FLAG_PICKED_UP_HORDE);
     UpdateWorldState(NETHERSTORM_FLAG, 0);
 
     if (player->GetTeamId() == TEAM_ALLIANCE)
@@ -474,11 +986,13 @@ void BattlegroundEY::EventTeamLostPoint(Player* player, uint32 point)
     UpdatePointsCount();
     DelCreature(BG_EY_TRIGGER_FEL_REAVER + point);
 
-    _reviveEvents.AddEventAtOffset([this, point]()
+    _reviveEvents.AddEventAtOffset(
+        [this, point]()
     {
         RelocateDeadPlayers(BgCreatures[point]);
         DelCreature(point);
-    }, 500ms);
+    },
+        500ms);
 }
 
 void BattlegroundEY::EventTeamCapturedPoint(Player* player, TeamId teamId, uint32 point)
@@ -515,7 +1029,12 @@ void BattlegroundEY::EventTeamCapturedPoint(Player* player, TeamId teamId, uint3
     // Xinef: done this way to avoid errors in console
     Creature* trigger = GetBgMap()->GetCreature(BgCreatures[BG_EY_TRIGGER_FEL_REAVER + point]);
     if (!trigger)
-        trigger = AddCreature(WORLD_TRIGGER, BG_EY_TRIGGER_FEL_REAVER + point, BG_EY_TriggerPositions[point][0], BG_EY_TriggerPositions[point][1], BG_EY_TriggerPositions[point][2], BG_EY_TriggerPositions[point][3]);
+        trigger = AddCreature(WORLD_TRIGGER,
+            BG_EY_TRIGGER_FEL_REAVER + point,
+            BG_EY_TriggerPositions[point][0],
+            BG_EY_TriggerPositions[point][1],
+            BG_EY_TriggerPositions[point][2],
+            BG_EY_TriggerPositions[point][3]);
 
     if (trigger)
     {
@@ -559,7 +1078,8 @@ bool BattlegroundEY::UpdatePlayerScore(Player* player, uint32 type, uint32 value
     switch (type)
     {
         case SCORE_FLAG_CAPTURES:
-            player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BG_OBJECTIVE_CAPTURE, BG_EY_OBJECTIVE_CAPTURE_FLAG);
+            player->UpdateAchievementCriteria(
+                ACHIEVEMENT_CRITERIA_TYPE_BG_OBJECTIVE_CAPTURE, BG_EY_OBJECTIVE_CAPTURE_FLAG);
             break;
         default:
             break;
@@ -570,46 +1090,55 @@ bool BattlegroundEY::UpdatePlayerScore(Player* player, uint32 type, uint32 value
 
 void BattlegroundEY::FillInitialWorldStates(WorldPacket& data)
 {
-    data << uint32(EY_HORDE_BASE)                   << uint32(_ownedPointsCount[TEAM_HORDE]);
-    data << uint32(EY_ALLIANCE_BASE)                << uint32(_ownedPointsCount[TEAM_ALLIANCE]);
-    data << uint32(DRAENEI_RUINS_HORDE_CONTROL)     << uint32(_capturePointInfo[POINT_DRAENEI_RUINS].IsUnderControl(TEAM_HORDE));
-    data << uint32(DRAENEI_RUINS_ALLIANCE_CONTROL)  << uint32(_capturePointInfo[POINT_DRAENEI_RUINS].IsUnderControl(TEAM_ALLIANCE));
-    data << uint32(DRAENEI_RUINS_UNCONTROL)         << uint32(_capturePointInfo[POINT_DRAENEI_RUINS].IsUncontrolled());
-    data << uint32(MAGE_TOWER_ALLIANCE_CONTROL)     << uint32(_capturePointInfo[POINT_MAGE_TOWER].IsUnderControl(TEAM_HORDE));
-    data << uint32(MAGE_TOWER_HORDE_CONTROL)        << uint32(_capturePointInfo[POINT_MAGE_TOWER].IsUnderControl(TEAM_ALLIANCE));
-    data << uint32(MAGE_TOWER_UNCONTROL)            << uint32(_capturePointInfo[POINT_MAGE_TOWER].IsUncontrolled());
-    data << uint32(FEL_REAVER_HORDE_CONTROL)        << uint32(_capturePointInfo[POINT_FEL_REAVER].IsUnderControl(TEAM_HORDE));
-    data << uint32(FEL_REAVER_ALLIANCE_CONTROL)     << uint32(_capturePointInfo[POINT_FEL_REAVER].IsUnderControl(TEAM_ALLIANCE));
-    data << uint32(FEL_REAVER_UNCONTROL)            << uint32(_capturePointInfo[POINT_FEL_REAVER].IsUncontrolled());
-    data << uint32(BLOOD_ELF_HORDE_CONTROL)         << uint32(_capturePointInfo[POINT_BLOOD_ELF].IsUnderControl(TEAM_HORDE));
-    data << uint32(BLOOD_ELF_ALLIANCE_CONTROL)      << uint32(_capturePointInfo[POINT_BLOOD_ELF].IsUnderControl(TEAM_ALLIANCE));
-    data << uint32(BLOOD_ELF_UNCONTROL)             << uint32(_capturePointInfo[POINT_BLOOD_ELF].IsUncontrolled());
-    data << uint32(NETHERSTORM_FLAG)                << uint32(_flagState == BG_EY_FLAG_STATE_ON_BASE);
-    data << uint32(NETHERSTORM_FLAG_STATE_HORDE)    << uint32(1);
+    data << uint32(EY_HORDE_BASE) << uint32(_ownedPointsCount[TEAM_HORDE]);
+    data << uint32(EY_ALLIANCE_BASE) << uint32(_ownedPointsCount[TEAM_ALLIANCE]);
+    data << uint32(DRAENEI_RUINS_HORDE_CONTROL)
+         << uint32(_capturePointInfo[POINT_DRAENEI_RUINS].IsUnderControl(TEAM_HORDE));
+    data << uint32(DRAENEI_RUINS_ALLIANCE_CONTROL)
+         << uint32(_capturePointInfo[POINT_DRAENEI_RUINS].IsUnderControl(TEAM_ALLIANCE));
+    data << uint32(DRAENEI_RUINS_UNCONTROL) << uint32(_capturePointInfo[POINT_DRAENEI_RUINS].IsUncontrolled());
+    data << uint32(MAGE_TOWER_ALLIANCE_CONTROL)
+         << uint32(_capturePointInfo[POINT_MAGE_TOWER].IsUnderControl(TEAM_HORDE));
+    data << uint32(MAGE_TOWER_HORDE_CONTROL)
+         << uint32(_capturePointInfo[POINT_MAGE_TOWER].IsUnderControl(TEAM_ALLIANCE));
+    data << uint32(MAGE_TOWER_UNCONTROL) << uint32(_capturePointInfo[POINT_MAGE_TOWER].IsUncontrolled());
+    data << uint32(FEL_REAVER_HORDE_CONTROL) << uint32(_capturePointInfo[POINT_FEL_REAVER].IsUnderControl(TEAM_HORDE));
+    data << uint32(FEL_REAVER_ALLIANCE_CONTROL)
+         << uint32(_capturePointInfo[POINT_FEL_REAVER].IsUnderControl(TEAM_ALLIANCE));
+    data << uint32(FEL_REAVER_UNCONTROL) << uint32(_capturePointInfo[POINT_FEL_REAVER].IsUncontrolled());
+    data << uint32(BLOOD_ELF_HORDE_CONTROL) << uint32(_capturePointInfo[POINT_BLOOD_ELF].IsUnderControl(TEAM_HORDE));
+    data << uint32(BLOOD_ELF_ALLIANCE_CONTROL)
+         << uint32(_capturePointInfo[POINT_BLOOD_ELF].IsUnderControl(TEAM_ALLIANCE));
+    data << uint32(BLOOD_ELF_UNCONTROL) << uint32(_capturePointInfo[POINT_BLOOD_ELF].IsUncontrolled());
+    data << uint32(NETHERSTORM_FLAG) << uint32(_flagState == BG_EY_FLAG_STATE_ON_BASE);
+    data << uint32(NETHERSTORM_FLAG_STATE_HORDE) << uint32(1);
     data << uint32(NETHERSTORM_FLAG_STATE_ALLIANCE) << uint32(1);
-    data << uint32(EY_HORDE_RESOURCES)              << uint32(GetTeamScore(TEAM_HORDE));
-    data << uint32(EY_ALLIANCE_RESOURCES)           << uint32(GetTeamScore(TEAM_ALLIANCE));
-    data << uint32(PROGRESS_BAR_SHOW)               << uint32(0);
-    data << uint32(PROGRESS_BAR_PERCENT_GREY)       << uint32(0);
-    data << uint32(PROGRESS_BAR_STATUS)             << uint32(0);
+    data << uint32(EY_HORDE_RESOURCES) << uint32(GetTeamScore(TEAM_HORDE));
+    data << uint32(EY_ALLIANCE_RESOURCES) << uint32(GetTeamScore(TEAM_ALLIANCE));
+    data << uint32(PROGRESS_BAR_SHOW) << uint32(0);
+    data << uint32(PROGRESS_BAR_PERCENT_GREY) << uint32(0);
+    data << uint32(PROGRESS_BAR_STATUS) << uint32(0);
 }
 
 GraveyardStruct const* BattlegroundEY::GetClosestGraveyard(Player* player)
 {
-    GraveyardStruct const* entry = sGraveyard->GetGraveyard(static_cast<uint16>(BG_EY_GRAVEYARD_MAIN_ALLIANCE) + player->GetTeamId());
+    GraveyardStruct const* entry =
+        sGraveyard->GetGraveyard(static_cast<uint16>(BG_EY_GRAVEYARD_MAIN_ALLIANCE) + player->GetTeamId());
     GraveyardStruct const* nearestEntry = entry;
 
     float pX = player->GetPositionX();
     float pY = player->GetPositionY();
     float pZ = player->GetPositionZ();
-    float dist = (entry->x - pX) * (entry->x - pX) + (entry->y - pY) * (entry->y - pY) + (entry->z - pZ) * (entry->z - pZ);
+    float dist =
+        (entry->x - pX) * (entry->x - pX) + (entry->y - pY) * (entry->y - pY) + (entry->z - pZ) * (entry->z - pZ);
     float minDist = dist;
 
     for (uint8 i = 0; i < EY_POINTS_MAX; ++i)
         if (_capturePointInfo[i].IsUnderControl(player->GetTeamId()))
         {
             entry = sGraveyard->GetGraveyard(m_CapturingPointTypes[i].GraveYardId);
-            dist = (entry->x - pX) * (entry->x - pX) + (entry->y - pY) * (entry->y - pY) + (entry->z - pZ) * (entry->z - pZ);
+            dist = (entry->x - pX) * (entry->x - pX) + (entry->y - pY) * (entry->y - pY) +
+                   (entry->z - pZ) * (entry->z - pZ);
             if (dist < minDist)
             {
                 minDist = dist;

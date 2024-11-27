@@ -69,8 +69,9 @@ public:
                     serpentis->AI()->Talk(SAY_SERPENTIS);
             }
 
-            if (type != TYPE_MUTANUS && _encounters[TYPE_LORD_COBRAHN] == DONE && _encounters[TYPE_LORD_PYTHAS] == DONE &&
-                    _encounters[TYPE_LADY_ANACONDRA] == DONE && _encounters[TYPE_LORD_SERPENTIS] == DONE)
+            if (type != TYPE_MUTANUS && _encounters[TYPE_LORD_COBRAHN] == DONE &&
+                _encounters[TYPE_LORD_PYTHAS] == DONE && _encounters[TYPE_LADY_ANACONDRA] == DONE &&
+                _encounters[TYPE_LORD_SERPENTIS] == DONE)
             {
                 instance->LoadGrid(-134.97f, 125.402f);
                 if (Creature* disciple = instance->GetCreature(DiscipleOfNaralexGUID))
@@ -102,11 +103,8 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << _encounters[0] << ' '
-                << _encounters[1] << ' '
-                << _encounters[2] << ' '
-                << _encounters[3] << ' '
-                << _encounters[4] << ' ';
+            data << _encounters[0] << ' ' << _encounters[1] << ' ' << _encounters[2] << ' ' << _encounters[3] << ' '
+                 << _encounters[4] << ' ';
         }
 
     private:

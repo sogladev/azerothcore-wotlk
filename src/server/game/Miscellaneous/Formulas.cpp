@@ -29,19 +29,19 @@ uint32 Acore::XP::BaseGain(uint8 pl_level, uint8 mob_level, ContentLevels conten
 
     switch (content)
     {
-    case CONTENT_1_60:
-        nBaseExp = 45;
-        break;
-    case CONTENT_61_70:
-        nBaseExp = 235;
-        break;
-    case CONTENT_71_80:
-        nBaseExp = 580;
-        break;
-    default:
-        LOG_ERROR("misc", "BaseGain: Unsupported content level {}", content);
-        nBaseExp = 45;
-        break;
+        case CONTENT_1_60:
+            nBaseExp = 45;
+            break;
+        case CONTENT_61_70:
+            nBaseExp = 235;
+            break;
+        case CONTENT_71_80:
+            nBaseExp = 580;
+            break;
+        default:
+            LOG_ERROR("misc", "BaseGain: Unsupported content level {}", content);
+            nBaseExp = 45;
+            break;
     }
 
     if (mob_level >= pl_level)
@@ -74,11 +74,12 @@ uint32 Acore::XP::Gain(Player* player, Unit* unit, bool isBattleGround /*= false
     uint32 gain = 0;
 
     if (!creature || (!creature->IsTotem() && !creature->IsPet() && !creature->IsCritter() &&
-        !(creature->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_NO_XP)))
+                         !(creature->GetCreatureTemplate()->flags_extra & CREATURE_FLAG_EXTRA_NO_XP)))
     {
         float xpMod = 1.0f;
 
-        gain = BaseGain(player->GetLevel(), unit->GetLevel(), GetContentLevelsForMapAndZone(unit->GetMapId(), unit->GetZoneId()));
+        gain = BaseGain(
+            player->GetLevel(), unit->GetLevel(), GetContentLevelsForMapAndZone(unit->GetMapId(), unit->GetZoneId()));
 
         if (gain && creature)
         {
@@ -125,9 +126,7 @@ uint32 Acore::XP::Gain(Player* player, Unit* unit, bool isBattleGround /*= false
 
         // if players dealt less than 50% of the damage and were credited anyway (due to CREATURE_FLAG_EXTRA_NO_PLAYER_DAMAGE_REQ), scale XP gained appropriately (linear scaling)
         if (creature && creature->GetPlayerDamageReq())
-        {
             xpMod *= 1.0f - 2.0f * creature->GetPlayerDamageReq() / creature->GetMaxHealth();
-        }
 
         gain = uint32(gain * xpMod);
     }

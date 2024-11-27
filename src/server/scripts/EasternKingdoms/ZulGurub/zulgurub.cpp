@@ -21,7 +21,7 @@
 
 enum Spells
 {
-    SPELL_AXE_FLURRY_STUN   = 24020
+    SPELL_AXE_FLURRY_STUN = 24020
 };
 
 class spell_axe_flurry : public SpellScript
@@ -39,15 +39,14 @@ class spell_axe_flurry : public SpellScript
         if (Unit* caster = GetCaster())
         {
             if (Unit* target = GetHitUnit())
-            {
                 caster->CastSpell(target, SPELL_AXE_FLURRY_STUN, true);
-            }
         }
     }
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_axe_flurry::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_axe_flurry::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
         OnEffectHitTarget += SpellEffectFn(spell_axe_flurry::HandleEffect, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };

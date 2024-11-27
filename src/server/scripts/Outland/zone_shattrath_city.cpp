@@ -52,9 +52,11 @@ public:
         if (creature->GetEntry() == 23484)
         {
             // Aldor vendor
-            if (creature->IsVendor() && (player->GetReputationRank(932) == REP_EXALTED) && (player->GetReputationRank(935) == REP_EXALTED) && (player->GetReputationRank(942) == REP_EXALTED))
+            if (creature->IsVendor() && (player->GetReputationRank(932) == REP_EXALTED) &&
+                (player->GetReputationRank(935) == REP_EXALTED) && (player->GetReputationRank(942) == REP_EXALTED))
             {
-                AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+                AddGossipItemFor(
+                    player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
                 SendGossipMenuFor(player, 11085, creature->GetGUID());
             }
             else
@@ -66,9 +68,11 @@ public:
         if (creature->GetEntry() == 23483)
         {
             // Scryers vendor
-            if (creature->IsVendor() && (player->GetReputationRank(934) == REP_EXALTED) && (player->GetReputationRank(935) == REP_EXALTED) && (player->GetReputationRank(942) == REP_EXALTED))
+            if (creature->IsVendor() && (player->GetReputationRank(934) == REP_EXALTED) &&
+                (player->GetReputationRank(935) == REP_EXALTED) && (player->GetReputationRank(942) == REP_EXALTED))
             {
-                AddGossipItemFor(player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+                AddGossipItemFor(
+                    player, GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
                 SendGossipMenuFor(player, 11085, creature->GetGUID());
             }
             else
@@ -87,8 +91,8 @@ public:
 
 enum Zephyr : int32
 {
-    GOSSIP_MENU_ZEPHYR              = 9205,
-    SPELL_TELEPORT_CAVERNS_OF_TIME  = 37778,
+    GOSSIP_MENU_ZEPHYR = 9205,
+    SPELL_TELEPORT_CAVERNS_OF_TIME = 37778,
 };
 
 class npc_zephyr : public CreatureScript
@@ -122,28 +126,28 @@ public:
 
 enum KServant
 {
-    SAY1       = 0,
-    WHISP1     = 1,
-    WHISP2     = 2,
-    WHISP3     = 3,
-    WHISP4     = 4,
-    WHISP5     = 5,
-    WHISP6     = 6,
-    WHISP7     = 7,
-    WHISP8     = 8,
-    WHISP9     = 9,
-    WHISP10    = 10,
-    WHISP11    = 11,
-    WHISP12    = 12,
-    WHISP13    = 13,
-    WHISP14    = 14,
-    WHISP15    = 15,
-    WHISP16    = 16,
-    WHISP17    = 17,
-    WHISP18    = 18,
-    WHISP19    = 19,
-    WHISP20    = 20,
-    WHISP21    = 21
+    SAY1 = 0,
+    WHISP1 = 1,
+    WHISP2 = 2,
+    WHISP3 = 3,
+    WHISP4 = 4,
+    WHISP5 = 5,
+    WHISP6 = 6,
+    WHISP7 = 7,
+    WHISP8 = 8,
+    WHISP9 = 9,
+    WHISP10 = 10,
+    WHISP11 = 11,
+    WHISP12 = 12,
+    WHISP13 = 13,
+    WHISP14 = 14,
+    WHISP15 = 15,
+    WHISP16 = 16,
+    WHISP17 = 17,
+    WHISP18 = 18,
+    WHISP19 = 19,
+    WHISP20 = 20,
+    WHISP21 = 21
 };
 
 class npc_kservant : public CreatureScript
@@ -257,55 +261,57 @@ enum ShattrathQuests
 {
     // QuestID : Creature Template ID
     // Heroic Daily Quests
-    QUEST_H_NAZZAN              = 11354, // 24410
-    QUEST_H_KELIDAN             = 11362, // 24413
-    QUEST_H_BLADEFIST           = 11363, // 24414
-    QUEST_H_QUAG                = 11368, // 24419
-    QUEST_H_BLACKSTALKER        = 11369, // 24420
-    QUEST_H_WARLORD             = 11370, // 24421
-    QUEST_H_IKISS               = 11372, // 24422
-    QUEST_H_SHAFFAR             = 11373, // 24423
-    QUEST_H_EXARCH              = 11374, // 24424
-    QUEST_H_MURMUR              = 11375, // 24425
-    QUEST_H_EPOCH               = 11378, // 24427
-    QUEST_H_AEONUS              = 11382, // 24428
-    QUEST_H_WARP                = 11384, // 24431
-    QUEST_H_CALCULATOR          = 11386, // 21504
-    QUEST_H_SKYRISS             = 11388, // 24435
-    QUEST_H_KAEL                = 11499, // 24855
+    QUEST_H_NAZZAN = 11354,       // 24410
+    QUEST_H_KELIDAN = 11362,      // 24413
+    QUEST_H_BLADEFIST = 11363,    // 24414
+    QUEST_H_QUAG = 11368,         // 24419
+    QUEST_H_BLACKSTALKER = 11369, // 24420
+    QUEST_H_WARLORD = 11370,      // 24421
+    QUEST_H_IKISS = 11372,        // 24422
+    QUEST_H_SHAFFAR = 11373,      // 24423
+    QUEST_H_EXARCH = 11374,       // 24424
+    QUEST_H_MURMUR = 11375,       // 24425
+    QUEST_H_EPOCH = 11378,        // 24427
+    QUEST_H_AEONUS = 11382,       // 24428
+    QUEST_H_WARP = 11384,         // 24431
+    QUEST_H_CALCULATOR = 11386,   // 21504
+    QUEST_H_SKYRISS = 11388,      // 24435
+    QUEST_H_KAEL = 11499,         // 24855
     // Normal Daily Quests
-    QUEST_N_CENTURIONS          = 11364, // 24411
-    QUEST_N_MYRMIDONS           = 11371, // 24415
-    QUEST_N_INSTRUCTORS         = 11376, // 24426
-    QUEST_N_LORDS               = 11383, // 24429
-    QUEST_N_CHANNELERS          = 11385, // 24430
-    QUEST_N_DESTROYERS          = 11387, // 24432
-    QUEST_N_SENTINELS           = 11389, // 24434
-    QUEST_N_SISTERS             = 11500, // 24854
+    QUEST_N_CENTURIONS = 11364,  // 24411
+    QUEST_N_MYRMIDONS = 11371,   // 24415
+    QUEST_N_INSTRUCTORS = 11376, // 24426
+    QUEST_N_LORDS = 11383,       // 24429
+    QUEST_N_CHANNELERS = 11385,  // 24430
+    QUEST_N_DESTROYERS = 11387,  // 24432
+    QUEST_N_SENTINELS = 11389,   // 24434
+    QUEST_N_SISTERS = 11500,     // 24854
 
-    ACTION_UPDATE_QUEST_STATUS   = 1,
+    ACTION_UPDATE_QUEST_STATUS = 1,
 
-    POOL_SHATTRATH_DAILY_H      = 356,
-    POOL_SHATTRATH_DAILY_N      = 357,
+    POOL_SHATTRATH_DAILY_H = 356,
+    POOL_SHATTRATH_DAILY_N = 357,
 
     // Image NPCs
-    NPC_SHATTRATH_DAILY_H       = 24854,
-    NPC_SHATTRATH_DAILY_N       = 24410
+    NPC_SHATTRATH_DAILY_H = 24854,
+    NPC_SHATTRATH_DAILY_N = 24410
 };
 
 struct npc_shattrath_daily_quest : public NullCreatureAI
 {
-    npc_shattrath_daily_quest(Creature* c) : NullCreatureAI(c) {}
+    npc_shattrath_daily_quest(Creature* c) : NullCreatureAI(c) { }
 
     void DoAction(int32 action) override
     {
         if (action == ACTION_UPDATE_QUEST_STATUS)
         {
             uint32 creature = me->GetEntry();
-            QueryResult result = CharacterDatabase.Query("SELECT `quest_id` FROM `pool_quest_save` WHERE `pool_id` = '{}'", creature == NPC_SHATTRATH_DAILY_H ? POOL_SHATTRATH_DAILY_H : POOL_SHATTRATH_DAILY_N);
+            QueryResult result =
+                CharacterDatabase.Query("SELECT `quest_id` FROM `pool_quest_save` WHERE `pool_id` = '{}'",
+                    creature == NPC_SHATTRATH_DAILY_H ? POOL_SHATTRATH_DAILY_H : POOL_SHATTRATH_DAILY_N);
             if (result)
             {
-                Field *fields = result->Fetch();
+                Field* fields = result->Fetch();
                 int quest_id = fields[0].Get<int>();
                 uint32 templateID = 0;
 

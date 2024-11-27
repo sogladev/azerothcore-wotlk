@@ -20,22 +20,22 @@
 
 enum Texts
 {
-    SAY_AGGRO               = 0,
-    SAY_EARTHQUAKE          = 1,
-    SAY_OVERRUN             = 2,
-    SAY_SLAY                = 3,
-    SAY_DEATH               = 4
+    SAY_AGGRO = 0,
+    SAY_EARTHQUAKE = 1,
+    SAY_OVERRUN = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4
 };
 
 enum Spells
 {
-    SPELL_EARTHQUAKE        = 32686,
-    SPELL_SUNDER_ARMOR      = 33661,
-    SPELL_CHAIN_LIGHTNING   = 33665,
-    SPELL_OVERRUN           = 32636,
-    SPELL_ENRAGE            = 33653,
-    SPELL_MARK_DEATH        = 37128,
-    SPELL_AURA_DEATH        = 37131
+    SPELL_EARTHQUAKE = 32686,
+    SPELL_SUNDER_ARMOR = 33661,
+    SPELL_CHAIN_LIGHTNING = 33665,
+    SPELL_OVERRUN = 32636,
+    SPELL_ENRAGE = 33653,
+    SPELL_MARK_DEATH = 37128,
+    SPELL_AURA_DEATH = 37131
 };
 
 struct boss_doomwalker : public ScriptedAI
@@ -53,9 +53,7 @@ struct boss_doomwalker : public ScriptedAI
         victim->CastSpell(victim, SPELL_MARK_DEATH, 0);
 
         if (roll_chance_i(25) && victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -66,7 +64,9 @@ struct boss_doomwalker : public ScriptedAI
     void JustEngagedWith(Unit* /*who*/) override
     {
         Talk(SAY_AGGRO);
-        scheduler.Schedule(1ms, [this](TaskContext context)
+        scheduler
+            .Schedule(1ms,
+                [this](TaskContext context)
         {
             if (!HealthAbovePct(20))
             {
@@ -74,28 +74,36 @@ struct boss_doomwalker : public ScriptedAI
                 context.Repeat(6s);
                 _inEnrage = true;
             }
-        }).Schedule(5s, 13s, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                13s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_SUNDER_ARMOR);
             context.Repeat(10s, 25s);
-        }).Schedule(10s, 30s, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                30s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_CHAIN_LIGHTNING, 1);
             context.Repeat(7s, 27s);
-        }).Schedule(25s, 35s, [this](TaskContext context)
+        })
+            .Schedule(25s,
+                35s,
+                [this](TaskContext context)
         {
             if (urand(0, 1))
-            {
                 return;
-            }
             Talk(SAY_EARTHQUAKE);
             if (_inEnrage) // avoid enrage + earthquake
-            {
                 me->RemoveAurasDueToSpell(SPELL_ENRAGE);
-            }
             DoCastAOE(SPELL_EARTHQUAKE);
             context.Repeat(30s, 55s);
-        }).Schedule(30s, 45s, [this](TaskContext context)
+        })
+            .Schedule(30s,
+                45s,
+                [this](TaskContext context)
         {
             Talk(SAY_OVERRUN);
             DoCastVictim(SPELL_OVERRUN);
@@ -108,9 +116,7 @@ struct boss_doomwalker : public ScriptedAI
         if (who && who->IsPlayer() && me->IsValidAttackTarget(who))
         {
             if (who->HasAura(SPELL_MARK_DEATH) && !who->HasAura(27827)) // Spirit of Redemption
-            {
                 who->CastSpell(who, SPELL_AURA_DEATH, 1);
-            }
         }
     }
 

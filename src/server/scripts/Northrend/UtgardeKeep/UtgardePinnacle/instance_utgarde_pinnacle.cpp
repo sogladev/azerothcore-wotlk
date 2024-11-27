@@ -32,7 +32,10 @@ public:
 
     struct instance_utgarde_pinnacle_InstanceMapScript : public InstanceScript
     {
-        instance_utgarde_pinnacle_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
+        instance_utgarde_pinnacle_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
+        {
+            Initialize();
+        };
 
         ObjectGuid SvalaSorrowgrave;
         ObjectGuid GortokPalehoof;
@@ -59,25 +62,26 @@ public:
         void Initialize() override
         {
             SetHeaders(DataHeader);
-            SkadiHits        = 0;
-            SkadiInRange     = 0;
+            SkadiHits = 0;
+            SkadiInRange = 0;
 
             svalaAchievement = false;
             skadiAchievement = false;
             ymironAchievement = false;
 
-            for(uint8 i = 0; i < MAX_ENCOUNTERS; ++i)
+            for (uint8 i = 0; i < MAX_ENCOUNTERS; ++i)
                 Encounters[i] = NOT_STARTED;
         }
 
         bool IsEncounterInProgress() const override
         {
-            for(uint8 i = 0; i < MAX_ENCOUNTERS; ++i)
+            for (uint8 i = 0; i < MAX_ENCOUNTERS; ++i)
                 if (Encounters[i] == IN_PROGRESS)
                     return true;
 
             return false;
         }
+
         void OnCreatureCreate(Creature* pCreature) override
         {
             switch (pCreature->GetEntry())
@@ -135,7 +139,8 @@ public:
             }
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const*  /*source*/, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {
@@ -204,10 +209,7 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << Encounters[0] << ' '
-                << Encounters[1] << ' '
-                << Encounters[2] << ' '
-                << Encounters[3];
+            data << Encounters[0] << ' ' << Encounters[1] << ' ' << Encounters[2] << ' ' << Encounters[3];
         }
 
         uint32 GetData(uint32 type) const override

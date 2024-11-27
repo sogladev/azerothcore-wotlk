@@ -21,91 +21,94 @@
 
 enum Text
 {
-    SAY_AGGRO                   = 1,
-    SAY_BANISH                  = 2,
-    SAY_SLAY                    = 3,
-    SAY_DEATH                   = 4
+    SAY_AGGRO = 1,
+    SAY_BANISH = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4
 };
 
 enum Spells
 {
-    SPELL_ARCANE_BLAST          = 31457,
-    SPELL_ARCANE_DISCHARGE      = 31472,
-    SPELL_TIME_LAPSE            = 31467,
-    SPELL_ATTRACTION            = 38540,
-    SPELL_BANISH_DRAGON_HELPER  = 31550
+    SPELL_ARCANE_BLAST = 31457,
+    SPELL_ARCANE_DISCHARGE = 31472,
+    SPELL_TIME_LAPSE = 31467,
+    SPELL_ATTRACTION = 38540,
+    SPELL_BANISH_DRAGON_HELPER = 31550
 };
 
- struct boss_chrono_lord_deja : public BossAI
- {
-     boss_chrono_lord_deja(Creature* creature) : BossAI(creature, DATA_CHRONO_LORD_DEJA) { }
+struct boss_chrono_lord_deja : public BossAI
+{
+    boss_chrono_lord_deja(Creature* creature) : BossAI(creature, DATA_CHRONO_LORD_DEJA) { }
 
-     void OwnTalk(uint32 id)
-     {
-         if (me->GetEntry() == NPC_CHRONO_LORD_DEJA)
-         {
-             Talk(id);
-         }
-     }
+    void OwnTalk(uint32 id)
+    {
+        if (me->GetEntry() == NPC_CHRONO_LORD_DEJA)
+            Talk(id);
+    }
 
-     void JustEngagedWith(Unit* /*who*/) override
-     {
-         OwnTalk(SAY_AGGRO);
-         _JustEngagedWith();
+    void JustEngagedWith(Unit* /*who*/) override
+    {
+        OwnTalk(SAY_AGGRO);
+        _JustEngagedWith();
 
-         scheduler.Schedule(10s, [this](TaskContext context)
-         {
-             DoCastVictim(SPELL_ARCANE_BLAST);
-             context.Repeat(20s);
-         }).Schedule(15s, [this](TaskContext context)
-         {
-             DoCastAOE(SPELL_TIME_LAPSE);
-             context.Repeat(20s);
-         }).Schedule(20s, [this](TaskContext context)
-         {
-             DoCastAOE(SPELL_ARCANE_DISCHARGE);
-             context.Repeat(25s);
-         });
+        scheduler
+            .Schedule(10s,
+                [this](TaskContext context)
+        {
+            DoCastVictim(SPELL_ARCANE_BLAST);
+            context.Repeat(20s);
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
+        {
+            DoCastAOE(SPELL_TIME_LAPSE);
+            context.Repeat(20s);
+        })
+            .Schedule(20s,
+                [this](TaskContext context)
+        {
+            DoCastAOE(SPELL_ARCANE_DISCHARGE);
+            context.Repeat(25s);
+        });
 
-         if (IsHeroic())
-         {
-             scheduler.Schedule(20s, [this](TaskContext context)
-             {
-                 DoCastAOE(SPELL_ATTRACTION);
-                 context.Repeat(30s);
-             });
-         }
-     }
+        if (IsHeroic())
+        {
+            scheduler.Schedule(20s,
+                [this](TaskContext context)
+            {
+                DoCastAOE(SPELL_ATTRACTION);
+                context.Repeat(30s);
+            });
+        }
+    }
 
-     void MoveInLineOfSight(Unit* who) override
-     {
-         if (who->IsCreature() && who->GetEntry() == NPC_TIME_KEEPER)
-         {
-             if (me->IsWithinDistInMap(who, 20.0f))
-             {
-                 OwnTalk(SAY_BANISH);
-                 DoCastAOE(SPELL_BANISH_DRAGON_HELPER);
-                 return;
-             }
-         }
+    void MoveInLineOfSight(Unit* who) override
+    {
+        if (who->IsCreature() && who->GetEntry() == NPC_TIME_KEEPER)
+        {
+            if (me->IsWithinDistInMap(who, 20.0f))
+            {
+                OwnTalk(SAY_BANISH);
+                DoCastAOE(SPELL_BANISH_DRAGON_HELPER);
+                return;
+            }
+        }
 
-         ScriptedAI::MoveInLineOfSight(who);
-     }
+        ScriptedAI::MoveInLineOfSight(who);
+    }
 
-     void KilledUnit(Unit* victim) override
-     {
-         if (victim->IsPlayer())
-         {
-             OwnTalk(SAY_SLAY);
-         }
-     }
+    void KilledUnit(Unit* victim) override
+    {
+        if (victim->IsPlayer())
+            OwnTalk(SAY_SLAY);
+    }
 
-     void JustDied(Unit* /*killer*/) override
-     {
-         OwnTalk(SAY_DEATH);
-         _JustDied();
-     }
- };
+    void JustDied(Unit* /*killer*/) override
+    {
+        OwnTalk(SAY_DEATH);
+        _JustDied();
+    }
+};
 
 void AddSC_boss_chrono_lord_deja()
 {

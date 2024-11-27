@@ -24,22 +24,19 @@
 
 enum eBlackStalker
 {
-    SPELL_ACID_BREATH               = 34268,
-    SPELL_ACID_SPIT                 = 34290,
-    SPELL_TAIL_SWEEP                = 34267,
-    SPELL_ENRAGE                    = 15716,
+    SPELL_ACID_BREATH = 34268,
+    SPELL_ACID_SPIT = 34290,
+    SPELL_TAIL_SWEEP = 34267,
+    SPELL_ENRAGE = 15716,
 
-    ACTION_MOVE_TO_PLATFORM         = 1
+    ACTION_MOVE_TO_PLATFORM = 1
 };
 
 struct boss_ghazan : public BossAI
 {
     boss_ghazan(Creature* creature) : BossAI(creature, DATA_GHAZAN)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void InitializeAI() override
@@ -53,26 +50,28 @@ struct boss_ghazan : public BossAI
     {
         _Reset();
         if (!_reachedPlatform)
-        {
             _movedToPlatform = false;
-        }
 
-        ScheduleHealthCheckEvent(20, [&] {
-            DoCastSelf(SPELL_ENRAGE);
-        });
+        ScheduleHealthCheckEvent(20, [&] { DoCastSelf(SPELL_ENRAGE); });
     }
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        scheduler.Schedule(3s, [this](TaskContext context)
+        scheduler
+            .Schedule(3s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_ACID_BREATH);
             context.Repeat(7s, 9s);
-        }).Schedule(1s, [this](TaskContext context)
+        })
+            .Schedule(1s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_ACID_SPIT);
             context.Repeat(7s, 9s);
-        }).Schedule(DUNGEON_MODE<Milliseconds>(5900ms, 10s), [this](TaskContext context)
+        })
+            .Schedule(DUNGEON_MODE<Milliseconds>(5900ms, 10s),
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_TAIL_SWEEP);
             context.Repeat(7s, 9s);
@@ -93,26 +92,24 @@ struct boss_ghazan : public BossAI
     void MovementInform(uint32 type, uint32 pointId) override
     {
         if (!_movedToPlatform || type != WAYPOINT_MOTION_TYPE || pointId != 19)
-        {
             return;
-        }
 
         _reachedPlatform = true;
         me->SetHomePosition(me->GetPosition());
 
-        me->m_Events.AddEventAtOffset([this]()
+        me->m_Events.AddEventAtOffset(
+            [this]()
         {
             me->StopMoving();
             me->GetMotionMaster()->MoveRandom(12.f);
-        }, 1ms);
+        },
+            1ms);
     }
 
     void JustReachedHome() override
     {
         if (_reachedPlatform)
-        {
             me->GetMotionMaster()->MoveRandom(12.f);
-        }
 
         _JustReachedHome();
     }
@@ -120,26 +117,24 @@ struct boss_ghazan : public BossAI
     void UpdateAI(uint32 diff) override
     {
         if (!UpdateVictim())
-        {
             return;
-        }
 
         scheduler.Update(diff);
 
         DoMeleeAttackIfReady();
     }
 
-    private:
-        bool _movedToPlatform;
-        bool _reachedPlatform;
+private:
+    bool _movedToPlatform;
+    bool _reachedPlatform;
 };
 
 class at_underbog_ghazan : public OnlyOnceAreaTriggerScript
 {
 public:
-    at_underbog_ghazan() : OnlyOnceAreaTriggerScript("at_underbog_ghazan") {}
+    at_underbog_ghazan() : OnlyOnceAreaTriggerScript("at_underbog_ghazan") { }
 
-    bool _OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool _OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (InstanceScript* instance = player->GetInstanceScript())
         {

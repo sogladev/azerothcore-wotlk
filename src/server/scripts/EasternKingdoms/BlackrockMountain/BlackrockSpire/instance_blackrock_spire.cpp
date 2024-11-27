@@ -29,14 +29,14 @@
 #include "SpellScriptLoader.h"
 #include "blackrock_spire.h"
 
-uint32 const DragonspireMobs[3] = { NPC_BLACKHAND_DREADWEAVER, NPC_BLACKHAND_SUMMONER, NPC_BLACKHAND_VETERAN };
+uint32 const DragonspireMobs[3] = {NPC_BLACKHAND_DREADWEAVER, NPC_BLACKHAND_SUMMONER, NPC_BLACKHAND_VETERAN};
 
 enum EventIds
 {
-    EVENT_DRAGONSPIRE_ROOM_STORE           = 1,
-    EVENT_DRAGONSPIRE_ROOM_CHECK           = 2,
+    EVENT_DRAGONSPIRE_ROOM_STORE = 1,
+    EVENT_DRAGONSPIRE_ROOM_CHECK = 2,
 
-    EVENT_SOLAKAR_WAVE                     = 3
+    EVENT_SOLAKAR_WAVE = 3
 };
 
 enum Timers
@@ -49,28 +49,28 @@ enum SolakarWaves
     MAX_WAVE_COUNT = 5
 };
 
-Position SolakarPosLeft  = Position(78.0f, -280.0f, 93.0f, 3.0f * M_PI / 2.0);
+Position SolakarPosLeft = Position(78.0f, -280.0f, 93.0f, 3.0f * M_PI / 2.0);
 Position SolakarPosRight = Position(84.0f, -280.0f, 93.0f, 3.0f * M_PI / 2.0);
-Position SolakarPosBoss  = Position(80.0f, -280.0f, 93.0f, 3.0f * M_PI / 2.0);
+Position SolakarPosBoss = Position(80.0f, -280.0f, 93.0f, 3.0f * M_PI / 2.0);
 
 enum Texts
 {
-    SAY_NEFARIUS_REND_WIPE      = 11,
-    SAY_SOLAKAR_FIRST_HATCHER   = 0,
-    SAY_SCARSHIELD_INF_WHISPER  = 0
+    SAY_NEFARIUS_REND_WIPE = 11,
+    SAY_SOLAKAR_FIRST_HATCHER = 0,
+    SAY_SCARSHIELD_INF_WHISPER = 0
 };
 
-MinionData const minionData[] =
-{
-    { NPC_CHROMATIC_ELITE_GUARD, DATA_GENERAL_DRAKKISATH }
+MinionData const minionData[] = {
+    {NPC_CHROMATIC_ELITE_GUARD, DATA_GENERAL_DRAKKISATH}
 };
 
-DoorData const doorData[] =
-{
-    { GO_GYTH_EXIT_DOOR,    DATA_WARCHIEF_REND_BLACKHAND,  DOOR_TYPE_PASSAGE },
-    { GO_DRAKKISATH_DOOR_1, DATA_GENERAL_DRAKKISATH,       DOOR_TYPE_PASSAGE },
-    { GO_DRAKKISATH_DOOR_2, DATA_GENERAL_DRAKKISATH,       DOOR_TYPE_PASSAGE },
-    { 0,                 0,          DOOR_TYPE_ROOM,                         } // END
+DoorData const doorData[] = {
+    {GO_GYTH_EXIT_DOOR, DATA_WARCHIEF_REND_BLACKHAND, DOOR_TYPE_PASSAGE},
+    {GO_DRAKKISATH_DOOR_1, DATA_GENERAL_DRAKKISATH, DOOR_TYPE_PASSAGE},
+    {GO_DRAKKISATH_DOOR_2, DATA_GENERAL_DRAKKISATH, DOOR_TYPE_PASSAGE},
+    {
+     0, 0,
+     DOOR_TYPE_ROOM, }  // END
 };
 
 class instance_blackrock_spire : public InstanceMapScript
@@ -81,9 +81,9 @@ public:
     struct instance_blackrock_spireMapScript : public InstanceScript
     {
         uint32 CurrentSolakarWave = 0;
-        uint32 SolakarState       = NOT_STARTED; // there should be a global instance encounter state, where is it?
+        uint32 SolakarState = NOT_STARTED; // there should be a global instance encounter state, where is it?
         GuidVector SolakarSummons;
-        uint32 VaelastraszState   = NOT_STARTED;
+        uint32 VaelastraszState = NOT_STARTED;
 
         instance_blackrock_spireMapScript(InstanceMap* map) : InstanceScript(map)
         {
@@ -92,9 +92,9 @@ public:
             LoadMinionData(minionData);
             LoadDoorData(doorData);
             CurrentSolakarWave = 0;
-            SolakarState       = NOT_STARTED;
+            SolakarState = NOT_STARTED;
             SolakarSummons.clear();
-            VaelastraszState   = NOT_STARTED;
+            VaelastraszState = NOT_STARTED;
         }
 
         void CreatureLooted(Creature* creature, LootType loot) override
@@ -103,9 +103,7 @@ public:
             {
                 case NPC_THE_BEAST:
                     if (loot == LOOT_SKINNING)
-                    {
                         creature->CastSpell(creature, SPELL_FINKLE_IS_EINHORN, true);
-                    }
                     break;
             }
         }
@@ -153,9 +151,7 @@ public:
                     break;
                 case NPC_WARCHIEF_REND_BLACKHAND:
                     if (GetBossState(DATA_GYTH) != IN_PROGRESS)
-                    {
                         WarchiefRendBlackhand = creature->GetGUID();
-                    }
 
                     if (GetBossState(DATA_GYTH) == DONE)
                         creature->DisappearAndDie();
@@ -303,14 +299,10 @@ public:
                     if (state == FAIL)
                     {
                         if (Creature* rend = instance->GetCreature(WarchiefRendBlackhand))
-                        {
                             rend->Respawn(true);
-                        }
 
                         if (Creature* nefarius = instance->GetCreature(LordVictorNefarius))
-                        {
                             nefarius->AI()->Talk(SAY_NEFARIUS_REND_WIPE);
-                        }
                     }
                     break;
                 default:
@@ -336,9 +328,7 @@ public:
                     {
                         SetBossState(DATA_UROK_DOOMHOWL, IN_PROGRESS);
                         if (GameObject* pile = instance->GetGameObject(go_urokPile))
-                        {
                             pile->SetLootState(GO_JUST_DEACTIVATED);
-                        }
                     }
                     break;
                 default:
@@ -362,18 +352,12 @@ public:
                     {
                         case IN_PROGRESS:
                             if (SolakarState == NOT_STARTED)
-                            {
                                 Events.ScheduleEvent(EVENT_SOLAKAR_WAVE, 500ms);
-                            }
                             break;
                         case FAIL:
                             for (ObjectGuid const& guid : SolakarSummons)
-                            {
                                 if (Creature* creature = instance->GetCreature(guid))
-                                {
                                     creature->DespawnOrUnsummon();
-                                }
-                            }
                             SolakarSummons.clear();
                             CurrentSolakarWave = 0;
                             SetData(DATA_SOLAKAR_FLAMEWREATH, NOT_STARTED);
@@ -393,28 +377,18 @@ public:
                         {
                             SetBossState(DATA_UROK_DOOMHOWL, NOT_STARTED);
                             if (GameObject* challenge = instance->GetGameObject(go_urokChallenge))
-                            {
                                 challenge->Delete();
-                            }
                             if (GameObject* pile = instance->GetGameObject(go_urokPile))
                             {
                                 pile->SetLootState(GO_READY);
                                 pile->Respawn();
                             }
                             for (auto const& circleGUID : go_urokOgreCirles)
-                            {
                                 if (GameObject* circle = instance->GetGameObject(circleGUID))
-                                {
                                     circle->Delete();
-                                }
-                            }
                             for (auto const& mobGUID : UrokMobs)
-                            {
                                 if (Creature* mob = instance->GetCreature(mobGUID))
-                                {
                                     mob->DespawnOrUnsummon();
-                                }
-                            }
                         }
                     }
                     break;
@@ -426,17 +400,11 @@ public:
         uint32 GetData(uint32 type) const override
         {
             if (type == DATA_SOLAKAR_FLAMEWREATH)
-            {
                 return SolakarState;
-            }
             else if (type == DATA_VAELASTRASZ)
-            {
                 return VaelastraszState;
-            }
             else
-            {
                 return InstanceScript::GetData(type);
-            }
         }
 
         void SummonSolakarWave(uint8 number)
@@ -444,18 +412,15 @@ public:
             if (number < MAX_WAVE_COUNT)
             {
                 if (Creature* summon = instance->SummonCreature(NPC_ROOKERY_GUARDIAN, SolakarPosLeft))
-                {
                     SolakarSummons.push_back(summon->GetGUID());
-                }
 
                 if (Creature* summon = instance->SummonCreature(NPC_ROOKERY_HATCHER, SolakarPosRight))
-                {
                     SolakarSummons.push_back(summon->GetGUID());
-                }
 
                 if (number == 0)
                 {
-                    if (Creature* FirstHatcher = instance->GetCreature(SolakarSummons.back())) // works because we spawned a hatcher second
+                    if (Creature* FirstHatcher =
+                            instance->GetCreature(SolakarSummons.back())) // works because we spawned a hatcher second
                     {
                         FirstHatcher->AI()->Talk(SAY_SOLAKAR_FIRST_HATCHER);
                     }
@@ -464,9 +429,7 @@ public:
             else if (number == MAX_WAVE_COUNT)
             {
                 if (Creature* summon = instance->SummonCreature(NPC_SOLAKAR, SolakarPosBoss))
-                {
                     SolakarSummons.push_back(summon->GetGUID());
-                }
             }
         }
 
@@ -594,12 +557,11 @@ public:
                     {
                         std::list<Creature*> creatureList;
                         GetCreatureListWithEntryInGrid(creatureList, rune, DragonspireMobs[j], 15.0f);
-                        for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
+                        for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end();
+                             ++itr)
                         {
                             if (Creature* creature = *itr)
-                            {
                                 runecreaturelist[i].push_back(creature->GetGUID());
-                            }
                         }
                     }
                 }
@@ -661,9 +623,10 @@ public:
                 }
             }
 
-            if (GetBossState(DATA_HALL_RUNE_1) == DONE && GetBossState(DATA_HALL_RUNE_2) == DONE && GetBossState(DATA_HALL_RUNE_3) == DONE &&
-                    GetBossState(DATA_HALL_RUNE_4) == DONE && GetBossState(DATA_HALL_RUNE_5) == DONE && GetBossState(DATA_HALL_RUNE_6) == DONE &&
-                    GetBossState(DATA_HALL_RUNE_7) == DONE)
+            if (GetBossState(DATA_HALL_RUNE_1) == DONE && GetBossState(DATA_HALL_RUNE_2) == DONE &&
+                GetBossState(DATA_HALL_RUNE_3) == DONE && GetBossState(DATA_HALL_RUNE_4) == DONE &&
+                GetBossState(DATA_HALL_RUNE_5) == DONE && GetBossState(DATA_HALL_RUNE_6) == DONE &&
+                GetBossState(DATA_HALL_RUNE_7) == DONE)
             {
                 SetBossState(DATA_DRAGONSPIRE_ROOM, DONE);
                 if (GameObject* door1 = instance->GetGameObject(go_emberseerin))
@@ -721,7 +684,7 @@ class at_dragonspire_hall : public AreaTriggerScript
 public:
     at_dragonspire_hall() : AreaTriggerScript("at_dragonspire_hall") { }
 
-    bool OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (player && player->IsAlive())
         {
@@ -745,7 +708,7 @@ class at_blackrock_stadium : public AreaTriggerScript
 public:
     at_blackrock_stadium() : AreaTriggerScript("at_blackrock_stadium") { }
 
-    bool OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (player && player->IsAlive())
         {
@@ -774,7 +737,7 @@ public:
 class go_father_flame : public GameObjectScript
 {
 public:
-    go_father_flame() : GameObjectScript("go_father_flame") {}
+    go_father_flame() : GameObjectScript("go_father_flame") { }
 
     void OnLootStateChanged(GameObject* go, uint32 state, Unit* /*unit*/) override
     {
@@ -782,7 +745,8 @@ public:
         {
             if (state == GO_ACTIVATED)
             {
-                if (instance->GetData(DATA_SOLAKAR_FLAMEWREATH) == IN_PROGRESS || instance->GetData(DATA_SOLAKAR_FLAMEWREATH) == DONE)
+                if (instance->GetData(DATA_SOLAKAR_FLAMEWREATH) == IN_PROGRESS ||
+                    instance->GetData(DATA_SOLAKAR_FLAMEWREATH) == DONE)
                 {
                     return;
                 }
@@ -798,17 +762,18 @@ class near_scarshield_infiltrator : public AreaTriggerScript
 public:
     near_scarshield_infiltrator() : AreaTriggerScript("near_scarshield_infiltrator") { }
 
-    bool OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (player && player->IsAlive())
         {
             if (Creature* creature = player->FindNearestCreature(NPC_SCARSHIELD_INFILTRATOR, 100.0f, true))
             {
                 bool transformHasStarted = creature->AI()->GetData(0) == 1;
-                if ((player->GetLevel() < 57 || !player->HasItemCount(ITEM_UNADORNED_SEAL))  && !transformHasStarted)
+                if ((player->GetLevel() < 57 || !player->HasItemCount(ITEM_UNADORNED_SEAL)) && !transformHasStarted)
                 {
                     // Send whisper if not already sent
-                    std::list<ObjectGuid>::iterator itr = std::find(whisperedTargets.begin(), whisperedTargets.end(), player->GetGUID());
+                    std::list<ObjectGuid>::iterator itr =
+                        std::find(whisperedTargets.begin(), whisperedTargets.end(), player->GetGUID());
                     if (itr == whisperedTargets.end())
                     {
                         creature->AI()->Talk(SAY_SCARSHIELD_INF_WHISPER, player);
@@ -820,8 +785,9 @@ public:
         }
         return false;
     }
-    private:
-        GuidList whisperedTargets;
+
+private:
+    GuidList whisperedTargets;
 };
 
 class at_scarshield_infiltrator : public AreaTriggerScript
@@ -829,7 +795,7 @@ class at_scarshield_infiltrator : public AreaTriggerScript
 public:
     at_scarshield_infiltrator() : AreaTriggerScript("at_scarshield_infiltrator") { }
 
-    bool OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (player && player->IsAlive())
         {
@@ -867,51 +833,56 @@ class spell_blackrock_spire_call_of_vaelastrasz : public SpellScript
             if (InstanceScript* instance = caster->GetInstanceScript())
             {
                 instance->SetData(DATA_VAELASTRASZ, IN_PROGRESS);
-                float distanceToNorthSpawn = caster->GetDistance2d(VaelastraszTheRedPosNorth.m_positionX, VaelastraszTheRedPosNorth.m_positionY);
-                float distanceToSouthSpawn = caster->GetDistance2d(VaelastraszTheRedPosSouth.m_positionX, VaelastraszTheRedPosSouth.m_positionY);
-                Position spawnPosition = distanceToNorthSpawn < distanceToSouthSpawn ? VaelastraszTheRedPosNorth : VaelastraszTheRedPosSouth;
+                float distanceToNorthSpawn =
+                    caster->GetDistance2d(VaelastraszTheRedPosNorth.m_positionX, VaelastraszTheRedPosNorth.m_positionY);
+                float distanceToSouthSpawn =
+                    caster->GetDistance2d(VaelastraszTheRedPosSouth.m_positionX, VaelastraszTheRedPosSouth.m_positionY);
+                Position spawnPosition =
+                    distanceToNorthSpawn < distanceToSouthSpawn ? VaelastraszTheRedPosNorth : VaelastraszTheRedPosSouth;
                 // despawn is called by the CreatureAI
-                caster->SummonCreature(NPC_VAELASTRASZ_THE_RED, spawnPosition, TEMPSUMMON_TIMED_DESPAWN, 60 * IN_MILLISECONDS);
+                caster->SummonCreature(
+                    NPC_VAELASTRASZ_THE_RED, spawnPosition, TEMPSUMMON_TIMED_DESPAWN, 60 * IN_MILLISECONDS);
             }
         }
     }
 
     void Register() override
     {
-        OnEffectLaunch += SpellEffectFn(spell_blackrock_spire_call_of_vaelastrasz::OnEffect, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
+        OnEffectLaunch +=
+            SpellEffectFn(spell_blackrock_spire_call_of_vaelastrasz::OnEffect, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
     }
 };
 
 enum Spells
 {
     // Vaelastrasz the Red
-    SPELL_VAELAN_SPAWNS               = 16634, // Lightning Effect (Self cast)
-    SPELL_TOUCH_OF_VAELASTRASZ        = 16319, // AoE heal (Self cast)
+    SPELL_VAELAN_SPAWNS = 16634,        // Lightning Effect (Self cast)
+    SPELL_TOUCH_OF_VAELASTRASZ = 16319, // AoE heal (Self cast)
     // Vaelastrasz
-    SPELL_FLAMEBREATH                 = 16396, // Combat (Self cast)
-    SPELL_VAELASTRASZ_SPAWN           = 16354, // Self Cast Despawn (Self cast)
+    SPELL_FLAMEBREATH = 16396,       // Combat (Self cast)
+    SPELL_VAELASTRASZ_SPAWN = 16354, // Self Cast Despawn (Self cast)
     // Victor Nefarius
-    SPELL_NEFARIUS_CORRUPTION         = 23642,
+    SPELL_NEFARIUS_CORRUPTION = 23642,
 };
 
 enum ModelIds
 {
-    MODEL_VAELASTRASZ_UBRS    = 9909,
+    MODEL_VAELASTRASZ_UBRS = 9909,
     MODEL_VAELASTRASZ_THE_RED = 9912,
 };
 
 enum Says
 {
     // Vaelastrasz the Red
-    SAY_RED_SUMMONED          = 0,
-    SAY_RED_BEFORE_TRANSFORM  = 1,
+    SAY_RED_SUMMONED = 0,
+    SAY_RED_BEFORE_TRANSFORM = 1,
     // Vaelastrasz
-    SAY_VAEL_SUMMONED         = 0,
-    SAY_VAEL_STOP_COMBAT      = 1,
+    SAY_VAEL_SUMMONED = 0,
+    SAY_VAEL_STOP_COMBAT = 1,
     // Victor Nefarius
-    SAY_NEFARIUS_15           = 15,
-    SAY_NEFARIUS_16           = 16,
-    SAY_NEFARIUS_17           = 17,
+    SAY_NEFARIUS_15 = 15,
+    SAY_NEFARIUS_16 = 16,
+    SAY_NEFARIUS_17 = 17,
 };
 
 enum Events
@@ -943,17 +914,13 @@ public:
         void IsSummonedBy(WorldObject* summoner) override
         {
             if (!summoner)
-            {
                 return;
-            }
             _combatEnabled = false;
             me->CastSpell(me, SPELL_VAELAN_SPAWNS, false);
             me->SetFacingToObject(summoner);
             Talk(SAY_RED_SUMMONED);
             if (Creature* victor = me->FindNearestCreature(NPC_LORD_VICTOR_NEFARIUS, 100.0f))
-            {
                 _victorGUID = victor->GetGUID();
-            }
             events.ScheduleEvent(EVENT_RED_1_TALK_BEFORE_TRANSFORM, 3s);
         }
 
@@ -993,9 +960,7 @@ public:
                             {
                                 me->AddThreat(rend, 100000.f);
                                 if (!me->FindNearestCreature(NPC_GYTH, 100.0f, true))
-                                {
                                     me->AI()->AttackStart(rend);
-                                }
                             }
                         }
                         _events2.ScheduleEvent(EVENT_FLAME_BREATH, 5s);
@@ -1056,9 +1021,7 @@ public:
             }
 
             if (!_combatEnabled || !UpdateVictim() || me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             _events2.Update(diff);
 

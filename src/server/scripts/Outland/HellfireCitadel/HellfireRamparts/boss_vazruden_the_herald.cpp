@@ -17,46 +17,45 @@
 
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "TaskScheduler.h"
 #include "hellfire_ramparts.h"
-#include "SpellScript.h"
 
 enum Says
 {
-    SAY_INTRO                   = 0,
-    SAY_WIPE                    = 0,
-    SAY_AGGRO                   = 1,
-    SAY_KILL                    = 2,
-    SAY_DIE                     = 3,
-    EMOTE_NAZAN                 = 0
+    SAY_INTRO = 0,
+    SAY_WIPE = 0,
+    SAY_AGGRO = 1,
+    SAY_KILL = 2,
+    SAY_DIE = 3,
+    EMOTE_NAZAN = 0
 };
 
 enum Spells
 {
-    SPELL_FIREBALL              = 33793,
-    SPELL_SUMMON_LIQUID_FIRE    = 31706,
-    SPELL_REVENGE               = 19130,
-    SPELL_CALL_NAZAN            = 30693,
-    SPELL_BELLOWING_ROAR        = 39427,
-    SPELL_CONE_OF_FIRE          = 30926
+    SPELL_FIREBALL = 33793,
+    SPELL_SUMMON_LIQUID_FIRE = 31706,
+    SPELL_REVENGE = 19130,
+    SPELL_CALL_NAZAN = 30693,
+    SPELL_BELLOWING_ROAR = 39427,
+    SPELL_CONE_OF_FIRE = 30926
 };
 
 enum Misc
 {
-    ACTION_FLY_DOWN             = 0,
-    POINT_MIDDLE                = 0,
-    POINT_FLIGHT                = 1
+    ACTION_FLY_DOWN = 0,
+    POINT_MIDDLE = 0,
+    POINT_FLIGHT = 1
 };
 
 enum GroupPhase
 {
-    GROUP_PHASE_1               = 0,
-    GROUP_PHASE_2               = 1
+    GROUP_PHASE_1 = 0,
+    GROUP_PHASE_2 = 1
 };
 
-const Position NazanPos[3] =
-{
+Position const NazanPos[3] = {
     {-1430.37f, 1710.03f, 111.0f, 0.0f},
     {-1428.40f, 1772.09f, 111.0f, 0.0f},
     {-1373.84f, 1771.57f, 111.0f, 0.0f}
@@ -64,7 +63,7 @@ const Position NazanPos[3] =
 
 struct boss_vazruden_the_herald : public BossAI
 {
-    boss_vazruden_the_herald(Creature* creature) : BossAI(creature, DATA_VAZRUDEN) {}
+    boss_vazruden_the_herald(Creature* creature) : BossAI(creature, DATA_VAZRUDEN) { }
 
     void Reset() override
     {
@@ -75,15 +74,13 @@ struct boss_vazruden_the_herald : public BossAI
         me->SummonCreature(NPC_HELLFIRE_SENTRY, -1383.39f, 1711.82f, 82.7961f, 5.67232f);
     }
 
-    void AttackStart(Unit*) override {}
+    void AttackStart(Unit*) override { }
 
     void JustSummoned(Creature* summon) override
     {
         summons.Summon(summon);
         if (summon->GetEntry() != NPC_HELLFIRE_SENTRY)
-        {
             summon->SetInCombatWithZone();
-        }
     }
 
     void MovementInform(uint32 type, uint32 id) override
@@ -115,25 +112,19 @@ struct boss_vazruden_the_herald : public BossAI
     {
         summons.Despawn(summon);
         if (summon->GetEntry() != NPC_HELLFIRE_SENTRY)
-        {
             BossAI::EnterEvadeMode();
-        }
     }
 
     void SetData(uint32 type, uint32 data) override
     {
         if (type == 0 && data == 1)
-        {
             summons.DoZoneInCombat(NPC_HELLFIRE_SENTRY);
-        }
     }
 
-    void UpdateAI(uint32  /*diff*/) override
+    void UpdateAI(uint32 /*diff*/) override
     {
         if (!me->IsVisible() && summons.size() == 0)
-        {
             BossAI::EnterEvadeMode();
-        }
     }
 };
 
@@ -141,10 +132,7 @@ struct boss_nazan : public ScriptedAI
 {
     boss_nazan(Creature* creature) : ScriptedAI(creature)
     {
-        _scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -161,12 +149,18 @@ struct boss_nazan : public ScriptedAI
     void JustEngagedWith(Unit*) override
     {
         _scheduler.CancelAll();
-        _scheduler.Schedule(5ms, GROUP_PHASE_1, [this](TaskContext context)
+        _scheduler
+            .Schedule(5ms,
+                GROUP_PHASE_1,
+                [this](TaskContext context)
         {
             me->GetMotionMaster()->MovePoint(POINT_FLIGHT, NazanPos[urand(0, 2)], false);
             _scheduler.DelayAll(7s);
             context.Repeat(30s);
-        }).Schedule(5s, GROUP_PHASE_1, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                GROUP_PHASE_1,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_FIREBALL);
             context.Repeat(4s, 6s);
@@ -176,13 +170,9 @@ struct boss_nazan : public ScriptedAI
     void AttackStart(Unit* who) override
     {
         if (me->IsLevitating())
-        {
             me->Attack(who, true);
-        }
         else
-        {
             ScriptedAI::AttackStart(who);
-        }
     }
 
     void DoAction(int32 param) override
@@ -205,11 +195,17 @@ struct boss_nazan : public ScriptedAI
             me->SetDisableGravity(false);
             me->SetReactState(REACT_AGGRESSIVE);
             me->GetMotionMaster()->MoveChase(me->GetVictim());
-            _scheduler.Schedule(5s, GROUP_PHASE_2, [this](TaskContext context)
+            _scheduler
+                .Schedule(5s,
+                    GROUP_PHASE_2,
+                    [this](TaskContext context)
             {
                 DoCastVictim(SPELL_CONE_OF_FIRE);
                 context.Repeat(12s);
-            }).Schedule(6s, GROUP_PHASE_2, [this](TaskContext context)
+            })
+                .Schedule(6s,
+                    GROUP_PHASE_2,
+                    [this](TaskContext context)
             {
                 DoCastRandomTarget(SPELL_FIREBALL);
                 context.Repeat(4s, 6s);
@@ -217,7 +213,9 @@ struct boss_nazan : public ScriptedAI
 
             if (IsHeroic())
             {
-                _scheduler.Schedule(10s, GROUP_PHASE_2, [this](TaskContext context)
+                _scheduler.Schedule(10s,
+                    GROUP_PHASE_2,
+                    [this](TaskContext context)
                 {
                     DoCastSelf(SPELL_BELLOWING_ROAR);
                     context.Repeat(30s);
@@ -231,12 +229,12 @@ struct boss_nazan : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-        _scheduler.Update(diff, [this]
-            {
+        _scheduler.Update(diff,
+            [this]
+        {
             if (!me->IsLevitating())
                 DoMeleeAttackIfReady();
-            });
-
+        });
     }
 
 private:
@@ -247,10 +245,7 @@ struct boss_vazruden : public ScriptedAI
 {
     boss_vazruden(Creature* creature) : ScriptedAI(creature)
     {
-        _scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -267,10 +262,9 @@ struct boss_vazruden : public ScriptedAI
 
     void JustEngagedWith(Unit*) override
     {
-        _scheduler.Schedule(5s, [this](TaskContext /*context*/)
-        {
-            Talk(SAY_AGGRO);
-        }).Schedule(4s, [this](TaskContext context)
+        _scheduler.Schedule(5s, [this](TaskContext /*context*/) { Talk(SAY_AGGRO); })
+            .Schedule(4s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_REVENGE);
             context.Repeat(6s);
@@ -284,10 +278,7 @@ struct boss_vazruden : public ScriptedAI
             _hasSpoken = true;
             Talk(SAY_KILL);
         }
-        _scheduler.Schedule(6s, [this](TaskContext /*context*/)
-        {
-            _hasSpoken = false;
-        });
+        _scheduler.Schedule(6s, [this](TaskContext /*context*/) { _hasSpoken = false; });
     }
 
     void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*type*/, SpellSchoolMask /*school*/) override
@@ -309,10 +300,7 @@ struct boss_vazruden : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-        _scheduler.Update(diff, [this]
-            {
-                DoMeleeAttackIfReady();
-            });
+        _scheduler.Update(diff, [this] { DoMeleeAttackIfReady(); });
     }
 
 private:
@@ -328,14 +316,13 @@ class spell_vazruden_fireball : public SpellScript
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
     {
         if (Unit* target = GetHitUnit())
-        {
             target->CastSpell(target, SPELL_SUMMON_LIQUID_FIRE, true);
-        }
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_vazruden_fireball::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_vazruden_fireball::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -346,14 +333,13 @@ class spell_vazruden_call_nazan : public SpellScript
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
     {
         if (Unit* target = GetHitUnit())
-        {
             target->GetAI()->DoAction(ACTION_FLY_DOWN);
-        }
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_vazruden_call_nazan::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_vazruden_call_nazan::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

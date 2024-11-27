@@ -32,54 +32,54 @@
 enum Texts
 {
     // Freya
-    GOSSIP_MENU_FREYA           = 10324,
-    NPC_TEXT_FREYA              = 14332,
+    GOSSIP_MENU_FREYA = 10324,
+    NPC_TEXT_FREYA = 14332,
 
     // Hodir
-    GOSSIP_MENU_HODIR           = 10335,
-    NPC_TEXT_HODIR              = 14326,
+    GOSSIP_MENU_HODIR = 10335,
+    NPC_TEXT_HODIR = 14326,
 
     // Mimiron
-    GOSSIP_MENU_MIMIRON         = 10336,
-    NPC_TEXT_MIMIRON            = 14334,
+    GOSSIP_MENU_MIMIRON = 10336,
+    NPC_TEXT_MIMIRON = 14334,
 
     // Thorim
-    GOSSIP_MENU_THORIM          = 10337,
-    NPC_TEXT_THORIM             = 14333,
+    GOSSIP_MENU_THORIM = 10337,
+    NPC_TEXT_THORIM = 14333,
 
     // Confirm assistance
-    GOSSIP_MENU_CONFIRM         = 10333,
-    NPC_TEXT_CONFIRM            = 14325,
+    GOSSIP_MENU_CONFIRM = 10333,
+    NPC_TEXT_CONFIRM = 14325,
 
     // Chosen
     SAY_KEEPER_CHOSEN_TO_PLAYER = 0,
-    SAY_KEEPER_CHOSEN_ANNOUNCE  = 1,
+    SAY_KEEPER_CHOSEN_ANNOUNCE = 1,
 };
 
 enum UldActions
 {
-    ACTION_KEEPER_OUTRO         = 0,
+    ACTION_KEEPER_OUTRO = 0,
 };
 
 enum UldNPCs
 {
-    NPC_WINTER_JORMUNGAR        = 34137,
-    NPC_SNOW_MOUND_4            = 34146,
-    NPC_SNOW_MOUND_6            = 34150,
-    NPC_SNOW_MOUND_8            = 34151
+    NPC_WINTER_JORMUNGAR = 34137,
+    NPC_SNOW_MOUND_4 = 34146,
+    NPC_SNOW_MOUND_6 = 34150,
+    NPC_SNOW_MOUND_8 = 34151
 };
 
 enum UldGameObjects
 {
-    GOBJ_SNOW_MOUND             = 194907
+    GOBJ_SNOW_MOUND = 194907
 };
 
 enum UldSpells
 {
-    SPELL_SIMPLE_TELEPORT       = 12980,
-    SPELL_KEEPER_TELEPORT       = 62940,
-    SPELL_SNOW_MOUND_PARTICLES  = 64615,
-    SPELL_ENERGY_SAP_10         = 64740
+    SPELL_SIMPLE_TELEPORT = 12980,
+    SPELL_KEEPER_TELEPORT = 62940,
+    SPELL_SNOW_MOUND_PARTICLES = 64615,
+    SPELL_ENERGY_SAP_10 = 64740
 };
 
 class npc_ulduar_keeper : public CreatureScript
@@ -93,10 +93,7 @@ public:
 
         void Reset() override
         {
-            scheduler.Schedule(250ms, [this](TaskContext /*context*/)
-            {
-                DoCastSelf(SPELL_SIMPLE_TELEPORT);
-            });
+            scheduler.Schedule(250ms, [this](TaskContext /*context*/) { DoCastSelf(SPELL_SIMPLE_TELEPORT); });
         }
 
         void DoAction(int32 param) override
@@ -120,10 +117,7 @@ public:
                     default:
                         return;
                 }
-                scheduler.Schedule(1s, [this](TaskContext /*context*/)
-                {
-                    DoCastSelf(SPELL_KEEPER_TELEPORT);
-                });
+                scheduler.Schedule(1s, [this](TaskContext /*context*/) { DoCastSelf(SPELL_KEEPER_TELEPORT); });
             }
         }
 
@@ -140,6 +134,7 @@ public:
         {
             scheduler.Update(diff);
         }
+
     private:
         uint8 _keeper;
     };
@@ -183,11 +178,11 @@ public:
         ClearGossipMenuFor(player);
         switch (action)
         {
-            case GOSSIP_ACTION_INFO_DEF+1:
+            case GOSSIP_ACTION_INFO_DEF + 1:
                 AddGossipItemFor(player, GOSSIP_MENU_CONFIRM, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                 SendGossipMenuFor(player, NPC_TEXT_CONFIRM, creature);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+2:
+            case GOSSIP_ACTION_INFO_DEF + 2:
             {
                 creature->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
                 CloseGossipMenuFor(player);
@@ -213,18 +208,21 @@ class spell_ulduar_energy_sap_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_ENERGY_SAP_DAMAGE_1, SPELL_ENERGY_SAP_DAMAGE_2 });
+        return ValidateSpellInfo({SPELL_ENERGY_SAP_DAMAGE_1, SPELL_ENERGY_SAP_DAMAGE_2});
     }
 
     void HandleEffectPeriodic(AuraEffect const* aurEff)
     {
         if (Unit* target = GetTarget())
-            target->CastSpell(target, (aurEff->GetId() == SPELL_ENERGY_SAP_10) ? SPELL_ENERGY_SAP_DAMAGE_1 : SPELL_ENERGY_SAP_DAMAGE_2, true);
+            target->CastSpell(target,
+                (aurEff->GetId() == SPELL_ENERGY_SAP_10) ? SPELL_ENERGY_SAP_DAMAGE_1 : SPELL_ENERGY_SAP_DAMAGE_2,
+                true);
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_ulduar_energy_sap_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_ulduar_energy_sap_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 
@@ -241,15 +239,20 @@ struct npc_ulduar_snow_mound : public ScriptedAI
     {
         if (!_activated && who->IsPlayer())
         {
-            if (me->GetExactDist2d(who) <= 10.0f && me->GetMap()->isInLineOfSight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 5.0f,
-                who->GetPositionX(), who->GetPositionY(), who->GetPositionZ() + 5.0f, 2, LINEOFSIGHT_ALL_CHECKS, VMAP::ModelIgnoreFlags::Nothing))
+            if (me->GetExactDist2d(who) <= 10.0f && me->GetMap()->isInLineOfSight(me->GetPositionX(),
+                                                        me->GetPositionY(),
+                                                        me->GetPositionZ() + 5.0f,
+                                                        who->GetPositionX(),
+                                                        who->GetPositionY(),
+                                                        who->GetPositionZ() + 5.0f,
+                                                        2,
+                                                        LINEOFSIGHT_ALL_CHECKS,
+                                                        VMAP::ModelIgnoreFlags::Nothing))
             {
                 _activated = true;
                 me->RemoveAura(SPELL_SNOW_MOUND_PARTICLES);
                 if (GameObject* go = me->FindNearestGameObject(GOBJ_SNOW_MOUND, 5.0f))
-                {
                     go->Delete();
-                }
 
                 switch (me->GetEntry())
                 {
@@ -266,19 +269,24 @@ struct npc_ulduar_snow_mound : public ScriptedAI
                         return;
                 }
 
-                _scheduler.Schedule(0s, [this](TaskContext context)
+                _scheduler.Schedule(0s,
+                    [this](TaskContext context)
                 {
                     _counter++;
                     float a = rand_norm() * 2 * M_PI; //needs verification from sniffs
                     float d = rand_norm() * 4.0f;
-                    if (Creature* jormungar = me->SummonCreature(NPC_WINTER_JORMUNGAR, me->GetPositionX() + cos(a) * d, me->GetPositionY() + std::sin(a) * d, me->GetPositionZ() + 1.0f, 0.0f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 300000))
+                    if (Creature* jormungar = me->SummonCreature(NPC_WINTER_JORMUNGAR,
+                            me->GetPositionX() + cos(a) * d,
+                            me->GetPositionY() + std::sin(a) * d,
+                            me->GetPositionZ() + 1.0f,
+                            0.0f,
+                            TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                            300000))
                     {
                         jormungar->SetInCombatWithZone();
                     }
                     if (_counter < _count)
-                    {
                         context.Repeat(2s);
-                    }
                 });
             }
         }
@@ -324,7 +332,7 @@ public:
         void JustEngagedWith(Unit* /*who*/) override
         {
             events.Reset();
-            events.ScheduleEvent(1, 2s); // checking Separation Anxiety, Charged Sphere
+            events.ScheduleEvent(1, 2s);     // checking Separation Anxiety, Charged Sphere
             events.ScheduleEvent(2, 5s, 8s); // Forked Lightning
             events.ScheduleEvent(3, (me->GetEntry() == 33722 ? 20s : 50s)); // Summon Charged Sphere
             if (Creature* c = me->FindNearestCreature((me->GetEntry() == 33722 ? 33699 : 33722), 30.0f, true))
@@ -411,10 +419,10 @@ public:
             events.Reset();
             events.ScheduleEvent(1, 5s, 8s); // Flame Spray
             events.ScheduleEvent(2, 3s, 6s); // Machine Gun
-            events.ScheduleEvent(3, 1s); // Charged Leap
+            events.ScheduleEvent(3, 1s);     // Charged Leap
         }
 
-        void PassengerBoarded(Unit* p, int8  /*seat*/, bool  /*apply*/) override
+        void PassengerBoarded(Unit* p, int8 /*seat*/, bool /*apply*/) override
         {
             me->SetFaction(p->GetFaction());
             me->SetReactState(REACT_PASSIVE);
@@ -425,7 +433,13 @@ public:
             if (!_spawnedMechanic && me->HealthBelowPctDamaged(20, damage))
             {
                 _spawnedMechanic = true;
-                if (Creature* c = me->SummonCreature(34184, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation(), TEMPSUMMON_MANUAL_DESPAWN, 0))
+                if (Creature* c = me->SummonCreature(34184,
+                        me->GetPositionX(),
+                        me->GetPositionY(),
+                        me->GetPositionZ(),
+                        me->GetOrientation(),
+                        TEMPSUMMON_MANUAL_DESPAWN,
+                        0))
                     c->AI()->AttackStart(me->GetVictim());
                 me->InterruptNonMeleeSpells(false);
                 me->CombatStop(true);
@@ -449,13 +463,15 @@ public:
                 ScriptedAI::EnterEvadeMode(why);
         }
 
-        void OnCharmed(bool  /*apply*/) override {}
+        void OnCharmed(bool /*apply*/) override { }
 
         void UpdateAI(uint32 diff) override
         {
             if (me->GetFaction() != FACTION_MONSTER_2)
             {
-                if (me->IsAlive() && (me->GetExactDist2dSq(2058.0f, 42.0f) < 25.0f * 25.0f || me->GetExactDist2dSq(2203.0f, 292.0f) < 25.0f * 25.0f || me->GetExactDist2dSq(2125.0f, 170.0f) > 160.0f * 160.0f))
+                if (me->IsAlive() && (me->GetExactDist2dSq(2058.0f, 42.0f) < 25.0f * 25.0f ||
+                                         me->GetExactDist2dSq(2203.0f, 292.0f) < 25.0f * 25.0f ||
+                                         me->GetExactDist2dSq(2125.0f, 170.0f) > 160.0f * 160.0f))
                     Unit::Kill(me, me, false);
             }
             else
@@ -481,17 +497,17 @@ public:
                         events.Repeat(10s, 15s);
                         break;
                     case 3:
+                    {
+                        float dist = me->GetDistance(me->GetVictim());
+                        if (dist > 10.0f && dist < 40.0f)
                         {
-                            float dist = me->GetDistance(me->GetVictim());
-                            if (dist > 10.0f && dist < 40.0f)
-                            {
-                                me->CastSpell(me->GetVictim(), 64779, false);
-                                events.Repeat(25s);
-                            }
-                            else
-                                events.Repeat(3s);
+                            me->CastSpell(me->GetVictim(), 64779, false);
+                            events.Repeat(25s);
                         }
-                        break;
+                        else
+                            events.Repeat(3s);
+                    }
+                    break;
                 }
 
                 DoMeleeAttackIfReady();
@@ -504,7 +520,7 @@ class spell_ulduar_arachnopod_damaged_aura : public AuraScript
 {
     PrepareAuraScript(spell_ulduar_arachnopod_damaged_aura);
 
-    void HandleEffectPeriodic(AuraEffect const*   /*aurEff*/)
+    void HandleEffectPeriodic(AuraEffect const* /*aurEff*/)
     {
         if (Unit* caster = GetCaster())
             Unit::Kill(caster, caster, false);
@@ -512,17 +528,15 @@ class spell_ulduar_arachnopod_damaged_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_ulduar_arachnopod_damaged_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_ulduar_arachnopod_damaged_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
 class AreaTrigger_at_celestial_planetarium_enterance : public AreaTriggerScript
 {
 public:
-    AreaTrigger_at_celestial_planetarium_enterance()
-        : AreaTriggerScript("at_celestial_planetarium_enterance")
-    {
-    }
+    AreaTrigger_at_celestial_planetarium_enterance() : AreaTriggerScript("at_celestial_planetarium_enterance") { }
 
     bool OnTrigger(Player* player, AreaTrigger const* /*trigger*/) override
     {

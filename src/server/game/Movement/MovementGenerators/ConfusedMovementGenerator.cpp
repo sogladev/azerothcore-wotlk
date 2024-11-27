@@ -26,8 +26,7 @@
 #define urand(a, b) unit.urand(a, b)
 #endif
 
-template<class T>
-void ConfusedMovementGenerator<T>::DoInitialize(T* unit)
+template <class T> void ConfusedMovementGenerator<T>::DoInitialize(T* unit)
 {
     unit->StopMoving();
     float const wander_distance = 4;
@@ -96,28 +95,25 @@ void ConfusedMovementGenerator<T>::DoInitialize(T* unit)
     unit->AddUnitState(UNIT_STATE_CONFUSED | UNIT_STATE_CONFUSED_MOVE);
 }
 
-template<>
+template <>
 void ConfusedMovementGenerator<Creature>::_InitSpecific(Creature* creature, bool& is_water_ok, bool& is_land_ok)
 {
     is_water_ok = creature->CanEnterWater();
-    is_land_ok  = creature->CanWalk();
+    is_land_ok = creature->CanWalk();
 }
 
-template<>
-void ConfusedMovementGenerator<Player>::_InitSpecific(Player*, bool& is_water_ok, bool& is_land_ok)
+template <> void ConfusedMovementGenerator<Player>::_InitSpecific(Player*, bool& is_water_ok, bool& is_land_ok)
 {
     is_water_ok = true;
-    is_land_ok  = true;
+    is_land_ok = true;
 }
 
-template<class T>
-void ConfusedMovementGenerator<T>::DoReset(T* unit)
+template <class T> void ConfusedMovementGenerator<T>::DoReset(T* unit)
 {
     DoInitialize(unit);
 }
 
-template<class T>
-bool ConfusedMovementGenerator<T>::DoUpdate(T* unit, uint32 diff)
+template <class T> bool ConfusedMovementGenerator<T>::DoUpdate(T* unit, uint32 diff)
 {
     if (unit->HasUnitState(UNIT_STATE_NOT_MOVE) || unit->IsMovementPreventedByCasting())
     {
@@ -158,16 +154,14 @@ bool ConfusedMovementGenerator<T>::DoUpdate(T* unit, uint32 diff)
     return true;
 }
 
-template<>
-void ConfusedMovementGenerator<Player>::DoFinalize(Player* unit)
+template <> void ConfusedMovementGenerator<Player>::DoFinalize(Player* unit)
 {
     unit->RemoveUnitFlag(UNIT_FLAG_CONFUSED);
     unit->ClearUnitState(UNIT_STATE_CONFUSED | UNIT_STATE_CONFUSED_MOVE);
     unit->StopMoving();
 }
 
-template<>
-void ConfusedMovementGenerator<Creature>::DoFinalize(Creature* unit)
+template <> void ConfusedMovementGenerator<Creature>::DoFinalize(Creature* unit)
 {
     unit->RemoveUnitFlag(UNIT_FLAG_CONFUSED);
     unit->ClearUnitState(UNIT_STATE_CONFUSED | UNIT_STATE_CONFUSED_MOVE);

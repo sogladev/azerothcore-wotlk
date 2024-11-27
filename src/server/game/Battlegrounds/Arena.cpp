@@ -25,6 +25,7 @@
 #include "ScriptMgr.h"
 #include "World.h"
 #include "WorldSession.h"
+
 //#include "WorldStatePackets.h"
 
 void ArenaScore::AppendToPacket(WorldPacket& data)
@@ -62,14 +63,14 @@ void ArenaTeamScore::BuildTeamInfoBlock(WorldPacket& data)
 
 Arena::Arena()
 {
-    StartDelayTimes[BG_STARTING_EVENT_FIRST]  = BG_START_DELAY_1M;
+    StartDelayTimes[BG_STARTING_EVENT_FIRST] = BG_START_DELAY_1M;
     StartDelayTimes[BG_STARTING_EVENT_SECOND] = BG_START_DELAY_30S;
-    StartDelayTimes[BG_STARTING_EVENT_THIRD]  = BG_START_DELAY_15S;
+    StartDelayTimes[BG_STARTING_EVENT_THIRD] = BG_START_DELAY_15S;
     StartDelayTimes[BG_STARTING_EVENT_FOURTH] = BG_START_DELAY_NONE;
 
-    StartMessageIds[BG_STARTING_EVENT_FIRST]  = ARENA_TEXT_START_ONE_MINUTE;
+    StartMessageIds[BG_STARTING_EVENT_FIRST] = ARENA_TEXT_START_ONE_MINUTE;
     StartMessageIds[BG_STARTING_EVENT_SECOND] = ARENA_TEXT_START_THIRTY_SECONDS;
-    StartMessageIds[BG_STARTING_EVENT_THIRD]  = ARENA_TEXT_START_FIFTEEN_SECONDS;
+    StartMessageIds[BG_STARTING_EVENT_THIRD] = ARENA_TEXT_START_FIFTEEN_SECONDS;
     StartMessageIds[BG_STARTING_EVENT_FOURTH] = ARENA_TEXT_START_BATTLE_HAS_BEGUN;
 }
 
@@ -79,19 +80,15 @@ void Arena::AddPlayer(Player* player)
     PlayerScores.emplace(player->GetGUID().GetCounter(), new ArenaScore(player->GetGUID(), player->GetBgTeamId()));
 
     if (player->GetBgTeamId() == TEAM_ALLIANCE) // gold
-    {
         if (player->GetTeamId() == TEAM_HORDE)
             player->CastSpell(player, SPELL_HORDE_GOLD_FLAG, true);
         else
             player->CastSpell(player, SPELL_ALLIANCE_GOLD_FLAG, true);
-    }
     else // green
-    {
         if (player->GetTeamId() == TEAM_HORDE)
             player->CastSpell(player, SPELL_HORDE_GREEN_FLAG, true);
         else
             player->CastSpell(player, SPELL_ALLIANCE_GREEN_FLAG, true);
-    }
 
     UpdateArenaWorldState();
 
@@ -103,26 +100,21 @@ void Arena::AddPlayer(Player* player)
 
         std::vector<Player*> members;
         bool isCrossfaction = false;
-        for (Group::member_citerator mitr = group->GetMemberSlots().begin(); mitr != group->GetMemberSlots().end(); ++mitr)
+        for (Group::member_citerator mitr = group->GetMemberSlots().begin(); mitr != group->GetMemberSlots().end();
+             ++mitr)
         {
             Player* member = ObjectAccessor::FindPlayer(mitr->guid);
             if (!member || member->GetGUID() == player->GetGUID())
-            {
                 continue;
-            }
             members.push_back(member);
             if (member->GetTeamId(true) != player->GetTeamId(true))
-            {
                 isCrossfaction = true;
-            }
         }
 
         if (isCrossfaction)
         {
             for (Player* member : members)
-            {
                 member->RemoveFromGroup();
-            }
             group->Disband();
 
             group = new Group();
@@ -130,9 +122,7 @@ void Arena::AddPlayer(Player* player)
             group->Create(player);
             sGroupMgr->AddGroup(group);
             for (Player* member : members)
-            {
                 group->AddMember(member);
-            }
         }
     }
 }
@@ -206,19 +196,22 @@ void Arena::EndBattleground(TeamId winnerTeamId)
     if (isRated())
     {
         uint32 startDelay = GetStartDelayTime();
-        bool bValidArena = GetStatus() == STATUS_IN_PROGRESS && GetStartTime() >= startDelay + 15000; // pussywizard: only if arena lasted at least 15 secs
+        bool bValidArena = GetStatus() == STATUS_IN_PROGRESS &&
+                           GetStartTime() >= startDelay + 15000; // pussywizard: only if arena lasted at least 15 secs
 
         uint32 loserTeamRating = 0;
         uint32 loserMatchmakerRating = 0;
-        int32  loserChange = 0;
-        int32  loserMatchmakerChange = 0;
+        int32 loserChange = 0;
+        int32 loserMatchmakerChange = 0;
         uint32 winnerTeamRating = 0;
         uint32 winnerMatchmakerRating = 0;
-        int32  winnerChange = 0;
-        int32  winnerMatchmakerChange = 0;
+        int32 winnerChange = 0;
+        int32 winnerMatchmakerChange = 0;
 
-        ArenaTeam* winnerArenaTeam = sArenaTeamMgr->GetArenaTeamById(GetArenaTeamIdForTeam(winnerTeamId == TEAM_NEUTRAL ? TEAM_HORDE : winnerTeamId));
-        ArenaTeam* loserArenaTeam  = sArenaTeamMgr->GetArenaTeamById(GetArenaTeamIdForTeam(winnerTeamId == TEAM_NEUTRAL ? TEAM_ALLIANCE : GetOtherTeamId(winnerTeamId)));
+        ArenaTeam* winnerArenaTeam = sArenaTeamMgr->GetArenaTeamById(
+            GetArenaTeamIdForTeam(winnerTeamId == TEAM_NEUTRAL ? TEAM_HORDE : winnerTeamId));
+        ArenaTeam* loserArenaTeam = sArenaTeamMgr->GetArenaTeamById(
+            GetArenaTeamIdForTeam(winnerTeamId == TEAM_NEUTRAL ? TEAM_ALLIANCE : GetOtherTeamId(winnerTeamId)));
 
         auto SaveArenaLogs = [&]()
         {
@@ -227,7 +220,8 @@ void Arena::EndBattleground(TeamId winnerTeamId)
             uint32 currOnline = sWorld->GetActiveSessionCount();
 
             CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
-            CharacterDatabasePreparedStatement* stmt2 = CharacterDatabase.GetPreparedStatement(CHAR_INS_ARENA_LOG_FIGHT);
+            CharacterDatabasePreparedStatement* stmt2 =
+                CharacterDatabase.GetPreparedStatement(CHAR_INS_ARENA_LOG_FIGHT);
             stmt2->SetData(0, fightId);
             stmt2->SetData(1, GetArenaType());
             stmt2->SetData(2, ((GetStartTime() <= startDelay ? 0 : GetStartTime() - startDelay) / 1000));
@@ -281,14 +275,27 @@ void Arena::EndBattleground(TeamId winnerTeamId)
 
             if (winnerTeamId != TEAM_NEUTRAL)
             {
-                winnerMatchmakerChange = bValidArena ? winnerArenaTeam->WonAgainst(winnerMatchmakerRating, loserMatchmakerRating, winnerChange, GetBgMap()) : 0;
-                loserMatchmakerChange = loserArenaTeam->LostAgainst(loserMatchmakerRating, winnerMatchmakerRating, loserChange, GetBgMap());
+                winnerMatchmakerChange =
+                    bValidArena ? winnerArenaTeam->WonAgainst(
+                                      winnerMatchmakerRating, loserMatchmakerRating, winnerChange, GetBgMap())
+                                : 0;
+                loserMatchmakerChange =
+                    loserArenaTeam->LostAgainst(loserMatchmakerRating, winnerMatchmakerRating, loserChange, GetBgMap());
 
-                sScriptMgr->OnAfterArenaRatingCalculation(this, winnerMatchmakerChange, loserMatchmakerChange, winnerChange, loserChange);
+                sScriptMgr->OnAfterArenaRatingCalculation(
+                    this, winnerMatchmakerChange, loserMatchmakerChange, winnerChange, loserChange);
 
-                LOG_DEBUG("bg.arena", "match Type: {} --- Winner: old rating: {}, rating gain: {}, old MMR: {}, MMR gain: {} --- Loser: old rating: {}, rating loss: {}, old MMR: {}, MMR loss: {} ---",
-                    GetArenaType(), winnerTeamRating, winnerChange, winnerMatchmakerRating, winnerMatchmakerChange,
-                    loserTeamRating, loserChange, loserMatchmakerRating, loserMatchmakerChange);
+                LOG_DEBUG("bg.arena",
+                    "match Type: {} --- Winner: old rating: {}, rating gain: {}, old MMR: {}, MMR gain: {} --- Loser: old rating: {}, rating loss: {}, old MMR: {}, MMR loss: {} ---",
+                    GetArenaType(),
+                    winnerTeamRating,
+                    winnerChange,
+                    winnerMatchmakerRating,
+                    winnerMatchmakerChange,
+                    loserTeamRating,
+                    loserChange,
+                    loserMatchmakerRating,
+                    loserMatchmakerChange);
 
                 SetArenaMatchmakerRating(winnerTeamId, winnerMatchmakerRating + winnerMatchmakerChange);
                 SetArenaMatchmakerRating(GetOtherTeamId(winnerTeamId), loserMatchmakerRating + loserMatchmakerChange);
@@ -301,8 +308,14 @@ void Arena::EndBattleground(TeamId winnerTeamId)
                 _arenaTeamScores[winnerTeam].Assign(winnerChange, winnerMatchmakerRating, winnerArenaTeam->GetName());
                 _arenaTeamScores[loserTeam].Assign(loserChange, loserMatchmakerRating, loserArenaTeam->GetName());
 
-                LOG_DEBUG("bg.arena", "Arena match Type: {} for Team1Id: {} - Team2Id: {} ended. WinnerTeamId: {}. Winner rating: +{}, Loser rating: {}",
-                    GetArenaType(), GetArenaTeamIdForTeam(TEAM_ALLIANCE), GetArenaTeamIdForTeam(TEAM_HORDE), winnerArenaTeam->GetId(), winnerChange, loserChange);
+                LOG_DEBUG("bg.arena",
+                    "Arena match Type: {} for Team1Id: {} - Team2Id: {} ended. WinnerTeamId: {}. Winner rating: +{}, Loser rating: {}",
+                    GetArenaType(),
+                    GetArenaTeamIdForTeam(TEAM_ALLIANCE),
+                    GetArenaTeamIdForTeam(TEAM_HORDE),
+                    winnerArenaTeam->GetId(),
+                    winnerChange,
+                    loserChange);
             }
             else // Deduct 16 points from each teams arena-rating if there are no winners after 45+2 minutes
             {
@@ -318,8 +331,10 @@ void Arena::EndBattleground(TeamId winnerTeamId)
                 winnerChange = ARENA_TIMELIMIT_POINTS_LOSS;
                 loserChange = ARENA_TIMELIMIT_POINTS_LOSS;
 
-                _arenaTeamScores[PVP_TEAM_ALLIANCE].Assign(ARENA_TIMELIMIT_POINTS_LOSS, winnerMatchmakerRating, winnerArenaTeam->GetName());
-                _arenaTeamScores[PVP_TEAM_HORDE].Assign(ARENA_TIMELIMIT_POINTS_LOSS, loserMatchmakerRating, loserArenaTeam->GetName());
+                _arenaTeamScores[PVP_TEAM_ALLIANCE].Assign(
+                    ARENA_TIMELIMIT_POINTS_LOSS, winnerMatchmakerRating, winnerArenaTeam->GetName());
+                _arenaTeamScores[PVP_TEAM_HORDE].Assign(
+                    ARENA_TIMELIMIT_POINTS_LOSS, loserMatchmakerRating, loserArenaTeam->GetName());
 
                 winnerArenaTeam->FinishGame(ARENA_TIMELIMIT_POINTS_LOSS, GetBgMap());
                 loserArenaTeam->FinishGame(ARENA_TIMELIMIT_POINTS_LOSS, GetBgMap());
@@ -343,14 +358,13 @@ void Arena::EndBattleground(TeamId winnerTeamId)
                     {
                         // update achievement BEFORE personal rating update
                         uint32 rating = player->GetArenaPersonalRating(winnerArenaTeam->GetSlot());
-                        player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_WIN_RATED_ARENA, rating ? rating : 1);
+                        player->UpdateAchievementCriteria(
+                            ACHIEVEMENT_CRITERIA_TYPE_WIN_RATED_ARENA, rating ? rating : 1);
                         player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_WIN_ARENA, GetMapId());
 
                         // Last standing - Rated 5v5 arena & be solely alive player
                         if (GetArenaType() == ARENA_TYPE_5v5 && aliveWinners == 1 && player->IsAlive())
-                        {
                             player->CastSpell(player, SPELL_LAST_MAN_STANDING, true);
-                        }
 
                         winnerArenaTeam->MemberWon(player, loserMatchmakerRating, winnerMatchmakerChange);
                     }

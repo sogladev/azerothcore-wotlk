@@ -21,45 +21,46 @@
 
 enum Spells
 {
-    SPELL_ENSNARING_MOSS    = 31948,
-    SPELL_FRENZY            = 34970,
-    SPELL_GRIEVOUS_WOUND_N  = 31956,
-    SPELL_GRIEVOUS_WOUND_H  = 38801,
-    SPELL_WATER_SPIT        = 35008
+    SPELL_ENSNARING_MOSS = 31948,
+    SPELL_FRENZY = 34970,
+    SPELL_GRIEVOUS_WOUND_N = 31956,
+    SPELL_GRIEVOUS_WOUND_H = 38801,
+    SPELL_WATER_SPIT = 35008
 };
 
 struct boss_rokmar_the_crackler : public BossAI
 {
     explicit boss_rokmar_the_crackler(Creature* creature) : BossAI(creature, DATA_ROKMAR_THE_CRACKLER)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
     {
         _Reset();
 
-        ScheduleHealthCheckEvent(20, [&] {
-            DoCastSelf(SPELL_FRENZY);
-        });
+        ScheduleHealthCheckEvent(20, [&] { DoCastSelf(SPELL_FRENZY); });
     }
 
     void JustEngagedWith(Unit* /*who*/) override
     {
         _JustEngagedWith();
 
-        scheduler.Schedule(8s, [this] (TaskContext context)
+        scheduler
+            .Schedule(8s,
+                [this](TaskContext context)
         {
             DoCastVictim(DUNGEON_MODE(SPELL_GRIEVOUS_WOUND_N, SPELL_GRIEVOUS_WOUND_H));
             context.Repeat(20700ms);
-        }).Schedule(15300ms, [this](TaskContext context)
+        })
+            .Schedule(15300ms,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_ENSNARING_MOSS);
             context.Repeat(26s);
-        }).Schedule(10700ms, [this](TaskContext context)
+        })
+            .Schedule(10700ms,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_WATER_SPIT);
             context.Repeat(19s);

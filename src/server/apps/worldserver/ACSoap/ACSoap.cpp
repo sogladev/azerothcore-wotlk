@@ -21,7 +21,7 @@
 #include "World.h"
 #include "soapStub.h"
 
-void ACSoapThread(const std::string& host, uint16 port)
+void ACSoapThread(std::string const& host, uint16 port)
 {
     struct soap soap;
     soap_init(&soap);
@@ -44,10 +44,15 @@ void ACSoapThread(const std::string& host, uint16 port)
     while (!World::IsStopped())
     {
         if (!soap_valid_socket(soap_accept(&soap)))
-            continue;   // ran into an accept timeout
+            continue; // ran into an accept timeout
 
-        LOG_DEBUG("network.soap", "ACSoap: accepted connection from IP={}.{}.{}.{}", (int)(soap.ip >> 24) & 0xFF, (int)(soap.ip >> 16) & 0xFF, (int)(soap.ip >> 8) & 0xFF, (int)soap.ip & 0xFF);
-        struct soap* thread_soap = soap_copy(&soap);// make a safe copy
+        LOG_DEBUG("network.soap",
+            "ACSoap: accepted connection from IP={}.{}.{}.{}",
+            (int)(soap.ip >> 24) & 0xFF,
+            (int)(soap.ip >> 16) & 0xFF,
+            (int)(soap.ip >> 8) & 0xFF,
+            (int)soap.ip & 0xFF);
+        struct soap* thread_soap = soap_copy(&soap); // make a safe copy
 
         process_message(thread_soap);
     }
@@ -63,8 +68,8 @@ void process_message(struct soap* soap_message)
 
     soap_serve(soap_message);
     soap_destroy(soap_message); // dealloc C++ data
-    soap_end(soap_message); // dealloc data and clean up
-    soap_free(soap_message); // detach soap struct and fre up the memory
+    soap_end(soap_message);     // dealloc data and clean up
+    soap_free(soap_message);    // detach soap struct and fre up the memory
 }
 
 /*
@@ -108,7 +113,8 @@ int ns1__executeCommand(soap* soap, char* command, char** result)
     // commands are executed in the world thread. We have to wait for them to be completed
     {
         // CliCommandHolder will be deleted from world, accessing after queueing is NOT save
-        CliCommandHolder* cmd = new CliCommandHolder(&connection, command, &SOAPCommand::print, &SOAPCommand::commandFinished);
+        CliCommandHolder* cmd =
+            new CliCommandHolder(&connection, command, &SOAPCommand::print, &SOAPCommand::commandFinished);
         sWorld->QueueCliCommand(cmd);
     }
 
@@ -138,12 +144,11 @@ void SOAPCommand::commandFinished(void* soapconnection, bool success)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-struct Namespace namespaces[] =
-{
-    { "SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/", nullptr, nullptr }, // must be first
-    { "SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", nullptr, nullptr }, // must be second
-    { "xsi", "http://www.w3.org/1999/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", nullptr },
-    { "xsd", "http://www.w3.org/1999/XMLSchema",          "http://www.w3.org/*/XMLSchema", nullptr },
-    { "ns1", "urn:AC", nullptr, nullptr },     // "ns1" namespace prefix
-    { nullptr, nullptr, nullptr, nullptr }
+struct Namespace namespaces[] = {
+    {"SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/", nullptr,                                  nullptr}, // must be first
+    {"SOAP-ENC", "http://schemas.xmlsoap.org/soap/encoding/", nullptr,                                  nullptr}, // must be second
+    {"xsi",      "http://www.w3.org/1999/XMLSchema-instance", "http://www.w3.org/*/XMLSchema-instance", nullptr},
+    {"xsd",      "http://www.w3.org/1999/XMLSchema",          "http://www.w3.org/*/XMLSchema",          nullptr},
+    {"ns1",      "urn:AC",                                    nullptr,                                  nullptr}, // "ns1" namespace prefix
+    {nullptr,    nullptr,                                     nullptr,                                  nullptr}
 };

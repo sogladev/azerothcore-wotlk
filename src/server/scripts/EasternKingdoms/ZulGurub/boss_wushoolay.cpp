@@ -28,16 +28,16 @@ EndScriptData */
 
 enum Spells
 {
-    SPELL_LIGHTNING_CLOUD       = 24683,
-    SPELL_CHAIN_LIGHTNING       = 24680,
-    SPELL_FORKED_LIGHTNING      = 24682
+    SPELL_LIGHTNING_CLOUD = 24683,
+    SPELL_CHAIN_LIGHTNING = 24680,
+    SPELL_FORKED_LIGHTNING = 24682
 };
 
 enum Events
 {
-    EVENT_LIGHTNING_CLOUD       = 1,
-    EVENT_CHAIN_LIGHTNING       = 2,
-    EVENT_FORKED_LIGHTNING      = 3
+    EVENT_LIGHTNING_CLOUD = 1,
+    EVENT_CHAIN_LIGHTNING = 2,
+    EVENT_FORKED_LIGHTNING = 3
 };
 
 class boss_wushoolay : public CreatureScript
@@ -74,15 +74,17 @@ public:
                     case EVENT_LIGHTNING_CLOUD:
                         if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
                         {
-                            me->CastSpell(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), SPELL_LIGHTNING_CLOUD, false);
+                            me->CastSpell(target->GetPositionX(),
+                                target->GetPositionY(),
+                                target->GetPositionZ(),
+                                SPELL_LIGHTNING_CLOUD,
+                                false);
                         }
                         events.ScheduleEvent(EVENT_LIGHTNING_CLOUD, 9s, 20s);
                         break;
                     case EVENT_CHAIN_LIGHTNING:
                         if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
-                        {
                             DoCast(target, SPELL_CHAIN_LIGHTNING);
-                        }
                         events.ScheduleEvent(EVENT_CHAIN_LIGHTNING, 12s, 24s);
                         break;
                     case EVENT_FORKED_LIGHTNING:

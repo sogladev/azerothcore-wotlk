@@ -30,18 +30,16 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable spectatorCommandTable =
-        {
-            { "version",  HandleSpectatorVersionCommand,  SEC_PLAYER, Console::No },
-            { "reset",    HandleSpectatorResetCommand,    SEC_PLAYER, Console::No },
-            { "spectate", HandleSpectatorSpectateCommand, SEC_PLAYER, Console::No },
-            { "watch",    HandleSpectatorWatchCommand,    SEC_PLAYER, Console::No },
-            { "leave",    HandleSpectatorLeaveCommand,    SEC_PLAYER, Console::No },
-            { "",         HandleSpectatorCommand,         SEC_PLAYER, Console::No }
+        static ChatCommandTable spectatorCommandTable = {
+            {"version",  HandleSpectatorVersionCommand,  SEC_PLAYER, Console::No},
+            {"reset",    HandleSpectatorResetCommand,    SEC_PLAYER, Console::No},
+            {"spectate", HandleSpectatorSpectateCommand, SEC_PLAYER, Console::No},
+            {"watch",    HandleSpectatorWatchCommand,    SEC_PLAYER, Console::No},
+            {"leave",    HandleSpectatorLeaveCommand,    SEC_PLAYER, Console::No},
+            {"",         HandleSpectatorCommand,         SEC_PLAYER, Console::No}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "spect", spectatorCommandTable }
+        static ChatCommandTable commandTable = {
+            {"spect", spectatorCommandTable}
         };
         return commandTable;
     }

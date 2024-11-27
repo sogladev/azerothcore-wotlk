@@ -21,55 +21,55 @@
 
 enum eDisplayId
 {
-    DISPLAYID_DEFAULT               = 21953,
-    DISPLAYID_UNDEAD                = 26351,
+    DISPLAYID_DEFAULT = 21953,
+    DISPLAYID_UNDEAD = 26351,
 };
 
 enum eNPCs
 {
-    NPC_INGVAR_UNDEAD               = 23980,
-    NPC_ANNHYLDE                    = 24068,
-    NPC_THROW                       = 23997,
+    NPC_INGVAR_UNDEAD = 23980,
+    NPC_ANNHYLDE = 24068,
+    NPC_THROW = 23997,
 };
 
 enum Yells
 {
     //Yells Ingvar
-    YELL_AGGRO_1                                = 0,
-    YELL_KILL_1                                 = 1,
-    YELL_DEAD_1                                 = 2,
+    YELL_AGGRO_1 = 0,
+    YELL_KILL_1 = 1,
+    YELL_DEAD_1 = 2,
 
-    YELL_AGGRO_2                                = 3,
-    YELL_KILL_2                                 = 4,
-    YELL_DEAD_2                                 = 5,
+    YELL_AGGRO_2 = 3,
+    YELL_KILL_2 = 4,
+    YELL_DEAD_2 = 5,
 
-    EMOTE_ROAR                                  = 6,
-    YELL_ANHYLDE_1                              = 0,
-    YELL_ANHYLDE_2                              = 1,
+    EMOTE_ROAR = 6,
+    YELL_ANHYLDE_1 = 0,
+    YELL_ANHYLDE_2 = 1,
 };
 
 enum eSpells
 {
-    SPELL_SUMMON_VALKYR             = 42912,
-    SPELL_RESURRECTION_BEAM         = 42857,
-    SPELL_RESURRECTION_BALL         = 42862,
-    SPELL_RESURRECTION_HEAL         = 42704,
-    SPELL_INGVAR_TRANSFORM          = 42796,
+    SPELL_SUMMON_VALKYR = 42912,
+    SPELL_RESURRECTION_BEAM = 42857,
+    SPELL_RESURRECTION_BALL = 42862,
+    SPELL_RESURRECTION_HEAL = 42704,
+    SPELL_INGVAR_TRANSFORM = 42796,
 
-    SPELL_STAGGERING_ROAR_N         = 42708,
-    SPELL_STAGGERING_ROAR_H         = 59708,
-    SPELL_CLEAVE                    = 42724,
-    SPELL_SMASH_N                   = 42669,
-    SPELL_SMASH_H                   = 59706,
-    SPELL_ENRAGE_N                  = 42705,
-    SPELL_ENRAGE_H                  = 59707,
+    SPELL_STAGGERING_ROAR_N = 42708,
+    SPELL_STAGGERING_ROAR_H = 59708,
+    SPELL_CLEAVE = 42724,
+    SPELL_SMASH_N = 42669,
+    SPELL_SMASH_H = 59706,
+    SPELL_ENRAGE_N = 42705,
+    SPELL_ENRAGE_H = 59707,
 
-    SPELL_DREADFUL_ROAR_N           = 42729,
-    SPELL_DREADFUL_ROAR_H           = 59734,
-    SPELL_WOE_STRIKE_N              = 42730,
-    SPELL_WOE_STRIKE_H              = 59735,
-    SPELL_DARK_SMASH                = 42723,
-    SPELL_SHADOW_AXE                = 42749,
+    SPELL_DREADFUL_ROAR_N = 42729,
+    SPELL_DREADFUL_ROAR_H = 59734,
+    SPELL_WOE_STRIKE_N = 42730,
+    SPELL_WOE_STRIKE_H = 59735,
+    SPELL_DARK_SMASH = 42723,
+    SPELL_SHADOW_AXE = 42749,
 };
 
 #define SPELL_STAGGERING_ROAR       DUNGEON_MODE(SPELL_STAGGERING_ROAR_N, SPELL_STAGGERING_ROAR_H)
@@ -227,7 +227,9 @@ public:
             Talk(YELL_DEAD_2);
             if (pInstance)
             {
-                pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, NPC_INGVAR_UNDEAD, 1); // undead entry needed for achievements
+                pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE,
+                    NPC_INGVAR_UNDEAD,
+                    1); // undead entry needed for achievements
                 pInstance->SetData(DATA_INGVAR, DONE);
             }
         }
@@ -264,7 +266,8 @@ public:
                     break;
                 case EVENT_VALKYR_MOVE:
                     if (Creature* s = ObjectAccessor::GetCreature(*me, ValkyrGUID))
-                        s->GetMotionMaster()->MovePoint(1, s->GetPositionX(), s->GetPositionY(), s->GetPositionZ() - 15.0f);
+                        s->GetMotionMaster()->MovePoint(
+                            1, s->GetPositionX(), s->GetPositionY(), s->GetPositionZ() - 15.0f);
                     break;
                 case EVENT_ANNHYLDE_YELL:
                     if (Creature* s = ObjectAccessor::GetCreature(*me, ValkyrGUID))
@@ -327,7 +330,7 @@ public:
                     events.Repeat(15s, 20s);
                     break;
                 case EVENT_SPELL_CLEAVE_OR_WOE_STRIKE:
-                    if (me->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID) == 0 )
+                    if (me->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID) == 0)
                     {
                         events.Repeat(3s);
                         break;
@@ -339,7 +342,7 @@ public:
                     events.Repeat(3s, 7s);
                     break;
                 case EVENT_SPELL_SMASH:
-                    if (me->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID) == 0 )
+                    if (me->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID) == 0)
                     {
                         events.Repeat(3s);
                         break;

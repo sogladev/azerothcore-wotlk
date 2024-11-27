@@ -24,38 +24,37 @@
 
 enum Spells
 {
-    SPELL_OVERCHARGED               = 64217,
-    SPELL_OVERCHARGED_BLAST         = 64219,
-    SPELL_OVERCHARGE                = 64218,
-    SPELL_BERSERK                   = 26662,
+    SPELL_OVERCHARGED = 64217,
+    SPELL_OVERCHARGED_BLAST = 64219,
+    SPELL_OVERCHARGE = 64218,
+    SPELL_BERSERK = 26662,
 
-    SPELL_CHAIN_LIGHTNING_10        = 64213,
-    SPELL_CHAIN_LIGHTNING_25        = 64215,
-    SPELL_LIGHTNING_NOVA_10         = 64216,
-    SPELL_LIGHTNING_NOVA_25         = 65279,
+    SPELL_CHAIN_LIGHTNING_10 = 64213,
+    SPELL_CHAIN_LIGHTNING_25 = 64215,
+    SPELL_LIGHTNING_NOVA_10 = 64216,
+    SPELL_LIGHTNING_NOVA_25 = 65279,
 };
 
 enum Events
 {
-    EVENT_CHAIN_LIGHTNING           = 1,
-    EVENT_LIGHTNING_NOVA            = 2,
-    EVENT_OVERCHARGE                = 3,
-    EVENT_BERSERK                   = 4,
-    EVENT_SUMMON_NEXT_MINION        = 5,
+    EVENT_CHAIN_LIGHTNING = 1,
+    EVENT_LIGHTNING_NOVA = 2,
+    EVENT_OVERCHARGE = 3,
+    EVENT_BERSERK = 4,
+    EVENT_SUMMON_NEXT_MINION = 5,
 };
 
 enum Misc
 {
-    EMOTE_OVERCHARGE                = 0,
-    EMOTE_MINION_RESPAWN            = 1,
-    EMOTE_BERSERK                   = 2,
+    EMOTE_OVERCHARGE = 0,
+    EMOTE_MINION_RESPAWN = 1,
+    EMOTE_BERSERK = 2,
 
-    NPC_TEMPEST_MINION              = 33998,
-    MAX_TEMPEST_MINIONS             = 4,
+    NPC_TEMPEST_MINION = 33998,
+    MAX_TEMPEST_MINIONS = 4,
 };
 
-struct Position TempestMinions[MAX_TEMPEST_MINIONS] =
-{
+struct Position TempestMinions[MAX_TEMPEST_MINIONS] = {
     {-203.980103f, -281.287720f, 91.650223f, 1.598807f},
     {-233.489410f, -281.139282f, 91.652412f, 1.598807f},
     {-233.267578f, -297.104645f, 91.681915f, 1.598807f},
@@ -133,7 +132,7 @@ public:
                 target->SetFullHealth();
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             events.Reset();
             if (summons.size() < 4)
@@ -211,10 +210,10 @@ class spell_voa_overcharge_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_OVERCHARGED_BLAST });
+        return ValidateSpellInfo({SPELL_OVERCHARGED_BLAST});
     }
 
-    void HandlePeriodicDummy(AuraEffect const*  /*aurEff*/)
+    void HandlePeriodicDummy(AuraEffect const* /*aurEff*/)
     {
         Unit* target = GetTarget();
         if (target->IsCreature() && GetAura()->GetStackAmount() >= 10)
@@ -228,7 +227,8 @@ class spell_voa_overcharge_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_voa_overcharge_aura::HandlePeriodicDummy, EFFECT_2, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_voa_overcharge_aura::HandlePeriodicDummy, EFFECT_2, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 

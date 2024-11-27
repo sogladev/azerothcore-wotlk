@@ -24,7 +24,7 @@
 #include "ObjectMgr.h"
 #include "Pet.h"
 #include "Player.h"
-#include "TargetedMovementGenerator.h"                      // for HandleNpcUnFollowCommand
+#include "TargetedMovementGenerator.h" // for HandleNpcUnFollowCommand
 #include "Transport.h"
 #include <string>
 
@@ -41,32 +41,31 @@ struct NpcFlagText
 
 #define NPCFLAG_COUNT   24
 
-NpcFlagText const npcFlagTexts[NPCFLAG_COUNT] =
-{
-    { UNIT_NPC_FLAG_AUCTIONEER,         LANG_NPCINFO_AUCTIONEER         },
-    { UNIT_NPC_FLAG_BANKER,             LANG_NPCINFO_BANKER             },
-    { UNIT_NPC_FLAG_BATTLEMASTER,       LANG_NPCINFO_BATTLEMASTER       },
-    { UNIT_NPC_FLAG_FLIGHTMASTER,       LANG_NPCINFO_FLIGHTMASTER       },
-    { UNIT_NPC_FLAG_GOSSIP,             LANG_NPCINFO_GOSSIP             },
-    { UNIT_NPC_FLAG_GUILD_BANKER,       LANG_NPCINFO_GUILD_BANKER       },
-    { UNIT_NPC_FLAG_INNKEEPER,          LANG_NPCINFO_INNKEEPER          },
-    { UNIT_NPC_FLAG_PETITIONER,         LANG_NPCINFO_PETITIONER         },
-    { UNIT_NPC_FLAG_PLAYER_VEHICLE,     LANG_NPCINFO_PLAYER_VEHICLE     },
-    { UNIT_NPC_FLAG_QUESTGIVER,         LANG_NPCINFO_QUESTGIVER         },
-    { UNIT_NPC_FLAG_REPAIR,             LANG_NPCINFO_REPAIR             },
-    { UNIT_NPC_FLAG_SPELLCLICK,         LANG_NPCINFO_SPELLCLICK         },
-    { UNIT_NPC_FLAG_SPIRITGUIDE,        LANG_NPCINFO_SPIRITGUIDE        },
-    { UNIT_NPC_FLAG_SPIRITHEALER,       LANG_NPCINFO_SPIRITHEALER       },
-    { UNIT_NPC_FLAG_STABLEMASTER,       LANG_NPCINFO_STABLEMASTER       },
-    { UNIT_NPC_FLAG_TABARDDESIGNER,     LANG_NPCINFO_TABARDDESIGNER     },
-    { UNIT_NPC_FLAG_TRAINER,            LANG_NPCINFO_TRAINER            },
-    { UNIT_NPC_FLAG_TRAINER_CLASS,      LANG_NPCINFO_TRAINER_CLASS      },
-    { UNIT_NPC_FLAG_TRAINER_PROFESSION, LANG_NPCINFO_TRAINER_PROFESSION },
-    { UNIT_NPC_FLAG_VENDOR,             LANG_NPCINFO_VENDOR             },
-    { UNIT_NPC_FLAG_VENDOR_AMMO,        LANG_NPCINFO_VENDOR_AMMO        },
-    { UNIT_NPC_FLAG_VENDOR_FOOD,        LANG_NPCINFO_VENDOR_FOOD        },
-    { UNIT_NPC_FLAG_VENDOR_POISON,      LANG_NPCINFO_VENDOR_POISON      },
-    { UNIT_NPC_FLAG_VENDOR_REAGENT,     LANG_NPCINFO_VENDOR_REAGENT     }
+NpcFlagText const npcFlagTexts[NPCFLAG_COUNT] = {
+    {UNIT_NPC_FLAG_AUCTIONEER,         LANG_NPCINFO_AUCTIONEER        },
+    {UNIT_NPC_FLAG_BANKER,             LANG_NPCINFO_BANKER            },
+    {UNIT_NPC_FLAG_BATTLEMASTER,       LANG_NPCINFO_BATTLEMASTER      },
+    {UNIT_NPC_FLAG_FLIGHTMASTER,       LANG_NPCINFO_FLIGHTMASTER      },
+    {UNIT_NPC_FLAG_GOSSIP,             LANG_NPCINFO_GOSSIP            },
+    {UNIT_NPC_FLAG_GUILD_BANKER,       LANG_NPCINFO_GUILD_BANKER      },
+    {UNIT_NPC_FLAG_INNKEEPER,          LANG_NPCINFO_INNKEEPER         },
+    {UNIT_NPC_FLAG_PETITIONER,         LANG_NPCINFO_PETITIONER        },
+    {UNIT_NPC_FLAG_PLAYER_VEHICLE,     LANG_NPCINFO_PLAYER_VEHICLE    },
+    {UNIT_NPC_FLAG_QUESTGIVER,         LANG_NPCINFO_QUESTGIVER        },
+    {UNIT_NPC_FLAG_REPAIR,             LANG_NPCINFO_REPAIR            },
+    {UNIT_NPC_FLAG_SPELLCLICK,         LANG_NPCINFO_SPELLCLICK        },
+    {UNIT_NPC_FLAG_SPIRITGUIDE,        LANG_NPCINFO_SPIRITGUIDE       },
+    {UNIT_NPC_FLAG_SPIRITHEALER,       LANG_NPCINFO_SPIRITHEALER      },
+    {UNIT_NPC_FLAG_STABLEMASTER,       LANG_NPCINFO_STABLEMASTER      },
+    {UNIT_NPC_FLAG_TABARDDESIGNER,     LANG_NPCINFO_TABARDDESIGNER    },
+    {UNIT_NPC_FLAG_TRAINER,            LANG_NPCINFO_TRAINER           },
+    {UNIT_NPC_FLAG_TRAINER_CLASS,      LANG_NPCINFO_TRAINER_CLASS     },
+    {UNIT_NPC_FLAG_TRAINER_PROFESSION, LANG_NPCINFO_TRAINER_PROFESSION},
+    {UNIT_NPC_FLAG_VENDOR,             LANG_NPCINFO_VENDOR            },
+    {UNIT_NPC_FLAG_VENDOR_AMMO,        LANG_NPCINFO_VENDOR_AMMO       },
+    {UNIT_NPC_FLAG_VENDOR_FOOD,        LANG_NPCINFO_VENDOR_FOOD       },
+    {UNIT_NPC_FLAG_VENDOR_POISON,      LANG_NPCINFO_VENDOR_POISON     },
+    {UNIT_NPC_FLAG_VENDOR_REAGENT,     LANG_NPCINFO_VENDOR_REAGENT    }
 };
 
 struct MechanicImmune
@@ -75,40 +74,39 @@ struct MechanicImmune
     char const* text;
 };
 
-MechanicImmune const mechanicImmunes[MAX_MECHANIC] =
-{
-    { MECHANIC_NONE,            "MECHANIC_NONE"               },
-    { MECHANIC_CHARM,           "MECHANIC_CHARM"              },
-    { MECHANIC_DISORIENTED,     "MECHANIC_DISORIENTED"        },
-    { MECHANIC_DISARM,          "MECHANIC_DISARM"             },
-    { MECHANIC_DISTRACT,        "MECHANIC_DISTRACT"           },
-    { MECHANIC_FEAR,            "MECHANIC_FEAR"               },
-    { MECHANIC_GRIP,            "MECHANIC_GRIP"               },
-    { MECHANIC_ROOT,            "MECHANIC_ROOT"               },
-    { MECHANIC_SLOW_ATTACK,     "MECHANIC_SLOW_ATTACK"        },
-    { MECHANIC_SILENCE,         "MECHANIC_SILENCE"            },
-    { MECHANIC_SLEEP,           "MECHANIC_SLEEP"              },
-    { MECHANIC_SNARE,           "MECHANIC_SNARE"              },
-    { MECHANIC_STUN,            "MECHANIC_STUN"               },
-    { MECHANIC_FREEZE,          "MECHANIC_FREEZE"             },
-    { MECHANIC_KNOCKOUT,        "MECHANIC_KNOCKOUT"           },
-    { MECHANIC_BLEED,           "MECHANIC_BLEED"              },
-    { MECHANIC_BANDAGE,         "MECHANIC_BANDAGE"            },
-    { MECHANIC_POLYMORPH,       "MECHANIC_POLYMORPH"          },
-    { MECHANIC_BANISH,          "MECHANIC_BANISH"             },
-    { MECHANIC_SHIELD,          "MECHANIC_SHIELD"             },
-    { MECHANIC_SHACKLE,         "MECHANIC_SHACKLE"            },
-    { MECHANIC_MOUNT,           "MECHANIC_MOUNT"              },
-    { MECHANIC_INFECTED,        "MECHANIC_INFECTED"           },
-    { MECHANIC_TURN,            "MECHANIC_TURN"               },
-    { MECHANIC_HORROR,          "MECHANIC_HORROR"             },
-    { MECHANIC_INVULNERABILITY, "MECHANIC_INVULNERABILITY"    },
-    { MECHANIC_INTERRUPT,       "MECHANIC_INTERRUPT"          },
-    { MECHANIC_DAZE,            "MECHANIC_DAZE"               },
-    { MECHANIC_DISCOVERY,       "MECHANIC_DISCOVERY"          },
-    { MECHANIC_IMMUNE_SHIELD,   "MECHANIC_IMMUNE_SHIELD"      },
-    { MECHANIC_SAPPED,          "MECHANIC_SAPPED"             },
-    { MECHANIC_ENRAGED,         "MECHANIC_ENRAGED"            },
+MechanicImmune const mechanicImmunes[MAX_MECHANIC] = {
+    {MECHANIC_NONE,            "MECHANIC_NONE"           },
+    {MECHANIC_CHARM,           "MECHANIC_CHARM"          },
+    {MECHANIC_DISORIENTED,     "MECHANIC_DISORIENTED"    },
+    {MECHANIC_DISARM,          "MECHANIC_DISARM"         },
+    {MECHANIC_DISTRACT,        "MECHANIC_DISTRACT"       },
+    {MECHANIC_FEAR,            "MECHANIC_FEAR"           },
+    {MECHANIC_GRIP,            "MECHANIC_GRIP"           },
+    {MECHANIC_ROOT,            "MECHANIC_ROOT"           },
+    {MECHANIC_SLOW_ATTACK,     "MECHANIC_SLOW_ATTACK"    },
+    {MECHANIC_SILENCE,         "MECHANIC_SILENCE"        },
+    {MECHANIC_SLEEP,           "MECHANIC_SLEEP"          },
+    {MECHANIC_SNARE,           "MECHANIC_SNARE"          },
+    {MECHANIC_STUN,            "MECHANIC_STUN"           },
+    {MECHANIC_FREEZE,          "MECHANIC_FREEZE"         },
+    {MECHANIC_KNOCKOUT,        "MECHANIC_KNOCKOUT"       },
+    {MECHANIC_BLEED,           "MECHANIC_BLEED"          },
+    {MECHANIC_BANDAGE,         "MECHANIC_BANDAGE"        },
+    {MECHANIC_POLYMORPH,       "MECHANIC_POLYMORPH"      },
+    {MECHANIC_BANISH,          "MECHANIC_BANISH"         },
+    {MECHANIC_SHIELD,          "MECHANIC_SHIELD"         },
+    {MECHANIC_SHACKLE,         "MECHANIC_SHACKLE"        },
+    {MECHANIC_MOUNT,           "MECHANIC_MOUNT"          },
+    {MECHANIC_INFECTED,        "MECHANIC_INFECTED"       },
+    {MECHANIC_TURN,            "MECHANIC_TURN"           },
+    {MECHANIC_HORROR,          "MECHANIC_HORROR"         },
+    {MECHANIC_INVULNERABILITY, "MECHANIC_INVULNERABILITY"},
+    {MECHANIC_INTERRUPT,       "MECHANIC_INTERRUPT"      },
+    {MECHANIC_DAZE,            "MECHANIC_DAZE"           },
+    {MECHANIC_DISCOVERY,       "MECHANIC_DISCOVERY"      },
+    {MECHANIC_IMMUNE_SHIELD,   "MECHANIC_IMMUNE_SHIELD"  },
+    {MECHANIC_SAPPED,          "MECHANIC_SAPPED"         },
+    {MECHANIC_ENRAGED,         "MECHANIC_ENRAGED"        },
 };
 
 struct SpellSchoolImmune
@@ -117,15 +115,14 @@ struct SpellSchoolImmune
     char const* text;
 };
 
-SpellSchoolImmune const spellSchoolImmunes[MAX_SPELL_SCHOOL] =
-{
-    { SPELL_SCHOOL_NORMAL, "SPELL_SCHOOL_NORMAL" },
-    { SPELL_SCHOOL_HOLY,   "SPELL_SCHOOL_HOLY"   },
-    { SPELL_SCHOOL_FIRE,   "SPELL_SCHOOL_FIRE"   },
-    { SPELL_SCHOOL_NATURE, "SPELL_SCHOOL_NATURE" },
-    { SPELL_SCHOOL_FROST,  "SPELL_SCHOOL_FROST"  },
-    { SPELL_SCHOOL_SHADOW, "SPELL_SCHOOL_SHADOW" },
-    { SPELL_SCHOOL_ARCANE, "SPELL_SCHOOL_ARCANE" },
+SpellSchoolImmune const spellSchoolImmunes[MAX_SPELL_SCHOOL] = {
+    {SPELL_SCHOOL_NORMAL, "SPELL_SCHOOL_NORMAL"},
+    {SPELL_SCHOOL_HOLY,   "SPELL_SCHOOL_HOLY"  },
+    {SPELL_SCHOOL_FIRE,   "SPELL_SCHOOL_FIRE"  },
+    {SPELL_SCHOOL_NATURE, "SPELL_SCHOOL_NATURE"},
+    {SPELL_SCHOOL_FROST,  "SPELL_SCHOOL_FROST" },
+    {SPELL_SCHOOL_SHADOW, "SPELL_SCHOOL_SHADOW"},
+    {SPELL_SCHOOL_ARCANE, "SPELL_SCHOOL_ARCANE"},
 };
 
 class npc_commandscript : public CommandScript
@@ -135,67 +132,60 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable npcAddCommandTable =
-        {
-            { "formation",      HandleNpcAddFormationCommand,      SEC_ADMINISTRATOR, Console::No },
-            { "item",           HandleNpcAddVendorItemCommand,     SEC_ADMINISTRATOR, Console::No },
-            { "move",           HandleNpcAddMoveCommand,           SEC_ADMINISTRATOR, Console::No },
-            { "temp",           HandleNpcAddTempSpawnCommand,      SEC_ADMINISTRATOR, Console::No },
-            { "",               HandleNpcAddCommand,               SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable npcAddCommandTable = {
+            {"formation", HandleNpcAddFormationCommand,  SEC_ADMINISTRATOR, Console::No},
+            {"item",      HandleNpcAddVendorItemCommand, SEC_ADMINISTRATOR, Console::No},
+            {"move",      HandleNpcAddMoveCommand,       SEC_ADMINISTRATOR, Console::No},
+            {"temp",      HandleNpcAddTempSpawnCommand,  SEC_ADMINISTRATOR, Console::No},
+            {"",          HandleNpcAddCommand,           SEC_ADMINISTRATOR, Console::No}
         };
-        static ChatCommandTable npcDeleteCommandTable =
-        {
-            { "item",           HandleNpcDeleteVendorItemCommand,  SEC_ADMINISTRATOR, Console::No },
-            { "",               HandleNpcDeleteCommand,            SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable npcDeleteCommandTable = {
+            {"item", HandleNpcDeleteVendorItemCommand, SEC_ADMINISTRATOR, Console::No},
+            {"",     HandleNpcDeleteCommand,           SEC_ADMINISTRATOR, Console::No}
         };
-        static ChatCommandTable npcFollowCommandTable =
-        {
-            { "stop",           HandleNpcUnFollowCommand,          SEC_GAMEMASTER, Console::No },
-            { "",               HandleNpcFollowCommand,            SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable npcFollowCommandTable = {
+            {"stop", HandleNpcUnFollowCommand, SEC_GAMEMASTER, Console::No},
+            {"",     HandleNpcFollowCommand,   SEC_GAMEMASTER, Console::No}
         };
 
-        static ChatCommandTable npcFactionCommandTable =
-        {
-            { "permanent",      HandleNpcSetFactionIdCommand,      SEC_ADMINISTRATOR, Console::No },
-            { "temp",           HandleNpcSetFactionTempIdCommand,  SEC_ADMINISTRATOR, Console::No },
-            { "original",       HandleNpcSetOriginalFaction,       SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable npcFactionCommandTable = {
+            {"permanent", HandleNpcSetFactionIdCommand,     SEC_ADMINISTRATOR, Console::No},
+            {"temp",      HandleNpcSetFactionTempIdCommand, SEC_ADMINISTRATOR, Console::No},
+            {"original",  HandleNpcSetOriginalFaction,      SEC_ADMINISTRATOR, Console::No}
         };
 
-        static ChatCommandTable npcSetCommandTable =
-        {
-            { "allowmove",      HandleNpcSetAllowMovementCommand,  SEC_ADMINISTRATOR, Console::No },
-            { "entry",          HandleNpcSetEntryCommand,          SEC_ADMINISTRATOR, Console::No },
-            { "faction",        npcFactionCommandTable},
-            { "flag",           HandleNpcSetFlagCommand,           SEC_ADMINISTRATOR, Console::No },
-            { "level",          HandleNpcSetLevelCommand,          SEC_ADMINISTRATOR, Console::No },
-            { "link",           HandleNpcSetLinkCommand,           SEC_ADMINISTRATOR, Console::No },
-            { "model",          HandleNpcSetModelCommand,          SEC_ADMINISTRATOR, Console::No },
-            { "movetype",       HandleNpcSetMoveTypeCommand,       SEC_ADMINISTRATOR, Console::No },
-            { "phase",          HandleNpcSetPhaseCommand,          SEC_ADMINISTRATOR, Console::No },
-            { "wanderdistance", HandleNpcSetWanderDistanceCommand, SEC_ADMINISTRATOR, Console::No },
-            { "spawntime",      HandleNpcSetSpawnTimeCommand,      SEC_ADMINISTRATOR, Console::No },
-            { "data",           HandleNpcSetDataCommand,           SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable npcSetCommandTable = {
+            {"allowmove", HandleNpcSetAllowMovementCommand, SEC_ADMINISTRATOR, Console::No},
+            {"entry", HandleNpcSetEntryCommand, SEC_ADMINISTRATOR, Console::No},
+            {"faction", npcFactionCommandTable},
+            {"flag", HandleNpcSetFlagCommand, SEC_ADMINISTRATOR, Console::No},
+            {"level", HandleNpcSetLevelCommand, SEC_ADMINISTRATOR, Console::No},
+            {"link", HandleNpcSetLinkCommand, SEC_ADMINISTRATOR, Console::No},
+            {"model", HandleNpcSetModelCommand, SEC_ADMINISTRATOR, Console::No},
+            {"movetype", HandleNpcSetMoveTypeCommand, SEC_ADMINISTRATOR, Console::No},
+            {"phase", HandleNpcSetPhaseCommand, SEC_ADMINISTRATOR, Console::No},
+            {"wanderdistance", HandleNpcSetWanderDistanceCommand, SEC_ADMINISTRATOR, Console::No},
+            {"spawntime", HandleNpcSetSpawnTimeCommand, SEC_ADMINISTRATOR, Console::No},
+            {"data", HandleNpcSetDataCommand, SEC_ADMINISTRATOR, Console::No}
         };
-        static ChatCommandTable npcCommandTable =
-        {
-            { "info",           HandleNpcInfoCommand,              SEC_GAMEMASTER, Console::No },
-            { "guid",           HandleNpcGuidCommand,              SEC_GAMEMASTER, Console::No },
-            { "near",           HandleNpcNearCommand,              SEC_GAMEMASTER, Console::No },
-            { "move",           HandleNpcMoveCommand,              SEC_GAMEMASTER, Console::No },
-            { "playemote",      HandleNpcPlayEmoteCommand,         SEC_GAMEMASTER, Console::No },
-            { "say",            HandleNpcSayCommand,               SEC_GAMEMASTER, Console::No },
-            { "textemote",      HandleNpcTextEmoteCommand,         SEC_GAMEMASTER, Console::No },
-            { "whisper",        HandleNpcWhisperCommand,           SEC_GAMEMASTER, Console::No },
-            { "yell",           HandleNpcYellCommand,              SEC_GAMEMASTER, Console::No },
-            { "tame",           HandleNpcTameCommand,              SEC_GAMEMASTER, Console::No },
-            { "add",            npcAddCommandTable },
-            { "delete",         npcDeleteCommandTable },
-            { "follow",         npcFollowCommandTable },
-            { "set",            npcSetCommandTable }
+        static ChatCommandTable npcCommandTable = {
+            {"info", HandleNpcInfoCommand, SEC_GAMEMASTER, Console::No},
+            {"guid", HandleNpcGuidCommand, SEC_GAMEMASTER, Console::No},
+            {"near", HandleNpcNearCommand, SEC_GAMEMASTER, Console::No},
+            {"move", HandleNpcMoveCommand, SEC_GAMEMASTER, Console::No},
+            {"playemote", HandleNpcPlayEmoteCommand, SEC_GAMEMASTER, Console::No},
+            {"say", HandleNpcSayCommand, SEC_GAMEMASTER, Console::No},
+            {"textemote", HandleNpcTextEmoteCommand, SEC_GAMEMASTER, Console::No},
+            {"whisper", HandleNpcWhisperCommand, SEC_GAMEMASTER, Console::No},
+            {"yell", HandleNpcYellCommand, SEC_GAMEMASTER, Console::No},
+            {"tame", HandleNpcTameCommand, SEC_GAMEMASTER, Console::No},
+            {"add", npcAddCommandTable},
+            {"delete", npcDeleteCommandTable},
+            {"follow", npcFollowCommandTable},
+            {"set", npcSetCommandTable}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "npc", npcCommandTable }
+        static ChatCommandTable commandTable = {
+            {"npc", npcCommandTable}
         };
         return commandTable;
     }
@@ -227,14 +217,16 @@ public:
 
                 Creature* creature = trans->CreateNPCPassenger(guid, &data);
 
-                creature->SaveToDB(trans->GetGOInfo()->moTransport.mapID, 1 << map->GetSpawnMode(), chr->GetPhaseMaskForSpawn());
+                creature->SaveToDB(
+                    trans->GetGOInfo()->moTransport.mapID, 1 << map->GetSpawnMode(), chr->GetPhaseMaskForSpawn());
 
                 sObjectMgr->AddCreatureToGrid(guid, &data);
                 return true;
             }
 
         Creature* creature = new Creature();
-        if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, chr->GetPhaseMaskForSpawn(), id, 0, x, y, z, o))
+        if (!creature->Create(
+                map->GenerateLowGuid<HighGuid::Unit>(), map, chr->GetPhaseMaskForSpawn(), id, 0, x, y, z, o))
         {
             delete creature;
             return false;
@@ -260,7 +252,8 @@ public:
     }
 
     //add item in vendorlist
-    static bool HandleNpcAddVendorItemCommand(ChatHandler* handler, ItemTemplate const* item, Optional<uint32> mc, Optional<uint32> it, Optional<uint32> ec, Optional<bool> addMulti)
+    static bool HandleNpcAddVendorItemCommand(ChatHandler* handler, ItemTemplate const* item, Optional<uint32> mc,
+        Optional<uint32> it, Optional<uint32> ec, Optional<bool> addMulti)
     {
         if (!item)
         {
@@ -281,7 +274,8 @@ public:
         uint32 extendedcost = ec.value_or(0);
         uint32 vendor_entry = addMulti.value_or(false) ? handler->GetSession()->GetCurrentVendor() : vendor->GetEntry();
 
-        if (!sObjectMgr->IsVendorItemValid(vendor_entry, itemId, maxcount, incrtime, extendedcost, handler->GetSession()->GetPlayer()))
+        if (!sObjectMgr->IsVendorItemValid(
+                vendor_entry, itemId, maxcount, incrtime, extendedcost, handler->GetSession()->GetPlayer()))
         {
             handler->SetSentErrorMessage(true);
             return false;
@@ -365,8 +359,8 @@ public:
             return false;
         }
 
-        creature->SetMaxHealth(100 + 30*lvl);
-        creature->SetHealth(100 + 30*lvl);
+        creature->SetMaxHealth(100 + 30 * lvl);
+        creature->SetHealth(100 + 30 * lvl);
         creature->SetLevel(lvl);
         creature->SaveToDB();
 
@@ -394,7 +388,8 @@ public:
     }
 
     //del item from vendor list
-    static bool HandleNpcDeleteVendorItemCommand(ChatHandler* handler, ItemTemplate const* item, Optional<bool> addMulti)
+    static bool HandleNpcDeleteVendorItemCommand(
+        ChatHandler* handler, ItemTemplate const* item, Optional<bool> addMulti)
     {
         Creature* vendor = handler->getSelectedCreature();
         if (!vendor || !vendor->IsVendor())
@@ -410,7 +405,8 @@ public:
         }
 
         uint32 itemId = item->ItemId;
-        if (!sObjectMgr->RemoveVendorItem(addMulti.value_or(false) ? handler->GetSession()->GetCurrentVendor() : vendor->GetEntry(), itemId))
+        if (!sObjectMgr->RemoveVendorItem(
+                addMulti.value_or(false) ? handler->GetSession()->GetCurrentVendor() : vendor->GetEntry(), itemId))
         {
             handler->SendErrorMessage(LANG_ITEM_NOT_IN_LIST, itemId);
             return false;
@@ -533,8 +529,17 @@ public:
         }
 
         creature->AI()->SetData(data_1, data_2);
-        std::string AIorScript = !creature->GetAIName().empty() ? "AI type: " + creature->GetAIName() : (!creature->GetScriptName().empty() ? "Script Name: " + creature->GetScriptName() : "No AI or Script Name Set");
-        handler->PSendSysMessage(LANG_NPC_SETDATA, creature->GetGUID().ToString(), creature->GetEntry(), creature->GetName(), data_1, data_2, AIorScript);
+        std::string AIorScript = !creature->GetAIName().empty()
+                                     ? "AI type: " + creature->GetAIName()
+                                     : (!creature->GetScriptName().empty() ? "Script Name: " + creature->GetScriptName()
+                                                                           : "No AI or Script Name Set");
+        handler->PSendSysMessage(LANG_NPC_SETDATA,
+            creature->GetGUID().ToString(),
+            creature->GetEntry(),
+            creature->GetName(),
+            data_1,
+            data_2,
+            AIorScript);
         return true;
     }
 
@@ -591,47 +596,55 @@ public:
         std::string curRespawnDelayStr = secsToTimeString(uint64(curRespawnDelay), true);
         std::string defRespawnDelayStr = secsToTimeString(target->GetRespawnDelay(), true);
 
-        handler->PSendSysMessage(LANG_NPCINFO_CHAR,  target->GetSpawnId(), target->GetGUID().ToString(), entry, id1, id2, id3, displayid, nativeid, faction, npcflags);
+        handler->PSendSysMessage(LANG_NPCINFO_CHAR,
+            target->GetSpawnId(),
+            target->GetGUID().ToString(),
+            entry,
+            id1,
+            id2,
+            id3,
+            displayid,
+            nativeid,
+            faction,
+            npcflags);
         handler->PSendSysMessage(LANG_NPCINFO_LEVEL, target->GetLevel());
-        handler->PSendSysMessage(LANG_NPCINFO_EQUIPMENT, target->GetCurrentEquipmentId(), target->GetOriginalEquipmentId());
-        handler->PSendSysMessage(LANG_NPCINFO_HEALTH, target->GetCreateHealth(), target->GetMaxHealth(), target->GetHealth());
-        handler->PSendSysMessage(LANG_NPCINFO_FLAGS, target->GetUnitFlags(), target->GetUnitFlags2(), target->GetDynamicFlags(), target->GetFaction());
+        handler->PSendSysMessage(
+            LANG_NPCINFO_EQUIPMENT, target->GetCurrentEquipmentId(), target->GetOriginalEquipmentId());
+        handler->PSendSysMessage(
+            LANG_NPCINFO_HEALTH, target->GetCreateHealth(), target->GetMaxHealth(), target->GetHealth());
+        handler->PSendSysMessage(LANG_NPCINFO_FLAGS,
+            target->GetUnitFlags(),
+            target->GetUnitFlags2(),
+            target->GetDynamicFlags(),
+            target->GetFaction());
         handler->PSendSysMessage(LANG_COMMAND_RAWPAWNTIMES, defRespawnDelayStr, curRespawnDelayStr);
-        handler->PSendSysMessage(LANG_NPCINFO_LOOT,  cInfo->lootid, cInfo->pickpocketLootId, cInfo->SkinLootId);
+        handler->PSendSysMessage(LANG_NPCINFO_LOOT, cInfo->lootid, cInfo->pickpocketLootId, cInfo->SkinLootId);
         handler->PSendSysMessage(LANG_NPCINFO_DUNGEON_ID, target->GetInstanceId());
         handler->PSendSysMessage(LANG_NPCINFO_PHASEMASK, target->GetPhaseMask());
         handler->PSendSysMessage(LANG_NPCINFO_ARMOR, target->GetArmor());
-        handler->PSendSysMessage(LANG_NPCINFO_POSITION, float(target->GetPositionX()), float(target->GetPositionY()), float(target->GetPositionZ()));
+        handler->PSendSysMessage(LANG_NPCINFO_POSITION,
+            float(target->GetPositionX()),
+            float(target->GetPositionY()),
+            float(target->GetPositionZ()));
         handler->PSendSysMessage(LANG_NPCINFO_AIINFO, target->GetAIName(), target->GetScriptName());
 
         for (uint8 i = 0; i < NPCFLAG_COUNT; i++)
-        {
             if (npcflags & npcFlagTexts[i].flag)
-            {
                 handler->PSendSysMessage(npcFlagTexts[i].text, npcFlagTexts[i].flag);
-            }
-        }
 
         handler->PSendSysMessage(LANG_NPCINFO_MECHANIC_IMMUNE, mechanicImmuneMask);
         for (uint8 i = 1; i < MAX_MECHANIC; ++i)
-        {
             if (mechanicImmuneMask & (1 << (mechanicImmunes[i].flag - 1)))
-            {
                 handler->PSendSysMessage(mechanicImmunes[i].text, mechanicImmunes[i].flag);
-            }
-        }
 
         handler->PSendSysMessage(LANG_NPCINFO_SPELL_SCHOOL_IMMUNE, spellSchoolImmuneMask);
         for (uint8 i = 0; i < MAX_SPELL_SCHOOL; ++i)
-        {
             if (spellSchoolImmuneMask & (1 << spellSchoolImmunes[i].flag))
-            {
                 handler->PSendSysMessage(spellSchoolImmunes[i].text, spellSchoolImmunes[i].flag);
-            }
-        }
 
         return true;
     }
+
     static bool HandleNpcGuidCommand(ChatHandler* handler)
     {
         Creature* target = handler->getSelectedCreature();
@@ -657,7 +670,17 @@ public:
             id3 = cData->id3;
         }
 
-        handler->PSendSysMessage(LANG_NPCINFO_CHAR, target->GetSpawnId(), target->GetGUID().ToString(), entry, id1, id2, id3, displayid, nativeid, faction, npcflags);
+        handler->PSendSysMessage(LANG_NPCINFO_CHAR,
+            target->GetSpawnId(),
+            target->GetGUID().ToString(),
+            entry,
+            id1,
+            id2,
+            id3,
+            displayid,
+            nativeid,
+            faction,
+            npcflags);
 
         return true;
     }
@@ -699,7 +722,8 @@ public:
                 if (!creatureTemplate)
                     continue;
 
-                handler->PSendSysMessage(LANG_CREATURE_LIST_CHAT, guid, entry, guid, creatureTemplate->Name, x, y, z, mapId, "", "");
+                handler->PSendSysMessage(
+                    LANG_CREATURE_LIST_CHAT, guid, entry, guid, creatureTemplate->Name, x, y, z, mapId, "", "");
 
                 ++count;
             } while (result->NextRow());
@@ -751,7 +775,7 @@ public:
             creature->SetPosition(x, y, z, o);
             creature->GetMotionMaster()->Initialize();
 
-            if (creature->IsAlive())                            // dead creature will reset movement generator at respawn
+            if (creature->IsAlive()) // dead creature will reset movement generator at respawn
             {
                 creature->setDeathState(DeathState::JustDied);
                 creature->Respawn();
@@ -822,7 +846,9 @@ public:
     * additional parameter: NODEL - so no waypoints are deleted, if you
     *                       change the movement type
     */
-    static bool HandleNpcSetMoveTypeCommand(ChatHandler* handler, Optional<CreatureSpawnId> lowGuid, Variant<EXACT_SEQUENCE("stay"), EXACT_SEQUENCE("random"), EXACT_SEQUENCE("way")> type, Optional<EXACT_SEQUENCE("nodel")> nodel)
+    static bool HandleNpcSetMoveTypeCommand(ChatHandler* handler, Optional<CreatureSpawnId> lowGuid,
+        Variant<EXACT_SEQUENCE("stay"), EXACT_SEQUENCE("random"), EXACT_SEQUENCE("way")> type,
+        Optional<EXACT_SEQUENCE("nodel")> nodel)
     {
         // 3 arguments:
         // GUID (optional - you can also select the creature)
@@ -837,14 +863,14 @@ public:
         ObjectGuid::LowType lowguid = 0;
         Creature* creature = nullptr;
 
-        if (!lowGuid)                                           // case .setmovetype $move_type (with selected creature)
+        if (!lowGuid) // case .setmovetype $move_type (with selected creature)
         {
             creature = handler->getSelectedCreature();
             if (!creature || creature->IsPet())
                 return false;
             lowguid = creature->GetSpawnId();
         }
-        else                                                    // case .setmovetype #creature_guid $move_type (with selected creature)
+        else // case .setmovetype #creature_guid $move_type (with selected creature)
         {
             lowguid = *lowGuid;
 
@@ -899,7 +925,7 @@ public:
             creature->SetDefaultMovementType(move_type);
             creature->GetMotionMaster()->Initialize();
 
-            if (creature->IsAlive())                            // dead creature will reset movement generator at respawn
+            if (creature->IsAlive()) // dead creature will reset movement generator at respawn
             {
                 creature->setDeathState(DeathState::JustDied);
                 creature->Respawn();
@@ -909,13 +935,9 @@ public:
         }
 
         if (!doNotDelete)
-        {
             handler->PSendSysMessage(LANG_MOVE_TYPE_SET, move_type);
-        }
         else
-        {
             handler->PSendSysMessage(LANG_MOVE_TYPE_SET_NODEL, move_type);
-        }
 
         return true;
     }
@@ -971,7 +993,7 @@ public:
         creature->SetDefaultMovementType(mtype);
         creature->GetMotionMaster()->Initialize();
 
-        if (creature->IsAlive())                                // dead creature will reset movement generator at respawn
+        if (creature->IsAlive()) // dead creature will reset movement generator at respawn
         {
             creature->setDeathState(DeathState::JustDied);
             creature->Respawn();
@@ -993,9 +1015,7 @@ public:
     static bool HandleNpcSetSpawnTimeCommand(ChatHandler* handler, std::string spawnTimeStr)
     {
         if (spawnTimeStr.empty())
-        {
             return false;
-        }
 
         if (Acore::StringTo<int32>(spawnTimeStr).value_or(0) < 0)
         {
@@ -1009,9 +1029,7 @@ public:
 
         int32 spawnTime = TimeStringToSecs(spawnTimeStr);
         if (spawnTime <= 0)
-        {
             spawnTime = Acore::StringTo<int32>(spawnTimeStr).value_or(0);
-        }
 
         if (spawnTime <= 0)
         {
@@ -1047,9 +1065,15 @@ public:
         // make some emotes
         switch (text.back())
         {
-            case '?':   creature->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);      break;
-            case '!':   creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);   break;
-            default:    creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);          break;
+            case '?':
+                creature->HandleEmoteCommand(EMOTE_ONESHOT_QUESTION);
+                break;
+            case '!':
+                creature->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
+                break;
+            default:
+                creature->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
+                break;
         }
 
         return true;
@@ -1093,7 +1117,8 @@ public:
             return false;
         }
 
-        FollowMovementGenerator<Creature> const* mgen = static_cast<FollowMovementGenerator<Creature> const*>((creature->GetMotionMaster()->top()));
+        FollowMovementGenerator<Creature> const* mgen =
+            static_cast<FollowMovementGenerator<Creature> const*>((creature->GetMotionMaster()->top()));
 
         if (mgen->GetTarget() != player)
         {
@@ -1187,7 +1212,7 @@ public:
         if (!cInfo->IsTameable(player->CanTameExoticPets()))
         {
             handler->PSendSysMessage(LANG_CREATURE_NON_TAMEABLE, cInfo->Entry);
-            handler->SetSentErrorMessage (true);
+            handler->SetSentErrorMessage(true);
             return false;
         }
 
@@ -1213,7 +1238,8 @@ public:
         ObjectGuid::LowType lowguid = creature->GetSpawnId();
         if (creature->GetFormation())
         {
-            handler->PSendSysMessage("Selected creature is already member of group {}", creature->GetFormation()->GetId());
+            handler->PSendSysMessage(
+                "Selected creature is already member of group {}", creature->GetFormation()->GetId());
             return false;
         }
 
@@ -1222,10 +1248,11 @@ public:
 
         Player* chr = handler->GetSession()->GetPlayer();
         FormationInfo group_member;
-        group_member.follow_angle   = (creature->GetAngle(chr) - chr->GetOrientation()) * 180 / M_PI;
-        group_member.follow_dist    = sqrtf(pow(chr->GetPositionX() - creature->GetPositionX(), int(2)) + pow(chr->GetPositionY() - creature->GetPositionY(), int(2)));
-        group_member.leaderGUID     = leaderGUID;
-        group_member.groupAI        = 0;
+        group_member.follow_angle = (creature->GetAngle(chr) - chr->GetOrientation()) * 180 / M_PI;
+        group_member.follow_dist = sqrtf(pow(chr->GetPositionX() - creature->GetPositionX(), int(2)) +
+                                         pow(chr->GetPositionY() - creature->GetPositionY(), int(2)));
+        group_member.leaderGUID = leaderGUID;
+        group_member.groupAI = 0;
 
         sFormationMgr->CreatureGroupMap[lowguid] = group_member;
         creature->SearchFormation();
@@ -1266,7 +1293,8 @@ public:
             return false;
         }
 
-        handler->PSendSysMessage("LinkGUID '{}' added to creature with DBTableGUID: '{}'", linkguid, creature->GetSpawnId());
+        handler->PSendSysMessage(
+            "LinkGUID '{}' added to creature with DBTableGUID: '{}'", linkguid, creature->GetSpawnId());
         return true;
     }
 };

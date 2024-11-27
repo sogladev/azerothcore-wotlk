@@ -38,20 +38,20 @@ EndContentData */
 enum ProfessorPhizzlethorpe
 {
     // Yells
-    SAY_PROGRESS_1          = 0,
-    SAY_PROGRESS_2          = 1,
-    SAY_PROGRESS_3          = 2,
-    EMOTE_PROGRESS_4        = 3,
-    SAY_AGGRO               = 4,
-    SAY_PROGRESS_5          = 5,
-    SAY_PROGRESS_6          = 6,
-    SAY_PROGRESS_7          = 7,
-    EMOTE_PROGRESS_8        = 8,
-    SAY_PROGRESS_9          = 9,
+    SAY_PROGRESS_1 = 0,
+    SAY_PROGRESS_2 = 1,
+    SAY_PROGRESS_3 = 2,
+    EMOTE_PROGRESS_4 = 3,
+    SAY_AGGRO = 4,
+    SAY_PROGRESS_5 = 5,
+    SAY_PROGRESS_6 = 6,
+    SAY_PROGRESS_7 = 7,
+    EMOTE_PROGRESS_8 = 8,
+    SAY_PROGRESS_9 = 9,
     // Quests
-    QUEST_SUNKEN_TREASURE   = 665,
+    QUEST_SUNKEN_TREASURE = 665,
     // Creatures
-    NPC_VENGEFUL_SURGE      = 2776
+    NPC_VENGEFUL_SURGE = 2776
 };
 
 class npc_professor_phizzlethorpe : public CreatureScript
@@ -81,8 +81,10 @@ public:
                     Talk(EMOTE_PROGRESS_4);
                     break;
                 case 9:
-                    me->SummonCreature(NPC_VENGEFUL_SURGE, -2052.96f, -2142.49f, 20.15f, 1.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
-                    me->SummonCreature(NPC_VENGEFUL_SURGE, -2052.96f, -2142.49f, 20.15f, 1.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    me->SummonCreature(
+                        NPC_VENGEFUL_SURGE, -2052.96f, -2142.49f, 20.15f, 1.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
+                    me->SummonCreature(
+                        NPC_VENGEFUL_SURGE, -2052.96f, -2142.49f, 20.15f, 1.0f, TEMPSUMMON_CORPSE_DESPAWN, 0);
                     break;
                 case 10:
                     Talk(SAY_PROGRESS_5, player);

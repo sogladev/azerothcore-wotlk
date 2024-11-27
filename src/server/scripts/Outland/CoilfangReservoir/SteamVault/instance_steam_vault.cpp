@@ -22,15 +22,14 @@
 
 enum MainChambersAccessPanelSays
 {
-    SAY_FAINT_ECHO  = 0,
+    SAY_FAINT_ECHO = 0,
     SAY_LOUD_RUMBLE = 1
 };
 
-MinionData const minionData[] =
-{
-    { NPC_NAGA_DISTILLER,          DATA_WARLORD_KALITHRESH  },
-    { NPC_THESPIA_WATER_ELEMENTAL, DATA_HYDROMANCER_THESPIA },
-    { 0,                            0                       }
+MinionData const minionData[] = {
+    {NPC_NAGA_DISTILLER,          DATA_WARLORD_KALITHRESH },
+    {NPC_THESPIA_WATER_ELEMENTAL, DATA_HYDROMANCER_THESPIA},
+    {0,                           0                       }
 };
 
 class go_main_chambers_access_panel : public GameObjectScript
@@ -49,39 +48,31 @@ public:
                 {
                     go->SetGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
                     if (doorController && doorController->IsAIEnabled)
-                    {
                         doorController->AI()->Talk(SAY_FAINT_ECHO);
-                    }
                 }
             }
-            else
+            else if (instance->GetBossState(DATA_MEKGINEER_STEAMRIGGER) == DONE)
             {
-                if (instance->GetBossState(DATA_MEKGINEER_STEAMRIGGER) == DONE)
-                {
-                    go->SetGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
-                    if (doorController && doorController->IsAIEnabled)
-                    {
-                        doorController->AI()->Talk(SAY_FAINT_ECHO);
-                    }
-                }
+                go->SetGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
+                if (doorController && doorController->IsAIEnabled)
+                    doorController->AI()->Talk(SAY_FAINT_ECHO);
             }
 
-            if (instance->GetBossState(DATA_HYDROMANCER_THESPIA) == DONE && instance->GetBossState(DATA_MEKGINEER_STEAMRIGGER) == DONE)
+            if (instance->GetBossState(DATA_HYDROMANCER_THESPIA) == DONE &&
+                instance->GetBossState(DATA_MEKGINEER_STEAMRIGGER) == DONE)
             {
                 if (doorController)
                 {
                     if (doorController->IsAIEnabled)
-                    {
                         doorController->AI()->Talk(SAY_LOUD_RUMBLE);
-                    }
 
-                    doorController->m_Events.AddEventAtOffset([instance]()
+                    doorController->m_Events.AddEventAtOffset(
+                        [instance]()
                     {
                         if (GameObject* mainGate = instance->GetGameObject(DATA_MAIN_CHAMBERS_DOOR))
-                        {
                             instance->HandleGameObject(ObjectGuid::Empty, true, mainGate);
-                        }
-                    }, 4s);
+                    },
+                        4s);
                 }
                 else if (GameObject* mainGate = instance->GetGameObject(DATA_MAIN_CHAMBERS_DOOR))
                 {
@@ -96,19 +87,19 @@ public:
     }
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_MEKGINEER_STEAMRIGGER,    DATA_MEKGINEER_STEAMRIGGER  },
-    { NPC_DOOR_CONTROLLER,          DATA_DOOR_CONTROLLER        },
-    { 0,                            0                           }
+ObjectData const creatureData[] = {
+    {NPC_MEKGINEER_STEAMRIGGER, DATA_MEKGINEER_STEAMRIGGER},
+    {NPC_DOOR_CONTROLLER,       DATA_DOOR_CONTROLLER      },
+    {0,                         0                         }
 };
 
-ObjectData const objectData[] =
-{
-    { GO_ACCESS_PANEL_HYDRO, DATA_ACCESS_PANEL_HYDROMANCER },
-    { GO_ACCESS_PANEL_MEK,   DATA_ACCESS_PANEL_MEKGINEER   },
-    { GO_MAIN_CHAMBERS_DOOR, DATA_MAIN_CHAMBERS_DOOR       },
-    { 0,                     0,                            }
+ObjectData const objectData[] = {
+    {GO_ACCESS_PANEL_HYDRO, DATA_ACCESS_PANEL_HYDROMANCER},
+    {GO_ACCESS_PANEL_MEK, DATA_ACCESS_PANEL_MEKGINEER},
+    {GO_MAIN_CHAMBERS_DOOR, DATA_MAIN_CHAMBERS_DOOR},
+    {
+     0, 0,
+     }
 };
 
 class instance_steam_vault : public InstanceMapScript
@@ -131,7 +122,8 @@ public:
             switch (go->GetEntry())
             {
                 case GO_MAIN_CHAMBERS_DOOR:
-                    if (GetBossState(DATA_HYDROMANCER_THESPIA) == DONE && GetBossState(DATA_MEKGINEER_STEAMRIGGER) == DONE)
+                    if (GetBossState(DATA_HYDROMANCER_THESPIA) == DONE &&
+                        GetBossState(DATA_MEKGINEER_STEAMRIGGER) == DONE)
                         HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_ACCESS_PANEL_HYDRO:
@@ -154,23 +146,17 @@ public:
         bool SetBossState(uint32 bossId, EncounterState state) override
         {
             if (!InstanceScript::SetBossState(bossId, state))
-            {
                 return false;
-            }
 
             if (bossId == DATA_HYDROMANCER_THESPIA && state == DONE)
             {
                 if (GameObject* panel = GetGameObject(DATA_ACCESS_PANEL_HYDROMANCER))
-                {
                     panel->RemoveGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
-                }
             }
             else if (bossId == DATA_MEKGINEER_STEAMRIGGER && state == DONE)
             {
                 if (GameObject* panel = GetGameObject(DATA_ACCESS_PANEL_MEKGINEER))
-                {
                     panel->RemoveGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
-                }
             }
 
             return true;

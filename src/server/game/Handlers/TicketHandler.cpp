@@ -63,9 +63,7 @@ void WorldSession::HandleGMTicketCreateOpcode(WorldPacket& recvData)
         recvData >> message;
 
         if (!ValidateHyperlinksAndMaybeKick(message))
-        {
             return;
-        }
 
         recvData >> needResponse;
         recvData >> needMoreHelp;
@@ -103,9 +101,7 @@ void WorldSession::HandleGMTicketCreateOpcode(WorldPacket& recvData)
         }
 
         if (!chatLog.empty() && !ValidateHyperlinksAndMaybeKick(chatLog))
-        {
             return;
-        }
 
         ticket = new GmTicket(GetPlayer());
         ticket->SetPosition(mapId, x, y, z);
@@ -134,9 +130,7 @@ void WorldSession::HandleGMTicketUpdateOpcode(WorldPacket& recv_data)
     recv_data >> message;
 
     if (!ValidateHyperlinksAndMaybeKick(message))
-    {
         return;
-    }
 
     GMTicketResponse response = GMTICKET_RESPONSE_UPDATE_ERROR;
     if (GmTicket* ticket = sTicketMgr->GetTicketByPlayer(GetPlayer()->GetGUID()))
@@ -175,12 +169,10 @@ void WorldSession::HandleGMTicketGetTicketOpcode(WorldPacket& /*recv_data*/)
     SendQueryTimeResponse();
 
     if (GmTicket* ticket = sTicketMgr->GetTicketByPlayer(GetPlayer()->GetGUID()))
-    {
         if (ticket->IsCompleted())
             ticket->SendResponse(this);
         else
             sTicketMgr->SendTicket(this, ticket);
-    }
     else
         sTicketMgr->SendTicket(this, nullptr);
 }
@@ -207,7 +199,8 @@ void WorldSession::HandleGMSurveySubmit(WorldPacket& recv_data)
     // sub_survey1, r1, comment1, sub_survey2, r2, comment2, sub_survey3, r3, comment3, sub_survey4, r4, comment4, sub_survey5, r5, comment5, sub_survey6, r6, comment6, sub_survey7, r7, comment7, sub_survey8, r8, comment8, sub_survey9, r9, comment9, sub_survey10, r10, comment10,
     for (uint8 i = 0; i < 10; i++)
     {
-        uint32 subSurveyId; // ref to i'th GMSurveySurveys.dbc field (all fields in that dbc point to fields in GMSurveyQuestions.dbc)
+        uint32
+            subSurveyId; // ref to i'th GMSurveySurveys.dbc field (all fields in that dbc point to fields in GMSurveyQuestions.dbc)
         recv_data >> subSurveyId;
         if (!subSurveyId)
             break;
@@ -218,9 +211,7 @@ void WorldSession::HandleGMSurveySubmit(WorldPacket& recv_data)
         recv_data >> comment;
 
         if (!ValidateHyperlinksAndMaybeKick(comment))
-        {
             return;
-        }
 
         // make sure the same sub survey is not added to DB twice
         if (!surveyIds.insert(subSurveyId).second)
@@ -238,9 +229,7 @@ void WorldSession::HandleGMSurveySubmit(WorldPacket& recv_data)
     recv_data >> comment;
 
     if (!ValidateHyperlinksAndMaybeKick(comment))
-    {
         return;
-    }
 
     CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_GM_SURVEY);
     stmt->SetData(0, GetPlayer()->GetGUID().GetCounter());
@@ -267,11 +256,11 @@ void WorldSession::HandleReportLag(WorldPacket& recv_data)
 
     CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_LAG_REPORT);
     stmt->SetData(0, GetPlayer()->GetGUID().GetCounter());
-    stmt->SetData (1, lagType);
+    stmt->SetData(1, lagType);
     stmt->SetData(2, mapId);
-    stmt->SetData (3, x);
-    stmt->SetData (4, y);
-    stmt->SetData (5, z);
+    stmt->SetData(3, x);
+    stmt->SetData(4, y);
+    stmt->SetData(5, z);
     stmt->SetData(6, GetLatency());
     stmt->SetData(7, GameTime::GetGameTime().count());
     CharacterDatabase.Execute(stmt);

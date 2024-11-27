@@ -83,20 +83,25 @@ void OutdoorPvPMgr::InitOutdoorPvP()
         auto iter = m_OutdoorPvPDatas.find(OutdoorPvPTypes(i));
         if (iter == m_OutdoorPvPDatas.end())
         {
-            LOG_ERROR("sql.sql", "Could not initialize OutdoorPvP object for type ID {}; no entry in database.", uint32(i));
+            LOG_ERROR(
+                "sql.sql", "Could not initialize OutdoorPvP object for type ID {}; no entry in database.", uint32(i));
             continue;
         }
 
         auto pvp = std::unique_ptr<OutdoorPvP>(sScriptMgr->CreateOutdoorPvP(iter->second.get()));
         if (!pvp)
         {
-            LOG_ERROR("outdoorpvp", "Could not initialize OutdoorPvP object for type ID {}; got nullptr pointer from script.", uint32(i));
+            LOG_ERROR("outdoorpvp",
+                "Could not initialize OutdoorPvP object for type ID {}; got nullptr pointer from script.",
+                uint32(i));
             continue;
         }
 
         if (!pvp->SetupOutdoorPvP())
         {
-            LOG_ERROR("outdoorpvp", "Could not initialize OutdoorPvP object for type ID {}; SetupOutdoorPvP failed.", uint32(i));
+            LOG_ERROR("outdoorpvp",
+                "Could not initialize OutdoorPvP object for type ID {}; SetupOutdoorPvP failed.",
+                uint32(i));
             continue;
         }
 
@@ -124,7 +129,8 @@ void OutdoorPvPMgr::HandlePlayerEnterZone(Player* player, uint32 zoneid)
         return;
 
     itr->second->HandlePlayerEnterZone(player, zoneid);
-    LOG_DEBUG("outdoorpvp", "Player {} entered outdoorpvp id {}", player->GetGUID().ToString(), itr->second->GetTypeId());
+    LOG_DEBUG(
+        "outdoorpvp", "Player {} entered outdoorpvp id {}", player->GetGUID().ToString(), itr->second->GetTypeId());
 }
 
 void OutdoorPvPMgr::HandlePlayerLeaveZone(Player* player, uint32 zoneid)
@@ -162,9 +168,7 @@ void OutdoorPvPMgr::Update(uint32 diff)
     if (m_UpdateTimer > OUTDOORPVP_OBJECTIVE_UPDATE_INTERVAL)
     {
         for (auto const& itr : m_OutdoorPvPSet)
-        {
             itr->Update(m_UpdateTimer);
-        }
 
         m_UpdateTimer = 0;
     }
@@ -174,12 +178,8 @@ bool OutdoorPvPMgr::HandleCustomSpell(Player* player, uint32 spellId, GameObject
 {
     // pussywizard: no mutex because not affecting other players
     for (auto& itr : m_OutdoorPvPSet)
-    {
         if (itr->HandleCustomSpell(player, spellId, go))
-        {
             return true;
-        }
-    }
 
     return false;
 }
@@ -188,9 +188,7 @@ ZoneScript* OutdoorPvPMgr::GetZoneScript(uint32 zoneId)
 {
     auto itr = m_OutdoorPvPMap.find(zoneId);
     if (itr != m_OutdoorPvPMap.end())
-    {
         return itr->second;
-    }
 
     return nullptr;
 }
@@ -200,12 +198,8 @@ bool OutdoorPvPMgr::HandleOpenGo(Player* player, GameObject* go)
     std::lock_guard<std::mutex> guard(_lock); // pussywizard
 
     for (auto& itr : m_OutdoorPvPSet)
-    {
         if (itr->HandleOpenGo(player, go))
-        {
             return true;
-        }
-    }
 
     return false;
 }
@@ -215,23 +209,15 @@ void OutdoorPvPMgr::HandleGossipOption(Player* player, Creature* creature, uint3
     std::lock_guard<std::mutex> guard(_lock); // pussywizard
 
     for (auto& itr : m_OutdoorPvPSet)
-    {
         if (itr->HandleGossipOption(player, creature, gossipid))
-        {
             return;
-        }
-    }
 }
 
 bool OutdoorPvPMgr::CanTalkTo(Player* player, Creature* creature, GossipMenuItems const& gso)
 {
     for (auto& itr : m_OutdoorPvPSet)
-    {
         if (itr->CanTalkTo(player, creature, gso))
-        {
             return true;
-        }
-    }
 
     return false;
 }
@@ -240,12 +226,8 @@ void OutdoorPvPMgr::HandleDropFlag(Player* player, uint32 spellId)
 {
     // pussywizard: no mutex because not affecting other players
     for (auto& itr : m_OutdoorPvPSet)
-    {
         if (itr->HandleDropFlag(player, spellId))
-        {
             return;
-        }
-    }
 }
 
 void OutdoorPvPMgr::HandlePlayerResurrects(Player* player, uint32 zoneid)
@@ -257,7 +239,5 @@ void OutdoorPvPMgr::HandlePlayerResurrects(Player* player, uint32 zoneid)
     // pussywizard: no mutex because not affecting other players
 
     if (itr->second->HasPlayer(player))
-    {
         itr->second->HandlePlayerResurrects(player, zoneid);
-    }
 }

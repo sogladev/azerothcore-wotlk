@@ -36,7 +36,7 @@ void Totem::Update(uint32 time)
     Unit* owner = GetOwner();
     if (!owner || !owner->IsAlive() || !IsAlive() || m_duration <= time)
     {
-        UnSummon();                                         // remove self
+        UnSummon(); // remove self
         return;
     }
 
@@ -71,7 +71,7 @@ void Totem::InitStats(uint32 duration)
 
     // Get spell cast by totem
     if (SpellInfo const* totemSpell = sSpellMgr->GetSpellInfo(GetSpell()))
-        if (totemSpell->CalcCastTime())   // If spell has cast time -> its an active totem
+        if (totemSpell->CalcCastTime()) // If spell has cast time -> its an active totem
             m_type = TOTEM_ACTIVE;
 
     m_duration = duration;
@@ -84,23 +84,14 @@ void Totem::InitSummon()
     if (m_type == TOTEM_PASSIVE && GetSpell())
     {
         if (TotemSpellIds(GetUInt32Value(UNIT_CREATED_BY_SPELL)) == TotemSpellIds::FireTotemSpell)
-        {
-            m_Events.AddEventAtOffset([this]()
-            {
-                CastSpell(this, GetSpell(), true);
-            }, 4s);
-        }
+            m_Events.AddEventAtOffset([this]() { CastSpell(this, GetSpell(), true); }, 4s);
         else
-        {
             CastSpell(this, GetSpell(), true);
-        }
     }
 
     // Some totems can have both instant effect and passive spell
     if (GetSpell(1))
-    {
         CastSpell(this, GetSpell(1), true);
-    }
 
     // xinef: this is better than the script, 100% sure to work
     if (GetEntry() == SENTRY_TOTEM_ENTRY)
@@ -114,9 +105,7 @@ void Totem::InitSummon()
     }
 
     if (!IsInWater())
-    {
         GetMotionMaster()->MoveFall();
-    }
 }
 
 void Totem::UnSummon(uint32 msTime)
@@ -176,17 +165,15 @@ bool Totem::IsImmunedToSpellEffect(SpellInfo const* spellInfo, uint32 index) con
     // xinef: immune to all positive spells, except of stoneclaw totem absorb, sentry totem bind sight and intervene
     // totems positive spells have unit_caster target
     if (spellInfo->Effects[index].Effect != SPELL_EFFECT_DUMMY &&
-            spellInfo->Effects[index].Effect != SPELL_EFFECT_SCRIPT_EFFECT &&
-            spellInfo->IsPositive() && spellInfo->Effects[index].TargetA.GetTarget() != TARGET_UNIT_CASTER &&
-            spellInfo->Effects[index].TargetA.GetCheckType() != TARGET_CHECK_ENTRY &&
-            spellInfo->Id != SPELL_STONECLAW && spellInfo->Id != SPELL_BIND_SIGHT && spellInfo->Id != SPELL_INTERVENE)
+        spellInfo->Effects[index].Effect != SPELL_EFFECT_SCRIPT_EFFECT && spellInfo->IsPositive() &&
+        spellInfo->Effects[index].TargetA.GetTarget() != TARGET_UNIT_CASTER &&
+        spellInfo->Effects[index].TargetA.GetCheckType() != TARGET_CHECK_ENTRY && spellInfo->Id != SPELL_STONECLAW &&
+        spellInfo->Id != SPELL_BIND_SIGHT && spellInfo->Id != SPELL_INTERVENE)
         return true;
 
     // Cyclone shouldn't be casted on totems
     if (spellInfo->Id == SPELL_CYCLONE)
-    {
         return true;
-    }
 
     switch (spellInfo->Effects[index].ApplyAuraName)
     {

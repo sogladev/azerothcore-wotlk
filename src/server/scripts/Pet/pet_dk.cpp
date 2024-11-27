@@ -38,15 +38,15 @@
 
 enum DeathKnightSpells
 {
-    SPELL_DK_SUMMON_GARGOYLE_1      = 49206,
-    SPELL_DK_SUMMON_GARGOYLE_2      = 50514,
-    SPELL_DK_DISMISS_GARGOYLE       = 50515,
-    SPELL_DK_SANCTUARY              = 54661,
-    SPELL_DK_NIGHT_OF_THE_DEAD      = 62137,
-    SPELL_DK_PET_SCALING            = 61017,
+    SPELL_DK_SUMMON_GARGOYLE_1 = 49206,
+    SPELL_DK_SUMMON_GARGOYLE_2 = 50514,
+    SPELL_DK_DISMISS_GARGOYLE = 50515,
+    SPELL_DK_SANCTUARY = 54661,
+    SPELL_DK_NIGHT_OF_THE_DEAD = 62137,
+    SPELL_DK_PET_SCALING = 61017,
     // Risen Ally
-    SPELL_DK_RAISE_ALLY             = 46619,
-    SPELL_GHOUL_FRENZY              = 62218,
+    SPELL_DK_RAISE_ALLY = 46619,
+    SPELL_GHOUL_FRENZY = 62218,
 };
 
 class npc_pet_dk_ebon_gargoyle : public CreatureScript
@@ -82,18 +82,18 @@ public:
 
             // Xinef: Night of the Dead avoidance
             if (Aura* aur = me->GetAura(SPELL_DK_NIGHT_OF_THE_DEAD))
-                if (AuraEffect* aurEff = owner->GetAuraEffect(SPELL_AURA_ADD_FLAT_MODIFIER, SPELLFAMILY_DEATHKNIGHT, 2718, 0))
+                if (AuraEffect* aurEff =
+                        owner->GetAuraEffect(SPELL_AURA_ADD_FLAT_MODIFIER, SPELLFAMILY_DEATHKNIGHT, 2718, 0))
                 {
                     if (aur->GetEffect(0))
-                    {
                         aur->GetEffect(0)->SetAmount(-aurEff->GetSpellInfo()->Effects[EFFECT_2].CalcValue());
-                    }
                 }
 
             me->SetCanFly(true);
             me->SetDisableGravity(true);
 
-            float tz = me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), true, MAX_FALL_DISTANCE);
+            float tz =
+                me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), true, MAX_FALL_DISTANCE);
             me->GetMotionMaster()->MoveCharge(me->GetPositionX(), me->GetPositionY(), tz, 7.0f, 1);
             me->AddUnitState(UNIT_STATE_NO_ENVIRONMENT_UPD);
             _selectionTimer = 2000;
@@ -103,7 +103,9 @@ public:
         void MySelectNextTarget()
         {
             Unit* owner = me->GetOwner();
-            if (owner && owner->IsPlayer() && (!me->GetVictim() || me->GetVictim()->IsImmunedToSpell(sSpellMgr->GetSpellInfo(51963)) || !me->IsValidAttackTarget(me->GetVictim()) || !owner->CanSeeOrDetect(me->GetVictim())))
+            if (owner && owner->IsPlayer() &&
+                (!me->GetVictim() || me->GetVictim()->IsImmunedToSpell(sSpellMgr->GetSpellInfo(51963)) ||
+                    !me->IsValidAttackTarget(me->GetVictim()) || !owner->CanSeeOrDetect(me->GetVictim())))
             {
                 Unit* selection = owner->ToPlayer()->GetSelectedUnit();
                 if (selection && selection != me->GetVictim() && me->IsValidAttackTarget(selection))
@@ -206,7 +208,8 @@ public:
                     MySelectNextTarget();
                     _selectionTimer = 0;
                 }
-                if (_initialCastTimer >= 2000 && !me->HasUnitState(UNIT_STATE_CASTING | UNIT_STATE_LOST_CONTROL) && me->GetMotionMaster()->GetMotionSlotType(MOTION_SLOT_CONTROLLED) == NULL_MOTION_TYPE)
+                if (_initialCastTimer >= 2000 && !me->HasUnitState(UNIT_STATE_CASTING | UNIT_STATE_LOST_CONTROL) &&
+                    me->GetMotionMaster()->GetMotionSlotType(MOTION_SLOT_CONTROLLED) == NULL_MOTION_TYPE)
                     me->CastSpell(me->GetVictim(), 51963, false);
             }
             else
@@ -254,7 +257,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_pet_dk_ghoulAI (pCreature);
+        return new npc_pet_dk_ghoulAI(pCreature);
     }
 };
 
@@ -276,7 +279,7 @@ public:
                     if (Player* player = owner->ToPlayer())
                     {
                         player->RemoveAurasDueToSpell(SPELL_DK_RAISE_ALLY); // Remove Raise Ally aura
-                        player->RemoveAurasDueToSpell(SPELL_GHOUL_FRENZY); // Remove Frenzy aura
+                        player->RemoveAurasDueToSpell(SPELL_GHOUL_FRENZY);  // Remove Frenzy aura
                         //player->ClearResurrectRequestData();
                     }
                 }
@@ -286,7 +289,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
-        return new npc_pet_dk_risen_allyAI (pCreature);
+        return new npc_pet_dk_risen_allyAI(pCreature);
     }
 };
 
@@ -312,7 +315,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return new npc_pet_dk_army_of_the_deadAI (creature);
+        return new npc_pet_dk_army_of_the_deadAI(creature);
     }
 };
 
@@ -338,7 +341,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return new npc_pet_dk_dancing_rune_weaponAI (creature);
+        return new npc_pet_dk_dancing_rune_weaponAI(creature);
     }
 };
 
@@ -352,9 +355,7 @@ class spell_pet_dk_gargoyle_strike : public SpellScript
         if (Unit* caster = GetCaster())
         {
             if (caster->GetLevel() >= 60)
-            {
                 damage += (caster->GetLevel() - 60) * 4;
-            }
         }
 
         SetEffectValue(damage);
@@ -362,7 +363,8 @@ class spell_pet_dk_gargoyle_strike : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_pet_dk_gargoyle_strike::HandleDamageCalc, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_pet_dk_gargoyle_strike::HandleDamageCalc, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
     }
 };
 

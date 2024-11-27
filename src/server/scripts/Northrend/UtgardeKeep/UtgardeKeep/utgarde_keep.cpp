@@ -93,23 +93,23 @@ public:
 
 enum EnslavedProtoDrake
 {
-    TYPE_PROTODRAKE_AT      = 28,
-    DATA_PROTODRAKE_MOVE    = 6,
+    TYPE_PROTODRAKE_AT = 28,
+    DATA_PROTODRAKE_MOVE = 6,
 
-    PATH_PROTODRAKE         = 125946,
+    PATH_PROTODRAKE = 125946,
 
-    EVENT_REND              = 1,
-    EVENT_FLAME_BREATH      = 2,
-    EVENT_KNOCKAWAY         = 3,
+    EVENT_REND = 1,
+    EVENT_FLAME_BREATH = 2,
+    EVENT_KNOCKAWAY = 3,
 
-    SPELL_REND              = 43931,
-    SPELL_FLAME_BREATH      = 50653,
-    SPELL_KNOCK_AWAY        = 49722,
+    SPELL_REND = 43931,
+    SPELL_FLAME_BREATH = 50653,
+    SPELL_KNOCK_AWAY = 49722,
 
-    POINT_LAST              = 5,
+    POINT_LAST = 5,
 };
 
-const Position protodrakeCheckPos = {206.24f, -190.28f, 200.11f, 0.f};
+Position const protodrakeCheckPos = {206.24f, -190.28f, 200.11f, 0.f};
 
 class npc_enslaved_proto_drake : public CreatureScript
 {
@@ -150,7 +150,8 @@ public:
 
         void SetData(uint32 type, uint32 data) override
         {
-            if (type == TYPE_PROTODRAKE_AT && data == DATA_PROTODRAKE_MOVE && !_setData && me->IsAlive() && me->GetDistance(protodrakeCheckPos) < 10.0f)
+            if (type == TYPE_PROTODRAKE_AT && data == DATA_PROTODRAKE_MOVE && !_setData && me->IsAlive() &&
+                me->GetDistance(protodrakeCheckPos) < 10.0f)
             {
                 _setData = true;
                 me->SetCanFly(true);
@@ -215,20 +216,21 @@ class spell_ticking_time_bomb_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_TICKING_TIME_BOMB_EXPLODE });
+        return ValidateSpellInfo({SPELL_TICKING_TIME_BOMB_EXPLODE});
     }
 
     void HandleOnEffectRemove(AuraEffect const* /* aurEff */, AuraEffectHandleModes /* mode */)
     {
         if (GetCaster() == GetTarget())
-        {
             GetTarget()->CastSpell(GetTarget(), SPELL_TICKING_TIME_BOMB_EXPLODE, true);
-        }
     }
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_ticking_time_bomb_aura::HandleOnEffectRemove, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_ticking_time_bomb_aura::HandleOnEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 

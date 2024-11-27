@@ -67,4 +67,4 @@ namespace GameTime
         GameTimeSystemPoint = system_clock::now();
         GameTimeSteadyPoint = steady_clock::now();
     }
-}
+} // namespace GameTime

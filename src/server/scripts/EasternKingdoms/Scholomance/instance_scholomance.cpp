@@ -44,7 +44,7 @@ public:
         {
             _miniBosses = 0;
             _kirtonosState = 0;
-            _rasHuman      = 0;
+            _rasHuman = 0;
         }
 
         void OnCreatureCreate(Creature* cr) override
@@ -134,22 +134,16 @@ public:
                             if (_kirtonosState == NOT_STARTED)
                             {
                                 if (Creature* kirtonos = instance->SummonCreature(NPC_KIRTONOS, KirtonosSpawn))
-                                {
                                     kirtonos->AI()->DoAction(IN_PROGRESS);
-                                }
                                 if (GameObject* gate = instance->GetGameObject(GetGuidData(GO_GATE_KIRTONOS)))
-                                {
                                     gate->SetGoState(GO_STATE_READY);
-                                }
                             }
                             _kirtonosState = data;
                             break;
                         case FAIL:
                             // open door and reset brazier
                             if (GameObject* gate = instance->GetGameObject(GetGuidData(GO_GATE_KIRTONOS)))
-                            {
                                 gate->SetGoState(GO_STATE_ACTIVE);
-                            }
 
                             if (GameObject* brazier = instance->GetGameObject(GetGuidData(GO_BRAZIER_KIRTONOS)))
                             {
@@ -162,9 +156,7 @@ public:
                         case DONE:
                             // open door
                             if (GameObject* gate = instance->GetGameObject(GetGuidData(GO_GATE_KIRTONOS)))
-                            {
                                 gate->SetGoState(GO_STATE_ACTIVE);
-                            }
                             [[fallthrough]];
                         default:
                             _kirtonosState = data;
@@ -238,7 +230,7 @@ public:
         ObjectGuid BrazierKirtonosGUID;
 
         ObjectGuid GandlingGatesGUID[7]; // 6 is the entrance
-        ObjectGuid GandlingGUID; // boss
+        ObjectGuid GandlingGUID;         // boss
 
         uint32 _kirtonosState;
         uint32 _miniBosses;
@@ -266,8 +258,10 @@ class spell_scholomance_fixate_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_scholomance_fixate_aura::HandleEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
-        OnEffectRemove += AuraEffectRemoveFn(spell_scholomance_fixate_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_scholomance_fixate_aura::HandleEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_scholomance_fixate_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -302,23 +296,29 @@ class spell_scholomance_boon_of_life_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_scholomance_boon_of_life_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectApply += AuraEffectApplyFn(spell_scholomance_boon_of_life_aura::OnApply, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_scholomance_boon_of_life_aura::OnRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(spell_scholomance_boon_of_life_aura::OnApply,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
 enum OccultistEntries
 {
-    CASTER_ENTRY      = 10472,
-    DARK_SHADE_ENTRY  = 11284
+    CASTER_ENTRY = 10472,
+    DARK_SHADE_ENTRY = 11284
 };
 
 enum OccultistSpells
 {
-    BONE_ARMOR_SPELL         = 16431,
-    COUNTER_SPELL            = 15122,
-    DRAIN_MANA_SPELL         = 17243,
-    SHADOWBOLT_VOLLEY_SPELL  = 17228
+    BONE_ARMOR_SPELL = 16431,
+    COUNTER_SPELL = 15122,
+    DRAIN_MANA_SPELL = 17243,
+    SHADOWBOLT_VOLLEY_SPELL = 17228
 };
 
 class npc_scholomance_occultist : public CreatureScript
@@ -326,7 +326,7 @@ class npc_scholomance_occultist : public CreatureScript
 public:
     npc_scholomance_occultist() : CreatureScript("npc_scholomance_occultist") { }
 
-    struct npc_scholomance_occultistAI: public ScriptedAI
+    struct npc_scholomance_occultistAI : public ScriptedAI
     {
         npc_scholomance_occultistAI(Creature* creature) : ScriptedAI(creature)
         {
@@ -339,18 +339,16 @@ public:
 
         Unit* SelectUnitCasting()
         {
-          ThreatContainer::StorageType threatlist = me->GetThreatMgr().GetThreatList();
-          for (ThreatContainer::StorageType::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
-          {
-              if (Unit* unit = ObjectAccessor::GetUnit(*me, (*itr)->getUnitGuid()))
-              {
-                  if (unit->HasUnitState(UNIT_STATE_CASTING))
-                  {
-                      return unit;
-                  }
-              }
-          }
-          return nullptr;
+            ThreatContainer::StorageType threatlist = me->GetThreatMgr().GetThreatList();
+            for (ThreatContainer::StorageType::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+            {
+                if (Unit* unit = ObjectAccessor::GetUnit(*me, (*itr)->getUnitGuid()))
+                {
+                    if (unit->HasUnitState(UNIT_STATE_CASTING))
+                        return unit;
+                }
+            }
+            return nullptr;
         }
 
         void JustReachedHome() override
@@ -376,9 +374,7 @@ public:
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             events.Update(diff);
 
@@ -391,9 +387,7 @@ public:
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             switch (events.ExecuteEvent())
             {
@@ -413,7 +407,8 @@ public:
                     }
                     break;
                 case 3:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, PowerUsersSelector(me, POWER_MANA, 20.0f, false)))
+                    if (Unit* target = SelectTarget(
+                            SelectTargetMethod::Random, 0, PowerUsersSelector(me, POWER_MANA, 20.0f, false)))
                     {
                         me->CastSpell(target, DRAIN_MANA_SPELL, false);
                     }

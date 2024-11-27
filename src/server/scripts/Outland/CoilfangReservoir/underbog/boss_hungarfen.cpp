@@ -26,21 +26,21 @@
 enum Spells
 {
     // Hungarfen
-    SPELL_SPAWN_MUSHROOMS   = 31692,
+    SPELL_SPAWN_MUSHROOMS = 31692,
     SPELL_DESPAWN_MUSHROOMS = 34874,
-    SPELL_FOUL_SPORES       = 31673,
-    SPELL_ACID_GEYSER       = 38739,
+    SPELL_FOUL_SPORES = 31673,
+    SPELL_ACID_GEYSER = 38739,
 
     // Underbog Mushroom
-    SPELL_SHRINK            = 31691,
-    SPELL_GROW              = 31698,
-    SPELL_SPORE_CLOUD       = 34168
+    SPELL_SHRINK = 31691,
+    SPELL_GROW = 31698,
+    SPELL_SPORE_CLOUD = 34168
 };
 
 enum Misc
 {
-    MAX_GROW_REPEAT         = 9,
-    EMOTE_ROARS             = 0
+    MAX_GROW_REPEAT = 9,
+    EMOTE_ROARS = 0
 };
 
 struct boss_hungarfen : public BossAI
@@ -53,15 +53,14 @@ struct boss_hungarfen : public BossAI
         _scheduler.CancelAll();
         DoCastAOE(SPELL_DESPAWN_MUSHROOMS, true);
 
-        ScheduleHealthCheckEvent(20, [&] {
+        ScheduleHealthCheckEvent(20,
+            [&]
+        {
             me->AddUnitState(UNIT_STATE_ROOT);
             Talk(EMOTE_ROARS);
             DoCastSelf(SPELL_FOUL_SPORES);
             _scheduler.DelayAll(11s);
-            _scheduler.Schedule(11s, [this](TaskContext /*context*/)
-            {
-                me->ClearUnitState(UNIT_STATE_ROOT);
-            });
+            _scheduler.Schedule(11s, [this](TaskContext /*context*/) { me->ClearUnitState(UNIT_STATE_ROOT); });
         });
     }
 
@@ -69,23 +68,23 @@ struct boss_hungarfen : public BossAI
     {
         _JustEngagedWith();
 
-        _scheduler.Schedule(IsHeroic() ? randtime(2400ms, 3600ms) : 10s, [this](TaskContext context)
-            {
-                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0, true))
-                {
-                    target->CastSpell(target, SPELL_SPAWN_MUSHROOMS, true);
-                }
+        _scheduler.Schedule(IsHeroic() ? randtime(2400ms, 3600ms) : 10s,
+            [this](TaskContext context)
+        {
+            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0, true))
+                target->CastSpell(target, SPELL_SPAWN_MUSHROOMS, true);
 
-                context.Repeat();
-            });
+            context.Repeat();
+        });
 
         if (IsHeroic())
         {
-            _scheduler.Schedule(6s, [this](TaskContext context)
-                {
-                    DoCastAOE(SPELL_ACID_GEYSER);
-                    context.Repeat(8500ms, 11s);
-                });
+            _scheduler.Schedule(6s,
+                [this](TaskContext context)
+            {
+                DoCastAOE(SPELL_ACID_GEYSER);
+                context.Repeat(8500ms, 11s);
+            });
         }
     }
 
@@ -94,10 +93,7 @@ struct boss_hungarfen : public BossAI
         if (!UpdateVictim())
             return;
 
-        _scheduler.Update(diff, [this]
-            {
-                DoMeleeAttackIfReady();
-            });
+        _scheduler.Update(diff, [this] { DoMeleeAttackIfReady(); });
     }
 
 private:
@@ -112,23 +108,25 @@ struct npc_underbog_mushroom : public ScriptedAI
     {
         DoCastSelf(SPELL_SHRINK, true);
 
-        _scheduler.Schedule(2s, [this](TaskContext context)
+        _scheduler.Schedule(2s,
+            [this](TaskContext context)
+        {
+            DoCastSelf(SPELL_GROW, true);
+
+            if (context.GetRepeatCounter() == MAX_GROW_REPEAT)
             {
-                DoCastSelf(SPELL_GROW, true);
+                DoCastSelf(SPELL_SPORE_CLOUD);
 
-                if (context.GetRepeatCounter() == MAX_GROW_REPEAT)
+                context.Schedule(4s,
+                    [this](TaskContext /*context*/)
                 {
-                    DoCastSelf(SPELL_SPORE_CLOUD);
-
-                    context.Schedule(4s, [this](TaskContext /*context*/)
-                        {
-                            me->RemoveAurasDueToSpell(SPELL_GROW);
-                            me->DespawnOrUnsummon(2000);
-                        });
-                }
-                else
-                    context.Repeat();
-            });
+                    me->RemoveAurasDueToSpell(SPELL_GROW);
+                    me->DespawnOrUnsummon(2000);
+                });
+            }
+            else
+                context.Repeat();
+        });
     }
 
     void UpdateAI(uint32 diff) override
@@ -153,14 +151,20 @@ class spell_spore_cloud : public AuraScript
             if (InstanceScript* instance = caster->GetInstanceScript())
             {
                 if (Creature* hungarfen = instance->GetCreature(DATA_HUNGARFEN))
-                    caster->CastSpell((Unit*)nullptr, GetSpellInfo()->Effects[EFFECT_0].TriggerSpell, true, nullptr, nullptr, hungarfen->GetGUID());
+                    caster->CastSpell((Unit*)nullptr,
+                        GetSpellInfo()->Effects[EFFECT_0].TriggerSpell,
+                        true,
+                        nullptr,
+                        nullptr,
+                        hungarfen->GetGUID());
             }
         }
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_spore_cloud::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_spore_cloud::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -178,7 +182,8 @@ class spell_despawn_underbog_mushrooms : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_despawn_underbog_mushrooms::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_despawn_underbog_mushrooms::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

@@ -25,16 +25,16 @@
 enum EadricSpells
 {
     //Eadric
-    SPELL_EADRIC_ACHIEVEMENT            = 68197,
-    ACHIEV_FACEROLLER                   = 3803,
+    SPELL_EADRIC_ACHIEVEMENT = 68197,
+    ACHIEV_FACEROLLER = 3803,
 
-    SPELL_RADIANCE                      = 66935,
-    SPELL_VENGEANCE                     = 66865,
-    SPELL_HAMMER_JUSTICE                = 66863,
-    SPELL_HAMMER_RIGHTEOUS              = 66867,
-    SPELL_HAMMER_RIGHTEOUS_DAMAGE       = 66903,
-    SPELL_HAMMER_RIGHTEOUS_ACTION_BAR   = 66904,
-    SPELL_HAMMER_RIGHTEOUS_THROW_BACK   = 66905,
+    SPELL_RADIANCE = 66935,
+    SPELL_VENGEANCE = 66865,
+    SPELL_HAMMER_JUSTICE = 66863,
+    SPELL_HAMMER_RIGHTEOUS = 66867,
+    SPELL_HAMMER_RIGHTEOUS_DAMAGE = 66903,
+    SPELL_HAMMER_RIGHTEOUS_ACTION_BAR = 66904,
+    SPELL_HAMMER_RIGHTEOUS_THROW_BACK = 66905,
 };
 
 enum EadricEvents
@@ -45,25 +45,25 @@ enum EadricEvents
 
 enum PaletressSpells
 {
-    SPELL_SMITE_N                       = 66536,
-    SPELL_SMITE_H                       = 67674,
-    SPELL_HOLY_FIRE_N                   = 66538,
-    SPELL_HOLY_FIRE_H                   = 67676,
-    SPELL_RENEW_N                       = 66537,
-    SPELL_RENEW_H                       = 67675,
+    SPELL_SMITE_N = 66536,
+    SPELL_SMITE_H = 67674,
+    SPELL_HOLY_FIRE_N = 66538,
+    SPELL_HOLY_FIRE_H = 67676,
+    SPELL_RENEW_N = 66537,
+    SPELL_RENEW_H = 67675,
 
-    SPELL_HOLY_NOVA                     = 66546,
-    SPELL_SHIELD                        = 66515,
-    SPELL_CONFESS                       = 66680,
-    SPELL_SUMMON_MEMORY                 = 66545,
+    SPELL_HOLY_NOVA = 66546,
+    SPELL_SHIELD = 66515,
+    SPELL_CONFESS = 66680,
+    SPELL_SUMMON_MEMORY = 66545,
 
     //Memory
-    SPELL_OLD_WOUNDS_N                  = 66620,
-    SPELL_OLD_WOUNDS_H                  = 67679,
-    SPELL_SHADOWS_PAST_N                = 66619,
-    SPELL_SHADOWS_PAST_H                = 67678,
-    SPELL_WAKING_NIGHTMARE_N            = 66552,
-    SPELL_WAKING_NIGHTMARE_H            = 67677,
+    SPELL_OLD_WOUNDS_N = 66620,
+    SPELL_OLD_WOUNDS_H = 67679,
+    SPELL_SHADOWS_PAST_N = 66619,
+    SPELL_SHADOWS_PAST_H = 67678,
+    SPELL_WAKING_NIGHTMARE_N = 66552,
+    SPELL_WAKING_NIGHTMARE_H = 67677,
 };
 
 #define SPELL_SMITE                     DUNGEON_MODE(SPELL_SMITE_N, SPELL_SMITE_H)
@@ -90,6 +90,7 @@ class boss_eadric : public CreatureScript
 {
 public:
     boss_eadric() : CreatureScript("boss_eadric") { }
+
     struct boss_eadricAI : public ScriptedAI
     {
         boss_eadricAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -117,12 +118,10 @@ public:
         void KilledUnit(Unit* who) override
         {
             if (who->IsPlayer())
-            {
                 Talk(SAY_EADRIC_KILL_PLAYER);
-            }
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             events.Reset();
             events.ScheduleEvent(EVENT_SPELL_RADIANCE, 16000);
@@ -133,7 +132,7 @@ public:
                 pInstance->SetData(BOSS_ARGENT_CHALLENGE, IN_PROGRESS);
         }
 
-        void SpellHit(Unit*  /*caster*/, SpellInfo const* spell) override
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spell) override
         {
             if (spell->Id == 66905 && me->GetHealth() == 1) // hammer throw back damage (15k)
                 me->CastSpell(me, 68197, true);
@@ -147,7 +146,9 @@ public:
                 if (me->GetFaction() != FACTION_FRIENDLY)
                 {
                     me->CastSpell((Unit*)nullptr, 68575, true); // achievements
-                    me->GetMap()->UpdateEncounterState(ENCOUNTER_CREDIT_CAST_SPELL, 68574, me); // paletress' spell credits encounter, but shouldn't credit achievements
+                    me->GetMap()->UpdateEncounterState(ENCOUNTER_CREDIT_CAST_SPELL,
+                        68574,
+                        me); // paletress' spell credits encounter, but shouldn't credit achievements
                     me->SetFaction(FACTION_FRIENDLY);
                     events.Reset();
                     Talk(SAY_EADRIC_DEFEATED);
@@ -244,12 +245,10 @@ public:
         void KilledUnit(Unit* who) override
         {
             if (who->IsPlayer())
-            {
                 Talk(SAY_PALETRESS_KILL_PLAYER);
-            }
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             events.Reset();
             events.ScheduleEvent(EVENT_SPELL_HOLY_FIRE, 9s, 12s);
@@ -318,7 +317,32 @@ public:
         void SummonMemory()
         {
             uint8 uiRandom = urand(0, 25);
-            uint32 uiSpells[26] = {66704, 66705, 66706, 66707, 66709, 66710, 66711, 66712, 66713, 66714, 66715, 66708, 66708, 66691, 66692, 66694, 66695, 66696, 66697, 66698, 66699, 66700, 66701, 66702, 66703, 66543};
+            uint32 uiSpells[26] = {66704,
+                66705,
+                66706,
+                66707,
+                66709,
+                66710,
+                66711,
+                66712,
+                66713,
+                66714,
+                66715,
+                66708,
+                66708,
+                66691,
+                66692,
+                66694,
+                66695,
+                66696,
+                66697,
+                66698,
+                66699,
+                66700,
+                66701,
+                66702,
+                66703,
+                66543};
             me->CastSpell(me, uiSpells[uiRandom], true);
         }
 
@@ -362,9 +386,7 @@ public:
                     break;
                 case EVENT_SPELL_RENEW:
                     if (!MemoryGUID)
-                    {
                         break;
-                    }
                     if (urand(0, 1))
                         me->CastSpell(me, SPELL_RENEW, false);
                     else if (Creature* memory = ObjectAccessor::GetCreature(*me, MemoryGUID))
@@ -405,7 +427,7 @@ public:
         InstanceScript* pInstance;
         EventMap events;
 
-        void Reset() override {}
+        void Reset() override { }
 
         void JustDied(Unit* /*killer*/) override
         {
@@ -475,25 +497,25 @@ public:
 enum ArgentSoldierSpells
 {
     // monk
-    SPELL_FLURRY_OF_BLOWS               = 67233,
-    SPELL_PUMMEL                        = 67235,
-    SPELL_DIVINE_SHIELD_H               = 67251,
-    SPELL_FINAL_MEDITATION_H            = 67255,
+    SPELL_FLURRY_OF_BLOWS = 67233,
+    SPELL_PUMMEL = 67235,
+    SPELL_DIVINE_SHIELD_H = 67251,
+    SPELL_FINAL_MEDITATION_H = 67255,
 
     // priestess
-    SPELL_HOLY_SMITE_N                  = 36176,
-    SPELL_HOLY_SMITE_H                  = 67289,
-    SPELL_FOUNTAIN_OF_LIGHT             = 67194,
-    NPC_FOUNTAIN_OF_LIGHT               = 35311,
-    SPELL_SHADOW_WORD_PAIN_N            = 34941,
-    SPELL_SHADOW_WORD_PAIN_H            = 34942,
-    SPELL_MIND_CONTROL_H                = 67229,
+    SPELL_HOLY_SMITE_N = 36176,
+    SPELL_HOLY_SMITE_H = 67289,
+    SPELL_FOUNTAIN_OF_LIGHT = 67194,
+    NPC_FOUNTAIN_OF_LIGHT = 35311,
+    SPELL_SHADOW_WORD_PAIN_N = 34941,
+    SPELL_SHADOW_WORD_PAIN_H = 34942,
+    SPELL_MIND_CONTROL_H = 67229,
 
     // lightwielder
-    SPELL_BLAZING_LIGHT_N               = 67247,
-    SPELL_BLAZING_LIGHT_H               = 67290,
-    SPELL_CLEAVE                        = 15284,
-    SPELL_UNBALANCING_STRIKE_H          = 67237,
+    SPELL_BLAZING_LIGHT_N = 67247,
+    SPELL_BLAZING_LIGHT_H = 67290,
+    SPELL_CLEAVE = 15284,
+    SPELL_UNBALANCING_STRIKE_H = 67237,
 };
 
 #define SPELL_HOLY_SMITE                DUNGEON_MODE(SPELL_HOLY_SMITE_N, SPELL_HOLY_SMITE_H)
@@ -697,14 +719,14 @@ public:
                     break;
 
                 case EVENT_LIGHTWIELDER_SPELL_BLAZING_LIGHT:
-                    {
-                        Unit* target = DoSelectLowestHpFriendly(40.0f);
-                        if (!target)
-                            target = me;
-                        me->CastSpell(target, SPELL_BLAZING_LIGHT, false);
-                        events.Repeat(8s, 12s);
-                    }
-                    break;
+                {
+                    Unit* target = DoSelectLowestHpFriendly(40.0f);
+                    if (!target)
+                        target = me;
+                    me->CastSpell(target, SPELL_BLAZING_LIGHT, false);
+                    events.Repeat(8s, 12s);
+                }
+                break;
                 case EVENT_LIGHTWIELDER_SPELL_CLEAVE:
                     if (me->GetVictim())
                         me->CastSpell(me->GetVictim(), SPELL_CLEAVE, false);
@@ -741,19 +763,21 @@ class spell_eadric_radiance : public SpellScript
     void FilterTargets(std::list<WorldObject*>& targets)
     {
         std::list<WorldObject*> tmplist;
-        for( std::list<WorldObject*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
+        for (std::list<WorldObject*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
             if ((*itr)->ToUnit()->HasInArc(M_PI, GetCaster()))
                 tmplist.push_back(*itr);
 
         targets.clear();
-        for( std::list<WorldObject*>::iterator itr = tmplist.begin(); itr != tmplist.end(); ++itr )
+        for (std::list<WorldObject*>::iterator itr = tmplist.begin(); itr != tmplist.end(); ++itr)
             targets.push_back(*itr);
     }
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_eadric_radiance::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_eadric_radiance::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_eadric_radiance::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_eadric_radiance::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -763,7 +787,7 @@ class spell_toc5_light_rain : public SpellScript
 
     void FilterTargets(std::list<WorldObject*>& targets)
     {
-        for( std::list<WorldObject*>::iterator itr = targets.begin(); itr != targets.end(); )
+        for (std::list<WorldObject*>::iterator itr = targets.begin(); itr != targets.end();)
         {
             if ((*itr)->IsCreature())
                 if ((*itr)->ToCreature()->GetEntry() == NPC_FOUNTAIN_OF_LIGHT)
@@ -778,7 +802,8 @@ class spell_toc5_light_rain : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_toc5_light_rain::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_toc5_light_rain::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
     }
 };
 
@@ -793,16 +818,17 @@ class spell_reflective_shield_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_REFLECTIVE_SHIELD_DAMAGE });
+        return ValidateSpellInfo({SPELL_REFLECTIVE_SHIELD_DAMAGE});
     }
 
-    void HandleAfterEffectAbsorb(AuraEffect*   /*aurEff*/, DamageInfo& dmgInfo, uint32& absorbAmount)
+    void HandleAfterEffectAbsorb(AuraEffect* /*aurEff*/, DamageInfo& dmgInfo, uint32& absorbAmount)
     {
         if (Unit* attacker = dmgInfo.GetAttacker())
             if (GetOwner() && attacker->GetGUID() != GetOwner()->GetGUID())
             {
                 int32 damage = (int32)(absorbAmount * 0.25f);
-                GetOwner()->ToUnit()->CastCustomSpell(attacker, SPELL_REFLECTIVE_SHIELD_DAMAGE, &damage, nullptr, nullptr, true);
+                GetOwner()->ToUnit()->CastCustomSpell(
+                    attacker, SPELL_REFLECTIVE_SHIELD_DAMAGE, &damage, nullptr, nullptr, true);
             }
     }
 

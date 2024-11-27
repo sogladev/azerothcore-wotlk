@@ -24,15 +24,10 @@ void ScriptMgr::OnWeatherChange(Weather* weather, WeatherState state, float grad
 {
     ASSERT(weather);
 
-    ExecuteScript<ElunaScript>([&](ElunaScript* script)
-    {
-        script->OnWeatherChange(weather, state, grade);
-    });
+    ExecuteScript<ElunaScript>([&](ElunaScript* script) { script->OnWeatherChange(weather, state, grade); });
 
     if (auto tempScript = ScriptRegistry<WeatherScript>::GetScriptById(weather->GetScriptId()))
-    {
         tempScript->OnChange(weather, state, grade);
-    }
 }
 
 void ScriptMgr::OnWeatherUpdate(Weather* weather, uint32 diff)
@@ -40,13 +35,10 @@ void ScriptMgr::OnWeatherUpdate(Weather* weather, uint32 diff)
     ASSERT(weather);
 
     if (auto tempScript = ScriptRegistry<WeatherScript>::GetScriptById(weather->GetScriptId()))
-    {
         tempScript->OnUpdate(weather, diff);
-    }
 }
 
-WeatherScript::WeatherScript(const char* name)
-    : ScriptObject(name)
+WeatherScript::WeatherScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<WeatherScript>::AddScript(this);
 }

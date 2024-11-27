@@ -26,17 +26,21 @@ void ScriptMgr::OnInitStatsForLevel(Guardian* guardian, uint8 petlevel)
 
 void ScriptMgr::OnCalculateMaxTalentPointsForLevel(Pet* pet, uint8 level, uint8& points)
 {
-    CALL_ENABLED_HOOKS(PetScript, PETHOOK_ON_CALCULATE_MAX_TALENT_POINTS_FOR_LEVEL, script->OnCalculateMaxTalentPointsForLevel(pet, level, points));
+    CALL_ENABLED_HOOKS(PetScript,
+        PETHOOK_ON_CALCULATE_MAX_TALENT_POINTS_FOR_LEVEL,
+        script->OnCalculateMaxTalentPointsForLevel(pet, level, points));
 }
 
 bool ScriptMgr::CanUnlearnSpellSet(Pet* pet, uint32 level, uint32 spell)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(PetScript, PETHOOK_CAN_UNLEARN_SPELL_SET, !script->CanUnlearnSpellSet(pet, level, spell));
+    CALL_ENABLED_BOOLEAN_HOOKS(
+        PetScript, PETHOOK_CAN_UNLEARN_SPELL_SET, !script->CanUnlearnSpellSet(pet, level, spell));
 }
 
 bool ScriptMgr::CanUnlearnSpellDefault(Pet* pet, SpellInfo const* spellInfo)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(PetScript, PETHOOK_CAN_UNLEARN_SPELL_DEFAULT, !script->CanUnlearnSpellDefault(pet, spellInfo));
+    CALL_ENABLED_BOOLEAN_HOOKS(
+        PetScript, PETHOOK_CAN_UNLEARN_SPELL_DEFAULT, !script->CanUnlearnSpellDefault(pet, spellInfo));
 }
 
 bool ScriptMgr::CanResetTalents(Pet* pet)
@@ -51,8 +55,7 @@ void ScriptMgr::OnPetAddToWorld(Pet* pet)
     CALL_ENABLED_HOOKS(PetScript, PETHOOK_ON_PET_ADD_TO_WORLD, script->OnPetAddToWorld(pet));
 }
 
-PetScript::PetScript(const char* name, std::vector<uint16> enabledHooks)
-    : ScriptObject(name, PETHOOK_END)
+PetScript::PetScript(char const* name, std::vector<uint16> enabledHooks) : ScriptObject(name, PETHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

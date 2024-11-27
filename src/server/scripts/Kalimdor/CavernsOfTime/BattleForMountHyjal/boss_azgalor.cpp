@@ -24,21 +24,21 @@
 
 enum Spells
 {
-    SPELL_RAIN_OF_FIRE          = 31340,
-    SPELL_DOOM                  = 31347,
-    SPELL_HOWL_OF_AZGALOR       = 31344,
-    SPELL_CLEAVE                = 31345,
-    SPELL_BERSERK               = 26662
+    SPELL_RAIN_OF_FIRE = 31340,
+    SPELL_DOOM = 31347,
+    SPELL_HOWL_OF_AZGALOR = 31344,
+    SPELL_CLEAVE = 31345,
+    SPELL_BERSERK = 26662
 };
 
 enum Texts
 {
-    SAY_ONDEATH             = 0,
-    SAY_ONSLAY              = 1,
-    SAY_DOOM                = 2, // Not used?
-    SAY_ONSPAWN             = 3,
+    SAY_ONDEATH = 0,
+    SAY_ONSLAY = 1,
+    SAY_DOOM = 2, // Not used?
+    SAY_ONSPAWN = 3,
 
-    SAY_ARCHIMONDE_INTRO    = 8
+    SAY_ARCHIMONDE_INTRO = 8
 };
 
 struct boss_azgalor : public BossAI
@@ -47,34 +47,44 @@ public:
     boss_azgalor(Creature* creature) : BossAI(creature, DATA_AZGALOR)
     {
         _recentlySpoken = false;
-        scheduler.SetValidator([this]
-            {
-                return !me->HasUnitState(UNIT_STATE_CASTING);
-            });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
-    void JustEngagedWith(Unit * who) override
+    void JustEngagedWith(Unit* who) override
     {
         BossAI::JustEngagedWith(who);
 
-        scheduler.Schedule(10s, 16s, [this](TaskContext context)
+        scheduler
+            .Schedule(10s,
+                16s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_CLEAVE);
             context.Repeat(8s, 16s);
-        }).Schedule(20s, 25s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                25s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_RAIN_OF_FIRE, 0, 40.f, false);
             context.Repeat(12s, 35s);
-        }).Schedule(30s, [this](TaskContext context)
+        })
+            .Schedule(30s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_HOWL_OF_AZGALOR);
             context.Repeat(18s, 20s);
-        }).Schedule(45s, 55s, [this](TaskContext context)
+        })
+            .Schedule(45s,
+                55s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_DOOM);
             Talk(SAY_DOOM);
             context.Repeat();
-        }).Schedule(10min, [this](TaskContext context)
+        })
+            .Schedule(10min,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_BERSERK);
             context.Repeat(5min);
@@ -89,21 +99,18 @@ public:
             me->GetMotionMaster()->MovePath(HORDE_BOSS_PATH, false);
     }
 
-    void KilledUnit(Unit * victim) override
+    void KilledUnit(Unit* victim) override
     {
         if (!_recentlySpoken && victim->IsPlayer())
         {
             Talk(SAY_ONSLAY);
             _recentlySpoken = true;
 
-            scheduler.Schedule(6s, [this](TaskContext)
-            {
-                _recentlySpoken = false;
-            });
+            scheduler.Schedule(6s, [this](TaskContext) { _recentlySpoken = false; });
         }
     }
 
-    void JustDied(Unit * killer) override
+    void JustDied(Unit* killer) override
     {
         Talk(SAY_ONDEATH);
         // If Archimonde has not yet been initialized, this won't trigger
@@ -126,14 +133,13 @@ class spell_azgalor_doom : public SpellScript
     void FilterTargets(std::list<WorldObject*>& targets)
     {
         if (Unit* victim = GetCaster()->GetVictim())
-        {
             targets.remove_if(Acore::ObjectGUIDCheck(victim->GetGUID(), true));
-        }
     }
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_azgalor_doom::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_azgalor_doom::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -145,14 +151,13 @@ class spell_azgalor_doom_aura : public AuraScript
     {
         Unit* target = GetTarget();
         if (GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_DEATH && !IsExpired())
-        {
             target->CastSpell(target, GetSpellInfo()->Effects[EFFECT_0].TriggerSpell, true);
-        }
     }
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_azgalor_doom_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_azgalor_doom_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

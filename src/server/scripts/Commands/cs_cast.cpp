@@ -39,18 +39,16 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable castCommandTable =
-        {
-            { "back",   HandleCastBackCommand,  SEC_GAMEMASTER, Console::No },
-            { "dist",   HandleCastDistCommand,  SEC_GAMEMASTER, Console::No },
-            { "self",   HandleCastSelfCommand,  SEC_GAMEMASTER, Console::No },
-            { "target", HandleCastTargetCommad, SEC_GAMEMASTER, Console::No },
-            { "dest",   HandleCastDestCommand,  SEC_GAMEMASTER, Console::No },
-            { "",       HandleCastCommand,      SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable castCommandTable = {
+            {"back",   HandleCastBackCommand,  SEC_GAMEMASTER, Console::No},
+            {"dist",   HandleCastDistCommand,  SEC_GAMEMASTER, Console::No},
+            {"self",   HandleCastSelfCommand,  SEC_GAMEMASTER, Console::No},
+            {"target", HandleCastTargetCommad, SEC_GAMEMASTER, Console::No},
+            {"dest",   HandleCastDestCommand,  SEC_GAMEMASTER, Console::No},
+            {"",       HandleCastCommand,      SEC_GAMEMASTER, Console::No}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "cast", castCommandTable }
+        static ChatCommandTable commandTable = {
+            {"cast", castCommandTable}
         };
         return commandTable;
     }
@@ -86,7 +84,8 @@ public:
     {
         if (triggeredStr)
         {
-            if (StringStartsWith("triggered", *triggeredStr)) // check if "triggered" starts with *triggeredStr (e.g. "trig", "trigger", etc.)
+            if (StringStartsWith("triggered",
+                    *triggeredStr)) // check if "triggered" starts with *triggeredStr (e.g. "trig", "trigger", etc.)
                 return TRIGGERED_FULL_DEBUG_MASK;
             else
                 return std::nullopt;
@@ -110,7 +109,8 @@ public:
         if (!triggerFlags)
             return false;
 
-        if (!CheckSpellCastResult(handler, handler->GetSession()->GetPlayer()->CastSpell(target, spell->Id, *triggerFlags)))
+        if (!CheckSpellCastResult(
+                handler, handler->GetSession()->GetPlayer()->CastSpell(target, spell->Id, *triggerFlags)))
         {
             handler->SetSentErrorMessage(true);
             return false;
@@ -135,7 +135,8 @@ public:
         if (!triggerFlags)
             return false;
 
-        if (!CheckSpellCastResult(handler, caster->CastSpell(handler->GetSession()->GetPlayer(), spell->Id, *triggerFlags)))
+        if (!CheckSpellCastResult(
+                handler, caster->CastSpell(handler->GetSession()->GetPlayer(), spell->Id, *triggerFlags)))
         {
             handler->SetSentErrorMessage(true);
             return false;
@@ -144,7 +145,8 @@ public:
         return true;
     }
 
-    static bool HandleCastDistCommand(ChatHandler* handler, SpellInfo const* spell, float dist, Optional<std::string> triggeredStr)
+    static bool HandleCastDistCommand(
+        ChatHandler* handler, SpellInfo const* spell, float dist, Optional<std::string> triggeredStr)
     {
         if (!CheckSpellExistsAndIsValid(handler, spell))
             return false;
@@ -156,7 +158,8 @@ public:
         float x, y, z;
         handler->GetSession()->GetPlayer()->GetClosePoint(x, y, z, dist);
 
-        if (!CheckSpellCastResult(handler, handler->GetSession()->GetPlayer()->CastSpell(x, y, z, spell->Id, *triggerFlags)))
+        if (!CheckSpellCastResult(
+                handler, handler->GetSession()->GetPlayer()->CastSpell(x, y, z, spell->Id, *triggerFlags)))
         {
             handler->SetSentErrorMessage(true);
             return false;
@@ -221,7 +224,8 @@ public:
         return true;
     }
 
-    static bool HandleCastDestCommand(ChatHandler* handler, SpellInfo const* spell, float x, float y, float z, Optional<std::string> triggeredStr)
+    static bool HandleCastDestCommand(
+        ChatHandler* handler, SpellInfo const* spell, float x, float y, float z, Optional<std::string> triggeredStr)
     {
         Unit* caster = handler->getSelectedUnit();
         if (!caster)

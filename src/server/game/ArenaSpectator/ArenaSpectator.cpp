@@ -112,7 +112,7 @@ bool ArenaSpectator::HandleSpectatorSpectateCommand(ChatHandler* handler, std::s
     if (!player->m_Controlled.empty())
         errors.push_back("Can't be controlling creatures.");
 
-    const Unit::VisibleAuraMap* va = player->GetVisibleAuras();
+    Unit::VisibleAuraMap const* va = player->GetVisibleAuras();
     for (auto itr = va->begin(); itr != va->end(); ++itr)
         if (Aura* aura = itr->second->GetBase())
             if (!itr->second->IsPositive() && !aura->IsPermanent() && aura->GetDuration() < HOUR * IN_MILLISECONDS)
@@ -143,7 +143,8 @@ bool ArenaSpectator::HandleSpectatorSpectateCommand(ChatHandler* handler, std::s
 
     bool bgPreparation = false;
     if ((!handler->GetSession()->GetSecurity() && bgmap->GetBG()->GetStatus() != STATUS_IN_PROGRESS) ||
-            (handler->GetSession()->GetSecurity() && bgmap->GetBG()->GetStatus() != STATUS_WAIT_JOIN && bgmap->GetBG()->GetStatus() != STATUS_IN_PROGRESS))
+        (handler->GetSession()->GetSecurity() && bgmap->GetBG()->GetStatus() != STATUS_WAIT_JOIN &&
+            bgmap->GetBG()->GetStatus() != STATUS_IN_PROGRESS))
     {
         bgPreparation = true;
         handler->SendSysMessage("Arena is not in progress yet. You will be invited as soon as it starts.");
@@ -163,12 +164,23 @@ bool ArenaSpectator::HandleSpectatorSpectateCommand(ChatHandler* handler, std::s
     if (bgPreparation)
         return true;
 
-    float z = spectate->GetMapId() == 618 ? std::max(28.27f, spectate->GetPositionZ() + 0.25f) : spectate->GetPositionZ() + 0.25f;
+    float z = spectate->GetMapId() == 618 ? std::max(28.27f, spectate->GetPositionZ() + 0.25f)
+                                          : spectate->GetPositionZ() + 0.25f;
 
     player->SetPendingSpectatorForBG(spectate->GetBattlegroundId());
-    player->SetBattlegroundId(spectate->GetBattlegroundId(), spectate->GetBattlegroundTypeId(), PLAYER_MAX_BATTLEGROUND_QUEUES, false, false, TEAM_NEUTRAL);
+    player->SetBattlegroundId(spectate->GetBattlegroundId(),
+        spectate->GetBattlegroundTypeId(),
+        PLAYER_MAX_BATTLEGROUND_QUEUES,
+        false,
+        false,
+        TEAM_NEUTRAL);
     player->SetEntryPoint();
-    player->TeleportTo(spectate->GetMapId(), spectate->GetPositionX(), spectate->GetPositionY(), z, spectate->GetOrientation(), TELE_TO_GM_MODE);
+    player->TeleportTo(spectate->GetMapId(),
+        spectate->GetPositionX(),
+        spectate->GetPositionY(),
+        z,
+        spectate->GetOrientation(),
+        TELE_TO_GM_MODE);
 
     return true;
 }
@@ -187,7 +199,9 @@ bool ArenaSpectator::HandleSpectatorWatchCommand(ChatHandler* handler, std::stri
         return true;
 
     Player* spectate = ObjectAccessor::FindPlayerByName(name);
-    if (!spectate || !spectate->IsAlive() || spectate->IsSpectator() || spectate->GetGUID() == player->GetGUID() || !spectate->IsInWorld() || !spectate->FindMap() || spectate->IsBeingTeleported() || spectate->FindMap() != player->FindMap() || !bg->IsPlayerInBattleground(spectate->GetGUID()))
+    if (!spectate || !spectate->IsAlive() || spectate->IsSpectator() || spectate->GetGUID() == player->GetGUID() ||
+        !spectate->IsInWorld() || !spectate->FindMap() || spectate->IsBeingTeleported() ||
+        spectate->FindMap() != player->FindMap() || !bg->IsPlayerInBattleground(spectate->GetGUID()))
         return true;
 
     if (WorldObject* o = player->GetViewpoint())
@@ -200,7 +214,8 @@ bool ArenaSpectator::HandleSpectatorWatchCommand(ChatHandler* handler, std::stri
                 return true;
         }
 
-    if (player->GetUInt64Value(PLAYER_FARSIGHT) || player->m_seer != player) // pussywizard: below this point we must not have a viewpoint!
+    if (player->GetUInt64Value(PLAYER_FARSIGHT) ||
+        player->m_seer != player) // pussywizard: below this point we must not have a viewpoint!
         return true;
 
     if (player->HaveAtClient(spectate))
@@ -250,21 +265,34 @@ void ArenaSpectator::HandleResetCommand(Player* player)
         SendCommand_UInt32Value(player, itr->first, "STA", plr->IsAlive() ? 1 : 0);
         Powers ptype = plr->getPowerType();
         SendCommand_UInt32Value(player, itr->first, "PWT", ptype);
-        SendCommand_UInt32Value(player, itr->first, "MPW", ptype == POWER_RAGE || ptype == POWER_RUNIC_POWER ? plr->GetMaxPower(ptype) / 10 : plr->GetMaxPower(ptype));
-        SendCommand_UInt32Value(player, itr->first, "CPW", ptype == POWER_RAGE || ptype == POWER_RUNIC_POWER ? plr->GetPower(ptype) / 10 : plr->GetPower(ptype));
+        SendCommand_UInt32Value(player,
+            itr->first,
+            "MPW",
+            ptype == POWER_RAGE || ptype == POWER_RUNIC_POWER ? plr->GetMaxPower(ptype) / 10 : plr->GetMaxPower(ptype));
+        SendCommand_UInt32Value(player,
+            itr->first,
+            "CPW",
+            ptype == POWER_RAGE || ptype == POWER_RUNIC_POWER ? plr->GetPower(ptype) / 10 : plr->GetPower(ptype));
         Pet* pet = plr->GetPet();
-        SendCommand_UInt32Value(player, itr->first, "PHP", pet && pet->GetCreatureTemplate()->family ? (uint32)pet->GetHealthPct() : 0);
+        SendCommand_UInt32Value(
+            player, itr->first, "PHP", pet && pet->GetCreatureTemplate()->family ? (uint32)pet->GetHealthPct() : 0);
         SendCommand_UInt32Value(player, itr->first, "PET", pet ? pet->GetCreatureTemplate()->family : 0);
         SendCommand_GUID(player, itr->first, "TRG", plr->GetTarget());
         SendCommand_UInt32Value(player, itr->first, "RES", 1);
         SendCommand_UInt32Value(player, itr->first, "CDC", 1);
-        SendCommand_UInt32Value(player, itr->first, "TIM", (bg->GetStartTime() < 46 * MINUTE * IN_MILLISECONDS) ? (46 * MINUTE * IN_MILLISECONDS - bg->GetStartTime()) / IN_MILLISECONDS : 0);
+        SendCommand_UInt32Value(player,
+            itr->first,
+            "TIM",
+            (bg->GetStartTime() < 46 * MINUTE * IN_MILLISECONDS)
+                ? (46 * MINUTE * IN_MILLISECONDS - bg->GetStartTime()) / IN_MILLISECONDS
+                : 0);
         // "SPE" not here (only possible to send starting a new cast)
 
         // send all "CD"
         SpellCooldowns const& sc = plr->GetSpellCooldownMap();
         for (SpellCooldowns::const_iterator itrc = sc.begin(); itrc != sc.end(); ++itrc)
-            if (itrc->second.sendToSpectator && itrc->second.maxduration >= SPECTATOR_COOLDOWN_MIN * IN_MILLISECONDS && itrc->second.maxduration <= SPECTATOR_COOLDOWN_MAX * IN_MILLISECONDS)
+            if (itrc->second.sendToSpectator && itrc->second.maxduration >= SPECTATOR_COOLDOWN_MIN * IN_MILLISECONDS &&
+                itrc->second.maxduration <= SPECTATOR_COOLDOWN_MAX * IN_MILLISECONDS)
                 if (uint32 cd = (getMSTimeDiff(getMSTime(), itrc->second.end) / 1000))
                     SendCommand_Cooldown(player, itr->first, "ACD", itrc->first, cd, itrc->second.maxduration / 1000);
 
@@ -274,7 +302,17 @@ void ArenaSpectator::HandleResetCommand(Player* player)
         {
             Aura* aura = aitr->second->GetBase();
             if (ShouldSendAura(aura, aitr->second->GetEffectMask(), plr->GetGUID(), false))
-                SendCommand_Aura(player, itr->first, "AUR", aura->GetCasterGUID(), aura->GetSpellInfo()->Id, aura->GetSpellInfo()->IsPositive(), aura->GetSpellInfo()->Dispel, aura->GetDuration(), aura->GetMaxDuration(), (aura->GetCharges() > 1 ? aura->GetCharges() : aura->GetStackAmount()), false);
+                SendCommand_Aura(player,
+                    itr->first,
+                    "AUR",
+                    aura->GetCasterGUID(),
+                    aura->GetSpellInfo()->Id,
+                    aura->GetSpellInfo()->IsPositive(),
+                    aura->GetSpellInfo()->Dispel,
+                    aura->GetDuration(),
+                    aura->GetMaxDuration(),
+                    (aura->GetCharges() > 1 ? aura->GetCharges() : aura->GetStackAmount()),
+                    false);
         }
     }
 }
@@ -284,7 +322,8 @@ bool ArenaSpectator::ShouldSendAura(Aura* aura, uint8 effMask, ObjectGuid target
     if (aura->GetSpellInfo()->SpellIconID == 1 || aura->GetSpellInfo()->HasAttribute(SPELL_ATTR1_NO_AURA_ICON))
         return false;
 
-    if (remove || aura->GetSpellInfo()->HasAttribute(SPELL_ATTR0_CU_DONT_BREAK_STEALTH) || aura->GetSpellInfo()->SpellFamilyName == SPELLFAMILY_GENERIC)
+    if (remove || aura->GetSpellInfo()->HasAttribute(SPELL_ATTR0_CU_DONT_BREAK_STEALTH) ||
+        aura->GetSpellInfo()->SpellFamilyName == SPELLFAMILY_GENERIC)
         return true;
 
     for (uint8 i = EFFECT_0; i < MAX_SPELL_EFFECTS; ++i)
@@ -292,24 +331,24 @@ bool ArenaSpectator::ShouldSendAura(Aura* aura, uint8 effMask, ObjectGuid target
         if (effMask & (1 << i))
         {
             AuraType at = aura->GetEffect(i)->GetAuraType();
-            if ((aura->GetEffect(i)->GetAmount() && (aura->GetSpellInfo()->IsPositive() || targetGUID != aura->GetCasterGUID())) ||
-                at == SPELL_AURA_MECHANIC_IMMUNITY || at == SPELL_AURA_EFFECT_IMMUNITY || at == SPELL_AURA_STATE_IMMUNITY || at == SPELL_AURA_SCHOOL_IMMUNITY || at == SPELL_AURA_DISPEL_IMMUNITY)
+            if ((aura->GetEffect(i)->GetAmount() &&
+                    (aura->GetSpellInfo()->IsPositive() || targetGUID != aura->GetCasterGUID())) ||
+                at == SPELL_AURA_MECHANIC_IMMUNITY || at == SPELL_AURA_EFFECT_IMMUNITY ||
+                at == SPELL_AURA_STATE_IMMUNITY || at == SPELL_AURA_SCHOOL_IMMUNITY || at == SPELL_AURA_DISPEL_IMMUNITY)
                 return true;
         }
     }
     return false;
 }
 
-template<>
-AC_GAME_API void ArenaSpectator::SendPacketTo(Player const* player, std::string&& message)
+template <> AC_GAME_API void ArenaSpectator::SendPacketTo(Player const* player, std::string&& message)
 {
     WorldPacket data;
     CreatePacket(data, message);
     player->GetSession()->SendPacket(&data);
 }
 
-template<>
-AC_GAME_API void ArenaSpectator::SendPacketTo(const Map* map, std::string&& message)
+template <> AC_GAME_API void ArenaSpectator::SendPacketTo(Map const* map, std::string&& message)
 {
     if (!map->IsBattleArena())
         return;

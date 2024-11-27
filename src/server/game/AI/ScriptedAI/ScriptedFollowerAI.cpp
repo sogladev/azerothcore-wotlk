@@ -27,18 +27,19 @@ EndScriptData */
 #include "Player.h"
 #include "ScriptedCreature.h"
 
-const float MAX_PLAYER_DISTANCE = 100.0f;
+float const MAX_PLAYER_DISTANCE = 100.0f;
 
 enum ePoints
 {
-    POINT_COMBAT_START  = 0xFFFFFF
+    POINT_COMBAT_START = 0xFFFFFF
 };
 
-FollowerAI::FollowerAI(Creature* creature) : ScriptedAI(creature),
+FollowerAI::FollowerAI(Creature* creature) :
+    ScriptedAI(creature),
     m_uiUpdateFollowTimer(2500),
     m_uiFollowState(STATE_FOLLOW_NONE),
     m_pQuestForFollow(nullptr)
-{}
+{ }
 
 void FollowerAI::AttackStart(Unit* who)
 {
@@ -95,7 +96,8 @@ void FollowerAI::MoveInLineOfSight(Unit* who)
     if (me->GetVictim())
         return;
 
-    if (!me->HasUnitState(UNIT_STATE_STUNNED) && who->isTargetableForAttack(true, me) && who->isInAccessiblePlaceFor(me))
+    if (!me->HasUnitState(UNIT_STATE_STUNNED) && who->isTargetableForAttack(true, me) &&
+        who->isInAccessiblePlaceFor(me))
         if (HasFollowState(STATE_FOLLOW_INPROGRESS) && AssistPlayerInCombatAgainst(who))
             return;
 
@@ -124,7 +126,8 @@ void FollowerAI::JustDied(Unit* /*pKiller*/)
             {
                 if (Player* member = groupRef->GetSource())
                 {
-                    if (member->IsInMap(player) && member->GetQuestStatus(m_pQuestForFollow->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
+                    if (member->IsInMap(player) &&
+                        member->GetQuestStatus(m_pQuestForFollow->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
                         member->FailQuest(m_pQuestForFollow->GetQuestId());
                 }
             }
@@ -205,7 +208,8 @@ void FollowerAI::UpdateAI(uint32 uiDiff)
 
                 if (Group* group = player->GetGroup())
                 {
-                    for (GroupReference* groupRef = group->GetFirstMember(); groupRef != nullptr; groupRef = groupRef->next())
+                    for (GroupReference* groupRef = group->GetFirstMember(); groupRef != nullptr;
+                         groupRef = groupRef->next())
                     {
                         Player* member = groupRef->GetSource();
 
@@ -264,7 +268,7 @@ void FollowerAI::MovementInform(uint32 motionType, uint32 pointId)
     }
 }
 
-void FollowerAI::StartFollow(Player* player, uint32 factionForFollower, const Quest* quest)
+void FollowerAI::StartFollow(Player* player, uint32 factionForFollower, Quest const* quest)
 {
     if (me->GetVictim())
     {
@@ -308,20 +312,17 @@ Player* FollowerAI::GetLeaderForFollower()
     {
         if (player->IsAlive())
             return player;
-        else
+        else if (Group* group = player->GetGroup())
         {
-            if (Group* group = player->GetGroup())
+            for (GroupReference* groupRef = group->GetFirstMember(); groupRef != nullptr; groupRef = groupRef->next())
             {
-                for (GroupReference* groupRef = group->GetFirstMember(); groupRef != nullptr; groupRef = groupRef->next())
-                {
-                    Player* member = groupRef->GetSource();
+                Player* member = groupRef->GetSource();
 
-                    if (member && me->IsWithinDistInMap(member, MAX_PLAYER_DISTANCE) && member->IsAlive())
-                    {
-                        LOG_DEBUG("scripts.ai", "FollowerAI GetLeader changed and returned new leader.");
-                        m_uiLeaderGUID = member->GetGUID();
-                        return member;
-                    }
+                if (member && me->IsWithinDistInMap(member, MAX_PLAYER_DISTANCE) && member->IsAlive())
+                {
+                    LOG_DEBUG("scripts.ai", "FollowerAI GetLeader changed and returned new leader.");
+                    m_uiLeaderGUID = member->GetGUID();
+                    return member;
                 }
             }
         }
@@ -344,11 +345,8 @@ void FollowerAI::SetFollowComplete(bool bWithEndEvent)
 
     if (bWithEndEvent)
         AddFollowState(STATE_FOLLOW_POSTEVENT);
-    else
-    {
-        if (HasFollowState(STATE_FOLLOW_POSTEVENT))
-            RemoveFollowState(STATE_FOLLOW_POSTEVENT);
-    }
+    else if (HasFollowState(STATE_FOLLOW_POSTEVENT))
+        RemoveFollowState(STATE_FOLLOW_POSTEVENT);
 
     AddFollowState(STATE_FOLLOW_COMPLETE);
 }

@@ -36,20 +36,17 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable titlesSetCommandTable =
-        {
-            { "mask", HandleTitlesSetMaskCommand, SEC_GAMEMASTER, Console::No },
+        static ChatCommandTable titlesSetCommandTable = {
+            {"mask", HandleTitlesSetMaskCommand, SEC_GAMEMASTER, Console::No},
         };
-        static ChatCommandTable titlesCommandTable =
-        {
-            { "add",     HandleTitlesAddCommand,     SEC_GAMEMASTER, Console::No },
-            { "current", HandleTitlesCurrentCommand, SEC_GAMEMASTER, Console::No },
-            { "remove",  HandleTitlesRemoveCommand,  SEC_GAMEMASTER, Console::No },
-            { "set",     titlesSetCommandTable },
+        static ChatCommandTable titlesCommandTable = {
+            {"add", HandleTitlesAddCommand, SEC_GAMEMASTER, Console::No},
+            {"current", HandleTitlesCurrentCommand, SEC_GAMEMASTER, Console::No},
+            {"remove", HandleTitlesRemoveCommand, SEC_GAMEMASTER, Console::No},
+            {"set", titlesSetCommandTable},
         };
-        static ChatCommandTable commandTable =
-        {
-            { "titles", titlesCommandTable },
+        static ChatCommandTable commandTable = {
+            {"titles", titlesCommandTable},
         };
         return commandTable;
     }
@@ -75,7 +72,10 @@ public:
         }
 
         std::string tNameLink = handler->GetNameLink(target);
-        std::string titleNameStr = Acore::StringFormat(target->getGender() == GENDER_MALE ? titleInfo->nameMale[handler->GetSessionDbcLocale()] : titleInfo->nameFemale[handler->GetSessionDbcLocale()], target->GetName());
+        std::string titleNameStr = Acore::StringFormat(target->getGender() == GENDER_MALE
+                                                           ? titleInfo->nameMale[handler->GetSessionDbcLocale()]
+                                                           : titleInfo->nameFemale[handler->GetSessionDbcLocale()],
+            target->GetName());
 
         target->SetTitle(titleInfo);
         target->SetUInt32Value(PLAYER_CHOSEN_TITLE, titleInfo->bit_index);
@@ -106,7 +106,10 @@ public:
         }
 
         std::string tNameLink = handler->GetNameLink(target);
-        std::string titleNameStr = Acore::StringFormat(target->getGender() == GENDER_MALE ? titleInfo->nameMale[handler->GetSessionDbcLocale()] : titleInfo->nameFemale[handler->GetSessionDbcLocale()], target->GetName());
+        std::string titleNameStr = Acore::StringFormat(target->getGender() == GENDER_MALE
+                                                           ? titleInfo->nameMale[handler->GetSessionDbcLocale()]
+                                                           : titleInfo->nameFemale[handler->GetSessionDbcLocale()],
+            target->GetName());
 
         target->SetTitle(titleInfo);
         handler->PSendSysMessage(LANG_TITLE_ADD_RES, uint32(titleId), titleNameStr, tNameLink);
@@ -137,7 +140,10 @@ public:
         target->SetTitle(titleInfo, true);
 
         std::string tNameLink = handler->GetNameLink(target);
-        std::string titleNameStr = Acore::StringFormat(target->getGender() == GENDER_MALE ? titleInfo->nameMale[handler->GetSessionDbcLocale()] : titleInfo->nameFemale[handler->GetSessionDbcLocale()], target->GetName());
+        std::string titleNameStr = Acore::StringFormat(target->getGender() == GENDER_MALE
+                                                           ? titleInfo->nameMale[handler->GetSessionDbcLocale()]
+                                                           : titleInfo->nameFemale[handler->GetSessionDbcLocale()],
+            target->GetName());
 
         handler->PSendSysMessage(LANG_TITLE_REMOVE_RES, uint32(titleId), titleNameStr, tNameLink);
 
@@ -170,7 +176,7 @@ public:
             if (CharTitlesEntry const* tEntry = sCharTitlesStore.LookupEntry(i))
                 titles2 &= ~(uint64(1) << tEntry->bit_index);
 
-        mask &= ~titles2;                                     // remove non-existing titles
+        mask &= ~titles2; // remove non-existing titles
 
         target->SetUInt64Value(PLAYER__FIELD_KNOWN_TITLES, mask);
         handler->SendSysMessage(LANG_DONE);

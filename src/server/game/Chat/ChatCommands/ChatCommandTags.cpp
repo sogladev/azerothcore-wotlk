@@ -99,13 +99,9 @@ ChatCommandResult Acore::ChatCommands::PlayerIdentifier::TryConsume(ChatHandler 
         _guid = ObjectGuid::Create<HighGuid::Player>(val.get<ObjectGuid::LowType>());
 
         if ((_player = ObjectAccessor::FindPlayerByLowGUID(_guid.GetCounter())))
-        {
             _name = _player->GetName();
-        }
         else if (!sCharacterCache->GetCharacterNameByGuid(_guid, _name))
-        {
             return FormatAcoreString(handler, LANG_CMDPARSER_CHAR_GUID_NO_EXIST, _guid.ToString());
-        }
 
         return next;
     }
@@ -120,34 +116,35 @@ ChatCommandResult Acore::ChatCommands::PlayerIdentifier::TryConsume(ChatHandler 
             return FormatAcoreString(handler, LANG_CMDPARSER_CHAR_NAME_INVALID, _name);
 
         if ((_player = ObjectAccessor::FindPlayerByName(_name)))
-        {
             _guid = _player->GetGUID();
-        }
         else if (!(_guid = sCharacterCache->GetCharacterGuidByName(_name)))
-        {
             return FormatAcoreString(handler, LANG_CMDPARSER_CHAR_NAME_NO_EXIST, _name);
-        }
 
         return next;
     }
 }
 
-Acore::ChatCommands::PlayerIdentifier::PlayerIdentifier(Player& player)
-    : _name(player.GetName()), _guid(player.GetGUID()), _player(&player) {}
+Acore::ChatCommands::PlayerIdentifier::PlayerIdentifier(Player& player) :
+    _name(player.GetName()),
+    _guid(player.GetGUID()),
+    _player(&player)
+{ }
 
-/*static*/ Optional<Acore::ChatCommands::PlayerIdentifier> Acore::ChatCommands::PlayerIdentifier::FromTarget(ChatHandler* handler)
+/*static*/ Optional<Acore::ChatCommands::PlayerIdentifier> Acore::ChatCommands::PlayerIdentifier::FromTarget(
+    ChatHandler* handler)
 {
     if (Player* player = handler->GetPlayer())
         if (Player* target = player->GetSelectedPlayer())
-            return { *target };
+            return {*target};
 
     return std::nullopt;
 }
 
-/*static*/ Optional<Acore::ChatCommands::PlayerIdentifier> Acore::ChatCommands::PlayerIdentifier::FromSelf(ChatHandler* handler)
+/*static*/ Optional<Acore::ChatCommands::PlayerIdentifier> Acore::ChatCommands::PlayerIdentifier::FromSelf(
+    ChatHandler* handler)
 {
     if (Player* player = handler->GetPlayer())
-        return { *player };
+        return {*player};
 
     return std::nullopt;
 }

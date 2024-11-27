@@ -31,152 +31,152 @@
 enum Texts
 {
     // Shared
-    SAY_REGENERATE                     = 0, // Without pressure in both realms, %s begins to regenerate.
+    SAY_REGENERATE = 0, // Without pressure in both realms, %s begins to regenerate.
 
     // Halion
-    SAY_INTRO                          = 1, // Meddlesome insects! You are too late. The Ruby Sanctum is lost!
-    SAY_AGGRO                          = 2, // Your world teeters on the brink of annihilation. You will ALL bear witness to the coming of a new age of DESTRUCTION!
-    SAY_METEOR_STRIKE                  = 3, // The heavens burn!
-    SAY_PHASE_TWO                      = 4, // You will find only suffering within the realm of twilight! Enter if you dare!
-    SAY_DEATH                          = 5, // Relish this victory, mortals, for it will be your last! This world will burn with the master's return!
-    SAY_KILL                           = 6, // Another "hero" falls.
-    SAY_BERSERK                        = 7, // Not good enough.
-    EMOTE_CORPOREALITY_POT             = 8, // Your efforts force %s further out of the physical realm!
-    EMOTE_CORPOREALITY_PIP             = 9, // Your companions' efforts force %s further into the physical realm!
+    SAY_INTRO = 1, // Meddlesome insects! You are too late. The Ruby Sanctum is lost!
+    SAY_AGGRO =
+        2, // Your world teeters on the brink of annihilation. You will ALL bear witness to the coming of a new age of DESTRUCTION!
+    SAY_METEOR_STRIKE = 3, // The heavens burn!
+    SAY_PHASE_TWO = 4,     // You will find only suffering within the realm of twilight! Enter if you dare!
+    SAY_DEATH =
+        5, // Relish this victory, mortals, for it will be your last! This world will burn with the master's return!
+    SAY_KILL = 6,               // Another "hero" falls.
+    SAY_BERSERK = 7,            // Not good enough.
+    EMOTE_CORPOREALITY_POT = 8, // Your efforts force %s further out of the physical realm!
+    EMOTE_CORPOREALITY_PIP = 9, // Your companions' efforts force %s further into the physical realm!
 
     // Twilight Halion
-    SAY_SPHERE_PULSE                   = 1, // Beware the shadow!
-    SAY_PHASE_THREE                    = 2, // I am the light and the darkness! Cower, mortals, before the herald of Deathwing!
-    EMOTE_CORPOREALITY_TIT             = 3, // Your companions' efforts force %s further into the twilight realm!
-    EMOTE_CORPOREALITY_TOT             = 4, // Your efforts force %s further out of the twilight realm!
-    EMOTE_WARN_LASER                   = 5, // The orbiting spheres pulse with dark energy!
+    SAY_SPHERE_PULSE = 1,       // Beware the shadow!
+    SAY_PHASE_THREE = 2,        // I am the light and the darkness! Cower, mortals, before the herald of Deathwing!
+    EMOTE_CORPOREALITY_TIT = 3, // Your companions' efforts force %s further into the twilight realm!
+    EMOTE_CORPOREALITY_TOT = 4, // Your efforts force %s further out of the twilight realm!
+    EMOTE_WARN_LASER = 5,       // The orbiting spheres pulse with dark energy!
 };
 
 enum Spells
 {
     // Halion
-    SPELL_FLAME_BREATH                  = 74525,
-    SPELL_CLEAVE                        = 74524,
-    SPELL_METEOR_STRIKE_TARGETING       = 74638,
-    SPELL_TAIL_LASH                     = 74531,
+    SPELL_FLAME_BREATH = 74525,
+    SPELL_CLEAVE = 74524,
+    SPELL_METEOR_STRIKE_TARGETING = 74638,
+    SPELL_TAIL_LASH = 74531,
 
     // Living Inferno
-    SPELL_BLAZING_AURA                  = 75885,
+    SPELL_BLAZING_AURA = 75885,
 
     // Combustion / Consumption
-    SPELL_SCALE_AURA                    = 70507,
-    SPELL_FIERY_COMBUSTION              = 74562,
-    SPELL_MARK_OF_COMBUSTION            = 74567,
-    SPELL_FIERY_COMBUSTION_EXPLOSION    = 74607,
-    SPELL_FIERY_COMBUSTION_SUMMON       = 74610,
-    SPELL_COMBUSTION_DAMAGE_AURA        = 74629,
-    SPELL_SOUL_CONSUMPTION              = 74792,
-    SPELL_MARK_OF_CONSUMPTION           = 74795,
-    SPELL_SOUL_CONSUMPTION_EXPLOSION    = 74799,
-    SPELL_SOUL_CONSUMPTION_SUMMON       = 74800,
-    SPELL_CONSUMPTION_DAMAGE_AURA       = 74803,
+    SPELL_SCALE_AURA = 70507,
+    SPELL_FIERY_COMBUSTION = 74562,
+    SPELL_MARK_OF_COMBUSTION = 74567,
+    SPELL_FIERY_COMBUSTION_EXPLOSION = 74607,
+    SPELL_FIERY_COMBUSTION_SUMMON = 74610,
+    SPELL_COMBUSTION_DAMAGE_AURA = 74629,
+    SPELL_SOUL_CONSUMPTION = 74792,
+    SPELL_MARK_OF_CONSUMPTION = 74795,
+    SPELL_SOUL_CONSUMPTION_EXPLOSION = 74799,
+    SPELL_SOUL_CONSUMPTION_SUMMON = 74800,
+    SPELL_CONSUMPTION_DAMAGE_AURA = 74803,
 
     // Meteor Strike
-    SPELL_METEOR_STRIKE                 = 74637,
-    SPELL_SUMMON_METEOR_STRIKE1         = 74680,
-    SPELL_SUMMON_METEOR_STRIKE2         = 74681,
-    SPELL_SUMMON_METEOR_STRIKE3         = 74682,
-    SPELL_SUMMON_METEOR_STRIKE4         = 74683,
-    SPELL_SUMMON_METEOR_FLAME1          = 74687,
-    SPELL_SUMMON_METEOR_FLAME2          = 74688,
-    SPELL_SUMMON_METEOR_FLAME3          = 74689,
-    SPELL_METEOR_STRIKE_SPREAD          = 74696,
-    SPELL_METEOR_STRIKE_COUNTDOWN       = 74641,
-    SPELL_METEOR_STRIKE_AOE_DAMAGE      = 74648,
-    SPELL_METEOR_STRIKE_FIRE_AURA_1     = 74713,
-    SPELL_METEOR_STRIKE_FIRE_AURA_2     = 74718,
-    SPELL_BIRTH_NO_VISUAL               = 40031,
+    SPELL_METEOR_STRIKE = 74637,
+    SPELL_SUMMON_METEOR_STRIKE1 = 74680,
+    SPELL_SUMMON_METEOR_STRIKE2 = 74681,
+    SPELL_SUMMON_METEOR_STRIKE3 = 74682,
+    SPELL_SUMMON_METEOR_STRIKE4 = 74683,
+    SPELL_SUMMON_METEOR_FLAME1 = 74687,
+    SPELL_SUMMON_METEOR_FLAME2 = 74688,
+    SPELL_SUMMON_METEOR_FLAME3 = 74689,
+    SPELL_METEOR_STRIKE_SPREAD = 74696,
+    SPELL_METEOR_STRIKE_COUNTDOWN = 74641,
+    SPELL_METEOR_STRIKE_AOE_DAMAGE = 74648,
+    SPELL_METEOR_STRIKE_FIRE_AURA_1 = 74713,
+    SPELL_METEOR_STRIKE_FIRE_AURA_2 = 74718,
+    SPELL_BIRTH_NO_VISUAL = 40031,
 
     // Twilight Halion
-    SPELL_DARK_BREATH                   = 74806,
+    SPELL_DARK_BREATH = 74806,
 
     // Shadow Orb
-    SPELL_TWILIGHT_CUTTER               = 74768,
-    SPELL_TWILIGHT_CUTTER_TRIGGERED     = 74769,
-    SPELL_TWILIGHT_PULSE_PERIODIC       = 78861,
-    SPELL_TRACK_ROTATION                = 74758,
+    SPELL_TWILIGHT_CUTTER = 74768,
+    SPELL_TWILIGHT_CUTTER_TRIGGERED = 74769,
+    SPELL_TWILIGHT_PULSE_PERIODIC = 78861,
+    SPELL_TRACK_ROTATION = 74758,
 
     // Halion Controller
-    SPELL_COSMETIC_FIRE_PILLAR          = 76006,
-    SPELL_FIERY_EXPLOSION               = 76010,
-    SPELL_CLEAR_DEBUFFS                 = 75396,
+    SPELL_COSMETIC_FIRE_PILLAR = 76006,
+    SPELL_FIERY_EXPLOSION = 76010,
+    SPELL_CLEAR_DEBUFFS = 75396,
 
     // Misc
-    SPELL_TWILIGHT_DIVISION             = 75063,
-    SPELL_LEAVE_TWILIGHT_REALM          = 74812,
-    SPELL_TWILIGHT_PHASING              = 74808,
-    SPELL_SUMMON_TWILIGHT_PORTAL        = 74809,
-    SPELL_SUMMON_EXIT_PORTALS_NORMAL    = 74804,
-    SPELL_SUMMON_EXIT_PORTALS           = 74805,
-    SPELL_TWILIGHT_MENDING              = 75509,
-    SPELL_TWILIGHT_REALM                = 74807,
-    SPELL_DUSK_SHROUD                   = 75476,
-    SPELL_COPY_DAMAGE                   = 74810
+    SPELL_TWILIGHT_DIVISION = 75063,
+    SPELL_LEAVE_TWILIGHT_REALM = 74812,
+    SPELL_TWILIGHT_PHASING = 74808,
+    SPELL_SUMMON_TWILIGHT_PORTAL = 74809,
+    SPELL_SUMMON_EXIT_PORTALS_NORMAL = 74804,
+    SPELL_SUMMON_EXIT_PORTALS = 74805,
+    SPELL_TWILIGHT_MENDING = 75509,
+    SPELL_TWILIGHT_REALM = 74807,
+    SPELL_DUSK_SHROUD = 75476,
+    SPELL_COPY_DAMAGE = 74810
 };
 
 enum Events
 {
     // Halion
-    EVENT_ACTIVATE_FIREWALL     = 1,
-    EVENT_CLEAVE                = 2,
-    EVENT_BREATH                = 3,
-    EVENT_METEOR_STRIKE         = 4,
-    EVENT_FIERY_COMBUSTION      = 5,
-    EVENT_TAIL_LASH             = 6,
-    EVENT_CHECK_HEALTH          = 7,
-    EVENT_KILL_TALK             = 8,
-    EVENT_TRIGGER_BERSERK       = 9,
-    EVENT_HALION_VISIBILITY     = 10,
+    EVENT_ACTIVATE_FIREWALL = 1,
+    EVENT_CLEAVE = 2,
+    EVENT_BREATH = 3,
+    EVENT_METEOR_STRIKE = 4,
+    EVENT_FIERY_COMBUSTION = 5,
+    EVENT_TAIL_LASH = 6,
+    EVENT_CHECK_HEALTH = 7,
+    EVENT_KILL_TALK = 8,
+    EVENT_TRIGGER_BERSERK = 9,
+    EVENT_HALION_VISIBILITY = 10,
 
     // Twilight Halion
-    EVENT_SOUL_CONSUMPTION      = 20,
-    EVENT_SHADOW_PULSARS        = 21,
-    EVENT_SHADOW_PULSARS_SHOOT  = 22,
-    EVENT_CHECK_CORPOREALITY    = 23,
-    EVENT_TWILIGHT_MENDING      = 24,
-    EVENT_SEND_ENCOUNTER_UNIT   = 25,
+    EVENT_SOUL_CONSUMPTION = 20,
+    EVENT_SHADOW_PULSARS = 21,
+    EVENT_SHADOW_PULSARS_SHOOT = 22,
+    EVENT_CHECK_CORPOREALITY = 23,
+    EVENT_TWILIGHT_MENDING = 24,
+    EVENT_SEND_ENCOUNTER_UNIT = 25,
 
     // Halion Controller
-    EVENT_START_INTRO           = 40,
-    EVENT_INTRO_PROGRESS_1      = 41,
-    EVENT_INTRO_PROGRESS_2      = 42,
-    EVENT_INTRO_PROGRESS_3      = 43,
-    EVENT_INTRO_PROGRESS_4      = 44
+    EVENT_START_INTRO = 40,
+    EVENT_INTRO_PROGRESS_1 = 41,
+    EVENT_INTRO_PROGRESS_2 = 42,
+    EVENT_INTRO_PROGRESS_3 = 43,
+    EVENT_INTRO_PROGRESS_4 = 44
 };
 
 enum Misc
 {
-    ACTION_SHOOT                = 1,
-    ACTION_CHECK_CORPOREALITY   = 2,
-    ACTION_RESET_ENCOUNTER      = 3,
+    ACTION_SHOOT = 1,
+    ACTION_CHECK_CORPOREALITY = 2,
+    ACTION_RESET_ENCOUNTER = 3,
 
-    DATA_TWILIGHT_DAMAGE_TAKEN  = 1,
-    DATA_MATERIAL_DAMAGE_TAKEN  = 2,
+    DATA_TWILIGHT_DAMAGE_TAKEN = 1,
+    DATA_MATERIAL_DAMAGE_TAKEN = 2,
 
-    SEAT_NORTH                  = 0,
-    SEAT_SOUTH                  = 1,
-    SEAT_EAST                   = 2,
-    SEAT_WEST                   = 3
+    SEAT_NORTH = 0,
+    SEAT_SOUTH = 1,
+    SEAT_EAST = 2,
+    SEAT_WEST = 3
 };
 
 enum CorporealityEvent
 {
-    CORPOREALITY_NONE               = 0,
-    CORPOREALITY_TWILIGHT_MENDING   = 1,
-    CORPOREALITY_INCREASE           = 2,
-    CORPOREALITY_DECREASE           = 3,
-    MAX_CORPOREALITY_STATE          = 11
+    CORPOREALITY_NONE = 0,
+    CORPOREALITY_TWILIGHT_MENDING = 1,
+    CORPOREALITY_INCREASE = 2,
+    CORPOREALITY_DECREASE = 3,
+    MAX_CORPOREALITY_STATE = 11
 };
 
-uint32 const _corporealityReference[MAX_CORPOREALITY_STATE] =
-{
-    74836, 74835, 74834, 74833, 74832, 74826, 74827, 74828, 74829, 74830, 74831
-};
+uint32 const _corporealityReference[MAX_CORPOREALITY_STATE] = {
+    74836, 74835, 74834, 74833, 74832, 74826, 74827, 74828, 74829, 74830, 74831};
 
 class SendEncounterUnit : public BasicEvent
 {
@@ -212,9 +212,7 @@ public:
 
     struct boss_halionAI : public BossAI
     {
-        boss_halionAI(Creature* creature) : BossAI(creature, DATA_HALION)
-        {
-        }
+        boss_halionAI(Creature* creature) : BossAI(creature, DATA_HALION) { }
 
         void Reset() override
         {
@@ -239,8 +237,10 @@ public:
                     summon->CastSpell(summon, SPELL_BIRTH_NO_VISUAL, false);
                     break;
                 case NPC_METEOR_STRIKE_FLAME:
-                    if (Is25ManRaid() && IsHeroic() && roll_chance_i(90) && summons.GetEntryCount(NPC_LIVING_EMBER) < _livingEmberCount + 12)
-                        if (Creature* ember = me->SummonCreature(NPC_LIVING_EMBER, *summon, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1000))
+                    if (Is25ManRaid() && IsHeroic() && roll_chance_i(90) &&
+                        summons.GetEntryCount(NPC_LIVING_EMBER) < _livingEmberCount + 12)
+                        if (Creature* ember =
+                                me->SummonCreature(NPC_LIVING_EMBER, *summon, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1000))
                         {
                             ember->SetVisible(false);
                         }
@@ -266,9 +266,13 @@ public:
         bool IsAnyPlayerValid()
         {
             Map::PlayerList const& playerList = me->GetMap()->GetPlayers();
-            for(Map::PlayerList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
+            for (Map::PlayerList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
                 if (Player* player = itr->GetSource())
-                    if (!player->IsGameMaster() && player->IsAlive() && me->GetHomePosition().GetExactDist2d(player) < 52.0f && me->IsWithinLOSInMap(player) && !player->HasAuraType(SPELL_AURA_MOD_INVISIBILITY) && !player->HasAuraType(SPELL_AURA_MOD_STEALTH) && !player->HasAuraType(SPELL_AURA_MOD_UNATTACKABLE))
+                    if (!player->IsGameMaster() && player->IsAlive() &&
+                        me->GetHomePosition().GetExactDist2d(player) < 52.0f && me->IsWithinLOSInMap(player) &&
+                        !player->HasAuraType(SPELL_AURA_MOD_INVISIBILITY) &&
+                        !player->HasAuraType(SPELL_AURA_MOD_STEALTH) &&
+                        !player->HasAuraType(SPELL_AURA_MOD_UNATTACKABLE))
                         return true;
             return false;
         }
@@ -350,11 +354,13 @@ public:
             {
                 case EVENT_HALION_VISIBILITY:
                     me->SetVisible(instance->GetBossState(DATA_HALION_INTRO_DONE) == DONE);
-                    me->SetReactState(instance->GetBossState(DATA_HALION_INTRO_DONE) == DONE ? REACT_AGGRESSIVE : REACT_PASSIVE);
+                    me->SetReactState(
+                        instance->GetBossState(DATA_HALION_INTRO_DONE) == DONE ? REACT_AGGRESSIVE : REACT_PASSIVE);
                     break;
                 case EVENT_TRIGGER_BERSERK:
                     me->CastSpell(me, SPELL_BERSERK, true);
-                    if (Creature* twilightHalion = ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_TWILIGHT_HALION)))
+                    if (Creature* twilightHalion =
+                            ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_TWILIGHT_HALION)))
                         twilightHalion->CastSpell(twilightHalion, SPELL_BERSERK, true);
                     break;
             }
@@ -395,7 +401,8 @@ public:
                     events.ScheduleEvent(EVENT_METEOR_STRIKE, 40s);
                     break;
                 case EVENT_FIERY_COMBUSTION:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 100.0f, true, true, -SPELL_TWILIGHT_REALM))
+                    if (Unit* target =
+                            SelectTarget(SelectTargetMethod::Random, 1, 100.0f, true, true, -SPELL_TWILIGHT_REALM))
                         me->CastSpell(target, SPELL_FIERY_COMBUSTION, false);
                     events.ScheduleEvent(EVENT_FIERY_COMBUSTION, 25s);
                     break;
@@ -455,7 +462,7 @@ public:
             me->SetReactState(REACT_DEFENSIVE);
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             _events.Reset();
             _events.ScheduleEvent(EVENT_CLEAVE, 8s, 10s);
@@ -469,9 +476,7 @@ public:
             me->SetInCombatWithZone();
         }
 
-        void EnterEvadeMode(EvadeReason /*why*/) override
-        {
-        }
+        void EnterEvadeMode(EvadeReason /*why*/) override { }
 
         void KilledUnit(Unit* victim) override
         {
@@ -538,7 +543,8 @@ public:
                     _events.ScheduleEvent(EVENT_BREATH, 10s, 12s);
                     break;
                 case EVENT_SOUL_CONSUMPTION:
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 100.0f, true, true, SPELL_TWILIGHT_REALM))
+                    if (Unit* target =
+                            SelectTarget(SelectTargetMethod::Random, 1, 100.0f, true, true, SPELL_TWILIGHT_REALM))
                         me->CastSpell(target, SPELL_SOUL_CONSUMPTION, false);
                     _events.ScheduleEvent(EVENT_SOUL_CONSUMPTION, 20s);
                     break;
@@ -559,7 +565,8 @@ public:
                     _events.ScheduleEvent(EVENT_SHADOW_PULSARS_SHOOT, 5s);
                     break;
                 case EVENT_SHADOW_PULSARS_SHOOT:
-                    if (Creature* orbCarrier = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(NPC_ORB_CARRIER)))
+                    if (Creature* orbCarrier =
+                            ObjectAccessor::GetCreature(*me, _instance->GetGuidData(NPC_ORB_CARRIER)))
                         orbCarrier->AI()->DoAction(ACTION_SHOOT);
                     break;
             }
@@ -586,8 +593,7 @@ public:
     struct npc_halion_controllerAI : public NullCreatureAI
     {
         npc_halion_controllerAI(Creature* creature) : NullCreatureAI(creature), _instance(creature->GetInstanceScript())
-        {
-        }
+        { }
 
         void Reset() override
         {
@@ -698,19 +704,19 @@ public:
             switch (action)
             {
                 case CORPOREALITY_INCREASE:
-                    {
-                        if (_corporeality == (MAX_CORPOREALITY_STATE - 1))
-                            return;
-                        ++_corporeality;
-                        break;
-                    }
+                {
+                    if (_corporeality == (MAX_CORPOREALITY_STATE - 1))
+                        return;
+                    ++_corporeality;
+                    break;
+                }
                 case CORPOREALITY_DECREASE:
-                    {
-                        if (_corporeality == 0)
-                            return;
-                        --_corporeality;
-                        break;
-                    }
+                {
+                    if (_corporeality == 0)
+                        return;
+                    --_corporeality;
+                    break;
+                }
                 default:
                     break;
             }
@@ -718,10 +724,12 @@ public:
             _instance->DoUpdateWorldState(WORLDSTATE_CORPOREALITY_MATERIAL, _corporeality * 10);
             _instance->DoUpdateWorldState(WORLDSTATE_CORPOREALITY_TWILIGHT, 100 - _corporeality * 10);
 
-            if (Creature* twilightHalion = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(NPC_TWILIGHT_HALION)))
+            if (Creature* twilightHalion =
+                    ObjectAccessor::GetCreature(*me, _instance->GetGuidData(NPC_TWILIGHT_HALION)))
             {
                 twilightHalion->RemoveAurasDueToSpell(_corporealityReference[MAX_CORPOREALITY_STATE - 1 - oldValue]);
-                twilightHalion->CastSpell(twilightHalion, _corporealityReference[MAX_CORPOREALITY_STATE - 1 - _corporeality], true);
+                twilightHalion->CastSpell(
+                    twilightHalion, _corporealityReference[MAX_CORPOREALITY_STATE - 1 - _corporeality], true);
                 twilightHalion->AI()->Talk(oldValue < _corporeality ? EMOTE_CORPOREALITY_TOT : EMOTE_CORPOREALITY_TIT);
             }
 
@@ -804,7 +812,7 @@ class spell_halion_meteor_strike_targeting : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_METEOR_STRIKE });
+        return ValidateSpellInfo({SPELL_METEOR_STRIKE});
     }
 
     void HandleDummy(SpellEffIndex /*effIndex*/)
@@ -815,7 +823,8 @@ class spell_halion_meteor_strike_targeting : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_halion_meteor_strike_targeting::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_halion_meteor_strike_targeting::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
 
@@ -825,7 +834,7 @@ class spell_halion_meteor_strike_marker_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_METEOR_STRIKE_AOE_DAMAGE, SPELL_METEOR_STRIKE_FIRE_AURA_1 });
+        return ValidateSpellInfo({SPELL_METEOR_STRIKE_AOE_DAMAGE, SPELL_METEOR_STRIKE_FIRE_AURA_1});
     }
 
     void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -849,8 +858,10 @@ class spell_halion_meteor_strike_marker_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_halion_meteor_strike_marker_aura::OnApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_halion_meteor_strike_marker_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_halion_meteor_strike_marker_aura::OnApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_halion_meteor_strike_marker_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -860,21 +871,28 @@ class spell_halion_meteor_strike_spread_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_METEOR_FLAME1, SPELL_SUMMON_METEOR_FLAME2, SPELL_SUMMON_METEOR_FLAME3 });
+        return ValidateSpellInfo({SPELL_SUMMON_METEOR_FLAME1, SPELL_SUMMON_METEOR_FLAME2, SPELL_SUMMON_METEOR_FLAME3});
     }
 
-    void HandlePeriodic(AuraEffect const*  /*aurEff*/)
+    void HandlePeriodic(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction(); // xinef: 3/5 straight, 2/5 turn
         if (!GetUnitOwner()->GetInstanceScript() || !GetUnitOwner()->GetInstanceScript()->IsEncounterInProgress())
             return;
 
-        GetUnitOwner()->CastSpell(GetUnitOwner(), RAND(SPELL_SUMMON_METEOR_FLAME1, SPELL_SUMMON_METEOR_FLAME2, SPELL_SUMMON_METEOR_FLAME2, SPELL_SUMMON_METEOR_FLAME2, SPELL_SUMMON_METEOR_FLAME3), true);
+        GetUnitOwner()->CastSpell(GetUnitOwner(),
+            RAND(SPELL_SUMMON_METEOR_FLAME1,
+                SPELL_SUMMON_METEOR_FLAME2,
+                SPELL_SUMMON_METEOR_FLAME2,
+                SPELL_SUMMON_METEOR_FLAME2,
+                SPELL_SUMMON_METEOR_FLAME3),
+            true);
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_halion_meteor_strike_spread_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_halion_meteor_strike_spread_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -891,7 +909,8 @@ class spell_halion_blazing_aura : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_halion_blazing_aura::HandleForceCast, EFFECT_1, SPELL_EFFECT_FORCE_CAST);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_halion_blazing_aura::HandleForceCast, EFFECT_1, SPELL_EFFECT_FORCE_CAST);
     }
 };
 
@@ -919,9 +938,16 @@ public:
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_halion_combustion_consumption_aura::AddMarkStack, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
-        AfterEffectApply += AuraEffectApplyFn(spell_halion_combustion_consumption_aura::OnApply, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_halion_combustion_consumption_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_halion_combustion_consumption_aura::AddMarkStack, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
+        AfterEffectApply += AuraEffectApplyFn(spell_halion_combustion_consumption_aura::OnApply,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DAMAGE,
+            AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_halion_combustion_consumption_aura::OnRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DAMAGE,
+            AURA_EFFECT_HANDLE_REAL);
     }
 
 private:
@@ -933,7 +959,11 @@ class spell_halion_marks_aura : public AuraScript
     PrepareAuraScript(spell_halion_marks_aura);
 
 public:
-    spell_halion_marks_aura(uint32 summonSpell, uint32 removeSpell) : AuraScript(), _summonSpellId(summonSpell), _removeSpellId(removeSpell) { }
+    spell_halion_marks_aura(uint32 summonSpell, uint32 removeSpell) :
+        AuraScript(),
+        _summonSpellId(summonSpell),
+        _removeSpellId(removeSpell)
+    { }
 
     void BeforeDispel(DispelInfo* dispelData)
     {
@@ -944,21 +974,30 @@ public:
                 dispelledUnit->RemoveAurasDueToSpell(_removeSpellId, ObjectGuid::Empty, 0, AURA_REMOVE_BY_EXPIRE);
     }
 
-    void OnRemove(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (GetTargetApplication()->GetRemoveMode() != AURA_REMOVE_BY_EXPIRE)
             return;
 
-        if (!GetTarget()->GetInstanceScript() || !GetTarget()->GetInstanceScript()->IsEncounterInProgress() || GetTarget()->GetMapId() != 724)
+        if (!GetTarget()->GetInstanceScript() || !GetTarget()->GetInstanceScript()->IsEncounterInProgress() ||
+            GetTarget()->GetMapId() != 724)
             return;
 
-        GetTarget()->CastCustomSpell(_summonSpellId, SPELLVALUE_BASE_POINT1, GetAura()->GetStackAmount(), GetTarget(), TRIGGERED_FULL_MASK, nullptr, nullptr, GetCasterGUID());
+        GetTarget()->CastCustomSpell(_summonSpellId,
+            SPELLVALUE_BASE_POINT1,
+            GetAura()->GetStackAmount(),
+            GetTarget(),
+            TRIGGERED_FULL_MASK,
+            nullptr,
+            nullptr,
+            GetCasterGUID());
     }
 
     void Register() override
     {
         OnDispel += AuraDispelFn(spell_halion_marks_aura::BeforeDispel);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_halion_marks_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove +=
+            AuraEffectRemoveFn(spell_halion_marks_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 
 private:
@@ -972,22 +1011,28 @@ class spell_halion_damage_aoe_summon : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SCALE_AURA });
+        return ValidateSpellInfo({SPELL_SCALE_AURA});
     }
 
 public:
-    spell_halion_damage_aoe_summon(uint32 explosionSpell, uint32 auraSpell) : SpellScript(), _explosionSpell(explosionSpell), _auraSpell(auraSpell) { }
+    spell_halion_damage_aoe_summon(uint32 explosionSpell, uint32 auraSpell) :
+        SpellScript(),
+        _explosionSpell(explosionSpell),
+        _auraSpell(auraSpell)
+    { }
 
     void HandleSummon(SpellEffIndex effIndex)
     {
         PreventHitDefaultEffect(effIndex);
         Unit* caster = GetCaster();
         uint32 entry = uint32(GetSpellInfo()->Effects[effIndex].MiscValue);
-        SummonPropertiesEntry const* properties = sSummonPropertiesStore.LookupEntry(uint32(GetSpellInfo()->Effects[effIndex].MiscValueB));
+        SummonPropertiesEntry const* properties =
+            sSummonPropertiesStore.LookupEntry(uint32(GetSpellInfo()->Effects[effIndex].MiscValueB));
         uint32 duration = uint32(GetSpellInfo()->GetDuration());
 
         Position pos = caster->GetPosition();
-        if (Creature* summon = caster->GetMap()->SummonCreature(entry, pos, properties, duration, caster, GetSpellInfo()->Id))
+        if (Creature* summon =
+                caster->GetMap()->SummonCreature(entry, pos, properties, duration, caster, GetSpellInfo()->Id))
         {
             bool heroic = summon->GetMap()->IsHeroic();
             bool raid = summon->GetMap()->Is25ManRaid();
@@ -999,10 +1044,12 @@ public:
             else
                 summon->SetPhaseMask(0x20, true);
 
-            summon->CastCustomSpell(SPELL_SCALE_AURA, SPELLVALUE_AURA_STACK, GetSpellValue()->EffectBasePoints[EFFECT_1], summon);
+            summon->CastCustomSpell(
+                SPELL_SCALE_AURA, SPELLVALUE_AURA_STACK, GetSpellValue()->EffectBasePoints[EFFECT_1], summon);
             summon->CastSpell(summon, _auraSpell, true);
 
-            int32 damage = int32((1500 + (GetSpellValue()->EffectBasePoints[EFFECT_1] * 1250)) * (heroic ? 1.25f : 1.0f) * (raid ? 1.5f : 1.0f));
+            int32 damage = int32((1500 + (GetSpellValue()->EffectBasePoints[EFFECT_1] * 1250)) *
+                                 (heroic ? 1.25f : 1.0f) * (raid ? 1.5f : 1.0f));
             caster->CastCustomSpell(_explosionSpell, SPELLVALUE_BASE_POINT0, damage, caster);
         }
     }
@@ -1023,10 +1070,10 @@ class spell_halion_clear_debuffs : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_FIERY_COMBUSTION });
+        return ValidateSpellInfo({SPELL_FIERY_COMBUSTION});
     }
 
-    void HandleScriptEffect(SpellEffIndex  /*effIndex*/)
+    void HandleScriptEffect(SpellEffIndex /*effIndex*/)
     {
         if (GetHitUnit())
         {
@@ -1038,7 +1085,8 @@ class spell_halion_clear_debuffs : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_halion_clear_debuffs::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_halion_clear_debuffs::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -1048,7 +1096,7 @@ class spell_halion_twilight_phasing : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_TWILIGHT_PORTAL });
+        return ValidateSpellInfo({SPELL_SUMMON_TWILIGHT_PORTAL});
     }
 
     bool Load() override
@@ -1059,8 +1107,10 @@ class spell_halion_twilight_phasing : public SpellScript
     void Phase()
     {
         Unit* caster = GetCaster();
-        caster->CastSpell(caster->GetPositionX(), caster->GetPositionY(), caster->GetPositionZ(), SPELL_SUMMON_TWILIGHT_PORTAL, true);
-        caster->GetMap()->SummonCreature(NPC_TWILIGHT_HALION, caster->ToCreature()->GetHomePosition(), nullptr, 0, caster);
+        caster->CastSpell(
+            caster->GetPositionX(), caster->GetPositionY(), caster->GetPositionZ(), SPELL_SUMMON_TWILIGHT_PORTAL, true);
+        caster->GetMap()->SummonCreature(
+            NPC_TWILIGHT_HALION, caster->ToCreature()->GetHomePosition(), nullptr, 0, caster);
     }
 
     void Register() override
@@ -1095,8 +1145,10 @@ class spell_halion_twilight_phasing_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_halion_twilight_phasing_aura::OnApply, EFFECT_0, SPELL_AURA_TRANSFORM, AURA_EFFECT_HANDLE_REAL);
-        OnEffectRemove += AuraEffectRemoveFn(spell_halion_twilight_phasing_aura::OnRemove, EFFECT_0, SPELL_AURA_TRANSFORM, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_halion_twilight_phasing_aura::OnApply, EFFECT_0, SPELL_AURA_TRANSFORM, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_halion_twilight_phasing_aura::OnRemove, EFFECT_0, SPELL_AURA_TRANSFORM, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -1106,7 +1158,7 @@ class spell_halion_twilight_realm_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_FIERY_COMBUSTION });
+        return ValidateSpellInfo({SPELL_FIERY_COMBUSTION});
     }
 
     void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*handle*/)
@@ -1118,12 +1170,14 @@ class spell_halion_twilight_realm_aura : public AuraScript
         target->RemoveAurasDueToSpell(SPELL_FIERY_COMBUSTION, ObjectGuid::Empty, 0, AURA_REMOVE_BY_ENEMY_SPELL);
         if (!GetTarget()->IsPlayer())
             return;
-        GetTarget()->m_Events.AddEvent(new SendEncounterUnit(GetTarget()->ToPlayer()), GetTarget()->m_Events.CalculateTime(500));
+        GetTarget()->m_Events.AddEvent(
+            new SendEncounterUnit(GetTarget()->ToPlayer()), GetTarget()->m_Events.CalculateTime(500));
     }
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_halion_twilight_realm_aura::OnApply, EFFECT_0, SPELL_AURA_PHASE, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(
+            spell_halion_twilight_realm_aura::OnApply, EFFECT_0, SPELL_AURA_PHASE, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -1133,7 +1187,7 @@ class spell_halion_leave_twilight_realm_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SOUL_CONSUMPTION, SPELL_TWILIGHT_REALM });
+        return ValidateSpellInfo({SPELL_SOUL_CONSUMPTION, SPELL_TWILIGHT_REALM});
     }
 
     void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*handle*/)
@@ -1151,13 +1205,16 @@ class spell_halion_leave_twilight_realm_aura : public AuraScript
 
         if (!GetTarget()->IsPlayer())
             return;
-        GetTarget()->m_Events.AddEvent(new SendEncounterUnit(GetTarget()->ToPlayer()), GetTarget()->m_Events.CalculateTime(500));
+        GetTarget()->m_Events.AddEvent(
+            new SendEncounterUnit(GetTarget()->ToPlayer()), GetTarget()->m_Events.CalculateTime(500));
     }
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_halion_leave_twilight_realm_aura::OnApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_halion_leave_twilight_realm_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(
+            spell_halion_leave_twilight_realm_aura::OnApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_halion_leave_twilight_realm_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -1173,14 +1230,18 @@ class spell_halion_twilight_cutter_periodic_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_halion_twilight_cutter_periodic_aura::HandlePeriodic, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_halion_twilight_cutter_periodic_aura::HandlePeriodic, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
 class TwilightCutterSelector
 {
 public:
-    TwilightCutterSelector(WorldObject* caster, WorldObject* cutterCaster) : _caster(caster), _cutterCaster(cutterCaster) {}
+    TwilightCutterSelector(WorldObject* caster, WorldObject* cutterCaster) :
+        _caster(caster),
+        _cutterCaster(cutterCaster)
+    { }
 
     bool operator()(WorldObject* unit)
     {
@@ -1213,7 +1274,8 @@ class spell_halion_twilight_cutter : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_halion_twilight_cutter::RemoveNotBetween, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_halion_twilight_cutter::RemoveNotBetween, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -1238,8 +1300,10 @@ class spell_halion_summon_exit_portals : public SpellScript
 
     void Register() override
     {
-        OnEffectLaunch += SpellEffectFn(spell_halion_summon_exit_portals::OnSummon, EFFECT_0, SPELL_EFFECT_SUMMON_OBJECT_WILD);
-        OnEffectLaunch += SpellEffectFn(spell_halion_summon_exit_portals::OnSummon, EFFECT_1, SPELL_EFFECT_SUMMON_OBJECT_WILD);
+        OnEffectLaunch +=
+            SpellEffectFn(spell_halion_summon_exit_portals::OnSummon, EFFECT_0, SPELL_EFFECT_SUMMON_OBJECT_WILD);
+        OnEffectLaunch +=
+            SpellEffectFn(spell_halion_summon_exit_portals::OnSummon, EFFECT_1, SPELL_EFFECT_SUMMON_OBJECT_WILD);
     }
 };
 
@@ -1249,10 +1313,10 @@ class spell_halion_twilight_division : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_EXIT_PORTALS_NORMAL, SPELL_SUMMON_EXIT_PORTALS, SPELL_TWILIGHT_PHASING });
+        return ValidateSpellInfo({SPELL_SUMMON_EXIT_PORTALS_NORMAL, SPELL_SUMMON_EXIT_PORTALS, SPELL_TWILIGHT_PHASING});
     }
 
-    void HandleDummy(SpellEffIndex  /*effIndex*/)
+    void HandleDummy(SpellEffIndex /*effIndex*/)
     {
         InstanceScript* instance = GetCaster()->GetInstanceScript();
         Creature* controller = ObjectAccessor::GetCreature(*GetCaster(), instance->GetGuidData(NPC_HALION_CONTROLLER));
@@ -1287,7 +1351,7 @@ class spell_halion_twilight_mending : public SpellScript
 {
     PrepareSpellScript(spell_halion_twilight_mending);
 
-    void HandleHealPct(SpellEffIndex  /*effIndex*/)
+    void HandleHealPct(SpellEffIndex /*effIndex*/)
     {
         if (Creature* target = GetHitCreature())
             target->AI()->Talk(SAY_REGENERATE);
@@ -1295,7 +1359,8 @@ class spell_halion_twilight_mending : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_halion_twilight_mending::HandleHealPct, EFFECT_ALL, SPELL_EFFECT_HEAL_PCT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_halion_twilight_mending::HandleHealPct, EFFECT_ALL, SPELL_EFFECT_HEAL_PCT);
     }
 };
 
@@ -1314,7 +1379,8 @@ public:
             me->CastSpell(me, SPELL_BLAZING_AURA, true);
 
             if (InstanceScript* instance = me->GetInstanceScript())
-                if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_HALION_CONTROLLER)))
+                if (Creature* controller =
+                        ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_HALION_CONTROLLER)))
                     controller->AI()->JustSummoned(me);
         }
 
@@ -1342,12 +1408,26 @@ void AddSC_boss_halion()
     RegisterSpellScript(spell_halion_meteor_strike_marker_aura);
     RegisterSpellScript(spell_halion_meteor_strike_spread_aura);
     RegisterSpellScript(spell_halion_blazing_aura);
-    RegisterSpellScriptWithArgs(spell_halion_combustion_consumption_aura, "spell_halion_soul_consumption_aura", SPELL_MARK_OF_CONSUMPTION);
-    RegisterSpellScriptWithArgs(spell_halion_combustion_consumption_aura, "spell_halion_fiery_combustion_aura", SPELL_MARK_OF_COMBUSTION);
-    RegisterSpellScriptWithArgs(spell_halion_marks_aura, "spell_halion_mark_of_combustion_aura", SPELL_FIERY_COMBUSTION_SUMMON, SPELL_FIERY_COMBUSTION);
-    RegisterSpellScriptWithArgs(spell_halion_marks_aura, "spell_halion_mark_of_consumption_aura", SPELL_SOUL_CONSUMPTION_SUMMON, SPELL_SOUL_CONSUMPTION);
-    RegisterSpellScriptWithArgs(spell_halion_damage_aoe_summon, "spell_halion_combustion_summon", SPELL_FIERY_COMBUSTION_EXPLOSION, SPELL_COMBUSTION_DAMAGE_AURA);
-    RegisterSpellScriptWithArgs(spell_halion_damage_aoe_summon, "spell_halion_consumption_summon", SPELL_SOUL_CONSUMPTION_EXPLOSION, SPELL_CONSUMPTION_DAMAGE_AURA);
+    RegisterSpellScriptWithArgs(
+        spell_halion_combustion_consumption_aura, "spell_halion_soul_consumption_aura", SPELL_MARK_OF_CONSUMPTION);
+    RegisterSpellScriptWithArgs(
+        spell_halion_combustion_consumption_aura, "spell_halion_fiery_combustion_aura", SPELL_MARK_OF_COMBUSTION);
+    RegisterSpellScriptWithArgs(spell_halion_marks_aura,
+        "spell_halion_mark_of_combustion_aura",
+        SPELL_FIERY_COMBUSTION_SUMMON,
+        SPELL_FIERY_COMBUSTION);
+    RegisterSpellScriptWithArgs(spell_halion_marks_aura,
+        "spell_halion_mark_of_consumption_aura",
+        SPELL_SOUL_CONSUMPTION_SUMMON,
+        SPELL_SOUL_CONSUMPTION);
+    RegisterSpellScriptWithArgs(spell_halion_damage_aoe_summon,
+        "spell_halion_combustion_summon",
+        SPELL_FIERY_COMBUSTION_EXPLOSION,
+        SPELL_COMBUSTION_DAMAGE_AURA);
+    RegisterSpellScriptWithArgs(spell_halion_damage_aoe_summon,
+        "spell_halion_consumption_summon",
+        SPELL_SOUL_CONSUMPTION_EXPLOSION,
+        SPELL_CONSUMPTION_DAMAGE_AURA);
     RegisterSpellScript(spell_halion_clear_debuffs);
     RegisterSpellAndAuraScriptPair(spell_halion_twilight_phasing, spell_halion_twilight_phasing_aura);
     RegisterSpellScript(spell_halion_twilight_realm_aura);

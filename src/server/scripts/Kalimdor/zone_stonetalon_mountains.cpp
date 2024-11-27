@@ -92,17 +92,17 @@ public:
 
 enum Kaya
 {
-    FACTION_ESCORTEE_H          = 775,
+    FACTION_ESCORTEE_H = 775,
 
-    NPC_GRIMTOTEM_RUFFIAN       = 11910,
-    NPC_GRIMTOTEM_BRUTE         = 11912,
-    NPC_GRIMTOTEM_SORCERER      = 11913,
+    NPC_GRIMTOTEM_RUFFIAN = 11910,
+    NPC_GRIMTOTEM_BRUTE = 11912,
+    NPC_GRIMTOTEM_SORCERER = 11913,
 
-    SAY_START                   = 0,
-    SAY_AMBUSH                  = 1,
-    SAY_END                     = 2,
+    SAY_START = 0,
+    SAY_AMBUSH = 1,
+    SAY_END = 2,
 
-    QUEST_PROTECT_KAYA          = 6523
+    QUEST_PROTECT_KAYA = 6523
 };
 
 class npc_kaya_flathoof : public CreatureScript
@@ -112,7 +112,7 @@ public:
 
     struct npc_kaya_flathoofAI : public npc_escortAI
     {
-        npc_kaya_flathoofAI(Creature* creature) : npc_escortAI(creature) {}
+        npc_kaya_flathoofAI(Creature* creature) : npc_escortAI(creature) { }
 
         void WaypointReached(uint32 waypointId) override
         {
@@ -124,9 +124,27 @@ public:
             {
                 case 16:
                     Talk(SAY_AMBUSH);
-                    me->SummonCreature(NPC_GRIMTOTEM_BRUTE, -48.53f, -503.34f, -46.31f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                    me->SummonCreature(NPC_GRIMTOTEM_RUFFIAN, -38.85f, -503.77f, -45.90f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
-                    me->SummonCreature(NPC_GRIMTOTEM_SORCERER, -36.37f, -496.23f, -45.71f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000);
+                    me->SummonCreature(NPC_GRIMTOTEM_BRUTE,
+                        -48.53f,
+                        -503.34f,
+                        -46.31f,
+                        0.0f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        30000);
+                    me->SummonCreature(NPC_GRIMTOTEM_RUFFIAN,
+                        -38.85f,
+                        -503.77f,
+                        -45.90f,
+                        0.0f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        30000);
+                    me->SummonCreature(NPC_GRIMTOTEM_SORCERER,
+                        -36.37f,
+                        -496.23f,
+                        -45.71f,
+                        0.0f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        30000);
                     break;
                 case 18:
                     me->SetFacingToObject(player);
@@ -141,7 +159,7 @@ public:
             summoned->AI()->AttackStart(me);
         }
 
-        void Reset() override {}
+        void Reset() override { }
     };
 
     bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override

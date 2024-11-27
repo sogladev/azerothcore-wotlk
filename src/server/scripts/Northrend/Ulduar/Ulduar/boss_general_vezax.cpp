@@ -30,45 +30,45 @@
 
 enum VezaxSpellData
 {
-    SPELL_VEZAX_BERSERK                         = 26662,
+    SPELL_VEZAX_BERSERK = 26662,
 
-    SPELL_VEZAX_SHADOW_CRASH                    = 62660,
-    SPELL_VEZAX_SHADOW_CRASH_DMG                = 62659,
-    SPELL_VEZAX_SHADOW_CRASH_AREA_AURA          = 63277,
-    SPELL_VEZAX_SHADOW_CRASH_AURA               = 65269,
+    SPELL_VEZAX_SHADOW_CRASH = 62660,
+    SPELL_VEZAX_SHADOW_CRASH_DMG = 62659,
+    SPELL_VEZAX_SHADOW_CRASH_AREA_AURA = 63277,
+    SPELL_VEZAX_SHADOW_CRASH_AURA = 65269,
 
-    SPELL_SEARING_FLAMES                        = 62661,
+    SPELL_SEARING_FLAMES = 62661,
 
-    SPELL_SURGE_OF_DARKNESS                     = 62662,
+    SPELL_SURGE_OF_DARKNESS = 62662,
 
-    SPELL_MARK_OF_THE_FACELESS_AURA             = 63276,
-    SPELL_MARK_OF_THE_FACELESS_EFFECT           = 63278,
+    SPELL_MARK_OF_THE_FACELESS_AURA = 63276,
+    SPELL_MARK_OF_THE_FACELESS_EFFECT = 63278,
 
-    SPELL_AURA_OF_DESPAIR_1                     = 62692,
-    SPELL_AURA_OF_DESPAIR_2                     = 64848,
-    SPELL_CORRUPTED_RAGE                        = 68415,
-    SPELL_CORRUPTED_WISDOM                      = 64646,
-    SPELL_SHAMANISTIC_RAGE                      = 30823,
-    SPELL_JUDGEMENTS_OF_THE_WISDOM_RANK_1       = 31876,
+    SPELL_AURA_OF_DESPAIR_1 = 62692,
+    SPELL_AURA_OF_DESPAIR_2 = 64848,
+    SPELL_CORRUPTED_RAGE = 68415,
+    SPELL_CORRUPTED_WISDOM = 64646,
+    SPELL_SHAMANISTIC_RAGE = 30823,
+    SPELL_JUDGEMENTS_OF_THE_WISDOM_RANK_1 = 31876,
 
-    SPELL_SUMMON_SARONITE_VAPORS                = 63081,
-    NPC_SARONITE_VAPORS                         = 33488,
-    SPELL_SARONITE_VAPORS_DMG                   = 63338,
-    SPELL_SARONITE_VAPORS_ENERGIZE              = 63337,
-    SPELL_SARONITE_VAPORS_AURA                  = 63323,
-    SPELL_SARONITE_VAPORS_DUMMYAURA             = 63322,
+    SPELL_SUMMON_SARONITE_VAPORS = 63081,
+    NPC_SARONITE_VAPORS = 33488,
+    SPELL_SARONITE_VAPORS_DMG = 63338,
+    SPELL_SARONITE_VAPORS_ENERGIZE = 63337,
+    SPELL_SARONITE_VAPORS_AURA = 63323,
+    SPELL_SARONITE_VAPORS_DUMMYAURA = 63322,
 
-    SPELL_SARONITE_ANIMUS_FORMATION_VISUAL      = 63319,
-    SPELL_SUMMON_SARONITE_ANIMUS                = 63145,
-    SPELL_SARONITE_BARRIER                      = 63364,
-    SPELL_PROFOUND_DARKNESS                     = 63420,
+    SPELL_SARONITE_ANIMUS_FORMATION_VISUAL = 63319,
+    SPELL_SUMMON_SARONITE_ANIMUS = 63145,
+    SPELL_SARONITE_BARRIER = 63364,
+    SPELL_PROFOUND_DARKNESS = 63420,
 };
 
 enum VezaxNpcs
 {
     // NPC_VEZAX                                = 33271,
     // NPC_VEZAX_BUNNY                          = 33500,
-    NPC_SARONITE_ANIMUS                         = 33524,
+    NPC_SARONITE_ANIMUS = 33524,
 };
 
 enum VezaxGOs
@@ -78,35 +78,35 @@ enum VezaxGOs
 
 enum VezaxEvents
 {
-    EVENT_SPELL_VEZAX_SHADOW_CRASH              = 1,
-    EVENT_SPELL_SEARING_FLAMES                  = 2,
-    EVENT_SPELL_SURGE_OF_DARKNESS               = 3,
-    EVENT_SPELL_MARK_OF_THE_FACELESS            = 4,
-    EVENT_SPELL_SUMMON_SARONITE_VAPORS          = 5,
-    EVENT_SARONITE_VAPORS_SWIRL                 = 6,
-    EVENT_SPELL_SUMMON_SARONITE_ANIMUS          = 7,
-    EVENT_DESPAWN_SARONITE_VAPORS               = 8,
-    EVENT_SPELL_PROFOUND_DARKNESS               = 9,
-    EVENT_BERSERK                               = 10,
-    EVENT_RESTORE_TARGET                        = 11,
+    EVENT_SPELL_VEZAX_SHADOW_CRASH = 1,
+    EVENT_SPELL_SEARING_FLAMES = 2,
+    EVENT_SPELL_SURGE_OF_DARKNESS = 3,
+    EVENT_SPELL_MARK_OF_THE_FACELESS = 4,
+    EVENT_SPELL_SUMMON_SARONITE_VAPORS = 5,
+    EVENT_SARONITE_VAPORS_SWIRL = 6,
+    EVENT_SPELL_SUMMON_SARONITE_ANIMUS = 7,
+    EVENT_DESPAWN_SARONITE_VAPORS = 8,
+    EVENT_SPELL_PROFOUND_DARKNESS = 9,
+    EVENT_BERSERK = 10,
+    EVENT_RESTORE_TARGET = 11,
 };
 
 enum VezaxText
 {
-    SAY_AGGRO                            = 0,
-    SAY_SLAY                             = 1,
-    SAY_SURGE_OF_DARKNESS                = 2,
-    SAY_DEATH                            = 3,
-    SAY_BERSERK                          = 4,
-    SAY_HARDMODE                         = 5,
-    SAY_EMOTE_ANIMUS                     = 6,
-    SAY_EMOTE_BARRIER                    = 7,
-    SAY_EMOTE_SURGE_OF_DARKNESS          = 8,
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_SURGE_OF_DARKNESS = 2,
+    SAY_DEATH = 3,
+    SAY_BERSERK = 4,
+    SAY_HARDMODE = 5,
+    SAY_EMOTE_ANIMUS = 6,
+    SAY_EMOTE_BARRIER = 7,
+    SAY_EMOTE_SURGE_OF_DARKNESS = 8,
 };
 
 enum VaporsText
 {
-    SAY_EMOTE_VAPORS    = 0,
+    SAY_EMOTE_VAPORS = 0,
 };
 
 class boss_vezax : public CreatureScript
@@ -154,7 +154,7 @@ public:
             me->setActive(false);
         }
 
-        void JustEngagedWith(Unit*  /*pWho*/) override
+        void JustEngagedWith(Unit* /*pWho*/) override
         {
             me->setActive(true);
             me->SetInCombatWithZone();
@@ -212,7 +212,8 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (!berserk && (me->GetPositionX() < 1720.0f || me->GetPositionX() > 1940.0f || me->GetPositionY() < 20.0f || me->GetPositionY() > 210.0f))
+            if (!berserk && (me->GetPositionX() < 1720.0f || me->GetPositionX() > 1940.0f ||
+                                me->GetPositionY() < 20.0f || me->GetPositionY() > 210.0f))
                 events.RescheduleEvent(EVENT_BERSERK, 1ms);
 
             events.Update(diff);
@@ -230,27 +231,27 @@ public:
                     Talk(SAY_BERSERK);
                     break;
                 case EVENT_SPELL_VEZAX_SHADOW_CRASH:
-                    {
-                        events.Repeat(10s);
+                {
+                    events.Repeat(10s);
 
-                        std::vector<Player*> players;
-                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                        for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
-                        {
-                            Player* temp = itr->GetSource();
-                            if (temp->IsAlive() && temp->GetDistance(me) > 15.0f )
-                                players.push_back(temp);
-                        }
-                        if (!players.empty())
-                        {
-                            me->setAttackTimer(BASE_ATTACK, 2000);
-                            Player* target = players.at(urand(0, players.size() - 1));
-                            me->SetGuidValue(UNIT_FIELD_TARGET, target->GetGUID());
-                            me->CastSpell(target, SPELL_VEZAX_SHADOW_CRASH, false);
-                            events.ScheduleEvent(EVENT_RESTORE_TARGET, 750ms);
-                        }
+                    std::vector<Player*> players;
+                    Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
+                    {
+                        Player* temp = itr->GetSource();
+                        if (temp->IsAlive() && temp->GetDistance(me) > 15.0f)
+                            players.push_back(temp);
                     }
-                    break;
+                    if (!players.empty())
+                    {
+                        me->setAttackTimer(BASE_ATTACK, 2000);
+                        Player* target = players.at(urand(0, players.size() - 1));
+                        me->SetGuidValue(UNIT_FIELD_TARGET, target->GetGUID());
+                        me->CastSpell(target, SPELL_VEZAX_SHADOW_CRASH, false);
+                        events.ScheduleEvent(EVENT_RESTORE_TARGET, 750ms);
+                    }
+                }
+                break;
                 case EVENT_RESTORE_TARGET:
                     if (me->GetVictim())
                         me->SetGuidValue(UNIT_FIELD_TARGET, me->GetVictim()->GetGUID());
@@ -268,55 +269,55 @@ public:
                     events.DelayEvents(10000, 1);
                     break;
                 case EVENT_SPELL_MARK_OF_THE_FACELESS:
-                    {
-                        std::vector<Player*> outside;
-                        std::vector<Player*> inside;
-                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
-                        for( Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr )
-                            if (Player* tmp = itr->GetSource())
-                                if (tmp->IsAlive())
-                                {
-                                    if (tmp->GetDistance(me) > 15.0f )
-                                        outside.push_back(tmp);
-                                    else
-                                        inside.push_back(tmp);
-                                }
+                {
+                    std::vector<Player*> outside;
+                    std::vector<Player*> inside;
+                    Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
+                        if (Player* tmp = itr->GetSource())
+                            if (tmp->IsAlive())
+                            {
+                                if (tmp->GetDistance(me) > 15.0f)
+                                    outside.push_back(tmp);
+                                else
+                                    inside.push_back(tmp);
+                            }
 
-                        Player* t = nullptr;
-                        if (outside.size() >= uint8(me->GetMap()->Is25ManRaid() ? 9 : 4))
-                            t = outside.at(urand(0, outside.size() - 1));
-                        else if (!inside.empty())
-                            t = inside.at(urand(0, inside.size() - 1));
+                    Player* t = nullptr;
+                    if (outside.size() >= uint8(me->GetMap()->Is25ManRaid() ? 9 : 4))
+                        t = outside.at(urand(0, outside.size() - 1));
+                    else if (!inside.empty())
+                        t = inside.at(urand(0, inside.size() - 1));
 
-                        if (t)
-                            me->CastSpell(t, SPELL_MARK_OF_THE_FACELESS_AURA, false);
+                    if (t)
+                        me->CastSpell(t, SPELL_MARK_OF_THE_FACELESS_AURA, false);
 
-                        events.Repeat(40s);
-                    }
-                    break;
+                    events.Repeat(40s);
+                }
+                break;
                 case EVENT_SPELL_SUMMON_SARONITE_VAPORS:
+                {
+                    vaporsCount++;
+                    me->CastSpell(me, SPELL_SUMMON_SARONITE_VAPORS, false);
+
+                    if (vaporsCount < 6 || !hardmodeAvailable)
+                        events.Repeat(30s);
+                    else
                     {
-                        vaporsCount++;
-                        me->CastSpell(me, SPELL_SUMMON_SARONITE_VAPORS, false);
+                        for (ObjectGuid const& guid : summons)
+                            if (Creature* sv = ObjectAccessor::GetCreature(*me, guid))
+                            {
+                                sv->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
+                                sv->GetMotionMaster()->MoveIdle();
+                                sv->GetMotionMaster()->MoveCharge(1852.78f, 81.38f, 342.461f, 28.0f);
+                            }
 
-                        if (vaporsCount < 6 || !hardmodeAvailable)
-                            events.Repeat(30s);
-                        else
-                        {
-                            for (ObjectGuid const& guid : summons)
-                                if (Creature* sv = ObjectAccessor::GetCreature(*me, guid))
-                                {
-                                    sv->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-                                    sv->GetMotionMaster()->MoveIdle();
-                                    sv->GetMotionMaster()->MoveCharge(1852.78f, 81.38f, 342.461f, 28.0f);
-                                }
-
-                            events.DelayEvents(12000, 0);
-                            events.DelayEvents(12000, 1);
-                            events.ScheduleEvent(EVENT_SARONITE_VAPORS_SWIRL, 6s);
-                        }
+                        events.DelayEvents(12000, 0);
+                        events.DelayEvents(12000, 1);
+                        events.ScheduleEvent(EVENT_SARONITE_VAPORS_SWIRL, 6s);
                     }
-                    break;
+                }
+                break;
                 case EVENT_SARONITE_VAPORS_SWIRL:
                     if (summons.size())
                     {
@@ -349,7 +350,7 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
             summons.DespawnAll();
             if (pInstance)
@@ -358,7 +359,7 @@ public:
             Talk(SAY_DEATH);
 
             if (GameObject* door = me->FindNearestGameObject(GO_VEZAX_DOOR, 500.0f))
-                if (door->GetGoState() != GO_STATE_ACTIVE )
+                if (door->GetGoState() != GO_STATE_ACTIVE)
                 {
                     door->SetLootState(GO_READY);
                     door->UseDoorOrButton(0, false);
@@ -371,7 +372,7 @@ public:
                 Talk(SAY_SLAY);
         }
 
-        void MoveInLineOfSight(Unit*  /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void JustSummoned(Creature* summon) override
         {
@@ -405,7 +406,7 @@ public:
 
         InstanceScript* pInstance;
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
             me->CastSpell(me, SPELL_SARONITE_VAPORS_AURA, true);
 
@@ -447,7 +448,7 @@ public:
         InstanceScript* pInstance;
         uint16 timer;
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
             me->DespawnOrUnsummon(3000);
 
@@ -478,10 +479,10 @@ class spell_aura_of_despair_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_AURA_OF_DESPAIR_2, SPELL_CORRUPTED_RAGE, SPELL_CORRUPTED_WISDOM });
+        return ValidateSpellInfo({SPELL_AURA_OF_DESPAIR_2, SPELL_CORRUPTED_RAGE, SPELL_CORRUPTED_WISDOM});
     }
 
-    void OnApply(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes  /*mode*/)
+    void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (Unit* caster = GetCaster())
             if (Unit* target = GetTarget())
@@ -492,7 +493,9 @@ class spell_aura_of_despair_aura : public AuraScript
                 target->CastSpell(target, SPELL_AURA_OF_DESPAIR_2, true);
                 if (target->HasSpell(SPELL_SHAMANISTIC_RAGE))
                     caster->CastSpell(target, SPELL_CORRUPTED_RAGE, true);
-                else if (target->HasSpell(SPELL_JUDGEMENTS_OF_THE_WISDOM_RANK_1) || target->HasSpell(SPELL_JUDGEMENTS_OF_THE_WISDOM_RANK_1 + 1) || target->HasSpell(SPELL_JUDGEMENTS_OF_THE_WISDOM_RANK_1 + 2))
+                else if (target->HasSpell(SPELL_JUDGEMENTS_OF_THE_WISDOM_RANK_1) ||
+                         target->HasSpell(SPELL_JUDGEMENTS_OF_THE_WISDOM_RANK_1 + 1) ||
+                         target->HasSpell(SPELL_JUDGEMENTS_OF_THE_WISDOM_RANK_1 + 2))
                     caster->CastSpell(target, SPELL_CORRUPTED_WISDOM, true);
             }
     }
@@ -509,8 +512,14 @@ class spell_aura_of_despair_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_aura_of_despair_aura::OnApply, EFFECT_0, SPELL_AURA_PREVENT_REGENERATE_POWER, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_aura_of_despair_aura::OnRemove, EFFECT_0, SPELL_AURA_PREVENT_REGENERATE_POWER, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_aura_of_despair_aura::OnApply,
+            EFFECT_0,
+            SPELL_AURA_PREVENT_REGENERATE_POWER,
+            AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_aura_of_despair_aura::OnRemove,
+            EFFECT_0,
+            SPELL_AURA_PREVENT_REGENERATE_POWER,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -520,10 +529,10 @@ class spell_mark_of_the_faceless_periodic_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_MARK_OF_THE_FACELESS_EFFECT });
+        return ValidateSpellInfo({SPELL_MARK_OF_THE_FACELESS_EFFECT});
     }
 
-    void HandleEffectPeriodic(AuraEffect const*   /*aurEff*/)
+    void HandleEffectPeriodic(AuraEffect const* /*aurEff*/)
     {
         if (Unit* caster = GetCaster())
             if (Unit* target = GetTarget())
@@ -536,7 +545,8 @@ class spell_mark_of_the_faceless_periodic_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_mark_of_the_faceless_periodic_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_mark_of_the_faceless_periodic_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -553,7 +563,8 @@ class spell_mark_of_the_faceless_drainhealth : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_mark_of_the_faceless_drainhealth::FilterTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_mark_of_the_faceless_drainhealth::FilterTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ENEMY);
     }
 };
 
@@ -563,7 +574,7 @@ class spell_saronite_vapors_dummy_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SARONITE_VAPORS_DMG });
+        return ValidateSpellInfo({SPELL_SARONITE_VAPORS_DMG});
     }
 
     void HandleAfterEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -577,7 +588,10 @@ class spell_saronite_vapors_dummy_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_saronite_vapors_dummy_aura::HandleAfterEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        AfterEffectApply += AuraEffectApplyFn(spell_saronite_vapors_dummy_aura::HandleAfterEffectApply,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
     }
 };
 
@@ -587,7 +601,7 @@ class spell_saronite_vapors_damage : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SARONITE_VAPORS_ENERGIZE });
+        return ValidateSpellInfo({SPELL_SARONITE_VAPORS_ENERGIZE});
     }
 
     void HandleAfterHit()
@@ -610,22 +624,24 @@ class spell_saronite_vapors_damage : public SpellScript
 class achievement_smell_saronite : public AchievementCriteriaScript
 {
 public:
-    achievement_smell_saronite() : AchievementCriteriaScript("achievement_smell_saronite") {}
+    achievement_smell_saronite() : AchievementCriteriaScript("achievement_smell_saronite") { }
 
-    bool OnCheck(Player*  /*player*/, Unit* target, uint32 /*criteria_id*/) override
+    bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {
-        return target && target->GetEntry() == NPC_VEZAX && target->IsCreature() && target->ToCreature()->AI()->GetData(1);
+        return target && target->GetEntry() == NPC_VEZAX && target->IsCreature() &&
+               target->ToCreature()->AI()->GetData(1);
     }
 };
 
 class achievement_shadowdodger : public AchievementCriteriaScript
 {
 public:
-    achievement_shadowdodger() : AchievementCriteriaScript("achievement_shadowdodger") {}
+    achievement_shadowdodger() : AchievementCriteriaScript("achievement_shadowdodger") { }
 
-    bool OnCheck(Player*  /*player*/, Unit* target, uint32 /*criteria_id*/) override
+    bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {
-        return target && target->GetEntry() == NPC_VEZAX && target->IsCreature() && target->ToCreature()->AI()->GetData(2);
+        return target && target->GetEntry() == NPC_VEZAX && target->IsCreature() &&
+               target->ToCreature()->AI()->GetData(2);
     }
 };
 
@@ -640,7 +656,9 @@ public:
             return false;
 
         if (InstanceScript* pInstance = go->GetInstanceScript())
-            if (pInstance->GetData(TYPE_XT002) != DONE && pInstance->GetData(TYPE_MIMIRON) != DONE && pInstance->GetData(TYPE_THORIM) != DONE && pInstance->GetData(TYPE_FREYA) != DONE && pInstance->GetData(TYPE_HODIR) != DONE)
+            if (pInstance->GetData(TYPE_XT002) != DONE && pInstance->GetData(TYPE_MIMIRON) != DONE &&
+                pInstance->GetData(TYPE_THORIM) != DONE && pInstance->GetData(TYPE_FREYA) != DONE &&
+                pInstance->GetData(TYPE_HODIR) != DONE)
             {
                 std::string accountName;
                 AccountMgr::GetName(plr->GetSession()->GetAccountId(), accountName);

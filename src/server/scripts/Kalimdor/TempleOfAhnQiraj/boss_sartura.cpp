@@ -22,27 +22,27 @@
 
 enum Says
 {
-    SAY_AGGRO                       = 0,
-    SAY_SLAY                        = 1,
-    SAY_DEATH                       = 2
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2
 };
 
 enum Spells
 {
     // Battleguard Sartura
-    SPELL_WHIRLWIND                 = 26083, // MechanicImmunity->Stunned (15sec)
-    SPELL_ENRAGE                    = 8269,
-    SPELL_BERSERK                   = 27680,
-    SPELL_SUNDERING_CLEAVE          = 25174,
+    SPELL_WHIRLWIND = 26083, // MechanicImmunity->Stunned (15sec)
+    SPELL_ENRAGE = 8269,
+    SPELL_BERSERK = 27680,
+    SPELL_SUNDERING_CLEAVE = 25174,
     // Sartura's Royal Guard
-    SPELL_GUARD_WHIRLWIND           = 26038,
-    SPELL_GUARD_KNOCKBACK           = 26027
+    SPELL_GUARD_WHIRLWIND = 26038,
+    SPELL_GUARD_KNOCKBACK = 26027
 };
 
 enum events
 {
     // Battleguard Sartura
-    EVENT_SARTURA_WHIRLWIND         = 1,
+    EVENT_SARTURA_WHIRLWIND = 1,
     EVENT_SARTURA_WHIRLWIND_RANDOM,
     EVENT_SARTURA_WHIRLWIND_END,
     EVENT_SPELL_BERSERK,
@@ -56,7 +56,7 @@ enum events
 
 struct boss_sartura : public BossAI
 {
-    boss_sartura(Creature* creature) : BossAI(creature, DATA_SARTURA) {}
+    boss_sartura(Creature* creature) : BossAI(creature, DATA_SARTURA) { }
 
     void InitializeAI() override
     {
@@ -165,14 +165,14 @@ struct boss_sartura : public BossAI
         DoMeleeAttackIfReady();
     };
 
-    private:
-        bool enraged;
-        bool berserked;
+private:
+    bool enraged;
+    bool berserked;
 };
 
 struct npc_sartura_royal_guard : public ScriptedAI
 {
-    npc_sartura_royal_guard(Creature* creature) : ScriptedAI(creature) {}
+    npc_sartura_royal_guard(Creature* creature) : ScriptedAI(creature) { }
 
     void Reset() override
     {

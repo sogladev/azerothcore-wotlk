@@ -25,80 +25,86 @@
 
 enum Spells
 {
-    SPELL_BERSERK                       = 26662,
+    SPELL_BERSERK = 26662,
     // Marks
-    SPELL_MARK_OF_KORTHAZZ              = 28832,
-    SPELL_MARK_OF_BLAUMEUX              = 28833,
-    SPELL_MARK_OF_RIVENDARE             = 28834,
-    SPELL_MARK_OF_ZELIEK                = 28835,
-    SPELL_MARK_DAMAGE                   = 28836,
+    SPELL_MARK_OF_KORTHAZZ = 28832,
+    SPELL_MARK_OF_BLAUMEUX = 28833,
+    SPELL_MARK_OF_RIVENDARE = 28834,
+    SPELL_MARK_OF_ZELIEK = 28835,
+    SPELL_MARK_DAMAGE = 28836,
     // Korth'azz
-    SPELL_KORTHAZZ_METEOR_10            = 28884,
-    SPELL_KORTHAZZ_METEOR_25            = 57467,
+    SPELL_KORTHAZZ_METEOR_10 = 28884,
+    SPELL_KORTHAZZ_METEOR_25 = 57467,
     // Blaumeux
-    SPELL_BLAUMEUX_SHADOW_BOLT_10       = 57374,
-    SPELL_BLAUMEUX_SHADOW_BOLT_25       = 57464,
-    SPELL_BLAUMEUX_VOID_ZONE_10         = 28863,
-    SPELL_BLAUMEUX_VOID_ZONE_25         = 57463,
-    SPELL_BLAUMEUX_UNYIELDING_PAIN      = 57381,
+    SPELL_BLAUMEUX_SHADOW_BOLT_10 = 57374,
+    SPELL_BLAUMEUX_SHADOW_BOLT_25 = 57464,
+    SPELL_BLAUMEUX_VOID_ZONE_10 = 28863,
+    SPELL_BLAUMEUX_VOID_ZONE_25 = 57463,
+    SPELL_BLAUMEUX_UNYIELDING_PAIN = 57381,
     // Zeliek
-    SPELL_ZELIEK_HOLY_WRATH_10          = 28883,
-    SPELL_ZELIEK_HOLY_WRATH_25          = 57466,
-    SPELL_ZELIEK_HOLY_BOLT_10           = 57376,
-    SPELL_ZELIEK_HOLY_BOLT_25           = 57465,
-    SPELL_ZELIEK_CONDEMNATION           = 57377,
+    SPELL_ZELIEK_HOLY_WRATH_10 = 28883,
+    SPELL_ZELIEK_HOLY_WRATH_25 = 57466,
+    SPELL_ZELIEK_HOLY_BOLT_10 = 57376,
+    SPELL_ZELIEK_HOLY_BOLT_25 = 57465,
+    SPELL_ZELIEK_CONDEMNATION = 57377,
     // Rivendare
-    SPELL_RIVENDARE_UNHOLY_SHADOW_10    = 28882,
-    SPELL_RIVENDARE_UNHOLY_SHADOW_25    = 57369
+    SPELL_RIVENDARE_UNHOLY_SHADOW_10 = 28882,
+    SPELL_RIVENDARE_UNHOLY_SHADOW_25 = 57369
 };
 
 enum Events
 {
-    EVENT_MARK_CAST                     = 1,
-    EVENT_PRIMARY_SPELL                 = 2,
-    EVENT_SECONDARY_SPELL               = 3,
-    EVENT_BERSERK                       = 4
+    EVENT_MARK_CAST = 1,
+    EVENT_PRIMARY_SPELL = 2,
+    EVENT_SECONDARY_SPELL = 3,
+    EVENT_BERSERK = 4
 };
 
 enum Misc
 {
     // Movement
-    MOVE_PHASE_NONE                     = 0,
-    MOVE_PHASE_STARTED                  = 1,
-    MOVE_PHASE_FINISHED                 = 2,
+    MOVE_PHASE_NONE = 0,
+    MOVE_PHASE_STARTED = 1,
+    MOVE_PHASE_FINISHED = 2,
     // Horseman
-    HORSEMAN_ZELIEK                     = 0,
-    HORSEMAN_BLAUMEUX                   = 1,
-    HORSEMAN_RIVENDARE                  = 2,
-    HORSEMAN_KORTHAZZ                   = 3
+    HORSEMAN_ZELIEK = 0,
+    HORSEMAN_BLAUMEUX = 1,
+    HORSEMAN_RIVENDARE = 2,
+    HORSEMAN_KORTHAZZ = 3
 };
 
 enum FourHorsemen
 {
-    SAY_AGGRO                           = 0,
-    SAY_TAUNT                           = 1,
-    SAY_SPECIAL                         = 2,
-    SAY_SLAY                            = 3,
-    SAY_DEATH                           = 4,
-    EMOTE_RAGECAST                      = 7
+    SAY_AGGRO = 0,
+    SAY_TAUNT = 1,
+    SAY_SPECIAL = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4,
+    EMOTE_RAGECAST = 7
 };
 
 // MARKS
-const uint32 TABLE_SPELL_MARK[4] = {SPELL_MARK_OF_ZELIEK, SPELL_MARK_OF_BLAUMEUX, SPELL_MARK_OF_RIVENDARE, SPELL_MARK_OF_KORTHAZZ};
+uint32 const TABLE_SPELL_MARK[4] = {
+    SPELL_MARK_OF_ZELIEK, SPELL_MARK_OF_BLAUMEUX, SPELL_MARK_OF_RIVENDARE, SPELL_MARK_OF_KORTHAZZ};
 
 // PRIMARY SPELL
-const uint32 TABLE_SPELL_PRIMARY_10[4] = {SPELL_ZELIEK_HOLY_BOLT_10, SPELL_BLAUMEUX_SHADOW_BOLT_10, SPELL_RIVENDARE_UNHOLY_SHADOW_10, SPELL_KORTHAZZ_METEOR_10};
-const uint32 TABLE_SPELL_PRIMARY_25[4] = {SPELL_ZELIEK_HOLY_BOLT_25, SPELL_BLAUMEUX_SHADOW_BOLT_25, SPELL_RIVENDARE_UNHOLY_SHADOW_25, SPELL_KORTHAZZ_METEOR_25};
+uint32 const TABLE_SPELL_PRIMARY_10[4] = {SPELL_ZELIEK_HOLY_BOLT_10,
+    SPELL_BLAUMEUX_SHADOW_BOLT_10,
+    SPELL_RIVENDARE_UNHOLY_SHADOW_10,
+    SPELL_KORTHAZZ_METEOR_10};
+uint32 const TABLE_SPELL_PRIMARY_25[4] = {SPELL_ZELIEK_HOLY_BOLT_25,
+    SPELL_BLAUMEUX_SHADOW_BOLT_25,
+    SPELL_RIVENDARE_UNHOLY_SHADOW_25,
+    SPELL_KORTHAZZ_METEOR_25};
 
 // PUNISH
-const uint32 TABLE_SPELL_PUNISH[4] = {SPELL_ZELIEK_CONDEMNATION, SPELL_BLAUMEUX_UNYIELDING_PAIN, 0, 0};
+uint32 const TABLE_SPELL_PUNISH[4] = {SPELL_ZELIEK_CONDEMNATION, SPELL_BLAUMEUX_UNYIELDING_PAIN, 0, 0};
 
 // SECONDARY SPELL
-const uint32 TABLE_SPELL_SECONDARY_10[4] = {SPELL_ZELIEK_HOLY_WRATH_10, SPELL_BLAUMEUX_VOID_ZONE_10, 0, 0};
-const uint32 TABLE_SPELL_SECONDARY_25[4] = {SPELL_ZELIEK_HOLY_WRATH_25, SPELL_BLAUMEUX_VOID_ZONE_25, 0, 0};
+uint32 const TABLE_SPELL_SECONDARY_10[4] = {SPELL_ZELIEK_HOLY_WRATH_10, SPELL_BLAUMEUX_VOID_ZONE_10, 0, 0};
+uint32 const TABLE_SPELL_SECONDARY_25[4] = {SPELL_ZELIEK_HOLY_WRATH_25, SPELL_BLAUMEUX_VOID_ZONE_25, 0, 0};
 
-const Position WaypointPositions[12] =
-{
+Position const WaypointPositions[12] = {
     // Thane waypoints
     {2542.3f, -2984.1f, 241.49f, 5.362f},
     {2547.6f, -2999.4f, 241.34f, 5.049f},
@@ -151,8 +157,8 @@ public:
 
         EventMap events;
         InstanceScript* pInstance;
-        uint8 currentWaypoint{};
-        uint8 movementPhase{};
+        uint8 currentWaypoint {};
+        uint8 movementPhase {};
         uint8 horsemanId;
 
         void MoveToCorner()
@@ -196,21 +202,15 @@ public:
             events.RescheduleEvent(EVENT_MARK_CAST, 24s);
             events.RescheduleEvent(EVENT_BERSERK, 10min);
             if ((me->GetEntry() != NPC_LADY_BLAUMEUX && me->GetEntry() != NPC_SIR_ZELIEK))
-            {
                 events.RescheduleEvent(EVENT_PRIMARY_SPELL, 10s, 15s);
-            }
             else
-            {
                 events.RescheduleEvent(EVENT_SECONDARY_SPELL, 15s);
-            }
             if (pInstance)
             {
                 if (GameObject* go = me->GetMap()->GetGameObject(pInstance->GetGuidData(DATA_HORSEMEN_GATE)))
                 {
                     if (pInstance->GetBossState(BOSS_GOTHIK) == DONE)
-                    {
                         go->SetGoState(GO_STATE_ACTIVE);
-                    }
                 }
             }
         }
@@ -246,13 +246,9 @@ public:
             if (movementPhase == MOVE_PHASE_FINISHED)
             {
                 if (me->GetEntry() == NPC_LADY_BLAUMEUX || me->GetEntry() == NPC_SIR_ZELIEK)
-                {
                     me->Attack(who, false);
-                }
                 else
-                {
                     ScriptedAI::AttackStart(who);
-                }
             }
         }
 
@@ -263,12 +259,10 @@ public:
 
             Talk(SAY_SLAY);
             if (pInstance)
-            {
                 pInstance->SetData(DATA_IMMORTAL_FAIL, 0);
-            }
         }
 
-        void JustDied(Unit*  killer) override
+        void JustDied(Unit* killer) override
         {
             BossAI::JustDied(killer);
             if (pInstance)
@@ -279,16 +273,24 @@ public:
                     {
                         if (Player* player = me->GetMap()->GetPlayers().getFirst()->GetSource())
                         {
-                            if (GameObject* chest = player->SummonGameObject(RAID_MODE(GO_HORSEMEN_CHEST_10, GO_HORSEMEN_CHEST_25), 2514.8f, -2944.9f, 245.55f, 5.51f, 0, 0, 0, 0, 0))
+                            if (GameObject* chest =
+                                    player->SummonGameObject(RAID_MODE(GO_HORSEMEN_CHEST_10, GO_HORSEMEN_CHEST_25),
+                                        2514.8f,
+                                        -2944.9f,
+                                        245.55f,
+                                        5.51f,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0))
                             {
                                 chest->SetLootRecipient(me);
                             }
                         }
                     }
                     if (GameObject* go = me->GetMap()->GetGameObject(pInstance->GetGuidData(DATA_HORSEMEN_GATE)))
-                    {
                         go->SetGoState(GO_STATE_ACTIVE);
-                    }
                 }
             }
             Talk(SAY_DEATH);
@@ -308,9 +310,7 @@ public:
             if (pInstance)
             {
                 if (GameObject* go = me->GetMap()->GetGameObject(pInstance->GetGuidData(DATA_HORSEMEN_GATE)))
-                {
                     go->SetGoState(GO_STATE_READY);
-                }
             }
         }
 
@@ -336,7 +336,8 @@ public:
             {
                 case EVENT_MARK_CAST:
                     me->CastSpell(me, TABLE_SPELL_MARK[horsemanId], false);
-                    events.Repeat((me->GetEntry() == NPC_LADY_BLAUMEUX || me->GetEntry() == NPC_SIR_ZELIEK) ? 15s : 12s);
+                    events.Repeat(
+                        (me->GetEntry() == NPC_LADY_BLAUMEUX || me->GetEntry() == NPC_SIR_ZELIEK) ? 15s : 12s);
                     return;
                 case EVENT_BERSERK:
                     Talk(SAY_SPECIAL);
@@ -344,11 +345,15 @@ public:
                     return;
                 case EVENT_PRIMARY_SPELL:
                     Talk(SAY_TAUNT);
-                    me->CastSpell(me->GetVictim(), RAID_MODE(TABLE_SPELL_PRIMARY_10[horsemanId], TABLE_SPELL_PRIMARY_25[horsemanId]), false);
+                    me->CastSpell(me->GetVictim(),
+                        RAID_MODE(TABLE_SPELL_PRIMARY_10[horsemanId], TABLE_SPELL_PRIMARY_25[horsemanId]),
+                        false);
                     events.Repeat(15s);
                     return;
                 case EVENT_SECONDARY_SPELL:
-                    me->CastSpell(me->GetVictim(), RAID_MODE(TABLE_SPELL_SECONDARY_10[horsemanId], TABLE_SPELL_SECONDARY_25[horsemanId]), false);
+                    me->CastSpell(me->GetVictim(),
+                        RAID_MODE(TABLE_SPELL_SECONDARY_10[horsemanId], TABLE_SPELL_SECONDARY_25[horsemanId]),
+                        false);
                     events.Repeat(15s);
                     return;
             }
@@ -358,9 +363,7 @@ public:
                 if (Unit* pTarget = me->SelectNearestPlayer(300.0f))
                 {
                     if (pTarget && me->IsValidAttackTarget(pTarget))
-                    {
                         AttackStart(pTarget);
-                    }
                 }
                 if (me->IsWithinDistInMap(me->GetVictim(), 45.0f) && me->IsValidAttackTarget(me->GetVictim()))
                 {
@@ -386,7 +389,7 @@ class spell_four_horsemen_mark_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_MARK_DAMAGE });
+        return ValidateSpellInfo({SPELL_MARK_DAMAGE});
     }
 
     void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -419,15 +422,16 @@ class spell_four_horsemen_mark_aura : public AuraScript
                     break;
             }
             if (damage)
-            {
                 caster->CastCustomSpell(SPELL_MARK_DAMAGE, SPELLVALUE_BASE_POINT0, damage, GetTarget());
-            }
         }
     }
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_four_horsemen_mark_aura::OnApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        AfterEffectApply += AuraEffectApplyFn(spell_four_horsemen_mark_aura::OnApply,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
     }
 };
 

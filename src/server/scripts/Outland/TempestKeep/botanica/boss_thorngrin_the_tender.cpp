@@ -21,22 +21,22 @@
 
 enum Says
 {
-    SAY_AGGRO                   = 0,
-    SAY_20_PERCENT_HP           = 1,
-    SAY_KILL                    = 2,
-    SAY_CAST_SACRIFICE          = 3,
-    SAY_50_PERCENT_HP           = 4,
-    SAY_CAST_HELLFIRE           = 5,
-    SAY_DEATH                   = 6,
-    EMOTE_ENRAGE                = 7,
-    SAY_INTRO                   = 8
+    SAY_AGGRO = 0,
+    SAY_20_PERCENT_HP = 1,
+    SAY_KILL = 2,
+    SAY_CAST_SACRIFICE = 3,
+    SAY_50_PERCENT_HP = 4,
+    SAY_CAST_HELLFIRE = 5,
+    SAY_DEATH = 6,
+    EMOTE_ENRAGE = 7,
+    SAY_INTRO = 8
 };
 
 enum Spells
 {
-    SPELL_SACRIFICE             = 34661,
-    SPELL_HELLFIRE              = 34659,
-    SPELL_ENRAGE                = 34670
+    SPELL_SACRIFICE = 34661,
+    SPELL_HELLFIRE = 34659,
+    SPELL_ENRAGE = 34670
 };
 
 struct boss_thorngrin_the_tender : public BossAI
@@ -50,12 +50,8 @@ struct boss_thorngrin_the_tender : public BossAI
     void Reset() override
     {
         _Reset();
-        ScheduleHealthCheckEvent(20, [&]() {
-            Talk(SAY_20_PERCENT_HP);
-        });
-        ScheduleHealthCheckEvent(50, [&]() {
-            Talk(SAY_50_PERCENT_HP);
-        });
+        ScheduleHealthCheckEvent(20, [&]() { Talk(SAY_20_PERCENT_HP); });
+        ScheduleHealthCheckEvent(50, [&]() { Talk(SAY_50_PERCENT_HP); });
     }
 
     void MoveInLineOfSight(Unit* who) override
@@ -73,20 +69,24 @@ struct boss_thorngrin_the_tender : public BossAI
         _JustEngagedWith();
         Talk(SAY_AGGRO);
 
-        scheduler.Schedule(6s, [this](TaskContext context)
+        scheduler
+            .Schedule(6s,
+                [this](TaskContext context)
         {
             if (DoCastRandomTarget(SPELL_SACRIFICE, 1) == SPELL_CAST_OK)
-            {
                 Talk(SAY_CAST_SACRIFICE);
-            }
             context.Repeat(30s);
-        }).Schedule(18s, [this](TaskContext context)
+        })
+            .Schedule(18s,
+                [this](TaskContext context)
         {
             if (roll_chance_i(50))
                 Talk(SAY_CAST_HELLFIRE);
             DoCastAOE(SPELL_HELLFIRE);
             context.Repeat(22s);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             Talk(EMOTE_ENRAGE);
             DoCastSelf(SPELL_ENRAGE);
@@ -97,9 +97,7 @@ struct boss_thorngrin_the_tender : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_KILL);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -108,8 +106,8 @@ struct boss_thorngrin_the_tender : public BossAI
         Talk(SAY_DEATH);
     }
 
-    private:
-        bool _intro;
+private:
+    bool _intro;
 };
 
 void AddSC_boss_thorngrin_the_tender()

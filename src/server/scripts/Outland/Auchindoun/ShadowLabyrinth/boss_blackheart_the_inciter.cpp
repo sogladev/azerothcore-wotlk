@@ -21,35 +21,32 @@
 
 enum Text
 {
-    SAY_INTRO               = 0,
-    SAY_AGGRO               = 1,
-    SAY_SLAY                = 2,
-    SAY_HELP                = 3,
-    SAY_DEATH               = 4
+    SAY_INTRO = 0,
+    SAY_AGGRO = 1,
+    SAY_SLAY = 2,
+    SAY_HELP = 3,
+    SAY_DEATH = 4
 };
 
 enum Spells
 {
-    SPELL_INCITE_CHAOS      = 33676,
-    SPELL_INCITE_CHAOS_B    = 33684, // debuff applied to each player
-    SPELL_CHARGE            = 33709,
-    SPELL_WAR_STOMP         = 33707,
-    SPELL_LAUGHTER          = 33722
+    SPELL_INCITE_CHAOS = 33676,
+    SPELL_INCITE_CHAOS_B = 33684, // debuff applied to each player
+    SPELL_CHARGE = 33709,
+    SPELL_WAR_STOMP = 33707,
+    SPELL_LAUGHTER = 33722
 };
 
 enum Npc
 {
-    NPC_INCITE_TRIGGER      = 19300
+    NPC_INCITE_TRIGGER = 19300
 };
 
 struct boss_blackheart_the_inciter : public BossAI
 {
     boss_blackheart_the_inciter(Creature* creature) : BossAI(creature, DATA_BLACKHEARTTHEINCITEREVENT)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     bool InciteChaos;
@@ -64,9 +61,7 @@ struct boss_blackheart_the_inciter : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer() && urand(0, 1))
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -80,7 +75,9 @@ struct boss_blackheart_the_inciter : public BossAI
         Talk(SAY_AGGRO);
         _JustEngagedWith();
         me->CallForHelp(100.0f);
-        scheduler.Schedule(24s, [this](TaskContext context)
+        scheduler
+            .Schedule(24s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_INCITE_CHAOS);
             DoCastSelf(SPELL_LAUGHTER, true);
@@ -91,7 +88,8 @@ struct boss_blackheart_the_inciter : public BossAI
                 Unit* target = ObjectAccessor::GetUnit(*me, (*itr)->getUnitGuid());
                 if (target && target->IsPlayer())
                 {
-                    if (Creature* inciteTrigger = me->SummonCreature(inciteTriggerID++, *target, TEMPSUMMON_TIMED_DESPAWN, 15 * IN_MILLISECONDS))
+                    if (Creature* inciteTrigger = me->SummonCreature(
+                            inciteTriggerID++, *target, TEMPSUMMON_TIMED_DESPAWN, 15 * IN_MILLISECONDS))
                     {
                         inciteTrigger->CastSpell(target, SPELL_INCITE_CHAOS_B, true);
                     }
@@ -102,20 +100,29 @@ struct boss_blackheart_the_inciter : public BossAI
             InciteChaos = true;
             scheduler.DelayAll(15s);
             context.Repeat(50s, 70s);
-            scheduler.Schedule(15s, [this](TaskContext /*context*/)
+            scheduler.Schedule(15s,
+                [this](TaskContext /*context*/)
             {
                 me->SetImmuneToPC(false);
                 InciteChaos = false;
             });
-        }).Schedule(15s, [this](TaskContext /*context*/)
+        })
+            .Schedule(15s,
+                [this](TaskContext /*context*/)
         {
             me->SetImmuneToPC(false);
             InciteChaos = false;
-        }).Schedule(30s, 50s, [this](TaskContext context)
+        })
+            .Schedule(30s,
+                50s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_CHARGE);
             context.Repeat(30s, 50s);
-        }).Schedule(16950ms, 26350ms, [this](TaskContext context)
+        })
+            .Schedule(16950ms,
+                26350ms,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_WAR_STOMP);
             context.Repeat(16950ms, 26350ms);

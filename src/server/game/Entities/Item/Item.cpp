@@ -76,7 +76,7 @@ void AddItemsSetItem(Player* player, Item* item)
 
     for (uint32 x = 0; x < MAX_ITEM_SET_SPELLS; ++x)
     {
-        if (!set->spells [x])
+        if (!set->spells[x])
             continue;
         //not enough for  spell
         if (set->items_to_triggerspell[x] > eff->item_count)
@@ -93,20 +93,19 @@ void AddItemsSetItem(Player* player, Item* item)
         //new spell
         for (uint32 y = 0; y < MAX_ITEM_SET_SPELLS; ++y)
         {
-            if (!eff->spells[y])                             // free slot
+            if (!eff->spells[y]) // free slot
             {
                 SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(set->spells[x]);
                 if (!spellInfo)
                 {
-                    LOG_ERROR("entities.item", "WORLD: unknown spell id {} in items set {} effects", set->spells[x], setid);
+                    LOG_ERROR(
+                        "entities.item", "WORLD: unknown spell id {} in items set {} effects", set->spells[x], setid);
                     break;
                 }
 
                 // spell casted only if fit form requirement, in other case will casted at form change
                 if (sScriptMgr->CanItemApplyEquipSpell(player, item))
-                {
                     player->ApplyEquipSpell(spellInfo, nullptr, true);
-                }
 
                 eff->spells[y] = spellInfo;
                 break;
@@ -165,7 +164,7 @@ void RemoveItemsSetItem(Player* player, ItemTemplate const* proto)
         }
     }
 
-    if (!eff->item_count)                                    //all items of a set were removed
+    if (!eff->item_count) //all items of a set were removed
     {
         ASSERT(eff == player->ItemSetEff[setindex]);
         delete eff;
@@ -189,9 +188,7 @@ bool ItemCanGoIntoBag(ItemTemplate const* pProto, ItemTemplate const* pBagProto)
             else
             {
                 if (pProto->Class == ITEM_CLASS_CONTAINER)
-                {
                     return false;
-                }
 
                 switch (pBagProto->SubClass)
                 {
@@ -235,9 +232,7 @@ bool ItemCanGoIntoBag(ItemTemplate const* pProto, ItemTemplate const* pBagProto)
         case ITEM_CLASS_QUIVER:
         {
             if (pProto->Class == ITEM_CLASS_QUIVER)
-            {
                 return false;
-            }
 
             switch (pBagProto->SubClass)
             {
@@ -320,7 +315,11 @@ void Item::UpdateDuration(Player* owner, uint32 diff)
     if (!GetUInt32Value(ITEM_FIELD_DURATION))
         return;
 
-    LOG_DEBUG("entities.player.items", "Item::UpdateDuration Item (Entry: {} Duration {} Diff {})", GetEntry(), GetUInt32Value(ITEM_FIELD_DURATION), diff);
+    LOG_DEBUG("entities.player.items",
+        "Item::UpdateDuration Item (Entry: {} Duration {} Diff {})",
+        GetEntry(),
+        GetUInt32Value(ITEM_FIELD_DURATION),
+        diff);
 
     if (GetUInt32Value(ITEM_FIELD_DURATION) <= diff)
     {
@@ -330,7 +329,7 @@ void Item::UpdateDuration(Player* owner, uint32 diff)
     }
 
     SetUInt32Value(ITEM_FIELD_DURATION, GetUInt32Value(ITEM_FIELD_DURATION) - diff);
-    SetState(ITEM_CHANGED, owner);                          // save new time in database
+    SetState(ITEM_CHANGED, owner); // save new time in database
 }
 
 void Item::SaveToDB(CharacterDatabaseTransaction trans)
@@ -344,68 +343,69 @@ void Item::SaveToDB(CharacterDatabaseTransaction trans)
     {
         case ITEM_NEW:
         case ITEM_CHANGED:
+        {
+            uint8 index = 0;
+            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(
+                uState == ITEM_NEW ? CHAR_REP_ITEM_INSTANCE : CHAR_UPD_ITEM_INSTANCE);
+            stmt->SetData(index, GetEntry());
+            stmt->SetData(++index, GetOwnerGUID().GetCounter());
+            stmt->SetData(++index, GetGuidValue(ITEM_FIELD_CREATOR).GetCounter());
+            stmt->SetData(++index, GetGuidValue(ITEM_FIELD_GIFTCREATOR).GetCounter());
+            stmt->SetData(++index, GetCount());
+            stmt->SetData(++index, GetUInt32Value(ITEM_FIELD_DURATION));
+
+            std::ostringstream ssSpells;
+            for (uint8 i = 0; i < MAX_ITEM_PROTO_SPELLS; ++i)
+                ssSpells << GetSpellCharges(i) << ' ';
+            stmt->SetData(++index, ssSpells.str());
+
+            stmt->SetData(++index, GetUInt32Value(ITEM_FIELD_FLAGS));
+
+            std::ostringstream ssEnchants;
+            for (uint8 i = 0; i < MAX_ENCHANTMENT_SLOT; ++i)
             {
-                uint8 index = 0;
-                CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(uState == ITEM_NEW ? CHAR_REP_ITEM_INSTANCE : CHAR_UPD_ITEM_INSTANCE);
-                stmt->SetData(  index, GetEntry());
-                stmt->SetData(++index, GetOwnerGUID().GetCounter());
-                stmt->SetData(++index, GetGuidValue(ITEM_FIELD_CREATOR).GetCounter());
-                stmt->SetData(++index, GetGuidValue(ITEM_FIELD_GIFTCREATOR).GetCounter());
-                stmt->SetData(++index, GetCount());
-                stmt->SetData(++index, GetUInt32Value(ITEM_FIELD_DURATION));
-
-                std::ostringstream ssSpells;
-                for (uint8 i = 0; i < MAX_ITEM_PROTO_SPELLS; ++i)
-                    ssSpells << GetSpellCharges(i) << ' ';
-                stmt->SetData(++index, ssSpells.str());
-
-                stmt->SetData(++index, GetUInt32Value(ITEM_FIELD_FLAGS));
-
-                std::ostringstream ssEnchants;
-                for (uint8 i = 0; i < MAX_ENCHANTMENT_SLOT; ++i)
-                {
-                    ssEnchants << GetEnchantmentId(EnchantmentSlot(i)) << ' ';
-                    ssEnchants << GetEnchantmentDuration(EnchantmentSlot(i)) << ' ';
-                    ssEnchants << GetEnchantmentCharges(EnchantmentSlot(i)) << ' ';
-                }
-                stmt->SetData(++index, ssEnchants.str());
-
-                stmt->SetData (++index, GetItemRandomPropertyId());
-                stmt->SetData(++index, GetUInt32Value(ITEM_FIELD_DURABILITY));
-                stmt->SetData(++index, GetUInt32Value(ITEM_FIELD_CREATE_PLAYED_TIME));
-                stmt->SetData(++index, m_text);
-                stmt->SetData(++index, guid);
-
-                trans->Append(stmt);
-
-                if ((uState == ITEM_CHANGED) && IsWrapped())
-                {
-                    stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_GIFT_OWNER);
-                    stmt->SetData(0, GetOwnerGUID().GetCounter());
-                    stmt->SetData(1, guid);
-                    trans->Append(stmt);
-                }
-                break;
+                ssEnchants << GetEnchantmentId(EnchantmentSlot(i)) << ' ';
+                ssEnchants << GetEnchantmentDuration(EnchantmentSlot(i)) << ' ';
+                ssEnchants << GetEnchantmentCharges(EnchantmentSlot(i)) << ' ';
             }
-        case ITEM_REMOVED:
+            stmt->SetData(++index, ssEnchants.str());
+
+            stmt->SetData(++index, GetItemRandomPropertyId());
+            stmt->SetData(++index, GetUInt32Value(ITEM_FIELD_DURABILITY));
+            stmt->SetData(++index, GetUInt32Value(ITEM_FIELD_CREATE_PLAYED_TIME));
+            stmt->SetData(++index, m_text);
+            stmt->SetData(++index, guid);
+
+            trans->Append(stmt);
+
+            if ((uState == ITEM_CHANGED) && IsWrapped())
             {
-                CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_ITEM_INSTANCE);
+                stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_GIFT_OWNER);
+                stmt->SetData(0, GetOwnerGUID().GetCounter());
+                stmt->SetData(1, guid);
+                trans->Append(stmt);
+            }
+            break;
+        }
+        case ITEM_REMOVED:
+        {
+            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_ITEM_INSTANCE);
+            stmt->SetData(0, guid);
+            trans->Append(stmt);
+
+            if (IsWrapped())
+            {
+                stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_GIFT);
                 stmt->SetData(0, guid);
                 trans->Append(stmt);
-
-                if (IsWrapped())
-                {
-                    stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_GIFT);
-                    stmt->SetData(0, guid);
-                    trans->Append(stmt);
-                }
-
-                if (!isInTransaction)
-                    CharacterDatabase.CommitTransaction(trans);
-
-                delete this;
-                return;
             }
+
+            if (!isInTransaction)
+                CharacterDatabase.CommitTransaction(trans);
+
+            delete this;
+            return;
+        }
         case ITEM_UNCHANGED:
             break;
     }
@@ -440,7 +440,7 @@ bool Item::LoadFromDB(ObjectGuid::LowType guid, ObjectGuid owner_guid, Field* fi
     if (owner_guid)
         SetOwnerGUID(owner_guid);
 
-    bool need_save = false;                                 // need explicit save data at load fixes
+    bool need_save = false; // need explicit save data at load fixes
     SetGuidValue(ITEM_FIELD_CREATOR, ObjectGuid::Create<HighGuid::Player>(fields[0].Get<uint32>()));
     SetGuidValue(ITEM_FIELD_GIFTCREATOR, ObjectGuid::Create<HighGuid::Player>(fields[1].Get<uint32>()));
     SetCount(fields[2].Get<uint32>());
@@ -458,12 +458,13 @@ bool Item::LoadFromDB(ObjectGuid::LowType guid, ObjectGuid owner_guid, Field* fi
     if (tokens.size() == MAX_ITEM_PROTO_SPELLS)
     {
         for (uint8 i = 0; i < MAX_ITEM_PROTO_SPELLS; ++i)
-        {
             if (Optional<int32> charges = Acore::StringTo<int32>(tokens[i]))
                 SetSpellCharges(i, *charges);
             else
-                LOG_ERROR("entities.item", "Invalid charge info '{}' for item {}, charge data not loaded.", tokens.at(i), GetGUID().ToString());
-        }
+                LOG_ERROR("entities.item",
+                    "Invalid charge info '{}' for item {}, charge data not loaded.",
+                    tokens.at(i),
+                    GetGUID().ToString());
     }
 
     SetUInt32Value(ITEM_FIELD_FLAGS, fields[5].Get<uint32>());
@@ -476,9 +477,13 @@ bool Item::LoadFromDB(ObjectGuid::LowType guid, ObjectGuid owner_guid, Field* fi
 
     std::string enchants = fields[6].Get<std::string>();
 
-    if (!_LoadIntoDataField(fields[6].Get<std::string>(), ITEM_FIELD_ENCHANTMENT_1_1, MAX_ENCHANTMENT_SLOT * MAX_ENCHANTMENT_OFFSET))
+    if (!_LoadIntoDataField(
+            fields[6].Get<std::string>(), ITEM_FIELD_ENCHANTMENT_1_1, MAX_ENCHANTMENT_SLOT * MAX_ENCHANTMENT_OFFSET))
     {
-        LOG_WARN("entities.item", "Invalid enchantment data '{}' for item {}. Forcing partial load.", fields[6].Get<std::string>(), GetGUID().ToString());
+        LOG_WARN("entities.item",
+            "Invalid enchantment data '{}' for item {}. Forcing partial load.",
+            fields[6].Get<std::string>(),
+            GetGUID().ToString());
     }
 
     SetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID, fields[7].Get<int16>());
@@ -501,9 +506,10 @@ bool Item::LoadFromDB(ObjectGuid::LowType guid, ObjectGuid owner_guid, Field* fi
     SetUInt32Value(ITEM_FIELD_CREATE_PLAYED_TIME, fields[9].Get<uint32>());
     SetText(fields[10].Get<std::string>());
 
-    if (need_save)                                           // normal item changed state set not work at loading
+    if (need_save) // normal item changed state set not work at loading
     {
-        CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ITEM_INSTANCE_ON_LOAD);
+        CharacterDatabasePreparedStatement* stmt =
+            CharacterDatabase.GetPreparedStatement(CHAR_UPD_ITEM_INSTANCE_ON_LOAD);
         stmt->SetData(0, GetUInt32Value(ITEM_FIELD_DURATION));
         stmt->SetData(1, GetUInt32Value(ITEM_FIELD_FLAGS));
         stmt->SetData(2, GetUInt32Value(ITEM_FIELD_DURABILITY));
@@ -546,7 +552,7 @@ ItemTemplate const* Item::GetTemplate() const
     return sObjectMgr->GetItemTemplate(GetEntry());
 }
 
-Player* Item::GetOwner()const
+Player* Item::GetOwner() const
 {
     return ObjectAccessor::FindPlayer(GetOwnerGUID());
 }
@@ -567,25 +573,25 @@ uint32 Item::GetSpell()
             switch (proto->SubClass)
             {
                 case ITEM_SUBCLASS_WEAPON_AXE:
-                    return  196;
+                    return 196;
                 case ITEM_SUBCLASS_WEAPON_AXE2:
-                    return  197;
+                    return 197;
                 case ITEM_SUBCLASS_WEAPON_BOW:
-                    return  264;
+                    return 264;
                 case ITEM_SUBCLASS_WEAPON_GUN:
-                    return  266;
+                    return 266;
                 case ITEM_SUBCLASS_WEAPON_MACE:
-                    return  198;
+                    return 198;
                 case ITEM_SUBCLASS_WEAPON_MACE2:
-                    return  199;
+                    return 199;
                 case ITEM_SUBCLASS_WEAPON_POLEARM:
-                    return  200;
+                    return 200;
                 case ITEM_SUBCLASS_WEAPON_SWORD:
-                    return  201;
+                    return 201;
                 case ITEM_SUBCLASS_WEAPON_SWORD2:
-                    return  202;
+                    return 202;
                 case ITEM_SUBCLASS_WEAPON_STAFF:
-                    return  227;
+                    return 227;
                 case ITEM_SUBCLASS_WEAPON_DAGGER:
                     return 1180;
                 case ITEM_SUBCLASS_WEAPON_THROWN:
@@ -609,7 +615,7 @@ uint32 Item::GetSpell()
                 case ITEM_SUBCLASS_ARMOR_MAIL:
                     return 8737;
                 case ITEM_SUBCLASS_ARMOR_PLATE:
-                    return  750;
+                    return 750;
                 case ITEM_SUBCLASS_ARMOR_SHIELD:
                     return 9116;
                 default:
@@ -633,7 +639,11 @@ int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
     // item can have not null only one from field values
     if ((itemProto->RandomProperty) && (itemProto->RandomSuffix))
     {
-        LOG_ERROR("sql.sql", "Item template {} have RandomProperty == {} and RandomSuffix == {}, but must have one from field =0", itemProto->ItemId, itemProto->RandomProperty, itemProto->RandomSuffix);
+        LOG_ERROR("sql.sql",
+            "Item template {} have RandomProperty == {} and RandomSuffix == {}, but must have one from field =0",
+            itemProto->ItemId,
+            itemProto->RandomProperty,
+            itemProto->RandomSuffix);
         return 0;
     }
 
@@ -644,7 +654,9 @@ int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
         ItemRandomPropertiesEntry const* random_id = sItemRandomPropertiesStore.LookupEntry(randomPropId);
         if (!random_id)
         {
-            LOG_ERROR("sql.sql", "Enchantment id #{} used but it doesn't have records in 'ItemRandomProperties.dbc'", randomPropId);
+            LOG_ERROR("sql.sql",
+                "Enchantment id #{} used but it doesn't have records in 'ItemRandomProperties.dbc'",
+                randomPropId);
             return 0;
         }
 
@@ -657,7 +669,9 @@ int32 Item::GenerateItemRandomPropertyId(uint32 item_id)
         ItemRandomSuffixEntry const* random_id = sItemRandomSuffixStore.LookupEntry(randomPropId);
         if (!random_id)
         {
-            LOG_ERROR("sql.sql", "Enchantment id #{} used but it doesn't have records in sItemRandomSuffixStore.", randomPropId);
+            LOG_ERROR("sql.sql",
+                "Enchantment id #{} used but it doesn't have records in sItemRandomSuffixStore.",
+                randomPropId);
             return 0;
         }
 
@@ -689,8 +703,7 @@ void Item::SetItemRandomProperties(int32 randomPropId)
         ItemRandomSuffixEntry const* item_rand = sItemRandomSuffixStore.LookupEntry(-randomPropId);
         if (item_rand)
         {
-            if (GetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID) != -int32(item_rand->ID) ||
-                    !GetItemSuffixFactor())
+            if (GetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID) != -int32(item_rand->ID) || !GetItemSuffixFactor())
             {
                 SetInt32Value(ITEM_FIELD_RANDOM_PROPERTIES_ID, -int32(item_rand->ID));
                 UpdateItemSuffixFactor();
@@ -750,7 +763,10 @@ void Item::AddToUpdateQueueOf(Player* player)
 
     if (player->GetGUID() != GetOwnerGUID())
     {
-        LOG_DEBUG("entities.player.items", "Item::AddToUpdateQueueOf - Owner's guid ({}) and player's guid ({}) don't match!", GetOwnerGUID().ToString(), player->GetGUID().ToString());
+        LOG_DEBUG("entities.player.items",
+            "Item::AddToUpdateQueueOf - Owner's guid ({}) and player's guid ({}) don't match!",
+            GetOwnerGUID().ToString(),
+            player->GetGUID().ToString());
         return;
     }
 
@@ -770,7 +786,10 @@ void Item::RemoveFromUpdateQueueOf(Player* player)
 
     if (player->GetGUID() != GetOwnerGUID())
     {
-        LOG_DEBUG("entities.player.items", "Item::RemoveFromUpdateQueueOf - Owner's guid ({}) and player's guid ({}) don't match!", GetOwnerGUID().ToString(), player->GetGUID().ToString());
+        LOG_DEBUG("entities.player.items",
+            "Item::RemoveFromUpdateQueueOf - Owner's guid ({}) and player's guid ({}) don't match!",
+            GetOwnerGUID().ToString(),
+            player->GetGUID().ToString());
         return;
     }
 
@@ -824,7 +843,8 @@ bool Item::HasEnchantRequiredSkill(Player const* player) const
     for (uint32 enchant_slot = PERM_ENCHANTMENT_SLOT; enchant_slot < MAX_ENCHANTMENT_SLOT; ++enchant_slot)
         if (uint32 enchant_id = GetEnchantmentId(EnchantmentSlot(enchant_slot)))
             if (SpellItemEnchantmentEntry const* enchantEntry = sSpellItemEnchantmentStore.LookupEntry(enchant_id))
-                if (enchantEntry->requiredSkill && player->GetSkillValue(enchantEntry->requiredSkill) < enchantEntry->requiredSkillValue)
+                if (enchantEntry->requiredSkill &&
+                    player->GetSkillValue(enchantEntry->requiredSkill) < enchantEntry->requiredSkillValue)
                     return false;
 
     return true;
@@ -885,42 +905,44 @@ bool Item::IsFitToSpellRequirements(SpellInfo const* spellInfo) const
 {
     ItemTemplate const* proto = GetTemplate();
 
-    if (spellInfo->EquippedItemClass != -1)                 // -1 == any item class
+    if (spellInfo->EquippedItemClass != -1) // -1 == any item class
     {
         // Special case - accept vellum for armor/weapon requirements
-        if ((spellInfo->EquippedItemClass == ITEM_CLASS_ARMOR && proto->IsArmorVellum())
-                || (spellInfo->EquippedItemClass == ITEM_CLASS_WEAPON && proto->IsWeaponVellum()))
+        if ((spellInfo->EquippedItemClass == ITEM_CLASS_ARMOR && proto->IsArmorVellum()) ||
+            (spellInfo->EquippedItemClass == ITEM_CLASS_WEAPON && proto->IsWeaponVellum()))
             if (spellInfo->IsAbilityOfSkillType(SKILL_ENCHANTING)) // only for enchanting spells
                 return true;
 
         if (spellInfo->EquippedItemClass != int32(proto->Class))
-            return false;                                   //  wrong item class
+            return false; //  wrong item class
 
-        if (spellInfo->EquippedItemSubClassMask != 0)        // 0 == any subclass
+        if (spellInfo->EquippedItemSubClassMask != 0) // 0 == any subclass
         {
             if ((spellInfo->EquippedItemSubClassMask & (1 << proto->SubClass)) == 0)
-                return false;                               // subclass not present in mask
+                return false; // subclass not present in mask
         }
     }
 
-    if (spellInfo->EquippedItemInventoryTypeMask != 0)       // 0 == any inventory type
+    if (spellInfo->EquippedItemInventoryTypeMask != 0) // 0 == any inventory type
     {
         // Special case - accept weapon type for main and offhand requirements
         if (proto->InventoryType == INVTYPE_WEAPON &&
-                (spellInfo->EquippedItemInventoryTypeMask & (1 << INVTYPE_WEAPONMAINHAND) ||
-                 spellInfo->EquippedItemInventoryTypeMask & (1 << INVTYPE_WEAPONOFFHAND)))
+            (spellInfo->EquippedItemInventoryTypeMask & (1 << INVTYPE_WEAPONMAINHAND) ||
+                spellInfo->EquippedItemInventoryTypeMask & (1 << INVTYPE_WEAPONOFFHAND)))
             return true;
         else if ((spellInfo->EquippedItemInventoryTypeMask & (1 << proto->InventoryType)) == 0)
-            return false;                                   // inventory type not present in mask
+            return false; // inventory type not present in mask
     }
 
     return true;
 }
 
-void Item::SetEnchantment(EnchantmentSlot slot, uint32 id, uint32 duration, uint32 charges, ObjectGuid caster /*= ObjectGuid::Empty*/)
+void Item::SetEnchantment(
+    EnchantmentSlot slot, uint32 id, uint32 duration, uint32 charges, ObjectGuid caster /*= ObjectGuid::Empty*/)
 {
     // Better lost small time at check in comparison lost time at item save to DB.
-    if ((GetEnchantmentId(slot) == id) && (GetEnchantmentDuration(slot) == duration) && (GetEnchantmentCharges(slot) == charges))
+    if ((GetEnchantmentId(slot) == id) && (GetEnchantmentDuration(slot) == duration) &&
+        (GetEnchantmentCharges(slot) == charges))
         return;
 
     Player* owner = GetOwner();
@@ -938,6 +960,7 @@ void Item::SetEnchantment(EnchantmentSlot slot, uint32 id, uint32 duration, uint
     SetUInt32Value(ITEM_FIELD_ENCHANTMENT_1_1 + slot * MAX_ENCHANTMENT_OFFSET + ENCHANTMENT_CHARGES_OFFSET, charges);
     SetState(ITEM_CHANGED, owner);
 }
+
 void Item::SetEnchantmentDuration(EnchantmentSlot slot, uint32 duration, Player* owner)
 {
     if (GetEnchantmentDuration(slot) == duration)
@@ -969,7 +992,8 @@ void Item::ClearEnchantment(EnchantmentSlot slot)
 
 bool Item::GemsFitSockets() const
 {
-    for (uint32 enchant_slot = SOCK_ENCHANTMENT_SLOT; enchant_slot < SOCK_ENCHANTMENT_SLOT + MAX_GEM_SOCKETS; ++enchant_slot)
+    for (uint32 enchant_slot = SOCK_ENCHANTMENT_SLOT; enchant_slot < SOCK_ENCHANTMENT_SLOT + MAX_GEM_SOCKETS;
+         ++enchant_slot)
     {
         uint8 SocketColor = GetTemplate()->Socket[enchant_slot - SOCK_ENCHANTMENT_SLOT].Color;
 
@@ -1014,7 +1038,8 @@ bool Item::HasSocket() const
 uint8 Item::GetGemCountWithID(uint32 GemID) const
 {
     uint8 count = 0;
-    for (uint32 enchant_slot = SOCK_ENCHANTMENT_SLOT; enchant_slot < SOCK_ENCHANTMENT_SLOT + MAX_GEM_SOCKETS; ++enchant_slot)
+    for (uint32 enchant_slot = SOCK_ENCHANTMENT_SLOT; enchant_slot < SOCK_ENCHANTMENT_SLOT + MAX_GEM_SOCKETS;
+         ++enchant_slot)
     {
         uint32 enchant_id = GetEnchantmentId(EnchantmentSlot(enchant_slot));
         if (!enchant_id)
@@ -1033,7 +1058,8 @@ uint8 Item::GetGemCountWithID(uint32 GemID) const
 uint8 Item::GetGemCountWithLimitCategory(uint32 limitCategory) const
 {
     uint8 count = 0;
-    for (uint32 enchant_slot = SOCK_ENCHANTMENT_SLOT; enchant_slot < SOCK_ENCHANTMENT_SLOT + MAX_GEM_SOCKETS; ++enchant_slot)
+    for (uint32 enchant_slot = SOCK_ENCHANTMENT_SLOT; enchant_slot < SOCK_ENCHANTMENT_SLOT + MAX_GEM_SOCKETS;
+         ++enchant_slot)
     {
         uint32 enchant_id = GetEnchantmentId(EnchantmentSlot(enchant_slot));
         if (!enchant_id)
@@ -1087,7 +1113,7 @@ void Item::SendTimeUpdate(Player* owner)
 Item* Item::CreateItem(uint32 item, uint32 count, Player const* player, bool clone, uint32 randomPropertyId)
 {
     if (count < 1)
-        return nullptr;                                        //don't create item at zero count
+        return nullptr; //don't create item at zero count
 
     ItemTemplate const* pProto = sObjectMgr->GetItemTemplate(item);
     if (pProto)
@@ -1102,7 +1128,8 @@ Item* Item::CreateItem(uint32 item, uint32 count, Player const* player, bool clo
         {
             pItem->SetCount(count);
             if (!clone)
-                pItem->SetItemRandomProperties(randomPropertyId ? randomPropertyId : Item::GenerateItemRandomPropertyId(item));
+                pItem->SetItemRandomProperties(
+                    randomPropertyId ? randomPropertyId : Item::GenerateItemRandomPropertyId(item));
             else if (randomPropertyId)
                 pItem->SetItemRandomProperties(randomPropertyId);
             return pItem;
@@ -1122,10 +1149,11 @@ Item* Item::CloneItem(uint32 count, Player const* player) const
     if (!newItem)
         return nullptr;
 
-    newItem->SetUInt32Value(ITEM_FIELD_CREATOR,      GetUInt32Value(ITEM_FIELD_CREATOR));
-    newItem->SetUInt32Value(ITEM_FIELD_GIFTCREATOR,  GetUInt32Value(ITEM_FIELD_GIFTCREATOR));
-    newItem->SetUInt32Value(ITEM_FIELD_FLAGS,        GetUInt32Value(ITEM_FIELD_FLAGS) & ~(ITEM_FIELD_FLAG_REFUNDABLE | ITEM_FIELD_FLAG_BOP_TRADEABLE));
-    newItem->SetUInt32Value(ITEM_FIELD_DURATION,     GetUInt32Value(ITEM_FIELD_DURATION));
+    newItem->SetUInt32Value(ITEM_FIELD_CREATOR, GetUInt32Value(ITEM_FIELD_CREATOR));
+    newItem->SetUInt32Value(ITEM_FIELD_GIFTCREATOR, GetUInt32Value(ITEM_FIELD_GIFTCREATOR));
+    newItem->SetUInt32Value(ITEM_FIELD_FLAGS,
+        GetUInt32Value(ITEM_FIELD_FLAGS) & ~(ITEM_FIELD_FLAG_REFUNDABLE | ITEM_FIELD_FLAG_BOP_TRADEABLE));
+    newItem->SetUInt32Value(ITEM_FIELD_DURATION, GetUInt32Value(ITEM_FIELD_DURATION));
     return newItem;
 }
 
@@ -1191,7 +1219,8 @@ void Item::DeleteRefundDataFromDB(CharacterDatabaseTransaction* trans)
 {
     if (trans)
     {
-        CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_ITEM_REFUND_INSTANCE);
+        CharacterDatabasePreparedStatement* stmt =
+            CharacterDatabase.GetPreparedStatement(CHAR_DEL_ITEM_REFUND_INSTANCE);
         stmt->SetData(0, GetGUID().GetCounter());
         (*trans)->Append(stmt);
     }
@@ -1290,8 +1319,8 @@ std::string Item::GetDebugInfo() const
 {
     std::stringstream sstr;
     sstr << Object::GetDebugInfo() << "\n"
-        << std::boolalpha
-        << "Owner: " << GetOwnerGUID().ToString() << " Count: " << GetCount()
-        << " BagSlot: " << std::to_string(GetBagSlot()) << " Slot: " << std::to_string(GetSlot()) << " Equipped: " << IsEquipped();
+         << std::boolalpha << "Owner: " << GetOwnerGUID().ToString() << " Count: " << GetCount()
+         << " BagSlot: " << std::to_string(GetBagSlot()) << " Slot: " << std::to_string(GetSlot())
+         << " Equipped: " << IsEquipped();
     return sstr.str();
 }

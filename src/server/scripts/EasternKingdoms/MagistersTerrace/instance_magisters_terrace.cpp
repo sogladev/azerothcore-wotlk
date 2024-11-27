@@ -21,37 +21,35 @@
 #include "ScriptedCreature.h"
 #include "magisters_terrace.h"
 
-ObjectData const creatureData[] =
-{
-    { NPC_DELRISSA,        DATA_DELRISSA         },
-    { NPC_KAEL_THAS,       DATA_KAELTHAS         },
-    { NPC_KALECGOS,        DATA_KALECGOS         },
-    { 0,                   0                     }
+ObjectData const creatureData[] = {
+    {NPC_DELRISSA,  DATA_DELRISSA},
+    {NPC_KAEL_THAS, DATA_KAELTHAS},
+    {NPC_KALECGOS,  DATA_KALECGOS},
+    {0,             0            }
 };
 
-ObjectData const gameobjectData[] =
-{
-    { GO_ESCAPE_ORB, DATA_ESCAPE_ORB },
-    { 0,             0,              }
+ObjectData const gameobjectData[] = {
+    {GO_ESCAPE_ORB, DATA_ESCAPE_ORB},
+    {
+     0, 0,
+     }
 };
 
-ObjectData const summonerData[] =
-{
-    { NPC_PHOENIX,       DATA_KAELTHAS },
-    { NPC_PHOENIX_EGG,   DATA_KAELTHAS },
-    { 0,                 0             }
+ObjectData const summonerData[] = {
+    {NPC_PHOENIX,     DATA_KAELTHAS},
+    {NPC_PHOENIX_EGG, DATA_KAELTHAS},
+    {0,               0            }
 };
 
-DoorData const doorData[] =
-{
-    { GO_SELIN_DOOR,           DATA_SELIN_FIREHEART, DOOR_TYPE_PASSAGE },
-    { GO_SELIN_ENCOUNTER_DOOR, DATA_SELIN_FIREHEART, DOOR_TYPE_ROOM    },
-    { GO_VEXALLUS_DOOR,        DATA_VEXALLUS,        DOOR_TYPE_PASSAGE },
-    { GO_DELRISSA_DOOR,        DATA_DELRISSA,        DOOR_TYPE_PASSAGE },
-    { 0,                       0,                    DOOR_TYPE_ROOM    } // END
+DoorData const doorData[] = {
+    {GO_SELIN_DOOR,           DATA_SELIN_FIREHEART, DOOR_TYPE_PASSAGE},
+    {GO_SELIN_ENCOUNTER_DOOR, DATA_SELIN_FIREHEART, DOOR_TYPE_ROOM   },
+    {GO_VEXALLUS_DOOR,        DATA_VEXALLUS,        DOOR_TYPE_PASSAGE},
+    {GO_DELRISSA_DOOR,        DATA_DELRISSA,        DOOR_TYPE_PASSAGE},
+    {0,                       0,                    DOOR_TYPE_ROOM   }  // END
 };
 
-Position const KalecgosSpawnPos = { 164.3747f, -397.1197f, 2.151798f, 1.66219f };
+Position const KalecgosSpawnPos = {164.3747f, -397.1197f, 2.151798f, 1.66219f};
 
 class instance_magisters_terrace : public InstanceMapScript
 {
@@ -74,7 +72,10 @@ public:
             if (eventId == EVENT_SPAWN_KALECGOS)
                 if (!GetCreature(DATA_KALECGOS) && !scheduler.IsGroupScheduled(DATA_KALECGOS))
                 {
-                    scheduler.Schedule(1min, 1min, DATA_KALECGOS,[this](TaskContext)
+                    scheduler.Schedule(1min,
+                        1min,
+                        DATA_KALECGOS,
+                        [this](TaskContext)
                     {
                         if (Creature* kalecgos = instance->SummonCreature(NPC_KALECGOS, KalecgosSpawnPos))
                             kalecgos->GetMotionMaster()->MovePath(PATH_KALECGOS_FLIGHT, false);

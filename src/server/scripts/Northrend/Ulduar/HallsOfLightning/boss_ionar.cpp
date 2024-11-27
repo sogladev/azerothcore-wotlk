@@ -23,46 +23,46 @@
 
 enum IonarSpells
 {
-    SPELL_BALL_LIGHTNING_N          = 52780,
-    SPELL_BALL_LIGHTNING_H          = 59800,
-    SPELL_STATIC_OVERLOAD_N         = 52658,
-    SPELL_STATIC_OVERLOAD_H         = 59795,
+    SPELL_BALL_LIGHTNING_N = 52780,
+    SPELL_BALL_LIGHTNING_H = 59800,
+    SPELL_STATIC_OVERLOAD_N = 52658,
+    SPELL_STATIC_OVERLOAD_H = 59795,
 
-    SPELL_DISPERSE                  = 52770,
-    SPELL_SUMMON_SPARK              = 52746,
-    SPELL_SPARK_DESPAWN             = 52776,
+    SPELL_DISPERSE = 52770,
+    SPELL_SUMMON_SPARK = 52746,
+    SPELL_SPARK_DESPAWN = 52776,
 
     //Spark of Ionar
-    SPELL_SPARK_VISUAL_TRIGGER_N    = 52667,
-    SPELL_SPARK_VISUAL_TRIGGER_H    = 59833,
-    SPELL_RANDOM_LIGHTNING          = 52663,
+    SPELL_SPARK_VISUAL_TRIGGER_N = 52667,
+    SPELL_SPARK_VISUAL_TRIGGER_H = 59833,
+    SPELL_RANDOM_LIGHTNING = 52663,
 };
 
 enum IonarOther
 {
     // NPCs
-    NPC_SPARK_OF_IONAR              = 28926,
+    NPC_SPARK_OF_IONAR = 28926,
 
     // Actions
-    ACTION_CALLBACK                 = 1,
-    ACTION_SPARK_DESPAWN            = 2,
+    ACTION_CALLBACK = 1,
+    ACTION_SPARK_DESPAWN = 2,
 };
 
 enum Yells
 {
-    SAY_AGGRO                       = 0,
-    SAY_SPLIT                       = 1,
-    SAY_SLAY                        = 2,
-    SAY_DEATH                       = 3
+    SAY_AGGRO = 0,
+    SAY_SPLIT = 1,
+    SAY_SLAY = 2,
+    SAY_DEATH = 3
 };
 
 enum IonarEvents
 {
-    EVENT_BALL_LIGHTNING            = 1,
-    EVENT_STATIC_OVERLOAD           = 2,
-    EVENT_CHECK_HEALTH              = 3,
-    EVENT_CALL_SPARKS               = 4,
-    EVENT_RESTORE                   = 5,
+    EVENT_BALL_LIGHTNING = 1,
+    EVENT_STATIC_OVERLOAD = 2,
+    EVENT_CHECK_HEALTH = 3,
+    EVENT_CALL_SPARKS = 4,
+    EVENT_RESTORE = 5,
 };
 
 class boss_ionar : public CreatureScript
@@ -151,10 +151,18 @@ public:
             Creature* spark;
             for (uint8 i = 0; i < 5; ++i)
             {
-                if ((spark = me->SummonCreature(NPC_SPARK_OF_IONAR, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 20000)))
+                if ((spark = me->SummonCreature(NPC_SPARK_OF_IONAR,
+                         me->GetPositionX(),
+                         me->GetPositionY(),
+                         me->GetPositionZ(),
+                         0,
+                         TEMPSUMMON_TIMED_DESPAWN,
+                         20000)))
                 {
                     summons.Summon(spark);
-                    spark->CastSpell(spark, me->GetMap()->IsHeroic() ? SPELL_SPARK_VISUAL_TRIGGER_H : SPELL_SPARK_VISUAL_TRIGGER_N, true);
+                    spark->CastSpell(spark,
+                        me->GetMap()->IsHeroic() ? SPELL_SPARK_VISUAL_TRIGGER_H : SPELL_SPARK_VISUAL_TRIGGER_N,
+                        true);
                     spark->CastSpell(spark, SPELL_RANDOM_LIGHTNING, true);
                     spark->SetUnitFlag(UNIT_FLAG_PACIFIED | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
                     spark->SetHomePosition(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0);
@@ -185,13 +193,16 @@ public:
             {
                 case EVENT_BALL_LIGHTNING:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random))
-                        me->CastSpell(target, me->GetMap()->IsHeroic() ? SPELL_BALL_LIGHTNING_H : SPELL_BALL_LIGHTNING_N, false);
+                        me->CastSpell(
+                            target, me->GetMap()->IsHeroic() ? SPELL_BALL_LIGHTNING_H : SPELL_BALL_LIGHTNING_N, false);
 
                     events.Repeat(10s, 11s);
                     break;
                 case EVENT_STATIC_OVERLOAD:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random))
-                        me->CastSpell(target, me->GetMap()->IsHeroic() ? SPELL_STATIC_OVERLOAD_H : SPELL_STATIC_OVERLOAD_N, false);
+                        me->CastSpell(target,
+                            me->GetMap()->IsHeroic() ? SPELL_STATIC_OVERLOAD_H : SPELL_STATIC_OVERLOAD_N,
+                            false);
 
                     events.Repeat(5s, 6s);
                     break;
@@ -202,12 +213,12 @@ public:
                     events.Repeat(1s);
                     return;
                 case EVENT_CALL_SPARKS:
-                    {
-                        EntryCheckPredicate pred(NPC_SPARK_OF_IONAR);
-                        summons.DoAction(ACTION_CALLBACK, pred);
-                        events.ScheduleEvent(EVENT_RESTORE, 2s, 0, 2);
-                        return;
-                    }
+                {
+                    EntryCheckPredicate pred(NPC_SPARK_OF_IONAR);
+                    summons.DoAction(ACTION_CALLBACK, pred);
+                    events.ScheduleEvent(EVENT_RESTORE, 2s, 0, 2);
+                    return;
+                }
                 case EVENT_RESTORE:
                     EntryCheckPredicate pred(NPC_SPARK_OF_IONAR);
                     summons.DoAction(ACTION_SPARK_DESPAWN, pred);
@@ -240,10 +251,15 @@ public:
         bool returning;
 
         void MoveInLineOfSight(Unit*) override { }
-        void UpdateAI(uint32) override { }
-        void AttackStart(Unit*  /*who*/) override { }
 
-        void Reset() override { returning = false; }
+        void UpdateAI(uint32) override { }
+
+        void AttackStart(Unit* /*who*/) override { }
+
+        void Reset() override
+        {
+            returning = false;
+        }
 
         void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
         {

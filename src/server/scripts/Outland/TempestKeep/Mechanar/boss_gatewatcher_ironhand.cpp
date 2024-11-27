@@ -21,18 +21,18 @@
 
 enum Says
 {
-    SAY_AGGRO                      = 0,
-    SAY_HAMMER                     = 1,
-    SAY_SLAY                       = 2,
-    SAY_DEATH                      = 3,
-    EMOTE_HAMMER                   = 4
+    SAY_AGGRO = 0,
+    SAY_HAMMER = 1,
+    SAY_SLAY = 2,
+    SAY_DEATH = 3,
+    EMOTE_HAMMER = 4
 };
 
 enum Spells
 {
-    SPELL_SHADOW_POWER             = 35322,
-    SPELL_JACKHAMMER               = 35327,
-    SPELL_STREAM_OF_MACHINE_FLUID  = 35311
+    SPELL_SHADOW_POWER = 35322,
+    SPELL_JACKHAMMER = 35327,
+    SPELL_STREAM_OF_MACHINE_FLUID = 35311
 };
 
 struct boss_gatewatcher_iron_hand : public BossAI
@@ -43,17 +43,23 @@ struct boss_gatewatcher_iron_hand : public BossAI
     {
         _JustEngagedWith();
 
-        scheduler.Schedule(15s, [this](TaskContext context)
+        scheduler
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_STREAM_OF_MACHINE_FLUID);
             context.Repeat(20s);
-        }).Schedule(35s, [this](TaskContext context)
+        })
+            .Schedule(35s,
+                [this](TaskContext context)
         {
             Talk(EMOTE_HAMMER);
             Talk(SAY_HAMMER);
             DoCastSelf(SPELL_JACKHAMMER);
             context.Repeat(40s);
-        }).Schedule(25s, [this](TaskContext context)
+        })
+            .Schedule(25s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_SHADOW_POWER);
             context.Repeat(25s);
@@ -65,9 +71,7 @@ struct boss_gatewatcher_iron_hand : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override

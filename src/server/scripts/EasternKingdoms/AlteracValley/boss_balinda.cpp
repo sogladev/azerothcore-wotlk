@@ -20,34 +20,31 @@
 
 enum Spells
 {
-    SPELL_ARCANE_EXPLOSION                        = 46608,
-    SPELL_CONE_OF_COLD                            = 38384,
-    SPELL_FIREBALL                                = 46988,
-    SPELL_FROSTBOLT                               = 46987,
-    SPELL_SUMMON_WATER_ELEMENTAL                  = 45067,
-    SPELL_ICEBLOCK                                = 46604
+    SPELL_ARCANE_EXPLOSION = 46608,
+    SPELL_CONE_OF_COLD = 38384,
+    SPELL_FIREBALL = 46988,
+    SPELL_FROSTBOLT = 46987,
+    SPELL_SUMMON_WATER_ELEMENTAL = 45067,
+    SPELL_ICEBLOCK = 46604
 };
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_EVADE                                   = 1,
-    SAY_SALVATION                               = 2,
+    SAY_AGGRO = 0,
+    SAY_EVADE = 1,
+    SAY_SALVATION = 2,
 };
 
 enum Creatures
 {
-    NPC_WATER_ELEMENTAL                           = 25040
+    NPC_WATER_ELEMENTAL = 25040
 };
 
 struct boss_balinda : public ScriptedAI
 {
     boss_balinda(Creature* creature) : ScriptedAI(creature), summons(me), _hasCastIceBlock(false)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -61,35 +58,25 @@ struct boss_balinda : public ScriptedAI
 
         Talk(SAY_AGGRO);
 
-        ScheduleTimedEvent(3s, [&]
+        ScheduleTimedEvent(3s,
+            [&]
         {
             if (summons.empty())
-            {
                 DoCast(SPELL_SUMMON_WATER_ELEMENTAL);
-            }
-        }, 50s, 50s);
+        },
+            50s,
+            50s);
 
-        ScheduleTimedEvent(5s, 15s, [&]
-        {
-            DoCastAOE(SPELL_ARCANE_EXPLOSION);
-        }, 5s, 15s);
+        ScheduleTimedEvent(5s, 15s, [&] { DoCastAOE(SPELL_ARCANE_EXPLOSION); }, 5s, 15s);
 
-        ScheduleTimedEvent(8s, [&]
-        {
-            DoCastVictim(SPELL_CONE_OF_COLD);
-        }, 10s, 20s);
+        ScheduleTimedEvent(8s, [&] { DoCastVictim(SPELL_CONE_OF_COLD); }, 10s, 20s);
 
-        ScheduleTimedEvent(1s, [&]
-        {
-            DoCastVictim(SPELL_FIREBALL);
-        }, 5s, 9s);
+        ScheduleTimedEvent(1s, [&] { DoCastVictim(SPELL_FIREBALL); }, 5s, 9s);
 
-        ScheduleTimedEvent(4s, [&]
-        {
-            DoCastVictim(SPELL_FROSTBOLT);
-        }, 4s, 12s);
+        ScheduleTimedEvent(4s, [&] { DoCastVictim(SPELL_FROSTBOLT); }, 4s, 12s);
 
-        ScheduleTimedEvent(5s, [&]
+        ScheduleTimedEvent(5s,
+            [&]
         {
             if (me->GetDistance2d(me->GetHomePosition().GetPositionX(), me->GetHomePosition().GetPositionY()) > 50)
             {
@@ -99,13 +86,15 @@ struct boss_balinda : public ScriptedAI
 
             if (Creature* elemental = summons.GetCreatureWithEntry(NPC_WATER_ELEMENTAL))
             {
-                if (elemental->GetDistance2d(me->GetHomePosition().GetPositionX(), me->GetHomePosition().GetPositionY()) > 50)
+                if (elemental->GetDistance2d(
+                        me->GetHomePosition().GetPositionX(), me->GetHomePosition().GetPositionY()) > 50)
                 {
                     elemental->AI()->EnterEvadeMode();
                 }
             }
-
-        }, 5s, 5s);
+        },
+            5s,
+            5s);
     }
 
     void JustSummoned(Creature* summoned) override
@@ -134,8 +123,7 @@ struct boss_balinda : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-        scheduler.Update(diff,
-            std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
+        scheduler.Update(diff, std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
     }
 
 private:

@@ -31,37 +31,37 @@
 
 enum EventIds
 {
-    EVENT_PLAYERS_GUNSHIP_SPAWN     = 22663,
-    EVENT_PLAYERS_GUNSHIP_COMBAT    = 22664,
-    EVENT_PLAYERS_GUNSHIP_SAURFANG  = 22665,
-    EVENT_ENEMY_GUNSHIP_COMBAT      = 22860,
-    EVENT_ENEMY_GUNSHIP_DESPAWN     = 22861,
+    EVENT_PLAYERS_GUNSHIP_SPAWN = 22663,
+    EVENT_PLAYERS_GUNSHIP_COMBAT = 22664,
+    EVENT_PLAYERS_GUNSHIP_SAURFANG = 22665,
+    EVENT_ENEMY_GUNSHIP_COMBAT = 22860,
+    EVENT_ENEMY_GUNSHIP_DESPAWN = 22861,
 
-    EVENT_QUAKE                     = 23437,
+    EVENT_QUAKE = 23437,
     EVENT_SECOND_REMORSELESS_WINTER = 23507,
-    EVENT_TELEPORT_TO_FROSMOURNE    = 23617,
-    EVENT_FESTERGUT_VALVE_USED      = 23438,
-    EVENT_ROTFACE_VALVE_USED        = 23426,
+    EVENT_TELEPORT_TO_FROSMOURNE = 23617,
+    EVENT_FESTERGUT_VALVE_USED = 23438,
+    EVENT_ROTFACE_VALVE_USED = 23426,
 };
 
 enum TimedEvents
 {
     EVENT_UPDATE_EXECUTION_TIME = 1,
-    EVENT_QUAKE_SHATTER         = 2,
-    EVENT_REBUILD_PLATFORM      = 3,
-    EVENT_RESPAWN_GUNSHIP       = 4,
-    EVENT_RESPAWN_SINDRAGOSA    = 5
+    EVENT_QUAKE_SHATTER = 2,
+    EVENT_REBUILD_PLATFORM = 3,
+    EVENT_RESPAWN_GUNSHIP = 4,
+    EVENT_RESPAWN_SINDRAGOSA = 5
 };
 
 enum Spells
 {
-    SPELL_GAS_VARIABLE      = 74119,
-    SPELL_OOZE_VARIABLE     = 74118,
+    SPELL_GAS_VARIABLE = 74119,
+    SPELL_OOZE_VARIABLE = 74118,
     BLOOD_BEAM_VISUAL_RHAND = 72304,
     BLOOD_BEAM_VISUAL_LHAND = 72303,
-    BLOOD_BEAM_VISUAL_LLEG  = 72302,
-    BLOOD_BEAM_VISUAL_RLEG  = 72301,
-    VOID_ZONE_VISUAL        = 69422
+    BLOOD_BEAM_VISUAL_LLEG = 72302,
+    BLOOD_BEAM_VISUAL_RLEG = 72301,
+    VOID_ZONE_VISUAL = 69422
 };
 
 enum Say
@@ -69,98 +69,115 @@ enum Say
     SAY_SOULS_LICH_KING_RAND_WHISPER = 5
 };
 
-BossBoundaryData const boundaries =
-{
-    { DATA_LORD_MARROWGAR, new CircleBoundary(Position(-428.0f,2211.0f), 95.0) },
-    { DATA_LORD_MARROWGAR, new RectangleBoundary(-430.0f, -330.0f, 2110.0f, 2310.0f) },
-    { DATA_LADY_DEATHWHISPER, new RectangleBoundary(-670.0f, -520.0f, 2145.0f, 2280.0f) },
-    { DATA_DEATHBRINGER_SAURFANG, new RectangleBoundary(-565.0f, -465.0f, 2160.0f, 2260.0f) },
+BossBoundaryData const boundaries = {
+    {DATA_LORD_MARROWGAR, new CircleBoundary(Position(-428.0f, 2211.0f), 95.0)},
+    {DATA_LORD_MARROWGAR, new RectangleBoundary(-430.0f, -330.0f, 2110.0f, 2310.0f)},
+    {DATA_LADY_DEATHWHISPER, new RectangleBoundary(-670.0f, -520.0f, 2145.0f, 2280.0f)},
+    {DATA_DEATHBRINGER_SAURFANG, new RectangleBoundary(-565.0f, -465.0f, 2160.0f, 2260.0f)},
 
-    { DATA_ROTFACE, new RectangleBoundary(4385.0f, 4505.0f, 3082.0f, 3195.0f) },
-    { DATA_FESTERGUT, new RectangleBoundary(4205.0f, 4325.0f, 3082.0f, 3195.0f) },
-    { DATA_PROFESSOR_PUTRICIDE, new ParallelogramBoundary(Position(4356.0f, 3290.0f), Position(4435.0f, 3194.0f), Position(4280.0f, 3194.0f)) },
-    { DATA_PROFESSOR_PUTRICIDE, new RectangleBoundary(4280.0f, 4435.0f, 3150.0f, 4360.0f) },
+    {DATA_ROTFACE, new RectangleBoundary(4385.0f, 4505.0f, 3082.0f, 3195.0f)},
+    {DATA_FESTERGUT, new RectangleBoundary(4205.0f, 4325.0f, 3082.0f, 3195.0f)},
+    {DATA_PROFESSOR_PUTRICIDE,
+     new ParallelogramBoundary(Position(4356.0f, 3290.0f), Position(4435.0f, 3194.0f), Position(4280.0f, 3194.0f))},
+    {DATA_PROFESSOR_PUTRICIDE, new RectangleBoundary(4280.0f, 4435.0f, 3150.0f, 4360.0f)},
 
-    { DATA_BLOOD_PRINCE_COUNCIL, new EllipseBoundary(Position(4660.95f, 2769.194f), 85.0, 60.0) },
-    { DATA_BLOOD_QUEEN_LANA_THEL, new CircleBoundary(Position(4595.93f, 2769.365f), 64.0) },
+    {DATA_BLOOD_PRINCE_COUNCIL, new EllipseBoundary(Position(4660.95f, 2769.194f), 85.0, 60.0)},
+    {DATA_BLOOD_QUEEN_LANA_THEL, new CircleBoundary(Position(4595.93f, 2769.365f), 64.0)},
 
-    { DATA_SISTER_SVALNA, new RectangleBoundary(4291.0f, 4423.0f, 2438.0f, 2653.0f) },
-    { DATA_VALITHRIA_DREAMWALKER, new RectangleBoundary(4112.5f, 4293.5f, 2385.0f, 2585.0f) },
-    { DATA_SINDRAGOSA, new EllipseBoundary(Position(4418.6f, 2484.0f), 110.0, 75.0) }
+    {DATA_SISTER_SVALNA, new RectangleBoundary(4291.0f, 4423.0f, 2438.0f, 2653.0f)},
+    {DATA_VALITHRIA_DREAMWALKER, new RectangleBoundary(4112.5f, 4293.5f, 2385.0f, 2585.0f)},
+    {DATA_SINDRAGOSA, new EllipseBoundary(Position(4418.6f, 2484.0f), 110.0, 75.0)}
 };
 
-DoorData const doorData[] =
-{
-    {GO_LORD_MARROWGAR_S_ENTRANCE,           DATA_LORD_MARROWGAR,        DOOR_TYPE_ROOM        },
-    {GO_SCOURGE_TRANSPORTER_FIRST,           DATA_LORD_MARROWGAR,        DOOR_TYPE_PASSAGE     },
-    {GO_ICEWALL,                             DATA_LORD_MARROWGAR,        DOOR_TYPE_PASSAGE     },
-    {GO_DOODAD_ICECROWN_ICEWALL02,           DATA_LORD_MARROWGAR,        DOOR_TYPE_PASSAGE     },
-    {GO_ORATORY_OF_THE_DAMNED_ENTRANCE,      DATA_LADY_DEATHWHISPER,     DOOR_TYPE_ROOM        },
-    {GO_SAURFANG_S_DOOR,                     DATA_DEATHBRINGER_SAURFANG, DOOR_TYPE_PASSAGE     },
-    {GO_ORANGE_PLAGUE_MONSTER_ENTRANCE,      DATA_FESTERGUT,             DOOR_TYPE_ROOM        },
-    {GO_GREEN_PLAGUE_MONSTER_ENTRANCE,       DATA_ROTFACE,               DOOR_TYPE_ROOM        },
-    {GO_CRIMSON_HALL_DOOR,                   DATA_BLOOD_PRINCE_COUNCIL,  DOOR_TYPE_ROOM        },
-    {GO_CRIMSON_HALL_DOOR,                   DATA_BLOOD_PRINCE_TRASH,    DOOR_TYPE_PASSAGE     },
-    {GO_BLOOD_ELF_COUNCIL_DOOR,              DATA_BLOOD_PRINCE_COUNCIL,  DOOR_TYPE_PASSAGE    },
-    {GO_BLOOD_ELF_COUNCIL_DOOR_RIGHT,        DATA_BLOOD_PRINCE_COUNCIL,  DOOR_TYPE_PASSAGE    },
-    {GO_DOODAD_ICECROWN_BLOODPRINCE_DOOR_01, DATA_BLOOD_QUEEN_LANA_THEL, DOOR_TYPE_ROOM       },
-    {GO_DOODAD_ICECROWN_GRATE_01,            DATA_BLOOD_QUEEN_LANA_THEL, DOOR_TYPE_PASSAGE    },
-    {GO_GREEN_DRAGON_BOSS_ENTRANCE,          DATA_SISTER_SVALNA,         DOOR_TYPE_PASSAGE    },
-    {GO_GREEN_DRAGON_BOSS_ENTRANCE,          DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_ROOM       },
-    {GO_GREEN_DRAGON_BOSS_EXIT,              DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_PASSAGE    },
-    {GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_01,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE },
-    {GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_02,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE },
-    {GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_03,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE },
-    {GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_04,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE },
-    {GO_SINDRAGOSA_ENTRANCE_DOOR,            DATA_SINDRAGOSA,            DOOR_TYPE_ROOM       },
-    {GO_SINDRAGOSA_ENTRANCE_DOOR,            DATA_SINDRAGOSA_GAUNTLET,   DOOR_TYPE_PASSAGE    },
-    {GO_SINDRAGOSA_SHORTCUT_ENTRANCE_DOOR,   DATA_SINDRAGOSA,            DOOR_TYPE_PASSAGE    },
-    {GO_SINDRAGOSA_SHORTCUT_EXIT_DOOR,       DATA_SINDRAGOSA,            DOOR_TYPE_PASSAGE    },
-    {GO_ICE_WALL,                            DATA_SINDRAGOSA,            DOOR_TYPE_ROOM       },
-    {GO_ICE_WALL,                            DATA_SINDRAGOSA,            DOOR_TYPE_ROOM       },
-    {0,                                      0,                          DOOR_TYPE_ROOM       }
+DoorData const doorData[] = {
+    {GO_LORD_MARROWGAR_S_ENTRANCE,           DATA_LORD_MARROWGAR,        DOOR_TYPE_ROOM      },
+    {GO_SCOURGE_TRANSPORTER_FIRST,           DATA_LORD_MARROWGAR,        DOOR_TYPE_PASSAGE   },
+    {GO_ICEWALL,                             DATA_LORD_MARROWGAR,        DOOR_TYPE_PASSAGE   },
+    {GO_DOODAD_ICECROWN_ICEWALL02,           DATA_LORD_MARROWGAR,        DOOR_TYPE_PASSAGE   },
+    {GO_ORATORY_OF_THE_DAMNED_ENTRANCE,      DATA_LADY_DEATHWHISPER,     DOOR_TYPE_ROOM      },
+    {GO_SAURFANG_S_DOOR,                     DATA_DEATHBRINGER_SAURFANG, DOOR_TYPE_PASSAGE   },
+    {GO_ORANGE_PLAGUE_MONSTER_ENTRANCE,      DATA_FESTERGUT,             DOOR_TYPE_ROOM      },
+    {GO_GREEN_PLAGUE_MONSTER_ENTRANCE,       DATA_ROTFACE,               DOOR_TYPE_ROOM      },
+    {GO_CRIMSON_HALL_DOOR,                   DATA_BLOOD_PRINCE_COUNCIL,  DOOR_TYPE_ROOM      },
+    {GO_CRIMSON_HALL_DOOR,                   DATA_BLOOD_PRINCE_TRASH,    DOOR_TYPE_PASSAGE   },
+    {GO_BLOOD_ELF_COUNCIL_DOOR,              DATA_BLOOD_PRINCE_COUNCIL,  DOOR_TYPE_PASSAGE   },
+    {GO_BLOOD_ELF_COUNCIL_DOOR_RIGHT,        DATA_BLOOD_PRINCE_COUNCIL,  DOOR_TYPE_PASSAGE   },
+    {GO_DOODAD_ICECROWN_BLOODPRINCE_DOOR_01, DATA_BLOOD_QUEEN_LANA_THEL, DOOR_TYPE_ROOM      },
+    {GO_DOODAD_ICECROWN_GRATE_01,            DATA_BLOOD_QUEEN_LANA_THEL, DOOR_TYPE_PASSAGE   },
+    {GO_GREEN_DRAGON_BOSS_ENTRANCE,          DATA_SISTER_SVALNA,         DOOR_TYPE_PASSAGE   },
+    {GO_GREEN_DRAGON_BOSS_ENTRANCE,          DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_ROOM      },
+    {GO_GREEN_DRAGON_BOSS_EXIT,              DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_PASSAGE   },
+    {GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_01,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE},
+    {GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_02,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE},
+    {GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_03,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE},
+    {GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_04,  DATA_VALITHRIA_DREAMWALKER, DOOR_TYPE_SPAWN_HOLE},
+    {GO_SINDRAGOSA_ENTRANCE_DOOR,            DATA_SINDRAGOSA,            DOOR_TYPE_ROOM      },
+    {GO_SINDRAGOSA_ENTRANCE_DOOR,            DATA_SINDRAGOSA_GAUNTLET,   DOOR_TYPE_PASSAGE   },
+    {GO_SINDRAGOSA_SHORTCUT_ENTRANCE_DOOR,   DATA_SINDRAGOSA,            DOOR_TYPE_PASSAGE   },
+    {GO_SINDRAGOSA_SHORTCUT_EXIT_DOOR,       DATA_SINDRAGOSA,            DOOR_TYPE_PASSAGE   },
+    {GO_ICE_WALL,                            DATA_SINDRAGOSA,            DOOR_TYPE_ROOM      },
+    {GO_ICE_WALL,                            DATA_SINDRAGOSA,            DOOR_TYPE_ROOM      },
+    {0,                                      0,                          DOOR_TYPE_ROOM      }
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_SINDRAGOSA,     DATA_SINDRAGOSA     },
-    { NPC_THE_SKYBREAKER, DATA_THE_SKYBREAKER },
-    { NPC_ORGRIMS_HAMMER, DATA_ORGRIMS_HAMMER },
-    { 0,                  0                   }
+ObjectData const creatureData[] = {
+    {NPC_SINDRAGOSA,     DATA_SINDRAGOSA    },
+    {NPC_THE_SKYBREAKER, DATA_THE_SKYBREAKER},
+    {NPC_ORGRIMS_HAMMER, DATA_ORGRIMS_HAMMER},
+    {0,                  0                  }
 };
 
 // this doesnt have to only store questgivers, also can be used for related quest spawns
 struct WeeklyQuest
 {
     uint32 creatureEntry;
-    uint32 questId[2];  // 10 and 25 man versions
+    uint32 questId[2]; // 10 and 25 man versions
 };
 
 // when changing the content, remember to update SetData, DATA_BLOOD_QUICKENING_STATE case for NPC_ALRIN_THE_AGILE index
-WeeklyQuest const WeeklyQuestData[WeeklyNPCs] =
-{
-    {NPC_INFILTRATOR_MINCHAR,         {QUEST_DEPROGRAMMING_10,                 QUEST_DEPROGRAMMING_25                }}, // Deprogramming
-    {NPC_KOR_KRON_LIEUTENANT,         {QUEST_SECURING_THE_RAMPARTS_10,         QUEST_SECURING_THE_RAMPARTS_25        }}, // Securing the Ramparts
-    {NPC_ROTTING_FROST_GIANT_10,      {QUEST_SECURING_THE_RAMPARTS_10,         QUEST_SECURING_THE_RAMPARTS_25        }}, // Securing the Ramparts
-    {NPC_ROTTING_FROST_GIANT_25,      {QUEST_SECURING_THE_RAMPARTS_10,         QUEST_SECURING_THE_RAMPARTS_25        }}, // Securing the Ramparts
-    {NPC_ALCHEMIST_ADRIANNA,          {QUEST_RESIDUE_RENDEZVOUS_10,            QUEST_RESIDUE_RENDEZVOUS_25           }}, // Residue Rendezvous
-    {NPC_ALRIN_THE_AGILE,             {QUEST_BLOOD_QUICKENING_10,              QUEST_BLOOD_QUICKENING_25             }}, // Blood Quickening
-    {NPC_INFILTRATOR_MINCHAR_BQ,      {QUEST_BLOOD_QUICKENING_10,              QUEST_BLOOD_QUICKENING_25             }}, // Blood Quickening
-    {NPC_MINCHAR_BEAM_STALKER,        {QUEST_BLOOD_QUICKENING_10,              QUEST_BLOOD_QUICKENING_25             }}, // Blood Quickening
-    {NPC_VALITHRIA_DREAMWALKER_QUEST, {QUEST_RESPITE_FOR_A_TORMENTED_SOUL_10,  QUEST_RESPITE_FOR_A_TORMENTED_SOUL_25 }}, // Respite for a Tormented Soul
+WeeklyQuest const WeeklyQuestData[WeeklyNPCs] = {
+    {NPC_INFILTRATOR_MINCHAR,         {QUEST_DEPROGRAMMING_10, QUEST_DEPROGRAMMING_25}          }, // Deprogramming
+    {NPC_KOR_KRON_LIEUTENANT,
+     {QUEST_SECURING_THE_RAMPARTS_10, QUEST_SECURING_THE_RAMPARTS_25}                           }, // Securing the Ramparts
+    {NPC_ROTTING_FROST_GIANT_10,
+     {QUEST_SECURING_THE_RAMPARTS_10, QUEST_SECURING_THE_RAMPARTS_25}                           }, // Securing the Ramparts
+    {NPC_ROTTING_FROST_GIANT_25,
+     {QUEST_SECURING_THE_RAMPARTS_10, QUEST_SECURING_THE_RAMPARTS_25}                           }, // Securing the Ramparts
+    {NPC_ALCHEMIST_ADRIANNA,          {QUEST_RESIDUE_RENDEZVOUS_10, QUEST_RESIDUE_RENDEZVOUS_25}}, // Residue Rendezvous
+    {NPC_ALRIN_THE_AGILE,             {QUEST_BLOOD_QUICKENING_10, QUEST_BLOOD_QUICKENING_25}    }, // Blood Quickening
+    {NPC_INFILTRATOR_MINCHAR_BQ,      {QUEST_BLOOD_QUICKENING_10, QUEST_BLOOD_QUICKENING_25}    }, // Blood Quickening
+    {NPC_MINCHAR_BEAM_STALKER,        {QUEST_BLOOD_QUICKENING_10, QUEST_BLOOD_QUICKENING_25}    }, // Blood Quickening
+    {NPC_VALITHRIA_DREAMWALKER_QUEST,
+     {QUEST_RESPITE_FOR_A_TORMENTED_SOUL_10, QUEST_RESPITE_FOR_A_TORMENTED_SOUL_25}             }, // Respite for a Tormented Soul
 };
 
-Position const JainaSpawnPos    = { -48.65278f, 2211.026f, 27.98586f, 3.124139f };
-Position const MuradinSpawnPos  = { -47.34549f, 2208.087f, 27.98586f, 3.106686f };
-Position const UtherSpawnPos    = { -26.58507f, 2211.524f, 30.19898f, 3.124139f };
-Position const SylvanasSpawnPos = { -41.45833f, 2222.891f, 27.98586f, 3.647738f };
-Position const SindragosaSpawnPos = { 4818.6997f, 2483.7102f, 287.06497f, 3.286661f };
+Position const JainaSpawnPos = {-48.65278f, 2211.026f, 27.98586f, 3.124139f};
+Position const MuradinSpawnPos = {-47.34549f, 2208.087f, 27.98586f, 3.106686f};
+Position const UtherSpawnPos = {-26.58507f, 2211.524f, 30.19898f, 3.124139f};
+Position const SylvanasSpawnPos = {-41.45833f, 2222.891f, 27.98586f, 3.647738f};
+Position const SindragosaSpawnPos = {4818.6997f, 2483.7102f, 287.06497f, 3.286661f};
 
 // Set position traps Spirit Alarm
-std::vector<Position> GoSpiritAlarm_1 = { { -160.96f, 2210.46f, 35.24f, 0.0f }, { -176.27f, 2201.93f, 35.24f, 0.0f}, { -207.83f, 2207.38f, 35.24f, 0.0f } };
-std::vector<Position> GoSpiritAlarm_2 = { { -178.41f, 2225.11f, 35.24f, 0.0f }, { -195.23f, 2221.55f, 35.24f, 0.0f}, { -209.94f, 2250.34f, 37.99f, 0.0f } };
-std::vector<Position> GoSpiritAlarm_3 = { { -289.80f, 2216.60f, 42.39f, 0.0f }, { -317.76f, 2216.11f, 42.57f, 0.0f}, { -301.07f, 2216.62f, 42.0f, 0.0f } };
-std::vector<Position> GoSpiritAlarm_4 = { { -276.07f, 2206.76f, 42.57f, 0.0f }, { -304.44f, 2199.11f, 41.99f, 0.0f}, { -292.82f, 2204.61f, 42.02f, 0.0f } };
+std::vector<Position> GoSpiritAlarm_1 = {
+    {-160.96f, 2210.46f, 35.24f, 0.0f},
+    {-176.27f, 2201.93f, 35.24f, 0.0f},
+    {-207.83f, 2207.38f, 35.24f, 0.0f}
+};
+std::vector<Position> GoSpiritAlarm_2 = {
+    {-178.41f, 2225.11f, 35.24f, 0.0f},
+    {-195.23f, 2221.55f, 35.24f, 0.0f},
+    {-209.94f, 2250.34f, 37.99f, 0.0f}
+};
+std::vector<Position> GoSpiritAlarm_3 = {
+    {-289.80f, 2216.60f, 42.39f, 0.0f},
+    {-317.76f, 2216.11f, 42.57f, 0.0f},
+    {-301.07f, 2216.62f, 42.0f,  0.0f}
+};
+std::vector<Position> GoSpiritAlarm_4 = {
+    {-276.07f, 2206.76f, 42.57f, 0.0f},
+    {-304.44f, 2199.11f, 41.99f, 0.0f},
+    {-292.82f, 2204.61f, 42.02f, 0.0f}
+};
 
 class RespawnEvent : public BasicEvent
 {
@@ -181,7 +198,7 @@ private:
 class DelayedCastMincharEvent : public BasicEvent
 {
 public:
-    DelayedCastMincharEvent(Creature* trigger, uint32 spellId) : _trigger(trigger), _spellId(spellId) {}
+    DelayedCastMincharEvent(Creature* trigger, uint32 spellId) : _trigger(trigger), _spellId(spellId) { }
 
     bool Execute(uint64 /*time*/, uint32 /*diff*/) override
     {
@@ -243,13 +260,11 @@ public:
             }
         }
 
-        void OnPlayerAreaUpdate(Player* player, uint32  /*oldArea*/, uint32 newArea) override
+        void OnPlayerAreaUpdate(Player* player, uint32 /*oldArea*/, uint32 newArea) override
         {
             if (newArea == 4890 /*Putricide's Laboratory of Alchemical Horrors and Fun*/ ||
-                    newArea == 4891 /*The Sanctum of Blood*/ ||
-                    newArea == 4889 /*The Frost Queen's Lair*/ ||
-                    newArea == 4859 /*The Frozen Throne*/ ||
-                    newArea == 4910 /*Frostmourne*/)
+                newArea == 4891 /*The Sanctum of Blood*/ || newArea == 4889 /*The Frost Queen's Lair*/ ||
+                newArea == 4859 /*The Frozen Throne*/ || newArea == 4910 /*Frostmourne*/)
             {
                 player->SendInitWorldStates(player->GetZoneId(), player->GetAreaId());
             }
@@ -271,7 +286,8 @@ public:
             if (GetBossState(DATA_LADY_DEATHWHISPER) == DONE && GetBossState(DATA_ICECROWN_GUNSHIP_BATTLE) != DONE)
                 SpawnGunship();
 
-            if (GetBossState(DATA_SINDRAGOSA) != DONE && IsSindragosaIntroDone && !GetCreature(DATA_SINDRAGOSA) && Events.GetTimeUntilEvent(EVENT_RESPAWN_SINDRAGOSA) == Milliseconds::max())
+            if (GetBossState(DATA_SINDRAGOSA) != DONE && IsSindragosaIntroDone && !GetCreature(DATA_SINDRAGOSA) &&
+                Events.GetTimeUntilEvent(EVENT_RESPAWN_SINDRAGOSA) == Milliseconds::max())
             {
                 Events.ScheduleEvent(EVENT_RESPAWN_SINDRAGOSA, 30s);
             }
@@ -285,9 +301,7 @@ public:
                         if (SpellInfo const* si = sSpellMgr->GetSpellInfo(itr->second->spellId))
                         {
                             if (si->HasAura(SPELL_AURA_MOD_INCREASE_HEALTH_PERCENT))
-                            {
                                 DoCastSpellOnPlayer(player, itr->second->spellId, false, false);
-                            }
                         }
                     }
             }
@@ -304,13 +318,16 @@ public:
             }
 
             // apply ICC buff to pets/summons
-            if (GetData(DATA_BUFF_AVAILABLE) && creature->GetOwnerGUID().IsPlayer() && creature->HasUnitTypeMask(UNIT_MASK_MINION | UNIT_MASK_GUARDIAN | UNIT_MASK_CONTROLABLE_GUARDIAN) && creature->CanHaveThreatList())
+            if (GetData(DATA_BUFF_AVAILABLE) && creature->GetOwnerGUID().IsPlayer() &&
+                creature->HasUnitTypeMask(UNIT_MASK_MINION | UNIT_MASK_GUARDIAN | UNIT_MASK_CONTROLABLE_GUARDIAN) &&
+                creature->CanHaveThreatList())
                 if (Unit* owner = creature->GetOwner())
                     if (Player* plr = owner->ToPlayer())
                     {
                         SpellAreaForAreaMapBounds saBounds = sSpellMgr->GetSpellAreaForAreaMapBounds(4812);
                         for (SpellAreaForAreaMap::const_iterator itr = saBounds.first; itr != saBounds.second; ++itr)
-                            if ((itr->second->raceMask & plr->getRaceMask()) && !creature->HasAura(itr->second->spellId))
+                            if ((itr->second->raceMask & plr->getRaceMask()) &&
+                                !creature->HasAura(itr->second->spellId))
                                 if (SpellInfo const* si = sSpellMgr->GetSpellInfo(itr->second->spellId))
                                     if (si->HasAura(SPELL_AURA_MOD_INCREASE_HEALTH_PERCENT))
                                         creature->AddAura(itr->second->spellId, creature);
@@ -319,7 +336,11 @@ public:
             // fighting npcs in Rampart of Skulls
             std::string name1("Skybreaker ");
             std::string name2("Kor'kron ");
-            if (!creature->GetTransport() && creature->GetPositionZ() <= 205.0f && creature->GetExactDist2d(-439.0f, 2210.0f) <= 150.0f && (creature->GetEntry() == 37544 || creature->GetEntry() == 37545 || creature->GetName().compare(0, name1.length(), name1) == 0 || creature->GetName().compare(0, name2.length(), name2) == 0))
+            if (!creature->GetTransport() && creature->GetPositionZ() <= 205.0f &&
+                creature->GetExactDist2d(-439.0f, 2210.0f) <= 150.0f &&
+                (creature->GetEntry() == 37544 || creature->GetEntry() == 37545 ||
+                    creature->GetName().compare(0, name1.length(), name1) == 0 ||
+                    creature->GetName().compare(0, name2.length(), name2) == 0))
                 creature->AddToNotify(NOTIFY_AI_RELOCATION);
 
             // pussywizard: check weekly here, before possible UpdateEntry
@@ -339,7 +360,8 @@ public:
                             WeeklyQuestNpcGUID[i] = creature->GetGUID();
                             if (WeeklyQuestId10 != WeeklyQuestData[i].questId[0])
                                 creature->SetVisible(false);
-                            else if (WeeklyQuestData[i].creatureEntry == NPC_VALITHRIA_DREAMWALKER_QUEST && GetBossState(DATA_VALITHRIA_DREAMWALKER) != DONE)
+                            else if (WeeklyQuestData[i].creatureEntry == NPC_VALITHRIA_DREAMWALKER_QUEST &&
+                                     GetBossState(DATA_VALITHRIA_DREAMWALKER) != DONE)
                                 creature->SetVisible(false);
                         }
                     break;
@@ -429,7 +451,8 @@ public:
                     break;
                 case NPC_PROFESSOR_PUTRICIDE:
                     ProfessorPutricideGUID = creature->GetGUID();
-                    if (GetBossState(DATA_ROTFACE) == DONE && GetBossState(DATA_FESTERGUT) == DONE && !HeroicAttempts && GetData(DATA_HAS_LIMITED_ATTEMPTS) && creature->IsAlive())
+                    if (GetBossState(DATA_ROTFACE) == DONE && GetBossState(DATA_FESTERGUT) == DONE && !HeroicAttempts &&
+                        GetData(DATA_HAS_LIMITED_ATTEMPTS) && creature->IsAlive())
                         creature->SetVisible(false);
                     break;
                 case NPC_PRINCE_KELESETH:
@@ -493,7 +516,9 @@ public:
                     break;
                 case NPC_INVISIBLE_STALKER:
                     // Teleporter visual at center
-                    if (creature->GetExactDist2d(4357.052f, 2769.421f) < 10.0f && GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE && GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE && GetBossState(DATA_SINDRAGOSA) == DONE)
+                    if (creature->GetExactDist2d(4357.052f, 2769.421f) < 10.0f &&
+                        GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE &&
+                        GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE && GetBossState(DATA_SINDRAGOSA) == DONE)
                         creature->CastSpell(creature, SPELL_ARTHAS_TELEPORTER_CEREMONY, false);
                     break;
                 case NPC_THE_LICH_KING:
@@ -524,7 +549,8 @@ public:
                             spellId = BLOOD_BEAM_VISUAL_LLEG;
                         else
                             spellId = BLOOD_BEAM_VISUAL_RLEG;
-                        creature->m_Events.AddEvent(new DelayedCastMincharEvent(creature, spellId), creature->m_Events.CalculateTime(1000));
+                        creature->m_Events.AddEvent(
+                            new DelayedCastMincharEvent(creature, spellId), creature->m_Events.CalculateTime(1000));
                     }
                     break;
                 case NPC_SKYBREAKER_DECKHAND:
@@ -575,16 +601,17 @@ public:
                 case NPC_ZAFOD_BOOMBOX:
                     if (GameObjectTemplate const* go = sObjectMgr->GetGameObjectTemplate(GO_THE_SKYBREAKER_A))
                         if ((TeamIdInInstance == TEAM_ALLIANCE && data->mapid == go->moTransport.mapID) ||
-                                (TeamIdInInstance == TEAM_HORDE && data->mapid != go->moTransport.mapID))
+                            (TeamIdInInstance == TEAM_HORDE && data->mapid != go->moTransport.mapID))
                             return entry;
                     return 0;
                 case NPC_IGB_MURADIN_BRONZEBEARD:
                     if ((TeamIdInInstance == TEAM_ALLIANCE && data->posX > 10.0f) ||
-                            (TeamIdInInstance == TEAM_HORDE && data->posX < 10.0f))
+                        (TeamIdInInstance == TEAM_HORDE && data->posX < 10.0f))
                         return entry;
                     return 0;
                 case NPC_SPIRE_FROSTWYRM:
-                    if ((TeamIdInInstance == TEAM_ALLIANCE && data->posY < 2200.0f) || (TeamIdInInstance == TEAM_HORDE && data->posY > 2200.0f))
+                    if ((TeamIdInInstance == TEAM_ALLIANCE && data->posY < 2200.0f) ||
+                        (TeamIdInInstance == TEAM_HORDE && data->posY > 2200.0f))
                         return 0;
                     break;
             }
@@ -632,7 +659,11 @@ public:
             // fighting npcs in Rampart of Skulls
             std::string name1("Skybreaker ");
             std::string name2("Kor'kron ");
-            if (!creature->GetTransport() && creature->GetPositionZ() <= 205.0f && creature->GetExactDist2d(-439.0f, 2210.0f) <= 150.0f && (creature->GetEntry() == 37544 || creature->GetEntry() == 37545 || creature->GetName().compare(0, name1.length(), name1) == 0 || creature->GetName().compare(0, name2.length(), name2) == 0))
+            if (!creature->GetTransport() && creature->GetPositionZ() <= 205.0f &&
+                creature->GetExactDist2d(-439.0f, 2210.0f) <= 150.0f &&
+                (creature->GetEntry() == 37544 || creature->GetEntry() == 37545 ||
+                    creature->GetName().compare(0, name1.length(), name1) == 0 ||
+                    creature->GetName().compare(0, name2.length(), name2) == 0))
                 if (!creature->GetLootRecipient())
                     creature->m_Events.AddEvent(new RespawnEvent(*creature), creature->m_Events.CalculateTime(3000));
 
@@ -650,7 +681,7 @@ public:
                     if (FrostwyrmGUIDs.empty())
                         return;
 
-                    if (creature->AI()->GetData(1/*DATA_FROSTWYRM_OWNER*/) == DATA_SPINESTALKER)
+                    if (creature->AI()->GetData(1 /*DATA_FROSTWYRM_OWNER*/) == DATA_SPINESTALKER)
                     {
                         SpinestalkerTrash.erase(creature->GetSpawnId());
                         if (SpinestalkerTrash.empty())
@@ -667,22 +698,22 @@ public:
                     break;
                 case NPC_RIMEFANG:
                 case NPC_SPINESTALKER:
+                {
+                    if (GetData(DATA_HAS_LIMITED_ATTEMPTS) && !HeroicAttempts)
+                        return;
+
+                    if (GetBossState(DATA_SINDRAGOSA) == DONE)
+                        return;
+
+                    FrostwyrmGUIDs.erase(creature->GetSpawnId());
+                    if (FrostwyrmGUIDs.empty())
                     {
-                        if (GetData(DATA_HAS_LIMITED_ATTEMPTS) && !HeroicAttempts)
-                            return;
-
-                        if (GetBossState(DATA_SINDRAGOSA) == DONE)
-                            return;
-
-                        FrostwyrmGUIDs.erase(creature->GetSpawnId());
-                        if (FrostwyrmGUIDs.empty())
-                        {
-                            instance->LoadGrid(SindragosaSpawnPos.GetPositionX(), SindragosaSpawnPos.GetPositionY());
-                            if (Creature* boss = instance->SummonCreature(NPC_SINDRAGOSA, SindragosaSpawnPos))
-                                boss->AI()->DoAction(ACTION_START_FROSTWYRM);
-                        }
-                        break;
+                        instance->LoadGrid(SindragosaSpawnPos.GetPositionX(), SindragosaSpawnPos.GetPositionY());
+                        if (Creature* boss = instance->SummonCreature(NPC_SINDRAGOSA, SindragosaSpawnPos))
+                            boss->AI()->DoAction(ACTION_START_FROSTWYRM);
                     }
+                    break;
+                }
                 case NPC_DEATHSPEAKER_SERVANT:
                     if (Creature* c = unit->SummonCreature(WORLD_TRIGGER, *unit, TEMPSUMMON_TIMED_DESPAWN, 10000))
                     {
@@ -716,7 +747,11 @@ public:
                     break;
                 case GO_GEIST_ALARM_1:
                 case GO_GEIST_ALARM_2:
-                    go->SetPosition(go->GetPositionX() + urand(0, 2) * 20.0f * (go->GetEntry() == GO_GEIST_ALARM_1 ? -1.0f : 1.0f), go->GetPositionY(), go->GetPositionZ(), go->GetOrientation());
+                    go->SetPosition(
+                        go->GetPositionX() + urand(0, 2) * 20.0f * (go->GetEntry() == GO_GEIST_ALARM_1 ? -1.0f : 1.0f),
+                        go->GetPositionY(),
+                        go->GetPositionZ(),
+                        go->GetOrientation());
                     break;
                 case GO_DOODAD_ICECROWN_ICEWALL02:
                 case GO_ICEWALL:
@@ -741,7 +776,8 @@ public:
                     break;
                 case GO_SCIENTIST_ENTRANCE:
                     PutricideEnteranceDoorGUID = go->GetGUID();
-                    HandleGameObject(PutricideEnteranceDoorGUID, PutricideEventProgress & PUTRICIDE_EVENT_FLAG_TRAP_FINISHED, go);
+                    HandleGameObject(
+                        PutricideEnteranceDoorGUID, PutricideEventProgress & PUTRICIDE_EVENT_FLAG_TRAP_FINISHED, go);
                     break;
                 // these 2 gates are functional only on 25man modes
                 case GO_DOODAD_ICECROWN_ROOSTPORTCULLIS_01:
@@ -796,21 +832,29 @@ public:
                     break;
                 case GO_SCIENTIST_AIRLOCK_DOOR_COLLISION:
                     PutricideCollisionGUID = go->GetGUID();
-                    HandleGameObject(PutricideCollisionGUID, ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) && (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE)), go);
+                    HandleGameObject(PutricideCollisionGUID,
+                        ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) &&
+                            (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE)),
+                        go);
                     break;
                 case GO_SCIENTIST_AIRLOCK_DOOR_ORANGE:
                     PutricideGateGUIDs[0] = go->GetGUID();
-                    if ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) && (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE))
+                    if ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) &&
+                        (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE))
                         go->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
                     else
-                        HandleGameObject(PutricideGateGUIDs[0], !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE), go);
+                        HandleGameObject(PutricideGateGUIDs[0],
+                            !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE),
+                            go);
                     break;
                 case GO_SCIENTIST_AIRLOCK_DOOR_GREEN:
                     PutricideGateGUIDs[1] = go->GetGUID();
-                    if ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE) && (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE))
+                    if ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE) &&
+                        (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE))
                         go->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
                     else
-                        HandleGameObject(PutricideGateGUIDs[1], !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE), go);
+                        HandleGameObject(
+                            PutricideGateGUIDs[1], !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE), go);
                     break;
                 case GO_DOODAD_ICECROWN_ORANGETUBES02:
                     PutricidePipeGUIDs[0] = go->GetGUID();
@@ -845,7 +889,8 @@ public:
                     break;
                 case GO_SCOURGE_TRANSPORTER_LK:
                     TheLichKingTeleportGUID = go->GetGUID();
-                    if (GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE && GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE && GetBossState(DATA_SINDRAGOSA) == DONE)
+                    if (GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE &&
+                        GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE && GetBossState(DATA_SINDRAGOSA) == DONE)
                         go->SetGoState(GO_STATE_ACTIVE);
                     break;
                 case GO_ARTHAS_PLATFORM:
@@ -941,7 +986,8 @@ public:
                 case DATA_WEEKLY_QUEST_ID:
                     return WeeklyQuestId10;
                 case DATA_PUTRICIDE_TRAP_STATE:
-                    if (!(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) || !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE))
+                    if (!(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) ||
+                        !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE))
                         return TO_BE_DECIDED;
                     if (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_TRAP_INPROGRESS)
                         return IN_PROGRESS;
@@ -1082,7 +1128,8 @@ public:
         {
             for (auto const& itr : instance->GetPlayers())
                 if (Player* _player = itr.GetSource())
-                    _player->DestroyItemCount(ITEM_GOBLIN_ROCKET_PACK, _player->GetItemCount(ITEM_GOBLIN_ROCKET_PACK), true);
+                    _player->DestroyItemCount(
+                        ITEM_GOBLIN_ROCKET_PACK, _player->GetItemCount(ITEM_GOBLIN_ROCKET_PACK), true);
         }
 
         bool SetBossState(uint32 type, EncounterState state) override
@@ -1095,7 +1142,11 @@ public:
                 case DATA_LORD_MARROWGAR:
                     if (state == DONE)
                     {
-                        WeeklyQuestId10 = RAND(QUEST_BLOOD_QUICKENING_10, QUEST_RESIDUE_RENDEZVOUS_10, QUEST_RESPITE_FOR_A_TORMENTED_SOUL_10, QUEST_DEPROGRAMMING_10, QUEST_SECURING_THE_RAMPARTS_10);
+                        WeeklyQuestId10 = RAND(QUEST_BLOOD_QUICKENING_10,
+                            QUEST_RESIDUE_RENDEZVOUS_10,
+                            QUEST_RESPITE_FOR_A_TORMENTED_SOUL_10,
+                            QUEST_DEPROGRAMMING_10,
+                            QUEST_SECURING_THE_RAMPARTS_10);
                         SetData(DATA_WEEKLY_QUEST_ID, 0); // show required hidden npcs
                         if (GameObject* transporter = instance->GetGameObject(ScourgeTransporterFirstGUID))
                             transporter->RemoveGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
@@ -1159,7 +1210,8 @@ public:
                     }
                     break;
                 case DATA_PROFESSOR_PUTRICIDE:
-                    HandleGameObject(PutricideEnteranceDoorGUID, (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_TRAP_FINISHED) && state != IN_PROGRESS);
+                    HandleGameObject(PutricideEnteranceDoorGUID,
+                        (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_TRAP_FINISHED) && state != IN_PROGRESS);
                     HandleGameObject(PlagueSigilGUID, state != DONE);
                     if (state == DONE)
                         CheckLichKingAvailability();
@@ -1185,7 +1237,8 @@ public:
                     break;
                 case DATA_VALITHRIA_DREAMWALKER:
                     if (state == DONE)
-                        SetData(DATA_WEEKLY_QUEST_ID, GetData(DATA_WEEKLY_QUEST_ID)); // will show weekly quest npc if necessary
+                        SetData(DATA_WEEKLY_QUEST_ID,
+                            GetData(DATA_WEEKLY_QUEST_ID)); // will show weekly quest npc if necessary
                     break;
                 case DATA_SINDRAGOSA:
                     HandleGameObject(FrostwingSigilGUID, state != DONE);
@@ -1198,9 +1251,7 @@ public:
                         if (instance->IsHeroic())
                         {
                             if (HeroicAttempts)
-                            {
                                 Events.ScheduleEvent(EVENT_RESPAWN_SINDRAGOSA, 30s);
-                            }
                         }
                         else
                         {
@@ -1214,35 +1265,35 @@ public:
                     }
                     break;
                 case DATA_THE_LICH_KING:
+                {
+                    // dramatically increase visibility range during fight to seeing frostmourne room
+                    instance->SetVisibilityRange(state == IN_PROGRESS ? 500.0f : 200.0f);
+
+                    if (state == FAIL)
                     {
-                        // dramatically increase visibility range during fight to seeing frostmourne room
-                        instance->SetVisibilityRange(state == IN_PROGRESS ? 500.0f : 200.0f);
+                        Events.CancelEvent(EVENT_QUAKE_SHATTER);
+                        Events.CancelEvent(EVENT_REBUILD_PLATFORM);
 
-                        if (state == FAIL)
-                        {
-                            Events.CancelEvent(EVENT_QUAKE_SHATTER);
-                            Events.CancelEvent(EVENT_REBUILD_PLATFORM);
-
-                            HandleDropAttempt();
-                        }
-
-                        if (state == DONE)
-                        {
-                            if (GameObject* bolvar = instance->GetGameObject(FrozenBolvarGUID))
-                                bolvar->SetRespawnTime(7 * DAY);
-                            if (GameObject* pillars = instance->GetGameObject(PillarsChainedGUID))
-                                pillars->SetRespawnTime(7 * DAY);
-                            if (GameObject* pillars = instance->GetGameObject(PillarsUnchainedGUID))
-                                pillars->SetRespawnTime(7 * DAY);
-
-                            instance->LoadGrid(JainaSpawnPos.GetPositionX(), JainaSpawnPos.GetPositionY());
-                            instance->SummonCreature(NPC_LADY_JAINA_PROUDMOORE_QUEST, JainaSpawnPos);
-                            instance->SummonCreature(NPC_MURADIN_BRONZEBEARD_QUEST, MuradinSpawnPos);
-                            instance->SummonCreature(NPC_UTHER_THE_LIGHTBRINGER_QUEST, UtherSpawnPos);
-                            instance->SummonCreature(NPC_LADY_SYLVANAS_WINDRUNNER_QUEST, SylvanasSpawnPos);
-                        }
-                        break;
+                        HandleDropAttempt();
                     }
+
+                    if (state == DONE)
+                    {
+                        if (GameObject* bolvar = instance->GetGameObject(FrozenBolvarGUID))
+                            bolvar->SetRespawnTime(7 * DAY);
+                        if (GameObject* pillars = instance->GetGameObject(PillarsChainedGUID))
+                            pillars->SetRespawnTime(7 * DAY);
+                        if (GameObject* pillars = instance->GetGameObject(PillarsUnchainedGUID))
+                            pillars->SetRespawnTime(7 * DAY);
+
+                        instance->LoadGrid(JainaSpawnPos.GetPositionX(), JainaSpawnPos.GetPositionY());
+                        instance->SummonCreature(NPC_LADY_JAINA_PROUDMOORE_QUEST, JainaSpawnPos);
+                        instance->SummonCreature(NPC_MURADIN_BRONZEBEARD_QUEST, MuradinSpawnPos);
+                        instance->SummonCreature(NPC_UTHER_THE_LIGHTBRINGER_QUEST, UtherSpawnPos);
+                        instance->SummonCreature(NPC_LADY_SYLVANAS_WINDRUNNER_QUEST, SylvanasSpawnPos);
+                    }
+                    break;
+                }
                 default:
                     break;
             }
@@ -1275,7 +1326,9 @@ public:
                         instance->DoForAllPlayers([&](Player* player)
                         {
                             player->UpdateAreaDependentAuras(player->GetAreaId());
-                            for (Unit::ControlSet::const_iterator itr = player->m_Controlled.begin(); itr != player->m_Controlled.end(); ++itr)
+                            for (Unit::ControlSet::const_iterator itr = player->m_Controlled.begin();
+                                 itr != player->m_Controlled.end();
+                                 ++itr)
                             {
                                 Unit::AuraMap& am = (*itr)->GetOwnedAuras();
                                 for (Unit::AuraMap::iterator itra = am.begin(); itra != am.end();)
@@ -1308,7 +1361,9 @@ public:
                     break;
                 case DATA_WEEKLY_QUEST_ID:
                     for (uint8 i = 0; i < WeeklyNPCs; ++i)
-                        if (WeeklyQuestData[i].questId[0] == WeeklyQuestId10 && (WeeklyQuestData[i].creatureEntry != NPC_VALITHRIA_DREAMWALKER_QUEST || GetBossState(DATA_VALITHRIA_DREAMWALKER) == DONE) /*appears after killing valithria*/)
+                        if (WeeklyQuestData[i].questId[0] == WeeklyQuestId10 &&
+                            (WeeklyQuestData[i].creatureEntry != NPC_VALITHRIA_DREAMWALKER_QUEST ||
+                                GetBossState(DATA_VALITHRIA_DREAMWALKER) == DONE) /*appears after killing valithria*/)
                             if (WeeklyQuestNpcGUID[i])
                                 if (Creature* c = instance->GetCreature(WeeklyQuestNpcGUID[i]))
                                     c->SetVisible(true);
@@ -1317,8 +1372,11 @@ public:
                     if (data == NOT_STARTED)
                     {
                         PutricideEventProgress &= ~PUTRICIDE_EVENT_FLAG_TRAP_INPROGRESS;
-                        HandleGameObject(PutricideCollisionGUID, ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) && (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE)));
-                        if ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) && (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE))
+                        HandleGameObject(PutricideCollisionGUID,
+                            ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) &&
+                                (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE)));
+                        if ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) &&
+                            (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE))
                         {
                             for (uint8 i = 0; i < 2; ++i)
                                 if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[i]))
@@ -1326,8 +1384,10 @@ public:
                         }
                         else
                         {
-                            HandleGameObject(PutricideGateGUIDs[0], !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE));
-                            HandleGameObject(PutricideGateGUIDs[1], !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE));
+                            HandleGameObject(PutricideGateGUIDs[0],
+                                !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE));
+                            HandleGameObject(
+                                PutricideGateGUIDs[1], !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE));
                         }
                         SaveToDB();
                     }
@@ -1344,8 +1404,11 @@ public:
                         PutricideEventProgress &= ~PUTRICIDE_EVENT_FLAG_TRAP_INPROGRESS;
                         PutricideEventProgress |= PUTRICIDE_EVENT_FLAG_TRAP_FINISHED;
                         HandleGameObject(PutricideEnteranceDoorGUID, true);
-                        HandleGameObject(PutricideCollisionGUID, ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) && (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE)));
-                        if ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) && (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE))
+                        HandleGameObject(PutricideCollisionGUID,
+                            ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) &&
+                                (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE)));
+                        if ((PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE) &&
+                            (PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE))
                         {
                             for (uint8 i = 0; i < 2; ++i)
                                 if (GameObject* go = instance->GetGameObject(PutricideGateGUIDs[i]))
@@ -1353,8 +1416,10 @@ public:
                         }
                         else
                         {
-                            HandleGameObject(PutricideGateGUIDs[0], !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE));
-                            HandleGameObject(PutricideGateGUIDs[1], !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE));
+                            HandleGameObject(PutricideGateGUIDs[0],
+                                !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_FESTERGUT_VALVE));
+                            HandleGameObject(
+                                PutricideGateGUIDs[1], !(PutricideEventProgress & PUTRICIDE_EVENT_FLAG_ROTFACE_VALVE));
                         }
                         SaveToDB();
                     }
@@ -1386,51 +1451,52 @@ public:
                         SaveToDB();
                     break;
                 case DATA_BLOOD_QUICKENING_STATE:
-                    {
-                        if (data == IN_PROGRESS && BloodQuickeningState != NOT_STARTED)
-                            break;
-                        if (BloodQuickeningState == data)
-                            break;
-                        if (WeeklyQuestId10 != QUEST_BLOOD_QUICKENING_10)
-                            break;
-
-                        switch (data)
-                        {
-                            case IN_PROGRESS:
-                                Events.ScheduleEvent(EVENT_UPDATE_EXECUTION_TIME, 1min);
-                                BloodQuickeningMinutes = 30;
-                                DoUpdateWorldState(WORLDSTATE_SHOW_TIMER, 1);
-                                DoUpdateWorldState(WORLDSTATE_EXECUTION_TIME, BloodQuickeningMinutes);
-                                break;
-                            case DONE:
-                                Events.CancelEvent(EVENT_UPDATE_EXECUTION_TIME);
-                                BloodQuickeningMinutes = 0;
-                                DoUpdateWorldState(WORLDSTATE_SHOW_TIMER, 0);
-                                break;
-                            default:
-                                break;
-                        }
-
-                        BloodQuickeningState = data;
-                        SaveToDB();
+                {
+                    if (data == IN_PROGRESS && BloodQuickeningState != NOT_STARTED)
                         break;
+                    if (BloodQuickeningState == data)
+                        break;
+                    if (WeeklyQuestId10 != QUEST_BLOOD_QUICKENING_10)
+                        break;
+
+                    switch (data)
+                    {
+                        case IN_PROGRESS:
+                            Events.ScheduleEvent(EVENT_UPDATE_EXECUTION_TIME, 1min);
+                            BloodQuickeningMinutes = 30;
+                            DoUpdateWorldState(WORLDSTATE_SHOW_TIMER, 1);
+                            DoUpdateWorldState(WORLDSTATE_EXECUTION_TIME, BloodQuickeningMinutes);
+                            break;
+                        case DONE:
+                            Events.CancelEvent(EVENT_UPDATE_EXECUTION_TIME);
+                            BloodQuickeningMinutes = 0;
+                            DoUpdateWorldState(WORLDSTATE_SHOW_TIMER, 0);
+                            break;
+                        default:
+                            break;
                     }
+
+                    BloodQuickeningState = data;
+                    SaveToDB();
+                    break;
+                }
                 case DATA_BPC_TRASH_DIED:
+                {
+                    if (++BloodPrinceTrashCount >= 4)
                     {
-                        if (++BloodPrinceTrashCount >= 4)
-                        {
-                            SetBossState(DATA_BLOOD_PRINCE_TRASH, NOT_STARTED);
-                            SetBossState(DATA_BLOOD_PRINCE_TRASH, DONE);
-                        }
-                        SaveToDB();
-                        break;
+                        SetBossState(DATA_BLOOD_PRINCE_TRASH, NOT_STARTED);
+                        SetBossState(DATA_BLOOD_PRINCE_TRASH, DONE);
                     }
+                    SaveToDB();
+                    break;
+                }
                 default:
                     break;
             }
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {
@@ -1469,9 +1535,7 @@ public:
         bool CheckRequiredBosses(uint32 bossId, Player const* player) const override
         {
             if (player && player->GetSession() && player->GetSession()->GetSecurity() >= SEC_MODERATOR)
-            {
                 return true;
-            }
 
             switch (bossId)
             {
@@ -1515,9 +1579,7 @@ public:
             {
                 case DATA_THE_LICH_KING:
                     if (GetBossState(DATA_PROFESSOR_PUTRICIDE) != DONE)
-                    {
                         return false;
-                    }
                     [[fallthrough]];
                 case DATA_PROFESSOR_PUTRICIDE:
                     if (GetBossState(DATA_FESTERGUT) != DONE || GetBossState(DATA_ROTFACE) != DONE)
@@ -1536,9 +1598,7 @@ public:
             {
                 case DATA_THE_LICH_KING:
                     if (GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) != DONE)
-                    {
                         return false;
-                    }
                     [[fallthrough]];
                 case DATA_BLOOD_QUEEN_LANA_THEL:
                     if (GetBossState(DATA_BLOOD_PRINCE_COUNCIL) != DONE)
@@ -1557,19 +1617,13 @@ public:
             {
                 case DATA_THE_LICH_KING:
                     if (GetBossState(DATA_SINDRAGOSA) != DONE)
-                    {
                         return false;
-                    }
                     [[fallthrough]];
                 case DATA_SINDRAGOSA:
                     if (GetBossState(DATA_VALITHRIA_DREAMWALKER) != DONE)
-                    {
                         return false;
-                    }
                     if (GetBossState(DATA_SINDRAGOSA_GAUNTLET) != DONE)
-                    {
                         return false;
-                    }
                     break;
                 default:
                     break;
@@ -1591,27 +1645,19 @@ public:
                 case DATA_ROTFACE:
                 case DATA_FESTERGUT:
                     if (GetBossState(DATA_DEATHBRINGER_SAURFANG) != DONE)
-                    {
                         return false;
-                    }
                     [[fallthrough]];
                 case DATA_DEATHBRINGER_SAURFANG:
                     if (GetBossState(DATA_ICECROWN_GUNSHIP_BATTLE) != DONE)
-                    {
                         return false;
-                    }
                     [[fallthrough]];
                 case DATA_ICECROWN_GUNSHIP_BATTLE:
                     if (GetBossState(DATA_LADY_DEATHWHISPER) != DONE)
-                    {
                         return false;
-                    }
                     [[fallthrough]];
                 case DATA_LADY_DEATHWHISPER:
                     if (GetBossState(DATA_LORD_MARROWGAR) != DONE)
-                    {
                         return false;
-                    }
                     [[fallthrough]];
                 case DATA_LORD_MARROWGAR:
                 default:
@@ -1623,7 +1669,8 @@ public:
 
         void CheckLichKingAvailability()
         {
-            if (GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE && GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE && GetBossState(DATA_SINDRAGOSA) == DONE)
+            if (GetBossState(DATA_PROFESSOR_PUTRICIDE) == DONE && GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE &&
+                GetBossState(DATA_SINDRAGOSA) == DONE)
             {
                 if (GameObject* teleporter = instance->GetGameObject(TheLichKingTeleportGUID))
                 {
@@ -1651,13 +1698,9 @@ public:
             data >> temp;
 
             if (temp == IN_PROGRESS)
-            {
                 ColdflameJetsState = NOT_STARTED;
-            }
             else
-            {
                 ColdflameJetsState = temp ? DONE : NOT_STARTED;
-            }
 
             data >> BloodQuickeningState;
             data >> BloodQuickeningMinutes;
@@ -1681,16 +1724,10 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << HeroicAttempts << ' '
-                << ColdflameJetsState << ' '
-                << BloodQuickeningState << ' '
-                << BloodQuickeningMinutes << ' '
-                << WeeklyQuestId10 << ' '
-                << PutricideEventProgress << ' '
-                << uint32(LichKingHeroicAvailable ? 1 : 0) << ' '
-                << BloodPrinceTrashCount << ' '
-                << uint32(IsBuffAvailable ? 1 : 0) << ' '
-                << uint32(IsSindragosaIntroDone ? 1 : 0);
+            data << HeroicAttempts << ' ' << ColdflameJetsState << ' ' << BloodQuickeningState << ' '
+                 << BloodQuickeningMinutes << ' ' << WeeklyQuestId10 << ' ' << PutricideEventProgress << ' '
+                 << uint32(LichKingHeroicAvailable ? 1 : 0) << ' ' << BloodPrinceTrashCount << ' '
+                 << uint32(IsBuffAvailable ? 1 : 0) << ' ' << uint32(IsSindragosaIntroDone ? 1 : 0);
         }
 
         void Update(uint32 diff) override
@@ -1705,9 +1742,7 @@ public:
                         if (player->GetQuestStatus(QUEST_A_FEAST_OF_SOULS) == QUEST_STATUS_INCOMPLETE)
                         {
                             if (Creature* theLichKing = instance->GetCreature(TheLichKingLhGUID))
-                            {
                                 theLichKing->AI()->Talk(SAY_SOULS_LICH_KING_RAND_WHISPER, player);
-                            }
                         }
             }
             else
@@ -1722,7 +1757,8 @@ public:
                         {
                             if (trans->GetGoState() == GO_STATE_READY && trans->GetPathProgress() == 0)
                                 trans->SetGoState(GO_STATE_ACTIVE);
-                            else if (trans->GetGoState() == GO_STATE_ACTIVE && trans->GetPathProgress() == trans->GetPauseTime())
+                            else if (trans->GetGoState() == GO_STATE_ACTIVE &&
+                                     trans->GetPathProgress() == trans->GetPauseTime())
                                 trans->SetGoState(GO_STATE_READY);
                         }
             }
@@ -1739,38 +1775,38 @@ public:
                 switch (eventId)
                 {
                     case EVENT_UPDATE_EXECUTION_TIME:
+                    {
+                        --BloodQuickeningMinutes;
+                        if (BloodQuickeningMinutes)
                         {
-                            --BloodQuickeningMinutes;
-                            if (BloodQuickeningMinutes)
-                            {
-                                Events.ScheduleEvent(EVENT_UPDATE_EXECUTION_TIME, 1min);
-                                DoUpdateWorldState(WORLDSTATE_SHOW_TIMER, 1);
-                                DoUpdateWorldState(WORLDSTATE_EXECUTION_TIME, BloodQuickeningMinutes);
-                            }
-                            else
-                            {
-                                BloodQuickeningState = DONE;
-                                DoUpdateWorldState(WORLDSTATE_SHOW_TIMER, 0);
-                                if (Creature* bq = instance->GetCreature(BloodQueenLanaThelGUID))
-                                    bq->AI()->DoAction(ACTION_KILL_MINCHAR);
-                            }
-                            SaveToDB();
-                            break;
+                            Events.ScheduleEvent(EVENT_UPDATE_EXECUTION_TIME, 1min);
+                            DoUpdateWorldState(WORLDSTATE_SHOW_TIMER, 1);
+                            DoUpdateWorldState(WORLDSTATE_EXECUTION_TIME, BloodQuickeningMinutes);
                         }
+                        else
+                        {
+                            BloodQuickeningState = DONE;
+                            DoUpdateWorldState(WORLDSTATE_SHOW_TIMER, 0);
+                            if (Creature* bq = instance->GetCreature(BloodQueenLanaThelGUID))
+                                bq->AI()->DoAction(ACTION_KILL_MINCHAR);
+                        }
+                        SaveToDB();
+                        break;
+                    }
                     case EVENT_QUAKE_SHATTER:
-                        {
-                            if (GameObject* platform = instance->GetGameObject(ArthasPlatformGUID))
-                                platform->SetDestructibleState(GO_DESTRUCTIBLE_DAMAGED);
-                            if (GameObject* edge = instance->GetGameObject(FrozenThroneEdgeGUID))
-                                edge->SetGoState(GO_STATE_ACTIVE);
-                            if (GameObject* wind = instance->GetGameObject(FrozenThroneWindGUID))
-                                wind->SetGoState(GO_STATE_READY);
-                            if (GameObject* warning = instance->GetGameObject(FrozenThroneWarningGUID))
-                                warning->SetGoState(GO_STATE_READY);
-                            if (Creature* theLichKing = instance->GetCreature(TheLichKingGUID))
-                                theLichKing->AI()->DoAction(ACTION_RESTORE_LIGHT);
-                            break;
-                        }
+                    {
+                        if (GameObject* platform = instance->GetGameObject(ArthasPlatformGUID))
+                            platform->SetDestructibleState(GO_DESTRUCTIBLE_DAMAGED);
+                        if (GameObject* edge = instance->GetGameObject(FrozenThroneEdgeGUID))
+                            edge->SetGoState(GO_STATE_ACTIVE);
+                        if (GameObject* wind = instance->GetGameObject(FrozenThroneWindGUID))
+                            wind->SetGoState(GO_STATE_READY);
+                        if (GameObject* warning = instance->GetGameObject(FrozenThroneWarningGUID))
+                            warning->SetGoState(GO_STATE_READY);
+                        if (Creature* theLichKing = instance->GetCreature(TheLichKingGUID))
+                            theLichKing->AI()->DoAction(ACTION_RESTORE_LIGHT);
+                        break;
+                    }
                     case EVENT_REBUILD_PLATFORM:
                         if (GameObject* platform = instance->GetGameObject(ArthasPlatformGUID))
                             platform->SetDestructibleState(GO_DESTRUCTIBLE_REBUILDING, nullptr, true);
@@ -1792,9 +1828,7 @@ public:
                                 sindragosa->GetMotionMaster()->MovePath(NPC_SINDRAGOSA * 10, true);
 
                                 if (TempSummon* summon = sindragosa->ToTempSummon())
-                                {
                                     summon->SetTempSummonType(TEMPSUMMON_DEAD_DESPAWN);
-                                }
                             }
                         }
                         // Could happen more than once if more than one player enters before she respawns.
@@ -1820,7 +1854,10 @@ public:
                     }
                     break;
                 case EVENT_ENEMY_GUNSHIP_COMBAT:
-                    if (Creature* captain = source->FindNearestCreature(TeamIdInInstance == TEAM_HORDE ? NPC_IGB_HIGH_OVERLORD_SAURFANG : NPC_IGB_MURADIN_BRONZEBEARD, 200.0f))
+                    if (Creature* captain =
+                            source->FindNearestCreature(TeamIdInInstance == TEAM_HORDE ? NPC_IGB_HIGH_OVERLORD_SAURFANG
+                                                                                       : NPC_IGB_MURADIN_BRONZEBEARD,
+                                200.0f))
                     {
                         captain->AI()->DoAction(ACTION_ENEMY_GUNSHIP_TALK);
                     }
@@ -1840,7 +1877,10 @@ public:
                             //After movement is stopped remove the backpack
                             RemoveBackPack();
                         }
-                    if (Creature* captain = source->FindNearestCreature(TeamIdInInstance == TEAM_HORDE ? NPC_IGB_HIGH_OVERLORD_SAURFANG : NPC_IGB_MURADIN_BRONZEBEARD, 200.0f))
+                    if (Creature* captain =
+                            source->FindNearestCreature(TeamIdInInstance == TEAM_HORDE ? NPC_IGB_HIGH_OVERLORD_SAURFANG
+                                                                                       : NPC_IGB_MURADIN_BRONZEBEARD,
+                                200.0f))
                         captain->AI()->DoAction(ACTION_EXIT_SHIP);
                     break;
 
@@ -1857,7 +1897,8 @@ public:
                     }
                     break;
                 case EVENT_TELEPORT_TO_FROSMOURNE: // Harvest Soul (normal mode)
-                    if (Creature* terenas = instance->SummonCreature(NPC_TERENAS_MENETHIL_FROSTMOURNE, TerenasSpawn, nullptr, 65000))
+                    if (Creature* terenas =
+                            instance->SummonCreature(NPC_TERENAS_MENETHIL_FROSTMOURNE, TerenasSpawn, nullptr, 65000))
                     {
                         terenas->AI()->DoAction(ACTION_FROSTMOURNE_INTRO);
                         std::list<Creature*> triggers;
@@ -1869,7 +1910,8 @@ public:
                             visual->CastSpell(visual, SPELL_FROSTMOURNE_TELEPORT_VISUAL, true);
                         }
 
-                        if (Creature* warden = instance->SummonCreature(NPC_SPIRIT_WARDEN, SpiritWardenSpawn, nullptr, 65000))
+                        if (Creature* warden =
+                                instance->SummonCreature(NPC_SPIRIT_WARDEN, SpiritWardenSpawn, nullptr, 65000))
                         {
                             terenas->AI()->AttackStart(warden);
                             warden->AddThreat(terenas, 300000.0f);
@@ -1966,7 +2008,7 @@ public:
         ObjectGuid GunshipArmoryGUID;
         ObjectGuid DeathbringerSaurfangGUID;
         ObjectGuid DeathbringerSaurfangDoorGUID;
-        ObjectGuid DeathbringerSaurfangEventGUID;   // Muradin Bronzebeard or High Overlord Saurfang
+        ObjectGuid DeathbringerSaurfangEventGUID; // Muradin Bronzebeard or High Overlord Saurfang
         ObjectGuid DeathbringersCacheGUID;
         ObjectGuid SaurfangTeleportGUID;
         ObjectGuid PlagueSigilGUID;

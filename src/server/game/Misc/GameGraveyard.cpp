@@ -87,7 +87,7 @@ GraveyardStruct const* Graveyard::GetDefaultGraveyard(TeamId teamId)
 {
     enum DefaultGraveyard
     {
-        HORDE_GRAVEYARD = 10, // Crossroads
+        HORDE_GRAVEYARD = 10,   // Crossroads
         ALLIANCE_GRAVEYARD = 4, // Westfall
     };
 
@@ -99,21 +99,17 @@ GraveyardStruct const* Graveyard::GetClosestGraveyard(Player* player, TeamId tea
     uint32 graveyardOverride = 0;
     sScriptMgr->OnBeforeChooseGraveyard(player, teamId, nearCorpse, graveyardOverride);
     if (graveyardOverride)
-    {
         return sGraveyard->GetGraveyard(graveyardOverride);
-    }
 
     WorldLocation loc = player->GetWorldLocation();
 
     if (nearCorpse)
-    {
         loc = player->GetCorpseLocation();
-    }
 
     uint32 mapId = loc.GetMapId();
-    float  x     = loc.GetPositionX();
-    float  y     = loc.GetPositionY();
-    float  z     = loc.GetPositionZ();
+    float x = loc.GetPositionX();
+    float y = loc.GetPositionY();
+    float z = loc.GetPositionZ();
 
     uint32 zoneId = 0;
     uint32 areaId = 0;
@@ -123,7 +119,12 @@ GraveyardStruct const* Graveyard::GetClosestGraveyard(Player* player, TeamId tea
     {
         if (z > -500)
         {
-            LOG_ERROR("sql.sql", "GetClosestGraveyard: unable to find zoneId and areaId for map {} coords ({}, {}, {})", mapId, x, y, z);
+            LOG_ERROR("sql.sql",
+                "GetClosestGraveyard: unable to find zoneId and areaId for map {} coords ({}, {}, {})",
+                mapId,
+                x,
+                y,
+                z);
             return GetDefaultGraveyard(teamId);
         }
     }
@@ -160,7 +161,10 @@ GraveyardStruct const* Graveyard::GetClosestGraveyard(Player* player, TeamId tea
     // not need to check validity of map object; MapId _MUST_ be valid here
     if (range.first == range.second && !map->IsBattlegroundOrArena())
     {
-        LOG_ERROR("sql.sql", "Table `graveyard_zone` incomplete: Zone {} Team {} does not have a linked graveyard.", zoneId, teamId);
+        LOG_ERROR("sql.sql",
+            "Table `graveyard_zone` incomplete: Zone {} Team {} does not have a linked graveyard.",
+            zoneId,
+            teamId);
         return GetDefaultGraveyard(teamId);
     }
 
@@ -185,24 +189,25 @@ GraveyardStruct const* Graveyard::GetClosestGraveyard(Player* player, TeamId tea
         GraveyardStruct const* entry = sGraveyard->GetGraveyard(graveyardLink.safeLocId);
         if (!entry)
         {
-            LOG_ERROR("sql.sql", "Table `graveyard_zone` has record for not existing `game_graveyard` table {}, skipped.", graveyardLink.safeLocId);
+            LOG_ERROR("sql.sql",
+                "Table `graveyard_zone` has record for not existing `game_graveyard` table {}, skipped.",
+                graveyardLink.safeLocId);
             continue;
         }
 
         // Skip enemy faction graveyard.
         if (!graveyardLink.IsNeutralOrFriendlyToTeam(teamId))
-        {
             continue;
-        }
 
         // Skip Archerus graveyards if the player isn't a Death Knight.
         enum DeathKnightGraveyards
         {
             GRAVEYARD_EBON_HOLD = 1369,
-            GRAVEYARD_ARCHERUS  = 1405
+            GRAVEYARD_ARCHERUS = 1405
         };
 
-        if (!player->IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_GRAVEYARD) && (graveyardLink.safeLocId == GRAVEYARD_EBON_HOLD || graveyardLink.safeLocId == GRAVEYARD_ARCHERUS))
+        if (!player->IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_GRAVEYARD) &&
+            (graveyardLink.safeLocId == GRAVEYARD_EBON_HOLD || graveyardLink.safeLocId == GRAVEYARD_ARCHERUS))
         {
             continue;
         }
@@ -211,10 +216,8 @@ GraveyardStruct const* Graveyard::GetClosestGraveyard(Player* player, TeamId tea
         if (mapId != entry->Map)
         {
             // if find graveyard at different map from where entrance placed (or no entrance data), use any first
-            if (!mapEntry
-                    || mapEntry->entrance_map < 0
-                    || uint32(mapEntry->entrance_map) != entry->Map
-                    || (mapEntry->entrance_x == 0 && mapEntry->entrance_y == 0))
+            if (!mapEntry || mapEntry->entrance_map < 0 || uint32(mapEntry->entrance_map) != entry->Map ||
+                (mapEntry->entrance_x == 0 && mapEntry->entrance_y == 0))
             {
                 // not have any corrdinates for check distance anyway
                 entryFar = entry;
@@ -222,8 +225,8 @@ GraveyardStruct const* Graveyard::GetClosestGraveyard(Player* player, TeamId tea
             }
 
             // at entrance map calculate distance (2D);
-            float dist2 = (entry->x - mapEntry->entrance_x) * (entry->x - mapEntry->entrance_x)
-                          + (entry->y - mapEntry->entrance_y) * (entry->y - mapEntry->entrance_y);
+            float dist2 = (entry->x - mapEntry->entrance_x) * (entry->x - mapEntry->entrance_x) +
+                          (entry->y - mapEntry->entrance_y) * (entry->y - mapEntry->entrance_y);
             if (foundEntr)
             {
                 if (dist2 < distEntr)
@@ -242,7 +245,8 @@ GraveyardStruct const* Graveyard::GetClosestGraveyard(Player* player, TeamId tea
         // find now nearest graveyard at same map
         else
         {
-            float dist2 = (entry->x - x) * (entry->x - x) + (entry->y - y) * (entry->y - y) + (entry->z - z) * (entry->z - z);
+            float dist2 =
+                (entry->x - x) * (entry->x - x) + (entry->y - y) * (entry->y - y) + (entry->z - z) * (entry->z - z);
             if (foundNear)
             {
                 if (dist2 < distNear)
@@ -315,7 +319,10 @@ void Graveyard::RemoveGraveyardLink(uint32 id, uint32 zoneId, TeamId teamId, boo
     GraveyardMapBoundsNonConst range = GraveyardStore.equal_range(zoneId);
     if (range.first == range.second)
     {
-        LOG_ERROR("sql.sql", "Table `graveyard_zone` incomplete: Zone {} Team {} does not have a linked graveyard.", zoneId, teamId);
+        LOG_ERROR("sql.sql",
+            "Table `graveyard_zone` incomplete: Zone {} Team {} does not have a linked graveyard.",
+            zoneId,
+            teamId);
         return;
     }
 
@@ -391,7 +398,9 @@ void Graveyard::LoadGraveyardZones()
         GraveyardStruct const* entry = sGraveyard->GetGraveyard(safeLocId);
         if (!entry)
         {
-            LOG_ERROR("sql.sql", "Table `graveyard_zone` has a record for not existing `game_graveyard` table {}, skipped.", safeLocId);
+            LOG_ERROR("sql.sql",
+                "Table `graveyard_zone` has a record for not existing `game_graveyard` table {}, skipped.",
+                safeLocId);
             continue;
         }
 
@@ -409,14 +418,17 @@ void Graveyard::LoadGraveyardZones()
         }
 
         if (!AddGraveyardLink(safeLocId, zoneId, teamId, false))
-            LOG_ERROR("sql.sql", "Table `graveyard_zone` has a duplicate record for Graveyard (ID: {}) and Zone (ID: {}), skipped.", safeLocId, zoneId);
+            LOG_ERROR("sql.sql",
+                "Table `graveyard_zone` has a duplicate record for Graveyard (ID: {}) and Zone (ID: {}), skipped.",
+                safeLocId,
+                zoneId);
     } while (result->NextRow());
 
     LOG_INFO("server.loading", ">> Loaded {} Graveyard-Zone Links in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
     LOG_INFO("server.loading", " ");
 }
 
-GraveyardStruct const* Graveyard::GetGraveyard(const std::string& name) const
+GraveyardStruct const* Graveyard::GetGraveyard(std::string const& name) const
 {
     // explicit name case
     std::wstring wname;
@@ -427,14 +439,12 @@ GraveyardStruct const* Graveyard::GetGraveyard(const std::string& name) const
     wstrToLower(wname);
 
     // Alternative first GameTele what contains wnameLow as substring in case no GameTele location found
-    const GraveyardStruct* alt = nullptr;
+    GraveyardStruct const* alt = nullptr;
     for (GraveyardContainer::const_iterator itr = _graveyardStore.begin(); itr != _graveyardStore.end(); ++itr)
-    {
         if (itr->second.wnameLow == wname)
             return &itr->second;
         else if (!alt && itr->second.wnameLow.find(wname) != std::wstring::npos)
             alt = &itr->second;
-    }
 
     return alt;
 }

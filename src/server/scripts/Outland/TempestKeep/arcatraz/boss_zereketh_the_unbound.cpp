@@ -22,18 +22,18 @@
 
 enum Say
 {
-    SAY_AGGRO                       = 0,
-    SAY_SLAY                        = 1,
-    SAY_SHADOW_NOVA                 = 2,
-    SAY_DEATH                       = 3
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_SHADOW_NOVA = 2,
+    SAY_DEATH = 3
 };
 
 enum Spells
 {
-    SPELL_VOID_ZONE                 = 36119,
-    SPELL_SHADOW_NOVA               = 36127,
-    SPELL_SEED_OF_CORRUPTION        = 36123,
-    SPELL_CORRUPTION_PROC           = 32865
+    SPELL_VOID_ZONE = 36119,
+    SPELL_SHADOW_NOVA = 36127,
+    SPELL_SEED_OF_CORRUPTION = 36123,
+    SPELL_CORRUPTION_PROC = 32865
 };
 
 struct boss_zereketh_the_unbound : public BossAI
@@ -51,19 +51,26 @@ struct boss_zereketh_the_unbound : public BossAI
         _JustEngagedWith();
         Talk(SAY_AGGRO);
 
-        scheduler.Schedule(11s, 29s, [this](TaskContext context)
+        scheduler
+            .Schedule(11s,
+                29s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_VOID_ZONE, 0, 60.0f);
             context.Repeat();
-        }).Schedule(12s, 22s, [this](TaskContext context)
+        })
+            .Schedule(12s,
+                22s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_SHADOW_NOVA);
             if (roll_chance_i(50))
-            {
                 Talk(SAY_SHADOW_NOVA);
-            }
             context.Repeat();
-        }).Schedule(6s, 12s, [this](TaskContext context)
+        })
+            .Schedule(6s,
+                12s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_SEED_OF_CORRUPTION, 0, 30.0f);
             context.Repeat(13s, 27s);
@@ -73,9 +80,7 @@ struct boss_zereketh_the_unbound : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 };
 

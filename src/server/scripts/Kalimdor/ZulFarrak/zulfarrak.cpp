@@ -60,9 +60,9 @@ enum blySays
 
 enum blySpells
 {
-    SPELL_BLYS_BAND_ESCAPE     = 11365,
-    SPELL_SHIELD_BASH          = 11972,
-    SPELL_REVENGE              = 12170
+    SPELL_BLYS_BAND_ESCAPE = 11365,
+    SPELL_SHIELD_BASH = 11972,
+    SPELL_REVENGE = 12170
 };
 
 #define GOSSIP_BLY                  "That's it!  I'm tired of helping you out.  It's time we settled things on the battlefield!"
@@ -96,7 +96,8 @@ public:
         uint32 postGossipStep;
         uint32 Text_Timer;
         uint32 ShieldBash_Timer;
-        uint32 Revenge_Timer; //this is wrong, spell should never be used unless me->GetVictim() dodge, parry or block attack. Trinity support required.
+        uint32
+            Revenge_Timer; //this is wrong, spell should never be used unless me->GetVictim() dodge, parry or block attack. Trinity support required.
         uint32 Porthome_Timer;
         ObjectGuid PlayerGUID;
 
@@ -124,13 +125,12 @@ public:
         void MovementInform(uint32 type, uint32 /*id*/) override
         {
             if (type != POINT_MOTION_TYPE)
-            {
                 return;
-            }
 
             if (instance->GetData(DATA_PYRAMID) == PYRAMID_WAVE_3)
             {
-                if (Creature* shadowpriest = ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_SHADOWPRIEST_SEZZZIZ)))
+                if (Creature* shadowpriest =
+                        ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_SHADOWPRIEST_SEZZZIZ)))
                 {
                     AttackStart(shadowpriest);
                     shadowpriest->CallAssistance();
@@ -150,9 +150,7 @@ public:
                             startedFight = true;
                             //weegli doesn't fight - he goes & blows up the door
                             if (Creature* pWeegli = ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_WEEGLI)))
-                            {
                                 pWeegli->AI()->DoAction(0);
-                            }
                             Talk(SAY_1);
                             Text_Timer = 5000;
                             break;
@@ -170,9 +168,7 @@ public:
                             switchFactionIfAlive(NPC_MURTA, target);
 
                             if (target)
-                            {
                                 AttackStart(target);
-                            }
                     }
 
                     postGossipStep++;
@@ -215,9 +211,7 @@ public:
             }
 
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             if (ShieldBash_Timer <= diff)
             {
@@ -258,9 +252,7 @@ public:
                     crew->SetFaction(FACTION_MONSTER);
 
                     if (target)
-                    {
                         crew->AI()->AttackStart(target);
-                    }
                 }
             }
         }
@@ -288,13 +280,9 @@ public:
             else
             {
                 if (instance->GetData(DATA_PYRAMID) == PYRAMID_NOT_STARTED)
-                {
                     SendGossipMenuFor(player, 1515, me->GetGUID());
-                }
                 else
-                {
                     SendGossipMenuFor(player, 1516, me->GetGUID());
-                }
             }
         }
     };
@@ -323,22 +311,16 @@ public:
         bool GossipHello(Player* /*player*/, bool reportUse) override
         {
             if (reportUse)
-            {
                 return true;
-            }
 
             instance->SetData(DATA_PYRAMID, PYRAMID_CAGES_OPEN);
 
             //setting gossip option as soon as the cages open
             if (Creature* bly = ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_BLY)))
-            {
                 bly->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
-            }
 
             if (Creature* weegli = ObjectAccessor::GetCreature(*me, instance->GetGuidData(NPC_WEEGLI)))
-            {
                 weegli->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
-            }
 
             //set bly & co to aggressive & start moving to top of stairs
             initBlyCrewMember(NPC_BLY, 1884.99f, 1263, 41.52f);
@@ -357,9 +339,8 @@ public:
                 crew->SetReactState(REACT_AGGRESSIVE);
                 crew->SetWalk(true);
                 crew->SetHomePosition(x, y, z, 4.78f);
-                crew->GetMotionMaster()->MovePoint(1, { x, y, z, 4.78f });
+                crew->GetMotionMaster()->MovePoint(1, {x, y, z, 4.78f});
                 crew->SetFaction(FACTION_ESCORT_N_NEUTRAL_ACTIVE);
-
             }
         }
     };
@@ -376,17 +357,17 @@ public:
 
 enum weegliSpells
 {
-    SPELL_BOMB                  = 8858,
-    SPELL_GOBLIN_LAND_MINE      = 21688,
-    SPELL_SHOOT                 = 6660,
-    SPELL_WEEGLIS_BARREL        = 10772
+    SPELL_BOMB = 8858,
+    SPELL_GOBLIN_LAND_MINE = 21688,
+    SPELL_SHOOT = 6660,
+    SPELL_WEEGLIS_BARREL = 10772
 };
 
 enum weegliSays
 {
-    SAY_WEEGLI_OHNO             = 0,
-    SAY_WEEGLI_OK_I_GO          = 1,
-    SAY_WEEGLI_OUT_OF_HERE      = 2
+    SAY_WEEGLI_OHNO = 0,
+    SAY_WEEGLI_OK_I_GO = 1,
+    SAY_WEEGLI_OUT_OF_HERE = 2
 };
 
 #define GOSSIP_WEEGLI               "Will you blow up that door now?"
@@ -421,13 +402,13 @@ public:
 
         void Reset() override
         {
-            Bomb_Timer     = 10000;
+            Bomb_Timer = 10000;
             LandMine_Timer = 30000;
         }
 
         void AttackStart(Unit* victim) override
         {
-            AttackStartCaster(victim, 10);//keep back & toss bombs/shoot
+            AttackStartCaster(victim, 10); //keep back & toss bombs/shoot
         }
 
         void UpdateAI(uint32 diff) override
@@ -503,7 +484,8 @@ public:
                 instance->SetData(DATA_PYRAMID, PYRAMID_ARRIVED_AT_STAIR);
                 Talk(SAY_WEEGLI_OHNO);
             }
-            else if (instance->GetData(DATA_PYRAMID) >= PYRAMID_KILLED_ALL_TROLLS && instance->GetData(DATA_PYRAMID) < PYRAMID_DESTROY_GATES)
+            else if (instance->GetData(DATA_PYRAMID) >= PYRAMID_KILLED_ALL_TROLLS &&
+                     instance->GetData(DATA_PYRAMID) < PYRAMID_DESTROY_GATES)
             {
                 instance->SetData(DATA_PYRAMID, PYRAMID_MOVED_DOWNSTAIRS);
             }
@@ -516,9 +498,7 @@ public:
         void MovementInform(uint32 type, uint32 /*id*/) override
         {
             if (type != POINT_MOTION_TYPE)
-            {
                 return;
-            }
 
             if (instance->GetData(DATA_PYRAMID) == PYRAMID_CAGES_OPEN)
             {
@@ -526,7 +506,8 @@ public:
                 instance->SetData(DATA_PYRAMID, PYRAMID_ARRIVED_AT_STAIR);
                 Talk(SAY_WEEGLI_OHNO);
             }
-            else if (instance->GetData(DATA_PYRAMID) >= PYRAMID_KILLED_ALL_TROLLS && instance->GetData(DATA_PYRAMID) < PYRAMID_DESTROY_GATES)
+            else if (instance->GetData(DATA_PYRAMID) >= PYRAMID_KILLED_ALL_TROLLS &&
+                     instance->GetData(DATA_PYRAMID) < PYRAMID_DESTROY_GATES)
             {
                 instance->SetData(DATA_PYRAMID, PYRAMID_MOVED_DOWNSTAIRS);
             }
@@ -542,7 +523,7 @@ public:
             {
                 me->SetFaction(FACTION_FRIENDLY);
                 me->SetWalk(false);
-                me->GetMotionMaster()->MovePoint(0, { 1858.57f, 1146.35f, 14.745f, 3.85f });
+                me->GetMotionMaster()->MovePoint(0, {1858.57f, 1146.35f, 14.745f, 3.85f});
                 me->SetHomePosition(1858.57f, 1146.35f, 14.745f, 3.85f);
                 Talk(SAY_WEEGLI_OK_I_GO);
                 instance->SetData(DATA_PYRAMID, PYRAMID_DESTROY_GATES);
@@ -568,14 +549,15 @@ public:
             {
                 case PYRAMID_MOVED_DOWNSTAIRS:
                 case PYRAMID_KILLED_ALL_TROLLS:
-                    AddGossipItemFor(player, GOSSIP_ICON_CHAT, GOSSIP_WEEGLI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                    SendGossipMenuFor(player, 1514, me->GetGUID());  //if event can proceed to end
+                    AddGossipItemFor(
+                        player, GOSSIP_ICON_CHAT, GOSSIP_WEEGLI, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                    SendGossipMenuFor(player, 1514, me->GetGUID()); //if event can proceed to end
                     break;
                 case PYRAMID_NOT_STARTED:
-                    SendGossipMenuFor(player, 1511, me->GetGUID());  //if event not started
+                    SendGossipMenuFor(player, 1511, me->GetGUID()); //if event not started
                     break;
                 default:
-                    SendGossipMenuFor(player, 1513, me->GetGUID());  //if event is in progress
+                    SendGossipMenuFor(player, 1513, me->GetGUID()); //if event is in progress
             }
         }
     };
@@ -588,24 +570,28 @@ public:
 
 enum ShadowPriestSezzizEnum
 {
-    SPELL_SHADOW_BOLT       = 15537,
-    SPELL_PSYCHIC_SCREEM    = 13704,
-    SPELL_RENEW             = 8362,
-    SPELL_HEAL              = 12039
+    SPELL_SHADOW_BOLT = 15537,
+    SPELL_PSYCHIC_SCREEM = 13704,
+    SPELL_RENEW = 8362,
+    SPELL_HEAL = 12039
 };
 
-std::array<std::vector<std::pair<uint32, Position>>, 4> shadowpriestSezzizAdds =
-{ {
-    { { NPC_SANDFURY_ZEALOT, { 1874.12f, 1198.90f, 8.87f } }, { NPC_SANDFURY_ACOLYTE, { 1874.12f, 1198.90f, 8.87f } } },
-    { { NPC_SANDFURY_ACOLYTE, { 895.26f, 1199.09f, 8.87f } }, { NPC_SANDFURY_ACOLYTE, { 895.26f, 1199.088f, 8.87f } } },
-    { { NPC_SANDFURY_ZEALOT, { 1874.12f, 1198.90f, 8.87f } }, { NPC_SANDFURY_ACOLYTE, { 895.26f, 1199.09f, 8.87f } }, { NPC_SANDFURY_ACOLYTE, { 895.26f, 1199.09f, 8.87f } } },
-    { { NPC_SANDFURY_ZEALOT, { 895.26f, 1199.09f, 8.87f } }, { NPC_SANDFURY_ZEALOT, { 1874.12f, 1198.90f, 8.87f } }, { NPC_SANDFURY_ACOLYTE, { 1874.12f, 1198.90f } }, { NPC_SANDFURY_ACOLYTE, { 895.26f, 1199.09f, 8.87f } } }
-} };
+std::array<std::vector<std::pair<uint32, Position>>, 4> shadowpriestSezzizAdds = {
+    {{{NPC_SANDFURY_ZEALOT, {1874.12f, 1198.90f, 8.87f}}, {NPC_SANDFURY_ACOLYTE, {1874.12f, 1198.90f, 8.87f}}},
+     {{NPC_SANDFURY_ACOLYTE, {895.26f, 1199.09f, 8.87f}}, {NPC_SANDFURY_ACOLYTE, {895.26f, 1199.088f, 8.87f}}},
+     {{NPC_SANDFURY_ZEALOT, {1874.12f, 1198.90f, 8.87f}},
+            {NPC_SANDFURY_ACOLYTE, {895.26f, 1199.09f, 8.87f}},
+            {NPC_SANDFURY_ACOLYTE, {895.26f, 1199.09f, 8.87f}}},
+     {{NPC_SANDFURY_ZEALOT, {895.26f, 1199.09f, 8.87f}},
+            {NPC_SANDFURY_ZEALOT, {1874.12f, 1198.90f, 8.87f}},
+            {NPC_SANDFURY_ACOLYTE, {1874.12f, 1198.90f}},
+            {NPC_SANDFURY_ACOLYTE, {895.26f, 1199.09f, 8.87f}}}}
+};
 
 class npc_shadowpriest_sezziz : public CreatureScript
 {
 public:
-    npc_shadowpriest_sezziz() : CreatureScript("npc_shadowpriest_sezziz") {}
+    npc_shadowpriest_sezziz() : CreatureScript("npc_shadowpriest_sezziz") { }
 
     struct npc_shadowpriest_sezzizAI : public ScriptedAI
     {
@@ -629,29 +615,24 @@ public:
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             if (_summonAddsTimer <= diff)
             {
                 for (auto& itr : shadowpriestSezzizAdds[_summmonAddsCount])
                 {
-                    if (Creature* add = me->SummonCreature(itr.first, itr.second, TEMPSUMMON_DEAD_DESPAWN, 10 * IN_MILLISECONDS))
+                    if (Creature* add =
+                            me->SummonCreature(itr.first, itr.second, TEMPSUMMON_DEAD_DESPAWN, 10 * IN_MILLISECONDS))
                     {
                         add->AI()->AttackStart(me->GetVictim());
                     }
                 }
 
                 if (++_summmonAddsCount >= 4)
-                {
                     _summmonAddsCount = 0;
-                }
 
                 _summonAddsTimer = urand(10 * IN_MILLISECONDS, 14 * IN_MILLISECONDS);
             }
@@ -667,9 +648,7 @@ public:
                 Acore::UnitLastSearcher<Acore::MostHPMissingInRange> searcher(me, unit, u_check);
                 Cell::VisitGridObjects(me, searcher, 40.f);
                 if (unit)
-                {
                     DoCast(unit, SPELL_HEAL);
-                }
 
                 _missingHPForHealTimer = urand(7 * IN_MILLISECONDS, 10 * IN_MILLISECONDS);
             }
@@ -685,9 +664,7 @@ public:
                 Acore::UnitLastSearcher<Acore::MostHPMissingInRange> searcher(me, unit, u_check);
                 Cell::VisitGridObjects(me, searcher, 40.f);
                 if (unit)
-                {
                     DoCast(unit, SPELL_RENEW);
-                }
 
                 _missingHPForRenewTimer = urand(10 * IN_MILLISECONDS, 15 * IN_MILLISECONDS);
             }

@@ -26,44 +26,44 @@
 
 enum Says
 {
-    SAY_VENOXIS_TRANSFORM           = 1,        // Let the coils of hate unfurl!
-    SAY_VENOXIS_DEATH               = 2         // Ssserenity.. at lassst!
+    SAY_VENOXIS_TRANSFORM = 1, // Let the coils of hate unfurl!
+    SAY_VENOXIS_DEATH = 2      // Ssserenity.. at lassst!
 };
 
 enum Spells
 {
     // High Priest Venoxis (14507)
     // All Phases
-    SPELL_THRASH                    = 3391,
+    SPELL_THRASH = 3391,
 
     // Phase 1 - Troll Form
-    SPELL_DISPEL_MAGIC              = 23859,
-    SPELL_RENEW                     = 23895,
-    SPELL_HOLY_NOVA                 = 23858,
-    SPELL_HOLY_FIRE                 = 23860,
-    SPELL_HOLY_WRATH                = 23979,
+    SPELL_DISPEL_MAGIC = 23859,
+    SPELL_RENEW = 23895,
+    SPELL_HOLY_NOVA = 23858,
+    SPELL_HOLY_FIRE = 23860,
+    SPELL_HOLY_WRATH = 23979,
 
     // Transform
-    SPELL_VENOXIS_TRANSFORM         = 23849,
+    SPELL_VENOXIS_TRANSFORM = 23849,
 
     // Phase 2 - Snake Form
-    SPELL_POISON_CLOUD              = 23861,
-    SPELL_VENOM_SPIT                = 23862,
-    SPELL_SUMMON_PARASITIC_SERPENT  = 23866,
-    SPELL_FRENZY                    = 8269,
+    SPELL_POISON_CLOUD = 23861,
+    SPELL_VENOM_SPIT = 23862,
+    SPELL_SUMMON_PARASITIC_SERPENT = 23866,
+    SPELL_FRENZY = 8269,
 };
 
 enum Phases
 {
-    PHASE_ONE                       = 1,    // troll form
-    PHASE_TWO                       = 2     // snake form
+    PHASE_ONE = 1, // troll form
+    PHASE_TWO = 2  // snake form
 };
 
 enum NPCs
 {
-    BOSS_VENOXIS                    = 14507,
-    NPC_RAZZASHI_COBRA              = 11373,
-    NPC_PARASITIC_SERPENT           = 14884
+    BOSS_VENOXIS = 14507,
+    NPC_RAZZASHI_COBRA = 11373,
+    NPC_PARASITIC_SERPENT = 14884
 };
 
 // High Priest Venoxis (14507)
@@ -74,10 +74,7 @@ public:
 
     void InitializeAI() override
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
 
         Reset();
     }
@@ -96,7 +93,8 @@ public:
         me->SetReactState(REACT_AGGRESSIVE);
 
         // Both phases
-        scheduler.Schedule(8s, [this](TaskContext context)
+        scheduler.Schedule(8s,
+            [this](TaskContext context)
         {
             DoCastSelf(SPELL_THRASH, true);
             context.Repeat(10s, 20s);
@@ -105,23 +103,41 @@ public:
         //
         // Phase 1 - Troll Form
         //
-        scheduler.Schedule(5s, 15s, PHASE_ONE, [this](TaskContext context)
+        scheduler
+            .Schedule(5s,
+                15s,
+                PHASE_ONE,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_HOLY_NOVA);
             context.Repeat(10s, 24s);
-        }).Schedule(35s, PHASE_ONE, [this](TaskContext context)
+        })
+            .Schedule(35s,
+                PHASE_ONE,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_DISPEL_MAGIC);
             context.Repeat(15s, 20s);
-        }).Schedule(10s, 20s, PHASE_ONE, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                20s,
+                PHASE_ONE,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_HOLY_FIRE);
             context.Repeat(10s, 24s);
-        }).Schedule(30s, PHASE_ONE, [this](TaskContext context)
+        })
+            .Schedule(30s,
+                PHASE_ONE,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_RENEW);
             context.Repeat(25s, 30s);
-        }).Schedule(15s, 25s, PHASE_ONE, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                25s,
+                PHASE_ONE,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_HOLY_WRATH);
             context.Repeat(12s, 22s);
@@ -130,7 +146,8 @@ public:
         //
         // Phase 2 - Snake Form (50% health)
         //
-        ScheduleHealthCheckEvent(50, [&]
+        ScheduleHealthCheckEvent(50,
+            [&]
         {
             scheduler.CancelGroup(PHASE_ONE);
 
@@ -138,25 +155,31 @@ public:
             Talk(SAY_VENOXIS_TRANSFORM);
             DoResetThreatList();
 
-            scheduler.Schedule(5s, PHASE_TWO, [this](TaskContext context)
+            scheduler
+                .Schedule(5s,
+                    PHASE_TWO,
+                    [this](TaskContext context)
             {
                 DoCastSelf(SPELL_VENOM_SPIT);
                 context.Repeat(5s, 15s);
-            }).Schedule(10s, PHASE_TWO, [this](TaskContext context)
+            })
+                .Schedule(10s,
+                    PHASE_TWO,
+                    [this](TaskContext context)
             {
                 DoCastSelf(SPELL_POISON_CLOUD);
                 context.Repeat(15s, 20s);
-            }).Schedule(30s, PHASE_TWO, [this](TaskContext context)
+            })
+                .Schedule(30s,
+                    PHASE_TWO,
+                    [this](TaskContext context)
             {
                 DoCastSelf(SPELL_SUMMON_PARASITIC_SERPENT);
                 context.Repeat(15s);
             });
 
             // frenzy at 20% health
-            ScheduleHealthCheckEvent(20, [&]
-            {
-                DoCastSelf(SPELL_FRENZY, true);
-            });
+            ScheduleHealthCheckEvent(20, [&] { DoCastSelf(SPELL_FRENZY, true); });
         });
     }
 
@@ -164,7 +187,7 @@ public:
     {
         BossAI::JustDied(killer);
         Talk(SAY_VENOXIS_DEATH);
-        me->RemoveAllAuras();       // removes transform
+        me->RemoveAllAuras(); // removes transform
     }
 };
 

@@ -23,45 +23,46 @@
 
 enum Spells
 {
-    SPELL_RAISE_DEAD_JAEREN         = 67715,
-    SPELL_RAISE_DEAD_ARELAS         = 67705,
-    SPELL_BK_FEIGN_DEATH            = 67691,
-    SPELL_BLACK_KNIGHT_RES          = 67693,
-    SPELL_BK_KILL_CREDIT            = 68663,
+    SPELL_RAISE_DEAD_JAEREN = 67715,
+    SPELL_RAISE_DEAD_ARELAS = 67705,
+    SPELL_BK_FEIGN_DEATH = 67691,
+    SPELL_BLACK_KNIGHT_RES = 67693,
+    SPELL_BK_KILL_CREDIT = 68663,
 
     // phase 1
-    SPELL_PLAGUE_STRIKE_N           = 67724,
-    SPELL_PLAGUE_STRIKE_H           = 67884,
-    SPELL_ICY_TOUCH_N               = 67718,
-    SPELL_ICY_TOUCH_H               = 67881,
-    SPELL_DEATH_RESPITE_N           = 67745,
-    SPELL_DEATH_RESPITE_H           = 68306,
-    SPELL_DEATH_RESPITE_DUMMY       = 66798,
-    SPELL_OBLITERATE_N              = 67725,
-    SPELL_OBLITERATE_H              = 67883,
+    SPELL_PLAGUE_STRIKE_N = 67724,
+    SPELL_PLAGUE_STRIKE_H = 67884,
+    SPELL_ICY_TOUCH_N = 67718,
+    SPELL_ICY_TOUCH_H = 67881,
+    SPELL_DEATH_RESPITE_N = 67745,
+    SPELL_DEATH_RESPITE_H = 68306,
+    SPELL_DEATH_RESPITE_DUMMY = 66798,
+    SPELL_OBLITERATE_N = 67725,
+    SPELL_OBLITERATE_H = 67883,
 
     // phase 2 (+ abilities from phase 1 without death respite)
-    SPELL_ARMY_DEAD_N               = 67761,
-    SPELL_ARMY_DEAD_H               = 67874,
-    SPELL_DESECRATION_N             = 67778,
-    SPELL_DESECRATION_H             = 67877,
-    SPELL_DESECRATION_SUMMON        = 67779,
-    SPELL_BK_GHOUL_EXPLODE          = 67751,
+    SPELL_ARMY_DEAD_N = 67761,
+    SPELL_ARMY_DEAD_H = 67874,
+    SPELL_DESECRATION_N = 67778,
+    SPELL_DESECRATION_H = 67877,
+    SPELL_DESECRATION_SUMMON = 67779,
+    SPELL_BK_GHOUL_EXPLODE = 67751,
 
     // phase 3
-    SPELL_DEATH_BITE_N              = 67808,
-    SPELL_DEATH_BITE_H              = 67875,
-    SPELL_MARKED_DEATH_N            = 67823,
-    SPELL_MARKED_DEATH_H            = 67882,
+    SPELL_DEATH_BITE_N = 67808,
+    SPELL_DEATH_BITE_H = 67875,
+    SPELL_MARKED_DEATH_N = 67823,
+    SPELL_MARKED_DEATH_H = 67882,
 
     // ghouls
-    SPELL_CLAW_N                    = 67774,
-    SPELL_CLAW_H                    = 67879,
-    SPELL_EXPLODE_N                 = 67729,
-    SPELL_EXPLODE_H                 = 67886,
-    SPELL_LEAP_N                    = 67749,
-    SPELL_LEAP_H                    = 67880,
+    SPELL_CLAW_N = 67774,
+    SPELL_CLAW_H = 67879,
+    SPELL_EXPLODE_N = 67729,
+    SPELL_EXPLODE_H = 67886,
+    SPELL_LEAP_N = 67749,
+    SPELL_LEAP_H = 67880,
 };
+
 #define SPELL_LEAP                  DUNGEON_MODE(SPELL_LEAP_N, SPELL_LEAP_H)
 #define SPELL_EXPLODE               DUNGEON_MODE(SPELL_EXPLODE_N, SPELL_EXPLODE_H)
 
@@ -88,13 +89,13 @@ enum Events
 
 enum NPCs
 {
-    NPC_RISEN_CHAMPION              = 35590,
+    NPC_RISEN_CHAMPION = 35590,
 };
 
 enum Models
 {
-    MODEL_SKELETON                  = 29846,
-    MODEL_GHOST                     = 21300
+    MODEL_SKELETON = 29846,
+    MODEL_GHOST = 21300
 };
 
 class boss_black_knight : public CreatureScript
@@ -175,7 +176,10 @@ public:
 
                 pInstance->SetData(BOSS_BLACK_KNIGHT, IN_PROGRESS);
                 Talk(SAY_BK_AGGRO);
-                me->CastSpell((Unit*)nullptr, (pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_HORDE ? SPELL_RAISE_DEAD_JAEREN : SPELL_RAISE_DEAD_ARELAS), false);
+                me->CastSpell((Unit*)nullptr,
+                    (pInstance->GetData(DATA_TEAMID_IN_INSTANCE) == TEAM_HORDE ? SPELL_RAISE_DEAD_JAEREN
+                                                                               : SPELL_RAISE_DEAD_ARELAS),
+                    false);
                 if (Creature* announcer = pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_ANNOUNCER)))
                     announcer->DespawnOrUnsummon();
 
@@ -188,7 +192,7 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit*  /*target*/, SpellInfo const* spell) override
+        void SpellHitTarget(Unit* /*target*/, SpellInfo const* spell) override
         {
             switch (spell->Id)
             {
@@ -252,7 +256,8 @@ public:
                     if (pInstance && !summons.empty())
                         if (Creature* ghoul = pInstance->instance->GetCreature(*summons.begin()))
                             if (urand(0, 1))
-                                ghoul->Yell("[Zombie] .... . Brains ....", LANG_UNIVERSAL); /// @todo: Multiple variations + not always happening, from video sources, needs sniff to transition from DB.
+                                ghoul->Yell("[Zombie] .... . Brains ....",
+                                    LANG_UNIVERSAL); /// @todo: Multiple variations + not always happening, from video sources, needs sniff to transition from DB.
                     break;
                 case EVENT_SPELL_PLAGUE_STRIKE:
                     if (me->GetVictim())
@@ -306,9 +311,7 @@ public:
         void KilledUnit(Unit* victim) override
         {
             if (victim->IsPlayer())
-            {
                 Talk(SAY_BK_KILL_PLAYER);
-            }
         }
 
         void JustDied(Unit* /*killer*/) override
@@ -331,11 +334,11 @@ public:
 class npc_black_knight_skeletal_gryphon : public CreatureScript
 {
 public:
-    npc_black_knight_skeletal_gryphon() : CreatureScript("npc_black_knight_skeletal_gryphon") {}
+    npc_black_knight_skeletal_gryphon() : CreatureScript("npc_black_knight_skeletal_gryphon") { }
 
     struct npc_black_knight_skeletal_gryphonAI : public npc_escortAI
     {
-        npc_black_knight_skeletal_gryphonAI(Creature* pCreature) : npc_escortAI(pCreature) {}
+        npc_black_knight_skeletal_gryphonAI(Creature* pCreature) : npc_escortAI(pCreature) { }
 
         void Reset() override
         {
@@ -403,7 +406,7 @@ public:
             events.Reset();
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             events.Reset();
             if (me->GetEntry() == NPC_RISEN_JAEREN || me->GetEntry() == NPC_RISEN_ARELAS)
@@ -411,7 +414,7 @@ public:
             events.RescheduleEvent(2, 3s, 4s); // claw
         }
 
-        void SpellHit(Unit*  /*caster*/, SpellInfo const* spell) override
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spell) override
         {
             if (spell->Id == SPELL_BK_GHOUL_EXPLODE)
             {

@@ -93,13 +93,9 @@ namespace Movement
         moveFlags |= MOVEMENTFLAG_SPLINE_ENABLED;
 
         if (!args.flags.orientationInversed)
-        {
             moveFlags = (moveFlags & ~(MOVEMENTFLAG_BACKWARD)) | MOVEMENTFLAG_FORWARD;
-        }
         else
-        {
             moveFlags = (moveFlags & ~(MOVEMENTFLAG_FORWARD)) | MOVEMENTFLAG_BACKWARD;
-        }
 
         bool isOrientationOnly = args.path.size() == 2 && args.path[0] == args.path[1];
 
@@ -120,7 +116,8 @@ namespace Movement
         }
 
         // limit the speed in the same way the client does
-        args.velocity = std::min(args.velocity, args.flags.catmullrom || args.flags.flying ? 50.0f : std::max(28.0f, unit->GetSpeed(MOVE_RUN) * 4.0f));
+        args.velocity = std::min(args.velocity,
+            args.flags.catmullrom || args.flags.flying ? 50.0f : std::max(28.0f, unit->GetSpeed(MOVE_RUN) * 4.0f));
 
         if (!args.Validate(unit))
             return 0;
@@ -170,7 +167,8 @@ namespace Movement
         }
 
         args.flags = MoveSplineFlag::Done;
-        unit->m_movementInfo.RemoveMovementFlag(MOVEMENTFLAG_FORWARD | MOVEMENTFLAG_BACKWARD | MOVEMENTFLAG_SPLINE_ENABLED);
+        unit->m_movementInfo.RemoveMovementFlag(
+            MOVEMENTFLAG_FORWARD | MOVEMENTFLAG_BACKWARD | MOVEMENTFLAG_SPLINE_ENABLED);
         move_spline.onTransport = transport;
         move_spline.Initialize(args);
 
@@ -193,7 +191,8 @@ namespace Movement
         args.TransformForTransport = unit->HasUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT) && unit->GetTransGUID();
         // mix existing state into new
         args.flags.walkmode = unit->m_movementInfo.HasMovementFlag(MOVEMENTFLAG_WALKING);
-        args.flags.flying = unit->m_movementInfo.HasMovementFlag((MovementFlags)(MOVEMENTFLAG_CAN_FLY | MOVEMENTFLAG_DISABLE_GRAVITY));
+        args.flags.flying =
+            unit->m_movementInfo.HasMovementFlag((MovementFlags)(MOVEMENTFLAG_CAN_FLY | MOVEMENTFLAG_DISABLE_GRAVITY));
     }
 
     void MoveSplineInit::SetFacing(Unit const* target)
@@ -216,7 +215,7 @@ namespace Movement
         args.flags.EnableFacingAngle();
     }
 
-    void MoveSplineInit::MoveTo(const Vector3& dest, bool generatePath, bool forceDestination)
+    void MoveSplineInit::MoveTo(Vector3 const& dest, bool generatePath, bool forceDestination)
     {
         if (generatePath)
         {
@@ -243,4 +242,4 @@ namespace Movement
 
         return input;
     }
-}
+} // namespace Movement

@@ -39,23 +39,23 @@ EndContentData */
 
 enum Erland
 {
-    SAY_QUESTACCEPT     = 0,
-    SAY_START           = 1,
-    SAY_AGGRO           = 2,
-    SAY_PROGRESS        = 3,
-    SAY_LAST            = 4,
+    SAY_QUESTACCEPT = 0,
+    SAY_START = 1,
+    SAY_AGGRO = 2,
+    SAY_PROGRESS = 3,
+    SAY_LAST = 4,
 
-    SAY_RANE            = 0,
-    SAY_RANE_ANSWER     = 5,
-    SAY_MOVE_QUINN      = 6,
+    SAY_RANE = 0,
+    SAY_RANE_ANSWER = 5,
+    SAY_MOVE_QUINN = 6,
 
-    SAY_QUINN           = 7,
-    SAY_QUINN_ANSWER    = 0,
-    SAY_BYE             = 8,
+    SAY_QUINN = 7,
+    SAY_QUINN_ANSWER = 0,
+    SAY_BYE = 8,
 
-    QUEST_ESCORTING     = 435,
-    NPC_RANE            = 1950,
-    NPC_QUINN           = 1951
+    QUEST_ESCORTING = 435,
+    NPC_RANE = 1950,
+    NPC_QUINN = 1951
 };
 
 class npc_deathstalker_erland : public CreatureScript
@@ -146,8 +146,7 @@ enum PyrewoodAmbush
     NPCSAY_END = 1
 };
 
-static float PyrewoodSpawnPoints[3][4] =
-{
+static float PyrewoodSpawnPoints[3][4] = {
     //pos_x   pos_y     pos_z    orien
     //outside
     /*
@@ -168,9 +167,10 @@ class pyrewood_ambush : public CreatureScript
 public:
     pyrewood_ambush() : CreatureScript("pyrewood_ambush") { }
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
     {
-        if (quest->GetQuestId() == QUEST_PYREWOOD_AMBUSH && !CAST_AI(pyrewood_ambush::pyrewood_ambushAI, creature->AI())->QuestInProgress)
+        if (quest->GetQuestId() == QUEST_PYREWOOD_AMBUSH &&
+            !CAST_AI(pyrewood_ambush::pyrewood_ambushAI, creature->AI())->QuestInProgress)
         {
             CAST_AI(pyrewood_ambush::pyrewood_ambushAI, creature->AI())->QuestInProgress = true;
             CAST_AI(pyrewood_ambush::pyrewood_ambushAI, creature->AI())->Phase = 0;
@@ -230,7 +230,13 @@ public:
 
         void SummonCreatureWithRandomTarget(uint32 creatureId, int position)
         {
-            if (Creature* summoned = me->SummonCreature(creatureId, PyrewoodSpawnPoints[position][0], PyrewoodSpawnPoints[position][1], PyrewoodSpawnPoints[position][2], PyrewoodSpawnPoints[position][3], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 15000))
+            if (Creature* summoned = me->SummonCreature(creatureId,
+                    PyrewoodSpawnPoints[position][0],
+                    PyrewoodSpawnPoints[position][1],
+                    PyrewoodSpawnPoints[position][2],
+                    PyrewoodSpawnPoints[position][3],
+                    TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                    15000))
             {
                 Unit* target = nullptr;
                 if (PlayerGUID)
@@ -279,9 +285,7 @@ public:
                         if (PlayerGUID)
                         {
                             if (Player* player = ObjectAccessor::GetPlayer(*me, PlayerGUID))
-                            {
                                 me->AI()->Talk(NPCSAY_INIT, player);
-                            }
                         }
                     }
                     if (WaitTimer <= diff)
@@ -336,38 +340,38 @@ public:
 enum ApparitionMisc
 {
     // Crowd
-    NPC_GNOLL_RUNNER        = 1772,
-    NPC_GNOLL_MYSTIC        = 1773,
-    EMOTE_CHEER             = 71,
-    EMOTE_GNOLL_CHEER       = 1,
+    NPC_GNOLL_RUNNER = 1772,
+    NPC_GNOLL_MYSTIC = 1773,
+    EMOTE_CHEER = 71,
+    EMOTE_GNOLL_CHEER = 1,
 
     // Apparition
-    SAY_APPA_INTRO          = 0,
-    SAY_APPA_OUTRO          = 14,
+    SAY_APPA_INTRO = 0,
+    SAY_APPA_OUTRO = 14,
 
     // Variation 1
-    SAY_APPA_OPTION_1_1     = 1,
-    SAY_APPA_OPTION_1_2     = 5,
-    SAY_APPA_OPTION_1_3     = 10,
-    SAY_APPA_OPTION_1_4     = 13,
+    SAY_APPA_OPTION_1_1 = 1,
+    SAY_APPA_OPTION_1_2 = 5,
+    SAY_APPA_OPTION_1_3 = 10,
+    SAY_APPA_OPTION_1_4 = 13,
 
     // Variation 2
-    SAY_APPA_OPTION_2_1     = 2,
-    SAY_APPA_OPTION_2_2     = 5,
-    SAY_APPA_OPTION_2_3     = 9,
-    SAY_APPA_OPTION_2_4     = 12,
+    SAY_APPA_OPTION_2_1 = 2,
+    SAY_APPA_OPTION_2_2 = 5,
+    SAY_APPA_OPTION_2_3 = 9,
+    SAY_APPA_OPTION_2_4 = 12,
 };
 
 enum ApparitionEvents
 {
-    EVENT_APPA_INTRO        = 1,
-    EVENT_APPA_SAY_1        = 2,
-    EVENT_APPA_SAY_2        = 3,
-    EVENT_APPA_SAY_3        = 4,
-    EVENT_APPA_SAY_4        = 5,
-    EVENT_APPA_OUTRO        = 6,
-    EVENT_APPA_OUTRO_CROWD  = 7,
-    EVENT_APPA_OUTRO_END    = 8,
+    EVENT_APPA_INTRO = 1,
+    EVENT_APPA_SAY_1 = 2,
+    EVENT_APPA_SAY_2 = 3,
+    EVENT_APPA_SAY_3 = 4,
+    EVENT_APPA_SAY_4 = 5,
+    EVENT_APPA_OUTRO = 6,
+    EVENT_APPA_OUTRO_CROWD = 7,
+    EVENT_APPA_OUTRO_END = 8,
 };
 
 class npc_ravenclaw_apparition : public CreatureScript
@@ -385,7 +389,7 @@ public:
         npc_ravenclaw_apparitionAI(Creature* creature) : NullCreatureAI(creature), summons(me)
         {
             HasEnded = false;
-            TalkRNG = urand(0,1);
+            TalkRNG = urand(0, 1);
             events.ScheduleEvent(EVENT_APPA_INTRO, 2000);
             summons.DespawnAll();
         }
@@ -400,7 +404,13 @@ public:
             for (uint8 i = 0; i < urand(3, 5); ++i)
             {
                 float o = i * 10;
-                me->SummonCreature(urand(NPC_GNOLL_RUNNER,NPC_GNOLL_MYSTIC), me->GetPositionX() + urand(3,5) * cos(o) , me->GetPositionY() + urand(3,5) * sin(o), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 35000);
+                me->SummonCreature(urand(NPC_GNOLL_RUNNER, NPC_GNOLL_MYSTIC),
+                    me->GetPositionX() + urand(3, 5) * cos(o),
+                    me->GetPositionY() + urand(3, 5) * sin(o),
+                    me->GetPositionZ(),
+                    0,
+                    TEMPSUMMON_TIMED_DESPAWN,
+                    35000);
             }
         }
 
@@ -409,13 +419,13 @@ public:
             for (SummonList::const_iterator itr = summons.begin(); itr != summons.end(); ++itr)
             {
                 if (Creature* c = ObjectAccessor::GetCreature(*me, *itr))
+                {
+                    if (urand(0, 1))
                     {
-                        if (urand(0,1))
-                        {
-                            c->HandleEmoteCommand(EMOTE_CHEER);
-                            c->AI()->Talk(EMOTE_GNOLL_CHEER);
-                        }
+                        c->HandleEmoteCommand(EMOTE_CHEER);
+                        c->AI()->Talk(EMOTE_GNOLL_CHEER);
                     }
+                }
             }
         }
 

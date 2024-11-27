@@ -44,9 +44,10 @@ static inline void PrintCliPrefix()
 namespace Acore::Impl::Readline
 {
     static std::vector<std::string> vec;
+
     char* cli_unpack_vector(char const*, int state)
     {
-        static std::size_t i=0;
+        static std::size_t i = 0;
         if (!state)
             i = 0;
         if (i < vec.size())
@@ -58,17 +59,17 @@ namespace Acore::Impl::Readline
     char** cli_completion(char const* text, int /*start*/, int /*end*/)
     {
         ::rl_attempted_completion_over = 1;
-        vec = Acore::ChatCommands::GetAutoCompletionsFor(CliHandler(nullptr,nullptr), text);
+        vec = Acore::ChatCommands::GetAutoCompletionsFor(CliHandler(nullptr, nullptr), text);
         return ::rl_completion_matches(text, &cli_unpack_vector);
     }
 
     int cli_hook_func()
     {
-           if (World::IsStopped())
-               ::rl_done = 1;
-           return 0;
+        if (World::IsStopped())
+            ::rl_done = 1;
+        return 0;
     }
-}
+} // namespace Acore::Impl::Readline
 #endif
 
 void utf8print(void* /*arg*/, std::string_view str)
@@ -76,10 +77,10 @@ void utf8print(void* /*arg*/, std::string_view str)
 #if AC_PLATFORM == AC_PLATFORM_WINDOWS
     fmt::print(str);
 #else
-{
-    fmt::print(str);
-    fflush(stdout);
-}
+    {
+        fmt::print(str);
+        fflush(stdout);
+    }
 #endif
 }
 
@@ -99,7 +100,7 @@ int kb_hit_return()
     tv.tv_usec = 0;
     FD_ZERO(&fds);
     FD_SET(STDIN_FILENO, &fds);
-    select(STDIN_FILENO+1, &fds, nullptr, nullptr, &tv);
+    select(STDIN_FILENO + 1, &fds, nullptr, nullptr, &tv);
     return FD_ISSET(STDIN_FILENO, &fds);
 }
 #endif

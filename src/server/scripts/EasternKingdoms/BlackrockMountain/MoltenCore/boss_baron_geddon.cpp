@@ -24,21 +24,21 @@
 
 enum Emotes
 {
-    EMOTE_SERVICE                   = 0
+    EMOTE_SERVICE = 0
 };
 
 enum Spells
 {
-    SPELL_INFERNO                   = 19695,
-    SPELL_INFERNO_DUMMY_EFFECT      = 19698, // Server side spell which inflicts damage
-    SPELL_IGNITE_MANA               = 19659,
-    SPELL_LIVING_BOMB               = 20475,
-    SPELL_ARMAGEDDON                = 20478,
+    SPELL_INFERNO = 19695,
+    SPELL_INFERNO_DUMMY_EFFECT = 19698, // Server side spell which inflicts damage
+    SPELL_IGNITE_MANA = 19659,
+    SPELL_LIVING_BOMB = 20475,
+    SPELL_ARMAGEDDON = 20478,
 };
 
 enum Events
 {
-    EVENT_INFERNO                   = 1,
+    EVENT_INFERNO = 1,
     EVENT_IGNITE_MANA,
     EVENT_LIVING_BOMB,
 };
@@ -50,10 +50,7 @@ public:
 
     struct boss_baron_geddonAI : public BossAI
     {
-        boss_baron_geddonAI(Creature* creature) : BossAI(creature, DATA_GEDDON),
-            armageddonCasted(false)
-        {
-        }
+        boss_baron_geddonAI(Creature* creature) : BossAI(creature, DATA_GEDDON), armageddonCasted(false) { }
 
         void Reset() override
         {
@@ -69,7 +66,8 @@ public:
             events.ScheduleEvent(EVENT_LIVING_BOMB, 11s, 16s);
         }
 
-        void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*dmgType*/, SpellSchoolMask /*school*/) override
+        void DamageTaken(
+            Unit* /*attacker*/, uint32& damage, DamageEffectType /*dmgType*/, SpellSchoolMask /*school*/) override
         {
             // If boss is below 2% hp - cast Armageddon
             if (!armageddonCasted && damage < me->GetHealth() && me->HealthBelowPctDamaged(2, damage))
@@ -96,7 +94,8 @@ public:
                 }
                 case EVENT_IGNITE_MANA:
                 {
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true, true, -SPELL_IGNITE_MANA))
+                    if (Unit* target =
+                            SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true, true, -SPELL_IGNITE_MANA))
                     {
                         DoCast(target, SPELL_IGNITE_MANA);
                     }
@@ -107,9 +106,7 @@ public:
                 case EVENT_LIVING_BOMB:
                 {
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true))
-                    {
                         DoCast(target, SPELL_LIVING_BOMB);
-                    }
 
                     events.RepeatEvent(urand(11000, 16000));
                     break;
@@ -134,7 +131,7 @@ class spell_geddon_inferno_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_INFERNO_DUMMY_EFFECT });
+        return ValidateSpellInfo({SPELL_INFERNO_DUMMY_EFFECT});
     }
 
     void HandleAfterApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -149,9 +146,7 @@ class spell_geddon_inferno_aura : public AuraScript
     void HandleAfterRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (Creature* pCreatureTarget = GetTarget()->ToCreature())
-        {
             pCreatureTarget->SetReactState(REACT_AGGRESSIVE);
-        }
     }
 
     void PeriodicTick(AuraEffect const* aurEff)
@@ -180,15 +175,28 @@ class spell_geddon_inferno_aura : public AuraScript
                     break;
             }
 
-            caster->CastCustomSpell(SPELL_INFERNO_DUMMY_EFFECT, SPELLVALUE_BASE_POINT0, 500 * multiplier, (Unit*)nullptr, TRIGGERED_NONE, nullptr, aurEff);
+            caster->CastCustomSpell(SPELL_INFERNO_DUMMY_EFFECT,
+                SPELLVALUE_BASE_POINT0,
+                500 * multiplier,
+                (Unit*)nullptr,
+                TRIGGERED_NONE,
+                nullptr,
+                aurEff);
         }
     }
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_geddon_inferno_aura::HandleAfterApply, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_geddon_inferno_aura::HandleAfterRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_geddon_inferno_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        AfterEffectApply += AuraEffectApplyFn(spell_geddon_inferno_aura::HandleAfterApply,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_geddon_inferno_aura::HandleAfterRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_geddon_inferno_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -209,15 +217,15 @@ class spell_geddon_armageddon_aura : public AuraScript
     void HandleAfterRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (Creature* pCreatureTarget = GetTarget()->ToCreature())
-        {
             pCreatureTarget->SetReactState(REACT_AGGRESSIVE);
-        }
     }
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_geddon_armageddon_aura::HandleAfterApply, EFFECT_1, SPELL_AURA_MOD_PACIFY, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_geddon_armageddon_aura::HandleAfterRemove, EFFECT_1, SPELL_AURA_MOD_PACIFY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(
+            spell_geddon_armageddon_aura::HandleAfterApply, EFFECT_1, SPELL_AURA_MOD_PACIFY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_geddon_armageddon_aura::HandleAfterRemove, EFFECT_1, SPELL_AURA_MOD_PACIFY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

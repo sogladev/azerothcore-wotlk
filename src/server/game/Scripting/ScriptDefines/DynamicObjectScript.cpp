@@ -23,13 +23,10 @@ void ScriptMgr::OnDynamicObjectUpdate(DynamicObject* dynobj, uint32 diff)
     ASSERT(dynobj);
 
     for (auto const& [scriptID, script] : ScriptRegistry<DynamicObjectScript>::ScriptPointerList)
-    {
         script->OnUpdate(dynobj, diff);
-    }
 }
 
-DynamicObjectScript::DynamicObjectScript(const char* name)
-    : ScriptObject(name)
+DynamicObjectScript::DynamicObjectScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<DynamicObjectScript>::AddScript(this);
 }

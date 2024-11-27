@@ -15,7 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
- /* ScriptData
+/* ScriptData
  Name: debug_commandscript
  %Complete: 100
  Comment: All debug related commands
@@ -51,65 +51,61 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable debugPlayCommandTable =
-        {
-            { "cinematic",      HandleDebugPlayCinematicCommand,       SEC_ADMINISTRATOR, Console::No },
-            { "movie",          HandleDebugPlayMovieCommand,           SEC_ADMINISTRATOR, Console::No },
-            { "sound",          HandleDebugPlaySoundCommand,           SEC_ADMINISTRATOR, Console::No },
-            { "music",          HandleDebugPlayMusicCommand,           SEC_ADMINISTRATOR, Console::No },
-            { "visual",         HandleDebugVisualCommand,              SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable debugPlayCommandTable = {
+            {"cinematic", HandleDebugPlayCinematicCommand, SEC_ADMINISTRATOR, Console::No},
+            {"movie",     HandleDebugPlayMovieCommand,     SEC_ADMINISTRATOR, Console::No},
+            {"sound",     HandleDebugPlaySoundCommand,     SEC_ADMINISTRATOR, Console::No},
+            {"music",     HandleDebugPlayMusicCommand,     SEC_ADMINISTRATOR, Console::No},
+            {"visual",    HandleDebugVisualCommand,        SEC_ADMINISTRATOR, Console::No}
         };
-        static ChatCommandTable debugSendCommandTable =
-        {
-            { "buyerror",       HandleDebugSendBuyErrorCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "channelnotify",  HandleDebugSendChannelNotifyCommand,   SEC_ADMINISTRATOR, Console::No },
-            { "chatmessage",    HandleDebugSendChatMsgCommand,         SEC_ADMINISTRATOR, Console::No },
-            { "equiperror",     HandleDebugSendEquipErrorCommand,      SEC_ADMINISTRATOR, Console::No },
-            { "largepacket",    HandleDebugSendLargePacketCommand,     SEC_ADMINISTRATOR, Console::No },
-            { "opcode",         HandleDebugSendOpcodeCommand,          SEC_ADMINISTRATOR, Console::No },
-            { "qpartymsg",      HandleDebugSendQuestPartyMsgCommand,   SEC_ADMINISTRATOR, Console::No },
-            { "qinvalidmsg",    HandleDebugSendQuestInvalidMsgCommand, SEC_ADMINISTRATOR, Console::No },
-            { "sellerror",      HandleDebugSendSellErrorCommand,       SEC_ADMINISTRATOR, Console::No },
-            { "setphaseshift",  HandleDebugSendSetPhaseShiftCommand,   SEC_ADMINISTRATOR, Console::No },
-            { "spellfail",      HandleDebugSendSpellFailCommand,       SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable debugSendCommandTable = {
+            {"buyerror",      HandleDebugSendBuyErrorCommand,        SEC_ADMINISTRATOR, Console::No},
+            {"channelnotify", HandleDebugSendChannelNotifyCommand,   SEC_ADMINISTRATOR, Console::No},
+            {"chatmessage",   HandleDebugSendChatMsgCommand,         SEC_ADMINISTRATOR, Console::No},
+            {"equiperror",    HandleDebugSendEquipErrorCommand,      SEC_ADMINISTRATOR, Console::No},
+            {"largepacket",   HandleDebugSendLargePacketCommand,     SEC_ADMINISTRATOR, Console::No},
+            {"opcode",        HandleDebugSendOpcodeCommand,          SEC_ADMINISTRATOR, Console::No},
+            {"qpartymsg",     HandleDebugSendQuestPartyMsgCommand,   SEC_ADMINISTRATOR, Console::No},
+            {"qinvalidmsg",   HandleDebugSendQuestInvalidMsgCommand, SEC_ADMINISTRATOR, Console::No},
+            {"sellerror",     HandleDebugSendSellErrorCommand,       SEC_ADMINISTRATOR, Console::No},
+            {"setphaseshift", HandleDebugSendSetPhaseShiftCommand,   SEC_ADMINISTRATOR, Console::No},
+            {"spellfail",     HandleDebugSendSpellFailCommand,       SEC_ADMINISTRATOR, Console::No}
         };
-        static ChatCommandTable debugCommandTable =
-        {
-            { "setbit",         HandleDebugSet32BitCommand,            SEC_ADMINISTRATOR, Console::No },
-            { "threat",         HandleDebugThreatListCommand,          SEC_ADMINISTRATOR, Console::No },
-            { "hostile",        HandleDebugHostileRefListCommand,      SEC_ADMINISTRATOR, Console::No },
-            { "anim",           HandleDebugAnimCommand,                SEC_ADMINISTRATOR, Console::No },
-            { "arena",          HandleDebugArenaCommand,               SEC_ADMINISTRATOR, Console::No },
-            { "bg",             HandleDebugBattlegroundCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "cooldown",       HandleDebugCooldownCommand,            SEC_ADMINISTRATOR, Console::No },
-            { "getitemstate",   HandleDebugGetItemStateCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "lootrecipient",  HandleDebugGetLootRecipientCommand,    SEC_ADMINISTRATOR, Console::No },
-            { "getvalue",       HandleDebugGetValueCommand,            SEC_ADMINISTRATOR, Console::No },
-            { "getitemvalue",   HandleDebugGetItemValueCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "Mod32Value",     HandleDebugMod32ValueCommand,          SEC_ADMINISTRATOR, Console::No },
-            { "play",           debugPlayCommandTable },
-            { "send",           debugSendCommandTable },
-            { "setaurastate",   HandleDebugSetAuraStateCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "setitemvalue",   HandleDebugSetItemValueCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "setvalue",       HandleDebugSetValueCommand,            SEC_ADMINISTRATOR, Console::No },
-            { "spawnvehicle",   HandleDebugSpawnVehicleCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "setvid",         HandleDebugSetVehicleIdCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "entervehicle",   HandleDebugEnterVehicleCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "uws",            HandleDebugUpdateWorldStateCommand,    SEC_ADMINISTRATOR, Console::No },
-            { "update",         HandleDebugUpdateCommand,              SEC_ADMINISTRATOR, Console::No },
-            { "itemexpire",     HandleDebugItemExpireCommand,          SEC_ADMINISTRATOR, Console::No },
-            { "areatriggers",   HandleDebugAreaTriggersCommand,        SEC_ADMINISTRATOR, Console::No },
-            { "lfg",            HandleDebugDungeonFinderCommand,       SEC_ADMINISTRATOR, Console::No },
-            { "los",            HandleDebugLoSCommand,                 SEC_ADMINISTRATOR, Console::No },
-            { "moveflags",      HandleDebugMoveflagsCommand,           SEC_ADMINISTRATOR, Console::No },
-            { "unitstate",      HandleDebugUnitStateCommand,           SEC_ADMINISTRATOR, Console::No },
-            { "objectcount",    HandleDebugObjectCountCommand,         SEC_ADMINISTRATOR, Console::Yes},
-            { "dummy",          HandleDebugDummyCommand,               SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable debugCommandTable = {
+            {"setbit", HandleDebugSet32BitCommand, SEC_ADMINISTRATOR, Console::No},
+            {"threat", HandleDebugThreatListCommand, SEC_ADMINISTRATOR, Console::No},
+            {"hostile", HandleDebugHostileRefListCommand, SEC_ADMINISTRATOR, Console::No},
+            {"anim", HandleDebugAnimCommand, SEC_ADMINISTRATOR, Console::No},
+            {"arena", HandleDebugArenaCommand, SEC_ADMINISTRATOR, Console::No},
+            {"bg", HandleDebugBattlegroundCommand, SEC_ADMINISTRATOR, Console::No},
+            {"cooldown", HandleDebugCooldownCommand, SEC_ADMINISTRATOR, Console::No},
+            {"getitemstate", HandleDebugGetItemStateCommand, SEC_ADMINISTRATOR, Console::No},
+            {"lootrecipient", HandleDebugGetLootRecipientCommand, SEC_ADMINISTRATOR, Console::No},
+            {"getvalue", HandleDebugGetValueCommand, SEC_ADMINISTRATOR, Console::No},
+            {"getitemvalue", HandleDebugGetItemValueCommand, SEC_ADMINISTRATOR, Console::No},
+            {"Mod32Value", HandleDebugMod32ValueCommand, SEC_ADMINISTRATOR, Console::No},
+            {"play", debugPlayCommandTable},
+            {"send", debugSendCommandTable},
+            {"setaurastate", HandleDebugSetAuraStateCommand, SEC_ADMINISTRATOR, Console::No},
+            {"setitemvalue", HandleDebugSetItemValueCommand, SEC_ADMINISTRATOR, Console::No},
+            {"setvalue", HandleDebugSetValueCommand, SEC_ADMINISTRATOR, Console::No},
+            {"spawnvehicle", HandleDebugSpawnVehicleCommand, SEC_ADMINISTRATOR, Console::No},
+            {"setvid", HandleDebugSetVehicleIdCommand, SEC_ADMINISTRATOR, Console::No},
+            {"entervehicle", HandleDebugEnterVehicleCommand, SEC_ADMINISTRATOR, Console::No},
+            {"uws", HandleDebugUpdateWorldStateCommand, SEC_ADMINISTRATOR, Console::No},
+            {"update", HandleDebugUpdateCommand, SEC_ADMINISTRATOR, Console::No},
+            {"itemexpire", HandleDebugItemExpireCommand, SEC_ADMINISTRATOR, Console::No},
+            {"areatriggers", HandleDebugAreaTriggersCommand, SEC_ADMINISTRATOR, Console::No},
+            {"lfg", HandleDebugDungeonFinderCommand, SEC_ADMINISTRATOR, Console::No},
+            {"los", HandleDebugLoSCommand, SEC_ADMINISTRATOR, Console::No},
+            {"moveflags", HandleDebugMoveflagsCommand, SEC_ADMINISTRATOR, Console::No},
+            {"unitstate", HandleDebugUnitStateCommand, SEC_ADMINISTRATOR, Console::No},
+            {"objectcount", HandleDebugObjectCountCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"dummy", HandleDebugDummyCommand, SEC_ADMINISTRATOR, Console::No}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "debug", debugCommandTable },
-            { "wpgps", HandleWPGPSCommand, SEC_ADMINISTRATOR, Console::No }
+        static ChatCommandTable commandTable = {
+            {"debug", debugCommandTable},
+            {"wpgps", HandleWPGPSCommand, SEC_ADMINISTRATOR, Console::No}
         };
         return commandTable;
     }
@@ -131,7 +127,11 @@ public:
             uint32 count = 1;
             for (FlyByCamera const& cam : *flyByCameras)
             {
-                handler->PSendSysMessage("{} - {}ms [{} ({} degrees)]", count, cam.timeStamp, cam.locations.ToString(), cam.locations.GetOrientation() * (180 / M_PI));
+                handler->PSendSysMessage("{} - {}ms [{} ({} degrees)]",
+                    count,
+                    cam.timeStamp,
+                    cam.locations.ToString(),
+                    cam.locations.GetOrientation() * (180 / M_PI));
                 ++count;
             }
             handler->PSendSysMessage("{} waypoints dumped", flyByCameras->size());
@@ -219,7 +219,8 @@ public:
         return true;
     }
 
-    static bool HandleDebugSendSpellFailCommand(ChatHandler* handler, SpellCastResult result, Optional<uint32> failArg1, Optional<uint32> failArg2)
+    static bool HandleDebugSendSpellFailCommand(
+        ChatHandler* handler, SpellCastResult result, Optional<uint32> failArg1, Optional<uint32> failArg2)
     {
         WorldPacket data(SMSG_CAST_FAILED, 5);
         data << uint8(0);
@@ -227,14 +228,10 @@ public:
         data << uint8(result);
 
         if (failArg1 || failArg2)
-        {
             data << uint32(failArg1.value_or(0));
-        }
 
         if (failArg2)
-        {
             data << uint32(*failArg2);
-        }
 
         handler->GetSession()->SendPacket(&data);
         return true;
@@ -264,18 +261,12 @@ public:
         Player* player = nullptr;
 
         if (!unit || (!unit->IsPlayer()))
-        {
             player = handler->GetSession()->GetPlayer();
-        }
         else
-        {
             player = unit->ToPlayer();
-        }
 
         if (!unit)
-        {
             unit = player;
-        }
 
         std::ifstream ifs("opcode.txt");
         if (!ifs.is_open())
@@ -478,7 +469,8 @@ public:
     static bool HandleDebugSendChatMsgCommand(ChatHandler* handler, ChatMsg type)
     {
         WorldPacket data;
-        ChatHandler::BuildChatPacket(data, type, LANG_UNIVERSAL, handler->GetPlayer(), handler->GetPlayer(), "testtest", 0, "chan");
+        ChatHandler::BuildChatPacket(
+            data, type, LANG_UNIVERSAL, handler->GetPlayer(), handler->GetPlayer(), "testtest", 0, "chan");
         handler->GetSession()->SendPacket(&data);
         return true;
     }
@@ -496,8 +488,12 @@ public:
             return false;
 
         handler->PSendSysMessage("Loot recipient for creature {} (GUID {}, SpawnID {}) is {}",
-            target->GetName(), target->GetGUID().ToString(), target->GetSpawnId(),
-            target->hasLootRecipient() ? (target->GetLootRecipient() ? target->GetLootRecipient()->GetName() : "offline") : "no loot recipient");
+            target->GetName(),
+            target->GetGUID().ToString(),
+            target->GetSpawnId(),
+            target->hasLootRecipient()
+                ? (target->GetLootRecipient() ? target->GetLootRecipient()->GetName() : "offline")
+                : "no loot recipient");
         return true;
     }
 
@@ -548,10 +544,16 @@ public:
                         for (uint8 j = 0; j < bag->GetBagSize(); ++j)
                             if (Item* item2 = bag->GetItemByPos(j))
                                 if (item2->GetState() == state)
-                                    handler->PSendSysMessage("bag: 255 slot: {} {} owner: {}", item2->GetSlot(), item2->GetGUID().ToString(), item2->GetOwnerGUID().ToString());
+                                    handler->PSendSysMessage("bag: 255 slot: {} {} owner: {}",
+                                        item2->GetSlot(),
+                                        item2->GetGUID().ToString(),
+                                        item2->GetOwnerGUID().ToString());
                     }
                     else if (item->GetState() == state)
-                        handler->PSendSysMessage("bag: 255 slot: {} {} owner: {}", item->GetSlot(), item->GetGUID().ToString(), item->GetOwnerGUID().ToString());
+                        handler->PSendSysMessage("bag: 255 slot: {} {} owner: {}",
+                            item->GetSlot(),
+                            item->GetGUID().ToString(),
+                            item->GetOwnerGUID().ToString());
                 }
             }
         }
@@ -568,21 +570,22 @@ public:
                 std::string st;
                 switch (item->GetState())
                 {
-                case ITEM_UNCHANGED:
-                    st = "unchanged";
-                    break;
-                case ITEM_CHANGED:
-                    st = "changed";
-                    break;
-                case ITEM_NEW:
-                    st = "new";
-                    break;
-                case ITEM_REMOVED:
-                    st = "removed";
-                    break;
+                    case ITEM_UNCHANGED:
+                        st = "unchanged";
+                        break;
+                    case ITEM_CHANGED:
+                        st = "changed";
+                        break;
+                    case ITEM_NEW:
+                        st = "new";
+                        break;
+                    case ITEM_REMOVED:
+                        st = "removed";
+                        break;
                 }
 
-                handler->PSendSysMessage("bag: {} slot: {} guid: {} - state: {}", bagSlot, item->GetSlot(), item->GetGUID().ToString(), st);
+                handler->PSendSysMessage(
+                    "bag: {} slot: {} guid: {} - state: {}", bagSlot, item->GetSlot(), item->GetGUID().ToString(), st);
             }
 
             if (updateQueue.empty())
@@ -604,21 +607,32 @@ public:
 
                 if (item->GetSlot() != i)
                 {
-                    handler->PSendSysMessage("Item with slot {} and guid {} has an incorrect slot value: {}", i, item->GetGUID().ToString(), item->GetSlot());
+                    handler->PSendSysMessage("Item with slot {} and guid {} has an incorrect slot value: {}",
+                        i,
+                        item->GetGUID().ToString(),
+                        item->GetSlot());
                     error = true;
                     continue;
                 }
 
                 if (item->GetOwnerGUID() != player->GetGUID())
                 {
-                    handler->PSendSysMessage("The item with slot {} {} does have non-matching owner guid {} and {}!", item->GetSlot(), item->GetGUID().ToString(), item->GetOwnerGUID().ToString(), player->GetGUID().ToString());
+                    handler->PSendSysMessage("The item with slot {} {} does have non-matching owner guid {} and {}!",
+                        item->GetSlot(),
+                        item->GetGUID().ToString(),
+                        item->GetOwnerGUID().ToString(),
+                        player->GetGUID().ToString());
                     error = true;
                     continue;
                 }
 
                 if (Bag* container = item->GetContainer())
                 {
-                    handler->PSendSysMessage("The item with slot {} {} has a container (slot: {}, {}) but shouldn't!", item->GetSlot(), item->GetGUID().ToString(), container->GetSlot(), container->GetGUID().ToString());
+                    handler->PSendSysMessage("The item with slot {} {} has a container (slot: {}, {}) but shouldn't!",
+                        item->GetSlot(),
+                        item->GetGUID().ToString(),
+                        container->GetSlot(),
+                        container->GetGUID().ToString());
                     error = true;
                     continue;
                 }
@@ -628,28 +642,47 @@ public:
                     uint16 qp = item->GetQueuePos();
                     if (qp > updateQueue.size())
                     {
-                        handler->PSendSysMessage("The item with slot {} and guid {} has its queuepos ({}) larger than the update queue size! ", item->GetSlot(), item->GetGUID().ToString(), qp);
+                        handler->PSendSysMessage(
+                            "The item with slot {} and guid {} has its queuepos ({}) larger than the update queue size! ",
+                            item->GetSlot(),
+                            item->GetGUID().ToString(),
+                            qp);
                         error = true;
                         continue;
                     }
 
                     if (!updateQueue[qp])
                     {
-                        handler->PSendSysMessage("The item with slot {} and guid {} has its queuepos ({}) pointing to NULL in the queue!", item->GetSlot(), item->GetGUID().ToString(), qp);
+                        handler->PSendSysMessage(
+                            "The item with slot {} and guid {} has its queuepos ({}) pointing to NULL in the queue!",
+                            item->GetSlot(),
+                            item->GetGUID().ToString(),
+                            qp);
                         error = true;
                         continue;
                     }
 
                     if (updateQueue[qp] != item)
                     {
-                        handler->PSendSysMessage("The item with slot {} and guid {} has a queuepos ({}) that points to another item in the queue (bag: {}, slot: {}, guid: {})", item->GetSlot(), item->GetGUID().ToString(), qp, updateQueue[qp]->GetBagSlot(), updateQueue[qp]->GetSlot(), updateQueue[qp]->GetGUID().ToString());
+                        handler->PSendSysMessage(
+                            "The item with slot {} and guid {} has a queuepos ({}) that points to another item in the queue (bag: {}, slot: {}, guid: {})",
+                            item->GetSlot(),
+                            item->GetGUID().ToString(),
+                            qp,
+                            updateQueue[qp]->GetBagSlot(),
+                            updateQueue[qp]->GetSlot(),
+                            updateQueue[qp]->GetGUID().ToString());
                         error = true;
                         continue;
                     }
                 }
                 else if (item->GetState() != ITEM_UNCHANGED)
                 {
-                    handler->PSendSysMessage("The item with slot {} and guid {} is not in queue but should be (state: {})!", item->GetSlot(), item->GetGUID().ToString(), item->GetState());
+                    handler->PSendSysMessage(
+                        "The item with slot {} and guid {} is not in queue but should be (state: {})!",
+                        item->GetSlot(),
+                        item->GetGUID().ToString(),
+                        item->GetState());
                     error = true;
                     continue;
                 }
@@ -664,14 +697,25 @@ public:
 
                         if (item2->GetSlot() != j)
                         {
-                            handler->PSendSysMessage("The item in bag {} and slot {} (guid: {}) has an incorrect slot value: {}", bag->GetSlot(), j, item2->GetGUID().ToString(), item2->GetSlot());
+                            handler->PSendSysMessage(
+                                "The item in bag {} and slot {} (guid: {}) has an incorrect slot value: {}",
+                                bag->GetSlot(),
+                                j,
+                                item2->GetGUID().ToString(),
+                                item2->GetSlot());
                             error = true;
                             continue;
                         }
 
                         if (item2->GetOwnerGUID() != player->GetGUID())
                         {
-                            handler->PSendSysMessage("The item in bag {} at slot {} and {}, the owner ({}) and the player ({}) don't match!", bag->GetSlot(), item2->GetSlot(), item2->GetGUID().ToString(), item2->GetOwnerGUID().ToString(), player->GetGUID().ToString());
+                            handler->PSendSysMessage(
+                                "The item in bag {} at slot {} and {}, the owner ({}) and the player ({}) don't match!",
+                                bag->GetSlot(),
+                                item2->GetSlot(),
+                                item2->GetGUID().ToString(),
+                                item2->GetOwnerGUID().ToString(),
+                                player->GetGUID().ToString());
                             error = true;
                             continue;
                         }
@@ -679,14 +723,23 @@ public:
                         Bag* container = item2->GetContainer();
                         if (!container)
                         {
-                            handler->PSendSysMessage("The item in bag {} at slot {} {} has no container!", bag->GetSlot(), item2->GetSlot(), item2->GetGUID().ToString());
+                            handler->PSendSysMessage("The item in bag {} at slot {} {} has no container!",
+                                bag->GetSlot(),
+                                item2->GetSlot(),
+                                item2->GetGUID().ToString());
                             error = true;
                             continue;
                         }
 
                         if (container != bag)
                         {
-                            handler->PSendSysMessage("The item in bag {} at slot {} {} has a different container(slot {} {})!", bag->GetSlot(), item2->GetSlot(), item2->GetGUID().ToString(), container->GetSlot(), container->GetGUID().ToString());
+                            handler->PSendSysMessage(
+                                "The item in bag {} at slot {} {} has a different container(slot {} {})!",
+                                bag->GetSlot(),
+                                item2->GetSlot(),
+                                item2->GetGUID().ToString(),
+                                container->GetSlot(),
+                                container->GetGUID().ToString());
                             error = true;
                             continue;
                         }
@@ -696,28 +749,51 @@ public:
                             uint16 qp = item2->GetQueuePos();
                             if (qp > updateQueue.size())
                             {
-                                handler->PSendSysMessage("The item in bag {} at slot {} having guid {} has a queuepos ({}) larger than the update queue size! ", bag->GetSlot(), item2->GetSlot(), item2->GetGUID().ToString(), qp);
+                                handler->PSendSysMessage(
+                                    "The item in bag {} at slot {} having guid {} has a queuepos ({}) larger than the update queue size! ",
+                                    bag->GetSlot(),
+                                    item2->GetSlot(),
+                                    item2->GetGUID().ToString(),
+                                    qp);
                                 error = true;
                                 continue;
                             }
 
                             if (!updateQueue[qp])
                             {
-                                handler->PSendSysMessage("The item in bag {} at slot {} having guid {} has a queuepos ({}) that points to NULL in the queue!", bag->GetSlot(), item2->GetSlot(), item2->GetGUID().ToString(), qp);
+                                handler->PSendSysMessage(
+                                    "The item in bag {} at slot {} having guid {} has a queuepos ({}) that points to NULL in the queue!",
+                                    bag->GetSlot(),
+                                    item2->GetSlot(),
+                                    item2->GetGUID().ToString(),
+                                    qp);
                                 error = true;
                                 continue;
                             }
 
                             if (updateQueue[qp] != item2)
                             {
-                                handler->PSendSysMessage("The item in bag {} at slot {} having guid {} has a queuepos ({}) that points to another item in the queue (bag: {}, slot: {}, guid: {})", bag->GetSlot(), item2->GetSlot(), item2->GetGUID().ToString(), qp, updateQueue[qp]->GetBagSlot(), updateQueue[qp]->GetSlot(), updateQueue[qp]->GetGUID().ToString());
+                                handler->PSendSysMessage(
+                                    "The item in bag {} at slot {} having guid {} has a queuepos ({}) that points to another item in the queue (bag: {}, slot: {}, guid: {})",
+                                    bag->GetSlot(),
+                                    item2->GetSlot(),
+                                    item2->GetGUID().ToString(),
+                                    qp,
+                                    updateQueue[qp]->GetBagSlot(),
+                                    updateQueue[qp]->GetSlot(),
+                                    updateQueue[qp]->GetGUID().ToString());
                                 error = true;
                                 continue;
                             }
                         }
                         else if (item2->GetState() != ITEM_UNCHANGED)
                         {
-                            handler->PSendSysMessage("The item in bag {} at slot {} having guid {} is not in queue but should be (state: {})!", bag->GetSlot(), item2->GetSlot(), item2->GetGUID().ToString(), item2->GetState());
+                            handler->PSendSysMessage(
+                                "The item in bag {} at slot {} having guid {} is not in queue but should be (state: {})!",
+                                bag->GetSlot(),
+                                item2->GetSlot(),
+                                item2->GetGUID().ToString(),
+                                item2->GetState());
                             error = true;
                             continue;
                         }
@@ -733,14 +809,22 @@ public:
 
                 if (item->GetOwnerGUID() != player->GetGUID())
                 {
-                    handler->SendSysMessage(Acore::StringFormat("queue({}): For the item {}, the owner ({}) and the player ({}) don't match!", index, item->GetGUID().ToString(), item->GetOwnerGUID().ToString(), player->GetGUID().ToString()));
+                    handler->SendSysMessage(Acore::StringFormat(
+                        "queue({}): For the item {}, the owner ({}) and the player ({}) don't match!",
+                        index,
+                        item->GetGUID().ToString(),
+                        item->GetOwnerGUID().ToString(),
+                        player->GetGUID().ToString()));
                     error = true;
                     continue;
                 }
 
                 if (item->GetQueuePos() != index)
                 {
-                    handler->SendSysMessage(Acore::StringFormat("queue({}): For the item {}, the queuepos doesn't match it's position in the queue!", index, item->GetGUID().ToString()));
+                    handler->SendSysMessage(Acore::StringFormat(
+                        "queue({}): For the item {}, the queuepos doesn't match it's position in the queue!",
+                        index,
+                        item->GetGUID().ToString()));
                     error = true;
                     continue;
                 }
@@ -752,14 +836,25 @@ public:
 
                 if (!test)
                 {
-                    handler->SendSysMessage(Acore::StringFormat("queue({}): The bag({}) and slot({}) values for {} are incorrect, the player doesn't have any item at that position!", index, item->GetBagSlot(), item->GetSlot(), item->GetGUID().ToString()));
+                    handler->SendSysMessage(Acore::StringFormat(
+                        "queue({}): The bag({}) and slot({}) values for {} are incorrect, the player doesn't have any item at that position!",
+                        index,
+                        item->GetBagSlot(),
+                        item->GetSlot(),
+                        item->GetGUID().ToString()));
                     error = true;
                     continue;
                 }
 
                 if (test != item)
                 {
-                    handler->SendSysMessage(Acore::StringFormat("queue({}): The bag({}) and slot({}) values for the {} are incorrect, {} is there instead!", index, item->GetBagSlot(), item->GetSlot(), item->GetGUID().ToString(), test->GetGUID().ToString()));
+                    handler->SendSysMessage(Acore::StringFormat(
+                        "queue({}): The bag({}) and slot({}) values for the {} are incorrect, {} is there instead!",
+                        index,
+                        item->GetBagSlot(),
+                        item->GetSlot(),
+                        item->GetGUID().ToString(),
+                        test->GetGUID().ToString()));
                     error = true;
                     continue;
                 }
@@ -784,7 +879,8 @@ public:
         return true;
     }
 
-    static bool HandleDebugCooldownCommand(ChatHandler* handler, uint32 spell_id, uint32 end_time, Optional<uint32> item_id)
+    static bool HandleDebugCooldownCommand(
+        ChatHandler* handler, uint32 spell_id, uint32 end_time, Optional<uint32> item_id)
     {
         Player* player = handler->GetPlayer();
 
@@ -838,7 +934,11 @@ public:
                 continue;
             }
 
-            handler->PSendSysMessage("   {}.   {}   ({})  - threat {}", ++count, unit->GetName(), unit->GetGUID().ToString(), (*itr)->GetThreat());
+            handler->PSendSysMessage("   {}.   {}   ({})  - threat {}",
+                ++count,
+                unit->GetName(),
+                unit->GetGUID().ToString(),
+                (*itr)->GetThreat());
         }
 
         auto const& threatList2 = target->GetThreatMgr().GetOfflineThreatList();
@@ -851,7 +951,11 @@ public:
                 continue;
             }
 
-            handler->PSendSysMessage("   {}.   [offline] {}   ({})  - threat {}", ++count, unit->GetName(), unit->GetGUID().ToString(), (*itr)->GetThreat());
+            handler->PSendSysMessage("   {}.   [offline] {}   ({})  - threat {}",
+                ++count,
+                unit->GetName(),
+                unit->GetGUID().ToString(),
+                (*itr)->GetThreat());
         }
 
         handler->SendSysMessage("End of threat list.");
@@ -874,8 +978,12 @@ public:
         {
             if (Unit* unit = ref->GetSource()->GetOwner())
             {
-                handler->PSendSysMessage("   {}.   {} {}   ({})  - threat {}", ++count, (ref->IsOnline() ? "" : "[offline]"),
-                    unit->GetName(), unit->GetGUID().ToString(), ref->GetThreat());
+                handler->PSendSysMessage("   {}.   {} {}   ({})  - threat {}",
+                    ++count,
+                    (ref->IsOnline() ? "" : "[offline]"),
+                    unit->GetName(),
+                    unit->GetGUID().ToString(),
+                    ref->GetThreat());
             }
             else
             {
@@ -950,7 +1058,15 @@ public:
 
         Map* map = handler->GetPlayer()->GetMap();
 
-        if (!v->Create(map->GenerateLowGuid<HighGuid::Vehicle>(), map, handler->GetSession()->GetPlayer()->GetPhaseMask(), entry, *id, x, y, z, o))
+        if (!v->Create(map->GenerateLowGuid<HighGuid::Vehicle>(),
+                map,
+                handler->GetSession()->GetPlayer()->GetPhaseMask(),
+                entry,
+                *id,
+                x,
+                y,
+                z,
+                o))
         {
             delete v;
             return false;
@@ -995,7 +1111,8 @@ public:
         return true;
     }
 
-    static bool HandleDebugSetItemValueCommand(ChatHandler* handler, ObjectGuid::LowType guid, uint32 index, uint32 value)
+    static bool HandleDebugSetItemValueCommand(
+        ChatHandler* handler, ObjectGuid::LowType guid, uint32 index, uint32 value)
     {
         Item* i = handler->GetPlayer()->GetItemByGuid(ObjectGuid(HighGuid::Item, 0, guid));
 
@@ -1040,9 +1157,17 @@ public:
         {
             Player* player = handler->GetSession()->GetPlayer();
             handler->PSendSysMessage("Checking LoS {} -> {}:", player->GetName(), unit->GetName());
-            handler->PSendSysMessage("    VMAP LoS: {}", player->IsWithinLOSInMap(unit, VMAP::ModelIgnoreFlags::Nothing, LINEOFSIGHT_CHECK_VMAP) ? "clear" : "obstructed");
-            handler->PSendSysMessage("    GObj LoS: {}", player->IsWithinLOSInMap(unit, VMAP::ModelIgnoreFlags::Nothing, LINEOFSIGHT_CHECK_GOBJECT_ALL) ? "clear" : "obstructed");
-            handler->PSendSysMessage("{} is {}in line of sight of {}.", unit->GetName(), (player->IsWithinLOSInMap(unit) ? "" : "not "), player->GetName());
+            handler->PSendSysMessage("    VMAP LoS: {}",
+                player->IsWithinLOSInMap(unit, VMAP::ModelIgnoreFlags::Nothing, LINEOFSIGHT_CHECK_VMAP) ? "clear"
+                                                                                                        : "obstructed");
+            handler->PSendSysMessage("    GObj LoS: {}",
+                player->IsWithinLOSInMap(unit, VMAP::ModelIgnoreFlags::Nothing, LINEOFSIGHT_CHECK_GOBJECT_ALL)
+                    ? "clear"
+                    : "obstructed");
+            handler->PSendSysMessage("{} is {}in line of sight of {}.",
+                unit->GetName(),
+                (player->IsWithinLOSInMap(unit) ? "" : "not "),
+                player->GetName());
             return true;
         }
 
@@ -1093,7 +1218,8 @@ public:
         else if (value.holds_alternative<float>())
         {
             target->SetFloatValue(index, value.get<float>());
-            handler->PSendSysMessage(LANG_SET_FLOAT_FIELD, target->GetGUID().ToString(), static_cast<float>(index), uint32(value));
+            handler->PSendSysMessage(
+                LANG_SET_FLOAT_FIELD, target->GetGUID().ToString(), static_cast<float>(index), uint32(value));
         }
 
         return true;
@@ -1134,7 +1260,10 @@ public:
     {
         if (index >= handler->GetPlayer()->GetValuesCount())
         {
-            handler->PSendSysMessage(LANG_TOO_BIG_INDEX, index, handler->GetPlayer()->GetGUID().ToString(), handler->GetPlayer()->GetValuesCount());
+            handler->PSendSysMessage(LANG_TOO_BIG_INDEX,
+                index,
+                handler->GetPlayer()->GetGUID().ToString(),
+                handler->GetPlayer()->GetValuesCount());
             return false;
         }
 
@@ -1202,7 +1331,8 @@ public:
         return true;
     }
 
-    static bool HandleDebugMoveflagsCommand(ChatHandler* handler, Optional<uint32> moveFlags, Optional<uint32> moveFlagsExtra)
+    static bool HandleDebugMoveflagsCommand(
+        ChatHandler* handler, Optional<uint32> moveFlags, Optional<uint32> moveFlagsExtra)
     {
         Unit* target = handler->getSelectedUnit();
         if (!target)
@@ -1211,13 +1341,13 @@ public:
         if (!moveFlags)
         {
             //! Display case
-            handler->PSendSysMessage(LANG_MOVEFLAGS_GET, target->GetUnitMovementFlags(), target->GetExtraUnitMovementFlags());
+            handler->PSendSysMessage(
+                LANG_MOVEFLAGS_GET, target->GetUnitMovementFlags(), target->GetExtraUnitMovementFlags());
         }
         else
         {
-            static uint32 const FlagsWithHandlers = MOVEMENTFLAG_MASK_HAS_PLAYER_STATUS_OPCODE |
-                MOVEMENTFLAG_WALKING | MOVEMENTFLAG_SWIMMING |
-                MOVEMENTFLAG_SPLINE_ENABLED;
+            static uint32 const FlagsWithHandlers = MOVEMENTFLAG_MASK_HAS_PLAYER_STATUS_OPCODE | MOVEMENTFLAG_WALKING |
+                                                    MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_SPLINE_ENABLED;
 
             bool unhandledFlag = ((*moveFlags ^ target->GetUnitMovementFlags()) & ~FlagsWithHandlers) != 0;
 
@@ -1245,14 +1375,13 @@ public:
                 target->SetUnitMovementFlags(*moveFlags);
 
             if (moveFlagsExtra)
-            {
                 target->SetExtraUnitMovementFlags(*moveFlagsExtra);
-            }
 
             if (moveFlagsExtra || unhandledFlag)
                 target->SendMovementFlagUpdate();
 
-            handler->PSendSysMessage(LANG_MOVEFLAGS_SET, target->GetUnitMovementFlags(), target->GetExtraUnitMovementFlags());
+            handler->PSendSysMessage(
+                LANG_MOVEFLAGS_SET, target->GetUnitMovementFlags(), target->GetExtraUnitMovementFlags());
         }
 
         return true;
@@ -1277,13 +1406,23 @@ public:
         if (!type)
         {
             // waypoint_data - id, point, X, Y, Z, O, delay, move_type, action, action_chance, wpguid
-            LOG_INFO("sql.dev", "(@PATH, XX, {:.3f}, {:.3f}, {:.5f}, {:.5f}, 0, 0, 0, 100, 0),", player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), player->GetOrientation());
+            LOG_INFO("sql.dev",
+                "(@PATH, XX, {:.3f}, {:.3f}, {:.5f}, {:.5f}, 0, 0, 0, 100, 0),",
+                player->GetPositionX(),
+                player->GetPositionY(),
+                player->GetPositionZ(),
+                player->GetOrientation());
         }
 
         if (type == "sai")
         {
             // waypoint (SAI) - entry, pointid, X, Y, Z, O, delay
-            LOG_INFO("sql.dev", "(@PATH, XX, {:.3f}, {:.3f}, {:.5f}, {:.5f}, 0),", player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), player->GetOrientation());
+            LOG_INFO("sql.dev",
+                "(@PATH, XX, {:.3f}, {:.3f}, {:.5f}, {:.5f}, 0),",
+                player->GetPositionX(),
+                player->GetPositionY(),
+                player->GetPositionZ(),
+                player->GetOrientation());
         }
 
         handler->PSendSysMessage("Waypoint SQL written to SQL Developer log");
@@ -1294,21 +1433,12 @@ public:
     {
         if (mapId)
         {
-            sMapMgr->DoForAllMapsWithMapId(mapId.value(),
-               [handler](Map* map) -> void
-                {
-                   HandleDebugObjectCountMap(handler, map);
-                }
-            );
+            sMapMgr->DoForAllMapsWithMapId(
+                mapId.value(), [handler](Map* map) -> void { HandleDebugObjectCountMap(handler, map); });
         }
         else
         {
-            sMapMgr->DoForAllMaps(
-                [handler](Map* map) -> void
-                {
-                    HandleDebugObjectCountMap(handler, map);
-                }
-            );
+            sMapMgr->DoForAllMaps([handler](Map* map) -> void { HandleDebugObjectCountMap(handler, map); });
         }
 
         return true;
@@ -1328,15 +1458,12 @@ public:
             }
         }
 
-        template<class T>
-        void Visit(std::unordered_map<ObjectGuid, T*>&) { }
+        template <class T> void Visit(std::unordered_map<ObjectGuid, T*>&) { }
 
         std::vector<std::pair<uint32, uint32>> GetTopCreatureCount(uint32 count)
         {
             auto comp = [](std::pair<uint32, uint32> const& a, std::pair<uint32, uint32> const& b)
-            {
-                return a.second > b.second;
-            };
+            { return a.second > b.second; };
             std::set<std::pair<uint32, uint32>, decltype(comp)> set(creatureIds.begin(), creatureIds.end(), comp);
 
             count = std::min(count, uint32(set.size()));
@@ -1352,11 +1479,14 @@ public:
 
     static void HandleDebugObjectCountMap(ChatHandler* handler, Map* map)
     {
-        handler->PSendSysMessage("Map Id: {} Name: '{}' Instance Id: {} Creatures: {} GameObjects: {} SetActive Objects: {}",
-                map->GetId(), map->GetMapName(), map->GetInstanceId(),
-                uint64(map->GetObjectsStore().Size<Creature>()),
-                uint64(map->GetObjectsStore().Size<GameObject>()),
-                uint64(map->GetActiveNonPlayersCount()));
+        handler->PSendSysMessage(
+            "Map Id: {} Name: '{}' Instance Id: {} Creatures: {} GameObjects: {} SetActive Objects: {}",
+            map->GetId(),
+            map->GetMapName(),
+            map->GetInstanceId(),
+            uint64(map->GetObjectsStore().Size<Creature>()),
+            uint64(map->GetObjectsStore().Size<GameObject>()),
+            uint64(map->GetActiveNonPlayersCount()));
 
         CreatureCountWorker worker;
         TypeContainerVisitor<CreatureCountWorker, MapStoredObjectTypesContainer> visitor(worker);
@@ -1370,7 +1500,8 @@ public:
 
     static bool HandleDebugDummyCommand(ChatHandler* handler)
     {
-        handler->SendSysMessage("This command does nothing right now. Edit your local core (cs_debug.cpp) to make it do whatever you need for testing.");
+        handler->SendSysMessage(
+            "This command does nothing right now. Edit your local core (cs_debug.cpp) to make it do whatever you need for testing.");
         return true;
     }
 };

@@ -36,7 +36,7 @@ ChannelMgr* ChannelMgr::forTeam(TeamId teamId)
     static ChannelMgr hordeChannelMgr(TEAM_HORDE);
 
     if (sWorld->getBoolConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHANNEL))
-        return &allianceChannelMgr;        // cross-faction
+        return &allianceChannelMgr; // cross-faction
 
     if (teamId == TEAM_ALLIANCE)
         return &allianceChannelMgr;
@@ -53,7 +53,8 @@ void ChannelMgr::LoadChannels()
     uint32 count = 0;
 
     //                                                    0          1     2     3         4          5
-    QueryResult result = CharacterDatabase.Query("SELECT channelId, name, team, announce, ownership, password FROM channels ORDER BY channelId ASC");
+    QueryResult result = CharacterDatabase.Query(
+        "SELECT channelId, name, team, announce, ownership, password FROM channels ORDER BY channelId ASC");
     if (!result)
     {
         LOG_WARN("server.loading", ">> Loaded 0 channels. DB table `channels` is empty.");
@@ -73,7 +74,9 @@ void ChannelMgr::LoadChannels()
         std::wstring channelWName;
         if (!Utf8toWStr(channelName, channelWName))
         {
-            LOG_ERROR("server.loading", "Failed to load channel '{}' from database - invalid utf8 sequence? Deleted.", channelName);
+            LOG_ERROR("server.loading",
+                "Failed to load channel '{}' from database - invalid utf8 sequence? Deleted.",
+                channelName);
             toDelete.emplace_back(channelName, team);
             continue;
         }
@@ -81,23 +84,29 @@ void ChannelMgr::LoadChannels()
         ChannelMgr* mgr = forTeam(team);
         if (!mgr)
         {
-            LOG_ERROR("server.loading", "Failed to load custom chat channel '{}' from database - invalid team {}. Deleted.", channelName, team);
+            LOG_ERROR("server.loading",
+                "Failed to load custom chat channel '{}' from database - invalid team {}. Deleted.",
+                channelName,
+                team);
             toDelete.emplace_back(channelName, team);
             continue;
         }
 
-        Channel* newChannel = new Channel(channelName, 0, channelDBId, team, fields[3].Get<uint8>(), fields[4].Get<uint8>());
+        Channel* newChannel =
+            new Channel(channelName, 0, channelDBId, team, fields[3].Get<uint8>(), fields[4].Get<uint8>());
         newChannel->SetPassword(password);
         mgr->channels[channelWName] = newChannel;
 
-        if (QueryResult banResult = CharacterDatabase.Query("SELECT playerGUID, banTime FROM channels_bans WHERE channelId = {}", channelDBId))
+        if (QueryResult banResult = CharacterDatabase.Query(
+                "SELECT playerGUID, banTime FROM channels_bans WHERE channelId = {}", channelDBId))
         {
             do
             {
                 Field* banFields = banResult->Fetch();
                 if (!banFields)
                     break;
-                newChannel->AddBan(ObjectGuid::Create<HighGuid::Player>(banFields[0].Get<uint32>()), banFields[1].Get<uint32>());
+                newChannel->AddBan(
+                    ObjectGuid::Create<HighGuid::Player>(banFields[0].Get<uint32>()), banFields[1].Get<uint32>());
             } while (banResult->NextRow());
         }
 
@@ -168,7 +177,8 @@ void ChannelMgr::LoadChannelRights()
     uint32 oldMSTime = getMSTime();
     channels_rights.clear();
 
-    QueryResult result = CharacterDatabase.Query("SELECT name, flags, speakdelay, joinmessage, delaymessage, moderators FROM channels_rights");
+    QueryResult result = CharacterDatabase.Query(
+        "SELECT name, flags, speakdelay, joinmessage, delaymessage, moderators FROM channels_rights");
     if (!result)
     {
         LOG_WARN("server.loading", ">> Loaded 0 Channel Rights!");
@@ -190,13 +200,16 @@ void ChannelMgr::LoadChannelRights()
                 uint64 moderator_acc = Acore::StringTo<uint64>(itr).value_or(0);
 
                 if (moderator_acc && ((uint32)moderator_acc) == moderator_acc)
-                {
                     moderators.insert((uint32)moderator_acc);
-                }
             }
         }
 
-        SetChannelRightsFor(fields[0].Get<std::string>(), fields[1].Get<uint32>(), fields[2].Get<uint32>(), fields[3].Get<std::string>(), fields[4].Get<std::string>(), moderators);
+        SetChannelRightsFor(fields[0].Get<std::string>(),
+            fields[1].Get<uint32>(),
+            fields[2].Get<uint32>(),
+            fields[3].Get<std::string>(),
+            fields[4].Get<std::string>(),
+            moderators);
 
         ++count;
     } while (result->NextRow());
@@ -205,7 +218,7 @@ void ChannelMgr::LoadChannelRights()
     LOG_INFO("server.loading", " ");
 }
 
-const ChannelRights& ChannelMgr::GetChannelRightsFor(const std::string& name)
+ChannelRights const& ChannelMgr::GetChannelRightsFor(std::string const& name)
 {
     std::string nameStr = name;
     std::transform(nameStr.begin(), nameStr.end(), nameStr.begin(), ::tolower);
@@ -215,7 +228,8 @@ const ChannelRights& ChannelMgr::GetChannelRightsFor(const std::string& name)
     return channelRightsEmpty;
 }
 
-void ChannelMgr::SetChannelRightsFor(const std::string& name, const uint32& flags, const uint32& speakDelay, const std::string& joinmessage, const std::string& speakmessage, const std::set<uint32>& moderators)
+void ChannelMgr::SetChannelRightsFor(std::string const& name, uint32 const& flags, uint32 const& speakDelay,
+    std::string const& joinmessage, std::string const& speakmessage, std::set<uint32> const& moderators)
 {
     std::string nameStr = name;
     std::transform(nameStr.begin(), nameStr.end(), nameStr.begin(), ::tolower);

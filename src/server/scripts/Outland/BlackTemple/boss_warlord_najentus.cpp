@@ -16,43 +16,43 @@
  */
 
 #include "CreatureScript.h"
+#include "Player.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "black_temple.h"
-#include "Player.h"
-#include "SpellScript.h"
 
 enum Yells
 {
-    SAY_AGGRO                       = 0,
-    SAY_NEEDLE                      = 1,
-    SAY_SLAY                        = 2,
-    SAY_SPECIAL                     = 3,
-    SAY_ENRAGE                      = 4,
-    SAY_DEATH                       = 5
+    SAY_AGGRO = 0,
+    SAY_NEEDLE = 1,
+    SAY_SLAY = 2,
+    SAY_SPECIAL = 3,
+    SAY_ENRAGE = 4,
+    SAY_DEATH = 5
 };
 
 enum Spells
 {
-    SPELL_NEEDLE_SPINE              = 39992,
-    SPELL_NEEDLE_SPINE_DAMAGE       = 39835,
-    SPELL_TIDAL_BURST               = 39878,
-    SPELL_TIDAL_SHIELD              = 39872,
-    SPELL_IMPALING_SPINE            = 39837,
-    SPELL_SUMMON_IMPALING_SPINE     = 39929,
-    SPELL_BERSERK                   = 26662,
-    SPELL_REMOVE_SPINES             = 40354
+    SPELL_NEEDLE_SPINE = 39992,
+    SPELL_NEEDLE_SPINE_DAMAGE = 39835,
+    SPELL_TIDAL_BURST = 39878,
+    SPELL_TIDAL_SHIELD = 39872,
+    SPELL_IMPALING_SPINE = 39837,
+    SPELL_SUMMON_IMPALING_SPINE = 39929,
+    SPELL_BERSERK = 26662,
+    SPELL_REMOVE_SPINES = 40354
 };
 
 enum Events
 {
-    EVENT_TALK_CHECK                = 1,
-    EVENT_ENRAGE                    = 2
+    EVENT_TALK_CHECK = 1,
+    EVENT_ENRAGE = 2
 };
 
 enum Misc
 {
-    ITEM_NAJENTUS_SPINE             = 32408
+    ITEM_NAJENTUS_SPINE = 32408
 };
 
 struct boss_najentus : public BossAI
@@ -74,22 +74,22 @@ struct boss_najentus : public BossAI
         Talk(SAY_AGGRO);
         DoCastSelf(SPELL_REMOVE_SPINES);
 
-        me->m_Events.AddEventAtOffset([this] {
+        me->m_Events.AddEventAtOffset(
+            [this]
+        {
             Talk(SAY_ENRAGE);
             DoCastSelf(SPELL_BERSERK, true);
-        }, 8min, EVENT_ENRAGE);
+        },
+            8min,
+            EVENT_ENRAGE);
 
-        ScheduleTimedEvent(25s, 100s, [&]
-        {
-            Talk(SAY_SPECIAL);
-        }, 25s, 100s);
+        ScheduleTimedEvent(25s, 100s, [&] { Talk(SAY_SPECIAL); }, 25s, 100s);
 
-        ScheduleTimedEvent(10s, [&]
-        {
-            me->CastCustomSpell(SPELL_NEEDLE_SPINE, SPELLVALUE_MAX_TARGETS, 3, me, false);
-        }, 15s, 15s);
+        ScheduleTimedEvent(
+            10s, [&] { me->CastCustomSpell(SPELL_NEEDLE_SPINE, SPELLVALUE_MAX_TARGETS, 3, me, false); }, 15s, 15s);
 
-        ScheduleTimedEvent(21s, [&]
+        ScheduleTimedEvent(21s,
+            [&]
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1))
             {
@@ -97,13 +97,18 @@ struct boss_najentus : public BossAI
                 target->CastSpell(target, SPELL_SUMMON_IMPALING_SPINE, true);
                 Talk(SAY_NEEDLE);
             }
-        }, 20s, 20s);
+        },
+            20s,
+            20s);
 
-        ScheduleTimedEvent(1min, [&]
+        ScheduleTimedEvent(1min,
+            [&]
         {
             DoCastSelf(SPELL_TIDAL_SHIELD);
             scheduler.DelayAll(10s);
-        }, 1min, 1min);
+        },
+            1min,
+            1min);
     }
 
     void KilledUnit(Unit* victim) override
@@ -112,10 +117,7 @@ struct boss_najentus : public BossAI
         {
             Talk(SAY_SLAY);
             _canTalk = false;
-            ScheduleUniqueTimedEvent(5s, [&]
-            {
-                _canTalk = true;
-            }, EVENT_TALK_CHECK);
+            ScheduleUniqueTimedEvent(5s, [&] { _canTalk = true; }, EVENT_TALK_CHECK);
         }
     }
 
@@ -134,7 +136,7 @@ class spell_najentus_needle_spine : public SpellScript
 {
     PrepareSpellScript(spell_najentus_needle_spine);
 
-    void HandleDummy(SpellEffIndex  /*effIndex*/)
+    void HandleDummy(SpellEffIndex /*effIndex*/)
     {
         if (Unit* target = GetHitUnit())
             GetCaster()->CastSpell(target, SPELL_NEEDLE_SPINE_DAMAGE, true);
@@ -150,7 +152,7 @@ class spell_najentus_hurl_spine : public SpellScript
 {
     PrepareSpellScript(spell_najentus_hurl_spine);
 
-    void HandleSchoolDamage(SpellEffIndex  /*effIndex*/)
+    void HandleSchoolDamage(SpellEffIndex /*effIndex*/)
     {
         Unit* target = GetHitUnit();
         if (target && target->HasAura(SPELL_TIDAL_SHIELD))
@@ -162,7 +164,8 @@ class spell_najentus_hurl_spine : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_najentus_hurl_spine::HandleSchoolDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_najentus_hurl_spine::HandleSchoolDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
     }
 };
 
@@ -174,10 +177,8 @@ class spell_najentus_remove_spines : public SpellScript
     {
         if (Unit* caster = GetCaster())
         {
-            caster->GetMap()->DoForAllPlayers([&](Player* player)
-            {
-                player->DestroyItemCount(ITEM_NAJENTUS_SPINE, 5, true);
-            });
+            caster->GetMap()->DoForAllPlayers(
+                [&](Player* player) { player->DestroyItemCount(ITEM_NAJENTUS_SPINE, 5, true); });
         }
     }
 

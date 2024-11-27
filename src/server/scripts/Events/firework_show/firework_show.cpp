@@ -16,6 +16,8 @@
  */
 
 #include "firework_show.h"
+#include "GameObjectAI.h"
+#include "GameObjectScript.h"
 #include "firework_show_BootyBay.h"
 #include "firework_show_Exodar.h"
 #include "firework_show_Ironforge.h"
@@ -26,21 +28,19 @@
 #include "firework_show_Teldrassil.h"
 #include "firework_show_ThunderBluff.h"
 #include "firework_show_Undercity.h"
-#include "GameObjectAI.h"
-#include "GameObjectScript.h"
 
 // <mapId, zoneId>, show
-std::map<std::pair<uint32, uint32>, FireworkShow const *> const FireworkShowStore = {
-    { { 0,   1    }, &fireworkShowIronforge    },
-    { { 0,   33   }, &fireworkShowBootyBay     },
-    { { 0,   1497 }, &fireworkShowUndercity    },
-    { { 0,   1519 }, &fireworkShowStormwind    },
-    { { 1,   141  }, &fireworkShowTeldrassil   },
-    { { 1,   1637 }, &fireworkShowOrgrimmar    },
-    { { 1,   1638 }, &fireworkShowThunderBluff },
-    { { 530, 3430 }, &fireworkShowSilvermoon   },
-    { { 530, 3557 }, &fireworkShowExodar       },
-    { { 530, 3703 }, &fireworkShowShattrath    },
+std::map<std::pair<uint32, uint32>, FireworkShow const*> const FireworkShowStore = {
+    {{0, 1},      &fireworkShowIronforge   },
+    {{0, 33},     &fireworkShowBootyBay    },
+    {{0, 1497},   &fireworkShowUndercity   },
+    {{0, 1519},   &fireworkShowStormwind   },
+    {{1, 141},    &fireworkShowTeldrassil  },
+    {{1, 1637},   &fireworkShowOrgrimmar   },
+    {{1, 1638},   &fireworkShowThunderBluff},
+    {{530, 3430}, &fireworkShowSilvermoon  },
+    {{530, 3557}, &fireworkShowExodar      },
+    {{530, 3703}, &fireworkShowShattrath   },
 };
 
 struct go_firework_show : public GameObjectAI
@@ -64,31 +64,31 @@ struct go_firework_show : public GameObjectAI
 
         StopShow();
 
-        _scheduler.Schedule(Milliseconds(4200), [this](TaskContext context)
+        _scheduler.Schedule(Milliseconds(4200),
+            [this](TaskContext context)
+        {
+            // check for show start
+            if (!_showRunning)
             {
-                // check for show start
-                if (!_showRunning)
-                {
-                    tzset(); // set timezone for localtime_r() -> fix issues due to daylight time
-                    tm local_tm = Acore::Time::TimeBreakdown();
+                tzset(); // set timezone for localtime_r() -> fix issues due to daylight time
+                tm local_tm = Acore::Time::TimeBreakdown();
 
-                    // each show runs approx. 12 minutes
-                    // and starts at the full hour
-                    if ((local_tm.tm_min >= 0) && (local_tm.tm_min < 12))
-                    {
-                        StartShow(local_tm.tm_min);
-                    }
-                }
+                // each show runs approx. 12 minutes
+                // and starts at the full hour
+                if ((local_tm.tm_min >= 0) && (local_tm.tm_min < 12))
+                    StartShow(local_tm.tm_min);
+            }
 
-                context.Repeat();
-            });
+            context.Repeat();
+        });
     }
 
     // provide start offset to handle a "late start"
     // e.g. if the gameobject is spawned later then the desired start time
     void StartShow(int minutesOffset)
     {
-        if (!_show || !_show->schedule.entries || !_show->schedule.size || !_show->spawns.entries || !_show->spawns.size)
+        if (!_show || !_show->schedule.entries || !_show->schedule.size || !_show->spawns.entries ||
+            !_show->spawns.size)
             return;
 
         _curIdx = 0;
@@ -99,23 +99,26 @@ struct go_firework_show : public GameObjectAI
         if (minutesOffset > 0)
         {
             int ts = 0;
-            do {
+            do
+            {
                 ts = _show->schedule.entries[_curIdx].timestamp;
             } while ((ts <= (minutesOffset * MINUTE * IN_MILLISECONDS)) && (++_curIdx < _show->schedule.size));
         }
 
-        _scheduler.Schedule(0s, [this](TaskContext context)
+        _scheduler.Schedule(0s,
+            [this](TaskContext context)
+        {
+            int32 dt = 0;
+            do
             {
-                int32 dt = 0;
-                do {
-                    dt = SpawnNextFirework();
-                } while (dt == 0);
+                dt = SpawnNextFirework();
+            } while (dt == 0);
 
-                if (0 < dt)
-                    context.Repeat(Milliseconds(dt));
-                else
-                    StopShow();
-            });
+            if (0 < dt)
+                context.Repeat(Milliseconds(dt));
+            else
+                StopShow();
+        });
     }
 
     void StopShow()
@@ -127,10 +130,8 @@ struct go_firework_show : public GameObjectAI
             me->GetGameObjectListWithEntryInGrid(_goList, GO_TOASTING_GOBLET, 1420.0f);
 
             for (std::list<GameObject*>::const_iterator itr = _goList.begin(); itr != _goList.end(); ++itr)
-            {
                 if (GameObjectAI* ai = (*itr)->AI())
                     ai->SetData(0, 1);
-            }
 
             // Trigger SAI to make Revelers cheer on show end
             for (uint32 i = 0; i < COUNT_REVELER_ID; i++)
@@ -139,10 +140,8 @@ struct go_firework_show : public GameObjectAI
                 me->GetCreatureListWithEntryInGrid(_crList, _show->revelerId[i], 1420.0f);
 
                 for (std::list<Creature*>::const_iterator itr = _crList.begin(); itr != _crList.end(); ++itr)
-                {
                     if (CreatureAI* ai = (*itr)->AI())
                         ai->SetData(0, 1);
-                }
             }
         }
 
@@ -204,7 +203,7 @@ private:
     TaskScheduler _scheduler;
     uint32_t _curIdx;
     bool _showRunning;
-    FireworkShow const * _show;
+    FireworkShow const* _show;
 };
 
 void AddSC_event_firework_show_scripts()

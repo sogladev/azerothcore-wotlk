@@ -28,7 +28,7 @@ namespace
 {
     std::unordered_map<ObjectGuid, CharacterCacheEntry> _characterCacheStore;
     std::unordered_map<std::string, CharacterCacheEntry*> _characterCacheByNameStore;
-}
+} // namespace
 
 CharacterCache* CharacterCache::instance()
 {
@@ -62,7 +62,8 @@ void CharacterCache::LoadCharacterCacheStorage()
     _characterCacheStore.clear();
     uint32 oldMSTime = getMSTime();
 
-    QueryResult result = CharacterDatabase.Query("SELECT guid, name, account, race, gender, class, level FROM characters");
+    QueryResult result =
+        CharacterDatabase.Query("SELECT guid, name, account, race, gender, class, level FROM characters");
     if (!result)
     {
         LOG_INFO("server.loading", "No character name data loaded, empty query!");
@@ -72,46 +73,65 @@ void CharacterCache::LoadCharacterCacheStorage()
     do
     {
         Field* fields = result->Fetch();
-        AddCharacterCacheEntry(ObjectGuid::Create<HighGuid::Player>(fields[0].Get<uint32>()) /*guid*/, fields[2].Get<uint32>() /*account*/, fields[1].Get<std::string>() /*name*/,
-            fields[4].Get<uint8>() /*gender*/, fields[3].Get<uint8>() /*race*/, fields[5].Get<uint8>() /*class*/, fields[6].Get<uint8>() /*level*/);
+        AddCharacterCacheEntry(ObjectGuid::Create<HighGuid::Player>(fields[0].Get<uint32>()) /*guid*/,
+            fields[2].Get<uint32>() /*account*/,
+            fields[1].Get<std::string>() /*name*/,
+            fields[4].Get<uint8>() /*gender*/,
+            fields[3].Get<uint8>() /*race*/,
+            fields[5].Get<uint8>() /*class*/,
+            fields[6].Get<uint8>() /*level*/);
     } while (result->NextRow());
 
-    QueryResult mailCountResult = CharacterDatabase.Query("SELECT receiver, COUNT(receiver) FROM mail GROUP BY receiver");
+    QueryResult mailCountResult =
+        CharacterDatabase.Query("SELECT receiver, COUNT(receiver) FROM mail GROUP BY receiver");
     if (mailCountResult)
     {
         do
         {
             Field* fields = mailCountResult->Fetch();
-            UpdateCharacterMailCount(ObjectGuid(HighGuid::Player, fields[0].Get<uint32>()), static_cast<int8>(fields[1].Get<uint64>()), true);
+            UpdateCharacterMailCount(ObjectGuid(HighGuid::Player, fields[0].Get<uint32>()),
+                static_cast<int8>(fields[1].Get<uint64>()),
+                true);
         } while (mailCountResult->NextRow());
     }
 
-    LOG_INFO("server.loading", ">> Loaded Character Infos For {} Characters in {} ms", _characterCacheStore.size(), GetMSTimeDiffToNow(oldMSTime));
+    LOG_INFO("server.loading",
+        ">> Loaded Character Infos For {} Characters in {} ms",
+        _characterCacheStore.size(),
+        GetMSTimeDiffToNow(oldMSTime));
     LOG_INFO("server.loading", " ");
 }
 
 void CharacterCache::RefreshCacheEntry(uint32 lowGuid)
 {
-    QueryResult result = CharacterDatabase.Query("SELECT guid, name, account, race, gender, class, level FROM characters WHERE guid = {}", lowGuid);
+    QueryResult result = CharacterDatabase.Query(
+        "SELECT guid, name, account, race, gender, class, level FROM characters WHERE guid = {}", lowGuid);
     if (!result)
-    {
         return;
-    }
 
     do
     {
         Field* fields = result->Fetch();
         DeleteCharacterCacheEntry(ObjectGuid::Create<HighGuid::Player>(lowGuid), fields[1].Get<std::string>());
-        AddCharacterCacheEntry(ObjectGuid::Create<HighGuid::Player>(fields[0].Get<uint32>()) /*guid*/, fields[2].Get<uint32>() /*account*/, fields[1].Get<std::string>() /*name*/, fields[4].Get<uint8>() /*gender*/, fields[3].Get<uint8>() /*race*/, fields[5].Get<uint8>() /*class*/, fields[6].Get<uint8>() /*level*/);
+        AddCharacterCacheEntry(ObjectGuid::Create<HighGuid::Player>(fields[0].Get<uint32>()) /*guid*/,
+            fields[2].Get<uint32>() /*account*/,
+            fields[1].Get<std::string>() /*name*/,
+            fields[4].Get<uint8>() /*gender*/,
+            fields[3].Get<uint8>() /*race*/,
+            fields[5].Get<uint8>() /*class*/,
+            fields[6].Get<uint8>() /*level*/);
     } while (result->NextRow());
 
-    QueryResult mailCountResult = CharacterDatabase.Query("SELECT receiver, COUNT(receiver) FROM mail WHERE receiver = {} GROUP BY receiver", lowGuid);
+    QueryResult mailCountResult = CharacterDatabase.Query(
+        "SELECT receiver, COUNT(receiver) FROM mail WHERE receiver = {} GROUP BY receiver", lowGuid);
     if (mailCountResult)
     {
         do
         {
             Field* fields = mailCountResult->Fetch();
-            UpdateCharacterMailCount(ObjectGuid(HighGuid::Player, fields[0].Get<uint32>()), static_cast<int8>(fields[1].Get<uint64>()), true);
+            UpdateCharacterMailCount(ObjectGuid(HighGuid::Player, fields[0].Get<uint32>()),
+                static_cast<int8>(fields[1].Get<uint64>()),
+                true);
         } while (mailCountResult->NextRow());
     }
 }
@@ -119,7 +139,8 @@ void CharacterCache::RefreshCacheEntry(uint32 lowGuid)
 /*
 Modifying functions
 */
-void CharacterCache::AddCharacterCacheEntry(ObjectGuid const& guid, uint32 accountId, std::string const& name, uint8 gender, uint8 race, uint8 playerClass, uint8 level)
+void CharacterCache::AddCharacterCacheEntry(ObjectGuid const& guid, uint32 accountId, std::string const& name,
+    uint8 gender, uint8 race, uint8 playerClass, uint8 level)
 {
     CharacterCacheEntry& data = _characterCacheStore[guid];
     data.Guid = guid;
@@ -129,11 +150,9 @@ void CharacterCache::AddCharacterCacheEntry(ObjectGuid const& guid, uint32 accou
     data.Sex = gender;
     data.Class = playerClass;
     data.Level = level;
-    data.GuildId = 0;                           // Will be set in guild loading or guild setting
+    data.GuildId = 0; // Will be set in guild loading or guild setting
     for (uint8 i = 0; i < MAX_ARENA_SLOT; ++i)
-    {
         data.ArenaTeamId[i] = 0; // Will be set in arena teams loading
-    }
 
     // Fill Name to Guid Store
     _characterCacheByNameStore[name] = &data;
@@ -145,7 +164,8 @@ void CharacterCache::DeleteCharacterCacheEntry(ObjectGuid const& guid, std::stri
     _characterCacheByNameStore.erase(name);
 }
 
-void CharacterCache::UpdateCharacterData(ObjectGuid const& guid, std::string const& name, Optional<uint8> gender /*= {}*/, Optional<uint8> race /*= {}*/)
+void CharacterCache::UpdateCharacterData(
+    ObjectGuid const& guid, std::string const& name, Optional<uint8> gender /*= {}*/, Optional<uint8> race /*= {}*/)
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
@@ -155,14 +175,10 @@ void CharacterCache::UpdateCharacterData(ObjectGuid const& guid, std::string con
     itr->second.Name = name;
 
     if (gender)
-    {
         itr->second.Sex = *gender;
-    }
 
     if (race)
-    {
         itr->second.Race = *race;
-    }
 
     //WorldPackets::Misc::InvalidatePlayer packet(guid);
     //sWorld->SendGlobalMessage(packet.Write());
@@ -176,9 +192,7 @@ void CharacterCache::UpdateCharacterLevel(ObjectGuid const& guid, uint8 level)
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return;
-    }
 
     itr->second.Level = level;
 }
@@ -187,9 +201,7 @@ void CharacterCache::UpdateCharacterAccountId(ObjectGuid const& guid, uint32 acc
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return;
-    }
 
     itr->second.AccountId = accountId;
 }
@@ -198,9 +210,7 @@ void CharacterCache::UpdateCharacterGuildId(ObjectGuid const& guid, ObjectGuid::
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return;
-    }
 
     itr->second.GuildId = guildId;
 }
@@ -209,9 +219,7 @@ void CharacterCache::UpdateCharacterArenaTeamId(ObjectGuid const& guid, uint8 sl
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return;
-    }
 
     itr->second.ArenaTeamId[slot] = arenaTeamId;
 }
@@ -220,9 +228,7 @@ void CharacterCache::UpdateCharacterMailCount(ObjectGuid const& guid, int8 count
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return;
-    }
 
     if (update)
     {
@@ -232,9 +238,7 @@ void CharacterCache::UpdateCharacterMailCount(ObjectGuid const& guid, int8 count
 
     // Let's be safe and prevent overflow
     if (!itr->second.MailCount && count < 0)
-    {
         return;
-    }
 
     itr->second.MailCount += count;
 }
@@ -243,9 +247,7 @@ void CharacterCache::UpdateCharacterGroup(ObjectGuid const& guid, ObjectGuid gro
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return;
-    }
 
     itr->second.GroupGuid = groupGUID;
 }
@@ -262,9 +264,7 @@ CharacterCacheEntry const* CharacterCache::GetCharacterCacheByGuid(ObjectGuid co
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr != _characterCacheStore.end())
-    {
         return &itr->second;
-    }
 
     return nullptr;
 }
@@ -273,9 +273,7 @@ CharacterCacheEntry const* CharacterCache::GetCharacterCacheByName(std::string c
 {
     auto itr = _characterCacheByNameStore.find(name);
     if (itr != _characterCacheByNameStore.end())
-    {
         return itr->second;
-    }
 
     return nullptr;
 }
@@ -284,9 +282,7 @@ ObjectGuid CharacterCache::GetCharacterGuidByName(std::string const& name) const
 {
     auto itr = _characterCacheByNameStore.find(name);
     if (itr != _characterCacheByNameStore.end())
-    {
         return itr->second->Guid;
-    }
 
     return ObjectGuid::Empty;
 }
@@ -295,9 +291,7 @@ bool CharacterCache::GetCharacterNameByGuid(ObjectGuid guid, std::string& name) 
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return false;
-    }
 
     name = itr->second.Name;
     return true;
@@ -307,9 +301,7 @@ uint32 CharacterCache::GetCharacterTeamByGuid(ObjectGuid guid) const
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return 0;
-    }
 
     return Player::TeamIdForRace(itr->second.Race);
 }
@@ -318,9 +310,7 @@ uint32 CharacterCache::GetCharacterAccountIdByGuid(ObjectGuid guid) const
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return 0;
-    }
 
     return itr->second.AccountId;
 }
@@ -329,9 +319,7 @@ uint32 CharacterCache::GetCharacterAccountIdByName(std::string const& name) cons
 {
     auto itr = _characterCacheByNameStore.find(name);
     if (itr != _characterCacheByNameStore.end())
-    {
         return itr->second->AccountId;
-    }
 
     return 0;
 }
@@ -340,9 +328,7 @@ uint8 CharacterCache::GetCharacterLevelByGuid(ObjectGuid guid) const
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return 0;
-    }
 
     return itr->second.Level;
 }
@@ -351,9 +337,7 @@ ObjectGuid::LowType CharacterCache::GetCharacterGuildIdByGuid(ObjectGuid guid) c
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return 0;
-    }
 
     return itr->second.GuildId;
 }
@@ -362,9 +346,7 @@ uint32 CharacterCache::GetCharacterArenaTeamIdByGuid(ObjectGuid guid, uint8 type
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return 0;
-    }
 
     return itr->second.ArenaTeamId[type];
 }
@@ -373,9 +355,7 @@ ObjectGuid CharacterCache::GetCharacterGroupGuidByGuid(ObjectGuid guid) const
 {
     auto itr = _characterCacheStore.find(guid);
     if (itr == _characterCacheStore.end())
-    {
         return ObjectGuid::Empty;
-    }
 
     return itr->second.GroupGuid;
 }

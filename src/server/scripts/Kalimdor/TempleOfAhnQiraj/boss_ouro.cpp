@@ -27,34 +27,34 @@
 enum Spells
 {
     // Ouro
-    SPELL_SWEEP                 = 26103,
-    SPELL_SAND_BLAST            = 26102,
-    SPELL_GROUND_RUPTURE        = 26100,
-    SPELL_BERSERK               = 26615,
-    SPELL_BOULDER               = 26616,
-    SPELL_OURO_SUBMERGE_VISUAL  = 26063,
-    SPELL_SUMMON_SANDWORM_BASE  = 26133,
+    SPELL_SWEEP = 26103,
+    SPELL_SAND_BLAST = 26102,
+    SPELL_GROUND_RUPTURE = 26100,
+    SPELL_BERSERK = 26615,
+    SPELL_BOULDER = 26616,
+    SPELL_OURO_SUBMERGE_VISUAL = 26063,
+    SPELL_SUMMON_SANDWORM_BASE = 26133,
 
     // Misc - Mounds, Ouro Spawner
-    SPELL_BIRTH                 = 26586,
-    SPELL_DIRTMOUND_PASSIVE     = 26092,
-    SPELL_SUMMON_OURO           = 26061,
-    SPELL_SUMMON_OURO_MOUNDS    = 26058,
-    SPELL_QUAKE                 = 26093,
-    SPELL_SUMMON_SCARABS        = 26060,
-    SPELL_SUMMON_OURO_AURA      = 26642,
-    SPELL_DREAM_FOG             = 24780
+    SPELL_BIRTH = 26586,
+    SPELL_DIRTMOUND_PASSIVE = 26092,
+    SPELL_SUMMON_OURO = 26061,
+    SPELL_SUMMON_OURO_MOUNDS = 26058,
+    SPELL_QUAKE = 26093,
+    SPELL_SUMMON_SCARABS = 26060,
+    SPELL_SUMMON_OURO_AURA = 26642,
+    SPELL_DREAM_FOG = 24780
 };
 
 enum Misc
 {
-    GROUP_EMERGED               = 0,
-    GROUP_PHASE_TRANSITION      = 1,
+    GROUP_EMERGED = 0,
+    GROUP_PHASE_TRANSITION = 1,
 
-    NPC_DIRT_MOUND              = 15712,
-    GO_SANDWORM_BASE            = 180795,
+    NPC_DIRT_MOUND = 15712,
+    GO_SANDWORM_BASE = 180795,
 
-    DATA_OURO_HEALTH            = 0
+    DATA_OURO_HEALTH = 0
 };
 
 struct npc_ouro_spawner : public ScriptedAI
@@ -122,18 +122,21 @@ struct boss_ouro : public BossAI
             DoCastSelf(SPELL_BERSERK, true);
             _enraged = true;
             scheduler.CancelGroup(GROUP_PHASE_TRANSITION);
-            scheduler.Schedule(1s, [this](TaskContext context)
-                {
-                    if (!IsPlayerWithinMeleeRange())
-                        DoSpellAttackToRandomTargetIfReady(SPELL_BOULDER);
+            scheduler
+                .Schedule(1s,
+                    [this](TaskContext context)
+            {
+                if (!IsPlayerWithinMeleeRange())
+                    DoSpellAttackToRandomTargetIfReady(SPELL_BOULDER);
 
-                    context.Repeat();
-                })
-                .Schedule(20s, [this](TaskContext context)
-                    {
-                        DoCastSelf(SPELL_SUMMON_OURO_MOUNDS, true);
-                        context.Repeat();
-                    });
+                context.Repeat();
+            })
+                .Schedule(20s,
+                    [this](TaskContext context)
+            {
+                DoCastSelf(SPELL_SUMMON_OURO_MOUNDS, true);
+                context.Repeat();
+            });
         }
     }
 
@@ -193,9 +196,7 @@ struct boss_ouro : public BossAI
     void SpellHitTarget(Unit* target, SpellInfo const* spellInfo) override
     {
         if (spellInfo->Id == SPELL_SAND_BLAST && target)
-        {
             me->GetThreatMgr().ModifyThreatByPercent(target, -100);
-        }
     }
 
     void Emerge()
@@ -204,59 +205,61 @@ struct boss_ouro : public BossAI
         DoCastSelf(SPELL_SUMMON_SANDWORM_BASE, true);
         me->SetReactState(REACT_AGGRESSIVE);
         CastGroundRupture();
-        scheduler.Schedule(20s, GROUP_EMERGED, [this](TaskContext context)
+        scheduler
+            .Schedule(20s,
+                GROUP_EMERGED,
+                [this](TaskContext context)
+        {
+            if (Unit* target = SelectTarget(SelectTargetMethod::MaxThreat, 0, 0.0f, true))
+                me->SetTarget(target->GetGUID());
+
+            DoCastAOE(SPELL_SAND_BLAST);
+
+            me->m_Events.AddEventAtOffset(
+                [this]()
+            {
+                if (Unit* victim = me->GetVictim())
+                    me->SetTarget(victim->GetGUID());
+            },
+                3s);
+
+            context.Repeat();
+        })
+            .Schedule(22s,
+                GROUP_EMERGED,
+                [this](TaskContext context)
+        {
+            DoCastVictim(SPELL_SWEEP);
+            context.Repeat();
+        })
+            .Schedule(90s, GROUP_PHASE_TRANSITION, [this](TaskContext /*context*/) { Submerge(); })
+            .Schedule(3s,
+                GROUP_PHASE_TRANSITION,
+                [this](TaskContext context)
+        {
+            if (_enraged)
+                return;
+
+            if (!IsPlayerWithinMeleeRange() && !_submerged)
+            {
+                if (_submergeMelee < 10)
                 {
-                    if (Unit* target = SelectTarget(SelectTargetMethod::MaxThreat, 0, 0.0f, true))
-                    {
-                        me->SetTarget(target->GetGUID());
-                    }
-
-                    DoCastAOE(SPELL_SAND_BLAST);
-
-                    me->m_Events.AddEventAtOffset([this]()
-                    {
-                        if (Unit* victim = me->GetVictim())
-                        {
-                            me->SetTarget(victim->GetGUID());
-                        }
-                    }, 3s);
-
-                    context.Repeat();
-                })
-            .Schedule(22s, GROUP_EMERGED, [this](TaskContext context)
-                {
-                    DoCastVictim(SPELL_SWEEP);
-                    context.Repeat();
-                })
-            .Schedule(90s, GROUP_PHASE_TRANSITION, [this](TaskContext /*context*/)
+                    _submergeMelee++;
+                }
+                else
                 {
                     Submerge();
-                })
-            .Schedule(3s, GROUP_PHASE_TRANSITION, [this](TaskContext context)
-                {
-                    if (_enraged)
-                        return;
+                    _submergeMelee = 0;
+                }
+            }
+            else
+            {
+                _submergeMelee = 0;
+            }
 
-                    if (!IsPlayerWithinMeleeRange() && !_submerged)
-                    {
-                        if (_submergeMelee < 10)
-                        {
-                            _submergeMelee++;
-                        }
-                        else
-                        {
-                            Submerge();
-                            _submergeMelee = 0;
-                        }
-                    }
-                    else
-                    {
-                        _submergeMelee = 0;
-                    }
-
-                    if (!_submerged)
-                        context.Repeat(1s);
-                });
+            if (!_submerged)
+                context.Repeat(1s);
+        });
     }
 
     void Reset() override
@@ -290,8 +293,7 @@ struct boss_ouro : public BossAI
     {
         UpdateVictim();
 
-        scheduler.Update(diff,
-            std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
+        scheduler.Update(diff, std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
     }
 
 protected:
@@ -331,12 +333,15 @@ struct npc_dirt_mound : ScriptedAI
     void JustEngagedWith(Unit* /*who*/) override
     {
         DoZoneInCombat();
-        scheduler.Schedule(30s, [this](TaskContext /*context*/)
+        scheduler
+            .Schedule(30s,
+                [this](TaskContext /*context*/)
         {
             DoCastSelf(SPELL_SUMMON_SCARABS, true);
             me->DespawnOrUnsummon(1000);
         })
-            .Schedule(100ms, [this](TaskContext context)
+            .Schedule(100ms,
+                [this](TaskContext context)
         {
             ChaseNewTarget();
             context.Repeat(5s, 10s);
@@ -371,9 +376,7 @@ struct npc_dirt_mound : ScriptedAI
     void EnterEvadeMode(EvadeReason /*why*/) override
     {
         if (_instance)
-        {
             _instance->SetBossState(DATA_OURO, FAIL);
-        }
 
         if (GameObject* base = me->FindNearestGameObject(GO_SANDWORM_BASE, 200.f))
             base->DespawnOrUnsummon();

@@ -19,43 +19,42 @@
 #include "GameObjectScript.h"
 #include "Player.h"
 #include "ScriptedCreature.h"
-#include "SpellScriptLoader.h"
-#include "serpent_shrine.h"
 #include "SpellAuraEffects.h"
 #include "SpellScript.h"
+#include "SpellScriptLoader.h"
+#include "serpent_shrine.h"
 
 enum Spells
 {
-    SPELL_WATER_BOLT              = 37138,
-    SPELL_WHIRL                   = 37660,
-    SPELL_GEYSER                  = 37478,
-    SPELL_SPOUT_VISUAL            = 37431,
-    SPELL_SPOUT_PERIODIC_1        = 37429,
-    SPELL_SPOUT_PERIODIC_2        = 37430,
-    SPELL_LURKER_SPAWN_TRIGGER    = 54587, // Needed for achievement
+    SPELL_WATER_BOLT = 37138,
+    SPELL_WHIRL = 37660,
+    SPELL_GEYSER = 37478,
+    SPELL_SPOUT_VISUAL = 37431,
+    SPELL_SPOUT_PERIODIC_1 = 37429,
+    SPELL_SPOUT_PERIODIC_2 = 37430,
+    SPELL_LURKER_SPAWN_TRIGGER = 54587, // Needed for achievement
 
-    SPELL_CLEAR_ALL_DEBUFFS     = 34098,
-    SPELL_SUBMERGE_VISUAL       = 28819,
+    SPELL_CLEAR_ALL_DEBUFFS = 34098,
+    SPELL_SUBMERGE_VISUAL = 28819,
 };
 
 enum Misc
 {
-    EMOTE_TAKE_BREATH           = 0,
-    ACTION_START_EVENT          = 1,
-    MAX_SUMMONS                 = 9,
+    EMOTE_TAKE_BREATH = 0,
+    ACTION_START_EVENT = 1,
+    MAX_SUMMONS = 9,
 
-    NPC_COILFANG_GUARDIAN       = 21873,
-    NPC_COILFANG_AMBUSHER       = 21865,
+    NPC_COILFANG_GUARDIAN = 21873,
+    NPC_COILFANG_AMBUSHER = 21865,
 };
 
 enum Groups
 {
-    GROUP_WHIRL                 = 1,
-    GROUP_GEYSER                = 2
+    GROUP_WHIRL = 1,
+    GROUP_GEYSER = 2
 };
 
-const Position positions[MAX_SUMMONS] =
-{
+Position const positions[MAX_SUMMONS] = {
     {2.8553810f, -459.823914f, -19.182686f, 0.0f},
     {12.400000f, -466.042267f, -19.182686f, 0.0f},
     {51.366653f, -460.836060f, -19.182686f, 0.0f},
@@ -120,9 +119,7 @@ struct boss_the_lurker_below : public BossAI
     void AttackStart(Unit* who) override
     {
         if (who && me->GetReactState() == REACT_AGGRESSIVE)
-        {
             me->Attack(who, true);
-        }
     }
 
     void JustEngagedWith(Unit* who) override
@@ -135,22 +132,28 @@ struct boss_the_lurker_below : public BossAI
     void SummonedCreatureDies(Creature* /*summon*/, Unit* /*killer*/) override
     {
         if (!summons.IsAnyCreatureAlive() && me->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE))
-        {
             SchedulerPhaseTwo(1s);
-        }
     }
 
     void SchedulerPhaseOne(std::chrono::milliseconds spoutTimer, std::chrono::milliseconds p2Timer)
     {
-        scheduler.Schedule(10900ms, GROUP_GEYSER, [this](TaskContext context)
+        scheduler
+            .Schedule(10900ms,
+                GROUP_GEYSER,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_GEYSER);
             context.Repeat(10200ms, 54900ms);
-        }).Schedule(18150ms, GROUP_WHIRL, [this](TaskContext context)
+        })
+            .Schedule(18150ms,
+                GROUP_WHIRL,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_WHIRL);
             context.Repeat(34150ms, 68550ms);
-        }).Schedule(spoutTimer, [this](TaskContext context)
+        })
+            .Schedule(spoutTimer,
+                [this](TaskContext context)
         {
             Talk(EMOTE_TAKE_BREATH);
             me->CastSpell(me, SPELL_SPOUT_VISUAL, TRIGGERED_IGNORE_SET_FACING);
@@ -159,13 +162,16 @@ struct boss_the_lurker_below : public BossAI
             me->SetTarget();
             scheduler.RescheduleGroup(GROUP_GEYSER, 25s);
             scheduler.RescheduleGroup(GROUP_WHIRL, 20s);
-            scheduler.Schedule(3s, [this](TaskContext)
+            scheduler.Schedule(3s,
+                [this](TaskContext)
             {
                 me->InterruptNonMeleeSpells(false);
                 DoCastSelf(RAND(SPELL_SPOUT_PERIODIC_1, SPELL_SPOUT_PERIODIC_2), true);
             });
             context.Repeat(60s);
-        }).Schedule(p2Timer, [this](TaskContext)
+        })
+            .Schedule(p2Timer,
+                [this](TaskContext)
         {
             //phase2
             scheduler.CancelAll();
@@ -176,7 +182,13 @@ struct boss_the_lurker_below : public BossAI
             for (uint8 i = 0; i < MAX_SUMMONS; ++i)
             {
                 //needs sniffed spell probably
-                me->SummonCreature(i < 6 ? NPC_COILFANG_AMBUSHER : NPC_COILFANG_GUARDIAN, positions[i].GetPositionX(), positions[i].GetPositionY(), positions[i].GetPositionZ(), positions[i].GetAngle(me), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 10000);
+                me->SummonCreature(i < 6 ? NPC_COILFANG_AMBUSHER : NPC_COILFANG_GUARDIAN,
+                    positions[i].GetPositionX(),
+                    positions[i].GetPositionY(),
+                    positions[i].GetPositionZ(),
+                    positions[i].GetAngle(me),
+                    TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                    10000);
             }
             SchedulerPhaseTwo(60s);
         });
@@ -184,7 +196,8 @@ struct boss_the_lurker_below : public BossAI
 
     void SchedulerPhaseTwo(Milliseconds timer)
     {
-        scheduler.Schedule(timer, [this](TaskContext)
+        scheduler.Schedule(timer,
+            [this](TaskContext)
         {
             me->setAttackTimer(BASE_ATTACK, 6000);
             me->SetStandState(UNIT_STAND_STATE_STAND);
@@ -202,7 +215,8 @@ struct boss_the_lurker_below : public BossAI
 
         scheduler.Update(diff);
 
-        if (me->getStandState() != UNIT_STAND_STATE_STAND || !me->isAttackReady() || me->GetReactState() != REACT_AGGRESSIVE)
+        if (me->getStandState() != UNIT_STAND_STATE_STAND || !me->isAttackReady() ||
+            me->GetReactState() != REACT_AGGRESSIVE)
             return;
 
         Unit* target = nullptr;
@@ -226,13 +240,9 @@ struct boss_the_lurker_below : public BossAI
             }
         }
         if (target)
-        {
             me->AttackerStateUpdate(target);
-        }
         else if ((target = SelectTarget(SelectTargetMethod::Random, 0)))
-        {
             me->CastSpell(target, SPELL_WATER_BOLT, false);
-        }
         me->resetAttackTimer();
     }
 };
@@ -245,10 +255,12 @@ public:
     bool OnGossipHello(Player* player, GameObject* go) override
     {
         if (InstanceScript* instance = go->GetInstanceScript())
-            if (roll_chance_i(instance->GetBossState(DATA_THE_LURKER_BELOW) != DONE ? 25 : 0) && !instance->IsEncounterInProgress())
+            if (roll_chance_i(instance->GetBossState(DATA_THE_LURKER_BELOW) != DONE ? 25 : 0) &&
+                !instance->IsEncounterInProgress())
             {
                 player->CastSpell(player, SPELL_LURKER_SPAWN_TRIGGER, true);
-                if (Creature* lurker = go->SummonCreature(NPC_THE_LURKER_BELOW, 38.4567f, -417.324f, -18.916666f, 2.94960f, TEMPSUMMON_MANUAL_DESPAWN))
+                if (Creature* lurker = go->SummonCreature(
+                        NPC_THE_LURKER_BELOW, 38.4567f, -417.324f, -18.916666f, 2.94960f, TEMPSUMMON_MANUAL_DESPAWN))
                     lurker->AI()->DoAction(ACTION_START_EVENT);
 
                 go->DespawnOrUnsummon();
@@ -290,17 +302,27 @@ class spell_lurker_below_spout : public AuraScript
     {
         PreventDefaultAction();
         Unit* caster = GetUnitOwner();
-        float orientation = GetSpellInfo()->Id == SPELL_SPOUT_PERIODIC_1 ? Position::NormalizeOrientation(caster->GetOrientation() + 0.1f) : Position::NormalizeOrientation(caster->GetOrientation() - 0.1f);
+        float orientation = GetSpellInfo()->Id == SPELL_SPOUT_PERIODIC_1
+                                ? Position::NormalizeOrientation(caster->GetOrientation() + 0.1f)
+                                : Position::NormalizeOrientation(caster->GetOrientation() - 0.1f);
         caster->SetFacingTo(orientation);
         GetUnitOwner()->CastSpell(GetUnitOwner(), aurEff->GetAmount(), true);
     }
 
     void Register() override
     {
-        DoEffectCalcPeriodic += AuraEffectCalcPeriodicFn(spell_lurker_below_spout::CalcPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
-        OnEffectApply += AuraEffectApplyFn(spell_lurker_below_spout::HandleEffectApply, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
-        OnEffectRemove += AuraEffectRemoveFn(spell_lurker_below_spout::HandleEffectRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_lurker_below_spout::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        DoEffectCalcPeriodic += AuraEffectCalcPeriodicFn(
+            spell_lurker_below_spout::CalcPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectApply += AuraEffectApplyFn(spell_lurker_below_spout::HandleEffectApply,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_lurker_below_spout::HandleEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_lurker_below_spout::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -311,14 +333,13 @@ class spell_lurker_below_spout_cone : public SpellScript
     void FilterTargets(std::list<WorldObject*>& targets)
     {
         targets.remove_if([this](WorldObject const* target) -> bool
-        {
-            return !GetCaster()->HasInLine(target, 5.0f) || !target->IsPlayer() || target->ToUnit()->IsInWater();
-        });
+        { return !GetCaster()->HasInLine(target, 5.0f) || !target->IsPlayer() || target->ToUnit()->IsInWater(); });
     }
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_lurker_below_spout_cone::FilterTargets, EFFECT_ALL, TARGET_UNIT_CONE_ENEMY_24);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_lurker_below_spout_cone::FilterTargets, EFFECT_ALL, TARGET_UNIT_CONE_ENEMY_24);
     }
 };
 

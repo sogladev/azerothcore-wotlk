@@ -26,56 +26,56 @@ constexpr auto MAX_ENCOUNTER = 6;
 enum Timers
 {
     TIMER_TOMBOFTHESEVEN = 30000,
-    TIMER_TOMB_START     = 1000,
-    TIMER_TOMB_RESET     = 15000
+    TIMER_TOMB_START = 1000,
+    TIMER_TOMB_RESET = 15000
 };
 
 enum Distances
 {
-    RADIUS_RING_OF_LAW      = 80,
-    DISTANCE_EMPEROR_ROOM   = 125
+    RADIUS_RING_OF_LAW = 80,
+    DISTANCE_EMPEROR_ROOM = 125
 };
 
 enum PrincessQuests
 {
-    PRINCESS_QUEST_HORDE        = 4004,
-    PRINCESS_QUEST_ALLIANCE     = 4363
+    PRINCESS_QUEST_HORDE = 4004,
+    PRINCESS_QUEST_ALLIANCE = 4363
 };
 
 enum GameObjects
 {
-    GO_ARENA1               = 161525,
-    GO_ARENA2               = 161522,
-    GO_ARENA3               = 161524,
-    GO_ARENA4               = 161523,
-    GO_SHADOW_LOCK          = 161460,
-    GO_SHADOW_MECHANISM     = 161461,
-    GO_SHADOW_GIANT_DOOR    = 157923,
-    GO_SHADOW_DUMMY         = 161516,
-    GO_BAR_KEG_SHOT         = 170607,
-    GO_BAR_KEG_TRAP         = 171941,
-    GO_BAR_DOOR             = 170571,
-    GO_TOMB_ENTER           = 170576,
-    GO_TOMB_EXIT            = 170577,
-    GO_LYCEUM               = 170558,
-    GO_SF_N                 = 174745, // Shadowforge Brazier North
-    GO_SF_S                 = 174744, // Shadowforge Brazier South
-    GO_GOLEM_ROOM_N         = 170573, // Magmus door North
-    GO_GOLEM_ROOM_S         = 170574, // Magmus door Soutsh
-    GO_THRONE_ROOM          = 170575, // Throne door
-    GO_SPECTRAL_CHALICE     = 164869,
-    GO_CHEST_SEVEN          = 169243,
+    GO_ARENA1 = 161525,
+    GO_ARENA2 = 161522,
+    GO_ARENA3 = 161524,
+    GO_ARENA4 = 161523,
+    GO_SHADOW_LOCK = 161460,
+    GO_SHADOW_MECHANISM = 161461,
+    GO_SHADOW_GIANT_DOOR = 157923,
+    GO_SHADOW_DUMMY = 161516,
+    GO_BAR_KEG_SHOT = 170607,
+    GO_BAR_KEG_TRAP = 171941,
+    GO_BAR_DOOR = 170571,
+    GO_TOMB_ENTER = 170576,
+    GO_TOMB_EXIT = 170577,
+    GO_LYCEUM = 170558,
+    GO_SF_N = 174745,         // Shadowforge Brazier North
+    GO_SF_S = 174744,         // Shadowforge Brazier South
+    GO_GOLEM_ROOM_N = 170573, // Magmus door North
+    GO_GOLEM_ROOM_S = 170574, // Magmus door Soutsh
+    GO_THRONE_ROOM = 170575,  // Throne door
+    GO_SPECTRAL_CHALICE = 164869,
+    GO_CHEST_SEVEN = 169243,
 };
 
 enum MiscData
 {
-    SPELL_STONED    = 10255
+    SPELL_STONED = 10255
 };
 
 class RestoreAttack : public BasicEvent
 {
 public:
-    RestoreAttack(Creature* boss) : _boss(boss) {}
+    RestoreAttack(Creature* boss) : _boss(boss) { }
 
     bool Execute(uint64 /*execTime*/, uint32 /*diff*/) override
     {
@@ -173,15 +173,15 @@ public:
         void OnPlayerEnter(Player* /* player */) override
         {
             ReplaceMoiraIfSaved(); // In case a player joins the party during the run
-         //   SetData(TYPE_RING_OF_LAW, DONE);
+                                   //   SetData(TYPE_RING_OF_LAW, DONE);
         }
 
         void ReplaceMoiraIfSaved()
         {
             ObjectGuid* GUIDToReplace = &PriestessGUID; // default to having Moira
-            ObjectGuid* GUIDToSpawn   = &MoiraGUID;
-            uint32      NPCEntry      = NPC_MOIRA;
-            bool        MoiraSaved    = true;
+            ObjectGuid* GUIDToSpawn = &MoiraGUID;
+            uint32 NPCEntry = NPC_MOIRA;
+            bool MoiraSaved = true;
 
             // check if all players saved her.
             Map::PlayerList const& lPlayers = instance->GetPlayers();
@@ -192,8 +192,9 @@ public:
                     if (Player* player = itr->GetSource())
                     {
                         // set to false if this player hasn't saved her. Another player can't put it to true.
-                        MoiraSaved = MoiraSaved && ((player->GetQuestStatus(PRINCESS_QUEST_HORDE) == QUEST_STATUS_REWARDED)
-                                                    || (player->GetQuestStatus(PRINCESS_QUEST_ALLIANCE) == QUEST_STATUS_REWARDED));
+                        MoiraSaved = MoiraSaved &&
+                                     ((player->GetQuestStatus(PRINCESS_QUEST_HORDE) == QUEST_STATUS_REWARDED) ||
+                                         (player->GetQuestStatus(PRINCESS_QUEST_ALLIANCE) == QUEST_STATUS_REWARDED));
                     }
                 }
             }
@@ -202,8 +203,8 @@ public:
             if (MoiraSaved)
             {
                 GUIDToReplace = &MoiraGUID;
-                GUIDToSpawn   = &PriestessGUID;
-                NPCEntry      = NPC_PRIESTESS;
+                GUIDToSpawn = &PriestessGUID;
+                NPCEntry = NPC_PRIESTESS;
             }
 
             if (Creature* CreatureToReplace = instance->GetCreature(*GUIDToReplace))
@@ -222,9 +223,9 @@ public:
             GhostKillCount = 0;
             TombTimer = TIMER_TOMB_START;
             TombEventCounter = 0;
-            tombResetTimer   = 0;
+            tombResetTimer = 0;
             OpenedCoofers = 0;
-            IronhandCounter  = 0;
+            IronhandCounter = 0;
             ArenaSpectators.clear();
 
             // these are linked to the dungeon and not how many times the arena started.
@@ -279,9 +280,7 @@ public:
                 case NPC_RAGEREAVER_GOLEM:
                 case NPC_WRATH_HAMMER_CONSTRUCT:
                     if (creature->IsAlive() && creature->GetPositionZ() < -51.5f && creature->GetPositionZ() > -55.f)
-                    {
                         ArgelmachAdds.push_back(creature->GetGUID());
-                    }
                     break;
                 case NPC_GOLEM_LORD_ARGELMACH:
                     ArgelmachGUID = creature->GetGUID();
@@ -300,7 +299,8 @@ public:
                     break;
                 case NPC_SHADOWFORGE_PEASANT:
                 case NPC_SHADOWFORCE_CITIZEN: // both do the same
-                    if (creature->GetDistance2d(CenterOfRingOfLaw.GetPositionX(), CenterOfRingOfLaw.GetPositionY()) < (float)RADIUS_RING_OF_LAW)
+                    if (creature->GetDistance2d(CenterOfRingOfLaw.GetPositionX(), CenterOfRingOfLaw.GetPositionY()) <
+                        (float)RADIUS_RING_OF_LAW)
                     {
                         ArenaSpectators.push_back(creature->GetGUID());
                     }
@@ -313,7 +313,8 @@ public:
                 case NPC_SHADOWFORGE_SENATOR:
                     // keep track of Senators that are not too far from emperor. Can't really use emperor as creature due to him possibly not being spawned.
                     // some senators spawn at ring of law
-                    if (creature->GetDistance2d(EmperorSpawnPos.GetPositionX(), EmperorSpawnPos.GetPositionY()) < (float)DISTANCE_EMPEROR_ROOM)
+                    if (creature->GetDistance2d(EmperorSpawnPos.GetPositionX(), EmperorSpawnPos.GetPositionY()) <
+                        (float)DISTANCE_EMPEROR_ROOM)
                     {
                         EmperorSenatorsVector.push_back(creature->GetGUID());
                     }
@@ -412,15 +413,14 @@ public:
                     SetData(TYPE_IRON_HALL, DONE);
                     break;
                 case NPC_SHADOWFORGE_SENATOR:
-                    deadSenators = 1; //hacky, but we cannot count the unit that just died through its state because OnUnitDeath() is called before the state is set.
-                    for (const auto &senatorGUID: EmperorSenatorsVector)
+                    deadSenators =
+                        1; //hacky, but we cannot count the unit that just died through its state because OnUnitDeath() is called before the state is set.
+                    for (auto const& senatorGUID : EmperorSenatorsVector)
                     {
                         if (Creature* senator = instance->GetCreature(senatorGUID))
                         {
                             if (!senator->IsAlive() || senator->isDying())
-                            {
                                 deadSenators++;
-                            }
                         }
                     }
 
@@ -439,9 +439,7 @@ public:
                 case NPC_DOOMREL:
                     GhostKillCount++;
                     if (GhostKillCount >= 7)
-                    {
                         SetData(TYPE_TOMB_OF_SEVEN, DONE);
-                    }
                     break;
                 default:
                     break;
@@ -458,30 +456,30 @@ public:
                     encounter[0] = data;
                     switch (data)
                     {
-                    case IN_PROGRESS:
-                        TempSummonGrimstone = instance->SummonCreature(NPC_GRIMSTONE, GrimstonePositon);
-                        break;
-                    case FAIL:
-                        if (TempSummonGrimstone)
-                        {
-                            TempSummonGrimstone->RemoveFromWorld();
-                            TempSummonGrimstone = nullptr;
-                            timeRingFail = GameTime::GetGameTime().count();
-                        }
-                        SetData(TYPE_RING_OF_LAW, NOT_STARTED);
-                        break;
-                    case DONE:
-                        for (auto const& itr : ArenaSpectators)
-                        {
-                            if (Creature* spectator = instance->GetCreature(itr))
+                        case IN_PROGRESS:
+                            TempSummonGrimstone = instance->SummonCreature(NPC_GRIMSTONE, GrimstonePositon);
+                            break;
+                        case FAIL:
+                            if (TempSummonGrimstone)
                             {
-                                spectator->SetFaction(FACTION_NEUTRAL);
-                                spectator->SetReactState(REACT_DEFENSIVE);
+                                TempSummonGrimstone->RemoveFromWorld();
+                                TempSummonGrimstone = nullptr;
+                                timeRingFail = GameTime::GetGameTime().count();
                             }
-                        }
-                        break;
-                    default:
-                        break;
+                            SetData(TYPE_RING_OF_LAW, NOT_STARTED);
+                            break;
+                        case DONE:
+                            for (auto const& itr : ArenaSpectators)
+                            {
+                                if (Creature* spectator = instance->GetCreature(itr))
+                                {
+                                    spectator->SetFaction(FACTION_NEUTRAL);
+                                    spectator->SetReactState(REACT_DEFENSIVE);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
                     break;
                 case TYPE_VAULT:
@@ -515,9 +513,7 @@ public:
                         HandleGameObject(GetGuidData(DATA_GOLEM_DOOR_N), true);
                         HandleGameObject(GetGuidData(DATA_GOLEM_DOOR_S), true);
                         if (Creature* magmus = instance->GetCreature(MagmusGUID))
-                        {
                             magmus->AI()->Talk(0);
-                        }
                         ReplaceMoiraIfSaved(); // Need to place the correct final boss, but we need her to be spawned first.
                     }
                     break;
@@ -525,21 +521,17 @@ public:
                     encounter[5] = data;
                     switch (data)
                     {
-                    case NOT_STARTED:
-                    case IN_PROGRESS:
-                        for (int i = 0; i < 6; i++)
-                        {
-                            if (Creature* ironhand = instance->GetCreature(IronhandGUID[i]))
-                            {
-                                ironhand->AI()->SetData(0, data == IN_PROGRESS);
-                            }
-                        }
-                        break;
-                    case DONE:
-                        HandleGameObject(GetGuidData(DATA_THRONE_DOOR), true);
-                        break;
-                    default:
-                        break;
+                        case NOT_STARTED:
+                        case IN_PROGRESS:
+                            for (int i = 0; i < 6; i++)
+                                if (Creature* ironhand = instance->GetCreature(IronhandGUID[i]))
+                                    ironhand->AI()->SetData(0, data == IN_PROGRESS);
+                            break;
+                        case DONE:
+                            HandleGameObject(GetGuidData(DATA_THRONE_DOOR), true);
+                            break;
+                        default:
+                            break;
                     }
                     break;
                 case DATA_OPEN_COFFER_DOORS:
@@ -606,7 +598,8 @@ public:
                     if (Creature* argelmach = instance->GetCreature(ArgelmachGUID))
                     {
                         argelmach->HandleEmoteCommand(EMOTE_ONESHOT_SHOUT);
-                        argelmach->m_Events.AddEvent(new RestoreAttack(argelmach), argelmach->m_Events.CalculateTime(3000));
+                        argelmach->m_Events.AddEvent(
+                            new RestoreAttack(argelmach), argelmach->m_Events.CalculateTime(3000));
 
                         for (ObjectGuid const& argelmachAddGUID : ArgelmachAdds)
                         {
@@ -631,8 +624,8 @@ public:
                 OUT_SAVE_INST_DATA;
 
                 std::ostringstream saveStream;
-                saveStream << encounter[0] << ' ' << encounter[1] << ' ' << encounter[2] << ' '
-                           << encounter[3] << ' ' << encounter[4] << ' ' << encounter[5] << ' ' << GhostKillCount;
+                saveStream << encounter[0] << ' ' << encounter[1] << ' ' << encounter[2] << ' ' << encounter[3] << ' '
+                           << encounter[4] << ' ' << encounter[5] << ' ' << GhostKillCount;
 
                 str_data = saveStream.str();
 
@@ -722,7 +715,7 @@ public:
             return str_data;
         }
 
-        void Load(const char* in) override
+        void Load(char const* in) override
         {
             if (!in)
             {
@@ -733,14 +726,14 @@ public:
             OUT_LOAD_INST_DATA(in);
 
             std::istringstream loadStream(in);
-            loadStream >> encounter[0] >> encounter[1] >> encounter[2] >> encounter[3]
-                       >> encounter[4] >> encounter[5] >> GhostKillCount;
+            loadStream >> encounter[0] >> encounter[1] >> encounter[2] >> encounter[3] >> encounter[4] >>
+                encounter[5] >> GhostKillCount;
 
             for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
                 if (encounter[i] == IN_PROGRESS)
                     encounter[i] = NOT_STARTED;
             if (GhostKillCount > 0 && GhostKillCount < 7)
-                GhostKillCount = 0;//reset tomb of seven event
+                GhostKillCount = 0; //reset tomb of seven event
             if (GhostKillCount >= 7)
                 GhostKillCount = 7;
 
@@ -771,8 +764,8 @@ public:
 
         void TombOfSevenReset()
         {
-            HandleGameObject(GoTombExitGUID, false);// close exit door
-            HandleGameObject(GoTombEnterGUID, true);// open entrance door
+            HandleGameObject(GoTombExitGUID, false); // close exit door
+            HandleGameObject(GoTombEnterGUID, true); // open entrance door
             for (uint8 i = 0; i < 7; ++i)
             {
                 if (Creature* boss = instance->GetCreature(TombBossGUIDs[i]))
@@ -790,10 +783,8 @@ public:
                     }
                     boss->SetFaction(FACTION_FRIENDLY);
                     boss->SetImmuneToPC(true); // think this is useless
-                    if (i == 6) // doomrel needs explicit reset
-                    {
+                    if (i == 6)                // doomrel needs explicit reset
                         boss->AI()->Reset();
-                    }
                 }
             }
 
@@ -815,14 +806,12 @@ public:
                     if (boss->IsAlive() && boss->IsInCombat())
                     {
                         tombResetTimer = TIMER_TOMB_RESET;
-                        return false;  // any boss in combat means we shouldn't reset.
+                        return false; // any boss in combat means we shouldn't reset.
                     }
                 }
             }
             if (!anyBossAlive) // no boss alive, put reset timer back up
-            {
                 tombResetTimer = TIMER_TOMB_RESET;
-            }
             tombResetTimer -= diff;
             return tombResetTimer < diff;
         }
@@ -842,9 +831,7 @@ public:
                 }
 
                 if (CheckTombReset(diff))
-                {
                     TombOfSevenReset();
-                }
             }
         }
     };

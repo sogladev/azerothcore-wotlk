@@ -37,23 +37,18 @@ public:
     {
         if (IsEventActive(HALLOWEEN_EVENTID) && !player->HasAura(SPELL_TRICKED_OR_TREATED))
         {
-            AddGossipItemFor(player, GOSSIP_MENU_EVENT, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + HALLOWEEN_EVENTID);
+            AddGossipItemFor(
+                player, GOSSIP_MENU_EVENT, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + HALLOWEEN_EVENTID);
         }
 
         if (creature->IsQuestGiver())
-        {
             player->PrepareQuestMenu(creature->GetGUID());
-        }
 
         if (creature->IsVendor())
-        {
             AddGossipItemFor(player, GOSSIP_MENU, 2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-        }
 
         if (creature->IsInnkeeper())
-        {
             AddGossipItemFor(player, GOSSIP_MENU, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INN);
-        }
 
         player->TalkedToCreature(creature->GetEntry(), creature->GetGUID());
         SendGossipMenuFor(player, player->GetGossipTextId(creature), creature->GetGUID());
@@ -63,7 +58,8 @@ public:
     bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
     {
         ClearGossipMenuFor(player);
-        if (action == GOSSIP_ACTION_INFO_DEF + HALLOWEEN_EVENTID && IsEventActive(HALLOWEEN_EVENTID) && !player->HasAura(SPELL_TRICKED_OR_TREATED))
+        if (action == GOSSIP_ACTION_INFO_DEF + HALLOWEEN_EVENTID && IsEventActive(HALLOWEEN_EVENTID) &&
+            !player->HasAura(SPELL_TRICKED_OR_TREATED))
         {
             player->CastSpell(player, SPELL_TRICKED_OR_TREATED, true);
             creature->CastSpell(player, roll_chance_i(50) ? SPELL_TRICK : SPELL_TREAT, true);

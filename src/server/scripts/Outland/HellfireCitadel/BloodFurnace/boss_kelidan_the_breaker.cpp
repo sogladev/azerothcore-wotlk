@@ -22,42 +22,39 @@
 
 enum Says
 {
-    SAY_WAKE                    = 0,
-    SAY_ADD_AGGRO               = 1,
-    SAY_KILL                    = 2,
-    SAY_NOVA                    = 3,
-    SAY_DIE                     = 4
+    SAY_WAKE = 0,
+    SAY_ADD_AGGRO = 1,
+    SAY_KILL = 2,
+    SAY_NOVA = 3,
+    SAY_DIE = 4
 };
 
 enum Spells
 {
-    SPELL_CORRUPTION            = 30938,
-    SPELL_EVOCATION             = 30935,
-    SPELL_FIRE_NOVA             = 33132,
-    SPELL_SHADOW_BOLT_VOLLEY    = 28599,
-    SPELL_BURNING_NOVA          = 30940,
-    SPELL_VORTEX                = 37370
+    SPELL_CORRUPTION = 30938,
+    SPELL_EVOCATION = 30935,
+    SPELL_FIRE_NOVA = 33132,
+    SPELL_SHADOW_BOLT_VOLLEY = 28599,
+    SPELL_BURNING_NOVA = 30940,
+    SPELL_VORTEX = 37370
 };
 
 enum Misc
 {
-    NPC_SHADOWMOON_CHANNELER    = 17653
+    NPC_SHADOWMOON_CHANNELER = 17653
 };
 
 enum Actions
 {
-    ACTION_CHANNELER_DIED       = 1,
-    ACTION_CHANNELER_AGGRO      = 2
+    ACTION_CHANNELER_DIED = 1,
+    ACTION_CHANNELER_AGGRO = 2
 };
 
 struct boss_kelidan_the_breaker : public BossAI
 {
     boss_kelidan_the_breaker(Creature* creature) : BossAI(creature, DATA_KELIDAN)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -68,43 +65,40 @@ struct boss_kelidan_the_breaker : public BossAI
         me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
         DoCastSelf(SPELL_EVOCATION);
         if (instance)
-        {
             instance->SetData(DATA_KELIDAN, NOT_STARTED);
-        }
     }
 
-    void JustEngagedWith(Unit*  /*who*/) override
+    void JustEngagedWith(Unit* /*who*/) override
     {
         Talk(SAY_WAKE);
         _JustEngagedWith();
         me->InterruptNonMeleeSpells(false);
         if (instance)
-        {
             instance->SetData(DATA_KELIDAN, IN_PROGRESS);
-        }
-        scheduler.Schedule(1s, [this](TaskContext context)
+        scheduler
+            .Schedule(1s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_SHADOW_BOLT_VOLLEY);
             context.Repeat(8s, 13s);
-        }).Schedule(5s, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_CORRUPTION);
             context.Repeat(30s, 50s);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             Talk(SAY_NOVA);
             ApplyImmunities(false);
             me->AddAura(SPELL_BURNING_NOVA, me);
             ApplyImmunities(true);
             if (IsHeroic())
-            {
                 DoCastAOE(SPELL_VORTEX);
-            }
             scheduler.DelayGroup(0, 6s);
-            scheduler.Schedule(5s, [this](TaskContext /*context*/)
-            {
-                DoCastSelf(SPELL_FIRE_NOVA, true);
-            });
+            scheduler.Schedule(5s, [this](TaskContext /*context*/) { DoCastSelf(SPELL_FIRE_NOVA, true); });
             context.Repeat(25s, 32s);
         });
     }
@@ -112,9 +106,7 @@ struct boss_kelidan_the_breaker : public BossAI
     void KilledUnit(Unit* /*victim*/) override
     {
         if (urand(0, 1))
-        {
             Talk(SAY_KILL);
-        }
     }
 
     void DoAction(int32 param) override
@@ -122,9 +114,7 @@ struct boss_kelidan_the_breaker : public BossAI
         if (param == ACTION_CHANNELER_DIED)
         {
             if (me->FindNearestCreature(NPC_SHADOWMOON_CHANNELER, 100.0f))
-            {
-                    return;
-            }
+                return;
             me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
             me->SetReactState(REACT_AGGRESSIVE);
             me->SetInCombatWithZone();
@@ -170,7 +160,6 @@ struct boss_kelidan_the_breaker : public BossAI
         me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_DAZE, apply);
         me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SAPPED, apply);
     }
-
 };
 
 void AddSC_boss_kelidan_the_breaker()

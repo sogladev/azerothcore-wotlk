@@ -20,14 +20,13 @@
 #include "ScriptedCreature.h"
 #include "utgarde_keep.h"
 
-ObjectData const creatureData[] =
-{
-    { NPC_DALRONN,            DATA_DALRONN            },
-    { NPC_SKARVALD,           DATA_SKARVALD           },
-    { NPC_DALRONN_GHOST,      DATA_DALRONN_GHOST      },
-    { NPC_SKARVALD_GHOST,     DATA_SKARVALD_GHOST     },
-    { NPC_DARK_RANGER_MARRAH, DATA_DARK_RANGER_MARRAH },
-    { 0,                      0                       }
+ObjectData const creatureData[] = {
+    {NPC_DALRONN,            DATA_DALRONN           },
+    {NPC_SKARVALD,           DATA_SKARVALD          },
+    {NPC_DALRONN_GHOST,      DATA_DALRONN_GHOST     },
+    {NPC_SKARVALD_GHOST,     DATA_SKARVALD_GHOST    },
+    {NPC_DARK_RANGER_MARRAH, DATA_DARK_RANGER_MARRAH},
+    {0,                      0                      }
 };
 
 class instance_utgarde_keep : public InstanceMapScript
@@ -70,7 +69,8 @@ public:
         bool IsEncounterInProgress() const override
         {
             for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-                if (m_auiEncounter[i] == IN_PROGRESS) return true;
+                if (m_auiEncounter[i] == IN_PROGRESS)
+                    return true;
 
             return false;
         }
@@ -98,7 +98,8 @@ public:
             switch (creature->GetEntry())
             {
                 case NPC_ENSLAVED_PROTO_DRAKE:
-                    if (creature->GetPositionX() < 250.0f) NPC_SpecialDrakeGUID = creature->GetGUID();
+                    if (creature->GetPositionX() < 250.0f)
+                        NPC_SpecialDrakeGUID = creature->GetGUID();
                     break;
             }
 
@@ -111,47 +112,58 @@ public:
             {
                 case GO_BELLOW_1:
                     GO_ForgeBellowGUID[0] = go->GetGUID();
-                    if (ForgeEventMask & 1) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (ForgeEventMask & 1)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_BELLOW_2:
                     GO_ForgeBellowGUID[1] = go->GetGUID();
-                    if (ForgeEventMask & 2) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (ForgeEventMask & 2)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_BELLOW_3:
                     GO_ForgeBellowGUID[2] = go->GetGUID();
-                    if (ForgeEventMask & 4) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (ForgeEventMask & 4)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_FORGEFIRE_1:
                     GO_ForgeFireGUID[0] = go->GetGUID();
-                    if (ForgeEventMask & 1) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (ForgeEventMask & 1)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_FORGEFIRE_2:
                     GO_ForgeFireGUID[1] = go->GetGUID();
-                    if (ForgeEventMask & 2) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (ForgeEventMask & 2)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_FORGEFIRE_3:
                     GO_ForgeFireGUID[2] = go->GetGUID();
-                    if (ForgeEventMask & 4) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (ForgeEventMask & 4)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_GLOWING_ANVIL_1:
                     GO_ForgeAnvilGUID[0] = go->GetGUID();
-                    if (ForgeEventMask & 1) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (ForgeEventMask & 1)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_GLOWING_ANVIL_2:
                     GO_ForgeAnvilGUID[1] = go->GetGUID();
-                    if (ForgeEventMask & 2) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (ForgeEventMask & 2)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_GLOWING_ANVIL_3:
                     GO_ForgeAnvilGUID[2] = go->GetGUID();
-                    if (ForgeEventMask & 4) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (ForgeEventMask & 4)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_GIANT_PORTCULLIS_1:
                     GO_PortcullisGUID[0] = go->GetGUID();
-                    if (m_auiEncounter[2] == DONE) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (m_auiEncounter[2] == DONE)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_GIANT_PORTCULLIS_2:
                     GO_PortcullisGUID[1] = go->GetGUID();
-                    if (m_auiEncounter[2] == DONE) HandleGameObject(ObjectGuid::Empty, true, go);
+                    if (m_auiEncounter[2] == DONE)
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
             }
         }
@@ -190,7 +202,6 @@ public:
 
                         if (Creature* c = GetCreature(DATA_SKARVALD_GHOST))
                             c->DespawnOrUnsummon();
-
                     }
 
                     if (data == DONE)
@@ -203,7 +214,6 @@ public:
 
                         if (Creature* c = GetCreature(DATA_SKARVALD_GHOST))
                             c->DespawnOrUnsummon();
-
                     }
 
                     m_auiEncounter[1] = data;
@@ -215,9 +225,16 @@ public:
                         c->SetLootMode(1);
                         c->loot.clear();
                         if (uint32 lootid = c->GetCreatureTemplate()->lootid)
-                            c->loot.FillLoot(lootid, LootTemplates_Creature, c->GetLootRecipient(), false, false, c->GetLootMode(), c);
+                            c->loot.FillLoot(lootid,
+                                LootTemplates_Creature,
+                                c->GetLootRecipient(),
+                                false,
+                                false,
+                                c->GetLootMode(),
+                                c);
                         if (c->GetLootMode())
-                            c->loot.generateMoneyLoot(c->GetCreatureTemplate()->mingold, c->GetCreatureTemplate()->maxgold);
+                            c->loot.generateMoneyLoot(
+                                c->GetCreatureTemplate()->mingold, c->GetCreatureTemplate()->maxgold);
                         c->DestroyForNearbyPlayers();
                         c->SetVisible(true);
                     }
@@ -230,9 +247,16 @@ public:
                         c->SetLootMode(1);
                         c->loot.clear();
                         if (uint32 lootid = c->GetCreatureTemplate()->lootid)
-                            c->loot.FillLoot(lootid, LootTemplates_Creature, c->GetLootRecipient(), false, false, c->GetLootMode(), c);
+                            c->loot.FillLoot(lootid,
+                                LootTemplates_Creature,
+                                c->GetLootRecipient(),
+                                false,
+                                false,
+                                c->GetLootMode(),
+                                c);
                         if (c->GetLootMode())
-                            c->loot.generateMoneyLoot(c->GetCreatureTemplate()->mingold, c->GetCreatureTemplate()->maxgold);
+                            c->loot.generateMoneyLoot(
+                                c->GetCreatureTemplate()->mingold, c->GetCreatureTemplate()->maxgold);
                         c->DestroyForNearbyPlayers();
                         c->SetVisible(true);
                     }
@@ -270,9 +294,7 @@ public:
             }
 
             if (data == DONE)
-            {
                 SaveToDB();
-            }
         }
 
         uint32 GetData(uint32 id) const override
@@ -305,7 +327,8 @@ public:
             data << m_auiEncounter[0] << ' ' << m_auiEncounter[1] << ' ' << m_auiEncounter[2] << ' ' << ForgeEventMask;
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const*  /*source*/, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {

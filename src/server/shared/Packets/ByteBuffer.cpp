@@ -24,16 +24,15 @@
 #include <sstream>
 #include <utf8.h>
 
-ByteBuffer::ByteBuffer(MessageBuffer&& buffer) :
-    _rpos(0), _wpos(0), _storage(buffer.Move()) { }
+ByteBuffer::ByteBuffer(MessageBuffer&& buffer) : _rpos(0), _wpos(0), _storage(buffer.Move()) { }
 
-ByteBufferPositionException::ByteBufferPositionException(bool add, std::size_t pos, std::size_t size, std::size_t valueSize)
+ByteBufferPositionException::ByteBufferPositionException(
+    bool add, std::size_t pos, std::size_t size, std::size_t valueSize)
 {
     std::ostringstream ss;
 
-    ss << "Attempted to " << (add ? "put" : "get") << " value with size: "
-       << valueSize << " in ByteBuffer (pos: " << pos << " size: " << size
-       << ")";
+    ss << "Attempted to " << (add ? "put" : "get") << " value with size: " << valueSize
+       << " in ByteBuffer (pos: " << pos << " size: " << size << ")";
 
     message().assign(ss.str());
 }
@@ -42,8 +41,7 @@ ByteBufferSourceException::ByteBufferSourceException(std::size_t pos, std::size_
 {
     std::ostringstream ss;
 
-    ss << "Attempted to put a "
-       << (valueSize > 0 ? "NULL-pointer" : "zero-sized value")
+    ss << "Attempted to put a " << (valueSize > 0 ? "NULL-pointer" : "zero-sized value")
        << " in ByteBuffer (pos: " << pos << " size: " << size << ")";
 
     message().assign(ss.str());
@@ -137,12 +135,14 @@ void ByteBuffer::append(uint8 const* src, std::size_t cnt)
 void ByteBuffer::AppendPackedTime(time_t time)
 {
     tm lt = Acore::Time::TimeBreakdown(time);
-    append<uint32>((lt.tm_year - 100) << 24 | lt.tm_mon << 20 | (lt.tm_mday - 1) << 14 | lt.tm_wday << 11 | lt.tm_hour << 6 | lt.tm_min);
+    append<uint32>((lt.tm_year - 100) << 24 | lt.tm_mon << 20 | (lt.tm_mday - 1) << 14 | lt.tm_wday << 11 |
+                   lt.tm_hour << 6 | lt.tm_min);
 }
 
 void ByteBuffer::put(std::size_t pos, uint8 const* src, std::size_t cnt)
 {
-    ASSERT(pos + cnt <= size(), "Attempted to put value with size: {} in ByteBuffer (pos: {} size: {})", cnt, pos, size());
+    ASSERT(
+        pos + cnt <= size(), "Attempted to put value with size: {} in ByteBuffer (pos: {} size: {})", cnt, pos, size());
     ASSERT(src, "Attempted to put a NULL-pointer in ByteBuffer (pos: {} size: {})", pos, size());
     ASSERT(cnt, "Attempted to put a zero-sized value in ByteBuffer (pos: {} size: {})", pos, size());
 

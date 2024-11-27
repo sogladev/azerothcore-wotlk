@@ -52,11 +52,13 @@ void TransportMgr::LoadTransportTemplates()
 {
     uint32 oldMSTime = getMSTime();
 
-    QueryResult result = WorldDatabase.Query("SELECT entry FROM gameobject_template WHERE type = 15 ORDER BY entry ASC");
+    QueryResult result =
+        WorldDatabase.Query("SELECT entry FROM gameobject_template WHERE type = 15 ORDER BY entry ASC");
 
     if (!result)
     {
-        LOG_WARN("server.loading", ">> Loaded 0 transport templates. DB table `gameobject_template` has no transports!");
+        LOG_WARN(
+            "server.loading", ">> Loaded 0 transport templates. DB table `gameobject_template` has no transports!");
         return;
     }
 
@@ -69,13 +71,19 @@ void TransportMgr::LoadTransportTemplates()
         GameObjectTemplate const* goInfo = sObjectMgr->GetGameObjectTemplate(entry);
         if (!goInfo)
         {
-            LOG_ERROR("entities.transport", "Transport {} has no associated GameObjectTemplate from `gameobject_template` , skipped.", entry);
+            LOG_ERROR("entities.transport",
+                "Transport {} has no associated GameObjectTemplate from `gameobject_template` , skipped.",
+                entry);
             continue;
         }
 
         if (goInfo->moTransport.taxiPathId >= sTaxiPathNodesByPath.size())
         {
-            LOG_ERROR("entities.transport", "Transport {} (name: {}) has an invalid path specified in `gameobject_template`.`data0` ({}) field, skipped.", entry, goInfo->name, goInfo->moTransport.taxiPathId);
+            LOG_ERROR("entities.transport",
+                "Transport {} (name: {}) has an invalid path specified in `gameobject_template`.`data0` ({}) field, skipped.",
+                entry,
+                goInfo->name,
+                goInfo->moTransport.taxiPathId);
             continue;
         }
 
@@ -177,7 +185,8 @@ void TransportMgr::GeneratePath(GameObjectTemplate const* goInfo, TransportTempl
 
     if (transport->mapsUsed.size() > 1)
     {
-        for (std::set<uint32>::const_iterator itr = transport->mapsUsed.begin(); itr != transport->mapsUsed.end(); ++itr)
+        for (std::set<uint32>::const_iterator itr = transport->mapsUsed.begin(); itr != transport->mapsUsed.end();
+             ++itr)
             ASSERT(!sMapStore.LookupEntry(*itr)->Instanceable());
 
         transport->inInstance = false;
@@ -188,9 +197,9 @@ void TransportMgr::GeneratePath(GameObjectTemplate const* goInfo, TransportTempl
     // last to first is always "teleport", even for closed paths
     keyFrames.back().Teleport = true;
 
-    const float speed = float(goInfo->moTransport.moveSpeed);
-    const float accel = float(goInfo->moTransport.accelRate);
-    const float accel_dist = 0.5f * speed * speed / accel;
+    float const speed = float(goInfo->moTransport.moveSpeed);
+    float const accel = float(goInfo->moTransport.accelRate);
+    float const accel_dist = 0.5f * speed * speed / accel;
 
     transport->accelTime = speed / accel;
     transport->accelDist = accel_dist;
@@ -284,7 +293,8 @@ void TransportMgr::GeneratePath(GameObjectTemplate const* goInfo, TransportTempl
             if (keyFrames[i].DistSinceStop < keyFrames[i].DistUntilStop) // is still accelerating
             {
                 // calculate accel+brake time for this short segment
-                float segment_time = 2.0f * std::sqrt((keyFrames[i].DistUntilStop + keyFrames[i].DistSinceStop) / accel);
+                float segment_time =
+                    2.0f * std::sqrt((keyFrames[i].DistUntilStop + keyFrames[i].DistSinceStop) / accel);
                 // substract acceleration time
                 keyFrames[i].TimeTo = segment_time - std::sqrt(2 * keyFrames[i].DistSinceStop / accel);
             }
@@ -401,7 +411,11 @@ MotionTransport* TransportMgr::CreateTransport(uint32 entry, ObjectGuid::LowType
     {
         if (mapEntry->Instanceable() != tInfo->inInstance)
         {
-            LOG_ERROR("entities.transport", "Transport {} (name: {}) attempted creation in instance map (id: {}) but it is not an instanced transport!", entry, trans->GetName(), mapId);
+            LOG_ERROR("entities.transport",
+                "Transport {} (name: {}) attempted creation in instance map (id: {}) but it is not an instanced transport!",
+                entry,
+                trans->GetName(),
+                mapId);
             delete trans;
             return nullptr;
         }
@@ -447,13 +461,17 @@ void TransportMgr::SpawnContinentTransports()
             } while (result->NextRow());
         }
 
-        LOG_INFO("server.loading", ">> Spawned {} continent motion transports in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
+        LOG_INFO("server.loading",
+            ">> Spawned {} continent motion transports in {} ms",
+            count,
+            GetMSTimeDiffToNow(oldMSTime));
     }
 
     if (sWorld->getBoolConfig(CONFIG_ENABLE_CONTINENT_TRANSPORT_PRELOADING))
     {
         // pussywizard: preload grids for continent static transports
-        QueryResult result2 = WorldDatabase.Query("SELECT map, position_x, position_y FROM gameobject g JOIN gameobject_template t ON g.id = t.entry WHERE t.type = 11");
+        QueryResult result2 = WorldDatabase.Query(
+            "SELECT map, position_x, position_y FROM gameobject g JOIN gameobject_template t ON g.id = t.entry WHERE t.type = 11");
 
         if (result2)
         {
@@ -474,7 +492,10 @@ void TransportMgr::SpawnContinentTransports()
             } while (result2->NextRow());
         }
 
-        LOG_INFO("server.loading", ">> Preloaded grids for {} continent static transports in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
+        LOG_INFO("server.loading",
+            ">> Preloaded grids for {} continent static transports in {} ms",
+            count,
+            GetMSTimeDiffToNow(oldMSTime));
     }
 }
 
@@ -487,11 +508,13 @@ void TransportMgr::CreateInstanceTransports(Map* map)
         return;
 
     // create transports
-    for (std::set<uint32>::const_iterator itr = mapTransports->second.begin(); itr != mapTransports->second.end(); ++itr)
+    for (std::set<uint32>::const_iterator itr = mapTransports->second.begin(); itr != mapTransports->second.end();
+         ++itr)
         CreateTransport(*itr, 0, map);
 }
 
-bool TransportAnimation::GetAnimNode(uint32 time, TransportAnimationEntry const*& curr, TransportAnimationEntry const*& next, float& percPos) const
+bool TransportAnimation::GetAnimNode(
+    uint32 time, TransportAnimationEntry const*& curr, TransportAnimationEntry const*& next, float& percPos) const
 {
     if (Path.empty())
         return false;
@@ -520,7 +543,8 @@ void TransportAnimation::GetAnimRotation(uint32 time, G3D::Quat& curr, G3D::Quat
         return;
     }
 
-    for (TransportPathRotationContainer::const_reverse_iterator itr = Rotations.rbegin(); itr != Rotations.rend(); ++itr)
+    for (TransportPathRotationContainer::const_reverse_iterator itr = Rotations.rbegin(); itr != Rotations.rend();
+         ++itr)
         if (time >= itr->first)
         {
             uint32 currSeg = itr->second->TimeSeg, nextSeg;
@@ -533,7 +557,10 @@ void TransportAnimation::GetAnimRotation(uint32 time, G3D::Quat& curr, G3D::Quat
             }
             else
             {
-                next = G3D::Quat(Rotations.begin()->second->X, Rotations.begin()->second->Y, Rotations.begin()->second->Z, Rotations.begin()->second->W);
+                next = G3D::Quat(Rotations.begin()->second->X,
+                    Rotations.begin()->second->Y,
+                    Rotations.begin()->second->Z,
+                    Rotations.begin()->second->W);
                 nextSeg = this->TotalTime;
             }
             percRot = float(time - currSeg) / float(nextSeg - currSeg);

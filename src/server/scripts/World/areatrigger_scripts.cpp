@@ -19,6 +19,7 @@
 #include "GameTime.h"
 #include "Player.h"
 #include "ScriptedCreature.h"
+
 /* ScriptData
 SDName: Areatrigger_Scripts
 SD%Complete: 100
@@ -42,10 +43,7 @@ EndContentData */
 class AreaTrigger_at_voltarus_middle : public AreaTriggerScript
 {
 public:
-    AreaTrigger_at_voltarus_middle()
-        : AreaTriggerScript("at_voltarus_middle")
-    {
-    }
+    AreaTrigger_at_voltarus_middle() : AreaTriggerScript("at_voltarus_middle") { }
 
     bool OnTrigger(Player* player, AreaTrigger const* /*trigger*/) override
     {
@@ -67,16 +65,13 @@ public:
 
 enum CoilfangGOs
 {
-    GO_COILFANG_WATERFALL   = 184212
+    GO_COILFANG_WATERFALL = 184212
 };
 
 class AreaTrigger_at_coilfang_waterfall : public AreaTriggerScript
 {
 public:
-    AreaTrigger_at_coilfang_waterfall()
-        : AreaTriggerScript("at_coilfang_waterfall")
-    {
-    }
+    AreaTrigger_at_coilfang_waterfall() : AreaTriggerScript("at_coilfang_waterfall") { }
 
     bool OnTrigger(Player* player, AreaTrigger const* /*trigger*/) override
     {
@@ -94,20 +89,17 @@ public:
 
 enum LegionTeleporter
 {
-    SPELL_TELE_A_TO         = 37387,
-    QUEST_GAINING_ACCESS_A  = 10589,
+    SPELL_TELE_A_TO = 37387,
+    QUEST_GAINING_ACCESS_A = 10589,
 
-    SPELL_TELE_H_TO         = 37389,
-    QUEST_GAINING_ACCESS_H  = 10604
+    SPELL_TELE_H_TO = 37389,
+    QUEST_GAINING_ACCESS_H = 10604
 };
 
 class AreaTrigger_at_legion_teleporter : public AreaTriggerScript
 {
 public:
-    AreaTrigger_at_legion_teleporter()
-        : AreaTriggerScript("at_legion_teleporter")
-    {
-    }
+    AreaTrigger_at_legion_teleporter() : AreaTriggerScript("at_legion_teleporter") { }
 
     bool OnTrigger(Player* player, AreaTrigger const* /*trigger*/) override
     {
@@ -137,18 +129,15 @@ public:
 
 enum StormwrightShelf
 {
-    QUEST_STRENGTH_OF_THE_TEMPEST               = 12741,
+    QUEST_STRENGTH_OF_THE_TEMPEST = 12741,
 
-    SPELL_CREATE_TRUE_POWER_OF_THE_TEMPEST      = 53067
+    SPELL_CREATE_TRUE_POWER_OF_THE_TEMPEST = 53067
 };
 
 class AreaTrigger_at_stormwright_shelf : public AreaTriggerScript
 {
 public:
-    AreaTrigger_at_stormwright_shelf()
-        : AreaTriggerScript("at_stormwright_shelf")
-    {
-    }
+    AreaTrigger_at_stormwright_shelf() : AreaTriggerScript("at_stormwright_shelf") { }
 
     bool OnTrigger(Player* player, AreaTrigger const* /*trigger*/) override
     {
@@ -165,24 +154,27 @@ public:
 
 enum ScentLarkorwi
 {
-    QUEST_SCENT_OF_LARKORWI                     = 4291,
-    NPC_LARKORWI_MATE                           = 9683
+    QUEST_SCENT_OF_LARKORWI = 4291,
+    NPC_LARKORWI_MATE = 9683
 };
 
 class AreaTrigger_at_scent_larkorwi : public AreaTriggerScript
 {
 public:
-    AreaTrigger_at_scent_larkorwi()
-        : AreaTriggerScript("at_scent_larkorwi")
-    {
-    }
+    AreaTrigger_at_scent_larkorwi() : AreaTriggerScript("at_scent_larkorwi") { }
 
     bool OnTrigger(Player* player, AreaTrigger const* /*trigger*/) override
     {
         if (!player->isDead() && player->GetQuestStatus(QUEST_SCENT_OF_LARKORWI) == QUEST_STATUS_INCOMPLETE)
         {
             if (!player->FindNearestCreature(NPC_LARKORWI_MATE, 15))
-                player->SummonCreature(NPC_LARKORWI_MATE, player->GetPositionX() + 5, player->GetPositionY(), player->GetPositionZ(), 3.3f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 100000);
+                player->SummonCreature(NPC_LARKORWI_MATE,
+                    player->GetPositionX() + 5,
+                    player->GetPositionY(),
+                    player->GetPositionZ(),
+                    3.3f,
+                    TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                    100000);
         }
 
         return false;
@@ -195,24 +187,21 @@ public:
 
 enum AtLastRites
 {
-    QUEST_LAST_RITES                          = 12019,
-    QUEST_BREAKING_THROUGH                    = 11898,
+    QUEST_LAST_RITES = 12019,
+    QUEST_BREAKING_THROUGH = 11898,
 };
 
 class AreaTrigger_at_last_rites : public AreaTriggerScript
 {
 public:
-    AreaTrigger_at_last_rites()
-        : AreaTriggerScript("at_last_rites")
-    {
-    }
+    AreaTrigger_at_last_rites() : AreaTriggerScript("at_last_rites") { }
 
     bool OnTrigger(Player* player, AreaTrigger const* trigger) override
     {
         QuestStatus QLR = player->GetQuestStatus(QUEST_LAST_RITES);
         QuestStatus QBT = player->GetQuestStatus(QUEST_BREAKING_THROUGH);
-        if (!(QLR == QUEST_STATUS_INCOMPLETE || QLR  == QUEST_STATUS_COMPLETE ||
-                QBT == QUEST_STATUS_INCOMPLETE || QBT == QUEST_STATUS_COMPLETE))
+        if (!(QLR == QUEST_STATUS_INCOMPLETE || QLR == QUEST_STATUS_COMPLETE || QBT == QUEST_STATUS_INCOMPLETE ||
+                QBT == QUEST_STATUS_COMPLETE))
             return false;
 
         WorldLocation pPosition;
@@ -250,8 +239,8 @@ public:
 enum NatsLanding
 {
     QUEST_NATS_BARGAIN = 11209,
-    SPELL_FISH_PASTE   = 42644,
-    NPC_LURKING_SHARK  = 23928
+    SPELL_FISH_PASTE = 42644,
+    NPC_LURKING_SHARK = 23928
 };
 
 class AreaTrigger_at_nats_landing : public AreaTriggerScript
@@ -268,7 +257,13 @@ public:
         {
             if (!player->FindNearestCreature(NPC_LURKING_SHARK, 20.0f))
             {
-                if (Creature* shark = player->SummonCreature(NPC_LURKING_SHARK, -4246.243f, -3922.356f, -7.488f, 5.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 100000))
+                if (Creature* shark = player->SummonCreature(NPC_LURKING_SHARK,
+                        -4246.243f,
+                        -3922.356f,
+                        -7.488f,
+                        5.0f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        100000))
                     shark->AI()->AttackStart(player);
 
                 return false;
@@ -284,9 +279,9 @@ public:
 
 enum SentryPoint
 {
-    SPELL_TELEPORT_VISUAL    = 799,  /// @todo Find the correct spell
+    SPELL_TELEPORT_VISUAL = 799, /// @todo Find the correct spell
     QUEST_MISSING_DIPLO_PT14 = 1265,
-    NPC_TERVOSH              = 4967
+    NPC_TERVOSH = 4967
 };
 
 class AreaTrigger_at_sentry_point : public AreaTriggerScript
@@ -302,7 +297,8 @@ public:
 
         if (!player->FindNearestCreature(NPC_TERVOSH, 100.0f))
         {
-            if (Creature* tervosh = player->SummonCreature(NPC_TERVOSH, -3476.51f, -4105.94f, 17.1f, 5.3816f, TEMPSUMMON_TIMED_DESPAWN, 60000))
+            if (Creature* tervosh = player->SummonCreature(
+                    NPC_TERVOSH, -3476.51f, -4105.94f, 17.1f, 5.3816f, TEMPSUMMON_TIMED_DESPAWN, 60000))
                 tervosh->CastSpell(tervosh, SPELL_TELEPORT_VISUAL, true);
         }
 
@@ -316,15 +312,15 @@ public:
 
 enum Brewfest
 {
-    NPC_TAPPER_SWINDLEKEG       = 24711,
-    NPC_IPFELKOFER_IRONKEG      = 24710,
+    NPC_TAPPER_SWINDLEKEG = 24711,
+    NPC_IPFELKOFER_IRONKEG = 24710,
 
-    AT_BREWFEST_DUROTAR         = 4829,
-    AT_BREWFEST_DUN_MOROGH      = 4820,
+    AT_BREWFEST_DUROTAR = 4829,
+    AT_BREWFEST_DUN_MOROGH = 4820,
 
-    SAY_WELCOME                 = 4,
+    SAY_WELCOME = 4,
 
-    AREATRIGGER_TALK_COOLDOWN   = 5, // in seconds
+    AREATRIGGER_TALK_COOLDOWN = 5, // in seconds
 };
 
 class AreaTrigger_at_brewfest : public AreaTriggerScript
@@ -371,14 +367,14 @@ private:
 
 enum Area52Entrance
 {
-    SPELL_A52_NEURALYZER  = 34400,
-    NPC_SPOTLIGHT         = 19913,
-    SUMMON_COOLDOWN       = 5,
+    SPELL_A52_NEURALYZER = 34400,
+    NPC_SPOTLIGHT = 19913,
+    SUMMON_COOLDOWN = 5,
 
-    AT_AREA_52_SOUTH      = 4472,
-    AT_AREA_52_NORTH      = 4466,
-    AT_AREA_52_WEST       = 4471,
-    AT_AREA_52_EAST       = 4422,
+    AT_AREA_52_SOUTH = 4472,
+    AT_AREA_52_NORTH = 4466,
+    AT_AREA_52_WEST = 4471,
+    AT_AREA_52_EAST = 4422,
 };
 
 class AreaTrigger_at_area_52_entrance : public AreaTriggerScript
@@ -386,7 +382,8 @@ class AreaTrigger_at_area_52_entrance : public AreaTriggerScript
 public:
     AreaTrigger_at_area_52_entrance() : AreaTriggerScript("at_area_52_entrance")
     {
-        _triggerTimes[AT_AREA_52_SOUTH] = _triggerTimes[AT_AREA_52_NORTH] = _triggerTimes[AT_AREA_52_WEST] = _triggerTimes[AT_AREA_52_EAST] = 0;
+        _triggerTimes[AT_AREA_52_SOUTH] = _triggerTimes[AT_AREA_52_NORTH] = _triggerTimes[AT_AREA_52_WEST] =
+            _triggerTimes[AT_AREA_52_EAST] = 0;
     }
 
     bool OnTrigger(Player* player, AreaTrigger const* trigger) override

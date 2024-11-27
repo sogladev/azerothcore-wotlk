@@ -21,15 +21,14 @@
 #include "TemporarySummon.h"
 #include "molten_core.h"
 
-MinionData const minionData[] =
-{
-    { NPC_FIRESWORN,                DATA_GARR },
-    { NPC_FLAMEWALKER,              DATA_GEHENNAS },
-    { NPC_FLAMEWALKER_PROTECTOR,    DATA_LUCIFRON },
-    { NPC_FLAMEWALKER_PRIEST,       DATA_SULFURON },
-    { NPC_FLAMEWALKER_HEALER,       DATA_MAJORDOMO_EXECUTUS },
-    { NPC_FLAMEWALKER_ELITE,        DATA_MAJORDOMO_EXECUTUS },
-    { 0, 0 } // END
+MinionData const minionData[] = {
+    {NPC_FIRESWORN,             DATA_GARR              },
+    {NPC_FLAMEWALKER,           DATA_GEHENNAS          },
+    {NPC_FLAMEWALKER_PROTECTOR, DATA_LUCIFRON          },
+    {NPC_FLAMEWALKER_PRIEST,    DATA_SULFURON          },
+    {NPC_FLAMEWALKER_HEALER,    DATA_MAJORDOMO_EXECUTUS},
+    {NPC_FLAMEWALKER_ELITE,     DATA_MAJORDOMO_EXECUTUS},
+    {0,                         0                      }  // END
 };
 
 struct MCBossObject
@@ -40,15 +39,14 @@ struct MCBossObject
 };
 
 constexpr uint8 MAX_MC_LINKED_BOSS_OBJ = 7;
-MCBossObject const linkedBossObjData[MAX_MC_LINKED_BOSS_OBJ]=
-{
-    { DATA_MAGMADAR,    GO_RUNE_KRESS,      GO_CIRCLE_MAGMADAR  },
-    { DATA_GEHENNAS,    GO_RUNE_MOHN,       GO_CIRCLE_GEHENNAS  },
-    { DATA_GARR,        GO_RUNE_BLAZ,       GO_CIRCLE_GARR      },
-    { DATA_SHAZZRAH,    GO_RUNE_MAZJ,       GO_CIRCLE_SHAZZRAH  },
-    { DATA_GEDDON,      GO_RUNE_ZETH,       GO_CIRCLE_GEDDON    },
-    { DATA_GOLEMAGG,    GO_RUNE_THERI,      GO_CIRCLE_GOLEMAGG  },
-    { DATA_SULFURON,    GO_RUNE_KORO,       GO_CIRCLE_SULFURON  },
+MCBossObject const linkedBossObjData[MAX_MC_LINKED_BOSS_OBJ] = {
+    {DATA_MAGMADAR, GO_RUNE_KRESS, GO_CIRCLE_MAGMADAR},
+    {DATA_GEHENNAS, GO_RUNE_MOHN,  GO_CIRCLE_GEHENNAS},
+    {DATA_GARR,     GO_RUNE_BLAZ,  GO_CIRCLE_GARR    },
+    {DATA_SHAZZRAH, GO_RUNE_MAZJ,  GO_CIRCLE_SHAZZRAH},
+    {DATA_GEDDON,   GO_RUNE_ZETH,  GO_CIRCLE_GEDDON  },
+    {DATA_GOLEMAGG, GO_RUNE_THERI, GO_CIRCLE_GOLEMAGG},
+    {DATA_SULFURON, GO_RUNE_KORO,  GO_CIRCLE_SULFURON},
 };
 
 constexpr uint8 SAY_SPAWN = 1;
@@ -56,7 +54,7 @@ constexpr uint8 SAY_SPAWN = 1;
 class instance_molten_core : public InstanceMapScript
 {
 public:
-    instance_molten_core() : InstanceMapScript(MCScriptName, 409) {}
+    instance_molten_core() : InstanceMapScript(MCScriptName, 409) { }
 
     struct instance_molten_core_InstanceMapScript : public InstanceScript
     {
@@ -70,9 +68,7 @@ public:
         void OnPlayerEnter(Player* /*player*/) override
         {
             if (CheckMajordomoExecutus())
-            {
                 SummonMajordomoExecutus();
-            }
         }
 
         void OnCreatureCreate(Creature* creature) override
@@ -158,18 +154,12 @@ public:
                     for (uint8 i = 0; i < MAX_MC_LINKED_BOSS_OBJ; ++i)
                     {
                         if (linkedBossObjData[i].circleId != go->GetEntry())
-                        {
                             continue;
-                        }
 
                         if (GetBossState(linkedBossObjData[i].bossId) == DONE)
-                        {
                             go->DespawnOrUnsummon(0ms, Seconds(WEEK));
-                        }
                         else
-                        {
                             _circlesGUIDs[linkedBossObjData[i].bossId] = go->GetGUID();
-                        }
                     }
 
                     break;
@@ -185,18 +175,12 @@ public:
                     for (uint8 i = 0; i < MAX_MC_LINKED_BOSS_OBJ; ++i)
                     {
                         if (linkedBossObjData[i].runeId != go->GetEntry())
-                        {
                             continue;
-                        }
 
                         if (GetBossState(linkedBossObjData[i].bossId) == DONE)
-                        {
                             go->UseDoorOrButton(WEEK * IN_MILLISECONDS);
-                        }
                         else
-                        {
                             _runesGUIDs[linkedBossObjData[i].bossId] = go->GetGUID();
-                        }
                     }
                     break;
                 }
@@ -213,9 +197,7 @@ public:
                 case GO_LAVA_BURST:
                 {
                     if (Creature* ragnaros = instance->GetCreature(_ragnarosGUID))
-                    {
                         ragnaros->AI()->SetGUID(go->GetGUID(), GO_LAVA_BURST);
-                    }
                     break;
                 }
             }
@@ -245,9 +227,7 @@ public:
         bool SetBossState(uint32 bossId, EncounterState state) override
         {
             if (!InstanceScript::SetBossState(bossId, state))
-            {
                 return false;
-            }
 
             if (bossId == DATA_MAJORDOMO_EXECUTUS && state == DONE)
             {
@@ -270,9 +250,7 @@ public:
                             {
                                 Creature* minion = instance->GetCreature(minionGuid);
                                 if (minion && minion->isDead())
-                                {
                                     minion->Respawn();
-                                }
                             }
                         }
                         break;
@@ -282,12 +260,8 @@ public:
                         if (!_golemaggMinionsGUIDS.empty())
                         {
                             for (ObjectGuid const& minionGuid : _golemaggMinionsGUIDS)
-                            {
                                 if (Creature* minion = instance->GetCreature(minionGuid))
-                                {
                                     minion->AI()->DoZoneInCombat(nullptr, 150.0f);
-                                }
-                            }
                         }
                         break;
                     }
@@ -296,12 +270,8 @@ public:
                         if (!_golemaggMinionsGUIDS.empty())
                         {
                             for (ObjectGuid const& minionGuid : _golemaggMinionsGUIDS)
-                            {
                                 if (Creature* minion = instance->GetCreature(minionGuid))
-                                {
                                     minion->CastSpell(minion, SPELL_CORE_RAGER_QUIET_SUICIDE, true);
-                                }
-                            }
                             _golemaggMinionsGUIDS.clear();
                         }
                         break;
@@ -326,9 +296,7 @@ public:
                 }
 
                 if (CheckMajordomoExecutus())
-                {
                     SummonMajordomoExecutus();
-                }
             }
 
             return true;
@@ -339,19 +307,13 @@ public:
             if (action == ACTION_RESET_GOLEMAGG_ENCOUNTER)
             {
                 if (Creature* golemagg = instance->GetCreature(_golemaggGUID))
-                {
                     golemagg->AI()->EnterEvadeMode();
-                }
 
                 if (!_golemaggMinionsGUIDS.empty())
                 {
                     for (ObjectGuid const& minionGuid : _golemaggMinionsGUIDS)
-                    {
                         if (Creature* minion = instance->GetCreature(minionGuid))
-                        {
                             minion->AI()->EnterEvadeMode();
-                        }
-                    }
                 }
             }
         }
@@ -359,16 +321,12 @@ public:
         void SummonMajordomoExecutus()
         {
             if (instance->GetCreature(_majordomoExecutusGUID))
-            {
                 return;
-            }
 
             if (GetBossState(DATA_MAJORDOMO_EXECUTUS) != DONE)
             {
                 if (Creature* creature = instance->SummonCreature(NPC_MAJORDOMO_EXECUTUS, MajordomoSummonPos))
-                {
                     creature->AI()->Talk(SAY_SPAWN);
-                }
             }
             else
             {
@@ -379,35 +337,27 @@ public:
         bool CheckMajordomoExecutus() const
         {
             if (GetBossState(DATA_RAGNAROS) == DONE)
-            {
                 return false;
-            }
 
             for (uint8 i = 0; i < DATA_MAJORDOMO_EXECUTUS; ++i)
             {
                 if (i == DATA_LUCIFRON)
-                {
                     continue;
-                }
 
                 if (GetBossState(i) != DONE)
-                {
                     return false;
-                }
             }
 
             // Prevent spawning if Ragnaros is present
             if (instance->GetCreature(_ragnarosGUID))
-            {
                 return false;
-            }
 
             return true;
         }
 
     private:
-        std::unordered_map<uint32/*bossid*/, ObjectGuid/*circleGUID*/> _circlesGUIDs;
-        std::unordered_map<uint32/*bossid*/, ObjectGuid/*runeGUID*/> _runesGUIDs;
+        std::unordered_map<uint32 /*bossid*/, ObjectGuid /*circleGUID*/> _circlesGUIDs;
+        std::unordered_map<uint32 /*bossid*/, ObjectGuid /*runeGUID*/> _runesGUIDs;
 
         // Golemagg encounter related
         ObjectGuid _golemaggGUID;

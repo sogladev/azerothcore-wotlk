@@ -25,8 +25,7 @@
 #define ACTION_WATER_ELEMENT_KILLED         2
 
 #define MAX_SPAWN_LOC 5
-static Position SpawnLoc[MAX_SPAWN_LOC] =
-{
+static Position SpawnLoc[MAX_SPAWN_LOC] = {
     {1840.64f, 795.407f, 44.079f, 1.676f},
     {1886.24f, 757.733f, 47.750f, 5.201f},
     {1877.91f, 845.915f, 43.417f, 3.560f},
@@ -36,34 +35,34 @@ static Position SpawnLoc[MAX_SPAWN_LOC] =
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_SLAY                                    = 1,
-    SAY_DEATH                                   = 2,
-    SAY_SPAWN                                   = 3,
-    SAY_ENRAGE                                  = 4,
-    SAY_SHATTER                                 = 5,
-    SAY_BUBBLE                                  = 6
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_SPAWN = 3,
+    SAY_ENRAGE = 4,
+    SAY_SHATTER = 5,
+    SAY_BUBBLE = 6
 };
 
 enum eCreatures
 {
-    NPC_ICHOR_GLOBULE                       = 29321,
+    NPC_ICHOR_GLOBULE = 29321,
 };
 
 enum eSpells
 {
-    SPELL_DRAINED                           = 59820,
-    SPELL_FRENZY_N                          = 54312,
-    SPELL_FRENZY_H                          = 59522,
-    SPELL_PROTECTIVE_BUBBLE                 = 54306,
-    SPELL_WATER_BLAST_N                     = 54237,
-    SPELL_WATER_BLAST_H                     = 59520,
-    SPELL_WATER_BOLT_VOLLEY_N               = 54241,
-    SPELL_WATER_BOLT_VOLLEY_H               = 59521,
+    SPELL_DRAINED = 59820,
+    SPELL_FRENZY_N = 54312,
+    SPELL_FRENZY_H = 59522,
+    SPELL_PROTECTIVE_BUBBLE = 54306,
+    SPELL_WATER_BLAST_N = 54237,
+    SPELL_WATER_BLAST_H = 59520,
+    SPELL_WATER_BOLT_VOLLEY_N = 54241,
+    SPELL_WATER_BOLT_VOLLEY_H = 59521,
 
-    SPELL_SPLASH                            = 59516, // casted by globule upon death
-    SPELL_WATER_GLOBULE                     = 54268, // casted when hit by visual
-    SPELL_CREATE_GLOBULE_VISUAL             = 54260, // tar 25
+    SPELL_SPLASH = 59516,                // casted by globule upon death
+    SPELL_WATER_GLOBULE = 54268,         // casted when hit by visual
+    SPELL_CREATE_GLOBULE_VISUAL = 54260, // tar 25
 };
 
 #define SPELL_WATER_BLAST                   DUNGEON_MODE(SPELL_WATER_BLAST_N, SPELL_WATER_BLAST_H)
@@ -239,7 +238,8 @@ public:
                     me->CastSpell((Unit*)nullptr, SPELL_WATER_BOLT_VOLLEY, false);
                     uiWaterBoltVolleyTimer = urand(10000, 15000);
                 }
-                else uiWaterBoltVolleyTimer -= uiDiff;
+                else
+                    uiWaterBoltVolleyTimer -= uiDiff;
             }
 
             DoMeleeAttackIfReady();
@@ -287,7 +287,7 @@ public:
             Talk(SAY_SLAY);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void EnterEvadeMode(EvadeReason why) override
         {
@@ -321,7 +321,7 @@ public:
         InstanceScript* pInstance;
         uint32 uiRangeCheck_Timer;
 
-        void SpellHit(Unit*  /*caster*/, SpellInfo const* spell) override
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spell) override
         {
             if (spell->Id == SPELL_CREATE_GLOBULE_VISUAL)
                 me->CastSpell(me, SPELL_WATER_GLOBULE, true);
@@ -332,7 +332,8 @@ public:
             if (uiRangeCheck_Timer < uiDiff)
             {
                 if (pInstance)
-                    if (Creature* pIchoron = pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_ICHORON_GUID)))
+                    if (Creature* pIchoron =
+                            pInstance->instance->GetCreature(pInstance->GetGuidData(DATA_ICHORON_GUID)))
                         if (me->IsWithinDist(pIchoron, 2.0f, false))
                         {
                             if (pIchoron->AI())
@@ -341,7 +342,8 @@ public:
                         }
                 uiRangeCheck_Timer = 1000;
             }
-            else uiRangeCheck_Timer -= uiDiff;
+            else
+                uiRangeCheck_Timer -= uiDiff;
         }
 
         void JustDied(Unit* /*killer*/) override
@@ -354,8 +356,9 @@ public:
             me->DespawnOrUnsummon(2500);
         }
 
-        void AttackStart(Unit* /*who*/) override {}
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void AttackStart(Unit* /*who*/) override { }
+
+        void MoveInLineOfSight(Unit* /*who*/) override { }
     };
 };
 

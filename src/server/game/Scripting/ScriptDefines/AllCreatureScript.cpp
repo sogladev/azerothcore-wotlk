@@ -23,46 +23,32 @@ void ScriptMgr::OnCreatureAddWorld(Creature* creature)
 {
     ASSERT(creature);
 
-    ExecuteScript<AllCreatureScript>([&](AllCreatureScript* script)
-    {
-        script->OnCreatureAddWorld(creature);
-    });
+    ExecuteScript<AllCreatureScript>([&](AllCreatureScript* script) { script->OnCreatureAddWorld(creature); });
 }
 
 void ScriptMgr::OnCreatureRemoveWorld(Creature* creature)
 {
     ASSERT(creature);
 
-    ExecuteScript<AllCreatureScript>([&](AllCreatureScript* script)
-    {
-        script->OnCreatureRemoveWorld(creature);
-    });
+    ExecuteScript<AllCreatureScript>([&](AllCreatureScript* script) { script->OnCreatureRemoveWorld(creature); });
 }
 
 void ScriptMgr::OnCreatureSaveToDB(Creature* creature)
 {
     ASSERT(creature);
 
-    ExecuteScript<AllCreatureScript>([&](AllCreatureScript* script)
-    {
-        script->OnCreatureSaveToDB(creature);
-    });
+    ExecuteScript<AllCreatureScript>([&](AllCreatureScript* script) { script->OnCreatureSaveToDB(creature); });
 }
 
-void ScriptMgr::OnBeforeCreatureSelectLevel(const CreatureTemplate* cinfo, Creature* creature, uint8& level)
+void ScriptMgr::OnBeforeCreatureSelectLevel(CreatureTemplate const* cinfo, Creature* creature, uint8& level)
 {
-    ExecuteScript<AllCreatureScript>([&](AllCreatureScript* script)
-    {
-        script->OnBeforeCreatureSelectLevel(cinfo, creature, level);
-    });
+    ExecuteScript<AllCreatureScript>(
+        [&](AllCreatureScript* script) { script->OnBeforeCreatureSelectLevel(cinfo, creature, level); });
 }
 
-void ScriptMgr::Creature_SelectLevel(const CreatureTemplate* cinfo, Creature* creature)
+void ScriptMgr::Creature_SelectLevel(CreatureTemplate const* cinfo, Creature* creature)
 {
-    ExecuteScript<AllCreatureScript>([&](AllCreatureScript* script)
-    {
-        script->Creature_SelectLevel(cinfo, creature);
-    });
+    ExecuteScript<AllCreatureScript>([&](AllCreatureScript* script) { script->Creature_SelectLevel(cinfo, creature); });
 }
 
 //bool ScriptMgr::CanCreatureSendListInventory(Player* player, Creature* creature, uint32 vendorEntry)
@@ -78,8 +64,7 @@ void ScriptMgr::Creature_SelectLevel(const CreatureTemplate* cinfo, Creature* cr
 //    return true;
 //}
 
-AllCreatureScript::AllCreatureScript(const char* name) :
-    ScriptObject(name)
+AllCreatureScript::AllCreatureScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<AllCreatureScript>::AddScript(this);
 }

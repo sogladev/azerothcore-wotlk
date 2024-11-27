@@ -29,9 +29,9 @@
 
 enum Mistletoe
 {
-    SPELL_CREATE_MISTLETOE          = 26206,
-    SPELL_CREATE_HOLLY              = 26207,
-    SPELL_CREATE_SNOWFLAKES         = 45036
+    SPELL_CREATE_MISTLETOE = 26206,
+    SPELL_CREATE_HOLLY = 26207,
+    SPELL_CREATE_SNOWFLAKES = 45036
 };
 
 // 26218 - Mistletoe
@@ -41,12 +41,7 @@ class spell_winter_veil_mistletoe : public SpellScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo(
-            {
-                SPELL_CREATE_MISTLETOE,
-                SPELL_CREATE_HOLLY,
-                SPELL_CREATE_SNOWFLAKES
-            });
+        return ValidateSpellInfo({SPELL_CREATE_MISTLETOE, SPELL_CREATE_HOLLY, SPELL_CREATE_SNOWFLAKES});
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -60,16 +55,17 @@ class spell_winter_veil_mistletoe : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_winter_veil_mistletoe::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_winter_veil_mistletoe::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
 enum winterWondervoltTrap
 {
-    SPELL_WINTER_WONDERVOLT_GREEN_WOMEN     = 26272,
-    SPELL_WINTER_WONDERVOLT_GREEN_MAN       = 26157,
-    SPELL_WINTER_WONDERVOLT_RED_WOMEN       = 26274,
-    SPELL_WINTER_WONDERVOLT_RED_MAN         = 26273,
+    SPELL_WINTER_WONDERVOLT_GREEN_WOMEN = 26272,
+    SPELL_WINTER_WONDERVOLT_GREEN_MAN = 26157,
+    SPELL_WINTER_WONDERVOLT_RED_WOMEN = 26274,
+    SPELL_WINTER_WONDERVOLT_RED_MAN = 26273,
 };
 
 // 26275 - PX-238 Winter Wondervolt TRAP
@@ -88,11 +84,13 @@ class spell_winter_wondervolt_trap : public SpellScript
             uint32 spellId = 0;
             if (target->getGender() == GENDER_MALE)
             {
-                spellId = target->GetTeamId() == TEAM_ALLIANCE ? SPELL_WINTER_WONDERVOLT_GREEN_MAN : SPELL_WINTER_WONDERVOLT_RED_MAN;
+                spellId = target->GetTeamId() == TEAM_ALLIANCE ? SPELL_WINTER_WONDERVOLT_GREEN_MAN
+                                                               : SPELL_WINTER_WONDERVOLT_RED_MAN;
             }
             else
             {
-                spellId = target->GetTeamId() == TEAM_ALLIANCE ? SPELL_WINTER_WONDERVOLT_GREEN_WOMEN : SPELL_WINTER_WONDERVOLT_RED_WOMEN;
+                spellId = target->GetTeamId() == TEAM_ALLIANCE ? SPELL_WINTER_WONDERVOLT_GREEN_WOMEN
+                                                               : SPELL_WINTER_WONDERVOLT_RED_WOMEN;
             }
 
             // cast
@@ -103,24 +101,25 @@ class spell_winter_wondervolt_trap : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_winter_wondervolt_trap::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_winter_wondervolt_trap::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
 enum crashinTrashin
 {
-    SPELL_BLUE_CAR_VISUAL               = 75110,
-    SPELL_RED_CAR_VISUAL                = 49384,
-    NPC_RED_RACER                       = 27664,
-    NPC_BLUE_RACER                      = 40281,
+    SPELL_BLUE_CAR_VISUAL = 75110,
+    SPELL_RED_CAR_VISUAL = 49384,
+    NPC_RED_RACER = 27664,
+    NPC_BLUE_RACER = 40281,
 
-    SPELL_RACER_DEATH_VISUAL            = 49337,
-    SPELL_RACER_CHARGE_TO_OBJECT        = 49302,
-    SPELL_RACER_KILL_COUNTER            = 49444,
-    SPELL_RACER_SLAM_HIT                = 49324,
-    SPELL_RACER_FLAMES                  = 49328,
+    SPELL_RACER_DEATH_VISUAL = 49337,
+    SPELL_RACER_CHARGE_TO_OBJECT = 49302,
+    SPELL_RACER_KILL_COUNTER = 49444,
+    SPELL_RACER_SLAM_HIT = 49324,
+    SPELL_RACER_FLAMES = 49328,
 
-    RACER_ACHI_CRITERIA                 = 4090,
+    RACER_ACHI_CRITERIA = 4090,
 };
 
 // 49297 - Racer Rocket Slam
@@ -169,13 +168,15 @@ class spell_winter_veil_racer_rocket_slam : public SpellScript
             float y = caster->GetPositionY() + 30 * std::sin(caster->GetOrientation());
             pos.Relocate(x, y, caster->GetMap()->GetHeight(x, y, MAX_HEIGHT) + 0.5f);
             //caster->GetFirstCollisionPosition(pos, 30.0f, caster->GetOrientation());
-            caster->CastSpell(pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), SPELL_RACER_CHARGE_TO_OBJECT, true);
+            caster->CastSpell(
+                pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), SPELL_RACER_CHARGE_TO_OBJECT, true);
         }
     }
 
     void Register() override
     {
-        OnEffectLaunch += SpellEffectFn(spell_winter_veil_racer_rocket_slam::HandleTriggerSpell, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
+        OnEffectLaunch += SpellEffectFn(
+            spell_winter_veil_racer_rocket_slam::HandleTriggerSpell, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
     }
 };
 
@@ -191,7 +192,11 @@ class spell_winter_veil_racer_slam_hit : public SpellScript
         if (!target || caster == target)
             return;
 
-        target->CastSpell(target->GetPositionX() + irand(-10, 10), target->GetPositionY() + irand(-10, 10), target->GetPositionZ(), SPELL_RACER_DEATH_VISUAL, true);
+        target->CastSpell(target->GetPositionX() + irand(-10, 10),
+            target->GetPositionY() + irand(-10, 10),
+            target->GetPositionZ(),
+            SPELL_RACER_DEATH_VISUAL,
+            true);
         target->DespawnOrUnsummon(3000);
         target->CastSpell(target, SPELL_RACER_FLAMES, true);
         caster->CastSpell(caster, SPELL_RACER_KILL_COUNTER, true);
@@ -205,17 +210,18 @@ class spell_winter_veil_racer_slam_hit : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_winter_veil_racer_slam_hit::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_winter_veil_racer_slam_hit::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
 enum airRifle
 {
-    SPELL_AIR_RIFLE_RIGHT_IN_THE_EYE        = 65577,
-    SPELL_AIR_RIFLE_STARLED                 = 61862,
-    SPELL_AIR_RIFLE_HIT                     = 61866,
-    SPELL_AIR_RIFLE_HIT_TRIGGER             = 65576,
-    SPELL_AIR_RIFLE_PELTED_DAMAGE           = 67531,
+    SPELL_AIR_RIFLE_RIGHT_IN_THE_EYE = 65577,
+    SPELL_AIR_RIFLE_STARLED = 61862,
+    SPELL_AIR_RIFLE_HIT = 61866,
+    SPELL_AIR_RIFLE_HIT_TRIGGER = 65576,
+    SPELL_AIR_RIFLE_PELTED_DAMAGE = 67531,
 };
 
 /* 65576 - Pelted!
@@ -251,9 +257,11 @@ class spell_winter_veil_shoot_air_rifle : public SpellScript
     void Register() override
     {
         if (m_scriptSpellId == SPELL_AIR_RIFLE_HIT_TRIGGER)
-            OnEffectHitTarget += SpellEffectFn(spell_winter_veil_shoot_air_rifle::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+            OnEffectHitTarget += SpellEffectFn(
+                spell_winter_veil_shoot_air_rifle::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
         else
-            OnEffectHitTarget += SpellEffectFn(spell_winter_veil_shoot_air_rifle::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+            OnEffectHitTarget += SpellEffectFn(
+                spell_winter_veil_shoot_air_rifle::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

@@ -21,8 +21,7 @@
 #include "MoveSplineInit.h"
 #include "Player.h"
 
-template<class T>
-void EscortMovementGenerator<T>::DoInitialize(T* unit)
+template <class T> void EscortMovementGenerator<T>::DoInitialize(T* unit)
 {
     if (!unit->IsStopped())
         unit->StopMoving();
@@ -41,8 +40,7 @@ void EscortMovementGenerator<T>::DoInitialize(T* unit)
     _splineId = unit->movespline->GetId();
 }
 
-template<class T>
-bool EscortMovementGenerator<T>::DoUpdate(T* unit, uint32  /*diff*/)
+template <class T> bool EscortMovementGenerator<T>::DoUpdate(T* unit, uint32 /*diff*/)
 {
     if (!unit)
         return false;
@@ -71,7 +69,8 @@ bool EscortMovementGenerator<T>::DoUpdate(T* unit, uint32  /*diff*/)
             m_precomputedPath.erase(m_precomputedPath.begin(), offsetItr);
 
             // restore 0 element (current position)
-            m_precomputedPath.insert(m_precomputedPath.begin(), G3D::Vector3(unit->GetPositionX(), unit->GetPositionY(), unit->GetPositionZ()));
+            m_precomputedPath.insert(m_precomputedPath.begin(),
+                G3D::Vector3(unit->GetPositionX(), unit->GetPositionY(), unit->GetPositionZ()));
 
             if (m_precomputedPath.size() > 2)
                 init.MovebyPath(m_precomputedPath);
@@ -87,14 +86,12 @@ bool EscortMovementGenerator<T>::DoUpdate(T* unit, uint32  /*diff*/)
     return !arrived;
 }
 
-template<class T>
-void EscortMovementGenerator<T>::DoFinalize(T* unit)
+template <class T> void EscortMovementGenerator<T>::DoFinalize(T* unit)
 {
     unit->ClearUnitState(UNIT_STATE_ROAMING | UNIT_STATE_ROAMING_MOVE);
 }
 
-template<class T>
-void EscortMovementGenerator<T>::DoReset(T* unit)
+template <class T> void EscortMovementGenerator<T>::DoReset(T* unit)
 {
     if (!unit->IsStopped())
         unit->StopMoving();

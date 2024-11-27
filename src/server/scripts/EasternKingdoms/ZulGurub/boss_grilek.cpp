@@ -28,20 +28,20 @@ EndScriptData */
 
 enum Spells
 {
-    SPELL_AVATAR                    = 24646, // Enrage Spell
-    SPELL_GROUND_TREMOR             = 6524,
-    SPELL_ENTANGLING_ROOTS          = 24648,
-    SPELL_SWEEPING_STRIKES          = 18765
+    SPELL_AVATAR = 24646, // Enrage Spell
+    SPELL_GROUND_TREMOR = 6524,
+    SPELL_ENTANGLING_ROOTS = 24648,
+    SPELL_SWEEPING_STRIKES = 18765
 };
 
 enum Events
 {
-    EVENT_AVATAR                    = 1,
-    EVENT_GROUND_TREMOR             = 2,
-    EVENT_START_PURSUIT             = 3,
-    EVENT_STOP_PURSUIT              = 4,
-    EVENT_ENTANGLING_ROOTS          = 5,
-    EVENT_SWEEPING_STRIKES          = 6
+    EVENT_AVATAR = 1,
+    EVENT_GROUND_TREMOR = 2,
+    EVENT_START_PURSUIT = 3,
+    EVENT_STOP_PURSUIT = 4,
+    EVENT_ENTANGLING_ROOTS = 5,
+    EVENT_SWEEPING_STRIKES = 6
 };
 
 class boss_grilek : public CreatureScript // grilek
@@ -51,9 +51,7 @@ public:
 
     struct boss_grilekAI : public BossAI
     {
-        boss_grilekAI(Creature* creature) : BossAI(creature, DATA_EDGE_OF_MADNESS)
-        {
-        }
+        boss_grilekAI(Creature* creature) : BossAI(creature, DATA_EDGE_OF_MADNESS) { }
 
         void Reset() override
         {
@@ -86,9 +84,7 @@ public:
                 {
                     case EVENT_AVATAR:
                         if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
-                        {
                             _pursuitTargetGUID = target->GetGUID();
-                        }
                         DoCast(me, SPELL_AVATAR);
                         me->SetReactState(REACT_PASSIVE);
                         DoResetThreatList();
@@ -103,9 +99,7 @@ public:
                     case EVENT_START_PURSUIT:
                         me->SetReactState(REACT_AGGRESSIVE);
                         if (Unit* pursuitTarget = ObjectAccessor::GetUnit(*me, _pursuitTargetGUID))
-                        {
                             me->GetThreatMgr().AddThreat(pursuitTarget, 1000000.f);
-                        }
                         break;
                     case EVENT_STOP_PURSUIT:
                         if (Unit* pursuitTarget = ObjectAccessor::GetUnit(*me, _pursuitTargetGUID))

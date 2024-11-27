@@ -66,37 +66,51 @@ void ScriptMgr::OnItemCreate(Item* item, ItemTemplate const* itemProto, Player c
 
 bool ScriptMgr::CanApplySoulboundFlag(Item* item, ItemTemplate const* proto)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(MiscScript, MISCHOOK_CAN_APPLY_SOULBOUND_FLAG, !script->CanApplySoulboundFlag(item, proto));
+    CALL_ENABLED_BOOLEAN_HOOKS(
+        MiscScript, MISCHOOK_CAN_APPLY_SOULBOUND_FLAG, !script->CanApplySoulboundFlag(item, proto));
 }
 
 bool ScriptMgr::CanItemApplyEquipSpell(Player* player, Item* item)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(MiscScript, MISCHOOK_CAN_ITEM_APPLY_EQUIP_SPELL, !script->CanItemApplyEquipSpell(player, item));
+    CALL_ENABLED_BOOLEAN_HOOKS(
+        MiscScript, MISCHOOK_CAN_ITEM_APPLY_EQUIP_SPELL, !script->CanItemApplyEquipSpell(player, item));
 }
 
 bool ScriptMgr::CanSendAuctionHello(WorldSession const* session, ObjectGuid guid, Creature* creature)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(MiscScript, MISCHOOK_CAN_SEND_AUCTIONHELLO, !script->CanSendAuctionHello(session, guid, creature));
+    CALL_ENABLED_BOOLEAN_HOOKS(
+        MiscScript, MISCHOOK_CAN_SEND_AUCTIONHELLO, !script->CanSendAuctionHello(session, guid, creature));
 }
 
-void ScriptMgr::ValidateSpellAtCastSpell(Player* player, uint32& oldSpellId, uint32& spellId, uint8& castCount, uint8& castFlags)
+void ScriptMgr::ValidateSpellAtCastSpell(
+    Player* player, uint32& oldSpellId, uint32& spellId, uint8& castCount, uint8& castFlags)
 {
-    CALL_ENABLED_HOOKS(MiscScript, MISCHOOK_VALIDATE_SPELL_AT_CAST_SPELL, script->ValidateSpellAtCastSpell(player, oldSpellId, spellId, castCount, castFlags));
+    CALL_ENABLED_HOOKS(MiscScript,
+        MISCHOOK_VALIDATE_SPELL_AT_CAST_SPELL,
+        script->ValidateSpellAtCastSpell(player, oldSpellId, spellId, castCount, castFlags));
 }
 
-void ScriptMgr::ValidateSpellAtCastSpellResult(Player* player, Unit* mover, Spell* spell, uint32 oldSpellId, uint32 spellId)
+void ScriptMgr::ValidateSpellAtCastSpellResult(
+    Player* player, Unit* mover, Spell* spell, uint32 oldSpellId, uint32 spellId)
 {
-    CALL_ENABLED_HOOKS(MiscScript, MISCHOOK_VALIDATE_SPELL_AT_CAST_SPELL_RESULT, script->ValidateSpellAtCastSpellResult(player, mover, spell, oldSpellId, spellId));
+    CALL_ENABLED_HOOKS(MiscScript,
+        MISCHOOK_VALIDATE_SPELL_AT_CAST_SPELL_RESULT,
+        script->ValidateSpellAtCastSpellResult(player, mover, spell, oldSpellId, spellId));
 }
 
-void ScriptMgr::OnAfterLootTemplateProcess(Loot* loot, LootTemplate const* tab, LootStore const& store, Player* lootOwner, bool personal, bool noEmptyError, uint16 lootMode)
+void ScriptMgr::OnAfterLootTemplateProcess(Loot* loot, LootTemplate const* tab, LootStore const& store,
+    Player* lootOwner, bool personal, bool noEmptyError, uint16 lootMode)
 {
-    CALL_ENABLED_HOOKS(MiscScript, MISCHOOK_ON_AFTER_LOOT_TEMPLATE_PROCESS, script->OnAfterLootTemplateProcess(loot, tab, store, lootOwner, personal, noEmptyError, lootMode));
+    CALL_ENABLED_HOOKS(MiscScript,
+        MISCHOOK_ON_AFTER_LOOT_TEMPLATE_PROCESS,
+        script->OnAfterLootTemplateProcess(loot, tab, store, lootOwner, personal, noEmptyError, lootMode));
 }
 
-void ScriptMgr::OnPlayerSetPhase(const AuraEffect* auraEff, AuraApplication const* aurApp, uint8 mode, bool apply, uint32& newPhase)
+void ScriptMgr::OnPlayerSetPhase(
+    AuraEffect const* auraEff, AuraApplication const* aurApp, uint8 mode, bool apply, uint32& newPhase)
 {
-    CALL_ENABLED_HOOKS(MiscScript, MISCHOOK_ON_PLAYER_SET_PHASE, script->OnPlayerSetPhase(auraEff, aurApp, mode, apply, newPhase));
+    CALL_ENABLED_HOOKS(
+        MiscScript, MISCHOOK_ON_PLAYER_SET_PHASE, script->OnPlayerSetPhase(auraEff, aurApp, mode, apply, newPhase));
 }
 
 void ScriptMgr::OnInstanceSave(InstanceSave* instanceSave)
@@ -109,8 +123,7 @@ void ScriptMgr::GetDialogStatus(Player* player, Object* questgiver)
     CALL_ENABLED_HOOKS(MiscScript, MISCHOOK_GET_DIALOG_STATUS, script->GetDialogStatus(player, questgiver));
 }
 
-MiscScript::MiscScript(const char* name, std::vector<uint16> enabledHooks)
-    : ScriptObject(name, MISCHOOK_END)
+MiscScript::MiscScript(char const* name, std::vector<uint16> enabledHooks) : ScriptObject(name, MISCHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

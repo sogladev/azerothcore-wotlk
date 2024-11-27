@@ -29,11 +29,12 @@ EndScriptData */
 
 enum ePoints
 {
-    POINT_LAST_POINT    = 0xFFFFFF,
-    POINT_HOME          = 0xFFFFFE
+    POINT_LAST_POINT = 0xFFFFFF,
+    POINT_HOME = 0xFFFFFE
 };
 
-npc_escortAI::npc_escortAI(Creature* creature) : ScriptedAI(creature),
+npc_escortAI::npc_escortAI(Creature* creature) :
+    ScriptedAI(creature),
     m_uiWPWaitTimer(1000),
     m_uiPlayerCheckTimer(0),
     m_uiEscortState(STATE_ESCORT_NONE),
@@ -47,7 +48,7 @@ npc_escortAI::npc_escortAI(Creature* creature) : ScriptedAI(creature),
     DespawnAtFar(true),
     ScriptWP(false),
     HasImmuneToNPCFlags(false)
-{}
+{ }
 
 void npc_escortAI::AttackStart(Unit* who)
 {
@@ -73,54 +74,36 @@ void npc_escortAI::AttackStart(Unit* who)
 bool npc_escortAI::AssistPlayerInCombatAgainst(Unit* who)
 {
     if (!who || !who->GetVictim())
-    {
         return false;
-    }
 
     if (me->HasReactState(REACT_PASSIVE))
-    {
         return false;
-    }
 
     //experimental (unknown) flag not present
     if (!(me->GetCreatureTemplate()->type_flags & CREATURE_TYPE_FLAG_CAN_ASSIST))
-    {
         return false;
-    }
 
     //not a player
     if (!who->GetVictim()->GetCharmerOrOwnerPlayerOrPlayerItself())
-    {
         return false;
-    }
 
     if (!who->isInAccessiblePlaceFor(me))
-    {
         return false;
-    }
 
     if (!CanAIAttack(who))
-    {
         return false;
-    }
 
     // we cannot attack in evade mode
     if (me->IsInEvadeMode())
-    {
         return false;
-    }
 
     // or if enemy is in evade mode
     if (who->IsCreature() && who->ToCreature()->IsInEvadeMode())
-    {
         return false;
-    }
 
     //never attack friendly
     if (!me->IsValidAttackTarget(who))
-    {
         return false;
-    }
 
     //too far away and no free sight?
     if (me->IsWithinDistInMap(who, GetMaxPlayerDistance()) && me->IsWithinLOSInMap(who))
@@ -137,7 +120,8 @@ void npc_escortAI::MoveInLineOfSight(Unit* who)
     if (me->GetVictim())
         return;
 
-    if (!me->HasUnitState(UNIT_STATE_STUNNED) && who->isTargetableForAttack(true, me) && who->isInAccessiblePlaceFor(me))
+    if (!me->HasUnitState(UNIT_STATE_STUNNED) && who->isTargetableForAttack(true, me) &&
+        who->isInAccessiblePlaceFor(me))
         if (HasEscortState(STATE_ESCORT_ESCORTING) && AssistPlayerInCombatAgainst(who))
             return;
 
@@ -163,7 +147,8 @@ void npc_escortAI::JustDied(Unit* /*killer*/)
         {
             for (GroupReference* groupRef = group->GetFirstMember(); groupRef != nullptr; groupRef = groupRef->next())
                 if (Player* member = groupRef->GetSource())
-                    if (member->IsInMap(player) && member->GetQuestStatus(m_pQuestForEscort->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
+                    if (member->IsInMap(player) &&
+                        member->GetQuestStatus(m_pQuestForEscort->GetQuestId()) == QUEST_STATUS_INCOMPLETE)
                         member->FailQuest(m_pQuestForEscort->GetQuestId());
         }
         else
@@ -239,7 +224,8 @@ bool npc_escortAI::IsPlayerOrGroupInRange()
 
 void npc_escortAI::UpdateAI(uint32 diff)
 {
-    if (HasEscortState(STATE_ESCORT_ESCORTING) && !me->GetVictim() && m_uiWPWaitTimer && !HasEscortState(STATE_ESCORT_RETURNING))
+    if (HasEscortState(STATE_ESCORT_ESCORTING) && !me->GetVictim() && m_uiWPWaitTimer &&
+        !HasEscortState(STATE_ESCORT_RETURNING))
     {
         if (m_uiWPWaitTimer <= diff)
         {
@@ -290,7 +276,8 @@ void npc_escortAI::UpdateAI(uint32 diff)
     }
 
     //Check if player or any member of his group is within range
-    if (HasEscortState(STATE_ESCORT_ESCORTING) && m_uiPlayerGUID && !me->GetVictim() && !HasEscortState(STATE_ESCORT_RETURNING))
+    if (HasEscortState(STATE_ESCORT_ESCORTING) && m_uiPlayerGUID && !me->GetVictim() &&
+        !HasEscortState(STATE_ESCORT_RETURNING))
     {
         m_uiPlayerCheckTimer += diff;
         if (m_uiPlayerCheckTimer > 1000)
@@ -344,7 +331,8 @@ void npc_escortAI::MovementInform(uint32 moveType, uint32 pointId)
         }
         else if (pointId == POINT_HOME)
         {
-            LOG_DEBUG("scripts.ai", "EscortAI has returned to original home location and will continue from beginning of waypoint list.");
+            LOG_DEBUG("scripts.ai",
+                "EscortAI has returned to original home location and will continue from beginning of waypoint list.");
 
             CurrentWP = WaypointList.begin();
             m_uiWPWaitTimer = 1;
@@ -428,35 +416,38 @@ void npc_escortAI::FillPointMovementListForCreature()
 void npc_escortAI::SetRun(bool on)
 {
     if (on)
-    {
         if (!m_bIsRunning)
             me->SetWalk(false);
         else
             LOG_DEBUG("scripts.ai", "EscortAI attempt to set run mode, but is already running.");
-    }
+    else if (m_bIsRunning)
+        me->SetWalk(true);
     else
-    {
-        if (m_bIsRunning)
-            me->SetWalk(true);
-        else
-            LOG_DEBUG("scripts.ai", "EscortAI attempt to set walk mode, but is already walking.");
-    }
+        LOG_DEBUG("scripts.ai", "EscortAI attempt to set walk mode, but is already walking.");
 
     m_bIsRunning = on;
 }
 
 //TODO: get rid of this many variables passed in function.
-void npc_escortAI::Start(bool isActiveAttacker /* = true*/, bool run /* = false */, ObjectGuid playerGUID /* = ObjectGuid::Empty */, Quest const* quest /* = nullptr */, bool instantRespawn /* = false */, bool canLoopPath /* = false */, bool resetWaypoints /* = true */)
+void npc_escortAI::Start(bool isActiveAttacker /* = true*/, bool run /* = false */,
+    ObjectGuid playerGUID /* = ObjectGuid::Empty */, Quest const* quest /* = nullptr */,
+    bool instantRespawn /* = false */, bool canLoopPath /* = false */, bool resetWaypoints /* = true */)
 {
     if (me->GetVictim())
     {
-        LOG_ERROR("entities.unit.ai", "ERROR: EscortAI (script: {}, creature entry: {}) attempts to Start while in combat", me->GetScriptName(), me->GetEntry());
+        LOG_ERROR("entities.unit.ai",
+            "ERROR: EscortAI (script: {}, creature entry: {}) attempts to Start while in combat",
+            me->GetScriptName(),
+            me->GetEntry());
         return;
     }
 
     if (HasEscortState(STATE_ESCORT_ESCORTING))
     {
-        LOG_ERROR("entities.unit.ai", "EscortAI (script: {}, creature entry: {}) attempts to Start while already escorting", me->GetScriptName(), me->GetEntry());
+        LOG_ERROR("entities.unit.ai",
+            "EscortAI (script: {}, creature entry: {}) attempts to Start while already escorting",
+            me->GetScriptName(),
+            me->GetEntry());
         return;
     }
 
@@ -469,8 +460,11 @@ void npc_escortAI::Start(bool isActiveAttacker /* = true*/, bool run /* = false 
 
     if (WaypointList.empty())
     {
-        LOG_ERROR("sql.sql", "EscortAI (script: {}, creature entry: {}) starts with 0 waypoints (possible missing entry in script_waypoint. Quest: {}).",
-                         me->GetScriptName(), me->GetEntry(), quest ? quest->GetQuestId() : 0);
+        LOG_ERROR("sql.sql",
+            "EscortAI (script: {}, creature entry: {}) starts with 0 waypoints (possible missing entry in script_waypoint. Quest: {}).",
+            me->GetScriptName(),
+            me->GetEntry(),
+            quest ? quest->GetQuestId() : 0);
         return;
     }
 
@@ -485,7 +479,8 @@ void npc_escortAI::Start(bool isActiveAttacker /* = true*/, bool run /* = false 
     m_bCanReturnToStart = canLoopPath;
 
     if (m_bCanReturnToStart && m_bCanInstantRespawn)
-        LOG_DEBUG("scripts.ai", "EscortAI is set to return home after waypoint end and instant respawn at waypoint end. Creature will never despawn.");
+        LOG_DEBUG("scripts.ai",
+            "EscortAI is set to return home after waypoint end and instant respawn at waypoint end. Creature will never despawn.");
 
     if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() == WAYPOINT_MOTION_TYPE)
     {
@@ -502,8 +497,12 @@ void npc_escortAI::Start(bool isActiveAttacker /* = true*/, bool run /* = false 
         me->SetImmuneToNPC(false);
     }
 
-    LOG_DEBUG("scripts.ai", "EscortAI started with {} waypoints. ActiveAttacker = {}, Run = {}, PlayerGUID = {}",
-        uint64(WaypointList.size()), m_bIsActiveAttacker, m_bIsRunning, m_uiPlayerGUID.ToString());
+    LOG_DEBUG("scripts.ai",
+        "EscortAI started with {} waypoints. ActiveAttacker = {}, Run = {}, PlayerGUID = {}",
+        uint64(WaypointList.size()),
+        m_bIsActiveAttacker,
+        m_bIsRunning,
+        m_uiPlayerGUID.ToString());
 
     CurrentWP = WaypointList.begin();
 
@@ -607,7 +606,8 @@ void npc_escortAI::GenerateWaypointArray(Movement::PointsArray* points)
             uint32 length = (WaypointList.size() - startingWaypointId) * size;
 
             uint32 cnt = 0;
-            for (std::list<Escort_Waypoint>::const_iterator itr = CurrentWP; itr != WaypointList.end() && cnt <= length; ++itr, ++cnt)
+            for (std::list<Escort_Waypoint>::const_iterator itr = CurrentWP; itr != WaypointList.end() && cnt <= length;
+                 ++itr, ++cnt)
                 pVector.push_back(G3D::Vector3(itr->x, itr->y, itr->z));
 
             if (pVector.size() > 2) // more than source + dest

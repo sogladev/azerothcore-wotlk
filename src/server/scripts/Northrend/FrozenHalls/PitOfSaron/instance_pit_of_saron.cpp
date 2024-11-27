@@ -70,12 +70,13 @@ public:
         bool IsEncounterInProgress() const override
         {
             for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-                if (m_auiEncounter[i] == IN_PROGRESS) return true;
+                if (m_auiEncounter[i] == IN_PROGRESS)
+                    return true;
 
             return false;
         }
 
-        void OnPlayerEnter(Player*  /*plr*/) override
+        void OnPlayerEnter(Player* /*plr*/) override
         {
             instance->LoadGrid(LeaderIntroPos.GetPositionX(), LeaderIntroPos.GetPositionY());
             if (Creature* c = instance->GetCreature(GetGuidData(DATA_LEADER_FIRST_GUID)))
@@ -267,7 +268,9 @@ public:
                     if (InstanceProgress < data)
                     {
                         InstanceProgress = data;
-                        if (InstanceProgress == INSTANCE_PROGRESS_TYRANNUS_INTRO && instance->GetDifficulty() == DUNGEON_DIFFICULTY_HEROIC && bAchievDontLookUp) // achiev Don't Look Up (4525)
+                        if (InstanceProgress == INSTANCE_PROGRESS_TYRANNUS_INTRO &&
+                            instance->GetDifficulty() == DUNGEON_DIFFICULTY_HEROIC &&
+                            bAchievDontLookUp) // achiev Don't Look Up (4525)
                             DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 72845);
                     }
                     break;
@@ -372,7 +375,8 @@ public:
             return ObjectGuid::Empty;
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const*  /*source*/, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {
@@ -392,10 +396,8 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << m_auiEncounter[0] << ' '
-                << m_auiEncounter[1] << ' '
-                << m_auiEncounter[2] << ' '
-                << InstanceProgress;
+            data << m_auiEncounter[0] << ' ' << m_auiEncounter[1] << ' ' << m_auiEncounter[2] << ' '
+                 << InstanceProgress;
         }
     };
 

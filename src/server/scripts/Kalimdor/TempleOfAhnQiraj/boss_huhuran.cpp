@@ -24,28 +24,28 @@
 
 enum Emotes
 {
-    EMOTE_FRENZY_KILL           = 0,
-    EMOTE_BERSERK               = 1
+    EMOTE_FRENZY_KILL = 0,
+    EMOTE_BERSERK = 1
 };
 
 enum Spells
 {
-    SPELL_FRENZY                = 26051, // triggers SPELL_POISON_BOLT
-    SPELL_BERSERK               = 26068, // triggers SPELL_POISON_BOLT
-    SPELL_NOXIOUS_POISON        = 26053,
-    SPELL_WYVERN_STING          = 26180,
-    SPELL_ACID_SPIT             = 26050,
-    SPELL_WYVERN_STING_DAMAGE   = 26233,
-    SPELL_POISON_BOLT           = 26052
+    SPELL_FRENZY = 26051,  // triggers SPELL_POISON_BOLT
+    SPELL_BERSERK = 26068, // triggers SPELL_POISON_BOLT
+    SPELL_NOXIOUS_POISON = 26053,
+    SPELL_WYVERN_STING = 26180,
+    SPELL_ACID_SPIT = 26050,
+    SPELL_WYVERN_STING_DAMAGE = 26233,
+    SPELL_POISON_BOLT = 26052
 };
 
 enum Events
 {
-    EVENT_FRENZY                = 1,
-    EVENT_WYVERN_STING          = 2,
-    EVENT_ACID_SPIT             = 3,
-    EVENT_NOXIOUS_POISON        = 4,
-    EVENT_HARD_ENRAGE           = 5
+    EVENT_FRENZY = 1,
+    EVENT_WYVERN_STING = 2,
+    EVENT_ACID_SPIT = 3,
+    EVENT_NOXIOUS_POISON = 4,
+    EVENT_HARD_ENRAGE = 5
 };
 
 struct boss_huhuran : public BossAI
@@ -145,15 +145,14 @@ class spell_huhuran_wyvern_sting : public AuraScript
         if (GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_ENEMY_SPELL) // dispelled
         {
             if (Unit* caster = GetCaster())
-            {
                 caster->CastCustomSpell(SPELL_WYVERN_STING_DAMAGE, SPELLVALUE_BASE_POINT0, 3000, GetUnitOwner(), true);
-            }
         }
     }
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_huhuran_wyvern_sting::OnRemove, EFFECT_0, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_huhuran_wyvern_sting::OnRemove, EFFECT_0, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -175,7 +174,8 @@ class spell_huhuran_poison_bolt : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_huhuran_poison_bolt::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_huhuran_poison_bolt::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 

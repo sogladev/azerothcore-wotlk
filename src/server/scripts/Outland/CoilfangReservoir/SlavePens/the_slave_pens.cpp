@@ -23,16 +23,14 @@
 class at_quagmirran_lair : public AreaTriggerScript
 {
 public:
-    at_quagmirran_lair() : AreaTriggerScript("at_quagmirran_lair") {}
+    at_quagmirran_lair() : AreaTriggerScript("at_quagmirran_lair") { }
 
     bool OnTrigger(Player* player, AreaTrigger const* /*trigger*/) override
     {
         if (InstanceScript* instance = player->GetInstanceScript())
         {
             if (Creature* quagmirran = instance->GetCreature(DATA_QUAGMIRRAN))
-            {
                 quagmirran->GetMotionMaster()->MovePath(quagmirran->GetEntry() * 100, true);
-            }
         }
 
         return true;

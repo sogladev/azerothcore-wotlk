@@ -22,21 +22,19 @@
 #include "InstanceScript.h"
 #include "shattered_halls.h"
 
-ObjectData const creatureData[] =
-{
-    { NPC_GRAND_WARLOCK_NETHEKURSE  , DATA_NETHEKURSE     },
-    { NPC_WARCHIEF_KARGATH          , DATA_KARGATH        },
-    { NPC_OMROGG_LEFT_HEAD          , DATA_OMROGG_LEFT_HEAD },
-    { NPC_OMROGG_RIGHT_HEAD         , DATA_OMROGG_RIGHT_HEAD },
-    { NPC_WARCHIEF_PORTAL           , DATA_WARCHIEF_PORTAL },
-    { 0                             , 0                   }
+ObjectData const creatureData[] = {
+    {NPC_GRAND_WARLOCK_NETHEKURSE, DATA_NETHEKURSE       },
+    {NPC_WARCHIEF_KARGATH,         DATA_KARGATH          },
+    {NPC_OMROGG_LEFT_HEAD,         DATA_OMROGG_LEFT_HEAD },
+    {NPC_OMROGG_RIGHT_HEAD,        DATA_OMROGG_RIGHT_HEAD},
+    {NPC_WARCHIEF_PORTAL,          DATA_WARCHIEF_PORTAL  },
+    {0,                            0                     }
 };
 
-DoorData const doorData[] =
-{
-    { GO_GRAND_WARLOCK_CHAMBER_DOOR_1, DATA_NETHEKURSE, DOOR_TYPE_PASSAGE },
-    { GO_GRAND_WARLOCK_CHAMBER_DOOR_2, DATA_NETHEKURSE, DOOR_TYPE_PASSAGE },
-    { 0,                                             0, DOOR_TYPE_ROOM    } // END
+DoorData const doorData[] = {
+    {GO_GRAND_WARLOCK_CHAMBER_DOOR_1, DATA_NETHEKURSE, DOOR_TYPE_PASSAGE},
+    {GO_GRAND_WARLOCK_CHAMBER_DOOR_2, DATA_NETHEKURSE, DOOR_TYPE_PASSAGE},
+    {0,                               0,               DOOR_TYPE_ROOM   }  // END
 };
 
 class instance_shattered_halls : public InstanceMapScript
@@ -113,7 +111,12 @@ public:
                 instance->LoadGrid(230, -80);
 
                 if (Creature* kargath = GetCreature(DATA_KARGATH))
-                    sCreatureTextMgr->SendChat(kargath, TeamIdInInstance == TEAM_ALLIANCE ? 3 : 4, nullptr, CHAT_MSG_ADDON, LANG_ADDON, TEXT_RANGE_MAP);
+                    sCreatureTextMgr->SendChat(kargath,
+                        TeamIdInInstance == TEAM_ALLIANCE ? 3 : 4,
+                        nullptr,
+                        CHAT_MSG_ADDON,
+                        LANG_ADDON,
+                        TEXT_RANGE_MAP);
 
                 RescueTimer = 80 * MINUTE * IN_MILLISECONDS;
             }
@@ -193,9 +196,7 @@ public:
         if (InstanceScript* instanceScript = player->GetInstanceScript())
         {
             if (player->GetMap()->IsHeroic())
-            {
                 instanceScript->SetData(DATA_ENTERED_ROOM, DATA_ENTERED_ROOM);
-            }
         }
 
         return true;

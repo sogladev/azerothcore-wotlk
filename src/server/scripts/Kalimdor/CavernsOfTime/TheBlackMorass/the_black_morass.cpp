@@ -27,27 +27,29 @@
 enum medivhMisc
 {
     NPC_SHADOW_COUNCIL_ENFORCER = 17023,
-    GO_DARK_PORTAL              = 185103,
+    GO_DARK_PORTAL = 185103,
 
-    EVENT_CHECK_HEALTH_25       = 1,
-    EVENT_CHECK_HEALTH_50       = 2,
-    EVENT_CHECK_HEALTH_75       = 3,
-    EVENT_SUMMON_CRYSTAL        = 4,
+    EVENT_CHECK_HEALTH_25 = 1,
+    EVENT_CHECK_HEALTH_50 = 2,
+    EVENT_CHECK_HEALTH_75 = 3,
+    EVENT_SUMMON_CRYSTAL = 4,
     EVENT_SUMMON_FLYING_CRYSTAL = 5,
 
-    EVENT_OUTRO_1               = 10,
-    EVENT_OUTRO_2               = 11,
-    EVENT_OUTRO_3               = 12,
-    EVENT_OUTRO_4               = 13,
-    EVENT_OUTRO_5               = 14,
-    EVENT_OUTRO_6               = 15,
-    EVENT_OUTRO_7               = 16,
-    EVENT_OUTRO_8               = 17
+    EVENT_OUTRO_1 = 10,
+    EVENT_OUTRO_2 = 11,
+    EVENT_OUTRO_3 = 12,
+    EVENT_OUTRO_4 = 13,
+    EVENT_OUTRO_5 = 14,
+    EVENT_OUTRO_6 = 15,
+    EVENT_OUTRO_7 = 16,
+    EVENT_OUTRO_8 = 17
 };
 
-static std::vector<uint32> firstWave = { NPC_INFINITE_ASSASSIN, NPC_INFINITE_WHELP, NPC_INFINITE_CHRONOMANCER };
-static std::vector<uint32> secondWave = { NPC_INFINITE_EXECUTIONER, NPC_INFINITE_CHRONOMANCER, NPC_INFINITE_WHELP, NPC_INFINITE_ASSASSIN };
-static std::vector<uint32> thirdWave = { NPC_INFINITE_EXECUTIONER, NPC_INFINITE_VANQUISHER, NPC_INFINITE_CHRONOMANCER, NPC_INFINITE_ASSASSIN  };
+static std::vector<uint32> firstWave = {NPC_INFINITE_ASSASSIN, NPC_INFINITE_WHELP, NPC_INFINITE_CHRONOMANCER};
+static std::vector<uint32> secondWave = {
+    NPC_INFINITE_EXECUTIONER, NPC_INFINITE_CHRONOMANCER, NPC_INFINITE_WHELP, NPC_INFINITE_ASSASSIN};
+static std::vector<uint32> thirdWave = {
+    NPC_INFINITE_EXECUTIONER, NPC_INFINITE_VANQUISHER, NPC_INFINITE_CHRONOMANCER, NPC_INFINITE_ASSASSIN};
 
 class NpcRunToHome : public BasicEvent
 {
@@ -73,22 +75,29 @@ struct npc_medivh_bm : public ScriptedAI
         _groundArray.clear();
         _airArray.clear();
 
-        _groundArray.push_back(G3D::Vector3(creature->GetPositionX() + 8.0f, creature->GetPositionY(), creature->GetPositionZ()));
+        _groundArray.push_back(
+            G3D::Vector3(creature->GetPositionX() + 8.0f, creature->GetPositionY(), creature->GetPositionZ()));
         _airArray.push_back(G3D::Vector3(creature->GetPositionX(), creature->GetPositionY(), creature->GetPositionZ()));
 
         for (uint8 i = 0; i < 10; ++i)
         {
-            _groundArray.push_back(G3D::Vector3(creature->GetPositionX() + 8.0f * cos(2.0f * M_PI * i / 10.0f), creature->GetPositionY() + 8.0f * std::sin(2.0f * M_PI * i / 10.0f), creature->GetPositionZ()));
+            _groundArray.push_back(G3D::Vector3(creature->GetPositionX() + 8.0f * cos(2.0f * M_PI * i / 10.0f),
+                creature->GetPositionY() + 8.0f * std::sin(2.0f * M_PI * i / 10.0f),
+                creature->GetPositionZ()));
         }
 
         for (uint8 i = 0; i < 40; ++i)
         {
-            _airArray.push_back(G3D::Vector3(creature->GetPositionX() + i * 0.25f * cos(2.0f * M_PI * i / 10.0f), creature->GetPositionY() + i * 0.25f * std::sin(2.0f * M_PI * i / 10.0f), creature->GetPositionZ() + i / 4.0f));
+            _airArray.push_back(G3D::Vector3(creature->GetPositionX() + i * 0.25f * cos(2.0f * M_PI * i / 10.0f),
+                creature->GetPositionY() + i * 0.25f * std::sin(2.0f * M_PI * i / 10.0f),
+                creature->GetPositionZ() + i / 4.0f));
         }
 
         for (uint8 i = 40; i < 80; ++i)
         {
-            _airArray.push_back(G3D::Vector3(creature->GetPositionX() + 10.0f * cos(2.0f * M_PI * i / 10.0f), creature->GetPositionY() + 10.0f * std::sin(2.0f * M_PI * i / 10.0f), creature->GetPositionZ() + i / 4.0f));
+            _airArray.push_back(G3D::Vector3(creature->GetPositionX() + 10.0f * cos(2.0f * M_PI * i / 10.0f),
+                creature->GetPositionY() + 10.0f * std::sin(2.0f * M_PI * i / 10.0f),
+                creature->GetPositionZ() + i / 4.0f));
         }
     }
 
@@ -98,9 +107,7 @@ struct npc_medivh_bm : public ScriptedAI
         me->CastSpell(me, SPELL_MANA_SHIELD, true);
 
         if (_instance->GetBossState(DATA_AEONUS) != DONE)
-        {
             me->CastSpell(me, SPELL_MEDIVH_CHANNEL, false);
-        }
 
         me->SetImmuneToNPC(false);
     }
@@ -126,9 +133,7 @@ struct npc_medivh_bm : public ScriptedAI
     void MoveInLineOfSight(Unit* who) override
     {
         if (!events.Empty() || _instance->GetBossState(DATA_AEONUS) == DONE)
-        {
             return;
-        }
 
         if (who->IsPlayer() && me->IsWithinDistInMap(who, 20.0f))
         {
@@ -147,7 +152,7 @@ struct npc_medivh_bm : public ScriptedAI
         }
     }
 
-    void AttackStart(Unit* ) override { }
+    void AttackStart(Unit*) override { }
 
     void DoAction(int32 param) override
     {
@@ -183,7 +188,8 @@ struct npc_medivh_bm : public ScriptedAI
                 events.ScheduleEvent(eventId, 500);
                 break;
             case EVENT_SUMMON_CRYSTAL:
-                me->SummonCreature(NPC_DP_EMITTER_STALKER, me->GetPositionX() + 8.0f, me->GetPositionY(), me->GetPositionZ());
+                me->SummonCreature(
+                    NPC_DP_EMITTER_STALKER, me->GetPositionX() + 8.0f, me->GetPositionY(), me->GetPositionZ());
                 break;
             case EVENT_SUMMON_FLYING_CRYSTAL:
                 me->CastSpell(me, SPELL_PORTAL_CRYSTALS, true);
@@ -232,9 +238,13 @@ struct npc_medivh_bm : public ScriptedAI
     {
         for (uint8 i = 0; i < 6; ++i)
         {
-            if (Creature* cr = me->SummonCreature(NPC_SHADOW_COUNCIL_ENFORCER, -2091.731f, 7133.083f - 3.0f * i, 34.589f, 0.0f))
+            if (Creature* cr =
+                    me->SummonCreature(NPC_SHADOW_COUNCIL_ENFORCER, -2091.731f, 7133.083f - 3.0f * i, 34.589f, 0.0f))
             {
-                cr->GetMotionMaster()->MovePoint(0, (first && i == 3) ? x + 2.0f : x, cr->GetPositionY() + y, cr->GetMapHeight(x, cr->GetPositionY() + y, cr->GetPositionZ(), true));
+                cr->GetMotionMaster()->MovePoint(0,
+                    (first && i == 3) ? x + 2.0f : x,
+                    cr->GetPositionY() + y,
+                    cr->GetMapHeight(x, cr->GetPositionY() + y, cr->GetPositionZ(), true));
                 cr->m_Events.AddEvent(new NpcRunToHome(*cr), cr->m_Events.CalculateTime(homeTime + urand(0, 2000)));
                 cr->DespawnOrUnsummon(duration + urand(0, 2000));
             }
@@ -250,11 +260,11 @@ private:
 
 enum timeRift
 {
-    EVENT_SUMMON_AT_RIFT        = 1,
-    EVENT_CHECK_DEATH           = 2,
-    EVENT_SUMMON_BOSS           = 3,
+    EVENT_SUMMON_AT_RIFT = 1,
+    EVENT_CHECK_DEATH = 2,
+    EVENT_SUMMON_BOSS = 3,
 
-    SAY_RIFT_MOB_SUMMONED       = 0
+    SAY_RIFT_MOB_SUMMONED = 0
 };
 
 struct npc_time_rift : public NullCreatureAI
@@ -269,17 +279,11 @@ struct npc_time_rift : public NullCreatureAI
         uint32 riftNumer = _instance->GetData(DATA_RIFT_NUMBER);
 
         if (riftNumer < 6)
-        {
             waveMobs = firstWave;
-        }
         else if (riftNumer < 12)
-        {
             waveMobs = secondWave;
-        }
         else
-        {
             waveMobs = thirdWave;
-        }
 
         waveMobIndex = 0;
         events.ScheduleEvent(EVENT_SUMMON_AT_RIFT, 16s);
@@ -289,9 +293,7 @@ struct npc_time_rift : public NullCreatureAI
     void JustSummoned(Creature* creature) override
     {
         if (creature->GetEntry() != NPC_AEONUS && _riftKeeperGUID.IsEmpty())
-        {
             _riftKeeperGUID = creature->GetGUID();
-        }
     }
 
     void DoSummonAtRift(uint32 entry)
@@ -303,7 +305,10 @@ struct npc_time_rift : public NullCreatureAI
             if (Creature* medivh = _instance->GetCreature(DATA_MEDIVH))
             {
                 float o = medivh->GetAngle(summon) + frand(-1.0f, 1.0f);
-                summon->SetHomePosition(medivh->GetPositionX() + 14.0f * cos(o), medivh->GetPositionY() + 14.0f * std::sin(o), medivh->GetPositionZ(), summon->GetAngle(medivh));
+                summon->SetHomePosition(medivh->GetPositionX() + 14.0f * cos(o),
+                    medivh->GetPositionY() + 14.0f * std::sin(o),
+                    medivh->GetPositionZ(),
+                    summon->GetAngle(medivh));
                 summon->GetMotionMaster()->MoveTargetedHome(true);
                 summon->SetReactState(REACT_DEFENSIVE);
             }
@@ -346,17 +351,13 @@ struct npc_time_rift : public NullCreatureAI
         }
 
         if (++waveMobIndex >= waveMobs.size())
-        {
             waveMobIndex = 0;
-        }
     }
 
     void SummonedCreatureDies(Creature* creature, Unit* /*killer*/) override
     {
         if (creature->GetGUID() == _riftKeeperGUID)
-        {
             me->DespawnOrUnsummon(0);
-        }
     }
 
     void UpdateAI(uint32 diff) override
@@ -377,10 +378,14 @@ struct npc_time_rift : public NullCreatureAI
                 switch (_instance->GetData(DATA_RIFT_NUMBER))
                 {
                     case 6:
-                        entry = _instance->GetBossState(DATA_CHRONO_LORD_DEJA) == DONE ? (me->GetMap()->IsHeroic() ? NPC_INFINITE_CHRONO_LORD : -NPC_CHRONO_LORD_DEJA) : NPC_CHRONO_LORD_DEJA;
+                        entry = _instance->GetBossState(DATA_CHRONO_LORD_DEJA) == DONE
+                                    ? (me->GetMap()->IsHeroic() ? NPC_INFINITE_CHRONO_LORD : -NPC_CHRONO_LORD_DEJA)
+                                    : NPC_CHRONO_LORD_DEJA;
                         break;
                     case 12:
-                        entry = _instance->GetBossState(DATA_TEMPORUS) == DONE ? (me->GetMap()->IsHeroic() ? NPC_INFINITE_TIMEREAVER : -NPC_TEMPORUS) : NPC_TEMPORUS;
+                        entry = _instance->GetBossState(DATA_TEMPORUS) == DONE
+                                    ? (me->GetMap()->IsHeroic() ? NPC_INFINITE_TIMEREAVER : -NPC_TEMPORUS)
+                                    : NPC_TEMPORUS;
                         break;
                     case 18:
                         entry = NPC_AEONUS;
@@ -392,22 +397,17 @@ struct npc_time_rift : public NullCreatureAI
 
                 Position pos = me->GetNearPosition(10.0f, 2 * M_PI * rand_norm());
 
-                if (Creature* summon = me->SummonCreature(std::abs(entry), pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3 * MINUTE * IN_MILLISECONDS))
+                if (Creature* summon = me->SummonCreature(
+                        std::abs(entry), pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3 * MINUTE * IN_MILLISECONDS))
                 {
                     if (entry < 0)
-                    {
                         summon->SetLootMode(0);
-                    }
 
                     if (summon->GetEntry() != NPC_AEONUS)
-                    {
                         me->CastSpell(summon, SPELL_RIFT_CHANNEL, false);
-                    }
 
                     if (summon->IsAIEnabled)
-                    {
                         summon->AI()->Talk(SAY_RIFT_MOB_SUMMONED);
-                    }
                 }
             }
         }
@@ -423,9 +423,7 @@ private:
 
 struct npc_black_morass_summoned_add : public SmartAI
 {
-    npc_black_morass_summoned_add(Creature* creature) : SmartAI(creature)
-    {
-    }
+    npc_black_morass_summoned_add(Creature* creature) : SmartAI(creature) { }
 
     void EnterEvadeMode(EvadeReason why) override
     {
@@ -452,15 +450,14 @@ class spell_black_morass_corrupt_medivh : public AuraScript
             _ticks = 0;
 
             if (InstanceScript* instance = GetUnitOwner()->GetInstanceScript())
-            {
                 instance->SetData(DATA_DAMAGE_SHIELD, m_scriptSpellId == SPELL_CORRUPT_AEONUS ? 2 : 1);
-            }
         }
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_black_morass_corrupt_medivh::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_black_morass_corrupt_medivh::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 
 private:

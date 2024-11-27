@@ -36,33 +36,33 @@ EndContentData */
 // Ours
 enum Caravan
 {
-    QUEST_BODYGUARD_FOR_HIRE            = 5821,
-    QUEST_GIZELTON_CARAVAN              = 5943,
+    QUEST_BODYGUARD_FOR_HIRE = 5821,
+    QUEST_GIZELTON_CARAVAN = 5943,
 
-    EVENT_RESUME_PATH                   = 1,
-    EVENT_WAIT_FOR_ASSIST               = 2,
-    EVENT_RESTART_ESCORT                = 3,
+    EVENT_RESUME_PATH = 1,
+    EVENT_WAIT_FOR_ASSIST = 2,
+    EVENT_RESTART_ESCORT = 3,
 
-    NPC_CORK_GIZELTON                   = 11625,
-    NPC_RIGGER_GIZELTON                 = 11626,
-    NPC_CARAVAN_KODO                    = 11564,
-    NPC_VENDOR_TRON                     = 12245,
-    NPC_SUPER_SELLER                    = 12246,
+    NPC_CORK_GIZELTON = 11625,
+    NPC_RIGGER_GIZELTON = 11626,
+    NPC_CARAVAN_KODO = 11564,
+    NPC_VENDOR_TRON = 12245,
+    NPC_SUPER_SELLER = 12246,
 
-    SAY_CARAVAN_LEAVE                   = 0,
-    SAY_CARAVAN_HIRE                    = 1,
+    SAY_CARAVAN_LEAVE = 0,
+    SAY_CARAVAN_HIRE = 1,
 
-    MAX_CARAVAN_SUMMONS                 = 3,
+    MAX_CARAVAN_SUMMONS = 3,
 
-    TIME_SHOP_STOP                      = 10 * MINUTE * IN_MILLISECONDS,
-    TIME_HIRE_STOP                      = 4 * MINUTE * IN_MILLISECONDS,
+    TIME_SHOP_STOP = 10 * MINUTE * IN_MILLISECONDS,
+    TIME_HIRE_STOP = 4 * MINUTE * IN_MILLISECONDS,
 
     // Ambush
-    NPC_KOLKAR_WAYLAYER                 = 12976,
-    NPC_KOLKAR_AMBUSHER                 = 12977,
-    NPC_LESSER_INFERNAL                 = 4676,
-    NPC_DOOMWARDER                      = 4677,
-    NPC_NETHER                          = 4684,
+    NPC_KOLKAR_WAYLAYER = 12976,
+    NPC_KOLKAR_AMBUSHER = 12977,
+    NPC_LESSER_INFERNAL = 4676,
+    NPC_DOOMWARDER = 4677,
+    NPC_NETHER = 4684,
 };
 
 class npc_cork_gizelton : public CreatureScript
@@ -85,9 +85,7 @@ public:
 
     struct npc_cork_gizeltonAI : public npc_escortAI
     {
-        npc_cork_gizeltonAI(Creature* creature) : npc_escortAI(creature)
-        {
-        }
+        npc_cork_gizeltonAI(Creature* creature) : npc_escortAI(creature) { }
 
         EventMap events;
         ObjectGuid summons[MAX_CARAVAN_SUMMONS];
@@ -200,13 +198,9 @@ public:
                 summons[0] = cr->GetGUID();
             }
             if (Creature* cr = me->SummonCreature(NPC_CARAVAN_KODO, *me))
-            {
                 summons[1] = cr->GetGUID();
-            }
             if (Creature* cr = me->SummonCreature(NPC_CARAVAN_KODO, *me))
-            {
                 summons[2] = cr->GetGUID();
-            }
 
             SummonsFollow();
         }
@@ -248,7 +242,8 @@ public:
         {
             for (uint8 i = 0; i < MAX_CARAVAN_SUMMONS; ++i)
                 if (Creature* summon = ObjectAccessor::GetCreature(*me, summons[i]))
-                    summon->SetHomePosition(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation());
+                    summon->SetHomePosition(
+                        me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation());
         }
 
         void ImmuneFlagSet(bool remove, uint32 faction)
@@ -276,14 +271,26 @@ public:
             {
                 // Finished north path
                 case 52:
-                    me->SummonCreature(NPC_VENDOR_TRON, -694.61f, 1460.7f, 90.794f, 2.4f, TEMPSUMMON_TIMED_DESPAWN, TIME_SHOP_STOP + 15 * IN_MILLISECONDS);
+                    me->SummonCreature(NPC_VENDOR_TRON,
+                        -694.61f,
+                        1460.7f,
+                        90.794f,
+                        2.4f,
+                        TEMPSUMMON_TIMED_DESPAWN,
+                        TIME_SHOP_STOP + 15 * IN_MILLISECONDS);
                     SetEscortPaused(true);
                     events.ScheduleEvent(EVENT_RESUME_PATH, TIME_SHOP_STOP);
                     CheckCaravan();
                     break;
                 // Finished south path
                 case 193:
-                    me->SummonCreature(NPC_SUPER_SELLER, -1905.5f, 2463.3f, 61.52f, 5.87f, TEMPSUMMON_TIMED_DESPAWN, TIME_SHOP_STOP + 15 * IN_MILLISECONDS);
+                    me->SummonCreature(NPC_SUPER_SELLER,
+                        -1905.5f,
+                        2463.3f,
+                        61.52f,
+                        5.87f,
+                        TEMPSUMMON_TIMED_DESPAWN,
+                        TIME_SHOP_STOP + 15 * IN_MILLISECONDS);
                     SetEscortPaused(true);
                     events.ScheduleEvent(EVENT_RESUME_PATH, TIME_SHOP_STOP);
                     CheckCaravan();
@@ -333,55 +340,66 @@ public:
                 case 83:
                 case 93:
                 case 100:
+                {
+                    if (!_playerGUID)
+                        return;
+                    ImmuneFlagSet(true, _faction);
+                    Creature* cr = nullptr;
+                    for (uint8 i = 0; i < 4; ++i)
                     {
-                        if (!_playerGUID)
-                            return;
-                        ImmuneFlagSet(true, _faction);
-                        Creature* cr = nullptr;
-                        for (uint8 i = 0; i < 4; ++i)
-                        {
-                            float o = (i * M_PI / 2) + (M_PI / 4);
-                            float x = me->GetPositionX() + cos(o) * 15.0f;
-                            float y = me->GetPositionY() + std::sin(o) * 15.0f;
-                            if ((cr = me->SummonCreature((i % 2 == 0 ? NPC_KOLKAR_WAYLAYER : NPC_KOLKAR_AMBUSHER),
-                                                         x, y, me->GetMap()->GetHeight(x, y, MAX_HEIGHT), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000)))
-                                cr->AI()->AttackStart(me);
-                        }
-                        if (cr)
-                        {
-                            AttackStart(cr);
-                            me->CallForHelp(50.0f);
-                        }
-                        break;
+                        float o = (i * M_PI / 2) + (M_PI / 4);
+                        float x = me->GetPositionX() + cos(o) * 15.0f;
+                        float y = me->GetPositionY() + std::sin(o) * 15.0f;
+                        if ((cr = me->SummonCreature((i % 2 == 0 ? NPC_KOLKAR_WAYLAYER : NPC_KOLKAR_AMBUSHER),
+                                 x,
+                                 y,
+                                 me->GetMap()->GetHeight(x, y, MAX_HEIGHT),
+                                 0.0f,
+                                 TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                                 30000)))
+                            cr->AI()->AttackStart(me);
                     }
+                    if (cr)
+                    {
+                        AttackStart(cr);
+                        me->CallForHelp(50.0f);
+                    }
+                    break;
+                }
                 // South -> North - spawn attackers
                 case 221:
                 case 228:
                 case 233:
+                {
+                    if (!_playerGUID)
+                        return;
+                    ImmuneFlagSet(true, _faction);
+                    Creature* cr = nullptr;
+                    for (uint8 i = 0; i < 3; ++i)
                     {
-                        if (!_playerGUID)
-                            return;
-                        ImmuneFlagSet(true, _faction);
-                        Creature* cr = nullptr;
-                        for (uint8 i = 0; i < 3; ++i)
-                        {
-                            float o = i * 2 * M_PI / 3;
-                            float x = me->GetPositionX() + cos(o) * 10.0f;
-                            float y = me->GetPositionY() + std::sin(o) * 10.0f;
-                            uint32 entry = NPC_LESSER_INFERNAL;
-                            if (i)
-                                entry = i == 1 ? NPC_DOOMWARDER : NPC_NETHER;
+                        float o = i * 2 * M_PI / 3;
+                        float x = me->GetPositionX() + cos(o) * 10.0f;
+                        float y = me->GetPositionY() + std::sin(o) * 10.0f;
+                        uint32 entry = NPC_LESSER_INFERNAL;
+                        if (i)
+                            entry = i == 1 ? NPC_DOOMWARDER : NPC_NETHER;
 
-                            if ((cr = me->SummonCreature(entry, x, y, me->GetMap()->GetHeight(x, y, MAX_HEIGHT), 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000)))
-                                cr->AI()->AttackStart(me);
-                        }
-                        if (cr)
-                        {
-                            AttackStart(cr);
-                            me->CallForHelp(50.0f);
-                        }
-                        break;
+                        if ((cr = me->SummonCreature(entry,
+                                 x,
+                                 y,
+                                 me->GetMap()->GetHeight(x, y, MAX_HEIGHT),
+                                 0.0f,
+                                 TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                                 30000)))
+                            cr->AI()->AttackStart(me);
                     }
+                    if (cr)
+                    {
+                        AttackStart(cr);
+                        me->CallForHelp(50.0f);
+                    }
+                    break;
+                }
                 case 282:
                     events.ScheduleEvent(EVENT_RESTART_ESCORT, 1s);
                     break;
@@ -423,22 +441,22 @@ public:
 // Theirs
 enum DyingKodo
 {
-    SAY_SMEED_HOME                  = 0,
+    SAY_SMEED_HOME = 0,
 
-    QUEST_KODO                      = 5561,
+    QUEST_KODO = 5561,
 
-    NPC_TEXT_KODO                   = 4449, // MenuID 3650
+    NPC_TEXT_KODO = 4449, // MenuID 3650
 
-    NPC_SMEED                       = 11596,
-    NPC_AGED_KODO                   = 4700,
-    NPC_DYING_KODO                  = 4701,
-    NPC_ANCIENT_KODO                = 4702,
-    NPC_TAMED_KODO                  = 11627,
+    NPC_SMEED = 11596,
+    NPC_AGED_KODO = 4700,
+    NPC_DYING_KODO = 4701,
+    NPC_ANCIENT_KODO = 4702,
+    NPC_TAMED_KODO = 11627,
 
-    SPELL_KODO_KOMBO_ITEM           = 18153,
-    SPELL_KODO_KOMBO_PLAYER_BUFF    = 18172,
-    SPELL_KODO_KOMBO_DESPAWN_BUFF   = 18377,
-    SPELL_KODO_KOMBO_GOSSIP         = 18362
+    SPELL_KODO_KOMBO_ITEM = 18153,
+    SPELL_KODO_KOMBO_PLAYER_BUFF = 18172,
+    SPELL_KODO_KOMBO_DESPAWN_BUFF = 18377,
+    SPELL_KODO_KOMBO_GOSSIP = 18362
 };
 
 class npc_aged_dying_ancient_kodo : public CreatureScript
@@ -448,7 +466,7 @@ public:
 
     struct npc_aged_dying_ancient_kodoAI : public ScriptedAI
     {
-        npc_aged_dying_ancient_kodoAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_aged_dying_ancient_kodoAI(Creature* creature) : ScriptedAI(creature) { }
 
         void JustRespawned() override
         {
@@ -457,7 +475,8 @@ public:
 
         void MoveInLineOfSight(Unit* who) override
         {
-            if (who->GetEntry() == NPC_SMEED && me->IsWithinDistInMap(who, 10.0f) && !me->HasAura(SPELL_KODO_KOMBO_GOSSIP))
+            if (who->GetEntry() == NPC_SMEED && me->IsWithinDistInMap(who, 10.0f) &&
+                !me->HasAura(SPELL_KODO_KOMBO_GOSSIP))
             {
                 me->SetHomePosition(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation());
                 me->GetMotionMaster()->Clear();
@@ -473,8 +492,9 @@ public:
         {
             if (spell->Id == SPELL_KODO_KOMBO_ITEM)
             {
-                if (!(caster->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF) || me->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF))
-                        && (me->GetEntry() == NPC_AGED_KODO || me->GetEntry() == NPC_DYING_KODO || me->GetEntry() == NPC_ANCIENT_KODO))
+                if (!(caster->HasAura(SPELL_KODO_KOMBO_PLAYER_BUFF) || me->HasAura(SPELL_KODO_KOMBO_DESPAWN_BUFF)) &&
+                    (me->GetEntry() == NPC_AGED_KODO || me->GetEntry() == NPC_DYING_KODO ||
+                        me->GetEntry() == NPC_ANCIENT_KODO))
                 {
                     me->UpdateEntry(NPC_TAMED_KODO, nullptr, false);
                     EnterEvadeMode();

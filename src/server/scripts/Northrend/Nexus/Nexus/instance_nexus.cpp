@@ -17,16 +17,15 @@
 
 #include "CreatureScript.h"
 #include "InstanceMapScript.h"
+#include "Player.h"
 #include "ScriptedCreature.h"
 #include "nexus.h"
-#include "Player.h"
 
-DoorData const doorData[] =
-{
-    { GO_TELESTRA_SPHERE,   DATA_TELESTRA_ORB,  DOOR_TYPE_PASSAGE },
-    { GO_ANOMALUS_SPHERE,   DATA_ANOMALUS_ORB,  DOOR_TYPE_PASSAGE },
-    { GO_ORMOROK_SPHERE,    DATA_ORMOROK_ORB,   DOOR_TYPE_PASSAGE },
-    { 0,                    0,                  DOOR_TYPE_ROOM    }
+DoorData const doorData[] = {
+    {GO_TELESTRA_SPHERE, DATA_TELESTRA_ORB, DOOR_TYPE_PASSAGE},
+    {GO_ANOMALUS_SPHERE, DATA_ANOMALUS_ORB, DOOR_TYPE_PASSAGE},
+    {GO_ORMOROK_SPHERE,  DATA_ORMOROK_ORB,  DOOR_TYPE_PASSAGE},
+    {0,                  0,                 DOOR_TYPE_ROOM   }
 };
 
 class instance_nexus : public InstanceMapScript
@@ -41,7 +40,7 @@ public:
 
     struct instance_nexus_InstanceMapScript : public InstanceScript
     {
-        instance_nexus_InstanceMapScript(Map* map) : InstanceScript(map) {}
+        instance_nexus_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         void Initialize() override
         {
@@ -150,7 +149,9 @@ public:
                 return true;
 
             BossInfo const* bossInfo = GetBossInfo(id + DATA_TELESTRA_ORB);
-            for (DoorSet::const_iterator i = bossInfo->door[DOOR_TYPE_PASSAGE].begin(); i != bossInfo->door[DOOR_TYPE_PASSAGE].end(); ++i)
+            for (DoorSet::const_iterator i = bossInfo->door[DOOR_TYPE_PASSAGE].begin();
+                 i != bossInfo->door[DOOR_TYPE_PASSAGE].end();
+                 ++i)
                 (*i)->RemoveGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
             return true;
         }
@@ -159,11 +160,11 @@ public:
 
 enum eFrayer
 {
-    SPELL_SUMMON_SEED_POD               = 52796,
-    SPELL_SEED_POD                      = 48082,
-    SPELL_AURA_OF_REGENERATION          = 52067,
-    SPELL_CRYSTAL_BLOOM                 = 48058,
-    SPELL_ENSNARE                       = 48053
+    SPELL_SUMMON_SEED_POD = 52796,
+    SPELL_SEED_POD = 48082,
+    SPELL_AURA_OF_REGENERATION = 52067,
+    SPELL_CRYSTAL_BLOOM = 48058,
+    SPELL_ENSNARE = 48053
 };
 
 struct npc_crystalline_frayer : public ScriptedAI

@@ -21,16 +21,16 @@
 
 enum Spells
 {
-    SPELL_SNEAK                 = 22766,
-    SPELL_ACIDIC_FANG           = 29901,
-    SPELL_HYAKISS_WEB           = 29896,
+    SPELL_SNEAK = 22766,
+    SPELL_ACIDIC_FANG = 29901,
+    SPELL_HYAKISS_WEB = 29896,
 
-    SPELL_DIVE                  = 29903,
-    SPELL_SONIC_BURST           = 29904,
-    SPELL_WING_BUFFET           = 29905,
-    SPELL_FEAR                  = 29321,
+    SPELL_DIVE = 29903,
+    SPELL_SONIC_BURST = 29904,
+    SPELL_WING_BUFFET = 29905,
+    SPELL_FEAR = 29321,
 
-    SPELL_RAVAGE                = 29906
+    SPELL_RAVAGE = 29906
 };
 
 struct boss_servant_quarters : public BossAI
@@ -42,21 +42,23 @@ struct boss_servant_quarters : public BossAI
         _scheduler.CancelAll();
 
         if (me->GetEntry() == NPC_HYAKISS_THE_LURKER)
-        {
             DoCastSelf(SPELL_SNEAK, true);
-        }
     }
 
-    void JustEngagedWith(Unit*  /*who*/) override
+    void JustEngagedWith(Unit* /*who*/) override
     {
         me->setActive(true);
         if (me->GetEntry() == NPC_HYAKISS_THE_LURKER)
         {
-            _scheduler.Schedule(5s, [this](TaskContext context)
+            _scheduler
+                .Schedule(5s,
+                    [this](TaskContext context)
             {
                 DoCastVictim(SPELL_ACIDIC_FANG);
                 context.Repeat(12s, 18s);
-            }).Schedule(9s, [this](TaskContext context)
+            })
+                .Schedule(9s,
+                    [this](TaskContext context)
             {
                 DoCastRandomTarget(SPELL_HYAKISS_WEB, 0, 30.0f);
                 context.Repeat(15s);
@@ -64,17 +66,24 @@ struct boss_servant_quarters : public BossAI
         }
         else if (me->GetEntry() == NPC_SHADIKITH_THE_GLIDER)
         {
-            _scheduler.Schedule(4s, [this](TaskContext context)
+            _scheduler
+                .Schedule(4s,
+                    [this](TaskContext context)
             {
                 DoCastSelf(SPELL_SONIC_BURST);
                 context.Repeat(12s, 18s);
-            }).Schedule(7s, [this](TaskContext context)
+            })
+                .Schedule(7s,
+                    [this](TaskContext context)
             {
                 DoCastSelf(SPELL_WING_BUFFET);
                 context.Repeat(12s, 18s);
-            }).Schedule(10s, [this](TaskContext context)
+            })
+                .Schedule(10s,
+                    [this](TaskContext context)
             {
-                if (Unit* target = SelectTarget(SelectTargetMethod::MinDistance, 0, FarthestTargetSelector(me, 40.0f, false, true)))
+                if (Unit* target = SelectTarget(
+                        SelectTargetMethod::MinDistance, 0, FarthestTargetSelector(me, 40.0f, false, true)))
                 {
                     me->CastSpell(target, SPELL_DIVE);
                 }
@@ -83,7 +92,8 @@ struct boss_servant_quarters : public BossAI
         }
         else // if (me->GetEntry() == NPC_ROKAD_THE_RAVAGER)
         {
-            _scheduler.Schedule(3s, [this](TaskContext context)
+            _scheduler.Schedule(3s,
+                [this](TaskContext context)
             {
                 DoCastVictim(SPELL_RAVAGE);
                 context.Repeat(10500ms);
@@ -91,19 +101,12 @@ struct boss_servant_quarters : public BossAI
         }
     }
 
-    void JustDied(Unit* /*who*/) override
-    {
-    }
+    void JustDied(Unit* /*who*/) override { }
 
     void MovementInform(uint32 type, uint32 point) override
     {
         if (type == POINT_MOTION_TYPE && point == EVENT_CHARGE)
-        {
-            _scheduler.Schedule(1ms, [this](TaskContext /*context*/)
-            {
-                DoCastVictim(SPELL_FEAR);
-            });
-        }
+            _scheduler.Schedule(1ms, [this](TaskContext /*context*/) { DoCastVictim(SPELL_FEAR); });
     }
 
     void UpdateAI(uint32 diff) override
@@ -118,8 +121,8 @@ struct boss_servant_quarters : public BossAI
         DoMeleeAttackIfReady();
     }
 
-    private:
-        TaskScheduler _scheduler;
+private:
+    TaskScheduler _scheduler;
 };
 
 void AddSC_boss_servant_quarters()

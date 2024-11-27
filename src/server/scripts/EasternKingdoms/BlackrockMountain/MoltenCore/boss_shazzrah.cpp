@@ -24,17 +24,18 @@
 
 enum Spells
 {
-    SPELL_ARCANE_EXPLOSION              = 19712,
-    SPELL_SHAZZRAH_CURSE                = 19713,
-    SPELL_MAGIC_GROUNDING               = 19714,
-    SPELL_COUNTERSPELL                  = 19715,
-    SPELL_SHAZZRAH_GATE_DUMMY           = 23138, // Teleports to and attacks a random target. About every 45 seconds Shazzrah will blink to random target causing a wipe of the threat list (source: wowwwiki)
-    SPELL_SHAZZRAH_GATE                 = 23139,
+    SPELL_ARCANE_EXPLOSION = 19712,
+    SPELL_SHAZZRAH_CURSE = 19713,
+    SPELL_MAGIC_GROUNDING = 19714,
+    SPELL_COUNTERSPELL = 19715,
+    SPELL_SHAZZRAH_GATE_DUMMY =
+        23138, // Teleports to and attacks a random target. About every 45 seconds Shazzrah will blink to random target causing a wipe of the threat list (source: wowwwiki)
+    SPELL_SHAZZRAH_GATE = 23139,
 };
 
 enum Events
 {
-    EVENT_ARCANE_EXPLOSION              = 1,
+    EVENT_ARCANE_EXPLOSION = 1,
     EVENT_SHAZZRAH_CURSE,
     EVENT_MAGIC_GROUNDING,
     EVENT_COUNTERSPELL,
@@ -48,13 +49,13 @@ public:
 
     struct boss_shazzrahAI : public BossAI
     {
-        boss_shazzrahAI(Creature* creature) : BossAI(creature, DATA_SHAZZRAH) {}
+        boss_shazzrahAI(Creature* creature) : BossAI(creature, DATA_SHAZZRAH) { }
 
         void JustEngagedWith(Unit* /*target*/) override
         {
             _JustEngagedWith();
             events.ScheduleEvent(EVENT_ARCANE_EXPLOSION, 2s, 4s);
-            events.ScheduleEvent(EVENT_SHAZZRAH_CURSE, 7s,11s);
+            events.ScheduleEvent(EVENT_SHAZZRAH_CURSE, 7s, 11s);
             events.ScheduleEvent(EVENT_MAGIC_GROUNDING, 14s, 19s);
             events.ScheduleEvent(EVENT_COUNTERSPELL, 9s, 10s);
             events.ScheduleEvent(EVENT_SHAZZRAH_GATE, 30s);
@@ -72,7 +73,8 @@ public:
                 }
                 case EVENT_SHAZZRAH_CURSE:
                 {
-                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true, true, -SPELL_SHAZZRAH_CURSE))
+                    if (Unit* target =
+                            SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true, true, -SPELL_SHAZZRAH_CURSE))
                     {
                         DoCast(target, SPELL_SHAZZRAH_CURSE);
                     }
@@ -115,7 +117,7 @@ class spell_shazzrah_gate_dummy : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SHAZZRAH_GATE });
+        return ValidateSpellInfo({SPELL_SHAZZRAH_GATE});
     }
 
     void FilterTargets(std::list<WorldObject*>& targets)
@@ -128,30 +130,22 @@ class spell_shazzrah_gate_dummy : public SpellScript
                 Player const* plrTarget = target->ToPlayer();
                 // Should not target non player targets
                 if (!plrTarget)
-                {
                     return true;
-                }
 
                 // Should skip current victim
                 if (caster->GetVictim() == plrTarget)
-                {
                     return true;
-                }
 
                 // Should not target enemies within melee range
                 if (plrTarget->IsWithinMeleeRange(caster))
-                {
                     return true;
-                }
 
                 return false;
             });
         }
 
         if (!targets.empty())
-        {
             Acore::Containers::RandomResize(targets, 1);
-        }
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -175,7 +169,8 @@ class spell_shazzrah_gate_dummy : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_shazzrah_gate_dummy::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_shazzrah_gate_dummy::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
         OnEffectHitTarget += SpellEffectFn(spell_shazzrah_gate_dummy::HandleScript, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };

@@ -30,18 +30,16 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable groupCommandTable =
-        {
-            { "list",    HandleGroupListCommand,    SEC_GAMEMASTER, Console::Yes },
-            { "join",    HandleGroupJoinCommand,    SEC_GAMEMASTER, Console::No },
-            { "remove",  HandleGroupRemoveCommand,  SEC_GAMEMASTER, Console::No },
-            { "disband", HandleGroupDisbandCommand, SEC_GAMEMASTER, Console::No },
-            { "leader",  HandleGroupLeaderCommand,  SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable groupCommandTable = {
+            {"list",    HandleGroupListCommand,    SEC_GAMEMASTER, Console::Yes},
+            {"join",    HandleGroupJoinCommand,    SEC_GAMEMASTER, Console::No },
+            {"remove",  HandleGroupRemoveCommand,  SEC_GAMEMASTER, Console::No },
+            {"disband", HandleGroupDisbandCommand, SEC_GAMEMASTER, Console::No },
+            {"leader",  HandleGroupLeaderCommand,  SEC_GAMEMASTER, Console::No }
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "group",  groupCommandTable }
+        static ChatCommandTable commandTable = {
+            {"group", groupCommandTable}
         };
 
         return commandTable;
@@ -50,14 +48,10 @@ public:
     static bool HandleGroupLeaderCommand(ChatHandler* handler, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target)
-        {
             return false;
-        }
 
         Player* player = nullptr;
         Group* group = nullptr;
@@ -78,14 +72,10 @@ public:
     static bool HandleGroupDisbandCommand(ChatHandler* handler, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target || !target->IsConnected())
-        {
             return false;
-        }
 
         Player* player = nullptr;
         Group* group = nullptr;
@@ -94,9 +84,7 @@ public:
         if (handler->GetPlayerGroupAndGUIDByName(target->GetName().c_str(), player, group, guid))
         {
             if (group)
-            {
                 group->Disband();
-            }
         }
 
         return true;
@@ -105,14 +93,10 @@ public:
     static bool HandleGroupRemoveCommand(ChatHandler* handler, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target || !target->IsConnected())
-        {
             return false;
-        }
 
         Player* player = nullptr;
         Group* group = nullptr;
@@ -121,20 +105,17 @@ public:
         if (handler->GetPlayerGroupAndGUIDByName(target->GetName().c_str(), player, group, guid, true))
         {
             if (group)
-            {
                 group->RemoveMember(guid);
-            }
         }
 
         return true;
     }
 
-    static bool HandleGroupJoinCommand(ChatHandler* handler, std::string const& playerInGroup, std::string const& playerName)
+    static bool HandleGroupJoinCommand(
+        ChatHandler* handler, std::string const& playerInGroup, std::string const& playerName)
     {
         if (playerInGroup.empty() || playerName.empty())
-        {
             return false;
-        }
 
         Player* playerSource = nullptr;
         Group* groupSource = nullptr;
@@ -148,7 +129,8 @@ public:
                 Group* groupTarget = nullptr;
                 Player* playerTarget = nullptr;
 
-                if (handler->GetPlayerGroupAndGUIDByName(playerName.c_str(), playerTarget, groupTarget, guidTarget, true))
+                if (handler->GetPlayerGroupAndGUIDByName(
+                        playerName.c_str(), playerTarget, groupTarget, guidTarget, true))
                 {
                     if (!groupTarget && playerTarget->GetGroup() != groupSource)
                     {
@@ -156,7 +138,8 @@ public:
                         {
                             groupSource->AddMember(playerTarget);
                             groupSource->BroadcastGroupUpdate();
-                            handler->PSendSysMessage(LANG_GROUP_PLAYER_JOINED, playerTarget->GetName(), playerSource->GetName());
+                            handler->PSendSysMessage(
+                                LANG_GROUP_PLAYER_JOINED, playerTarget->GetName(), playerSource->GetName());
                             return true;
                         }
                         else
@@ -188,28 +171,20 @@ public:
     static bool HandleGroupListCommand(ChatHandler* handler, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target)
-        {
             return false;
-        }
 
         Group* groupTarget = nullptr;
 
         if (target->IsConnected())
-        {
             groupTarget = target->GetConnectedPlayer()->GetGroup();
-        }
 
         if (!groupTarget)
         {
             if (ObjectGuid groupGUID = sCharacterCache->GetCharacterGroupGuidByGuid(target->GetGUID()))
-            {
                 groupTarget = sGroupMgr->GetGroupByGUID(groupGUID.GetCounter());
-            }
         }
 
         if (!groupTarget)
@@ -218,23 +193,20 @@ public:
             return true;
         }
 
-        handler->PSendSysMessage(LANG_GROUP_TYPE, (groupTarget->isRaidGroup() ? "Raid" : "Party"), groupTarget->GetMembersCount());
+        handler->PSendSysMessage(
+            LANG_GROUP_TYPE, (groupTarget->isRaidGroup() ? "Raid" : "Party"), groupTarget->GetMembersCount());
 
         for (auto const& slot : groupTarget->GetMemberSlots())
         {
             std::string flags;
 
             if (slot.flags & MEMBER_FLAG_ASSISTANT)
-            {
                 flags = "Assistant";
-            }
 
             if (slot.flags & MEMBER_FLAG_MAINTANK)
             {
                 if (!flags.empty())
-                {
                     flags.append(", ");
-                }
 
                 flags.append("MainTank");
             }
@@ -242,17 +214,13 @@ public:
             if (slot.flags & MEMBER_FLAG_MAINASSIST)
             {
                 if (!flags.empty())
-                {
                     flags.append(", ");
-                }
 
                 flags.append("MainAssist");
             }
 
             if (flags.empty())
-            {
                 flags = "None";
-            }
         }
 
         return true;

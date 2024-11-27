@@ -41,7 +41,8 @@ void AutobroadcastMgr::LoadAutobroadcasts()
 
     if (!result)
     {
-        LOG_WARN("autobroadcast", ">> Loaded 0 autobroadcasts definitions. DB table `autobroadcast` is empty for this realm!");
+        LOG_WARN("autobroadcast",
+            ">> Loaded 0 autobroadcasts definitions. DB table `autobroadcast` is empty for this realm!");
         LOG_INFO("autobroadcast", " ");
         return;
     }
@@ -50,7 +51,9 @@ void AutobroadcastMgr::LoadAutobroadcasts()
 
     if (_announceType < AnnounceType::World || _announceType > AnnounceType::Both)
     {
-        LOG_ERROR("autobroadcast", "AutobroadcastMgr::LoadAutobroadcasts: Config option AutoBroadcast.Center set to not allowed value {}. Set to default value 0", (int8)_announceType);
+        LOG_ERROR("autobroadcast",
+            "AutobroadcastMgr::LoadAutobroadcasts: Config option AutoBroadcast.Center set to not allowed value {}. Set to default value 0",
+            (int8)_announceType);
         _announceType = AnnounceType::World;
     }
 
@@ -74,16 +77,16 @@ void AutobroadcastMgr::LoadAutobroadcasts()
 void AutobroadcastMgr::SendAutobroadcasts()
 {
     if (_autobroadcasts.empty())
-    {
         return;
-    }
 
     uint32 weight = 0;
     AutobroadcastsWeightMap selectionWeights;
 
     std::string msg;
 
-    for (AutobroadcastsWeightMap::const_iterator it = _autobroadcastsWeights.begin(); it != _autobroadcastsWeights.end(); ++it)
+    for (AutobroadcastsWeightMap::const_iterator it = _autobroadcastsWeights.begin();
+         it != _autobroadcastsWeights.end();
+         ++it)
     {
         if (it->second)
         {
@@ -113,17 +116,17 @@ void AutobroadcastMgr::SendAutobroadcasts()
 
     switch (_announceType)
     {
-    case AnnounceType::World:
-        SendWorldAnnouncement(msg);
-        break;
-    case AnnounceType::Notification:
-        SendNotificationAnnouncement(msg);
-        break;
-    case AnnounceType::Both:
-        SendWorldAnnouncement(msg);
-        SendNotificationAnnouncement(msg);
-    default:
-        break;
+        case AnnounceType::World:
+            SendWorldAnnouncement(msg);
+            break;
+        case AnnounceType::Notification:
+            SendNotificationAnnouncement(msg);
+            break;
+        case AnnounceType::Both:
+            SendWorldAnnouncement(msg);
+            SendNotificationAnnouncement(msg);
+        default:
+            break;
     }
 
     LOG_DEBUG("autobroadcast", "AutobroadcastMgr::SendAutobroadcasts: '{}'", msg);

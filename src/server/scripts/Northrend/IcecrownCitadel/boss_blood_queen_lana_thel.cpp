@@ -27,56 +27,56 @@
 
 enum Texts
 {
-    SAY_AGGRO                   = 0,
-    SAY_VAMPIRIC_BITE           = 1,
-    SAY_MIND_CONTROL            = 2,
-    EMOTE_BLOODTHIRST           = 3,
-    SAY_SWARMING_SHADOWS        = 4,
-    EMOTE_SWARMING_SHADOWS      = 5,
-    SAY_PACT_OF_THE_DARKFALLEN  = 6,
-    SAY_AIR_PHASE               = 7,
-    SAY_KILL                    = 8,
-    SAY_WIPE                    = 9,
-    SAY_BERSERK                 = 10,
-    SAY_DEATH                   = 11,
-    EMOTE_BERSERK_RAID          = 12
+    SAY_AGGRO = 0,
+    SAY_VAMPIRIC_BITE = 1,
+    SAY_MIND_CONTROL = 2,
+    EMOTE_BLOODTHIRST = 3,
+    SAY_SWARMING_SHADOWS = 4,
+    EMOTE_SWARMING_SHADOWS = 5,
+    SAY_PACT_OF_THE_DARKFALLEN = 6,
+    SAY_AIR_PHASE = 7,
+    SAY_KILL = 8,
+    SAY_WIPE = 9,
+    SAY_BERSERK = 10,
+    SAY_DEATH = 11,
+    EMOTE_BERSERK_RAID = 12
 };
 
 enum Spells
 {
-    SPELL_SHROUD_OF_SORROW                  = 70986,
-    SPELL_FRENZIED_BLOODTHIRST_VISUAL       = 71949,
-    SPELL_VAMPIRIC_BITE                     = 71726,
-    SPELL_VAMPIRIC_BITE_DUMMY               = 71837,
-    SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_PLR    = 70879,
-    SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_HEAL   = 70872,
-    SPELL_FRENZIED_BLOODTHIRST              = 70877,
-    SPELL_UNCONTROLLABLE_FRENZY             = 70923,
-    SPELL_PRESENCE_OF_THE_DARKFALLEN_DUMMY  = 70994,
+    SPELL_SHROUD_OF_SORROW = 70986,
+    SPELL_FRENZIED_BLOODTHIRST_VISUAL = 71949,
+    SPELL_VAMPIRIC_BITE = 71726,
+    SPELL_VAMPIRIC_BITE_DUMMY = 71837,
+    SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_PLR = 70879,
+    SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_HEAL = 70872,
+    SPELL_FRENZIED_BLOODTHIRST = 70877,
+    SPELL_UNCONTROLLABLE_FRENZY = 70923,
+    SPELL_PRESENCE_OF_THE_DARKFALLEN_DUMMY = 70994,
     SPELL_PRESENCE_OF_THE_DARKFALLEN_EFFECT = 70995,
-    SPELL_PRESENCE_OF_THE_DARKFALLEN_SE     = 71952,
-    SPELL_BLOOD_MIRROR_DAMAGE               = 70821,
-    SPELL_BLOOD_MIRROR_VISUAL               = 71510,
-    SPELL_BLOOD_MIRROR_DUMMY                = 70838,
-    SPELL_DELIRIOUS_SLASH                   = 71623,
-    SPELL_PACT_OF_THE_DARKFALLEN_TARGET     = 71336,
-    SPELL_PACT_OF_THE_DARKFALLEN            = 71340,
-    SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE     = 71341,
-    SPELL_SWARMING_SHADOWS                  = 71264,
-    SPELL_TWILIGHT_BLOODBOLT_TARGET         = 71445,
-    SPELL_TWILIGHT_BLOODBOLT                = 71818,
-    SPELL_TWILIGHT_BLOODBOLT_FROM_WHIRL     = 71446,
-    SPELL_INCITE_TERROR                     = 73070,
-    SPELL_BLOODBOLT_WHIRL                   = 71772,
-    SPELL_ANNIHILATE                        = 71322,
+    SPELL_PRESENCE_OF_THE_DARKFALLEN_SE = 71952,
+    SPELL_BLOOD_MIRROR_DAMAGE = 70821,
+    SPELL_BLOOD_MIRROR_VISUAL = 71510,
+    SPELL_BLOOD_MIRROR_DUMMY = 70838,
+    SPELL_DELIRIOUS_SLASH = 71623,
+    SPELL_PACT_OF_THE_DARKFALLEN_TARGET = 71336,
+    SPELL_PACT_OF_THE_DARKFALLEN = 71340,
+    SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE = 71341,
+    SPELL_SWARMING_SHADOWS = 71264,
+    SPELL_TWILIGHT_BLOODBOLT_TARGET = 71445,
+    SPELL_TWILIGHT_BLOODBOLT = 71818,
+    SPELL_TWILIGHT_BLOODBOLT_FROM_WHIRL = 71446,
+    SPELL_INCITE_TERROR = 73070,
+    SPELL_BLOODBOLT_WHIRL = 71772,
+    SPELL_ANNIHILATE = 71322,
 };
 
 enum Shadowmourne
 {
-    QUEST_BLOOD_INFUSION                    = 24756,
-    SPELL_BLOOD_INFUSION_CREDIT             = 72934,
-    SPELL_GUSHING_WOUND                     = 72132,
-    SPELL_THIRST_QUENCHED                   = 72154,
+    QUEST_BLOOD_INFUSION = 24756,
+    SPELL_BLOOD_INFUSION_CREDIT = 72934,
+    SPELL_GUSHING_WOUND = 72132,
+    SPELL_THIRST_QUENCHED = 72154,
 };
 
 #define ESSENCE_OF_BLOOD_QUEEN     RAID_MODE<uint32>(70867, 71473, 71532, 71533)
@@ -85,8 +85,7 @@ enum Shadowmourne
 #define DELIRIOUS_SLASH            RAID_MODE<uint32>(71623, 71624, 71625, 71626)
 #define PRESENCE_OF_THE_DARKFALLEN RAID_MODE<uint32>(70994, 71962, 71963, 71964)
 
-uint32 const vampireAuras[3][MAX_DIFFICULTY] =
-{
+uint32 const vampireAuras[3][MAX_DIFFICULTY] = {
     {70867, 71473, 71532, 71533},
     {70879, 71525, 71530, 71531},
     {70877, 71474, 70877, 71474},
@@ -118,20 +117,20 @@ enum Events
 
 enum Guids
 {
-    GUID_VAMPIRE    = 1,
-    GUID_BLOODBOLT  = 2,
+    GUID_VAMPIRE = 1,
+    GUID_BLOODBOLT = 2,
 };
 
 enum Points
 {
-    POINT_CENTER    = 1,
-    POINT_AIR       = 2,
-    POINT_GROUND    = 3,
-    POINT_MINCHAR   = 4,
+    POINT_CENTER = 1,
+    POINT_AIR = 2,
+    POINT_GROUND = 3,
+    POINT_MINCHAR = 4,
 };
 
-Position const centerPos  = {4595.7090f, 2769.4190f, 400.6368f, 0.000000f};
-Position const airPos     = {4595.7090f, 2769.4190f, 422.3893f, 0.000000f};
+Position const centerPos = {4595.7090f, 2769.4190f, 400.6368f, 0.000000f};
+Position const airPos = {4595.7090f, 2769.4190f, 422.3893f, 0.000000f};
 Position const mincharPos = {4629.3711f, 2782.6089f, 424.6390f, 0.000000f};
 
 class boss_blood_queen_lana_thel : public CreatureScript
@@ -212,7 +211,7 @@ public:
             _creditBloodQuickening = instance->GetData(DATA_BLOOD_QUICKENING_STATE) == IN_PROGRESS;
         }
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
             _JustDied();
             Talk(SAY_DEATH);
@@ -326,41 +325,43 @@ public:
                     me->CastSpell(me, SPELL_BERSERK, true);
                     break;
                 case EVENT_VAMPIRIC_BITE:
-                    {
-                        Player* target = nullptr;
-                        float maxThreat = 0.0f;
-                        const Map::PlayerList& pl = me->GetMap()->GetPlayers();
-                        for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
-                            if (Player* p = itr->GetSource())
-                                if (p->IsAlive() && p != me->GetVictim() && p->GetGUID() != _offtankGUID && !p->IsGameMaster() && p->GetDistance(me) < 70.0f)
+                {
+                    Player* target = nullptr;
+                    float maxThreat = 0.0f;
+                    Map::PlayerList const& pl = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
+                        if (Player* p = itr->GetSource())
+                            if (p->IsAlive() && p != me->GetVictim() && p->GetGUID() != _offtankGUID &&
+                                !p->IsGameMaster() && p->GetDistance(me) < 70.0f)
+                            {
+                                float th = me->GetThreatMgr().getThreatWithoutTemp(p);
+                                if (!target || th > maxThreat)
                                 {
-                                    float th = me->GetThreatMgr().getThreatWithoutTemp(p);
-                                    if (!target || th > maxThreat)
-                                    {
-                                        target = p;
-                                        maxThreat = th;
-                                    }
+                                    target = p;
+                                    maxThreat = th;
                                 }
+                            }
 
-                        if (target)
-                        {
-                            me->CastSpell(target, SPELL_VAMPIRIC_BITE, false);
-                            me->CastSpell((Unit*)nullptr, SPELL_VAMPIRIC_BITE_DUMMY, true);
-                            Talk(SAY_VAMPIRIC_BITE);
-                            SetGUID(target->GetGUID(), GUID_VAMPIRE);
-                            target->CastSpell(target, SPELL_PRESENCE_OF_THE_DARKFALLEN_DUMMY, TRIGGERED_FULL_MASK);
-                            target->CastSpell(target, SPELL_PRESENCE_OF_THE_DARKFALLEN_SE, TRIGGERED_FULL_MASK);
-                        }
+                    if (target)
+                    {
+                        me->CastSpell(target, SPELL_VAMPIRIC_BITE, false);
+                        me->CastSpell((Unit*)nullptr, SPELL_VAMPIRIC_BITE_DUMMY, true);
+                        Talk(SAY_VAMPIRIC_BITE);
+                        SetGUID(target->GetGUID(), GUID_VAMPIRE);
+                        target->CastSpell(target, SPELL_PRESENCE_OF_THE_DARKFALLEN_DUMMY, TRIGGERED_FULL_MASK);
+                        target->CastSpell(target, SPELL_PRESENCE_OF_THE_DARKFALLEN_SE, TRIGGERED_FULL_MASK);
                     }
-                    break;
+                }
+                break;
                 case EVENT_BLOOD_MIRROR:
                     if (me->GetVictim())
                     {
                         std::list<Player*> myList;
-                        const Map::PlayerList& pl = me->GetMap()->GetPlayers();
+                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
                         for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                             if (Player* p = itr->GetSource())
-                                if (p->IsAlive() && p != me->GetVictim() && !p->IsGameMaster() && !p->HasAura(SPELL_UNCONTROLLABLE_FRENZY))
+                                if (p->IsAlive() && p != me->GetVictim() && !p->IsGameMaster() &&
+                                    !p->HasAura(SPELL_UNCONTROLLABLE_FRENZY))
                                     myList.push_back(p);
                         if (!myList.empty())
                         {
@@ -379,7 +380,8 @@ public:
                                     if (Player* prevOfftank = ObjectAccessor::GetPlayer(*me, _offtankGUID))
                                         prevOfftank->RemoveAurasDueToSpell(SPELL_BLOOD_MIRROR_DUMMY);
 
-                                if (target->GetDistance(me->GetVictim()) > 39.0f || me->GetDistance(me->GetVictim()) > 39.0f)
+                                if (target->GetDistance(me->GetVictim()) > 39.0f ||
+                                    me->GetDistance(me->GetVictim()) > 39.0f)
                                 {
                                     _tankGUID.Clear();
                                     _offtankGUID.Clear();
@@ -393,8 +395,10 @@ public:
                                 me->GetVictim()->CastSpell(target, SPELL_BLOOD_MIRROR_DUMMY, true);
                                 me->CastSpell(me->GetVictim(), SPELL_BLOOD_MIRROR_VISUAL, false);
 
-                                if (Is25ManRaid() && target->GetQuestStatus(QUEST_BLOOD_INFUSION) == QUEST_STATUS_INCOMPLETE &&
-                                        target->HasAura(SPELL_UNSATED_CRAVING) && !target->HasAura(SPELL_THIRST_QUENCHED) && !target->HasAura(SPELL_GUSHING_WOUND))
+                                if (Is25ManRaid() &&
+                                    target->GetQuestStatus(QUEST_BLOOD_INFUSION) == QUEST_STATUS_INCOMPLETE &&
+                                    target->HasAura(SPELL_UNSATED_CRAVING) && !target->HasAura(SPELL_THIRST_QUENCHED) &&
+                                    !target->HasAura(SPELL_GUSHING_WOUND))
                                     target->CastSpell(target, SPELL_GUSHING_WOUND, TRIGGERED_FULL_MASK);
                             }
                         }
@@ -427,10 +431,12 @@ public:
                     if (!me->HasReactState(REACT_PASSIVE))
                     {
                         std::list<Player*> myList;
-                        const Map::PlayerList& pl = me->GetMap()->GetPlayers();
+                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
                         for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                             if (Player* p = itr->GetSource())
-                                if (p->IsAlive() && p != me->GetVictim() && p->GetGUID() != _offtankGUID && !p->IsGameMaster() && p->GetDistance(me) < 100.0f && !p->HasAura(SPELL_UNCONTROLLABLE_FRENZY))
+                                if (p->IsAlive() && p != me->GetVictim() && p->GetGUID() != _offtankGUID &&
+                                    !p->IsGameMaster() && p->GetDistance(me) < 100.0f &&
+                                    !p->HasAura(SPELL_UNCONTROLLABLE_FRENZY))
                                     myList.push_back(p);
                         Acore::Containers::RandomResize(myList, Is25ManRaid() ? 3 : 2);
                         if (myList.size() > 1)
@@ -450,10 +456,12 @@ public:
                     if (!me->HasReactState(REACT_PASSIVE))
                     {
                         std::list<Player*> myList;
-                        const Map::PlayerList& pl = me->GetMap()->GetPlayers();
+                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
                         for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                             if (Player* p = itr->GetSource())
-                                if (p->IsAlive() && p != me->GetVictim() && p->GetGUID() != _offtankGUID && !p->IsGameMaster() && !p->HasAura(SPELL_PACT_OF_THE_DARKFALLEN) && !p->HasAura(SPELL_UNCONTROLLABLE_FRENZY))
+                                if (p->IsAlive() && p != me->GetVictim() && p->GetGUID() != _offtankGUID &&
+                                    !p->IsGameMaster() && !p->HasAura(SPELL_PACT_OF_THE_DARKFALLEN) &&
+                                    !p->HasAura(SPELL_UNCONTROLLABLE_FRENZY))
                                     myList.push_back(p);
 
                         if (!myList.empty())
@@ -474,10 +482,12 @@ public:
                     if (!me->HasReactState(REACT_PASSIVE))
                     {
                         std::list<Player*> myList;
-                        const Map::PlayerList& pl = me->GetMap()->GetPlayers();
+                        Map::PlayerList const& pl = me->GetMap()->GetPlayers();
                         for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                             if (Player* p = itr->GetSource())
-                                if (p->IsAlive() && p != me->GetVictim() && p->GetGUID() != _offtankGUID && !p->IsGameMaster() && !p->HasAura(SPELL_PACT_OF_THE_DARKFALLEN) && !p->HasAura(SPELL_UNCONTROLLABLE_FRENZY))
+                                if (p->IsAlive() && p != me->GetVictim() && p->GetGUID() != _offtankGUID &&
+                                    !p->IsGameMaster() && !p->HasAura(SPELL_PACT_OF_THE_DARKFALLEN) &&
+                                    !p->HasAura(SPELL_UNCONTROLLABLE_FRENZY))
                                     myList.push_back(p);
 
                         Acore::Containers::RandomResize(myList, uint32(Is25ManRaid() ? 4 : 2));
@@ -553,7 +563,7 @@ public:
 
         void EnterEvadeMode(EvadeReason why) override
         {
-            const Map::PlayerList& pl = me->GetMap()->GetPlayers();
+            Map::PlayerList const& pl = me->GetMap()->GetPlayers();
             for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                 if (Player* p = itr->GetSource())
                     if (p->IsAlive() && p->HasAura(SPELL_UNCONTROLLABLE_FRENZY))
@@ -572,7 +582,7 @@ public:
             BossAI::EnterEvadeMode();
         }
 
-        bool CanAIAttack(Unit const*  /*target*/) const override
+        bool CanAIAttack(Unit const* /*target*/) const override
         {
             return me->IsVisible();
         }
@@ -593,7 +603,7 @@ class spell_blood_queen_pact_of_the_darkfallen_dmg_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE });
+        return ValidateSpellInfo({SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE});
     }
 
     // this is an additional effect to be executed
@@ -604,14 +614,21 @@ class spell_blood_queen_pact_of_the_darkfallen_dmg_aura : public AuraScript
         SpellInfo const* damageSpell = sSpellMgr->AssertSpellInfo(SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE);
         int32 damage = damageSpell->Effects[EFFECT_0].CalcValue();
         float herobonus = ((GetTarget()->FindMap() && GetTarget()->FindMap()->IsHeroic()) ? 0.2f : 0.0f);
-        float multiplier = 0.5f + herobonus + 0.1f * uint32(aurEff->GetTickNumber() / 10); // do not convert to 0.01f - we need tick number/10 as INT (damage increases every 10 ticks)
+        float multiplier =
+            0.5f + herobonus +
+            0.1f *
+                uint32(aurEff->GetTickNumber() /
+                       10); // do not convert to 0.01f - we need tick number/10 as INT (damage increases every 10 ticks)
         damage = int32(damage * multiplier);
-        GetTarget()->CastCustomSpell(SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE, SPELLVALUE_BASE_POINT0, damage, GetTarget(), true);
+        GetTarget()->CastCustomSpell(
+            SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE, SPELLVALUE_BASE_POINT0, damage, GetTarget(), true);
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_blood_queen_pact_of_the_darkfallen_dmg_aura::PeriodicTick, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(spell_blood_queen_pact_of_the_darkfallen_dmg_aura::PeriodicTick,
+            EFFECT_1,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -645,7 +662,8 @@ class spell_blood_queen_pact_of_the_darkfallen : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_blood_queen_pact_of_the_darkfallen::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_blood_queen_pact_of_the_darkfallen::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
     }
 };
 
@@ -661,14 +679,15 @@ class spell_blood_queen_pact_of_the_darkfallen_dmg_target : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_blood_queen_pact_of_the_darkfallen_dmg_target::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_blood_queen_pact_of_the_darkfallen_dmg_target::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
     }
 };
 
 class BloodboltHitCheck
 {
 public:
-    explicit BloodboltHitCheck(LanaThelAI* ai) : _ai(ai) {}
+    explicit BloodboltHitCheck(LanaThelAI* ai) : _ai(ai) { }
 
     bool operator()(WorldObject* object) const
     {
@@ -685,7 +704,7 @@ class spell_blood_queen_bloodbolt : public SpellScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_TWILIGHT_BLOODBOLT_FROM_WHIRL });
+        return ValidateSpellInfo({SPELL_TWILIGHT_BLOODBOLT_FROM_WHIRL});
     }
 
     bool Load() override
@@ -711,8 +730,10 @@ class spell_blood_queen_bloodbolt : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_blood_queen_bloodbolt::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
-        OnEffectHitTarget += SpellEffectFn(spell_blood_queen_bloodbolt::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_blood_queen_bloodbolt::FilterTargets, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_blood_queen_bloodbolt::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -722,13 +743,14 @@ class spell_blood_queen_frenzied_bloodthirst_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_UNCONTROLLABLE_FRENZY });
+        return ValidateSpellInfo({SPELL_UNCONTROLLABLE_FRENZY});
     }
 
     void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (InstanceScript* instance = GetTarget()->GetInstanceScript())
-            if (Creature* bloodQueen = ObjectAccessor::GetCreature(*GetTarget(), instance->GetGuidData(DATA_BLOOD_QUEEN_LANA_THEL)))
+            if (Creature* bloodQueen =
+                    ObjectAccessor::GetCreature(*GetTarget(), instance->GetGuidData(DATA_BLOOD_QUEEN_LANA_THEL)))
                 bloodQueen->AI()->Talk(EMOTE_BLOODTHIRST, GetTarget());
     }
 
@@ -737,7 +759,8 @@ class spell_blood_queen_frenzied_bloodthirst_aura : public AuraScript
         Unit* target = GetTarget();
         if (GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_EXPIRE)
             if (InstanceScript* instance = target->GetInstanceScript())
-                if (Creature* bloodQueen = ObjectAccessor::GetCreature(*target, instance->GetGuidData(DATA_BLOOD_QUEEN_LANA_THEL)))
+                if (Creature* bloodQueen =
+                        ObjectAccessor::GetCreature(*target, instance->GetGuidData(DATA_BLOOD_QUEEN_LANA_THEL)))
                     if (bloodQueen->IsAlive() && bloodQueen->IsInCombat())
                     {
                         // this needs to be done BEFORE charm aura or we hit an assert in Unit::SetCharmedBy
@@ -751,8 +774,14 @@ class spell_blood_queen_frenzied_bloodthirst_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_blood_queen_frenzied_bloodthirst_aura::OnApply, EFFECT_0, SPELL_AURA_OVERRIDE_SPELLS, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_blood_queen_frenzied_bloodthirst_aura::OnRemove, EFFECT_0, SPELL_AURA_OVERRIDE_SPELLS, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_blood_queen_frenzied_bloodthirst_aura::OnApply,
+            EFFECT_0,
+            SPELL_AURA_OVERRIDE_SPELLS,
+            AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_blood_queen_frenzied_bloodthirst_aura::OnRemove,
+            EFFECT_0,
+            SPELL_AURA_OVERRIDE_SPELLS,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -762,7 +791,7 @@ class spell_blood_queen_essence_of_the_blood_queen_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_HEAL });
+        return ValidateSpellInfo({SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_HEAL});
     }
 
     void OnProc(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
@@ -772,17 +801,22 @@ class spell_blood_queen_essence_of_the_blood_queen_aura : public AuraScript
         DamageInfo* damageInfo = eventInfo.GetDamageInfo();
 
         if (!damageInfo || !damageInfo->GetDamage())
-        {
             return;
-        }
 
         int32 heal = CalculatePct(static_cast<int32>(damageInfo->GetDamage()), aurEff->GetAmount());
-        GetTarget()->CastCustomSpell(SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_HEAL, SPELLVALUE_BASE_POINT0, heal, GetTarget(), TRIGGERED_FULL_MASK, nullptr, aurEff);
+        GetTarget()->CastCustomSpell(SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_HEAL,
+            SPELLVALUE_BASE_POINT0,
+            heal,
+            GetTarget(),
+            TRIGGERED_FULL_MASK,
+            nullptr,
+            aurEff);
     }
 
     void Register() override
     {
-        OnEffectProc += AuraEffectProcFn(spell_blood_queen_essence_of_the_blood_queen_aura::OnProc, EFFECT_1, SPELL_AURA_DUMMY);
+        OnEffectProc +=
+            AuraEffectProcFn(spell_blood_queen_essence_of_the_blood_queen_aura::OnProc, EFFECT_1, SPELL_AURA_DUMMY);
     }
 };
 
@@ -793,11 +827,7 @@ class spell_blood_queen_vampiric_bite : public SpellScript
     bool Validate(SpellInfo const* /*spell*/) override
     {
         return ValidateSpellInfo(
-            {
-                SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_PLR,
-                SPELL_FRENZIED_BLOODTHIRST,
-                SPELL_PRESENCE_OF_THE_DARKFALLEN_DUMMY
-            });
+            {SPELL_ESSENCE_OF_THE_BLOOD_QUEEN_PLR, SPELL_FRENZIED_BLOODTHIRST, SPELL_PRESENCE_OF_THE_DARKFALLEN_DUMMY});
     }
 
     SpellCastResult CheckTarget()
@@ -819,9 +849,7 @@ class spell_blood_queen_vampiric_bite : public SpellScript
     void OnCast(SpellMissInfo missInfo)
     {
         if (missInfo != SPELL_MISS_NONE)
-        {
             return;
-        }
 
         if (!GetCaster()->IsPlayer() || GetCaster()->GetMapId() != 631)
             return;
@@ -845,7 +873,8 @@ class spell_blood_queen_vampiric_bite : public SpellScript
         }
 
         if (InstanceScript* instance = GetCaster()->GetInstanceScript())
-            if (Creature* bloodQueen = ObjectAccessor::GetCreature(*GetCaster(), instance->GetGuidData(DATA_BLOOD_QUEEN_LANA_THEL)))
+            if (Creature* bloodQueen =
+                    ObjectAccessor::GetCreature(*GetCaster(), instance->GetGuidData(DATA_BLOOD_QUEEN_LANA_THEL)))
                 bloodQueen->AI()->SetGUID(GetHitUnit()->GetGUID(), GUID_VAMPIRE);
     }
 
@@ -859,7 +888,8 @@ class spell_blood_queen_vampiric_bite : public SpellScript
     {
         OnCheckCast += SpellCheckCastFn(spell_blood_queen_vampiric_bite::CheckTarget);
         BeforeHit += BeforeSpellHitFn(spell_blood_queen_vampiric_bite::OnCast);
-        OnEffectHitTarget += SpellEffectFn(spell_blood_queen_vampiric_bite::HandlePresence, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_blood_queen_vampiric_bite::HandlePresence, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
     }
 };
 
@@ -869,12 +899,14 @@ class spell_blood_queen_swarming_shadows_floor_dmg : public SpellScript
 
     void FilterTargets(std::list<WorldObject*>& targets)
     {
-        targets.remove_if(Acore::AllWorldObjectsInExactRange(GetCaster(), GetSpellInfo()->Effects[0].CalcRadius(), true));
+        targets.remove_if(
+            Acore::AllWorldObjectsInExactRange(GetCaster(), GetSpellInfo()->Effects[0].CalcRadius(), true));
     }
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_blood_queen_swarming_shadows_floor_dmg::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_blood_queen_swarming_shadows_floor_dmg::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -889,19 +921,29 @@ class spell_blood_queen_presence_of_the_darkfallen : public SpellScript
             return;
 
         if (InstanceScript* instance = GetHitUnit()->GetInstanceScript())
-            GetHitUnit()->CastSpell((Unit*)nullptr, GetSpellInfo()->Effects[effIndex].TriggerSpell, true, nullptr, nullptr, instance->GetGuidData(DATA_BLOOD_QUEEN_LANA_THEL));
+            GetHitUnit()->CastSpell((Unit*)nullptr,
+                GetSpellInfo()->Effects[effIndex].TriggerSpell,
+                true,
+                nullptr,
+                nullptr,
+                instance->GetGuidData(DATA_BLOOD_QUEEN_LANA_THEL));
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_blood_queen_presence_of_the_darkfallen::HandleScript, EFFECT_0, SPELL_EFFECT_FORCE_CAST);
+        OnEffectHitTarget += SpellEffectFn(
+            spell_blood_queen_presence_of_the_darkfallen::HandleScript, EFFECT_0, SPELL_EFFECT_FORCE_CAST);
     }
 };
 
 class achievement_once_bitten_twice_shy : public AchievementCriteriaScript
 {
 public:
-    achievement_once_bitten_twice_shy(const char* name, uint8 spawnMode, bool wasVampire) : AchievementCriteriaScript(name), _spawnMode(spawnMode), _wasVampire(wasVampire) { }
+    achievement_once_bitten_twice_shy(char const* name, uint8 spawnMode, bool wasVampire) :
+        AchievementCriteriaScript(name),
+        _spawnMode(spawnMode),
+        _wasVampire(wasVampire)
+    { }
 
     bool OnCheck(Player* source, Unit* target, uint32 /*criteria_id*/) override
     {
@@ -909,7 +951,8 @@ public:
             return false;
 
         if (LanaThelAI* lanaThelAI = CAST_AI(LanaThelAI, target->GetAI()))
-            return (target->GetMap()->GetSpawnMode() % 2) == _spawnMode && lanaThelAI->WasVampire(source->GetGUID()) == _wasVampire;
+            return (target->GetMap()->GetSpawnMode() % 2) == _spawnMode &&
+                   lanaThelAI->WasVampire(source->GetGUID()) == _wasVampire;
         return false;
     }
 

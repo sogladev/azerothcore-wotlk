@@ -21,32 +21,31 @@
 
 enum Spells
 {
-    SPELL_MORTAL_WOUND      = 25646,
-    SPELL_ENTANGLE_RIGHT    = 720,
-    SPELL_ENTANGLE_CENTER   = 731,
-    SPELL_ENTANGLE_LEFT     = 1121,
+    SPELL_MORTAL_WOUND = 25646,
+    SPELL_ENTANGLE_RIGHT = 720,
+    SPELL_ENTANGLE_CENTER = 731,
+    SPELL_ENTANGLE_LEFT = 1121,
 
-    SPELL_SUMMON_WORM_1     = 518,
-    SPELL_SUMMON_WORM_2     = 25831,
-    SPELL_SUMMON_WORM_3     = 25832
+    SPELL_SUMMON_WORM_1 = 518,
+    SPELL_SUMMON_WORM_2 = 25831,
+    SPELL_SUMMON_WORM_3 = 25832
 };
 
 enum Misc
 {
-    MAX_HATCHLING_SPAWN     = 4,
-    NPC_VEKNISS_HATCHLING   = 15962
+    MAX_HATCHLING_SPAWN = 4,
+    NPC_VEKNISS_HATCHLING = 15962
 };
 
-const std::array<Position, 3> hatchlingsSpawnPoints
-{
+std::array<Position, 3> const hatchlingsSpawnPoints {
     {
-        { -8043.6f, 1254.1f, -84.3f }, // Right
-        { -8003.0f, 1222.9f, -82.1f }, // Center
-        { -8022.3f, 1149.0f, -89.1f }  // Left
+     {-8043.6f, 1254.1f, -84.3f}, // Right
+        {-8003.0f, 1222.9f, -82.1f}, // Center
+        {-8022.3f, 1149.0f, -89.1f}  // Left
     }
 };
 
-const std::array<uint32, 3> entangleSpells = { SPELL_ENTANGLE_RIGHT, SPELL_ENTANGLE_CENTER, SPELL_ENTANGLE_LEFT };
+std::array<uint32, 3> const entangleSpells = {SPELL_ENTANGLE_RIGHT, SPELL_ENTANGLE_CENTER, SPELL_ENTANGLE_LEFT};
 
 struct boss_fankriss : public BossAI
 {
@@ -57,7 +56,7 @@ struct boss_fankriss : public BossAI
 
     void Reset() override
     {
-        summonWormSpells = { SPELL_SUMMON_WORM_1, SPELL_SUMMON_WORM_2, SPELL_SUMMON_WORM_3};
+        summonWormSpells = {SPELL_SUMMON_WORM_1, SPELL_SUMMON_WORM_2, SPELL_SUMMON_WORM_3};
         BossAI::Reset();
     }
 
@@ -67,7 +66,7 @@ struct boss_fankriss : public BossAI
         Acore::Containers::RandomResize(summonWormSpells, amount);
         for (uint32 summonSpell : summonWormSpells)
             DoCastAOE(summonSpell, true);
-        summonWormSpells = { SPELL_SUMMON_WORM_1, SPELL_SUMMON_WORM_2, SPELL_SUMMON_WORM_3 };
+        summonWormSpells = {SPELL_SUMMON_WORM_1, SPELL_SUMMON_WORM_2, SPELL_SUMMON_WORM_3};
     }
 
     void SummonHatchlingWaves()
@@ -86,27 +85,34 @@ struct boss_fankriss : public BossAI
     {
         BossAI::JustEngagedWith(who);
 
-        scheduler.Schedule(7s, 14s, [this](TaskContext context)
+        scheduler
+            .Schedule(7s,
+                14s,
+                [this](TaskContext context)
+        {
+            DoCastVictim(SPELL_MORTAL_WOUND);
+            context.Repeat();
+        })
+            .Schedule(30s,
+                50s,
+                [this](TaskContext context)
+        {
+            SummonWorms();
+            context.Repeat(22s, 70s);
+        })
+            .Schedule(15s,
+                20s,
+                [this](TaskContext context)
+        {
+            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 0.0f, true))
             {
-                DoCastVictim(SPELL_MORTAL_WOUND);
-                context.Repeat();
-            })
-            .Schedule(30s, 50s, [this](TaskContext context)
-            {
-                SummonWorms();
-                context.Repeat(22s, 70s);
-            })
-            .Schedule(15s, 20s, [this](TaskContext context)
-            {
-                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 0.0f, true))
-                {
-                    uint32 spellId = Acore::Containers::SelectRandomContainerElement(entangleSpells);
-                    DoCast(target, spellId);
-                }
+                uint32 spellId = Acore::Containers::SelectRandomContainerElement(entangleSpells);
+                DoCast(target, spellId);
+            }
 
-                SummonHatchlingWaves();
-                context.Repeat(25s, 55s);
-            });
+            SummonHatchlingWaves();
+            context.Repeat(25s, 55s);
+        });
     }
 
 private:

@@ -23,6 +23,7 @@
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "TemporarySummon.h"
+
 /*
  * Scripts for spells with SPELLFAMILY_PRIEST and SPELLFAMILY_GENERIC spells used by priest players.
  * Ordered alphabetically using scriptname.
@@ -31,47 +32,47 @@
 
 enum PriestSpells
 {
-    SPELL_PRIEST_DIVINE_AEGIS                       = 47753,
-    SPELL_PRIEST_EMPOWERED_RENEW                    = 63544,
-    SPELL_PRIEST_GLYPH_OF_CIRCLE_OF_HEALING         = 55675,
-    SPELL_PRIEST_GLYPH_OF_LIGHTWELL                 = 55673,
-    SPELL_PRIEST_GLYPH_OF_PRAYER_OF_HEALING_HEAL    = 56161,
-    SPELL_PRIEST_GUARDIAN_SPIRIT_HEAL               = 48153,
-    SPELL_PRIEST_ITEM_EFFICIENCY                    = 37595,
-    SPELL_PRIEST_LIGHTWELL_CHARGES                  = 59907,
-    SPELL_PRIEST_MANA_LEECH_PROC                    = 34650,
-    SPELL_PRIEST_PENANCE_R1                         = 47540,
-    SPELL_PRIEST_PENANCE_R1_DAMAGE                  = 47758,
-    SPELL_PRIEST_PENANCE_R1_HEAL                    = 47757,
-    SPELL_PRIEST_REFLECTIVE_SHIELD_TRIGGERED        = 33619,
-    SPELL_PRIEST_REFLECTIVE_SHIELD_R1               = 33201,
-    SPELL_PRIEST_SHADOW_WORD_DEATH                  = 32409,
-    SPELL_PRIEST_T9_HEALING_2P                      = 67201,
-    SPELL_PRIEST_VAMPIRIC_TOUCH_DISPEL              = 64085,
-    SPELL_PRIEST_T4_4P_FLEXIBILITY                  = 37565,
+    SPELL_PRIEST_DIVINE_AEGIS = 47753,
+    SPELL_PRIEST_EMPOWERED_RENEW = 63544,
+    SPELL_PRIEST_GLYPH_OF_CIRCLE_OF_HEALING = 55675,
+    SPELL_PRIEST_GLYPH_OF_LIGHTWELL = 55673,
+    SPELL_PRIEST_GLYPH_OF_PRAYER_OF_HEALING_HEAL = 56161,
+    SPELL_PRIEST_GUARDIAN_SPIRIT_HEAL = 48153,
+    SPELL_PRIEST_ITEM_EFFICIENCY = 37595,
+    SPELL_PRIEST_LIGHTWELL_CHARGES = 59907,
+    SPELL_PRIEST_MANA_LEECH_PROC = 34650,
+    SPELL_PRIEST_PENANCE_R1 = 47540,
+    SPELL_PRIEST_PENANCE_R1_DAMAGE = 47758,
+    SPELL_PRIEST_PENANCE_R1_HEAL = 47757,
+    SPELL_PRIEST_REFLECTIVE_SHIELD_TRIGGERED = 33619,
+    SPELL_PRIEST_REFLECTIVE_SHIELD_R1 = 33201,
+    SPELL_PRIEST_SHADOW_WORD_DEATH = 32409,
+    SPELL_PRIEST_T9_HEALING_2P = 67201,
+    SPELL_PRIEST_VAMPIRIC_TOUCH_DISPEL = 64085,
+    SPELL_PRIEST_T4_4P_FLEXIBILITY = 37565,
 
-    SPELL_GENERIC_ARENA_DAMPENING                   = 74410,
-    SPELL_GENERIC_BATTLEGROUND_DAMPENING            = 74411,
-    SPELL_PRIEST_TWIN_DISCIPLINE_R1                 = 47586,
-    SPELL_PRIEST_SPIRITUAL_HEALING_R1               = 14898,
-    SPELL_PRIEST_DIVINE_PROVIDENCE_R1               = 47562
+    SPELL_GENERIC_ARENA_DAMPENING = 74410,
+    SPELL_GENERIC_BATTLEGROUND_DAMPENING = 74411,
+    SPELL_PRIEST_TWIN_DISCIPLINE_R1 = 47586,
+    SPELL_PRIEST_SPIRITUAL_HEALING_R1 = 14898,
+    SPELL_PRIEST_DIVINE_PROVIDENCE_R1 = 47562
 };
 
 enum PriestSpellIcons
 {
-    PRIEST_ICON_ID_BORROWED_TIME                    = 2899,
-    PRIEST_ICON_ID_EMPOWERED_RENEW_TALENT           = 3021,
-    PRIEST_ICON_ID_PAIN_AND_SUFFERING               = 2874,
+    PRIEST_ICON_ID_BORROWED_TIME = 2899,
+    PRIEST_ICON_ID_EMPOWERED_RENEW_TALENT = 3021,
+    PRIEST_ICON_ID_PAIN_AND_SUFFERING = 2874,
 };
 
 enum Mics
 {
-    PRIEST_LIGHTWELL_NPC_1                          = 31897,
-    PRIEST_LIGHTWELL_NPC_2                          = 31896,
-    PRIEST_LIGHTWELL_NPC_3                          = 31895,
-    PRIEST_LIGHTWELL_NPC_4                          = 31894,
-    PRIEST_LIGHTWELL_NPC_5                          = 31893,
-    PRIEST_LIGHTWELL_NPC_6                          = 31883
+    PRIEST_LIGHTWELL_NPC_1 = 31897,
+    PRIEST_LIGHTWELL_NPC_2 = 31896,
+    PRIEST_LIGHTWELL_NPC_3 = 31895,
+    PRIEST_LIGHTWELL_NPC_4 = 31894,
+    PRIEST_LIGHTWELL_NPC_5 = 31893,
+    PRIEST_LIGHTWELL_NPC_6 = 31883
 };
 
 class spell_pri_shadowfiend_scaling : public AuraScript
@@ -83,7 +84,8 @@ class spell_pri_shadowfiend_scaling : public AuraScript
         // xinef: shadowfiend inherits 40% of resistance from owner and 35% of armor (guessed)
         if (Unit* owner = GetUnitOwner()->GetOwner())
         {
-            SpellSchoolMask schoolMask = SpellSchoolMask(aurEff->GetSpellInfo()->Effects[aurEff->GetEffIndex()].MiscValue);
+            SpellSchoolMask schoolMask =
+                SpellSchoolMask(aurEff->GetSpellInfo()->Effects[aurEff->GetEffIndex()].MiscValue);
             int32 modifier = schoolMask == SPELL_SCHOOL_MASK_NORMAL ? 35 : 40;
             amount = CalculatePct(std::max<int32>(0, owner->GetResistance(schoolMask)), modifier);
         }
@@ -99,17 +101,18 @@ class spell_pri_shadowfiend_scaling : public AuraScript
         }
     }
 
-    void CalculateAPAmount(AuraEffect const*  /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
+    void CalculateAPAmount(AuraEffect const* /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
     {
         // xinef: shadowfiend inherits 333% of SP as AP - 35.7% of damage increase per hit
         if (Unit* owner = GetUnitOwner()->GetOwner())
         {
             int32 shadow = owner->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_SHADOW);
-            amount = CalculatePct(std::max<int32>(0, shadow), 300); // xinef: deacrased to 300, including 15% from self buff
+            amount =
+                CalculatePct(std::max<int32>(0, shadow), 300); // xinef: deacrased to 300, including 15% from self buff
         }
     }
 
-    void CalculateSPAmount(AuraEffect const*  /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
+    void CalculateSPAmount(AuraEffect const* /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)
     {
         // xinef: shadowfiend inherits 30% of SP
         if (Unit* owner = GetUnitOwner()->GetOwner())
@@ -127,26 +130,33 @@ class spell_pri_shadowfiend_scaling : public AuraScript
     {
         GetUnitOwner()->ApplySpellImmune(0, IMMUNITY_STATE, aurEff->GetAuraType(), true, SPELL_BLOCK_TYPE_POSITIVE);
         if (aurEff->GetAuraType() == SPELL_AURA_MOD_ATTACK_POWER)
-            GetUnitOwner()->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_ATTACK_POWER_PCT, true, SPELL_BLOCK_TYPE_POSITIVE);
+            GetUnitOwner()->ApplySpellImmune(
+                0, IMMUNITY_STATE, SPELL_AURA_MOD_ATTACK_POWER_PCT, true, SPELL_BLOCK_TYPE_POSITIVE);
         else if (aurEff->GetAuraType() == SPELL_AURA_MOD_STAT)
-            GetUnitOwner()->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TOTAL_STAT_PERCENTAGE, true, SPELL_BLOCK_TYPE_POSITIVE);
+            GetUnitOwner()->ApplySpellImmune(
+                0, IMMUNITY_STATE, SPELL_AURA_MOD_TOTAL_STAT_PERCENTAGE, true, SPELL_BLOCK_TYPE_POSITIVE);
     }
 
     void Register() override
     {
         if (m_scriptSpellId != 35661)
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_pri_shadowfiend_scaling::CalculateResistanceAmount, EFFECT_ALL, SPELL_AURA_MOD_RESISTANCE);
+            DoEffectCalcAmount += AuraEffectCalcAmountFn(
+                spell_pri_shadowfiend_scaling::CalculateResistanceAmount, EFFECT_ALL, SPELL_AURA_MOD_RESISTANCE);
 
         if (m_scriptSpellId == 35661 || m_scriptSpellId == 35662)
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_pri_shadowfiend_scaling::CalculateStatAmount, EFFECT_ALL, SPELL_AURA_MOD_STAT);
+            DoEffectCalcAmount += AuraEffectCalcAmountFn(
+                spell_pri_shadowfiend_scaling::CalculateStatAmount, EFFECT_ALL, SPELL_AURA_MOD_STAT);
 
         if (m_scriptSpellId == 35661)
         {
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_pri_shadowfiend_scaling::CalculateAPAmount, EFFECT_ALL, SPELL_AURA_MOD_ATTACK_POWER);
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_pri_shadowfiend_scaling::CalculateSPAmount, EFFECT_ALL, SPELL_AURA_MOD_DAMAGE_DONE);
+            DoEffectCalcAmount += AuraEffectCalcAmountFn(
+                spell_pri_shadowfiend_scaling::CalculateAPAmount, EFFECT_ALL, SPELL_AURA_MOD_ATTACK_POWER);
+            DoEffectCalcAmount += AuraEffectCalcAmountFn(
+                spell_pri_shadowfiend_scaling::CalculateSPAmount, EFFECT_ALL, SPELL_AURA_MOD_DAMAGE_DONE);
         }
 
-        OnEffectApply += AuraEffectApplyFn(spell_pri_shadowfiend_scaling::HandleEffectApply, EFFECT_ALL, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_pri_shadowfiend_scaling::HandleEffectApply, EFFECT_ALL, SPELL_AURA_ANY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -157,14 +167,15 @@ class spell_pri_circle_of_healing : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PRIEST_GLYPH_OF_CIRCLE_OF_HEALING });
+        return ValidateSpellInfo({SPELL_PRIEST_GLYPH_OF_CIRCLE_OF_HEALING});
     }
 
     void FilterTargets(std::list<WorldObject*>& targets)
     {
         targets.remove_if(Acore::RaidCheck(GetCaster(), false));
 
-        uint32 const maxTargets = GetCaster()->HasAura(SPELL_PRIEST_GLYPH_OF_CIRCLE_OF_HEALING) ? 6 : 5; // Glyph of Circle of Healing
+        uint32 const maxTargets =
+            GetCaster()->HasAura(SPELL_PRIEST_GLYPH_OF_CIRCLE_OF_HEALING) ? 6 : 5; // Glyph of Circle of Healing
 
         if (targets.size() > maxTargets)
         {
@@ -175,7 +186,8 @@ class spell_pri_circle_of_healing : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_pri_circle_of_healing::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ALLY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_pri_circle_of_healing::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ALLY);
     }
 };
 
@@ -186,7 +198,7 @@ class spell_pri_divine_aegis : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PRIEST_DIVINE_AEGIS });
+        return ValidateSpellInfo({SPELL_PRIEST_DIVINE_AEGIS});
     }
 
     bool CheckProc(ProcEventInfo& eventInfo)
@@ -206,7 +218,13 @@ class spell_pri_divine_aegis : public AuraScript
 
         absorb = std::min(absorb, eventInfo.GetProcTarget()->GetLevel() * 125);
 
-        GetTarget()->CastCustomSpell(SPELL_PRIEST_DIVINE_AEGIS, SPELLVALUE_BASE_POINT0, absorb, eventInfo.GetProcTarget(), true, nullptr, aurEff);
+        GetTarget()->CastCustomSpell(SPELL_PRIEST_DIVINE_AEGIS,
+            SPELLVALUE_BASE_POINT0,
+            absorb,
+            eventInfo.GetProcTarget(),
+            true,
+            nullptr,
+            aurEff);
     }
 
     void Register() override
@@ -236,7 +254,8 @@ class spell_pri_divine_hymn : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_pri_divine_hymn::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ALLY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_pri_divine_hymn::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ALLY);
     }
 };
 
@@ -247,7 +266,7 @@ class spell_pri_glyph_of_prayer_of_healing : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PRIEST_GLYPH_OF_PRAYER_OF_HEALING_HEAL });
+        return ValidateSpellInfo({SPELL_PRIEST_GLYPH_OF_PRAYER_OF_HEALING_HEAL});
     }
 
     void HandleProc(AuraEffect const* aurEff, ProcEventInfo& eventInfo)
@@ -256,13 +275,18 @@ class spell_pri_glyph_of_prayer_of_healing : public AuraScript
 
         HealInfo* healInfo = eventInfo.GetHealInfo();
         if (!healInfo || !healInfo->GetHeal())
-        {
             return;
-        }
 
         SpellInfo const* triggeredSpellInfo = sSpellMgr->AssertSpellInfo(SPELL_PRIEST_GLYPH_OF_PRAYER_OF_HEALING_HEAL);
-        int32 heal = int32(CalculatePct(int32(healInfo->GetHeal()), aurEff->GetAmount()) / triggeredSpellInfo->GetMaxTicks());
-        GetTarget()->CastCustomSpell(SPELL_PRIEST_GLYPH_OF_PRAYER_OF_HEALING_HEAL, SPELLVALUE_BASE_POINT0, heal, eventInfo.GetProcTarget(), true, nullptr, aurEff);
+        int32 heal =
+            int32(CalculatePct(int32(healInfo->GetHeal()), aurEff->GetAmount()) / triggeredSpellInfo->GetMaxTicks());
+        GetTarget()->CastCustomSpell(SPELL_PRIEST_GLYPH_OF_PRAYER_OF_HEALING_HEAL,
+            SPELLVALUE_BASE_POINT0,
+            heal,
+            eventInfo.GetProcTarget(),
+            true,
+            nullptr,
+            aurEff);
     }
 
     void Register() override
@@ -280,7 +304,7 @@ class spell_pri_guardian_spirit : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PRIEST_GUARDIAN_SPIRIT_HEAL });
+        return ValidateSpellInfo({SPELL_PRIEST_GUARDIAN_SPIRIT_HEAL});
     }
 
     bool Load() override
@@ -310,7 +334,8 @@ class spell_pri_guardian_spirit : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_pri_guardian_spirit::CalculateAmount, EFFECT_1, SPELL_AURA_SCHOOL_ABSORB);
+        DoEffectCalcAmount +=
+            AuraEffectCalcAmountFn(spell_pri_guardian_spirit::CalculateAmount, EFFECT_1, SPELL_AURA_SCHOOL_ABSORB);
         OnEffectAbsorb += AuraEffectAbsorbFn(spell_pri_guardian_spirit::Absorb, EFFECT_1);
     }
 };
@@ -336,7 +361,8 @@ class spell_pri_hymn_of_hope : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_pri_hymn_of_hope::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ALLY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_pri_hymn_of_hope::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ALLY);
     }
 };
 
@@ -347,7 +373,7 @@ class spell_pri_item_greater_heal_refund : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PRIEST_ITEM_EFFICIENCY });
+        return ValidateSpellInfo({SPELL_PRIEST_ITEM_EFFICIENCY});
     }
 
     bool CheckProc(ProcEventInfo& eventInfo)
@@ -368,7 +394,8 @@ class spell_pri_item_greater_heal_refund : public AuraScript
     void Register() override
     {
         DoCheckProc += AuraCheckProcFn(spell_pri_item_greater_heal_refund::CheckProc);
-        OnEffectProc += AuraEffectProcFn(spell_pri_item_greater_heal_refund::HandleProc, EFFECT_0, SPELL_AURA_PROC_TRIGGER_SPELL);
+        OnEffectProc +=
+            AuraEffectProcFn(spell_pri_item_greater_heal_refund::HandleProc, EFFECT_0, SPELL_AURA_PROC_TRIGGER_SPELL);
     }
 };
 
@@ -391,12 +418,24 @@ class spell_pri_lightwell : public SpellScript
         uint32 lightwellRenew = 0;
         switch (caster->GetEntry())
         {
-            case PRIEST_LIGHTWELL_NPC_1: lightwellRenew = 7001; break;
-            case PRIEST_LIGHTWELL_NPC_2: lightwellRenew = 27873; break;
-            case PRIEST_LIGHTWELL_NPC_3: lightwellRenew = 27874; break;
-            case PRIEST_LIGHTWELL_NPC_4: lightwellRenew = 28276; break;
-            case PRIEST_LIGHTWELL_NPC_5: lightwellRenew = 48084; break;
-            case PRIEST_LIGHTWELL_NPC_6: lightwellRenew = 48085; break;
+            case PRIEST_LIGHTWELL_NPC_1:
+                lightwellRenew = 7001;
+                break;
+            case PRIEST_LIGHTWELL_NPC_2:
+                lightwellRenew = 27873;
+                break;
+            case PRIEST_LIGHTWELL_NPC_3:
+                lightwellRenew = 27874;
+                break;
+            case PRIEST_LIGHTWELL_NPC_4:
+                lightwellRenew = 28276;
+                break;
+            case PRIEST_LIGHTWELL_NPC_5:
+                lightwellRenew = 48084;
+                break;
+            case PRIEST_LIGHTWELL_NPC_6:
+                lightwellRenew = 48085;
+                break;
         }
 
         // proc a spellcast
@@ -410,7 +449,8 @@ class spell_pri_lightwell : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_pri_lightwell::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_pri_lightwell::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -446,9 +486,16 @@ class spell_pri_lightwell_renew : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_pri_lightwell_renew::CalculateAmount, EFFECT_0, SPELL_AURA_PERIODIC_HEAL);
-        AfterEffectApply += AuraEffectApplyFn(spell_pri_lightwell_renew::HandleUpdateSpellclick, EFFECT_0, SPELL_AURA_PERIODIC_HEAL, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_pri_lightwell_renew::HandleUpdateSpellclick, EFFECT_0, SPELL_AURA_PERIODIC_HEAL, AURA_EFFECT_HANDLE_REAL);
+        DoEffectCalcAmount +=
+            AuraEffectCalcAmountFn(spell_pri_lightwell_renew::CalculateAmount, EFFECT_0, SPELL_AURA_PERIODIC_HEAL);
+        AfterEffectApply += AuraEffectApplyFn(spell_pri_lightwell_renew::HandleUpdateSpellclick,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_HEAL,
+            AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_pri_lightwell_renew::HandleUpdateSpellclick,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_HEAL,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -476,7 +523,7 @@ class spell_pri_mana_leech : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PRIEST_MANA_LEECH_PROC });
+        return ValidateSpellInfo({SPELL_PRIEST_MANA_LEECH_PROC});
     }
 
     bool Load() override
@@ -519,7 +566,8 @@ class spell_pri_mind_sear : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_pri_mind_sear::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_pri_mind_sear::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
     }
 };
 
@@ -532,7 +580,8 @@ class spell_pri_pain_and_suffering_proc : public SpellScript
     {
         // Refresh Shadow Word: Pain on target
         if (Unit* unitTarget = GetHitUnit())
-            if (AuraEffect* aur = unitTarget->GetAuraEffect(SPELL_AURA_PERIODIC_DAMAGE, SPELLFAMILY_PRIEST, 0x8000, 0, 0, GetCaster()->GetGUID()))
+            if (AuraEffect* aur = unitTarget->GetAuraEffect(
+                    SPELL_AURA_PERIODIC_DAMAGE, SPELLFAMILY_PRIEST, 0x8000, 0, 0, GetCaster()->GetGUID()))
             {
                 aur->GetBase()->RefreshTimersWithMods();
                 aur->ChangeAmount(aur->CalculateAmount(aur->GetCaster()), false);
@@ -541,7 +590,8 @@ class spell_pri_pain_and_suffering_proc : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_pri_pain_and_suffering_proc::HandleEffectScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget += SpellEffectFn(
+            spell_pri_pain_and_suffering_proc::HandleEffectScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -618,13 +668,14 @@ class spell_pri_penance : public SpellScript
 };
 
 // -17 - Power Word: Shield
-static int32 CalculateSpellAmount(Unit* caster, int32 amount, SpellInfo const* spellInfo, const AuraEffect* aurEff)
+static int32 CalculateSpellAmount(Unit* caster, int32 amount, SpellInfo const* spellInfo, AuraEffect const* aurEff)
 {
     // +80.68% from sp bonus
     float bonus = 0.8068f;
 
     // Borrowed Time
-    if (AuraEffect const* borrowedTime = caster->GetDummyAuraEffect(SPELLFAMILY_PRIEST, PRIEST_ICON_ID_BORROWED_TIME, EFFECT_1))
+    if (AuraEffect const* borrowedTime =
+            caster->GetDummyAuraEffect(SPELLFAMILY_PRIEST, PRIEST_ICON_ID_BORROWED_TIME, EFFECT_1))
         bonus += CalculatePct(1.0f, borrowedTime->GetAmount());
 
     bonus *= caster->SpellBaseHealingBonusDone(spellInfo->GetSchoolMask());
@@ -637,7 +688,8 @@ static int32 CalculateSpellAmount(Unit* caster, int32 amount, SpellInfo const* s
     amount += int32(bonus);
 
     // Twin Disciplines
-    if (AuraEffect const* twinDisciplines = caster->GetAuraEffect(SPELL_AURA_ADD_PCT_MODIFIER, SPELLFAMILY_PRIEST, 0x400000, 0, 0, caster->GetGUID()))
+    if (AuraEffect const* twinDisciplines =
+            caster->GetAuraEffect(SPELL_AURA_ADD_PCT_MODIFIER, SPELLFAMILY_PRIEST, 0x400000, 0, 0, caster->GetGUID()))
         AddPct(amount, twinDisciplines->GetAmount());
 
     // Focused Power, xinef: apply positive modifier only
@@ -646,14 +698,10 @@ static int32 CalculateSpellAmount(Unit* caster, int32 amount, SpellInfo const* s
 
     // Arena - Dampening
     if (AuraEffect const* arenaDampening = caster->GetAuraEffect(SPELL_GENERIC_ARENA_DAMPENING, EFFECT_0))
-    {
         AddPct(amount, arenaDampening->GetAmount());
-    }
     // Battleground - Dampening
     else if (AuraEffect const* bgDampening = caster->GetAuraEffect(SPELL_GENERIC_BATTLEGROUND_DAMPENING, EFFECT_0))
-    {
         AddPct(amount, bgDampening->GetAmount());
-    }
 
     return amount;
 };
@@ -664,7 +712,7 @@ class spell_pri_power_word_shield_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PRIEST_REFLECTIVE_SHIELD_TRIGGERED, SPELL_PRIEST_REFLECTIVE_SHIELD_R1 });
+        return ValidateSpellInfo({SPELL_PRIEST_REFLECTIVE_SHIELD_TRIGGERED, SPELL_PRIEST_REFLECTIVE_SHIELD_R1});
     }
 
     void CalculateAmount(AuraEffect const* aurEff, int32& amount, bool& canBeRecalculated)
@@ -681,18 +729,27 @@ class spell_pri_power_word_shield_aura : public AuraScript
             return;
 
         if (Unit* owner = GetUnitOwner())
-            if (AuraEffect* talentAurEff = owner->GetAuraEffectOfRankedSpell(SPELL_PRIEST_REFLECTIVE_SHIELD_R1, EFFECT_0))
+            if (AuraEffect* talentAurEff =
+                    owner->GetAuraEffectOfRankedSpell(SPELL_PRIEST_REFLECTIVE_SHIELD_R1, EFFECT_0))
             {
                 int32 bp = CalculatePct(absorbAmount, talentAurEff->GetAmount());
                 // xinef: prevents infinite loop!
                 if (!dmgInfo.GetSpellInfo() || dmgInfo.GetSpellInfo()->Id != SPELL_PRIEST_REFLECTIVE_SHIELD_TRIGGERED)
-                    target->CastCustomSpell(dmgInfo.GetAttacker(), SPELL_PRIEST_REFLECTIVE_SHIELD_TRIGGERED, &bp, nullptr, nullptr, true, nullptr, aurEff);
+                    target->CastCustomSpell(dmgInfo.GetAttacker(),
+                        SPELL_PRIEST_REFLECTIVE_SHIELD_TRIGGERED,
+                        &bp,
+                        nullptr,
+                        nullptr,
+                        true,
+                        nullptr,
+                        aurEff);
             }
     }
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_pri_power_word_shield_aura::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(
+            spell_pri_power_word_shield_aura::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
         AfterEffectAbsorb += AuraEffectAbsorbFn(spell_pri_power_word_shield_aura::ReflectDamage, EFFECT_0);
     }
 };
@@ -708,7 +765,10 @@ class spell_pri_power_word_shield : public SpellScript
         if (!target)
             return SPELL_FAILED_BAD_TARGETS;
 
-        if (AuraEffect* aurEff = target->GetAuraEffect(SPELL_AURA_SCHOOL_ABSORB, (SpellFamilyNames)GetSpellInfo()->SpellFamilyName, GetSpellInfo()->SpellIconID, EFFECT_0))
+        if (AuraEffect* aurEff = target->GetAuraEffect(SPELL_AURA_SCHOOL_ABSORB,
+                (SpellFamilyNames)GetSpellInfo()->SpellFamilyName,
+                GetSpellInfo()->SpellIconID,
+                EFFECT_0))
         {
             int32 newAmount = GetSpellInfo()->Effects[EFFECT_0].CalcValue(caster, nullptr, nullptr);
             newAmount = CalculateSpellAmount(caster, newAmount, GetSpellInfo(), aurEff);
@@ -733,13 +793,10 @@ class spell_pri_prayer_of_mending_heal : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo(
-            {
-                SPELL_PRIEST_T9_HEALING_2P,
-                SPELL_PRIEST_TWIN_DISCIPLINE_R1,
-                SPELL_PRIEST_SPIRITUAL_HEALING_R1,
-                SPELL_PRIEST_DIVINE_PROVIDENCE_R1
-            });
+        return ValidateSpellInfo({SPELL_PRIEST_T9_HEALING_2P,
+            SPELL_PRIEST_TWIN_DISCIPLINE_R1,
+            SPELL_PRIEST_SPIRITUAL_HEALING_R1,
+            SPELL_PRIEST_DIVINE_PROVIDENCE_R1});
     }
 
     void HandleHeal(SpellEffIndex /*effIndex*/)
@@ -748,22 +805,14 @@ class spell_pri_prayer_of_mending_heal : public SpellScript
         {
             int32 heal = GetEffectValue();
             if (AuraEffect* aurEff = caster->GetAuraEffect(SPELL_PRIEST_T9_HEALING_2P, EFFECT_0))
-            {
                 AddPct(heal, aurEff->GetAmount());
-            }
 
             if (AuraEffect* aurEff = caster->GetAuraEffectOfRankedSpell(SPELL_PRIEST_TWIN_DISCIPLINE_R1, EFFECT_0))
-            {
                 AddPct(heal, aurEff->GetAmount());
-            }
             if (AuraEffect* aurEff = caster->GetAuraEffectOfRankedSpell(SPELL_PRIEST_SPIRITUAL_HEALING_R1, EFFECT_0))
-            {
                 AddPct(heal, aurEff->GetAmount());
-            }
             if (AuraEffect* aurEff = caster->GetAuraEffectOfRankedSpell(SPELL_PRIEST_DIVINE_PROVIDENCE_R1, EFFECT_0))
-            {
                 AddPct(heal, aurEff->GetAmount());
-            }
 
             SetEffectValue(heal);
         }
@@ -771,7 +820,8 @@ class spell_pri_prayer_of_mending_heal : public SpellScript
 
     void Register() override
     {
-        OnEffectLaunchTarget += SpellEffectFn(spell_pri_prayer_of_mending_heal::HandleHeal, EFFECT_0, SPELL_EFFECT_HEAL);
+        OnEffectLaunchTarget +=
+            SpellEffectFn(spell_pri_prayer_of_mending_heal::HandleHeal, EFFECT_0, SPELL_EFFECT_HEAL);
     }
 };
 
@@ -795,20 +845,26 @@ class spell_pri_renew : public AuraScript
         if (Unit* caster = GetCaster())
         {
             // Empowered Renew
-            if (AuraEffect const* empoweredRenewAurEff = caster->GetDummyAuraEffect(SPELLFAMILY_PRIEST, PRIEST_ICON_ID_EMPOWERED_RENEW_TALENT, EFFECT_1))
+            if (AuraEffect const* empoweredRenewAurEff =
+                    caster->GetDummyAuraEffect(SPELLFAMILY_PRIEST, PRIEST_ICON_ID_EMPOWERED_RENEW_TALENT, EFFECT_1))
             {
                 uint32 heal = GetEffect(EFFECT_0)->GetAmount();
                 heal = GetTarget()->SpellHealingBonusTaken(caster, GetSpellInfo(), heal, DOT);
 
-                int32 basepoints0 = empoweredRenewAurEff->GetAmount() * GetEffect(EFFECT_0)->GetTotalTicks() * int32(heal) / 100;
-                caster->CastCustomSpell(GetTarget(), SPELL_PRIEST_EMPOWERED_RENEW, &basepoints0, nullptr, nullptr, true, nullptr, aurEff);
+                int32 basepoints0 =
+                    empoweredRenewAurEff->GetAmount() * GetEffect(EFFECT_0)->GetTotalTicks() * int32(heal) / 100;
+                caster->CastCustomSpell(
+                    GetTarget(), SPELL_PRIEST_EMPOWERED_RENEW, &basepoints0, nullptr, nullptr, true, nullptr, aurEff);
             }
         }
     }
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_pri_renew::HandleApplyEffect, EFFECT_0, SPELL_AURA_PERIODIC_HEAL, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
+        OnEffectApply += AuraEffectApplyFn(spell_pri_renew::HandleApplyEffect,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_HEAL,
+            AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
     }
 };
 
@@ -822,7 +878,8 @@ class spell_pri_shadow_word_death : public SpellScript
         int32 damage = GetHitDamage();
 
         // Pain and Suffering reduces damage
-        if (AuraEffect* aurEff = GetCaster()->GetDummyAuraEffect(SPELLFAMILY_PRIEST, PRIEST_ICON_ID_PAIN_AND_SUFFERING, EFFECT_1))
+        if (AuraEffect* aurEff =
+                GetCaster()->GetDummyAuraEffect(SPELLFAMILY_PRIEST, PRIEST_ICON_ID_PAIN_AND_SUFFERING, EFFECT_1))
             AddPct(damage, aurEff->GetAmount());
 
         GetCaster()->CastCustomSpell(GetCaster(), SPELL_PRIEST_SHADOW_WORD_DEATH, &damage, 0, 0, true);
@@ -841,7 +898,7 @@ class spell_pri_vampiric_touch : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PRIEST_VAMPIRIC_TOUCH_DISPEL });
+        return ValidateSpellInfo({SPELL_PRIEST_VAMPIRIC_TOUCH_DISPEL});
     }
 
     void HandleDispel(DispelInfo* /*dispelInfo*/)
@@ -853,19 +910,19 @@ class spell_pri_vampiric_touch : public AuraScript
                     int32 damage = aurEff->GetBaseAmount();
                     damage = aurEff->GetSpellInfo()->Effects[EFFECT_1].CalcValue(caster, &damage, nullptr) * 8;
                     // backfire damage
-                    caster->CastCustomSpell(target, SPELL_PRIEST_VAMPIRIC_TOUCH_DISPEL, &damage, nullptr, nullptr, true, nullptr, aurEff);
+                    caster->CastCustomSpell(
+                        target, SPELL_PRIEST_VAMPIRIC_TOUCH_DISPEL, &damage, nullptr, nullptr, true, nullptr, aurEff);
                 }
     }
 
     bool CheckProc(ProcEventInfo& eventInfo)
     {
         if (!eventInfo.GetActionTarget() || GetOwner()->GetGUID() != eventInfo.GetActionTarget()->GetGUID())
-        {
             return false;
-        }
 
         SpellInfo const* spellInfo = eventInfo.GetSpellInfo();
-        if (!spellInfo || spellInfo->SpellFamilyName != SPELLFAMILY_PRIEST || !(spellInfo->SpellFamilyFlags[0] & 0x00002000))
+        if (!spellInfo || spellInfo->SpellFamilyName != SPELLFAMILY_PRIEST ||
+            !(spellInfo->SpellFamilyFlags[0] & 0x00002000))
         {
             return false;
         }
@@ -877,9 +934,7 @@ class spell_pri_vampiric_touch : public AuraScript
     {
         PreventDefaultAction();
         if (Unit* actor = eventInfo.GetActor())
-        {
             actor->CastSpell(actor, 57669, true, nullptr, aurEff);
-        }
     }
 
     void Register() override
@@ -922,8 +977,10 @@ class spell_pri_mind_control : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_pri_mind_control::HandleApplyEffect, EFFECT_0, SPELL_AURA_MOD_POSSESS, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_pri_mind_control::HandleRemoveEffect, EFFECT_0, SPELL_AURA_MOD_POSSESS, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(
+            spell_pri_mind_control::HandleApplyEffect, EFFECT_0, SPELL_AURA_MOD_POSSESS, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_pri_mind_control::HandleRemoveEffect, EFFECT_0, SPELL_AURA_MOD_POSSESS, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -934,7 +991,7 @@ class spell_pri_t4_4p_bonus : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PRIEST_T4_4P_FLEXIBILITY });
+        return ValidateSpellInfo({SPELL_PRIEST_T4_4P_FLEXIBILITY});
     }
 
     void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& /*eventInfo*/)
@@ -945,7 +1002,8 @@ class spell_pri_t4_4p_bonus : public AuraScript
 
     void Register() override
     {
-        OnEffectProc += AuraEffectProcFn(spell_pri_t4_4p_bonus::HandleProc, EFFECT_ALL, SPELL_AURA_OVERRIDE_CLASS_SCRIPTS);
+        OnEffectProc +=
+            AuraEffectProcFn(spell_pri_t4_4p_bonus::HandleProc, EFFECT_ALL, SPELL_AURA_OVERRIDE_CLASS_SCRIPTS);
     }
 };
 

@@ -27,33 +27,33 @@
 
 enum Spells
 {
-    SPELL_STATIC_DISRUPTION     = 43622,
-    SPELL_STATIC_VISUAL         = 45265,
-    SPELL_CALL_LIGHTNING        = 43661, // Missing timer
-    SPELL_GUST_OF_WIND          = 43621,
-    SPELL_ELECTRICAL_STORM      = 43648,
+    SPELL_STATIC_DISRUPTION = 43622,
+    SPELL_STATIC_VISUAL = 45265,
+    SPELL_CALL_LIGHTNING = 43661, // Missing timer
+    SPELL_GUST_OF_WIND = 43621,
+    SPELL_ELECTRICAL_STORM = 43648,
     SPELL_ELECTRICAL_STORM_AREA = 44007, // Safe within the eye of the storm
-    SPELL_BERSERK               = 45078,
-    SPELL_ELECTRICAL_OVERLOAD   = 43658,
-    SPELL_EAGLE_SWOOP           = 44732,
-    SPELL_ZAP                   = 43137,
-    SPELL_SAND_STORM            = 25160
+    SPELL_BERSERK = 45078,
+    SPELL_ELECTRICAL_OVERLOAD = 43658,
+    SPELL_EAGLE_SWOOP = 44732,
+    SPELL_ZAP = 43137,
+    SPELL_SAND_STORM = 25160
 };
 
 enum Says
 {
-    SAY_AGGRO                   = 0,
-    SAY_SUMMON                  = 1,
-    SAY_INTRO                   = 2, // Not used in script
-    SAY_ENRAGE                  = 3,
-    SAY_KILL                    = 4,
-    SAY_DEATH                   = 5
+    SAY_AGGRO = 0,
+    SAY_SUMMON = 1,
+    SAY_INTRO = 2, // Not used in script
+    SAY_ENRAGE = 3,
+    SAY_KILL = 4,
+    SAY_DEATH = 5
 };
 
 enum Misc
 {
-    ACTION_STORM_EXPIRE         = 1,
-    GROUP_ELECTRICAL_STORM      = 1
+    ACTION_STORM_EXPIRE = 1,
+    GROUP_ELECTRICAL_STORM = 1
 };
 
 constexpr auto NPC_SOARING_EAGLE = 24858;
@@ -79,7 +79,10 @@ struct boss_akilzon : public BossAI
     {
         _JustEngagedWith();
 
-        ScheduleTimedEvent(10s, 20s, [&] {
+        ScheduleTimedEvent(10s,
+            20s,
+            [&]
+        {
             Unit* target = SelectTarget(SelectTargetMethod::Random, 1);
             if (!target)
                 target = me->GetVictim();
@@ -89,18 +92,25 @@ struct boss_akilzon : public BossAI
                 DoCast(target, SPELL_STATIC_DISRUPTION, false);
                 me->SetInFront(me->GetVictim());
             }
-        }, 10s, 18s);
+        },
+            10s,
+            18s);
 
-        ScheduleTimedEvent(20s, 30s, [&] {
+        ScheduleTimedEvent(20s,
+            30s,
+            [&]
+        {
             if (scheduler.GetNextGroupOcurrence(GROUP_ELECTRICAL_STORM) > 5s)
                 DoCastRandomTarget(SPELL_GUST_OF_WIND, 1);
-        }, 20s, 30s);
+        },
+            20s,
+            30s);
 
-        ScheduleTimedEvent(10s, 20s, [&] {
-            DoCastVictim(SPELL_CALL_LIGHTNING);
-        }, 12s, 17s);
+        ScheduleTimedEvent(10s, 20s, [&] { DoCastVictim(SPELL_CALL_LIGHTNING); }, 12s, 17s);
 
-        scheduler.Schedule(1min, GROUP_ELECTRICAL_STORM, [this](TaskContext context)
+        scheduler.Schedule(1min,
+            GROUP_ELECTRICAL_STORM,
+            [this](TaskContext context)
         {
             Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50, true);
             if (!target)
@@ -109,39 +119,48 @@ struct boss_akilzon : public BossAI
                 return;
             }
             target->CastSpell(target, SPELL_ELECTRICAL_STORM_AREA, true); // cloud visual
-            DoCast(target, SPELL_ELECTRICAL_STORM); // storm cyclon + visual
+            DoCast(target, SPELL_ELECTRICAL_STORM);                       // storm cyclon + visual
 
             float x, y, z;
             target->GetPosition(x, y, z);
             target->GetMotionMaster()->MoveJump(x, y, target->GetPositionZ() + 16.0f, 1.0f, 1.0f);
 
-            me->m_Events.AddEventAtOffset([&] {
-                HandleStormSequence();
-            }, 3s);
+            me->m_Events.AddEventAtOffset([&] { HandleStormSequence(); }, 3s);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 if (!_isRaining)
                 {
                     SetWeather(WEATHER_STATE_HEAVY_RAIN, 0.9999f);
                     _isRaining = true;
                 }
-            }, Seconds(urand(47, 52)));
+            },
+                Seconds(urand(47, 52)));
 
             context.Repeat();
         });
 
-        ScheduleTimedEvent(47s, 52s, [&] {
+        ScheduleTimedEvent(47s,
+            52s,
+            [&]
+        {
             if (!_isRaining)
             {
                 SetWeather(WEATHER_STATE_HEAVY_RAIN, 0.9999f);
                 _isRaining = true;
             }
-        }, 47s, 52s);
+        },
+            47s,
+            52s);
 
-        me->m_Events.AddEventAtOffset([&] {
+        me->m_Events.AddEventAtOffset(
+            [&]
+        {
             Talk(SAY_ENRAGE);
             DoCastSelf(SPELL_BERSERK, true);
-        }, 10min);
+        },
+            10min);
 
         Talk(SAY_AGGRO);
     }
@@ -166,18 +185,14 @@ struct boss_akilzon : public BossAI
 
     void HandleStormSequence()
     {
-        me->m_Events.AddEventAtOffset([&] {
-            HandleStormSequence();
-        }, 1s);
+        me->m_Events.AddEventAtOffset([&] { HandleStormSequence(); }, 1s);
     }
 
     void DoAction(int32 actionId) override
     {
         if (actionId == ACTION_STORM_EXPIRE)
         {
-            me->m_Events.AddEventAtOffset([&] {
-                SummonEagles();
-            }, 5s);
+            me->m_Events.AddEventAtOffset([&] { SummonEagles(); }, 5s);
 
             me->InterruptNonMeleeSpells(false);
 
@@ -205,9 +220,9 @@ struct boss_akilzon : public BossAI
                     z = target->GetPositionZ() + urand(16, 20);
                     if (z > 95)
                         z = 95.0f - urand(0, 5);
-                }
-                ;
-                if (Creature* creature = me->SummonCreature(NPC_SOARING_EAGLE, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                };
+                if (Creature* creature =
+                        me->SummonCreature(NPC_SOARING_EAGLE, x, y, z, 0, TEMPSUMMON_CORPSE_DESPAWN, 0))
                 {
                     creature->AddThreat(me->GetVictim(), 1.0f);
                     creature->AI()->AttackStart(me->GetVictim());
@@ -221,7 +236,7 @@ private:
     ObjectGuid _birdGUIDs[8];
     ObjectGuid _targetGUID;
     ObjectGuid _cycloneGUID;
-    bool   _isRaining;
+    bool _isRaining;
 };
 
 struct npc_akilzon_eagle : public ScriptedAI
@@ -312,7 +327,8 @@ class spell_electrial_storm : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_electrial_storm::OnRemove, EFFECT_0, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove +=
+            AuraEffectRemoveFn(spell_electrial_storm::OnRemove, EFFECT_0, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

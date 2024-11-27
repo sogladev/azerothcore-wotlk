@@ -25,28 +25,28 @@
 
 enum eTexts
 {
-    SAY_START_COMBAT                    = 1,
-    SAY_FROST_TOMB                      = 3,
-    SAY_SUMMON_SKELETONS                = 2,
-    SAY_FROST_TOMB_EMOTE                = 4,
-    SAY_DEATH                           = 5,
-    SAY_KILL                            = 6,
+    SAY_START_COMBAT = 1,
+    SAY_FROST_TOMB = 3,
+    SAY_SUMMON_SKELETONS = 2,
+    SAY_FROST_TOMB_EMOTE = 4,
+    SAY_DEATH = 5,
+    SAY_KILL = 6,
 };
 
 enum eNPCs
 {
-    NPC_FROST_TOMB                      = 23965,
-    NPC_SKELETON                        = 23970,
+    NPC_FROST_TOMB = 23965,
+    NPC_SKELETON = 23970,
 };
 
 enum eSpells
 {
-    SPELL_FROST_TOMB                    = 42672,
-    SPELL_FROST_TOMB_SUMMON             = 42714,
-    SPELL_FROST_TOMB_AURA               = 48400,
+    SPELL_FROST_TOMB = 42672,
+    SPELL_FROST_TOMB_SUMMON = 42714,
+    SPELL_FROST_TOMB_AURA = 48400,
 
-    SPELL_SHADOWBOLT_N                  = 43667,
-    SPELL_SHADOWBOLT_H                  = 59389,
+    SPELL_SHADOWBOLT_N = 43667,
+    SPELL_SHADOWBOLT_H = 59389,
 };
 
 #define SPELL_SHADOWBOLT                DUNGEON_MODE(SPELL_SHADOWBOLT_N, SPELL_SHADOWBOLT_H)
@@ -78,13 +78,14 @@ public:
                     PrisonerGUID = s->GetGUID();
                     if (me->GetInstanceScript() && me->GetInstanceScript()->instance->IsHeroic())
                     {
-                        const int32 dmg = 2000;
+                        int32 const dmg = 2000;
                         c->CastCustomSpell(s, SPELL_FROST_TOMB_AURA, nullptr, &dmg, nullptr, true);
                     }
                     else
                         c->CastSpell(s, SPELL_FROST_TOMB_AURA, true);
                 }
         }
+
         ObjectGuid PrisonerGUID;
 
         void JustDied(Unit* killer) override
@@ -99,7 +100,7 @@ public:
             me->DespawnOrUnsummon(5000);
         }
 
-        void UpdateAI(uint32  /*diff*/) override
+        void UpdateAI(uint32 /*diff*/) override
         {
             if (PrisonerGUID)
             {
@@ -145,9 +146,7 @@ public:
         void KilledUnit(Unit* victim) override
         {
             if (victim->IsPlayer())
-            {
                 Talk(SAY_KILL);
-            }
         }
 
         void JustDied(Unit* /*killer*/) override
@@ -215,7 +214,13 @@ public:
                     {
                         float dist = rand_norm() * 4 + 3.0f;
                         float angle = rand_norm() * 2 * M_PI;
-                        if (Creature* c = me->SummonCreature(NPC_SKELETON, 156.2f + cos(angle) * dist, 259.1f + std::sin(angle) * dist, 42.9f, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                        if (Creature* c = me->SummonCreature(NPC_SKELETON,
+                                156.2f + cos(angle) * dist,
+                                259.1f + std::sin(angle) * dist,
+                                42.9f,
+                                0,
+                                TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                                20000))
                             if (Unit* target = c->SelectNearestTarget(250.0f))
                             {
                                 c->AddThreat(target, 5.0f);
@@ -232,9 +237,9 @@ public:
 
 enum eSkeletonEnum
 {
-    SPELL_DECREPIFY                     = 42702,
-    SPELL_BONE_ARMOR                    = 59386,
-    SPELL_SCOURGE_RESURRECTION          = 42704,
+    SPELL_DECREPIFY = 42702,
+    SPELL_BONE_ARMOR = 59386,
+    SPELL_SCOURGE_RESURRECTION = 42704,
 
     EVENT_SPELL_DECREPIFY = 1,
     EVENT_SPELL_BONE_ARMOR,
@@ -292,7 +297,7 @@ public:
 
         void UpdateAI(uint32 diff) override
         {
-            if (pInstance && pInstance->GetData(DATA_KELESETH) != IN_PROGRESS )
+            if (pInstance && pInstance->GetData(DATA_KELESETH) != IN_PROGRESS)
             {
                 if (me->IsAlive())
                     me->KillSelf();
@@ -349,7 +354,7 @@ class spell_frost_tomb_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_FROST_TOMB_SUMMON });
+        return ValidateSpellInfo({SPELL_FROST_TOMB_SUMMON});
     }
 
     void HandleEffectPeriodic(AuraEffect const* aurEff)
@@ -362,7 +367,8 @@ class spell_frost_tomb_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_frost_tomb_aura::HandleEffectPeriodic, EFFECT_1, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_frost_tomb_aura::HandleEffectPeriodic, EFFECT_1, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 

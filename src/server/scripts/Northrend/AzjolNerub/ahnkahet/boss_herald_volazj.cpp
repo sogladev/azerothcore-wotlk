@@ -26,73 +26,74 @@
 enum Spells
 {
     // BASIC FIGHT
-    SPELL_MIND_FLAY                         = 57941,
-    SPELL_SHADOW_BOLT_VOLLEY                = 57942,
-    SPELL_SHIVER                            = 57949,
+    SPELL_MIND_FLAY = 57941,
+    SPELL_SHADOW_BOLT_VOLLEY = 57942,
+    SPELL_SHIVER = 57949,
 
     // INSANITY
-    SPELL_INSANITY                          = 57496, //Dummy
-    INSANITY_VISUAL                         = 57561,
-    SPELL_INSANITY_TARGET                   = 57508,
-    SPELL_CLONE_PLAYER                      = 57507, //casted on player during insanity
-    SPELL_INSANITY_PHASING_1                = 57508,
-    SPELL_INSANITY_PHASING_2                = 57509,
-    SPELL_INSANITY_PHASING_3                = 57510,
-    SPELL_INSANITY_PHASING_4                = 57511,
-    SPELL_INSANITY_PHASING_5                = 57512,
+    SPELL_INSANITY = 57496, //Dummy
+    INSANITY_VISUAL = 57561,
+    SPELL_INSANITY_TARGET = 57508,
+    SPELL_CLONE_PLAYER = 57507, //casted on player during insanity
+    SPELL_INSANITY_PHASING_1 = 57508,
+    SPELL_INSANITY_PHASING_2 = 57509,
+    SPELL_INSANITY_PHASING_3 = 57510,
+    SPELL_INSANITY_PHASING_4 = 57511,
+    SPELL_INSANITY_PHASING_5 = 57512,
 
-    SPELL_WHISPER_AGGRO                     = 60291,
-    SPELL_WHISPER_INSANITY                  = 60292,
-    SPELL_WHISPER_SLAY_1                    = 60293,
-    SPELL_WHISPER_SLAY_2                    = 60294,
-    SPELL_WHISPER_SLAY_3                    = 60295,
-    SPELL_WHISPER_DEATH_1                   = 60296,
-    SPELL_WHISPER_DEATH_2                   = 60297
+    SPELL_WHISPER_AGGRO = 60291,
+    SPELL_WHISPER_INSANITY = 60292,
+    SPELL_WHISPER_SLAY_1 = 60293,
+    SPELL_WHISPER_SLAY_2 = 60294,
+    SPELL_WHISPER_SLAY_3 = 60295,
+    SPELL_WHISPER_DEATH_1 = 60296,
+    SPELL_WHISPER_DEATH_2 = 60297
 };
 
 enum Texts
 {
-    SAY_AGGRO                               = 0,
-    SAY_INSANITY                            = 1,
-    SAY_SLAY_1                              = 2,
-    SAY_SLAY_2                              = 3,
-    SAY_SLAY_3                              = 4,
-    SAY_DEATH_1                             = 5,
-    SAY_DEATH_2                             = 6,
+    SAY_AGGRO = 0,
+    SAY_INSANITY = 1,
+    SAY_SLAY_1 = 2,
+    SAY_SLAY_2 = 3,
+    SAY_SLAY_3 = 4,
+    SAY_DEATH_1 = 5,
+    SAY_DEATH_2 = 6,
 
-    WHISPER_AGGRO                           = 7,
-    WHISPER_INSANITY                        = 8,
-    WHISPER_SLAY_1                          = 9,
-    WHISPER_SLAY_2                          = 10,
-    WHISPER_SLAY_3                          = 11,
-    WHISPER_DEATH_1                         = 12,
-    WHISPER_DEATH_2                         = 13
+    WHISPER_AGGRO = 7,
+    WHISPER_INSANITY = 8,
+    WHISPER_SLAY_1 = 9,
+    WHISPER_SLAY_2 = 10,
+    WHISPER_SLAY_3 = 11,
+    WHISPER_DEATH_1 = 12,
+    WHISPER_DEATH_2 = 13
 };
 
 enum Misc
 {
-    NPC_TWISTED_VISAGE                      = 30625,
-    ACHIEV_QUICK_DEMISE_START_EVENT         = 20382,
+    NPC_TWISTED_VISAGE = 30625,
+    ACHIEV_QUICK_DEMISE_START_EVENT = 20382,
 
-    MAX_INSANITY_TARGETS                    = 5,
-    DATA_SET_INSANITY_PHASE                 = 1,
+    MAX_INSANITY_TARGETS = 5,
+    DATA_SET_INSANITY_PHASE = 1,
 };
 
 enum Events
 {
-    EVENT_HERALD_MIND_FLAY                  = 1,
+    EVENT_HERALD_MIND_FLAY = 1,
     EVENT_HERALD_SHADOW,
     EVENT_HERALD_SHIVER,
 };
 
-const std::array<uint32, MAX_INSANITY_TARGETS> InsanitySpells = { SPELL_INSANITY_PHASING_1, SPELL_INSANITY_PHASING_2, SPELL_INSANITY_PHASING_3, SPELL_INSANITY_PHASING_4, SPELL_INSANITY_PHASING_5 };
+std::array<uint32, MAX_INSANITY_TARGETS> const InsanitySpells = {SPELL_INSANITY_PHASING_1,
+    SPELL_INSANITY_PHASING_2,
+    SPELL_INSANITY_PHASING_3,
+    SPELL_INSANITY_PHASING_4,
+    SPELL_INSANITY_PHASING_5};
 
 struct boss_volazj : public BossAI
 {
-    boss_volazj(Creature* pCreature) : BossAI(pCreature, DATA_HERALD_VOLAZJ),
-        insanityTimes(0),
-        insanityPhase(false)
-        { }
+    boss_volazj(Creature* pCreature) : BossAI(pCreature, DATA_HERALD_VOLAZJ), insanityTimes(0), insanityPhase(false) { }
 
     void InitializeAI() override
     {
@@ -180,18 +181,15 @@ struct boss_volazj : public BossAI
     void SetData(uint32 type, uint32 value) override
     {
         if (type == DATA_SET_INSANITY_PHASE)
-        {
             insanityPhase = (value != 0);
-        }
     }
 
-    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
+    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damagetype*/,
+        SpellSchoolMask /*damageSchoolMask*/) override
     {
         // Do not perform insanity recast if boss is casting Insanity already
         if (me->FindCurrentSpellBySpellId(SPELL_INSANITY))
-        {
             return;
-        }
 
         // First insanity
         if (insanityTimes == 0 && me->HealthBelowPctDamaged(66, damage))
@@ -212,16 +210,12 @@ struct boss_volazj : public BossAI
     {
         //Return since we have no target
         if (!UpdateVictim())
-        {
             return;
-        }
 
         if (insanityPhase)
         {
             if (!CheckPhaseMinions())
-            {
                 return;
-            }
 
             insanityPhase = false;
             me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
@@ -231,9 +225,7 @@ struct boss_volazj : public BossAI
 
         events.Update(diff);
         if (me->HasUnitState(UNIT_STATE_CASTING))
-        {
             return;
-        }
 
         while (uint32 const eventId = events.ExecuteEvent())
         {
@@ -254,9 +246,7 @@ struct boss_volazj : public BossAI
                 case EVENT_HERALD_SHIVER:
                 {
                     if (Unit* pTarget = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true))
-                    {
                         DoCast(pTarget, SPELL_SHIVER, false);
-                    }
 
                     events.Repeat(15s);
                     break;
@@ -264,9 +254,7 @@ struct boss_volazj : public BossAI
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
         }
 
         DoMeleeAttackIfReady();
@@ -274,7 +262,7 @@ struct boss_volazj : public BossAI
 
 private:
     uint8 insanityTimes;
-    bool insanityPhase;     // Indicates if boss enter to insanity phase
+    bool insanityPhase; // Indicates if boss enter to insanity phase
 
     uint32 GetPlrInsanityAuraId(uint32 phaseMask) const
     {
@@ -303,9 +291,7 @@ private:
             if (Player* pPlayer = i.GetSource())
             {
                 if (uint32 const insanityAura = GetPlrInsanityAuraId(pPlayer->GetPhaseMask()))
-                {
                     pPlayer->RemoveAurasDueToSpell(insanityAura);
-                }
             }
         }
     }
@@ -321,21 +307,15 @@ private:
 
         uint32 phase = 1;
         for (ObjectGuid const& summonGUID : summons)
-        {
             if (Creature* summon = ObjectAccessor::GetCreature(*me, summonGUID))
-            {
                 phase |= summon->GetPhaseMask();
-            }
-        }
 
         Map::PlayerList const& players = me->GetMap()->GetPlayers();
         for (auto const& i : players)
         {
             Player* pPlayer = i.GetSource();
             if (pPlayer && !(pPlayer->GetPhaseMask() & phase))
-            {
                 pPlayer->RemoveAurasDueToSpell(GetPlrInsanityAuraId(pPlayer->GetPhaseMask()));
-            }
         }
 
         return false;
@@ -347,7 +327,10 @@ class spell_herald_volzaj_insanity : public SpellScript
 {
     PrepareSpellScript(spell_herald_volzaj_insanity);
 
-    bool Load() override { return GetCaster()->IsCreature(); }
+    bool Load() override
+    {
+        return GetCaster()->IsCreature();
+    }
 
     void HandleDummyEffect(std::list<WorldObject*>& targets)
     {
@@ -363,14 +346,12 @@ class spell_herald_volzaj_insanity : public SpellScript
             targets.remove_if([this](WorldObject* targetObj) -> bool
             {
                 return !targetObj || !targetObj->IsPlayer() || !targetObj->ToPlayer()->IsInCombatWith(GetCaster()) ||
-                        targetObj->GetDistance(GetCaster()) >= (MAX_VISIBILITY_DISTANCE * 2);
+                       targetObj->GetDistance(GetCaster()) >= (MAX_VISIBILITY_DISTANCE * 2);
             });
         }
 
         if (targets.empty())
-        {
             return;
-        }
 
         // Start channel visual and set self as unnattackable
         caster->ToCreature()->AI()->Talk(SAY_INSANITY);
@@ -387,16 +368,12 @@ class spell_herald_volzaj_insanity : public SpellScript
         {
             WorldObject* targetObj = *itr;
             if (!targetObj)
-            {
                 continue;
-            }
 
             Player* plrTarget = targetObj->ToPlayer();
             // This should never happen, spell has attribute SPELL_ATTR3_ONLY_TARGET_PLAYERS
             if (!plrTarget)
-            {
                 continue;
-            }
 
             // phase mask
             plrTarget->CastSpell(plrTarget, InsanitySpells.at(insanityCounter), true);
@@ -407,11 +384,10 @@ class spell_herald_volzaj_insanity : public SpellScript
                 // Should not make clone of current player target
                 Player const* plrClone = *itr2 ? (*itr2)->ToPlayer() : nullptr;
                 if (!plrClone || plrClone == plrTarget)
-                {
                     continue;
-                }
 
-                if (Unit* summon = caster->SummonCreature(NPC_TWISTED_VISAGE, plrClone->GetPosition(), TEMPSUMMON_CORPSE_DESPAWN, 0))
+                if (Unit* summon = caster->SummonCreature(
+                        NPC_TWISTED_VISAGE, plrClone->GetPosition(), TEMPSUMMON_CORPSE_DESPAWN, 0))
                 {
                     summon->AddThreat(plrTarget, 0.0f);
                     summon->SetInCombatWith(plrTarget);
@@ -436,7 +412,8 @@ class spell_herald_volzaj_insanity : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_herald_volzaj_insanity::HandleDummyEffect, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_herald_volzaj_insanity::HandleDummyEffect, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
         AfterCast += SpellCastFn(spell_herald_volzaj_insanity::HandleAfterCast);
     }
 };
@@ -454,47 +431,61 @@ class spell_volazj_whisper : public SpellScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo(
-        {
-            SPELL_WHISPER_AGGRO,
+        return ValidateSpellInfo({SPELL_WHISPER_AGGRO,
             SPELL_WHISPER_INSANITY,
             SPELL_WHISPER_SLAY_1,
             SPELL_WHISPER_SLAY_2,
             SPELL_WHISPER_SLAY_3,
             SPELL_WHISPER_DEATH_1,
-            SPELL_WHISPER_DEATH_2
-        });
+            SPELL_WHISPER_DEATH_2});
     }
 
-    bool Load() override { return GetCaster()->IsCreature(); }
+    bool Load() override
+    {
+        return GetCaster()->IsCreature();
+    }
 
     void HandleScriptEffect(SpellEffIndex /* effIndex */)
     {
         Unit* target = GetHitPlayer();
         Creature* caster = GetCaster()->ToCreature();
         if (!target || !caster)
-        {
             return;
-        }
 
         uint32 text = 0;
         switch (GetSpellInfo()->Id)
         {
-            case SPELL_WHISPER_AGGRO:    text = WHISPER_AGGRO;    break;
-            case SPELL_WHISPER_INSANITY: text = WHISPER_INSANITY; break;
-            case SPELL_WHISPER_SLAY_1:   text = WHISPER_SLAY_1;   break;
-            case SPELL_WHISPER_SLAY_2:   text = WHISPER_SLAY_2;   break;
-            case SPELL_WHISPER_SLAY_3:   text = WHISPER_SLAY_3;   break;
-            case SPELL_WHISPER_DEATH_1:  text = WHISPER_DEATH_1;  break;
-            case SPELL_WHISPER_DEATH_2:  text = WHISPER_DEATH_2;  break;
-            default: return;
+            case SPELL_WHISPER_AGGRO:
+                text = WHISPER_AGGRO;
+                break;
+            case SPELL_WHISPER_INSANITY:
+                text = WHISPER_INSANITY;
+                break;
+            case SPELL_WHISPER_SLAY_1:
+                text = WHISPER_SLAY_1;
+                break;
+            case SPELL_WHISPER_SLAY_2:
+                text = WHISPER_SLAY_2;
+                break;
+            case SPELL_WHISPER_SLAY_3:
+                text = WHISPER_SLAY_3;
+                break;
+            case SPELL_WHISPER_DEATH_1:
+                text = WHISPER_DEATH_1;
+                break;
+            case SPELL_WHISPER_DEATH_2:
+                text = WHISPER_DEATH_2;
+                break;
+            default:
+                return;
         }
         caster->AI()->Talk(text, target);
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_volazj_whisper::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_volazj_whisper::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

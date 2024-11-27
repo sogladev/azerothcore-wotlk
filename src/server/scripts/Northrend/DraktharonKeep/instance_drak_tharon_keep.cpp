@@ -18,17 +18,16 @@
 #include "CreatureScript.h"
 #include "InstanceMapScript.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "drak_tharon_keep.h"
-#include "SpellScript.h"
 
-DoorData const doorData[] =
-{
-    { GO_NOVOS_CRYSTAL_1,   DATA_NOVOS_CRYSTALS,    DOOR_TYPE_ROOM },
-    { GO_NOVOS_CRYSTAL_2,   DATA_NOVOS_CRYSTALS,    DOOR_TYPE_ROOM },
-    { GO_NOVOS_CRYSTAL_3,   DATA_NOVOS_CRYSTALS,    DOOR_TYPE_ROOM },
-    { GO_NOVOS_CRYSTAL_4,   DATA_NOVOS_CRYSTALS,    DOOR_TYPE_ROOM },
-    { 0,                    0,                      DOOR_TYPE_ROOM }
+DoorData const doorData[] = {
+    {GO_NOVOS_CRYSTAL_1, DATA_NOVOS_CRYSTALS, DOOR_TYPE_ROOM},
+    {GO_NOVOS_CRYSTAL_2, DATA_NOVOS_CRYSTALS, DOOR_TYPE_ROOM},
+    {GO_NOVOS_CRYSTAL_3, DATA_NOVOS_CRYSTALS, DOOR_TYPE_ROOM},
+    {GO_NOVOS_CRYSTAL_4, DATA_NOVOS_CRYSTALS, DOOR_TYPE_ROOM},
+    {0,                  0,                   DOOR_TYPE_ROOM}
 };
 
 class instance_drak_tharon_keep : public InstanceMapScript
@@ -87,7 +86,7 @@ class spell_dtk_raise_dead_aura : public AuraScript
         return GetUnitOwner()->IsCreature();
     }
 
-    void HandleEffectRemove(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         GetUnitOwner()->ToCreature()->DespawnOrUnsummon(1);
         GetUnitOwner()->SummonCreature(NPC_RISEN_DRAKKARI_WARRIOR, *GetUnitOwner());
@@ -95,7 +94,8 @@ class spell_dtk_raise_dead_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_dtk_raise_dead_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_dtk_raise_dead_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -105,7 +105,7 @@ class spell_dtk_summon_random_drakkari : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_DRAKKARI_SHAMAN, SPELL_SUMMON_DRAKKARI_GUARDIAN });
+        return ValidateSpellInfo({SPELL_SUMMON_DRAKKARI_SHAMAN, SPELL_SUMMON_DRAKKARI_GUARDIAN});
     }
 
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
@@ -115,7 +115,8 @@ class spell_dtk_summon_random_drakkari : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_dtk_summon_random_drakkari::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_dtk_summon_random_drakkari::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

@@ -30,16 +30,14 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable cacheCommandTable =
-        {
-            { "info",      HandleCacheInfoCommand,       SEC_GAMEMASTER, Console::Yes    },
-            { "delete",    HandleCacheDeleteCommand,     SEC_ADMINISTRATOR, Console::Yes },
-            { "refresh",   HandleCacheRefreshCommand,    SEC_GAMEMASTER, Console::Yes    }
+        static ChatCommandTable cacheCommandTable = {
+            {"info",    HandleCacheInfoCommand,    SEC_GAMEMASTER,    Console::Yes},
+            {"delete",  HandleCacheDeleteCommand,  SEC_ADMINISTRATOR, Console::Yes},
+            {"refresh", HandleCacheRefreshCommand, SEC_GAMEMASTER,    Console::Yes}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "cache", cacheCommandTable },
+        static ChatCommandTable commandTable = {
+            {"cache", cacheCommandTable},
         };
         return commandTable;
     }
@@ -47,9 +45,7 @@ public:
     static bool HandleCacheInfoCommand(ChatHandler* handler, Optional<PlayerIdentifier> player)
     {
         if (!player)
-        {
             player = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!player)
         {
@@ -65,9 +61,20 @@ public:
             return false;
         }
 
-        handler->PSendSysMessage(LANG_COMMAND_CACHE_INFO, cache->Name, cache->Guid.ToString(), cache->AccountId,
-            cache->Class, cache->Race, cache->Sex, cache->Level, cache->MailCount, cache->GuildId, cache->GroupGuid.ToString(),
-            cache->ArenaTeamId[ARENA_SLOT_2v2], cache->ArenaTeamId[ARENA_SLOT_3v3], cache->ArenaTeamId[ARENA_SLOT_5v5]);
+        handler->PSendSysMessage(LANG_COMMAND_CACHE_INFO,
+            cache->Name,
+            cache->Guid.ToString(),
+            cache->AccountId,
+            cache->Class,
+            cache->Race,
+            cache->Sex,
+            cache->Level,
+            cache->MailCount,
+            cache->GuildId,
+            cache->GroupGuid.ToString(),
+            cache->ArenaTeamId[ARENA_SLOT_2v2],
+            cache->ArenaTeamId[ARENA_SLOT_3v3],
+            cache->ArenaTeamId[ARENA_SLOT_5v5]);
 
         handler->SetSentErrorMessage(false);
         return true;
@@ -76,9 +83,7 @@ public:
     static bool HandleCacheDeleteCommand(ChatHandler* handler, Optional<PlayerIdentifier> player)
     {
         if (!player)
-        {
             player = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!player)
         {
@@ -95,9 +100,7 @@ public:
     static bool HandleCacheRefreshCommand(ChatHandler* handler, Optional<PlayerIdentifier> player)
     {
         if (!player)
-        {
             player = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!player)
         {
@@ -111,29 +114,34 @@ public:
             {
                 if (sCharacterCache->HasCharacterCacheEntry(cPlayer->GetGUID()))
                 {
-                    sCharacterCache->UpdateCharacterData(cPlayer->GetGUID(), cPlayer->GetName(), cPlayer->getGender(), cPlayer->getRace());
+                    sCharacterCache->UpdateCharacterData(
+                        cPlayer->GetGUID(), cPlayer->GetName(), cPlayer->getGender(), cPlayer->getRace());
                 }
                 else
                 {
-                    sCharacterCache->AddCharacterCacheEntry(cPlayer->GetGUID(), cPlayer->GetSession()->GetAccountId(), cPlayer->GetName(),
-                        cPlayer->getGender(), cPlayer->getRace(), cPlayer->getClass(), cPlayer->GetLevel());
+                    sCharacterCache->AddCharacterCacheEntry(cPlayer->GetGUID(),
+                        cPlayer->GetSession()->GetAccountId(),
+                        cPlayer->GetName(),
+                        cPlayer->getGender(),
+                        cPlayer->getRace(),
+                        cPlayer->getClass(),
+                        cPlayer->GetLevel());
                 }
 
                 sCharacterCache->UpdateCharacterAccountId(cPlayer->GetGUID(), cPlayer->GetSession()->GetAccountId());
                 sCharacterCache->UpdateCharacterGuildId(cPlayer->GetGUID(), cPlayer->GetGuildId());
                 sCharacterCache->UpdateCharacterMailCount(cPlayer->GetGUID(), cPlayer->GetMailSize(), true);
-                sCharacterCache->UpdateCharacterArenaTeamId(cPlayer->GetGUID(), ARENA_SLOT_2v2, cPlayer->GetArenaTeamId(ARENA_SLOT_2v2));
-                sCharacterCache->UpdateCharacterArenaTeamId(cPlayer->GetGUID(), ARENA_SLOT_3v3, cPlayer->GetArenaTeamId(ARENA_SLOT_3v3));
-                sCharacterCache->UpdateCharacterArenaTeamId(cPlayer->GetGUID(), ARENA_SLOT_5v5, cPlayer->GetArenaTeamId(ARENA_SLOT_5v5));
+                sCharacterCache->UpdateCharacterArenaTeamId(
+                    cPlayer->GetGUID(), ARENA_SLOT_2v2, cPlayer->GetArenaTeamId(ARENA_SLOT_2v2));
+                sCharacterCache->UpdateCharacterArenaTeamId(
+                    cPlayer->GetGUID(), ARENA_SLOT_3v3, cPlayer->GetArenaTeamId(ARENA_SLOT_3v3));
+                sCharacterCache->UpdateCharacterArenaTeamId(
+                    cPlayer->GetGUID(), ARENA_SLOT_5v5, cPlayer->GetArenaTeamId(ARENA_SLOT_5v5));
 
                 if (Group* group = cPlayer->GetGroup())
-                {
                     sCharacterCache->UpdateCharacterGroup(cPlayer->GetGUID(), group->GetGUID());
-                }
                 else
-                {
                     sCharacterCache->ClearCharacterGroup(cPlayer->GetGUID());
-                }
             }
         }
         else

@@ -34,41 +34,40 @@
 ## npc_belnistrasz for Quest 3525 "Extinguishing the Idol"
 ######*/
 
-Position const PosSummonSpawner[3] =
-{
-    { 2582.789f, 954.3925f, 52.48214f, 3.787364f  },
-    { 2569.42f,  956.3801f, 52.27323f, 5.427974f  },
-    { 2570.62f,  942.3934f, 53.7433f,  0.715585f  }
+Position const PosSummonSpawner[3] = {
+    {2582.789f, 954.3925f, 52.48214f, 3.787364f},
+    {2569.42f,  956.3801f, 52.27323f, 5.427974f},
+    {2570.62f,  942.3934f, 53.7433f,  0.715585f}
 };
 
 enum Belnistrasz
 {
-    EVENT_CHANNEL                = 1,
-    EVENT_IDOL_ROOM_SPAWNER      = 2,
-    EVENT_PROGRESS               = 3,
-    EVENT_COMPLETE               = 4,
-    EVENT_FIREBALL               = 5,
-    EVENT_FROST_NOVA             = 6,
+    EVENT_CHANNEL = 1,
+    EVENT_IDOL_ROOM_SPAWNER = 2,
+    EVENT_PROGRESS = 3,
+    EVENT_COMPLETE = 4,
+    EVENT_FIREBALL = 5,
+    EVENT_FROST_NOVA = 6,
 
-    PATH_ESCORT                  = 871710,
-    POINT_REACH_IDOL             = 17,
+    PATH_ESCORT = 871710,
+    POINT_REACH_IDOL = 17,
 
     QUEST_EXTINGUISHING_THE_IDOL = 3525,
 
-    SAY_QUEST_ACCEPTED           = 0,
-    SAY_EVENT_START              = 1,
-    SAY_EVENT_THREE_MIN_LEFT     = 2,
-    SAY_EVENT_TWO_MIN_LEFT       = 3,
-    SAY_EVENT_ONE_MIN_LEFT       = 4,
-    SAY_EVENT_END                = 5,
-    SAY_AGGRO                    = 6, // Combat
-    SAY_WATCH_OUT                = 7, // 25% chance to target random creature and say on wave spawn
+    SAY_QUEST_ACCEPTED = 0,
+    SAY_EVENT_START = 1,
+    SAY_EVENT_THREE_MIN_LEFT = 2,
+    SAY_EVENT_TWO_MIN_LEFT = 3,
+    SAY_EVENT_ONE_MIN_LEFT = 4,
+    SAY_EVENT_END = 5,
+    SAY_AGGRO = 6,     // Combat
+    SAY_WATCH_OUT = 7, // 25% chance to target random creature and say on wave spawn
 
-    SPELL_ARCANE_INTELLECT       = 13326,
-    SPELL_FIREBALL               = 9053,
-    SPELL_FROST_NOVA             = 11831,
-    SPELL_IDOL_SHUTDOWN_VISUAL   = 12774, // Hits Unit Entry: 8662
-    SPELL_IDOM_ROOM_CAMERA_SHAKE = 12816  // Dummy needs scripting
+    SPELL_ARCANE_INTELLECT = 13326,
+    SPELL_FIREBALL = 9053,
+    SPELL_FROST_NOVA = 11831,
+    SPELL_IDOL_SHUTDOWN_VISUAL = 12774,  // Hits Unit Entry: 8662
+    SPELL_IDOM_ROOM_CAMERA_SHAKE = 12816 // Dummy needs scripting
 };
 
 class npc_belnistrasz : public CreatureScript
@@ -94,7 +93,7 @@ public:
 
                 channeling = false;
                 eventProgress = 0;
-                spawnerCount  = 0;
+                spawnerCount = 0;
                 me->SetNpcFlag(UNIT_NPC_FLAG_QUESTGIVER);
                 me->SetReactState(REACT_AGGRESSIVE);
             }
@@ -158,64 +157,78 @@ public:
                         me->SetReactState(REACT_PASSIVE);
                         break;
                     case EVENT_IDOL_ROOM_SPAWNER:
-                        if (Creature* creature = me->SummonCreature(NPC_IDOL_ROOM_SPAWNER, PosSummonSpawner[urand(0, 2)], TEMPSUMMON_TIMED_DESPAWN, 4000))
+                        if (Creature* creature = me->SummonCreature(
+                                NPC_IDOL_ROOM_SPAWNER, PosSummonSpawner[urand(0, 2)], TEMPSUMMON_TIMED_DESPAWN, 4000))
                             creature->AI()->SetData(0, spawnerCount);
                         if (++spawnerCount < 8)
                             events.ScheduleEvent(EVENT_IDOL_ROOM_SPAWNER, 35s);
                         break;
                     case EVENT_PROGRESS:
+                    {
+                        switch (eventProgress)
                         {
-                            switch (eventProgress)
-                            {
-                                case 0:
-                                    Talk(SAY_EVENT_THREE_MIN_LEFT);
-                                    ++eventProgress;
-                                    events.ScheduleEvent(EVENT_PROGRESS, 1min);
-                                    break;
-                                case 1:
-                                    Talk(SAY_EVENT_TWO_MIN_LEFT);
-                                    ++eventProgress;
-                                    events.ScheduleEvent(EVENT_PROGRESS, 1min);
-                                    break;
-                                case 2:
-                                    Talk(SAY_EVENT_ONE_MIN_LEFT);
-                                    ++eventProgress;
-                                    events.ScheduleEvent(EVENT_PROGRESS, 1min);
-                                    break;
-                                case 3:
-                                    events.CancelEvent(EVENT_IDOL_ROOM_SPAWNER);
-                                    me->InterruptSpell(CURRENT_CHANNELED_SPELL);
-                                    Talk(SAY_EVENT_END);
-                                    events.ScheduleEvent(EVENT_COMPLETE, 3s);
-                                    break;
-                            }
-                            break;
+                            case 0:
+                                Talk(SAY_EVENT_THREE_MIN_LEFT);
+                                ++eventProgress;
+                                events.ScheduleEvent(EVENT_PROGRESS, 1min);
+                                break;
+                            case 1:
+                                Talk(SAY_EVENT_TWO_MIN_LEFT);
+                                ++eventProgress;
+                                events.ScheduleEvent(EVENT_PROGRESS, 1min);
+                                break;
+                            case 2:
+                                Talk(SAY_EVENT_ONE_MIN_LEFT);
+                                ++eventProgress;
+                                events.ScheduleEvent(EVENT_PROGRESS, 1min);
+                                break;
+                            case 3:
+                                events.CancelEvent(EVENT_IDOL_ROOM_SPAWNER);
+                                me->InterruptSpell(CURRENT_CHANNELED_SPELL);
+                                Talk(SAY_EVENT_END);
+                                events.ScheduleEvent(EVENT_COMPLETE, 3s);
+                                break;
                         }
+                        break;
+                    }
                     case EVENT_COMPLETE:
+                    {
+                        DoCast(me, SPELL_IDOM_ROOM_CAMERA_SHAKE);
+                        me->SummonGameObject(GO_BELNISTRASZS_BRAZIER,
+                            2577.196f,
+                            947.0781f,
+                            53.16757f,
+                            2.356195f,
+                            0,
+                            0,
+                            0.9238796f,
+                            0.3826832f,
+                            3600);
+                        std::list<WorldObject*> ClusterList;
+                        Acore::AllWorldObjectsInRange objects(me, 50.0f);
+                        Acore::WorldObjectListSearcher<Acore::AllWorldObjectsInRange> searcher(
+                            me, ClusterList, objects);
+                        Cell::VisitAllObjects(me, searcher, 50.0f);
+                        for (std::list<WorldObject*>::const_iterator itr = ClusterList.begin();
+                             itr != ClusterList.end();
+                             ++itr)
                         {
-                            DoCast(me, SPELL_IDOM_ROOM_CAMERA_SHAKE);
-                            me->SummonGameObject(GO_BELNISTRASZS_BRAZIER, 2577.196f, 947.0781f, 53.16757f, 2.356195f, 0, 0, 0.9238796f, 0.3826832f, 3600);
-                            std::list<WorldObject*> ClusterList;
-                            Acore::AllWorldObjectsInRange objects(me, 50.0f);
-                            Acore::WorldObjectListSearcher<Acore::AllWorldObjectsInRange> searcher(me, ClusterList, objects);
-                            Cell::VisitAllObjects(me, searcher, 50.0f);
-                            for (std::list<WorldObject*>::const_iterator itr = ClusterList.begin(); itr != ClusterList.end(); ++itr)
+                            if (Player* player = (*itr)->ToPlayer())
                             {
-                                if (Player* player = (*itr)->ToPlayer())
-                                {
-                                    if (player->GetQuestStatus(QUEST_EXTINGUISHING_THE_IDOL) == QUEST_STATUS_INCOMPLETE)
-                                        player->CompleteQuest(QUEST_EXTINGUISHING_THE_IDOL);
-                                }
-                                else if (GameObject* go = (*itr)->ToGameObject())
-                                {
-                                    if (go->GetEntry() == GO_IDOL_OVEN_FIRE || go->GetEntry() == GO_IDOL_CUP_FIRE || go->GetEntry() == GO_IDOL_MOUTH_FIRE)
-                                        go->Delete();
-                                }
+                                if (player->GetQuestStatus(QUEST_EXTINGUISHING_THE_IDOL) == QUEST_STATUS_INCOMPLETE)
+                                    player->CompleteQuest(QUEST_EXTINGUISHING_THE_IDOL);
                             }
-                            instance->SetData(GO_BELNISTRASZS_BRAZIER, DONE);
-                            me->DespawnOrUnsummon();
-                            break;
+                            else if (GameObject* go = (*itr)->ToGameObject())
+                            {
+                                if (go->GetEntry() == GO_IDOL_OVEN_FIRE || go->GetEntry() == GO_IDOL_CUP_FIRE ||
+                                    go->GetEntry() == GO_IDOL_MOUTH_FIRE)
+                                    go->Delete();
+                            }
                         }
+                        instance->SetData(GO_BELNISTRASZS_BRAZIER, DONE);
+                        me->DespawnOrUnsummon();
+                        break;
+                    }
                     case EVENT_FIREBALL:
                         if (me->HasUnitState(UNIT_STATE_CASTING) || !UpdateVictim())
                             return;
@@ -256,22 +269,40 @@ public:
 
     struct npc_idol_room_spawnerAI : public NullCreatureAI
     {
-        npc_idol_room_spawnerAI(Creature* creature) : NullCreatureAI(creature)
-        {
-        }
+        npc_idol_room_spawnerAI(Creature* creature) : NullCreatureAI(creature) { }
 
         void SetData(uint32 /*type*/, uint32 data) override
         {
             if (data < 7)
             {
-                me->SummonCreature(NPC_WITHERED_BATTLE_BOAR, me->GetPositionX(),  me->GetPositionY(),  me->GetPositionZ(),  me->GetOrientation());
+                me->SummonCreature(NPC_WITHERED_BATTLE_BOAR,
+                    me->GetPositionX(),
+                    me->GetPositionY(),
+                    me->GetPositionZ(),
+                    me->GetOrientation());
                 if (data > 0 && me->GetOrientation() < 4.0f)
-                    me->SummonCreature(NPC_WITHERED_BATTLE_BOAR, me->GetPositionX(),  me->GetPositionY(),  me->GetPositionZ(),  me->GetOrientation());
-                me->SummonCreature(NPC_DEATHS_HEAD_GEOMANCER, me->GetPositionX() + (cos(me->GetOrientation() - (M_PI / 2)) * 2), me->GetPositionY() + (std::sin(me->GetOrientation() - (M_PI / 2)) * 2), me->GetPositionZ(),  me->GetOrientation());
-                me->SummonCreature(NPC_WITHERED_QUILGUARD, me->GetPositionX() + (cos(me->GetOrientation() + (M_PI / 2)) * 2), me->GetPositionY() + (std::sin(me->GetOrientation() + (M_PI / 2)) * 2), me->GetPositionZ(),  me->GetOrientation());
+                    me->SummonCreature(NPC_WITHERED_BATTLE_BOAR,
+                        me->GetPositionX(),
+                        me->GetPositionY(),
+                        me->GetPositionZ(),
+                        me->GetOrientation());
+                me->SummonCreature(NPC_DEATHS_HEAD_GEOMANCER,
+                    me->GetPositionX() + (cos(me->GetOrientation() - (M_PI / 2)) * 2),
+                    me->GetPositionY() + (std::sin(me->GetOrientation() - (M_PI / 2)) * 2),
+                    me->GetPositionZ(),
+                    me->GetOrientation());
+                me->SummonCreature(NPC_WITHERED_QUILGUARD,
+                    me->GetPositionX() + (cos(me->GetOrientation() + (M_PI / 2)) * 2),
+                    me->GetPositionY() + (std::sin(me->GetOrientation() + (M_PI / 2)) * 2),
+                    me->GetPositionZ(),
+                    me->GetOrientation());
             }
             else if (data == 7)
-                me->SummonCreature(NPC_PLAGUEMAW_THE_ROTTING, me->GetPositionX(),  me->GetPositionY(),  me->GetPositionZ(),  me->GetOrientation());
+                me->SummonCreature(NPC_PLAGUEMAW_THE_ROTTING,
+                    me->GetPositionX(),
+                    me->GetPositionY(),
+                    me->GetPositionZ(),
+                    me->GetOrientation());
         }
     };
 

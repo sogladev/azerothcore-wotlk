@@ -16,27 +16,27 @@
  */
 
 #include "CreatureScript.h"
-#include "SpellScriptLoader.h"
-#include "halls_of_reflection.h"
 #include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
 #include "SpellScript.h"
+#include "SpellScriptLoader.h"
+#include "halls_of_reflection.h"
 
 enum Yells
 {
-    SAY_AGGRO                                     = 0,
-    SAY_SLAY                                      = 1,
-    SAY_DEATH                                     = 2,
-    SAY_CORRUPTED_FLESH                           = 3,
-    SAY_CORRUPTED_WELL                            = 4,
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_CORRUPTED_FLESH = 3,
+    SAY_CORRUPTED_WELL = 4,
 };
 
 enum Spells
 {
-    SPELL_OBLITERATE                              = 72360,
-    SPELL_WELL_OF_CORRUPTION                      = 72362,
-    SPELL_CORRUPTED_FLESH                         = 72363,
-    SPELL_SHARED_SUFFERING                        = 72368,
+    SPELL_OBLITERATE = 72360,
+    SPELL_WELL_OF_CORRUPTION = 72362,
+    SPELL_CORRUPTED_FLESH = 72363,
+    SPELL_SHARED_SUFFERING = 72368,
 };
 
 enum Events
@@ -183,10 +183,10 @@ class spell_hor_shared_suffering_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SHARED_SUFFERING_DAMAGE });
+        return ValidateSpellInfo({SPELL_SHARED_SUFFERING_DAMAGE});
     }
 
-    void OnRemove(AuraEffect const* aurEff, AuraEffectHandleModes  /*mode*/)
+    void OnRemove(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
     {
         if (GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_ENEMY_SPELL) // dispelled
             if (Unit* caster = GetCaster())
@@ -203,13 +203,15 @@ class spell_hor_shared_suffering_aura : public AuraScript
                                     ++count;
                         ticks = (a->GetDuration() / int32(a->GetSpellInfo()->Effects[0].Amplitude)) + 1;
                         int32 dmg = (ticks * dmgPerTick) / count;
-                        caster->CastCustomSpell(GetTarget(), SPELL_SHARED_SUFFERING_DAMAGE, nullptr, &dmg, nullptr, true);
+                        caster->CastCustomSpell(
+                            GetTarget(), SPELL_SHARED_SUFFERING_DAMAGE, nullptr, &dmg, nullptr, true);
                     }
     }
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_hor_shared_suffering_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_hor_shared_suffering_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

@@ -21,16 +21,19 @@
 
 void ScriptMgr::OnAfterDatabasesLoaded(uint32 updateFlags)
 {
-    CALL_ENABLED_HOOKS(DatabaseScript, DATABASEHOOK_ON_AFTER_DATABASES_LOADED, script->OnAfterDatabasesLoaded(updateFlags));
+    CALL_ENABLED_HOOKS(
+        DatabaseScript, DATABASEHOOK_ON_AFTER_DATABASES_LOADED, script->OnAfterDatabasesLoaded(updateFlags));
 }
 
 void ScriptMgr::OnAfterDatabaseLoadCreatureTemplates(std::vector<CreatureTemplate*> creatureTemplates)
 {
-    CALL_ENABLED_HOOKS(DatabaseScript, DATABASEHOOK_ON_AFTER_DATABASE_LOAD_CREATURETEMPLATES, script->OnAfterDatabaseLoadCreatureTemplates(creatureTemplates));
+    CALL_ENABLED_HOOKS(DatabaseScript,
+        DATABASEHOOK_ON_AFTER_DATABASE_LOAD_CREATURETEMPLATES,
+        script->OnAfterDatabaseLoadCreatureTemplates(creatureTemplates));
 }
 
-DatabaseScript::DatabaseScript(const char* name, std::vector<uint16> enabledHooks)
-    : ScriptObject(name, DATABASEHOOK_END)
+DatabaseScript::DatabaseScript(char const* name, std::vector<uint16> enabledHooks) :
+    ScriptObject(name, DATABASEHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

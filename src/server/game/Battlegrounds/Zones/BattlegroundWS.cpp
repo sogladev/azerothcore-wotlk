@@ -49,9 +49,7 @@ BattlegroundWS::BattlegroundWS()
     _honorEndKills = 0;
 }
 
-BattlegroundWS::~BattlegroundWS()
-{
-}
+BattlegroundWS::~BattlegroundWS() { }
 
 void BattlegroundWS::PostUpdateImpl(uint32 diff)
 {
@@ -62,13 +60,15 @@ void BattlegroundWS::PostUpdateImpl(uint32 diff)
         {
             case BG_WS_EVENT_UPDATE_GAME_TIME:
                 UpdateWorldState(BG_WS_STATE_TIMER, GetMatchTime());
-                _bgEvents.ScheduleEvent(BG_WS_EVENT_UPDATE_GAME_TIME, ((BG_WS_TOTAL_GAME_TIME - GetStartTime()) % (MINUTE * IN_MILLISECONDS)) + 1);
+                _bgEvents.ScheduleEvent(BG_WS_EVENT_UPDATE_GAME_TIME,
+                    ((BG_WS_TOTAL_GAME_TIME - GetStartTime()) % (MINUTE * IN_MILLISECONDS)) + 1);
                 break;
             case BG_WS_EVENT_NO_TIME_LEFT:
                 if (GetTeamScore(TEAM_ALLIANCE) == GetTeamScore(TEAM_HORDE))
                     EndBattleground(_lastFlagCaptureTeam);
                 else
-                    EndBattleground(GetTeamScore(TEAM_HORDE) > GetTeamScore(TEAM_ALLIANCE) ? TEAM_HORDE : TEAM_ALLIANCE);
+                    EndBattleground(
+                        GetTeamScore(TEAM_HORDE) > GetTeamScore(TEAM_ALLIANCE) ? TEAM_HORDE : TEAM_ALLIANCE);
                 break;
             case BG_WS_EVENT_RESPAWN_BOTH_FLAGS:
                 SpawnBGObject(BG_WS_OBJECT_H_FLAG, RESPAWN_IMMEDIATELY);
@@ -137,7 +137,8 @@ void BattlegroundWS::StartingEventOpenDoors()
     StartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, WS_EVENT_START_BATTLE);
     UpdateWorldState(BG_WS_STATE_TIMER_ACTIVE, 1);
     _bgEvents.ScheduleEvent(BG_WS_EVENT_UPDATE_GAME_TIME, 0);
-    _bgEvents.ScheduleEvent(BG_WS_EVENT_NO_TIME_LEFT, BG_WS_TOTAL_GAME_TIME - 2 * MINUTE * IN_MILLISECONDS); // 27 - 2 = 25 minutes
+    _bgEvents.ScheduleEvent(
+        BG_WS_EVENT_NO_TIME_LEFT, BG_WS_TOTAL_GAME_TIME - 2 * MINUTE * IN_MILLISECONDS); // 27 - 2 = 25 minutes
     _bgEvents.ScheduleEvent(BG_WS_EVENT_DESPAWN_DOORS, BG_WS_DOOR_DESPAWN_TIME);
 }
 
@@ -171,18 +172,14 @@ void BattlegroundWS::RespawnFlagAfterDrop(TeamId teamId)
 void BattlegroundWS::CheckFlagKeeperInArea(TeamId teamId)
 {
     if (GetStatus() != STATUS_IN_PROGRESS || GetFlagState(teamId) != BG_WS_FLAG_STATE_ON_PLAYER)
-    {
         return;
-    }
 
     uint32 triggerId = teamId == TEAM_ALLIANCE ? BG_WS_TRIGGER_HORDE_FLAG_SPAWN : BG_WS_TRIGGER_ALLIANCE_FLAG_SPAWN;
     AreaTrigger const* areaTrigger = sObjectMgr->GetAreaTrigger(triggerId);
     if (Player* player = ObjectAccessor::GetPlayer(FindBgMap(), GetFlagPickerGUID(teamId)))
     {
         if (areaTrigger && player->IsInAreaTriggerRadius(areaTrigger))
-        {
             HandleAreaTrigger(player, triggerId);
-        }
     }
 }
 
@@ -216,8 +213,9 @@ void BattlegroundWS::EventPlayerCapturedFlag(Player* player)
     SpawnBGObject(BG_WS_OBJECT_H_FLAG, BG_WS_FLAG_RESPAWN_TIME);
     SpawnBGObject(BG_WS_OBJECT_A_FLAG, BG_WS_FLAG_RESPAWN_TIME);
 
-    UpdateWorldState(player->GetTeamId() == TEAM_ALLIANCE ? BG_WS_FLAG_CAPTURES_ALLIANCE : BG_WS_FLAG_CAPTURES_HORDE, GetTeamScore(player->GetTeamId()));
-    UpdatePlayerScore(player, SCORE_FLAG_CAPTURES, 1);      // +1 flag captures
+    UpdateWorldState(player->GetTeamId() == TEAM_ALLIANCE ? BG_WS_FLAG_CAPTURES_ALLIANCE : BG_WS_FLAG_CAPTURES_HORDE,
+        GetTeamScore(player->GetTeamId()));
+    UpdatePlayerScore(player, SCORE_FLAG_CAPTURES, 1); // +1 flag captures
     _lastFlagCaptureTeam = player->GetTeamId();
 
     RewardHonorToTeam(GetBonusHonorFromKill(2), player->GetTeamId());
@@ -272,7 +270,8 @@ void BattlegroundWS::EventPlayerClickedOnFlag(Player* player, GameObject* gameOb
     player->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_ENTER_PVP_COMBAT);
 
     // Alliance Flag picked up from base
-    if (player->GetTeamId() == TEAM_HORDE && GetFlagState(TEAM_ALLIANCE) == BG_WS_FLAG_STATE_ON_BASE && BgObjects[BG_WS_OBJECT_A_FLAG] == gameObject->GetGUID())
+    if (player->GetTeamId() == TEAM_HORDE && GetFlagState(TEAM_ALLIANCE) == BG_WS_FLAG_STATE_ON_BASE &&
+        BgObjects[BG_WS_OBJECT_A_FLAG] == gameObject->GetGUID())
     {
         SpawnBGObject(BG_WS_OBJECT_A_FLAG, RESPAWN_ONE_DAY);
         SetFlagPicker(player->GetGUID(), TEAM_ALLIANCE);
@@ -292,7 +291,8 @@ void BattlegroundWS::EventPlayerClickedOnFlag(Player* player, GameObject* gameOb
     }
 
     // Horde Flag picked up from base
-    if (player->GetTeamId() == TEAM_ALLIANCE && GetFlagState(TEAM_HORDE) == BG_WS_FLAG_STATE_ON_BASE && BgObjects[BG_WS_OBJECT_H_FLAG] == gameObject->GetGUID())
+    if (player->GetTeamId() == TEAM_ALLIANCE && GetFlagState(TEAM_HORDE) == BG_WS_FLAG_STATE_ON_BASE &&
+        BgObjects[BG_WS_OBJECT_H_FLAG] == gameObject->GetGUID())
     {
         SpawnBGObject(BG_WS_OBJECT_H_FLAG, RESPAWN_ONE_DAY);
         SetFlagPicker(player->GetGUID(), TEAM_HORDE);
@@ -316,7 +316,8 @@ void BattlegroundWS::EventPlayerClickedOnFlag(Player* player, GameObject* gameOb
         player->RemoveAurasByType(SPELL_AURA_MOUNTED);
     }
     // Alliance Flag on ground
-    if (GetFlagState(TEAM_ALLIANCE) == BG_WS_FLAG_STATE_ON_GROUND && player->IsWithinDistInMap(gameObject, 10.0f) && gameObject->GetEntry() == BG_OBJECT_A_FLAG_GROUND_WS_ENTRY)
+    if (GetFlagState(TEAM_ALLIANCE) == BG_WS_FLAG_STATE_ON_GROUND && player->IsWithinDistInMap(gameObject, 10.0f) &&
+        gameObject->GetEntry() == BG_OBJECT_A_FLAG_GROUND_WS_ENTRY)
     {
         SetDroppedFlagGUID(ObjectGuid::Empty, TEAM_ALLIANCE);
         if (player->GetTeamId() == TEAM_ALLIANCE)
@@ -349,7 +350,8 @@ void BattlegroundWS::EventPlayerClickedOnFlag(Player* player, GameObject* gameOb
     }
 
     // Horde Flag on ground
-    if (GetFlagState(TEAM_HORDE) == BG_WS_FLAG_STATE_ON_GROUND && player->IsWithinDistInMap(gameObject, 10.0f) && gameObject->GetEntry() == BG_OBJECT_H_FLAG_GROUND_WS_ENTRY)
+    if (GetFlagState(TEAM_HORDE) == BG_WS_FLAG_STATE_ON_GROUND && player->IsWithinDistInMap(gameObject, 10.0f) &&
+        gameObject->GetEntry() == BG_OBJECT_H_FLAG_GROUND_WS_ENTRY)
     {
         SetDroppedFlagGUID(ObjectGuid::Empty, TEAM_HORDE);
         if (player->GetTeamId() == TEAM_HORDE)
@@ -402,23 +404,25 @@ void BattlegroundWS::HandleAreaTrigger(Player* player, uint32 trigger)
     switch (trigger)
     {
         case BG_WS_TRIGGER_ALLIANCE_FLAG_SPAWN: // Alliance Flag spawn
-            if (GetFlagState(TEAM_ALLIANCE) == BG_WS_FLAG_STATE_ON_BASE && GetFlagPickerGUID(TEAM_HORDE) == player->GetGUID())
+            if (GetFlagState(TEAM_ALLIANCE) == BG_WS_FLAG_STATE_ON_BASE &&
+                GetFlagPickerGUID(TEAM_HORDE) == player->GetGUID())
                 EventPlayerCapturedFlag(player);
             break;
         case BG_WS_TRIGGER_HORDE_FLAG_SPAWN: // Horde Flag spawn
-            if (GetFlagState(TEAM_HORDE) == BG_WS_FLAG_STATE_ON_BASE && GetFlagPickerGUID(TEAM_ALLIANCE) == player->GetGUID())
+            if (GetFlagState(TEAM_HORDE) == BG_WS_FLAG_STATE_ON_BASE &&
+                GetFlagPickerGUID(TEAM_ALLIANCE) == player->GetGUID())
                 EventPlayerCapturedFlag(player);
             break;
-        case 3649: // Not used
-        case 3688: // Not used
-        case 4628: // Not used
-        case 4629: // Not used
-        case BG_WS_TRIGGER_ALLIANCE_ELIXIR_SPEED_SPAWN: // Alliance elixir of speed spawn
-        case BG_WS_TRIGGER_HORDE_ELIXIR_SPEED_SPAWN: // Horde elixir of speed spawn
-        case BG_WS_TRIGGER_ALLIANCE_ELIXIR_REGEN_SPAWN: // Alliance elixir of regeneration spawn
-        case BG_WS_TRIGGER_HORDE_ELIXIR_REGEN_SPAWN: // Horde elixir of regeneration spawn
+        case 3649:                                        // Not used
+        case 3688:                                        // Not used
+        case 4628:                                        // Not used
+        case 4629:                                        // Not used
+        case BG_WS_TRIGGER_ALLIANCE_ELIXIR_SPEED_SPAWN:   // Alliance elixir of speed spawn
+        case BG_WS_TRIGGER_HORDE_ELIXIR_SPEED_SPAWN:      // Horde elixir of speed spawn
+        case BG_WS_TRIGGER_ALLIANCE_ELIXIR_REGEN_SPAWN:   // Alliance elixir of regeneration spawn
+        case BG_WS_TRIGGER_HORDE_ELIXIR_REGEN_SPAWN:      // Horde elixir of regeneration spawn
         case BG_WS_TRIGGER_ALLIANCE_ELIXIR_BERSERK_SPAWN: // Alliance elixir of berserk spawn
-        case BG_WS_TRIGGER_HORDE_ELIXIR_BERSERK_SPAWN: // Horde elixir of berserk spawn
+        case BG_WS_TRIGGER_HORDE_ELIXIR_BERSERK_SPAWN:    // Horde elixir of berserk spawn
             break;
     }
 }
@@ -426,27 +430,207 @@ void BattlegroundWS::HandleAreaTrigger(Player* player, uint32 trigger)
 bool BattlegroundWS::SetupBattleground()
 {
     // flags
-    AddObject(BG_WS_OBJECT_A_FLAG, BG_OBJECT_A_FLAG_WS_ENTRY, 1540.423f, 1481.325f, 351.8284f, 3.089233f, 0, 0, 0.9996573f, 0.02617699f, RESPAWN_IMMEDIATELY);
-    AddObject(BG_WS_OBJECT_H_FLAG, BG_OBJECT_H_FLAG_WS_ENTRY, 916.0226f, 1434.405f, 345.413f, 0.01745329f, 0, 0, 0.008726535f, 0.9999619f, RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_A_FLAG,
+        BG_OBJECT_A_FLAG_WS_ENTRY,
+        1540.423f,
+        1481.325f,
+        351.8284f,
+        3.089233f,
+        0,
+        0,
+        0.9996573f,
+        0.02617699f,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_H_FLAG,
+        BG_OBJECT_H_FLAG_WS_ENTRY,
+        916.0226f,
+        1434.405f,
+        345.413f,
+        0.01745329f,
+        0,
+        0,
+        0.008726535f,
+        0.9999619f,
+        RESPAWN_IMMEDIATELY);
     // buffs
-    AddObject(BG_WS_OBJECT_SPEEDBUFF_1, BG_OBJECTID_SPEEDBUFF_ENTRY, 1449.93f, 1470.71f, 342.6346f, -1.64061f, 0, 0, 0.7313537f, -0.6819983f, SPEED_BUFF_RESPAWN_TIME);
-    AddObject(BG_WS_OBJECT_SPEEDBUFF_2, BG_OBJECTID_SPEEDBUFF_ENTRY, 1005.171f, 1447.946f, 335.9032f, 1.64061f, 0, 0, 0.7313537f, 0.6819984f, SPEED_BUFF_RESPAWN_TIME);
-    AddObject(BG_WS_OBJECT_REGENBUFF_1, BG_OBJECTID_REGENBUFF_ENTRY, 1317.506f, 1550.851f, 313.2344f, -0.2617996f, 0, 0, 0.1305263f, -0.9914448f, RESTORATION_BUFF_RESPAWN_TIME);
-    AddObject(BG_WS_OBJECT_REGENBUFF_2, BG_OBJECTID_REGENBUFF_ENTRY, 1110.451f, 1353.656f, 316.5181f, -0.6806787f, 0, 0, 0.333807f, -0.9426414f, RESTORATION_BUFF_RESPAWN_TIME);
-    AddObject(BG_WS_OBJECT_BERSERKBUFF_1, BG_OBJECTID_BERSERKERBUFF_ENTRY, 1320.09f, 1378.79f, 314.7532f, 1.186824f, 0, 0, 0.5591929f, 0.8290376f, BERSERKING_BUFF_RESPAWN_TIME);
-    AddObject(BG_WS_OBJECT_BERSERKBUFF_2, BG_OBJECTID_BERSERKERBUFF_ENTRY, 1139.688f, 1560.288f, 306.8432f, -2.443461f, 0, 0, 0.9396926f, -0.3420201f, BERSERKING_BUFF_RESPAWN_TIME);
+    AddObject(BG_WS_OBJECT_SPEEDBUFF_1,
+        BG_OBJECTID_SPEEDBUFF_ENTRY,
+        1449.93f,
+        1470.71f,
+        342.6346f,
+        -1.64061f,
+        0,
+        0,
+        0.7313537f,
+        -0.6819983f,
+        SPEED_BUFF_RESPAWN_TIME);
+    AddObject(BG_WS_OBJECT_SPEEDBUFF_2,
+        BG_OBJECTID_SPEEDBUFF_ENTRY,
+        1005.171f,
+        1447.946f,
+        335.9032f,
+        1.64061f,
+        0,
+        0,
+        0.7313537f,
+        0.6819984f,
+        SPEED_BUFF_RESPAWN_TIME);
+    AddObject(BG_WS_OBJECT_REGENBUFF_1,
+        BG_OBJECTID_REGENBUFF_ENTRY,
+        1317.506f,
+        1550.851f,
+        313.2344f,
+        -0.2617996f,
+        0,
+        0,
+        0.1305263f,
+        -0.9914448f,
+        RESTORATION_BUFF_RESPAWN_TIME);
+    AddObject(BG_WS_OBJECT_REGENBUFF_2,
+        BG_OBJECTID_REGENBUFF_ENTRY,
+        1110.451f,
+        1353.656f,
+        316.5181f,
+        -0.6806787f,
+        0,
+        0,
+        0.333807f,
+        -0.9426414f,
+        RESTORATION_BUFF_RESPAWN_TIME);
+    AddObject(BG_WS_OBJECT_BERSERKBUFF_1,
+        BG_OBJECTID_BERSERKERBUFF_ENTRY,
+        1320.09f,
+        1378.79f,
+        314.7532f,
+        1.186824f,
+        0,
+        0,
+        0.5591929f,
+        0.8290376f,
+        BERSERKING_BUFF_RESPAWN_TIME);
+    AddObject(BG_WS_OBJECT_BERSERKBUFF_2,
+        BG_OBJECTID_BERSERKERBUFF_ENTRY,
+        1139.688f,
+        1560.288f,
+        306.8432f,
+        -2.443461f,
+        0,
+        0,
+        0.9396926f,
+        -0.3420201f,
+        BERSERKING_BUFF_RESPAWN_TIME);
     // alliance gates
-    AddObject(BG_WS_OBJECT_DOOR_A_1, BG_OBJECT_DOOR_A_1_WS_ENTRY, 1503.335f, 1493.466f, 352.1888f, 3.115414f, 0, 0, 0.9999143f, 0.01308903f, RESPAWN_IMMEDIATELY);
-    AddObject(BG_WS_OBJECT_DOOR_A_2, BG_OBJECT_DOOR_A_2_WS_ENTRY, 1492.478f, 1457.912f, 342.9689f, 3.115414f, 0, 0, 0.9999143f, 0.01308903f, RESPAWN_IMMEDIATELY);
-    AddObject(BG_WS_OBJECT_DOOR_A_3, BG_OBJECT_DOOR_A_3_WS_ENTRY, 1468.503f, 1494.357f, 351.8618f, 3.115414f, 0, 0, 0.9999143f, 0.01308903f, RESPAWN_IMMEDIATELY);
-    AddObject(BG_WS_OBJECT_DOOR_A_4, BG_OBJECT_DOOR_A_4_WS_ENTRY, 1471.555f, 1458.778f, 362.6332f, 3.115414f, 0, 0, 0.9999143f, 0.01308903f, RESPAWN_IMMEDIATELY);
-    AddObject(BG_WS_OBJECT_DOOR_A_5, BG_OBJECT_DOOR_A_5_WS_ENTRY, 1492.347f, 1458.34f, 342.3712f, -0.03490669f, 0, 0, 0.01745246f, -0.9998477f, RESPAWN_IMMEDIATELY);
-    AddObject(BG_WS_OBJECT_DOOR_A_6, BG_OBJECT_DOOR_A_6_WS_ENTRY, 1503.466f, 1493.367f, 351.7352f, -0.03490669f, 0, 0, 0.01745246f, -0.9998477f, RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_A_1,
+        BG_OBJECT_DOOR_A_1_WS_ENTRY,
+        1503.335f,
+        1493.466f,
+        352.1888f,
+        3.115414f,
+        0,
+        0,
+        0.9999143f,
+        0.01308903f,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_A_2,
+        BG_OBJECT_DOOR_A_2_WS_ENTRY,
+        1492.478f,
+        1457.912f,
+        342.9689f,
+        3.115414f,
+        0,
+        0,
+        0.9999143f,
+        0.01308903f,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_A_3,
+        BG_OBJECT_DOOR_A_3_WS_ENTRY,
+        1468.503f,
+        1494.357f,
+        351.8618f,
+        3.115414f,
+        0,
+        0,
+        0.9999143f,
+        0.01308903f,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_A_4,
+        BG_OBJECT_DOOR_A_4_WS_ENTRY,
+        1471.555f,
+        1458.778f,
+        362.6332f,
+        3.115414f,
+        0,
+        0,
+        0.9999143f,
+        0.01308903f,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_A_5,
+        BG_OBJECT_DOOR_A_5_WS_ENTRY,
+        1492.347f,
+        1458.34f,
+        342.3712f,
+        -0.03490669f,
+        0,
+        0,
+        0.01745246f,
+        -0.9998477f,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_A_6,
+        BG_OBJECT_DOOR_A_6_WS_ENTRY,
+        1503.466f,
+        1493.367f,
+        351.7352f,
+        -0.03490669f,
+        0,
+        0,
+        0.01745246f,
+        -0.9998477f,
+        RESPAWN_IMMEDIATELY);
     // horde gates
-    AddObject(BG_WS_OBJECT_DOOR_H_1, BG_OBJECT_DOOR_H_1_WS_ENTRY, 949.1663f, 1423.772f, 345.6241f, -0.5756807f, -0.01673368f, -0.004956111f, -0.2839723f, 0.9586737f, RESPAWN_IMMEDIATELY);
-    AddObject(BG_WS_OBJECT_DOOR_H_2, BG_OBJECT_DOOR_H_2_WS_ENTRY, 953.0507f, 1459.842f, 340.6526f, -1.99662f, -0.1971825f, 0.1575096f, -0.8239487f, 0.5073641f, RESPAWN_IMMEDIATELY);
-    AddObject(BG_WS_OBJECT_DOOR_H_3, BG_OBJECT_DOOR_H_3_WS_ENTRY, 949.9523f, 1422.751f, 344.9273f, 0.0f, 0, 0, 0, 1, RESPAWN_IMMEDIATELY);
-    AddObject(BG_WS_OBJECT_DOOR_H_4, BG_OBJECT_DOOR_H_4_WS_ENTRY, 950.7952f, 1459.583f, 342.1523f, 0.05235988f, 0, 0, 0.02617695f, 0.9996573f, RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_H_1,
+        BG_OBJECT_DOOR_H_1_WS_ENTRY,
+        949.1663f,
+        1423.772f,
+        345.6241f,
+        -0.5756807f,
+        -0.01673368f,
+        -0.004956111f,
+        -0.2839723f,
+        0.9586737f,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_H_2,
+        BG_OBJECT_DOOR_H_2_WS_ENTRY,
+        953.0507f,
+        1459.842f,
+        340.6526f,
+        -1.99662f,
+        -0.1971825f,
+        0.1575096f,
+        -0.8239487f,
+        0.5073641f,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_H_3,
+        BG_OBJECT_DOOR_H_3_WS_ENTRY,
+        949.9523f,
+        1422.751f,
+        344.9273f,
+        0.0f,
+        0,
+        0,
+        0,
+        1,
+        RESPAWN_IMMEDIATELY);
+    AddObject(BG_WS_OBJECT_DOOR_H_4,
+        BG_OBJECT_DOOR_H_4_WS_ENTRY,
+        950.7952f,
+        1459.583f,
+        342.1523f,
+        0.05235988f,
+        0,
+        0,
+        0.02617695f,
+        0.9996573f,
+        RESPAWN_IMMEDIATELY);
 
     GraveyardStruct const* sg = sGraveyard->GetGraveyard(WS_GRAVEYARD_MAIN_ALLIANCE);
     AddSpiritGuide(WS_SPIRIT_MAIN_ALLIANCE, sg->x, sg->y, sg->z, 3.124139f, TEAM_ALLIANCE);
@@ -481,9 +665,9 @@ void BattlegroundWS::Init()
     _flagKeepers[TEAM_HORDE].Clear();
     _droppedFlagGUID[TEAM_ALLIANCE].Clear();
     _droppedFlagGUID[TEAM_HORDE].Clear();
-    _flagState[TEAM_ALLIANCE]       = BG_WS_FLAG_STATE_ON_BASE;
-    _flagState[TEAM_HORDE]          = BG_WS_FLAG_STATE_ON_BASE;
-    _lastFlagCaptureTeam            = TEAM_NEUTRAL;
+    _flagState[TEAM_ALLIANCE] = BG_WS_FLAG_STATE_ON_BASE;
+    _flagState[TEAM_HORDE] = BG_WS_FLAG_STATE_ON_BASE;
+    _lastFlagCaptureTeam = TEAM_NEUTRAL;
 
     if (sBattlegroundMgr->IsBGWeekend(GetBgTypeID(true)))
     {
@@ -528,7 +712,8 @@ bool BattlegroundWS::UpdatePlayerScore(Player* player, uint32 type, uint32 value
     switch (type)
     {
         case SCORE_FLAG_CAPTURES:
-            player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BG_OBJECTIVE_CAPTURE, WS_OBJECTIVE_CAPTURE_FLAG);
+            player->UpdateAchievementCriteria(
+                ACHIEVEMENT_CRITERIA_TYPE_BG_OBJECTIVE_CAPTURE, WS_OBJECTIVE_CAPTURE_FLAG);
             break;
         case SCORE_FLAG_RETURNS:
             player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BG_OBJECTIVE_CAPTURE, WS_OBJECTIVE_RETURN_FLAG);
@@ -541,9 +726,11 @@ bool BattlegroundWS::UpdatePlayerScore(Player* player, uint32 type, uint32 value
 GraveyardStruct const* BattlegroundWS::GetClosestGraveyard(Player* player)
 {
     if (GetStatus() == STATUS_IN_PROGRESS)
-        return sGraveyard->GetGraveyard(player->GetTeamId() == TEAM_ALLIANCE ? WS_GRAVEYARD_MAIN_ALLIANCE : WS_GRAVEYARD_MAIN_HORDE);
+        return sGraveyard->GetGraveyard(
+            player->GetTeamId() == TEAM_ALLIANCE ? WS_GRAVEYARD_MAIN_ALLIANCE : WS_GRAVEYARD_MAIN_HORDE);
     else
-        return sGraveyard->GetGraveyard(player->GetTeamId() == TEAM_ALLIANCE ? WS_GRAVEYARD_FLAGROOM_ALLIANCE : WS_GRAVEYARD_FLAGROOM_HORDE);
+        return sGraveyard->GetGraveyard(
+            player->GetTeamId() == TEAM_ALLIANCE ? WS_GRAVEYARD_FLAGROOM_ALLIANCE : WS_GRAVEYARD_FLAGROOM_HORDE);
 }
 
 void BattlegroundWS::FillInitialWorldStates(WorldPacket& data)
@@ -570,11 +757,12 @@ TeamId BattlegroundWS::GetPrematureWinner()
 uint32 BattlegroundWS::GetAssaultSpellId() const
 {
     if ((!GetFlagPickerGUID(TEAM_ALLIANCE) && GetFlagState(TEAM_ALLIANCE) != BG_WS_FLAG_STATE_ON_GROUND) ||
-            (!GetFlagPickerGUID(TEAM_HORDE) && GetFlagState(TEAM_HORDE) != BG_WS_FLAG_STATE_ON_GROUND) ||
-            _bgEvents.GetNextEventTime(BG_WS_EVENT_BOTH_FLAGS_KEPT10) > 0)
+        (!GetFlagPickerGUID(TEAM_HORDE) && GetFlagState(TEAM_HORDE) != BG_WS_FLAG_STATE_ON_GROUND) ||
+        _bgEvents.GetNextEventTime(BG_WS_EVENT_BOTH_FLAGS_KEPT10) > 0)
         return 0;
 
-    return _bgEvents.GetNextEventTime(BG_WS_EVENT_BOTH_FLAGS_KEPT15) > 0 ? BG_WS_SPELL_FOCUSED_ASSAULT : BG_WS_SPELL_BRUTAL_ASSAULT;
+    return _bgEvents.GetNextEventTime(BG_WS_EVENT_BOTH_FLAGS_KEPT15) > 0 ? BG_WS_SPELL_FOCUSED_ASSAULT
+                                                                         : BG_WS_SPELL_BRUTAL_ASSAULT;
 }
 
 void BattlegroundWS::RemoveAssaultAuras()

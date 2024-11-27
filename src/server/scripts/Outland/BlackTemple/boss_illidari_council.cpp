@@ -16,89 +16,89 @@
  */
 
 #include "CreatureScript.h"
-#include "ScriptedCreature.h"
-#include "SpellScriptLoader.h"
-#include "black_temple.h"
 #include "Player.h"
+#include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
 #include "SpellMgr.h"
 #include "SpellScript.h"
+#include "SpellScriptLoader.h"
+#include "black_temple.h"
 
 enum Says
 {
-    SAY_COUNCIL_AGGRO                   = 0,
-    SAY_COUNCIL_ENRAGE                  = 1,
-    SAY_COUNCIL_SPECIAL                 = 2,
-    SAY_COUNCIL_SLAY                    = 3,
-    SAY_COUNCIL_DEATH                   = 4
+    SAY_COUNCIL_AGGRO = 0,
+    SAY_COUNCIL_ENRAGE = 1,
+    SAY_COUNCIL_SPECIAL = 2,
+    SAY_COUNCIL_SLAY = 3,
+    SAY_COUNCIL_DEATH = 4
 };
 
 enum Spells
 {
-    SPELL_EMPYREAL_EQUIVALENCY          = 41333,
-    SPELL_SHARED_RULE_DMG               = 41342,
-    SPELL_SHARED_RULE_HEAL              = 41343,
-    SPELL_EMPYREAL_BALANCE              = 41499,
-    SPELL_BERSERK                       = 41924,
+    SPELL_EMPYREAL_EQUIVALENCY = 41333,
+    SPELL_SHARED_RULE_DMG = 41342,
+    SPELL_SHARED_RULE_HEAL = 41343,
+    SPELL_EMPYREAL_BALANCE = 41499,
+    SPELL_BERSERK = 41924,
 
     // Gathios the Shatterer
-    SPELL_BLESSING_OF_PROTECTION        = 41450,
-    SPELL_BLESSING_OF_SPELL_WARDING     = 41451,
-    SPELL_CONSECRATION                  = 41541,
-    SPELL_HAMMER_OF_JUSTICE             = 41468,
-    SPELL_SEAL_OF_COMMAND               = 41469,
-    SPELL_SEAL_OF_BLOOD                 = 41459,
-    SPELL_CHROMATIC_RESISTANCE_AURA     = 41453,
-    SPELL_DEVOTION_AURA                 = 41452,
-    SPELL_JUDGEMENT                     = 41467,
+    SPELL_BLESSING_OF_PROTECTION = 41450,
+    SPELL_BLESSING_OF_SPELL_WARDING = 41451,
+    SPELL_CONSECRATION = 41541,
+    SPELL_HAMMER_OF_JUSTICE = 41468,
+    SPELL_SEAL_OF_COMMAND = 41469,
+    SPELL_SEAL_OF_BLOOD = 41459,
+    SPELL_CHROMATIC_RESISTANCE_AURA = 41453,
+    SPELL_DEVOTION_AURA = 41452,
+    SPELL_JUDGEMENT = 41467,
 
     // High Nethermancer Zerevor
-    SPELL_FLAMESTRIKE                   = 41481,
-    SPELL_BLIZZARD                      = 41482,
-    SPELL_ARCANE_BOLT                   = 41483,
-    SPELL_ARCANE_EXPLOSION              = 41524,
-    SPELL_DAMPEN_MAGIC                  = 41478,
+    SPELL_FLAMESTRIKE = 41481,
+    SPELL_BLIZZARD = 41482,
+    SPELL_ARCANE_BOLT = 41483,
+    SPELL_ARCANE_EXPLOSION = 41524,
+    SPELL_DAMPEN_MAGIC = 41478,
 
     // Lady Malande
-    SPELL_EMPOWERED_SMITE               = 41471,
-    SPELL_CIRCLE_OF_HEALING             = 41455,
-    SPELL_REFLECTIVE_SHIELD             = 41475,
-    SPELL_REFLECTIVE_SHIELD_T           = 33619,
-    SPELL_DIVINE_WRATH                  = 41472,
-    SPELL_HEAL_VISUAL                   = 24171,
+    SPELL_EMPOWERED_SMITE = 41471,
+    SPELL_CIRCLE_OF_HEALING = 41455,
+    SPELL_REFLECTIVE_SHIELD = 41475,
+    SPELL_REFLECTIVE_SHIELD_T = 33619,
+    SPELL_DIVINE_WRATH = 41472,
+    SPELL_HEAL_VISUAL = 24171,
 
     // Veras Darkshadow
-    SPELL_DEADLY_STRIKE                 = 41480,
-    SPELL_DEADLY_POISON                 = 41485,
-    SPELL_ENVENOM                       = 41487,
-    SPELL_VANISH                        = 41476,
-    SPELL_VANISH_OUT                    = 41479,
-    SPELL_VANISH_VISUAL                 = 24222
+    SPELL_DEADLY_STRIKE = 41480,
+    SPELL_DEADLY_POISON = 41485,
+    SPELL_ENVENOM = 41487,
+    SPELL_VANISH = 41476,
+    SPELL_VANISH_OUT = 41479,
+    SPELL_VANISH_VISUAL = 24222
 };
 
 enum Misc
 {
-    ACTION_START_ENCOUNTER              = 1,
-    ACTION_END_ENCOUNTER                = 2,
-    ACTION_ENRAGE                       = 3,
+    ACTION_START_ENCOUNTER = 1,
+    ACTION_END_ENCOUNTER = 2,
+    ACTION_ENRAGE = 3,
 
-    EVENT_SPELL_BLESSING                = 1,
-    EVENT_SPELL_AURA                    = 2,
-    EVENT_SPELL_SEAL                    = 3,
-    EVENT_SPELL_HAMMER_OF_JUSTICE       = 4,
-    EVENT_SPELL_JUDGEMENT               = 5,
-    EVENT_SPELL_CONSECRATION            = 6,
+    EVENT_SPELL_BLESSING = 1,
+    EVENT_SPELL_AURA = 2,
+    EVENT_SPELL_SEAL = 3,
+    EVENT_SPELL_HAMMER_OF_JUSTICE = 4,
+    EVENT_SPELL_JUDGEMENT = 5,
+    EVENT_SPELL_CONSECRATION = 6,
 
-    EVENT_SPELL_REFLECTIVE_SHIELD       = 20,
-    EVENT_SPELL_CIRCLE_OF_HEALING       = 21,
-    EVENT_SPELL_DIVINE_WRATH            = 22,
-    EVENT_SPELL_EMPOWERED_SMITE         = 23,
+    EVENT_SPELL_REFLECTIVE_SHIELD = 20,
+    EVENT_SPELL_CIRCLE_OF_HEALING = 21,
+    EVENT_SPELL_DIVINE_WRATH = 22,
+    EVENT_SPELL_EMPOWERED_SMITE = 23,
 
-    EVENT_SPELL_VANISH                  = 30,
-    EVENT_SPELL_VANISH_OUT              = 31,
-    EVENT_SPELL_ENRAGE                  = 32,
+    EVENT_SPELL_VANISH = 30,
+    EVENT_SPELL_VANISH_OUT = 31,
+    EVENT_SPELL_ENRAGE = 32,
 
-    EVENT_KILL_TALK                     = 100
+    EVENT_KILL_TALK = 100
 };
 
 class VerasEnvenom : public BasicEvent
@@ -137,6 +137,7 @@ struct boss_illidari_council : public BossAI
     }
 
     void AttackStart(Unit*) override { }
+
     void MoveInLineOfSight(Unit*) override { }
 
     void DoAction(int32 param) override
@@ -150,10 +151,7 @@ struct boss_illidari_council : public BossAI
 
             DoCastSelf(SPELL_EMPYREAL_BALANCE, true);
 
-            ScheduleTimedEvent(3200ms, [&]
-                {
-                    DoCastSelf(SPELL_EMPYREAL_EQUIVALENCY, true);
-                }, 3200ms);
+            ScheduleTimedEvent(3200ms, [&] { DoCastSelf(SPELL_EMPYREAL_EQUIVALENCY, true); }, 3200ms);
 
             for (uint8 i = DATA_GATHIOS_THE_SHATTERER; i <= DATA_VERAS_DARKSHADOW; ++i)
             {
@@ -187,7 +185,8 @@ struct boss_illidari_council : public BossAI
         }
     }
 
-    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
+    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damagetype*/,
+        SpellSchoolMask /*damageSchoolMask*/) override
     {
         if (me->GetHealth() <= damage)
         {
@@ -246,14 +245,23 @@ struct boss_illidari_council_memberAI : public ScriptedAI
         }
     }
 
-    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
+    void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*damagetype*/,
+        SpellSchoolMask /*damageSchoolMask*/) override
     {
         InstanceScript* instance = me->GetInstanceScript();
 
         int32 damageTaken = damage;
         Creature* target = instance->GetCreature(DATA_ILLIDARI_COUNCIL);
 
-        me->CastCustomSpell(target->ToUnit(), SPELL_SHARED_RULE_DMG, &damageTaken, &damageTaken, &damageTaken, true, nullptr, nullptr, me->GetGUID());
+        me->CastCustomSpell(target->ToUnit(),
+            SPELL_SHARED_RULE_DMG,
+            &damageTaken,
+            &damageTaken,
+            &damageTaken,
+            true,
+            nullptr,
+            nullptr,
+            me->GetGUID());
 
         if (me->GetHealth() <= damage)
             damage = me->GetHealth() - 1;
@@ -324,48 +332,50 @@ struct boss_gathios_the_shatterer : public boss_illidari_council_memberAI
 
         switch (events.ExecuteEvent())
         {
-        case EVENT_SPELL_BLESSING:
-            if (Unit* member = SelectCouncilMember())
-            {
-                me->CastSpell(member, _toggleBlessing ? SPELL_BLESSING_OF_PROTECTION : SPELL_BLESSING_OF_SPELL_WARDING);
-                _toggleBlessing = !_toggleBlessing;
-            }
-            events.ScheduleEvent(EVENT_SPELL_BLESSING, 15s);
-            break;
-        case EVENT_SPELL_AURA:
-            DoCastSelf(_toggleAura ? SPELL_DEVOTION_AURA : SPELL_CHROMATIC_RESISTANCE_AURA);
-            _toggleAura = !_toggleAura;
-            events.ScheduleEvent(EVENT_SPELL_AURA, 60s);
-            break;
-        case EVENT_SPELL_CONSECRATION:
-            if (roll_chance_i(50))
-                Talk(SAY_COUNCIL_SPECIAL);
-            DoCastSelf(SPELL_CONSECRATION);
-            events.ScheduleEvent(EVENT_SPELL_CONSECRATION, 30s);
-            break;
-        case EVENT_SPELL_HAMMER_OF_JUSTICE:
-            if (Unit* target = me->GetVictim())
-                if (target->IsPlayer() && me->IsInRange(target, 10.0f, 40.0f, true))
+            case EVENT_SPELL_BLESSING:
+                if (Unit* member = SelectCouncilMember())
                 {
-                    me->CastSpell(target, SPELL_HAMMER_OF_JUSTICE);
-                    events.ScheduleEvent(EVENT_SPELL_HAMMER_OF_JUSTICE, 20s);
-                    break;
+                    me->CastSpell(
+                        member, _toggleBlessing ? SPELL_BLESSING_OF_PROTECTION : SPELL_BLESSING_OF_SPELL_WARDING);
+                    _toggleBlessing = !_toggleBlessing;
                 }
-            events.ScheduleEvent(EVENT_SPELL_HAMMER_OF_JUSTICE, 0s);
-            break;
-        case EVENT_SPELL_SEAL:
-            DoCastSelf(_toggleSeal ? SPELL_SEAL_OF_COMMAND : SPELL_SEAL_OF_BLOOD);
-            _toggleSeal = !_toggleSeal;
-            events.ScheduleEvent(EVENT_SPELL_SEAL, 20s);
-            break;
-        case EVENT_SPELL_JUDGEMENT:
-            me->CastSpell(me->GetVictim(), SPELL_JUDGEMENT);
-            events.ScheduleEvent(EVENT_SPELL_JUDGEMENT, 16s, 20s);
-            break;
+                events.ScheduleEvent(EVENT_SPELL_BLESSING, 15s);
+                break;
+            case EVENT_SPELL_AURA:
+                DoCastSelf(_toggleAura ? SPELL_DEVOTION_AURA : SPELL_CHROMATIC_RESISTANCE_AURA);
+                _toggleAura = !_toggleAura;
+                events.ScheduleEvent(EVENT_SPELL_AURA, 60s);
+                break;
+            case EVENT_SPELL_CONSECRATION:
+                if (roll_chance_i(50))
+                    Talk(SAY_COUNCIL_SPECIAL);
+                DoCastSelf(SPELL_CONSECRATION);
+                events.ScheduleEvent(EVENT_SPELL_CONSECRATION, 30s);
+                break;
+            case EVENT_SPELL_HAMMER_OF_JUSTICE:
+                if (Unit* target = me->GetVictim())
+                    if (target->IsPlayer() && me->IsInRange(target, 10.0f, 40.0f, true))
+                    {
+                        me->CastSpell(target, SPELL_HAMMER_OF_JUSTICE);
+                        events.ScheduleEvent(EVENT_SPELL_HAMMER_OF_JUSTICE, 20s);
+                        break;
+                    }
+                events.ScheduleEvent(EVENT_SPELL_HAMMER_OF_JUSTICE, 0s);
+                break;
+            case EVENT_SPELL_SEAL:
+                DoCastSelf(_toggleSeal ? SPELL_SEAL_OF_COMMAND : SPELL_SEAL_OF_BLOOD);
+                _toggleSeal = !_toggleSeal;
+                events.ScheduleEvent(EVENT_SPELL_SEAL, 20s);
+                break;
+            case EVENT_SPELL_JUDGEMENT:
+                me->CastSpell(me->GetVictim(), SPELL_JUDGEMENT);
+                events.ScheduleEvent(EVENT_SPELL_JUDGEMENT, 16s, 20s);
+                break;
         }
 
         DoMeleeAttackIfReady();
     }
+
 private:
     bool _toggleBlessing;
     bool _toggleAura;
@@ -374,7 +384,10 @@ private:
 
 struct boss_high_nethermancer_zerevor : public boss_illidari_council_memberAI
 {
-    boss_high_nethermancer_zerevor(Creature* creature) : boss_illidari_council_memberAI(creature), _canCastDampenMagic(true) { }
+    boss_high_nethermancer_zerevor(Creature* creature) :
+        boss_illidari_council_memberAI(creature),
+        _canCastDampenMagic(true)
+    { }
 
     void Reset() override
     {
@@ -393,28 +406,26 @@ struct boss_high_nethermancer_zerevor : public boss_illidari_council_memberAI
     {
         boss_illidari_council_memberAI::JustEngagedWith(who);
 
-        ScheduleTimedEvent(25s, [&]
+        ScheduleTimedEvent(25s,
+            [&]
         {
             if (roll_chance_i(50))
                 Talk(SAY_COUNCIL_SPECIAL);
             DoCastRandomTarget(SPELL_FLAMESTRIKE, 0, 100.0f);
-        }, 40s);
+        },
+            40s);
 
-        ScheduleTimedEvent(15s, [&]
-        {
-            DoCastVictim(SPELL_ARCANE_BOLT);
-        }, 3s);
+        ScheduleTimedEvent(15s, [&] { DoCastVictim(SPELL_ARCANE_BOLT); }, 3s);
 
-        ScheduleTimedEvent(5s, [&]
-        {
-            DoCastRandomTarget(SPELL_BLIZZARD, 0, 100.0f);
-        }, 40s);
+        ScheduleTimedEvent(5s, [&] { DoCastRandomTarget(SPELL_BLIZZARD, 0, 100.0f); }, 40s);
 
-        ScheduleTimedEvent(10s, [&]
+        ScheduleTimedEvent(10s,
+            [&]
         {
             if (SelectTarget(SelectTargetMethod::Random, 0, 10.0f))
                 DoCastAOE(SPELL_ARCANE_EXPLOSION);
-        }, 10s);
+        },
+            10s);
 
         if (Aura* aura = me->GetAura(SPELL_DAMPEN_MAGIC))
         {
@@ -429,7 +440,8 @@ struct boss_high_nethermancer_zerevor : public boss_illidari_council_memberAI
             if (mode == AURA_REMOVE_BY_ENEMY_SPELL || mode == AURA_REMOVE_BY_EXPIRE)
                 if (!CastDampenMagicIfPossible())
                 {
-                    scheduler.Schedule(1s, [this](TaskContext context)
+                    scheduler.Schedule(1s,
+                        [this](TaskContext context)
                     {
                         if (!CastDampenMagicIfPossible())
                             context.Repeat();
@@ -445,8 +457,7 @@ struct boss_high_nethermancer_zerevor : public boss_illidari_council_memberAI
         if (me->HasUnitState(UNIT_STATE_CASTING))
             return;
 
-        scheduler.Update(diff,
-            std::bind(&BossAI::DoMeleeAttackIfReady, this));
+        scheduler.Update(diff, std::bind(&BossAI::DoMeleeAttackIfReady, this));
     }
 
     bool CastDampenMagicIfPossible()
@@ -454,23 +465,12 @@ struct boss_high_nethermancer_zerevor : public boss_illidari_council_memberAI
         if (_canCastDampenMagic)
         {
             _canCastDampenMagic = false;
-            me->m_Events.AddEventAtOffset([this] {
-                _canCastDampenMagic = true;
-            }, 1min);
+            me->m_Events.AddEventAtOffset([this] { _canCastDampenMagic = true; }, 1min);
 
             if (me->IsInCombat())
-            {
-                scheduler.Schedule(1s, [this](TaskContext /*context*/)
-                {
-                    DoCastSelf(SPELL_DAMPEN_MAGIC);
-                });
-            }
+                scheduler.Schedule(1s, [this](TaskContext /*context*/) { DoCastSelf(SPELL_DAMPEN_MAGIC); });
             else
-            {
-                me->m_Events.AddEventAtOffset([this] {
-                    DoCastSelf(SPELL_DAMPEN_MAGIC);
-                }, 1s);
-            }
+                me->m_Events.AddEventAtOffset([this] { DoCastSelf(SPELL_DAMPEN_MAGIC); }, 1s);
 
             return true;
         }
@@ -478,8 +478,8 @@ struct boss_high_nethermancer_zerevor : public boss_illidari_council_memberAI
         return false;
     }
 
-    private:
-        bool _canCastDampenMagic;
+private:
+    bool _canCastDampenMagic;
 };
 
 struct boss_lady_malande : public boss_illidari_council_memberAI
@@ -512,25 +512,25 @@ struct boss_lady_malande : public boss_illidari_council_memberAI
 
         switch (events.ExecuteEvent())
         {
-        case EVENT_SPELL_CIRCLE_OF_HEALING:
-            DoCastSelf(SPELL_CIRCLE_OF_HEALING);
-            events.ScheduleEvent(EVENT_SPELL_CIRCLE_OF_HEALING, 20s);
-            break;
-        case EVENT_SPELL_REFLECTIVE_SHIELD:
-            if (roll_chance_i(50))
-                Talk(SAY_COUNCIL_SPECIAL);
-            DoCastSelf(SPELL_REFLECTIVE_SHIELD);
-            events.ScheduleEvent(EVENT_SPELL_REFLECTIVE_SHIELD, 40s);
-            break;
-        case EVENT_SPELL_DIVINE_WRATH:
-            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100.0f))
-                me->CastSpell(target, SPELL_DIVINE_WRATH);
-            events.ScheduleEvent(EVENT_SPELL_DIVINE_WRATH, 20s);
-            break;
-        case EVENT_SPELL_EMPOWERED_SMITE:
-            me->CastSpell(me->GetVictim(), SPELL_EMPOWERED_SMITE);
-            events.ScheduleEvent(EVENT_SPELL_EMPOWERED_SMITE, 3s);
-            break;
+            case EVENT_SPELL_CIRCLE_OF_HEALING:
+                DoCastSelf(SPELL_CIRCLE_OF_HEALING);
+                events.ScheduleEvent(EVENT_SPELL_CIRCLE_OF_HEALING, 20s);
+                break;
+            case EVENT_SPELL_REFLECTIVE_SHIELD:
+                if (roll_chance_i(50))
+                    Talk(SAY_COUNCIL_SPECIAL);
+                DoCastSelf(SPELL_REFLECTIVE_SHIELD);
+                events.ScheduleEvent(EVENT_SPELL_REFLECTIVE_SHIELD, 40s);
+                break;
+            case EVENT_SPELL_DIVINE_WRATH:
+                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100.0f))
+                    me->CastSpell(target, SPELL_DIVINE_WRATH);
+                events.ScheduleEvent(EVENT_SPELL_DIVINE_WRATH, 20s);
+                break;
+            case EVENT_SPELL_EMPOWERED_SMITE:
+                me->CastSpell(me->GetVictim(), SPELL_EMPOWERED_SMITE);
+                events.ScheduleEvent(EVENT_SPELL_EMPOWERED_SMITE, 3s);
+                break;
         }
     }
 };
@@ -563,22 +563,22 @@ struct boss_veras_darkshadow : public boss_illidari_council_memberAI
 
         switch (events.ExecuteEvent())
         {
-        case EVENT_SPELL_VANISH:
-            if (roll_chance_i(50))
-                Talk(SAY_COUNCIL_SPECIAL);
-            DoCastSelf(SPELL_DEADLY_STRIKE);
-            DoCastSelf(SPELL_VANISH);
-            events.ScheduleEvent(EVENT_SPELL_VANISH, 60s);
-            events.ScheduleEvent(EVENT_SPELL_VANISH_OUT, 29s);
-            break;
-        case EVENT_SPELL_VANISH_OUT:
-            DoCastSelf(SPELL_VANISH_OUT);
-            break;
-        case EVENT_SPELL_ENRAGE:
-            DoResetThreatList();
-            if (Creature* council = instance->GetCreature(DATA_ILLIDARI_COUNCIL))
-                council->GetAI()->DoAction(ACTION_ENRAGE);
-            break;
+            case EVENT_SPELL_VANISH:
+                if (roll_chance_i(50))
+                    Talk(SAY_COUNCIL_SPECIAL);
+                DoCastSelf(SPELL_DEADLY_STRIKE);
+                DoCastSelf(SPELL_VANISH);
+                events.ScheduleEvent(EVENT_SPELL_VANISH, 60s);
+                events.ScheduleEvent(EVENT_SPELL_VANISH_OUT, 29s);
+                break;
+            case EVENT_SPELL_VANISH_OUT:
+                DoCastSelf(SPELL_VANISH_OUT);
+                break;
+            case EVENT_SPELL_ENRAGE:
+                DoResetThreatList();
+                if (Creature* council = instance->GetCreature(DATA_ILLIDARI_COUNCIL))
+                    council->GetAI()->DoAction(ACTION_ENRAGE);
+                break;
         }
 
         if (events.GetNextEventTime(EVENT_SPELL_VANISH_OUT) == 0)
@@ -598,7 +598,8 @@ class spell_illidari_council_balance_of_power_aura : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_illidari_council_balance_of_power_aura::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(
+            spell_illidari_council_balance_of_power_aura::CalculateAmount, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB);
     }
 };
 
@@ -639,7 +640,8 @@ class spell_illidari_council_empyreal_balance : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_illidari_council_empyreal_balance::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_illidari_council_empyreal_balance::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
         AfterCast += SpellCastFn(spell_illidari_council_empyreal_balance::HandleAfterCast);
     }
 
@@ -677,7 +679,8 @@ class spell_illidari_council_empyreal_equivalency : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_illidari_council_empyreal_equivalency::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_illidari_council_empyreal_equivalency::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
         AfterCast += SpellCastFn(spell_illidari_council_empyreal_equivalency::HandleAfterCast);
     }
 
@@ -691,7 +694,7 @@ class spell_illidari_council_reflective_shield_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_REFLECTIVE_SHIELD_T });
+        return ValidateSpellInfo({SPELL_REFLECTIVE_SHIELD_T});
     }
 
     void ReflectDamage(AuraEffect* aurEff, DamageInfo& dmgInfo, uint32& absorbAmount)
@@ -701,7 +704,8 @@ class spell_illidari_council_reflective_shield_aura : public AuraScript
             return;
 
         int32 bp = absorbAmount / 2;
-        target->CastCustomSpell(dmgInfo.GetAttacker(), SPELL_REFLECTIVE_SHIELD_T, &bp, nullptr, nullptr, true, nullptr, aurEff);
+        target->CastCustomSpell(
+            dmgInfo.GetAttacker(), SPELL_REFLECTIVE_SHIELD_T, &bp, nullptr, nullptr, true, nullptr, aurEff);
     }
 
     void Register() override
@@ -709,6 +713,7 @@ class spell_illidari_council_reflective_shield_aura : public AuraScript
         AfterEffectAbsorb += AuraEffectAbsorbFn(spell_illidari_council_reflective_shield_aura::ReflectDamage, EFFECT_0);
     }
 };
+
 class spell_illidari_council_circle_of_healing : public SpellScript
 {
     PrepareSpellScript(spell_illidari_council_circle_of_healing);
@@ -726,12 +731,14 @@ class spell_illidari_council_circle_of_healing : public SpellScript
         Creature* target = instance->GetCreature(DATA_ILLIDARI_COUNCIL);
 
         int32 heal = GetHitHeal();
-        target->CastCustomSpell(target, SPELL_SHARED_RULE_HEAL, &heal, &heal, &heal, true, nullptr, nullptr, target->GetGUID());
+        target->CastCustomSpell(
+            target, SPELL_SHARED_RULE_HEAL, &heal, &heal, &heal, true, nullptr, nullptr, target->GetGUID());
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_illidari_council_circle_of_healing::HandleSharedRule, EFFECT_0, SPELL_EFFECT_HEAL);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_illidari_council_circle_of_healing::HandleSharedRule, EFFECT_0, SPELL_EFFECT_HEAL);
     }
 };
 
@@ -756,7 +763,8 @@ class spell_illidari_council_judgement : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_illidari_council_judgement::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_illidari_council_judgement::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -770,13 +778,15 @@ class spell_illidari_council_deadly_strike_aura : public AuraScript
         if (Unit* target = GetUnitOwner()->GetAI()->SelectTarget(SelectTargetMethod::Random, 0, 100.0f, true))
         {
             GetUnitOwner()->CastSpell(target, GetSpellInfo()->Effects[effect->GetEffIndex()].TriggerSpell, true);
-            GetUnitOwner()->m_Events.AddEvent(new VerasEnvenom(*GetUnitOwner(), target->GetGUID()), GetUnitOwner()->m_Events.CalculateTime(urand(1500, 3500)));
+            GetUnitOwner()->m_Events.AddEvent(new VerasEnvenom(*GetUnitOwner(), target->GetGUID()),
+                GetUnitOwner()->m_Events.CalculateTime(urand(1500, 3500)));
         }
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_illidari_council_deadly_strike_aura::Update, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_illidari_council_deadly_strike_aura::Update, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 

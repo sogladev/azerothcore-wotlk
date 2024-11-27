@@ -21,23 +21,23 @@
 
 enum Spells
 {
-    SPELL_SMITE_STOMP       = 6432,
-    SPELL_SMITE_SLAM        = 6435,
+    SPELL_SMITE_STOMP = 6432,
+    SPELL_SMITE_SLAM = 6435,
 
-    EQUIP_SWORD             = 1,
-    EQUIP_TWO_SWORDS        = 2,
-    EQUIP_MACE              = 3,
+    EQUIP_SWORD = 1,
+    EQUIP_TWO_SWORDS = 2,
+    EQUIP_MACE = 3,
 
-    EVENT_CHECK_HEALTH1     = 1,
-    EVENT_CHECK_HEALTH2     = 2,
-    EVENT_SMITE_SLAM        = 3,
-    EVENT_SWAP_WEAPON1      = 4,
-    EVENT_SWAP_WEAPON2      = 5,
-    EVENT_RESTORE_COMBAT    = 6,
-    EVENT_KNEEL             = 7,
+    EVENT_CHECK_HEALTH1 = 1,
+    EVENT_CHECK_HEALTH2 = 2,
+    EVENT_SMITE_SLAM = 3,
+    EVENT_SWAP_WEAPON1 = 4,
+    EVENT_SWAP_WEAPON2 = 5,
+    EVENT_RESTORE_COMBAT = 6,
+    EVENT_KNEEL = 7,
 
-    SAY_SWAP1               = 2,
-    SAY_SWAP2               = 3
+    SAY_SWAP1 = 2,
+    SAY_SWAP2 = 3
 };
 
 class boss_mr_smite : public CreatureScript
@@ -52,9 +52,7 @@ public:
 
     struct boss_mr_smiteAI : public ScriptedAI
     {
-        boss_mr_smiteAI(Creature* creature) : ScriptedAI(creature)
-        {
-        }
+        boss_mr_smiteAI(Creature* creature) : ScriptedAI(creature) { }
 
         EventMap events;
         bool health67;

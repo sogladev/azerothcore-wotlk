@@ -21,19 +21,19 @@
 
 enum Text
 {
-    SAY_AGGRO                   = 1,
-    SAY_BANISH                  = 2,
-    SAY_SLAY                    = 3,
-    SAY_DEATH                   = 4
+    SAY_AGGRO = 1,
+    SAY_BANISH = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4
 };
 
 enum Spells
 {
-    SPELL_HASTEN                = 31458,
-    SPELL_MORTAL_WOUND          = 31464,
-    SPELL_WING_BUFFET           = 31475,
-    SPELL_REFLECT               = 38592,
-    SPELL_BANISH_DRAGON_HELPER  = 31550
+    SPELL_HASTEN = 31458,
+    SPELL_MORTAL_WOUND = 31464,
+    SPELL_WING_BUFFET = 31475,
+    SPELL_REFLECT = 38592,
+    SPELL_BANISH_DRAGON_HELPER = 31550
 };
 
 struct boss_temporus : public BossAI
@@ -49,15 +49,21 @@ struct boss_temporus : public BossAI
     void JustEngagedWith(Unit* /*who*/) override
     {
         _JustEngagedWith();
-        scheduler.Schedule(12s, [this](TaskContext context)
+        scheduler
+            .Schedule(12s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_HASTEN);
             context.Repeat(20s);
-        }).Schedule(5s, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_MORTAL_WOUND);
             context.Repeat(10s);
-        }).Schedule(20s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_WING_BUFFET);
             context.Repeat(20s);
@@ -65,7 +71,8 @@ struct boss_temporus : public BossAI
 
         if (IsHeroic())
         {
-            scheduler.Schedule(28s, [this](TaskContext context)
+            scheduler.Schedule(28s,
+                [this](TaskContext context)
             {
                 DoCastSelf(SPELL_REFLECT);
                 context.Repeat(30s);
@@ -77,9 +84,7 @@ struct boss_temporus : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             OwnTalk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override

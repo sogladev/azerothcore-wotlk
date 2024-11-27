@@ -22,8 +22,15 @@
 #include "SpellAuraEffects.h"
 #include "Transport.h"
 
-DynamicObject::DynamicObject(bool isWorldObject) : WorldObject(isWorldObject), MovableMapObject(),
-    _aura(nullptr), _removedAura(nullptr), _caster(nullptr), _duration(0), _isViewpoint(false), _updateViewerVisibilityTimer(0)
+DynamicObject::DynamicObject(bool isWorldObject) :
+    WorldObject(isWorldObject),
+    MovableMapObject(),
+    _aura(nullptr),
+    _removedAura(nullptr),
+    _caster(nullptr),
+    _duration(0),
+    _isViewpoint(false),
+    _updateViewerVisibilityTimer(0)
 {
     m_objectType |= TYPEMASK_DYNAMICOBJECT;
     m_objectTypeId = TYPEID_DYNAMICOBJECT;
@@ -94,13 +101,18 @@ void DynamicObject::RemoveFromWorld()
     }
 }
 
-bool DynamicObject::CreateDynamicObject(ObjectGuid::LowType guidlow, Unit* caster, uint32 spellId, Position const& pos, float radius, DynamicObjectType type)
+bool DynamicObject::CreateDynamicObject(ObjectGuid::LowType guidlow, Unit* caster, uint32 spellId, Position const& pos,
+    float radius, DynamicObjectType type)
 {
     SetMap(caster->GetMap());
     Relocate(pos);
     if (!IsPositionValid())
     {
-        LOG_ERROR("dyobject", "DynamicObject (spell {}) not created. Suggested coordinates isn't valid (X: {} Y: {})", spellId, GetPositionX(), GetPositionY());
+        LOG_ERROR("dyobject",
+            "DynamicObject (spell {}) not created. Suggested coordinates isn't valid (X: {} Y: {})",
+            spellId,
+            GetPositionX(),
+            GetPositionY());
         return false;
     }
 
@@ -129,9 +141,7 @@ bool DynamicObject::CreateDynamicObject(ObjectGuid::LowType guidlow, Unit* caste
     }
 
     if (IsWorldObject())
-    {
         setActive(true);
-    }
 
     return true;
 }
@@ -255,9 +265,7 @@ void DynamicObject::RemoveCasterViewpoint()
 
         // Restore prev farsight viewpoint
         if (Unit* farsightObject = ObjectAccessor::GetUnit(*caster, _oldFarsightGUID))
-        {
             caster->SetViewpoint(farsightObject, true);
-        }
         _oldFarsightGUID.Clear();
     }
 }

@@ -35,16 +35,16 @@ void Player::UpdateSpeakTime(ChatFloodThrottle::Index index)
     uint32 limit, delay;
     switch (index)
     {
-         case ChatFloodThrottle::ADDON:
-             limit = sWorld->getIntConfig(CONFIG_CHATFLOOD_ADDON_MESSAGE_COUNT);
-             delay = sWorld->getIntConfig(CONFIG_CHATFLOOD_ADDON_MESSAGE_DELAY);
-             break;
-         case ChatFloodThrottle::REGULAR:
-             limit = sWorld->getIntConfig(CONFIG_CHATFLOOD_MESSAGE_COUNT);
-             delay = sWorld->getIntConfig(CONFIG_CHATFLOOD_MESSAGE_DELAY);
-             [[fallthrough]];
-         default:
-             return;
+        case ChatFloodThrottle::ADDON:
+            limit = sWorld->getIntConfig(CONFIG_CHATFLOOD_ADDON_MESSAGE_COUNT);
+            delay = sWorld->getIntConfig(CONFIG_CHATFLOOD_ADDON_MESSAGE_DELAY);
+            break;
+        case ChatFloodThrottle::REGULAR:
+            limit = sWorld->getIntConfig(CONFIG_CHATFLOOD_MESSAGE_COUNT);
+            delay = sWorld->getIntConfig(CONFIG_CHATFLOOD_MESSAGE_DELAY);
+            [[fallthrough]];
+        default:
+            return;
     }
     time_t current = GameTime::GetGameTime().count();
     if (m_chatFloodData[index].Time > current)
@@ -68,7 +68,7 @@ void Player::UpdateSpeakTime(ChatFloodThrottle::Index index)
 
 bool Player::CanSpeak() const
 {
-    return  GetSession()->m_muteTime <= time (nullptr);
+    return GetSession()->m_muteTime <= time(nullptr);
 }
 
 /*********************************************************/
@@ -96,7 +96,8 @@ void Player::SavePositionInDB(uint32 mapid, float x, float y, float z, float o, 
     CharacterDatabase.Execute(stmt);
 }
 
-void Player::SavePositionInDB(WorldLocation const& loc, uint16 zoneId, ObjectGuid guid, CharacterDatabaseTransaction trans)
+void Player::SavePositionInDB(
+    WorldLocation const& loc, uint16 zoneId, ObjectGuid guid, CharacterDatabaseTransaction trans)
 {
     CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_CHARACTER_POSITION);
 
@@ -152,7 +153,7 @@ void Player::SendAttackSwingBadFacingAttack()
 void Player::SendAutoRepeatCancel(Unit* target)
 {
     WorldPacket data(SMSG_CANCEL_AUTO_REPEAT, target->GetPackGUID().size());
-    data << target->GetPackGUID();                  // may be it's target guid
+    data << target->GetPackGUID(); // may be it's target guid
     SendMessageToSet(&data, true);
 }
 
@@ -202,15 +203,14 @@ void Player::ResetInstances(ObjectGuid guid, uint8 method, bool isRaid)
             if (!p || p->GetDifficulty(false) != DUNGEON_DIFFICULTY_NORMAL)
                 break;
             std::vector<InstanceSave*> toUnbind;
-            BoundInstancesMap const& m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(p->GetGUID(), Difficulty(DUNGEON_DIFFICULTY_NORMAL));
+            BoundInstancesMap const& m_boundInstances =
+                sInstanceSaveMgr->PlayerGetBoundInstances(p->GetGUID(), Difficulty(DUNGEON_DIFFICULTY_NORMAL));
             for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end(); ++itr)
             {
                 InstanceSave* instanceSave = itr->second.save;
                 MapEntry const* entry = sMapStore.LookupEntry(itr->first);
                 if (!entry || entry->IsRaid() || !instanceSave->CanReset())
-                {
                     continue;
-                }
 
                 Map* map = sMapMgr->FindMap(instanceSave->GetMapId(), instanceSave->GetInstanceId());
                 if (!map || map->ToInstanceMap()->Reset(method))
@@ -226,26 +226,23 @@ void Player::ResetInstances(ObjectGuid guid, uint8 method, bool isRaid)
                 sInstanceSaveMgr->DeleteInstanceSavedData(instanceSave->GetInstanceId());
             }
             for (std::vector<InstanceSave*>::const_iterator itr = toUnbind.begin(); itr != toUnbind.end(); ++itr)
-            {
                 sInstanceSaveMgr->UnbindAllFor(*itr);
-            }
         }
-            break;
+        break;
         case INSTANCE_RESET_CHANGE_DIFFICULTY:
         {
             Player* p = ObjectAccessor::FindConnectedPlayer(guid);
             if (!p)
                 break;
             std::vector<InstanceSave*> toUnbind;
-            BoundInstancesMap const& m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(p->GetGUID(), p->GetDifficulty(isRaid));
+            BoundInstancesMap const& m_boundInstances =
+                sInstanceSaveMgr->PlayerGetBoundInstances(p->GetGUID(), p->GetDifficulty(isRaid));
             for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end(); ++itr)
             {
                 InstanceSave* instanceSave = itr->second.save;
                 MapEntry const* entry = sMapStore.LookupEntry(itr->first);
                 if (!entry || entry->IsRaid() != isRaid || !instanceSave->CanReset())
-                {
                     continue;
-                }
 
                 Map* map = sMapMgr->FindMap(instanceSave->GetMapId(), instanceSave->GetInstanceId());
                 if (!map || map->ToInstanceMap()->Reset(method))
@@ -263,7 +260,7 @@ void Player::ResetInstances(ObjectGuid guid, uint8 method, bool isRaid)
             for (std::vector<InstanceSave*>::const_iterator itr = toUnbind.begin(); itr != toUnbind.end(); ++itr)
                 sInstanceSaveMgr->UnbindAllFor(*itr);
         }
-            break;
+        break;
         case INSTANCE_RESET_GROUP_JOIN:
         {
             Player* p = ObjectAccessor::FindConnectedPlayer(guid);
@@ -272,8 +269,10 @@ void Player::ResetInstances(ObjectGuid guid, uint8 method, bool isRaid)
             for (uint8 d = 0; d < MAX_DIFFICULTY; ++d)
             {
                 std::vector<InstanceSave*> toUnbind;
-                BoundInstancesMap const& m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(p->GetGUID(), Difficulty(d));
-                for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end(); ++itr)
+                BoundInstancesMap const& m_boundInstances =
+                    sInstanceSaveMgr->PlayerGetBoundInstances(p->GetGUID(), Difficulty(d));
+                for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();
+                     ++itr)
                 {
                     if (itr->second.perm)
                         continue;
@@ -290,18 +289,21 @@ void Player::ResetInstances(ObjectGuid guid, uint8 method, bool isRaid)
                     sInstanceSaveMgr->DeleteInstanceSavedData(instanceSave->GetInstanceId());
                 }
                 for (std::vector<InstanceSave*>::const_iterator itr = toUnbind.begin(); itr != toUnbind.end(); ++itr)
-                    sInstanceSaveMgr->PlayerUnbindInstance(p->GetGUID(), (*itr)->GetMapId(), (*itr)->GetDifficulty(), true, p);
+                    sInstanceSaveMgr->PlayerUnbindInstance(
+                        p->GetGUID(), (*itr)->GetMapId(), (*itr)->GetDifficulty(), true, p);
             }
         }
-            break;
+        break;
         case INSTANCE_RESET_GROUP_LEAVE:
         {
             Player* p = ObjectAccessor::FindConnectedPlayer(guid);
             for (uint8 d = 0; d < MAX_DIFFICULTY; ++d)
             {
                 std::vector<InstanceSave*> toUnbind;
-                BoundInstancesMap const& m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(guid, Difficulty(d));
-                for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end(); ++itr)
+                BoundInstancesMap const& m_boundInstances =
+                    sInstanceSaveMgr->PlayerGetBoundInstances(guid, Difficulty(d));
+                for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();
+                     ++itr)
                 {
                     if (itr->second.perm)
                         continue;
@@ -319,7 +321,7 @@ void Player::ResetInstances(ObjectGuid guid, uint8 method, bool isRaid)
                     sInstanceSaveMgr->PlayerUnbindInstance(guid, (*itr)->GetMapId(), (*itr)->GetDifficulty(), true, p);
             }
         }
-            break;
+        break;
     }
 }
 
@@ -362,9 +364,7 @@ void Player::UpdateContestedPvP(uint32 diff)
     if (!m_contestedPvPTimer || IsInCombat())
         return;
     if (m_contestedPvPTimer <= diff)
-    {
         ResetContestedPvP();
-    }
     else
         m_contestedPvPTimer -= diff;
 }
@@ -391,9 +391,7 @@ void Player::UpdatePvPFlag(time_t currTime)
 void Player::UpdateFFAPvPFlag(time_t currTime)
 {
     if (!IsFFAPvP() || sWorld->IsFFAPvPRealm() || !pvpInfo.FFAPvPEndTimer || currTime < pvpInfo.FFAPvPEndTimer + 30)
-    {
         return;
-    }
 
     pvpInfo.FFAPvPEndTimer = time_t(0);
     if (HasByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_FFA_PVP))
@@ -438,7 +436,9 @@ void Player::UpdateDuelFlag(time_t currTime)
 
 void Player::SendItemRetrievalMail(uint32 itemEntry, uint32 count)
 {
-    SendItemRetrievalMail({ { itemEntry, count } });
+    SendItemRetrievalMail({
+        {itemEntry, count}
+    });
 }
 
 void Player::SendItemRetrievalMail(std::vector<std::pair<uint32, uint32>> mailItems)
@@ -446,7 +446,9 @@ void Player::SendItemRetrievalMail(std::vector<std::pair<uint32, uint32>> mailIt
     if (mailItems.empty())
     {
         // Skip send if empty items
-        LOG_ERROR("entities.player.items", "> SendItemRetrievalMail: Attempt to send almost with items without items. Player {}", GetGUID().ToString());
+        LOG_ERROR("entities.player.items",
+            "> SendItemRetrievalMail: Attempt to send almost with items without items. Player {}",
+            GetGUID().ToString());
         return;
     }
 
@@ -467,7 +469,10 @@ void Player::SendItemRetrievalMail(std::vector<std::pair<uint32, uint32>> mailIt
 
         if (itemCount < 1 || (itemTemplate->MaxCount > 0 && itemCount > static_cast<uint32>(itemTemplate->MaxCount)))
         {
-            LOG_ERROR("entities.player.items", "> SendItemRetrievalMail: Incorrect item count ({}) for item id {}", itemEntry, itemCount);
+            LOG_ERROR("entities.player.items",
+                "> SendItemRetrievalMail: Incorrect item count ({}) for item id {}",
+                itemEntry,
+                itemCount);
             return;
         }
 
@@ -490,16 +495,15 @@ void Player::SendItemRetrievalMail(std::vector<std::pair<uint32, uint32>> mailIt
     };
 
     for (auto& [itemEntry, itemCount] : mailItems)
-    {
         AddMailItem(itemEntry, itemCount);
-    }
 
     CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 
     for (auto const& items : allItems)
     {
         MailSender sender(MAIL_CREATURE, 34337 /* The Postmaster */);
-        MailDraft draft("Recovered Item", "We recovered a lost item in the twisting nether and noted that it was yours.$B$BPlease find said object enclosed."); // This is the text used in Cataclysm, it probably wasn't changed.
+        MailDraft draft("Recovered Item",
+            "We recovered a lost item in the twisting nether and noted that it was yours.$B$BPlease find said object enclosed."); // This is the text used in Cataclysm, it probably wasn't changed.
 
         for (auto const& [itemEntry, itemCount] : items)
         {

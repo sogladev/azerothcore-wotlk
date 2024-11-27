@@ -35,80 +35,86 @@ EndScriptData */
 /*********************************/
 enum Says
 {
-    SAY_DOROTHEE_DEATH          = 0,
-    SAY_DOROTHEE_SUMMON         = 1,
-    SAY_DOROTHEE_TITO_DEATH     = 2,
-    SAY_DOROTHEE_AGGRO          = 3,
+    SAY_DOROTHEE_DEATH = 0,
+    SAY_DOROTHEE_SUMMON = 1,
+    SAY_DOROTHEE_TITO_DEATH = 2,
+    SAY_DOROTHEE_AGGRO = 3,
 
-    SAY_ROAR_AGGRO              = 0,
-    SAY_ROAR_DEATH              = 1,
-    SAY_ROAR_SLAY               = 2,
+    SAY_ROAR_AGGRO = 0,
+    SAY_ROAR_DEATH = 1,
+    SAY_ROAR_SLAY = 2,
 
-    SAY_STRAWMAN_AGGRO          = 0,
-    SAY_STRAWMAN_DEATH          = 1,
-    SAY_STRAWMAN_SLAY           = 2,
+    SAY_STRAWMAN_AGGRO = 0,
+    SAY_STRAWMAN_DEATH = 1,
+    SAY_STRAWMAN_SLAY = 2,
 
-    SAY_TINHEAD_AGGRO           = 0,
-    SAY_TINHEAD_DEATH           = 1,
-    SAY_TINHEAD_SLAY            = 2,
-    EMOTE_RUST                  = 3,
+    SAY_TINHEAD_AGGRO = 0,
+    SAY_TINHEAD_DEATH = 1,
+    SAY_TINHEAD_SLAY = 2,
+    EMOTE_RUST = 3,
 
-    SAY_CRONE_AGGRO             = 0,
-    SAY_CRONE_DEATH             = 1,
-    SAY_CRONE_SLAY              = 2,
+    SAY_CRONE_AGGRO = 0,
+    SAY_CRONE_DEATH = 1,
+    SAY_CRONE_SLAY = 2,
 };
 
 enum Spells
 {
     // Dorothee
-    SPELL_WATERBOLT         = 31012,
-    SPELL_SCREAM            = 31013,
-    SPELL_SUMMONTITO        = 31014,
+    SPELL_WATERBOLT = 31012,
+    SPELL_SCREAM = 31013,
+    SPELL_SUMMONTITO = 31014,
 
     // Tito
-    SPELL_YIPPING           = 31015,
+    SPELL_YIPPING = 31015,
 
     // Strawman
-    SPELL_BRAIN_BASH        = 31046,
-    SPELL_BRAIN_WIPE        = 31069,
-    SPELL_BURNING_STRAW     = 31075,
+    SPELL_BRAIN_BASH = 31046,
+    SPELL_BRAIN_WIPE = 31069,
+    SPELL_BURNING_STRAW = 31075,
 
     // Tinhead
-    SPELL_CLEAVE            = 31043,
-    SPELL_RUST              = 31086,
+    SPELL_CLEAVE = 31043,
+    SPELL_RUST = 31086,
 
     // Roar
-    SPELL_MANGLE            = 31041,
-    SPELL_SHRED             = 31042,
+    SPELL_MANGLE = 31041,
+    SPELL_SHRED = 31042,
     SPELL_FRIGHTENED_SCREAM = 31013,
 
     // Crone
-    SPELL_CHAIN_LIGHTNING   = 32337,
+    SPELL_CHAIN_LIGHTNING = 32337,
 
     // Cyclone
-    SPELL_KNOCKBACK         = 32334,
-    SPELL_CYCLONE_VISUAL    = 32332,
+    SPELL_KNOCKBACK = 32334,
+    SPELL_CYCLONE_VISUAL = 32332,
 };
 
 enum Creatures
 {
-    CREATURE_TITO           = 17548,
-    CREATURE_CYCLONE        = 18412,
-    CREATURE_CRONE          = 18168,
+    CREATURE_TITO = 17548,
+    CREATURE_CYCLONE = 18412,
+    CREATURE_CRONE = 18168,
 };
 
 enum OZActions
 {
-    ACTION_RELEASE          = 1,
+    ACTION_RELEASE = 1,
 };
 
 void SummonCroneIfReady(InstanceScript* instance, Creature* creature)
 {
-    instance->SetData(DATA_OPERA_OZ_DEATHCOUNT, SPECIAL);  // Increment DeathCount
+    instance->SetData(DATA_OPERA_OZ_DEATHCOUNT, SPECIAL); // Increment DeathCount
 
     if (instance->GetData(DATA_OPERA_OZ_DEATHCOUNT) == 4)
     {
-        if (Creature* pCrone = creature->SummonCreature(CREATURE_CRONE, -10891.96f, -1755.95f, creature->GetPositionZ(), 4.64f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR * 2 * IN_MILLISECONDS))
+        if (Creature* pCrone = creature->SummonCreature(CREATURE_CRONE,
+                -10891.96f,
+                -1755.95f,
+                creature->GetPositionZ(),
+                4.64f,
+                TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,
+                HOUR * 2 * IN_MILLISECONDS))
         {
             if (creature->GetVictim())
                 pCrone->AI()->AttackStart(creature->GetVictim());
@@ -121,25 +127,15 @@ void SummonCroneIfReady(InstanceScript* instance, Creature* creature)
 void DespawnAll(InstanceScript* instance)
 {
     if (Creature* dorothee = instance->GetCreature(DATA_DOROTHEE))
-    {
         dorothee->DespawnOrUnsummon();
-    }
     if (Creature* roar = instance->GetCreature(DATA_ROAR))
-    {
         roar->DespawnOrUnsummon();
-    }
     if (Creature* strawman = instance->GetCreature(DATA_STRAWMAN))
-    {
         strawman->DespawnOrUnsummon();
-    }
     if (Creature* tinhead = instance->GetCreature(DATA_TINHEAD))
-    {
         tinhead->DespawnOrUnsummon();
-    }
     if (Creature* tito = instance->GetCreature(DATA_TITO))
-    {
         tito->DespawnOrUnsummon();
-    }
 }
 
 void DoActions(InstanceScript* instance)
@@ -147,12 +143,8 @@ void DoActions(InstanceScript* instance)
     uint32 datas[4] = {DATA_DOROTHEE, DATA_ROAR, DATA_STRAWMAN, DATA_TINHEAD};
 
     for (uint32 data : datas)
-    {
         if (Creature* actionCreature = instance->GetCreature(data))
-        {
             actionCreature->AI()->DoAction(ACTION_RELEASE);
-        }
-    }
 }
 
 struct boss_dorothee : public ScriptedAI
@@ -164,10 +156,7 @@ struct boss_dorothee : public ScriptedAI
 
         instance = creature->GetInstanceScript();
 
-        _scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     InstanceScript* instance;
@@ -177,7 +166,8 @@ struct boss_dorothee : public ScriptedAI
     {
         if (action == ACTION_RELEASE)
         {
-            _scheduler.Schedule(11700ms, [this](TaskContext)
+            _scheduler.Schedule(11700ms,
+                [this](TaskContext)
             {
                 me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 me->SetImmuneToPC(false);
@@ -194,18 +184,19 @@ struct boss_dorothee : public ScriptedAI
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        _scheduler.Schedule(1ms, [this](TaskContext context)
+        _scheduler
+            .Schedule(1ms,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_WATERBOLT);
             context.Repeat(1500ms);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_SCREAM);
             context.Repeat(30s);
-        }).Schedule(41s, [this](TaskContext)
-        {
-            SummonTito();
-        });
+        }).Schedule(41s, [this](TaskContext) { SummonTito(); });
     }
 
     void JustReachedHome() override
@@ -215,7 +206,8 @@ struct boss_dorothee : public ScriptedAI
 
     void SummonTito()
     {
-        if (Creature* pTito = me->SummonCreature(CREATURE_TITO, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
+        if (Creature* pTito = me->SummonCreature(
+                CREATURE_TITO, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 30000))
         {
             Talk(SAY_DOROTHEE_SUMMON);
             pTito->AI()->AttackStart(me->GetVictim());
@@ -234,9 +226,7 @@ struct boss_dorothee : public ScriptedAI
     void SummonedCreatureDies(Creature* creature, Unit* /*killer*/) override
     {
         if (creature->GetEntry() == NPC_TITO)
-        {
             Talk(SAY_DOROTHEE_TITO_DEATH);
-        }
     }
 
     void EnterEvadeMode(EvadeReason reason) override
@@ -253,9 +243,7 @@ struct boss_dorothee : public ScriptedAI
     void UpdateAI(uint32 diff) override
     {
         if (!_startIntro)
-        {
             Talk(SAY_DOROTHEE_AGGRO);
-        }
 
         if (!_startIntro)
         {
@@ -266,6 +254,7 @@ struct boss_dorothee : public ScriptedAI
 
         _scheduler.Update(diff);
     }
+
 private:
     TaskScheduler _scheduler;
     bool _startIntro;
@@ -282,7 +271,8 @@ struct npc_tito : public ScriptedAI
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        _scheduler.Schedule(10s, [this](TaskContext context)
+        _scheduler.Schedule(10s,
+            [this](TaskContext context)
         {
             DoCastVictim(SPELL_YIPPING);
             context.Repeat(10s);
@@ -298,6 +288,7 @@ struct npc_tito : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
+
 private:
     TaskScheduler _scheduler;
 };
@@ -308,10 +299,7 @@ struct boss_roar : public ScriptedAI
     {
         instance = creature->GetInstanceScript();
 
-        _scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     InstanceScript* instance;
@@ -320,7 +308,8 @@ struct boss_roar : public ScriptedAI
     {
         if (action == ACTION_RELEASE)
         {
-            _scheduler.Schedule(16670ms, [this](TaskContext)
+            _scheduler.Schedule(16670ms,
+                [this](TaskContext)
             {
                 me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 me->SetImmuneToPC(false);
@@ -344,15 +333,21 @@ struct boss_roar : public ScriptedAI
     {
         Talk(SAY_ROAR_AGGRO);
 
-        _scheduler.Schedule(5s, [this](TaskContext context)
+        _scheduler
+            .Schedule(5s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_MANGLE);
             context.Repeat(5s, 8s);
-        }).Schedule(10s, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_SHRED);
             context.Repeat(10s, 15s);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             //why is this also on roar??? same id
             DoCastSelf(SPELL_FRIGHTENED_SCREAM);
@@ -386,6 +381,7 @@ struct boss_roar : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
+
 private:
     TaskScheduler _scheduler;
 };
@@ -396,10 +392,7 @@ struct boss_strawman : public ScriptedAI
     {
         instance = creature->GetInstanceScript();
 
-        _scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     InstanceScript* instance;
@@ -408,7 +401,8 @@ struct boss_strawman : public ScriptedAI
     {
         if (action == ACTION_RELEASE)
         {
-            _scheduler.Schedule(26300ms, [this](TaskContext)
+            _scheduler.Schedule(26300ms,
+                [this](TaskContext)
             {
                 me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 me->SetImmuneToPC(false);
@@ -427,15 +421,20 @@ struct boss_strawman : public ScriptedAI
             DespawnAll(instance);
         }
     }
+
     void JustEngagedWith(Unit* /*who*/) override
     {
         Talk(SAY_STRAWMAN_AGGRO);
 
-        _scheduler.Schedule(5s, [this](TaskContext context)
+        _scheduler
+            .Schedule(5s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_BRAIN_BASH);
             context.Repeat(15s);
-        }).Schedule(7s, [this](TaskContext context)
+        })
+            .Schedule(7s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_BRAIN_WIPE);
             context.Repeat(20s);
@@ -481,6 +480,7 @@ struct boss_strawman : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
+
 private:
     TaskScheduler _scheduler;
 };
@@ -491,10 +491,7 @@ struct boss_tinhead : public ScriptedAI
     {
         instance = creature->GetInstanceScript();
 
-        _scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     InstanceScript* instance;
@@ -503,7 +500,8 @@ struct boss_tinhead : public ScriptedAI
     {
         if (action == ACTION_RELEASE)
         {
-            _scheduler.Schedule(34470ms, [this](TaskContext)
+            _scheduler.Schedule(34470ms,
+                [this](TaskContext)
             {
                 me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 me->SetImmuneToPC(false);
@@ -521,11 +519,15 @@ struct boss_tinhead : public ScriptedAI
     {
         Talk(SAY_TINHEAD_AGGRO);
 
-        _scheduler.Schedule(5s, [this](TaskContext context)
+        _scheduler
+            .Schedule(5s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_CLEAVE);
             context.Repeat(5s);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             if (_rustCount < 8)
             {
@@ -574,6 +576,7 @@ struct boss_tinhead : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
+
 private:
     TaskScheduler _scheduler;
     uint8 _rustCount;
@@ -608,17 +611,21 @@ struct boss_crone : public ScriptedAI
         Talk(SAY_CRONE_AGGRO);
         DoZoneInCombat();
 
-        _scheduler.Schedule(22s, [this](TaskContext context)
+        _scheduler
+            .Schedule(22s,
+                [this](TaskContext context)
         {
-            if (Creature* Cyclone = DoSpawnCreature(CREATURE_CYCLONE, float(urand(0, 9)), float(urand(0, 9)), 0, 0, TEMPSUMMON_TIMED_DESPAWN, 15000))
-            Cyclone->CastSpell(Cyclone, SPELL_CYCLONE_VISUAL, true);
+            if (Creature* Cyclone = DoSpawnCreature(
+                    CREATURE_CYCLONE, float(urand(0, 9)), float(urand(0, 9)), 0, 0, TEMPSUMMON_TIMED_DESPAWN, 15000))
+                Cyclone->CastSpell(Cyclone, SPELL_CYCLONE_VISUAL, true);
             context.Repeat(22s);
-        }).Schedule(8s, [this](TaskContext context)
+        })
+            .Schedule(8s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_CHAIN_LIGHTNING);
             context.Repeat(8s);
         });
-
     }
 
     void EnterEvadeMode(EvadeReason reason) override
@@ -644,6 +651,7 @@ struct boss_crone : public ScriptedAI
 
         DoMeleeAttackIfReady();
     }
+
 private:
     TaskScheduler _scheduler;
 };
@@ -656,7 +664,8 @@ struct npc_cyclone : public ScriptedAI
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        _scheduler.Schedule(1s, [this](TaskContext context)
+        _scheduler.Schedule(1s,
+            [this](TaskContext context)
         {
             Position pos = me->GetRandomNearPosition(10);
             me->GetMotionMaster()->MovePoint(0, pos);
@@ -671,6 +680,7 @@ struct npc_cyclone : public ScriptedAI
 
         _scheduler.Update(diff);
     }
+
 private:
     TaskScheduler _scheduler;
 };
@@ -680,25 +690,25 @@ private:
 /************************************/
 enum RedRidingHood
 {
-    SAY_WOLF_AGGRO                  = 0,
-    SAY_WOLF_SLAY                   = 1,
-    SAY_WOLF_HOOD                   = 2,
-    SOUND_WOLF_DEATH                = 9275,
+    SAY_WOLF_AGGRO = 0,
+    SAY_WOLF_SLAY = 1,
+    SAY_WOLF_HOOD = 2,
+    SOUND_WOLF_DEATH = 9275,
 
-    SPELL_LITTLE_RED_RIDING_HOOD    = 30768,
-    SPELL_TERRIFYING_HOWL           = 30752,
-    SPELL_WIDE_SWIPE                = 30761,
-    SPELL_PICNIC_BASKET_SMELL       = 30755,
+    SPELL_LITTLE_RED_RIDING_HOOD = 30768,
+    SPELL_TERRIFYING_HOWL = 30752,
+    SPELL_WIDE_SWIPE = 30761,
+    SPELL_PICNIC_BASKET_SMELL = 30755,
 
-    CREATURE_BIG_BAD_WOLF           = 17521,
+    CREATURE_BIG_BAD_WOLF = 17521,
 
-    GRANDMOTHER_GOSSIP_MENU1        = 7441,
-    GRANDMOTHER_GOSSIP_MENU2        = 7442,
-    GRANDMOTHER_GOSSIP_MENU3        = 7443,
+    GRANDMOTHER_GOSSIP_MENU1 = 7441,
+    GRANDMOTHER_GOSSIP_MENU2 = 7442,
+    GRANDMOTHER_GOSSIP_MENU3 = 7443,
 
-    GRANDMOTHER_TEXT1               = 9009,
-    GRANDMOTHER_TEXT2               = 9010,
-    GRANDMOTHER_TEXT3               = 9011
+    GRANDMOTHER_TEXT1 = 9009,
+    GRANDMOTHER_TEXT2 = 9010,
+    GRANDMOTHER_TEXT3 = 9011
 };
 
 struct npc_grandmother : public CreatureScript
@@ -720,7 +730,13 @@ struct npc_grandmother : public CreatureScript
                 SendGossipMenuFor(player, GRANDMOTHER_TEXT3, creature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF + 2:
-                if (Creature* pBigBadWolf = creature->SummonCreature(CREATURE_BIG_BAD_WOLF, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR * 2 * IN_MILLISECONDS))
+                if (Creature* pBigBadWolf = creature->SummonCreature(CREATURE_BIG_BAD_WOLF,
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,
+                        HOUR * 2 * IN_MILLISECONDS))
                 {
                     pBigBadWolf->AI()->AttackStart(player);
                 }
@@ -744,10 +760,7 @@ struct boss_bigbadwolf : public ScriptedAI
     {
         instance = creature->GetInstanceScript();
 
-        _scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     InstanceScript* instance;
@@ -758,7 +771,9 @@ struct boss_bigbadwolf : public ScriptedAI
         Talk(SAY_WOLF_AGGRO);
         DoZoneInCombat();
 
-        _scheduler.Schedule(30s, [this](TaskContext context)
+        _scheduler
+            .Schedule(30s,
+                [this](TaskContext context)
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100, true))
             {
@@ -768,11 +783,16 @@ struct boss_bigbadwolf : public ScriptedAI
             }
 
             context.Repeat(40s);
-        }).Schedule(25s, 35s, [this](TaskContext context)
+        })
+            .Schedule(25s,
+                35s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_TERRIFYING_HOWL);
             context.Repeat(25s, 35s);
-        }).Schedule(5s, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_WIDE_SWIPE);
             context.Repeat(25s, 30s);
@@ -812,6 +832,7 @@ struct boss_bigbadwolf : public ScriptedAI
 
         _scheduler.Update(diff);
     }
+
 private:
     TaskScheduler _scheduler;
 };
@@ -823,58 +844,58 @@ private:
 enum JulianneRomulo
 {
     /**** Speech *****/
-    SAY_JULIANNE_AGGRO              = 0,
-    SAY_JULIANNE_ENTER              = 1,
-    SAY_JULIANNE_DEATH01            = 2,
-    SAY_JULIANNE_DEATH02            = 3,
-    SAY_JULIANNE_RESURRECT          = 4,
-    SAY_JULIANNE_SLAY               = 5,
+    SAY_JULIANNE_AGGRO = 0,
+    SAY_JULIANNE_ENTER = 1,
+    SAY_JULIANNE_DEATH01 = 2,
+    SAY_JULIANNE_DEATH02 = 3,
+    SAY_JULIANNE_RESURRECT = 4,
+    SAY_JULIANNE_SLAY = 5,
 
-    SAY_ROMULO_AGGRO                = 0,
-    SAY_ROMULO_DEATH                = 1,
-    SAY_ROMULO_DEATH2               = 2,
-    SAY_ROMULO_RESURRECT            = 3,
-    SAY_ROMULO_SLAY                 = 4,
+    SAY_ROMULO_AGGRO = 0,
+    SAY_ROMULO_DEATH = 1,
+    SAY_ROMULO_DEATH2 = 2,
+    SAY_ROMULO_RESURRECT = 3,
+    SAY_ROMULO_SLAY = 4,
 
-    SPELL_BLINDING_PASSION          = 30890,
-    SPELL_DEVOTION                  = 30887,
-    SPELL_ETERNAL_AFFECTION         = 30878,
-    SPELL_POWERFUL_ATTRACTION       = 30889,
-    SPELL_DRINK_POISON              = 30907,
+    SPELL_BLINDING_PASSION = 30890,
+    SPELL_DEVOTION = 30887,
+    SPELL_ETERNAL_AFFECTION = 30878,
+    SPELL_POWERFUL_ATTRACTION = 30889,
+    SPELL_DRINK_POISON = 30907,
 
-    SPELL_BACKWARD_LUNGE            = 30815,
-    SPELL_DARING                    = 30841,
-    SPELL_DEADLY_SWATHE             = 30817,
-    SPELL_POISON_THRUST             = 30822,
+    SPELL_BACKWARD_LUNGE = 30815,
+    SPELL_DARING = 30841,
+    SPELL_DEADLY_SWATHE = 30817,
+    SPELL_POISON_THRUST = 30822,
 
-    SPELL_UNDYING_LOVE              = 30951,
-    SPELL_RES_VISUAL                = 24171,
+    SPELL_UNDYING_LOVE = 30951,
+    SPELL_RES_VISUAL = 24171,
 
-    CREATURE_ROMULO                 = 17533,
-    ROMULO_X                        = -10900,
-    ROMULO_Y                        = -1758,
+    CREATURE_ROMULO = 17533,
+    ROMULO_X = -10900,
+    ROMULO_Y = -1758,
 };
 
 enum RAJPhase
 {
-    PHASE_JULIANNE      = 0,
-    PHASE_ROMULO        = 1,
-    PHASE_BOTH          = 2,
+    PHASE_JULIANNE = 0,
+    PHASE_ROMULO = 1,
+    PHASE_BOTH = 2,
 };
 
 enum RAJGroups
 {
-    GROUP_COMBAT        = 0,
-    GROUP_RP            = 1
+    GROUP_COMBAT = 0,
+    GROUP_RP = 1
 };
 
 enum RAJActions
 {
-    ACTION_FAKING_DEATH     = 2,
-    ACTION_COMBAT_SCHEDULE  = 3,
+    ACTION_FAKING_DEATH = 2,
+    ACTION_COMBAT_SCHEDULE = 3,
     //ACTION_DO_RESURRECT     = 4,
     //ACTION_RESS_ROMULO      = 5,
-    ACTION_CANCEL_COMBAT    = 6
+    ACTION_CANCEL_COMBAT = 6
 };
 
 void PretendToDie(Creature* creature)
@@ -927,10 +948,9 @@ struct boss_julianne : public ScriptedAI
         summonedRomulo = false;
         me->SetImmuneToPC(true);
 
-        _scheduler.Schedule(1s, [this](TaskContext)
-        {
-            Talk(SAY_JULIANNE_ENTER);
-        }).Schedule(10s, [this](TaskContext)
+        _scheduler.Schedule(1s, [this](TaskContext) { Talk(SAY_JULIANNE_ENTER); })
+            .Schedule(10s,
+                [this](TaskContext)
         {
             Talk(SAY_JULIANNE_AGGRO);
             me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
@@ -950,7 +970,8 @@ struct boss_julianne : public ScriptedAI
                 ScheduleCombat();
                 break;
             case ACTION_RESS_ROMULO:
-                me->m_Events.AddEventAtOffset([this]
+                me->m_Events.AddEventAtOffset(
+                    [this]
                 {
                     if (Creature* romulo = instance->GetCreature(DATA_ROMULO))
                     {
@@ -959,7 +980,8 @@ struct boss_julianne : public ScriptedAI
                         romulo->AI()->DoAction(ACTION_FAKING_DEATH);
                         romulo->AI()->Talk(SAY_ROMULO_RESURRECT);
                     }
-                }, 1s);
+                },
+                    1s);
                 break;
             case ACTION_DO_RESURRECT:
                 phase = PHASE_BOTH;
@@ -975,28 +997,38 @@ struct boss_julianne : public ScriptedAI
 
     void ScheduleCombat()
     {
-        _scheduler.Schedule(30s, GROUP_COMBAT, [this](TaskContext context)
+        _scheduler
+            .Schedule(30s,
+                GROUP_COMBAT,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_BLINDING_PASSION);
             context.Repeat(30s, 45s);
-        }).Schedule(15s, GROUP_COMBAT, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                GROUP_COMBAT,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_DEVOTION);
             context.Repeat(15s, 45s);
-        }).Schedule(5s, GROUP_COMBAT, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                GROUP_COMBAT,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_POWERFUL_ATTRACTION);
             context.Repeat(5s, 30s);
-        }).Schedule(25s, GROUP_COMBAT, [this](TaskContext context)
+        })
+            .Schedule(25s,
+                GROUP_COMBAT,
+                [this](TaskContext context)
         {
             if (urand(0, 1) && summonedRomulo)
             {
                 if (Creature* romulo = instance->GetCreature(DATA_ROMULO))
                 {
                     if (!romulo->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE))
-                    {
                         DoCast(romulo, SPELL_ETERNAL_AFFECTION);
-                    }
                 }
             }
             else
@@ -1023,14 +1055,24 @@ struct boss_julianne : public ScriptedAI
         {
             Talk(SAY_JULIANNE_DEATH01);
             _scheduler.CancelGroup(GROUP_COMBAT);
-            _scheduler.Schedule(2500ms, GROUP_RP, [this](TaskContext)
+            _scheduler.Schedule(2500ms,
+                GROUP_RP,
+                [this](TaskContext)
             {
                 //will do this 2secs after spell hit. this is time to display visual as expected
                 PretendToDie(me);
                 phase = PHASE_ROMULO;
-                _scheduler.Schedule(10s, GROUP_RP, [this](TaskContext)
+                _scheduler.Schedule(10s,
+                    GROUP_RP,
+                    [this](TaskContext)
                 {
-                    if (Creature* romulo = me->SummonCreature(CREATURE_ROMULO, ROMULO_X, ROMULO_Y, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, HOUR * 2 * IN_MILLISECONDS))
+                    if (Creature* romulo = me->SummonCreature(CREATURE_ROMULO,
+                            ROMULO_X,
+                            ROMULO_Y,
+                            me->GetPositionZ(),
+                            0,
+                            TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,
+                            HOUR * 2 * IN_MILLISECONDS))
                     {
                         romulo->SetInCombatWithZone();
                     }
@@ -1043,9 +1085,7 @@ struct boss_julianne : public ScriptedAI
     void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
     {
         if (damage < me->GetHealth())
-        {
             return;
-        }
 
         damage = me->GetHealth() - 1;
 
@@ -1054,9 +1094,7 @@ struct boss_julianne : public ScriptedAI
             me->ClearTarget();
 
             if (isFakingDeath)
-            {
                 return;
-            }
 
             me->InterruptNonMeleeSpells(true);
             DoCast(me, SPELL_DRINK_POISON);
@@ -1096,9 +1134,7 @@ struct boss_julianne : public ScriptedAI
     void KilledUnit(Unit* victim) override
     {
         if (victim != me)
-        {
             Talk(SAY_JULIANNE_SLAY);
-        }
     }
 
     void UpdateAI(uint32 diff) override
@@ -1106,15 +1142,12 @@ struct boss_julianne : public ScriptedAI
         _scheduler.Update(diff);
 
         if (!UpdateVictim())
-        {
             return;
-        }
 
         if (!isFakingDeath)
-        {
             DoMeleeAttackIfReady();
-        }
     }
+
 private:
     InstanceScript* instance;
     uint32 phase;
@@ -1156,17 +1189,13 @@ struct boss_romulo : public ScriptedAI
     {
         me->DespawnOrUnsummon();
         if (Creature* julianne = instance->GetCreature(DATA_JULIANNE))
-        {
             julianne->DespawnOrUnsummon();
-        }
     }
 
     void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
     {
         if (damage < me->GetHealth())
-        {
             return;
-        }
 
         damage = me->GetHealth() - 1;
 
@@ -1177,15 +1206,15 @@ struct boss_romulo : public ScriptedAI
             isFakingDeath = true;
             phase = PHASE_BOTH;
 
-            me->m_Events.AddEventAtOffset([this]
+            me->m_Events.AddEventAtOffset(
+                [this]
             {
                 Resurrect(me);
                 isFakingDeath = false;
                 if (Creature* julliane = instance->GetCreature(DATA_JULIANNE))
-                {
                     julliane->AI()->DoAction(ACTION_DO_RESURRECT);
-                }
-            }, 3s);
+            },
+                3s);
         }
 
         if (phase == PHASE_BOTH && !isFakingDeath)
@@ -1208,7 +1237,10 @@ struct boss_romulo : public ScriptedAI
             }
         }
 
-        _scheduler.Schedule(15s, GROUP_COMBAT, [this](TaskContext context)
+        _scheduler
+            .Schedule(15s,
+                GROUP_COMBAT,
+                [this](TaskContext context)
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 100, true))
             {
@@ -1218,15 +1250,24 @@ struct boss_romulo : public ScriptedAI
                     context.Repeat(15s, 30s);
                 }
             }
-        }).Schedule(20s, GROUP_COMBAT, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                GROUP_COMBAT,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_DARING);
             context.Repeat(20s, 40s);
-        }).Schedule(25s, GROUP_COMBAT, [this](TaskContext context)
+        })
+            .Schedule(25s,
+                GROUP_COMBAT,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_DEADLY_SWATHE);
             context.Repeat(15s, 25s);
-        }).Schedule(10s, GROUP_COMBAT, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                GROUP_COMBAT,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_POISON_THRUST);
             context.Repeat(10s, 20s);
@@ -1257,9 +1298,7 @@ struct boss_romulo : public ScriptedAI
     void KilledUnit(Unit* victim) override
     {
         if (victim != me)
-        {
             Talk(SAY_ROMULO_SLAY);
-        }
     }
 
     void UpdateAI(uint32 diff) override
@@ -1267,15 +1306,12 @@ struct boss_romulo : public ScriptedAI
         _scheduler.Update(diff);
 
         if (!UpdateVictim())
-        {
             return;
-        }
 
         if (!isFakingDeath)
-        {
             DoMeleeAttackIfReady();
-        }
     }
+
 private:
     InstanceScript* instance;
     uint32 phase;

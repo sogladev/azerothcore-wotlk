@@ -29,30 +29,30 @@
 // Ours
 enum saeed
 {
-    NPC_PROTECTORATE_AVENGER        = 21805,
-    NPC_PROTECTORATE_DEFENDER       = 20984,
-    NPC_DIMENSIUS                   = 19554,
+    NPC_PROTECTORATE_AVENGER = 21805,
+    NPC_PROTECTORATE_DEFENDER = 20984,
+    NPC_DIMENSIUS = 19554,
 
-    EVENT_START_WALK                = 1,
-    EVENT_START_FIGHT1              = 2,
-    EVENT_START_FIGHT2              = 3,
+    EVENT_START_WALK = 1,
+    EVENT_START_FIGHT1 = 2,
+    EVENT_START_FIGHT2 = 3,
 
-    DATA_START_ENCOUNTER            = 1,
-    DATA_START_FIGHT                = 2,
+    DATA_START_ENCOUNTER = 1,
+    DATA_START_FIGHT = 2,
 
-    SAY_SAEED_0                     = 0,
-    SAY_SAEED_1                     = 1,
-    SAY_SAEED_2                     = 2,
-    SAY_SAEED_3                     = 3,
-    SAY_DIMENSISIUS_1               = 1,
+    SAY_SAEED_0 = 0,
+    SAY_SAEED_1 = 1,
+    SAY_SAEED_2 = 2,
+    SAY_SAEED_3 = 3,
+    SAY_DIMENSISIUS_1 = 1,
 
-    QUEST_DIMENSIUS_DEVOURING       = 10439,
+    QUEST_DIMENSIUS_DEVOURING = 10439,
 
-    SPELL_DIMENSIUS_TRANSFORM       = 35939,
+    SPELL_DIMENSIUS_TRANSFORM = 35939,
 
-    GOSSIP_MENU_SAEED               = 8228,
-    TEXT_NPC_SAEED_DEFAULT          = 10229,
-    TEXT_NPC_SAEED_START_FIGHT      = 10232,
+    GOSSIP_MENU_SAEED = 8228,
+    TEXT_NPC_SAEED_DEFAULT = 10229,
+    TEXT_NPC_SAEED_START_FIGHT = 10232,
 };
 
 class npc_captain_saeed : public CreatureScript
@@ -62,7 +62,7 @@ public:
 
     struct npc_captain_saeedAI : public npc_escortAI
     {
-        npc_captain_saeedAI(Creature* creature) : npc_escortAI(creature), summons(me) {}
+        npc_captain_saeedAI(Creature* creature) : npc_escortAI(creature), summons(me) { }
 
         SummonList summons;
         EventMap events;
@@ -159,7 +159,8 @@ public:
                     }
                     else
                     {
-                        cr->SetHomePosition(cr->GetPositionX(), cr->GetPositionY(), cr->GetPositionZ(), cr->GetOrientation());
+                        cr->SetHomePosition(
+                            cr->GetPositionX(), cr->GetPositionY(), cr->GetPositionZ(), cr->GetOrientation());
                         cr->AI()->AttackStart(who);
                     }
                 }
@@ -278,7 +279,9 @@ public:
                 AddGossipItemFor(player, GOSSIP_MENU_SAEED, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
         }
 
-        SendGossipMenuFor(player, creature->AI()->GetData(1) ? TEXT_NPC_SAEED_START_FIGHT : TEXT_NPC_SAEED_DEFAULT, creature->GetGUID());
+        SendGossipMenuFor(player,
+            creature->AI()->GetData(1) ? TEXT_NPC_SAEED_START_FIGHT : TEXT_NPC_SAEED_DEFAULT,
+            creature->GetGUID());
 
         return true;
     }
@@ -297,30 +300,29 @@ public:
 // The Speech of Dawnforge, Ardonis & Pathaleon
 enum CommanderDawnforgeData
 {
-    SAY_COMMANDER_DAWNFORGE_1       = 0,
-    SAY_COMMANDER_DAWNFORGE_2       = 1,
-    SAY_COMMANDER_DAWNFORGE_3       = 2,
-    SAY_COMMANDER_DAWNFORGE_4       = 3,
-    SAY_COMMANDER_DAWNFORGE_5       = 4,
+    SAY_COMMANDER_DAWNFORGE_1 = 0,
+    SAY_COMMANDER_DAWNFORGE_2 = 1,
+    SAY_COMMANDER_DAWNFORGE_3 = 2,
+    SAY_COMMANDER_DAWNFORGE_4 = 3,
+    SAY_COMMANDER_DAWNFORGE_5 = 4,
 
-    SAY_ARCANIST_ARDONIS_1          = 0,
-    SAY_ARCANIST_ARDONIS_2          = 1,
+    SAY_ARCANIST_ARDONIS_1 = 0,
+    SAY_ARCANIST_ARDONIS_2 = 1,
 
-    SAY_PATHALEON_CULATOR_IMAGE_1   = 0,
-    SAY_PATHALEON_CULATOR_IMAGE_2   = 1,
+    SAY_PATHALEON_CULATOR_IMAGE_1 = 0,
+    SAY_PATHALEON_CULATOR_IMAGE_2 = 1,
     SAY_PATHALEON_CULATOR_IMAGE_2_1 = 2,
     SAY_PATHALEON_CULATOR_IMAGE_2_2 = 3,
 
-    QUEST_INFO_GATHERING            = 10198,
-    SPELL_SUNFURY_DISGUISE          = 34603,
+    QUEST_INFO_GATHERING = 10198,
+    SPELL_SUNFURY_DISGUISE = 34603,
 };
 
 // Entries of Arcanist Ardonis, Commander Dawnforge, Pathaleon the Curators Image
-const uint32 CreatureEntry[3] =
-{
-    19830,                                                // Ardonis
-    19831,                                                // Dawnforge
-    21504                                                 // Pathaleon
+uint32 const CreatureEntry[3] = {
+    19830, // Ardonis
+    19831, // Dawnforge
+    21504  // Pathaleon
 };
 
 class npc_commander_dawnforge : public CreatureScript
@@ -475,7 +477,13 @@ public:
                 //Phase 4 Pathaleon spawns up to phase 9
                 case 4:
                     //spawn pathaleon's image
-                    me->SummonCreature(CreatureEntry[2], 2325.851563f, 2799.534668f, 133.084229f, 6.038996f, TEMPSUMMON_TIMED_DESPAWN, 90000);
+                    me->SummonCreature(CreatureEntry[2],
+                        2325.851563f,
+                        2799.534668f,
+                        133.084229f,
+                        6.038996f,
+                        TEMPSUMMON_TIMED_DESPAWN,
+                        90000);
                     ++Phase;
                     Phase_Timer = 500;
                     break;
@@ -561,7 +569,7 @@ class at_commander_dawnforge : public AreaTriggerScript
 public:
     at_commander_dawnforge() : AreaTriggerScript("at_commander_dawnforge") { }
 
-    bool OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         //if player lost aura or not have at all, we should not try start event.
         if (!player->HasAura(SPELL_SUNFURY_DISGUISE))
@@ -585,14 +593,14 @@ public:
 ######*/
 enum BessyData
 {
-    Q_ALMABTRIEB    = 10337,
-    N_THADELL       = 20464,
-    SPAWN_FIRST     = 20512,
-    SPAWN_SECOND    = 19881,
-    SAY_BESSY_0     = 0,
-    SAY_BESSY_1     = 1,
-    SAY_THADELL_1   = 2,
-    SAY_THADELL_2   = 3
+    Q_ALMABTRIEB = 10337,
+    N_THADELL = 20464,
+    SPAWN_FIRST = 20512,
+    SPAWN_SECOND = 19881,
+    SAY_BESSY_0 = 0,
+    SAY_BESSY_1 = 1,
+    SAY_THADELL_1 = 2,
+    SAY_THADELL_2 = 3
 };
 
 class npc_bessy : public CreatureScript
@@ -637,14 +645,19 @@ public:
             {
                 case 3: //first spawn
                     Talk(SAY_BESSY_1);
-                    me->SummonCreature(SPAWN_FIRST, 2449.67f, 2183.11f, 96.85f, 6.20f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-                    me->SummonCreature(SPAWN_FIRST, 2449.53f, 2184.43f, 96.36f, 6.27f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-                    me->SummonCreature(SPAWN_FIRST, 2449.85f, 2186.34f, 97.57f, 6.08f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                    me->SummonCreature(
+                        SPAWN_FIRST, 2449.67f, 2183.11f, 96.85f, 6.20f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                    me->SummonCreature(
+                        SPAWN_FIRST, 2449.53f, 2184.43f, 96.36f, 6.27f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                    me->SummonCreature(
+                        SPAWN_FIRST, 2449.85f, 2186.34f, 97.57f, 6.08f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
                     break;
                 case 7:
                     Talk(SAY_BESSY_1);
-                    me->SummonCreature(SPAWN_SECOND, 2309.64f, 2186.24f, 92.25f, 6.06f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-                    me->SummonCreature(SPAWN_SECOND, 2309.25f, 2183.46f, 91.75f, 6.22f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                    me->SummonCreature(
+                        SPAWN_SECOND, 2309.64f, 2186.24f, 92.25f, 6.06f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
+                    me->SummonCreature(
+                        SPAWN_SECOND, 2309.25f, 2183.46f, 91.75f, 6.22f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
                     break;
                 case 12:
                     player->GroupEventHappens(Q_ALMABTRIEB, me);
@@ -683,8 +696,8 @@ public:
 
 enum MaxxAMillion
 {
-    QUEST_MARK_V_IS_ALIVE   = 10191,
-    GO_DRAENEI_MACHINE      = 183771
+    QUEST_MARK_V_IS_ALIVE = 10191,
+    GO_DRAENEI_MACHINE = 183771
 };
 
 class npc_maxx_a_million_escort : public CreatureScript
@@ -766,11 +779,12 @@ public:
         }
     };
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
     {
         if (quest->GetQuestId() == QUEST_MARK_V_IS_ALIVE)
         {
-            if (npc_maxx_a_million_escortAI* pEscortAI = CAST_AI(npc_maxx_a_million_escort::npc_maxx_a_million_escortAI, creature->AI()))
+            if (npc_maxx_a_million_escortAI* pEscortAI =
+                    CAST_AI(npc_maxx_a_million_escort::npc_maxx_a_million_escortAI, creature->AI()))
             {
                 creature->SetFaction(FACTION_ESCORTEE_N_NEUTRAL_PASSIVE);
                 pEscortAI->Start(false, false, player->GetGUID());
@@ -782,7 +796,7 @@ public:
 
 enum PhaseHunterData
 {
-    NPC_PHASE_HUNTER_ENTRY         = 18879,
+    NPC_PHASE_HUNTER_ENTRY = 18879,
     NPC_DRAINED_PHASE_HUNTER_ENTRY = 19595
 };
 
@@ -803,7 +817,7 @@ class spell_q10190_battery_recharging_blaster : public SpellScript
     {
         OnCheckCast += SpellCheckCastFn(spell_q10190_battery_recharging_blaster::CheckCast);
     }
- };
+};
 
 class spell_q10190_battery_recharging_blaster_aura : public AuraScript
 {
@@ -821,14 +835,17 @@ class spell_q10190_battery_recharging_blaster_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_q10190_battery_recharging_blaster_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_q10190_battery_recharging_blaster_aura::HandleEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
 enum Veraku
 {
-    NPC_VERAKU               = 18544,
-    SPELL_CHALLENGE_VERAKU   = 34895
+    NPC_VERAKU = 18544,
+    SPELL_CHALLENGE_VERAKU = 34895
 };
 
 class spell_challenge_veraku : public SpellScript
@@ -838,7 +855,7 @@ public:
 
     bool Validate(SpellInfo const* /*SpellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CHALLENGE_VERAKU });
+        return ValidateSpellInfo({SPELL_CHALLENGE_VERAKU});
     }
 
     SpellCastResult CheckRequirement()
@@ -866,6 +883,7 @@ void AddSC_netherstorm()
     new at_commander_dawnforge();
     new npc_bessy();
     new npc_maxx_a_million_escort();
-    RegisterSpellAndAuraScriptPair(spell_q10190_battery_recharging_blaster, spell_q10190_battery_recharging_blaster_aura);
+    RegisterSpellAndAuraScriptPair(
+        spell_q10190_battery_recharging_blaster, spell_q10190_battery_recharging_blaster_aura);
     RegisterSpellScript(spell_challenge_veraku);
 }

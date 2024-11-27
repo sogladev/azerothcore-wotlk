@@ -38,9 +38,11 @@ public:
 };
 
 WorldSocketMgr::WorldSocketMgr() :
-    BaseSocketMgr(), _socketSystemSendBufferSize(-1), _socketApplicationSendBufferSize(4096), _tcpNoDelay(true)
-{
-}
+    BaseSocketMgr(),
+    _socketSystemSendBufferSize(-1),
+    _socketApplicationSendBufferSize(4096),
+    _tcpNoDelay(true)
+{ }
 
 WorldSocketMgr& WorldSocketMgr::Instance()
 {
@@ -48,7 +50,8 @@ WorldSocketMgr& WorldSocketMgr::Instance()
     return instance;
 }
 
-bool WorldSocketMgr::StartWorldNetwork(Acore::Asio::IoContext& ioContext, std::string const& bindIp, uint16 port, int threadCount)
+bool WorldSocketMgr::StartWorldNetwork(
+    Acore::Asio::IoContext& ioContext, std::string const& bindIp, uint16 port, int threadCount)
 {
     _tcpNoDelay = sConfigMgr->GetOption<bool>("Network.TcpNodelay", true);
 
@@ -91,7 +94,9 @@ void WorldSocketMgr::OnSocketOpen(tcp::socket&& sock, uint32 threadIndex)
 
         if (err && err != boost::system::errc::not_supported)
         {
-            LOG_ERROR("network", "WorldSocketMgr::OnSocketOpen sock.set_option(boost::asio::socket_base::send_buffer_size) err = {}", err.message());
+            LOG_ERROR("network",
+                "WorldSocketMgr::OnSocketOpen sock.set_option(boost::asio::socket_base::send_buffer_size) err = {}",
+                err.message());
             return;
         }
     }
@@ -104,7 +109,9 @@ void WorldSocketMgr::OnSocketOpen(tcp::socket&& sock, uint32 threadIndex)
 
         if (err)
         {
-            LOG_ERROR("network", "WorldSocketMgr::OnSocketOpen sock.set_option(boost::asio::ip::tcp::no_delay) err = {}", err.message());
+            LOG_ERROR("network",
+                "WorldSocketMgr::OnSocketOpen sock.set_option(boost::asio::ip::tcp::no_delay) err = {}",
+                err.message());
             return;
         }
     }

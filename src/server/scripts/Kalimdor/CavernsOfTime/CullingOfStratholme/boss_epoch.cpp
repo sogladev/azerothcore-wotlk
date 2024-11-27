@@ -22,31 +22,31 @@
 
 enum Spells
 {
-    SPELL_CURSE_OF_EXERTION                     = 52772,
-    SPELL_WOUNDING_STRIKE_N                     = 52771,
-    SPELL_WOUNDING_STRIKE_H                     = 58830,
-    SPELL_TIME_STOP                             = 58848,
-    SPELL_TIME_WARP                             = 52766,
-    SPELL_TIME_STEP_N                           = 52737,
-    SPELL_TIME_STEP_H                           = 58829,
+    SPELL_CURSE_OF_EXERTION = 52772,
+    SPELL_WOUNDING_STRIKE_N = 52771,
+    SPELL_WOUNDING_STRIKE_H = 58830,
+    SPELL_TIME_STOP = 58848,
+    SPELL_TIME_WARP = 52766,
+    SPELL_TIME_STEP_N = 52737,
+    SPELL_TIME_STEP_H = 58829,
 };
 
 enum Events
 {
-    EVENT_SPELL_CURSE_OF_EXERTION               = 1,
-    EVENT_SPELL_WOUNDING_STRIKE                 = 2,
-    EVENT_SPELL_TIME_STOP                       = 3,
-    EVENT_SPELL_TIME_WARP                       = 4,
-    EVENT_TIME_WARP                             = 5,
+    EVENT_SPELL_CURSE_OF_EXERTION = 1,
+    EVENT_SPELL_WOUNDING_STRIKE = 2,
+    EVENT_SPELL_TIME_STOP = 3,
+    EVENT_SPELL_TIME_WARP = 4,
+    EVENT_TIME_WARP = 5,
 };
 
 enum Yells
 {
-    SAY_INTRO                                   = 0,
-    SAY_AGGRO                                   = 1,
-    SAY_TIME_WARP                               = 2,
-    SAY_SLAY                                    = 3,
-    SAY_DEATH                                   = 4
+    SAY_INTRO = 0,
+    SAY_AGGRO = 1,
+    SAY_TIME_WARP = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4
 };
 
 class boss_epoch : public CreatureScript
@@ -61,12 +61,11 @@ public:
 
     struct boss_epochAI : public ScriptedAI
     {
-        boss_epochAI(Creature* c) : ScriptedAI(c)
-        {
-        }
+        boss_epochAI(Creature* c) : ScriptedAI(c) { }
 
         EventMap events;
         uint8 warps;
+
         void Reset() override
         {
             events.Reset();
@@ -119,7 +118,8 @@ public:
                     events.RepeatEvent(9000);
                     break;
                 case EVENT_SPELL_WOUNDING_STRIKE:
-                    me->CastSpell(me->GetVictim(), DUNGEON_MODE(SPELL_WOUNDING_STRIKE_N, SPELL_WOUNDING_STRIKE_H), false);
+                    me->CastSpell(
+                        me->GetVictim(), DUNGEON_MODE(SPELL_WOUNDING_STRIKE_N, SPELL_WOUNDING_STRIKE_H), false);
                     events.RepeatEvent(6000);
                     break;
                 case EVENT_SPELL_TIME_STOP:
@@ -144,7 +144,7 @@ public:
             Talk(SAY_DEATH);
         }
 
-        void KilledUnit(Unit*  /*victim*/) override
+        void KilledUnit(Unit* /*victim*/) override
         {
             if (!urand(0, 1))
                 return;

@@ -21,28 +21,28 @@
 
 enum Says
 {
-    SAY_AGGRO                   = 0,
-    SAY_KILL                    = 1,
-    SAY_TREE                    = 2,
-    SAY_SUMMON                  = 3,
-    SAY_DEATH                   = 4,
-    SAY_OOC_RANDOM              = 5
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_TREE = 2,
+    SAY_SUMMON = 3,
+    SAY_DEATH = 4,
+    SAY_OOC_RANDOM = 5
 };
 
 enum Spells
 {
-    SPELL_TRANQUILITY           = 34550,
-    SPELL_TREE_FORM             = 34551,
-    SPELL_SUMMON_FRAYER         = 34557,
-    SPELL_PLANT_WHITE           = 34759,
-    SPELL_PLANT_GREEN           = 34761,
-    SPELL_PLANT_BLUE            = 34762,
-    SPELL_PLANT_RED             = 34763
+    SPELL_TRANQUILITY = 34550,
+    SPELL_TREE_FORM = 34551,
+    SPELL_SUMMON_FRAYER = 34557,
+    SPELL_PLANT_WHITE = 34759,
+    SPELL_PLANT_GREEN = 34761,
+    SPELL_PLANT_BLUE = 34762,
+    SPELL_PLANT_RED = 34763
 };
 
 enum Npcs
 {
-    NPC_FRAYER                  = 19953
+    NPC_FRAYER = 19953
 };
 
 struct boss_high_botanist_freywinn : public BossAI
@@ -56,16 +56,18 @@ struct boss_high_botanist_freywinn : public BossAI
         _JustEngagedWith();
         Talk(SAY_AGGRO);
 
-        scheduler.Schedule(6s, [this](TaskContext context)
+        scheduler
+            .Schedule(6s,
+                [this](TaskContext context)
         {
             if (roll_chance_i(20))
-            {
                 Talk(SAY_OOC_RANDOM);
-            }
 
             DoCastAOE(RAND(SPELL_PLANT_WHITE, SPELL_PLANT_GREEN, SPELL_PLANT_BLUE, SPELL_PLANT_RED));
             context.Repeat();
-        }).Schedule(30s, [this](TaskContext context)
+        })
+            .Schedule(30s,
+                [this](TaskContext context)
         {
             scheduler.CancelAll();
 
@@ -78,10 +80,7 @@ struct boss_high_botanist_freywinn : public BossAI
             DoCastSelf(SPELL_TRANQUILITY, true);
             DoCastSelf(SPELL_TREE_FORM, true);
 
-            scheduler.Schedule(45s, [this](TaskContext)
-            {
-                ResumeEncounter();
-            });
+            scheduler.Schedule(45s, [this](TaskContext) { ResumeEncounter(); });
 
             context.Repeat(75s);
         });
@@ -97,9 +96,7 @@ struct boss_high_botanist_freywinn : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_KILL);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -113,9 +110,7 @@ struct boss_high_botanist_freywinn : public BossAI
         summons.Despawn(summon);
 
         if (!summons.HasEntry(NPC_FRAYER))
-        {
             ResumeEncounter();
-        }
     }
 };
 

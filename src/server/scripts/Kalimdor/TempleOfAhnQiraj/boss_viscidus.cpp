@@ -25,76 +25,95 @@
 enum Spells
 {
     // Viscidus - Glob of Viscidus
-    SPELL_POISON_SHOCK          = 25993,
-    SPELL_POISONBOLT_VOLLEY     = 25991,
-    SPELL_SUMMON_TOXIN_SLIME    = 26584,
-    SPELL_SUMMON_TOXIN_SLIME_2  = 26577,
-    SPELL_VISCIDUS_SLOWED       = 26034,
-    SPELL_VISCIDUS_SLOWED_MORE  = 26036,
-    SPELL_VISCIDUS_FREEZE       = 25937,
-    SPELL_REJOIN_VISCIDUS       = 25896,
-    SPELL_EXPLODE_TRIGGER       = 25938,
-    SPELL_VISCIDUS_SHRINKS      = 25893, // Server-side
-    SPELL_INVIS_SELF            = 25905,
-    SPELL_VISCIDUS_GROWS        = 25897,
-    SPELL_STUN_SELF             = 25900,
+    SPELL_POISON_SHOCK = 25993,
+    SPELL_POISONBOLT_VOLLEY = 25991,
+    SPELL_SUMMON_TOXIN_SLIME = 26584,
+    SPELL_SUMMON_TOXIN_SLIME_2 = 26577,
+    SPELL_VISCIDUS_SLOWED = 26034,
+    SPELL_VISCIDUS_SLOWED_MORE = 26036,
+    SPELL_VISCIDUS_FREEZE = 25937,
+    SPELL_REJOIN_VISCIDUS = 25896,
+    SPELL_EXPLODE_TRIGGER = 25938,
+    SPELL_VISCIDUS_SHRINKS = 25893, // Server-side
+    SPELL_INVIS_SELF = 25905,
+    SPELL_VISCIDUS_GROWS = 25897,
+    SPELL_STUN_SELF = 25900,
 
     // Toxic slime
-    SPELL_TOXIN                 = 26575,
+    SPELL_TOXIN = 26575,
 };
 
 enum Events
 {
-    EVENT_POISONBOLT_VOLLEY     = 1,
-    EVENT_POISON_SHOCK          = 2,
-    EVENT_TOXIN                 = 3,
-    EVENT_RESET_PHASE           = 4
+    EVENT_POISONBOLT_VOLLEY = 1,
+    EVENT_POISON_SHOCK = 2,
+    EVENT_TOXIN = 3,
+    EVENT_RESET_PHASE = 4
 };
 
 enum Phases
 {
-    PHASE_FROST                 = 1,
-    PHASE_MELEE                 = 2,
-    PHASE_GLOB                  = 3
+    PHASE_FROST = 1,
+    PHASE_MELEE = 2,
+    PHASE_GLOB = 3
 };
 
 enum Emotes
 {
-    EMOTE_SLOW                  = 0,
-    EMOTE_FREEZE                = 1,
-    EMOTE_FROZEN                = 2,
+    EMOTE_SLOW = 0,
+    EMOTE_FREEZE = 1,
+    EMOTE_FROZEN = 2,
 
-    EMOTE_CRACK                 = 3,
-    EMOTE_SHATTER               = 4,
-    EMOTE_EXPLODE               = 5
+    EMOTE_CRACK = 3,
+    EMOTE_SHATTER = 4,
+    EMOTE_EXPLODE = 5
 };
 
 enum HitCounter
 {
-    HITCOUNTER_SLOW             = 100,
-    HITCOUNTER_SLOW_MORE        = 150,
-    HITCOUNTER_FREEZE           = 200,
+    HITCOUNTER_SLOW = 100,
+    HITCOUNTER_SLOW_MORE = 150,
+    HITCOUNTER_FREEZE = 200,
 
-    HITCOUNTER_CRACK            = 50,
-    HITCOUNTER_SHATTER          = 100,
-    HITCOUNTER_EXPLODE          = 150,
+    HITCOUNTER_CRACK = 50,
+    HITCOUNTER_SHATTER = 100,
+    HITCOUNTER_EXPLODE = 150,
 };
 
 enum MovePoints
 {
-    ROOM_CENTER                 = 1
+    ROOM_CENTER = 1
 };
 
 enum Misc
 {
-    MAX_GLOB_SPAWN             = 20,
+    MAX_GLOB_SPAWN = 20,
 };
 
-Position const roomCenter = { -7992.36f, 908.19f, -52.62f, 1.68f };
+Position const roomCenter = {-7992.36f, 908.19f, -52.62f, 1.68f};
 
-Position const resetPoint = { -7992.0f, 1041.0f, -23.84f };
+Position const resetPoint = {-7992.0f, 1041.0f, -23.84f};
 
-std::array<uint32, MAX_GLOB_SPAWN> const spawnGlobSpells = { 25865, 25866, 25867, 25868, 25869, 25870, 25871, 25872, 25873, 25874, 25875, 25876, 25877, 25878, 25879, 25880, 25881, 25882, 25883, 25884 };
+std::array<uint32, MAX_GLOB_SPAWN> const spawnGlobSpells = {25865,
+    25866,
+    25867,
+    25868,
+    25869,
+    25870,
+    25871,
+    25872,
+    25873,
+    25874,
+    25875,
+    25876,
+    25877,
+    25878,
+    25879,
+    25880,
+    25881,
+    25882,
+    25883,
+    25884};
 
 struct boss_viscidus : public BossAI
 {
@@ -137,16 +156,12 @@ struct boss_viscidus : public BossAI
             damage = 0;
 
         if (!attacker)
-        {
             return;
-        }
 
         if (_phase != PHASE_MELEE)
         {
             if (_phase == PHASE_FROST && effType == DIRECT_DAMAGE && (spellSchoolMask & SPELL_SCHOOL_MASK_FROST) != 0)
-            {
                 ++_hitcounter;
-            }
 
             return;
         }
@@ -171,22 +186,20 @@ struct boss_viscidus : public BossAI
             me->AttackStop();
             me->CastStop();
             me->HandleEmoteCommand(EMOTE_ONESHOT_FLYDEATH); // not found in sniff, this is the best one I found
-            scheduler.Schedule(2500ms, [this](TaskContext /*context*/)
-                {
-                    DoCastSelf(SPELL_EXPLODE_TRIGGER, true);
-                })
-                .Schedule(3000ms, [this](TaskContext /*context*/)
-                {
-                    DoCastSelf(SPELL_INVIS_SELF, true);
-                    me->SetAuraStack(SPELL_VISCIDUS_SHRINKS, me, 20);
-                    me->LowerPlayerDamageReq(me->GetMaxHealth());
-                    me->SetHealth(me->GetMaxHealth() * 0.01f); // set 1% health
-                    DoResetThreatList();
-                    me->NearTeleportTo(roomCenter.GetPositionX(),
-                        roomCenter.GetPositionY(),
-                        roomCenter.GetPositionZ(),
-                        roomCenter.GetOrientation());
-                });
+            scheduler.Schedule(2500ms, [this](TaskContext /*context*/) { DoCastSelf(SPELL_EXPLODE_TRIGGER, true); })
+                .Schedule(3000ms,
+                    [this](TaskContext /*context*/)
+            {
+                DoCastSelf(SPELL_INVIS_SELF, true);
+                me->SetAuraStack(SPELL_VISCIDUS_SHRINKS, me, 20);
+                me->LowerPlayerDamageReq(me->GetMaxHealth());
+                me->SetHealth(me->GetMaxHealth() * 0.01f); // set 1% health
+                DoResetThreatList();
+                me->NearTeleportTo(roomCenter.GetPositionX(),
+                    roomCenter.GetPositionY(),
+                    roomCenter.GetPositionZ(),
+                    roomCenter.GetOrientation());
+            });
         }
         else if (_hitcounter == HITCOUNTER_SHATTER)
             Talk(EMOTE_SHATTER);
@@ -197,17 +210,14 @@ struct boss_viscidus : public BossAI
     void SpellHit(Unit* caster, SpellInfo const* spellInfo) override
     {
         if (spellInfo->Id == SPELL_REJOIN_VISCIDUS)
-        {
             me->RemoveAuraFromStack(SPELL_VISCIDUS_SHRINKS);
-        }
 
         SpellSchoolMask spellSchoolMask = spellInfo->GetSchoolMask();
-        if (spellInfo->EquippedItemClass == ITEM_CLASS_WEAPON && spellInfo->EquippedItemSubClassMask & (1 << ITEM_SUBCLASS_WEAPON_WAND))
+        if (spellInfo->EquippedItemClass == ITEM_CLASS_WEAPON &&
+            spellInfo->EquippedItemSubClassMask & (1 << ITEM_SUBCLASS_WEAPON_WAND))
         {
             if (Item* pItem = caster->ToPlayer()->GetWeaponForAttack(RANGED_ATTACK))
-            {
                 spellSchoolMask = SpellSchoolMask(1 << pItem->GetTemplate()->Damage[0].DamageType);
-            }
         }
 
         if ((spellSchoolMask & SPELL_SCHOOL_MASK_FROST) && _phase == PHASE_FROST)
@@ -329,17 +339,19 @@ struct boss_glob_of_viscidus : public ScriptedAI
     {
         me->SetInCombatWithZone();
         scheduler.CancelAll();
-        scheduler.Schedule(2400ms, [this](TaskContext context)
+        scheduler.Schedule(2400ms,
+            [this](TaskContext context)
+        {
+            me->GetMotionMaster()->MovePoint(ROOM_CENTER, roomCenter);
+            float topSpeed = me->GetSpeedRate(MOVE_RUN) + 0.2142855f * 4;
+            context.Schedule(1s,
+                [this, topSpeed](TaskContext context)
             {
-                me->GetMotionMaster()->MovePoint(ROOM_CENTER, roomCenter);
-                float topSpeed = me->GetSpeedRate(MOVE_RUN) + 0.2142855f * 4;
-                context.Schedule(1s, [this, topSpeed](TaskContext context)
-                    {
-                        float newSpeed = me->GetSpeedRate(MOVE_RUN) + 0.2142855f; // sniffed
-                        me->SetSpeed(MOVE_RUN, newSpeed < topSpeed ? newSpeed : topSpeed);
-                        context.Repeat();
-                    });
+                float newSpeed = me->GetSpeedRate(MOVE_RUN) + 0.2142855f; // sniffed
+                me->SetSpeed(MOVE_RUN, newSpeed < topSpeed ? newSpeed : topSpeed);
+                context.Repeat();
             });
+        });
     }
 
     void MovementInform(uint32 /*type*/, uint32 id) override

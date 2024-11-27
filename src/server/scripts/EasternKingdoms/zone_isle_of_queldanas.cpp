@@ -23,6 +23,7 @@
 #include "SpellInfo.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
+
 /* ScriptData
 SDName: Isle_of_Queldanas
 SD%Complete: 100
@@ -101,9 +102,8 @@ enum ThalorienTexts
 };
 
 #define SUNWELL_DEFENDER_NUM 10
-const Position SunwellDefenderPos[SUNWELL_DEFENDER_NUM] =
-{
-    {11801.6f, -7070.91f, 25.5347f, 2.7428f},
+Position const SunwellDefenderPos[SUNWELL_DEFENDER_NUM] = {
+    {11801.6f, -7070.91f, 25.5347f, 2.7428f },
     {11800.8f, -7073.11f, 25.7903f, 2.78207f},
     {11799.9f, -7075.29f, 26.1329f, 2.78207f},
     {11799.1f, -7077.46f, 26.3211f, 2.78207f},
@@ -111,7 +111,7 @@ const Position SunwellDefenderPos[SUNWELL_DEFENDER_NUM] =
     {11795.1f, -7078.93f, 26.1822f, 2.77814f},
     {11796.0f, -7076.32f, 26.4659f, 2.79778f},
     {11797.0f, -7073.71f, 26.3534f, 2.79778f},
-    {11797.8f, -7071.5f, 26.0573f, 2.79778f},
+    {11797.8f, -7071.5f,  26.0573f, 2.79778f},
     {11798.7f, -7068.83f, 25.6424f, 2.79778f}
 };
 
@@ -127,9 +127,7 @@ public:
 
     struct npc_bh_thalorien_dawnseekerAI : public ScriptedAI
     {
-        npc_bh_thalorien_dawnseekerAI(Creature* c) : ScriptedAI(c), summons(me)
-        {
-        }
+        npc_bh_thalorien_dawnseekerAI(Creature* c) : ScriptedAI(c), summons(me) { }
 
         EventMap events;
         SummonList summons;
@@ -183,7 +181,8 @@ public:
                 {
                     me->RemoveAurasDueToSpell(67541);
                     me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
-                    me->GetMotionMaster()->MoveCharge(11779.30f, -7065.43f, 24.92f, me->GetSpeed(MOVE_RUN), EVENT_CHARGE);
+                    me->GetMotionMaster()->MoveCharge(
+                        11779.30f, -7065.43f, 24.92f, me->GetSpeed(MOVE_RUN), EVENT_CHARGE);
                     events.ScheduleEvent(EVENT_OUTRO_0, 0);
                     events.ScheduleEvent(EVENT_OUTRO_1, 5000);
                     events.ScheduleEvent(EVENT_OUTRO_2, 12000);
@@ -192,7 +191,8 @@ public:
                 else if (summons.size() == 1)
                 {
                     me->RemoveAurasDueToSpell(67541);
-                    me->GetMotionMaster()->MoveCharge(11779.30f, -7065.43f, 24.92f, me->GetSpeed(MOVE_RUN), EVENT_CHARGE);
+                    me->GetMotionMaster()->MoveCharge(
+                        11779.30f, -7065.43f, 24.92f, me->GetSpeed(MOVE_RUN), EVENT_CHARGE);
                     switch (summon->GetEntry())
                     {
                         case NPC_SCOURGE_ZOMBIE:
@@ -247,7 +247,10 @@ public:
                     return;
                 case EVENT_SUMMON_SOLDIERS:
                     for (uint8 i = 0; i < SUNWELL_DEFENDER_NUM; ++i)
-                        me->SummonCreature(NPC_SUNWELL_DEFENDER, SunwellDefenderPos[i], TEMPSUMMON_TIMED_DESPAWN, 33000 + (i / 5) * 5000);
+                        me->SummonCreature(NPC_SUNWELL_DEFENDER,
+                            SunwellDefenderPos[i],
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            33000 + (i / 5) * 5000);
                     break;
                 case EVENT_TALK_INTRO_0:
                 case EVENT_TALK_INTRO_1:
@@ -262,33 +265,33 @@ public:
                             c->HandleEmoteCommand(EMOTE_ONESHOT_SALUTE);
                     break;
                 case EVENT_SOLDIERS_RUN_AWAY:
+                {
+                    uint8 count = 0;
+                    for (SummonList::iterator itr = summons.begin(); itr != summons.end();)
                     {
-                        uint8 count = 0;
-                        for (SummonList::iterator itr = summons.begin(); itr != summons.end();)
+                        ++count;
+                        if (Creature* c = ObjectAccessor::GetCreature(*me, *itr))
                         {
-                            ++count;
-                            if (Creature* c = ObjectAccessor::GetCreature(*me, *itr))
+                            c->SetWalk(false);
+                            c->GetMotionMaster()->MovePoint(0, 11863.35f, -7073.44f, 27.40f);
+                        }
+                        SummonList::iterator itr2 = itr++;
+                        summons.erase(itr2);
+                        if (count >= 5)
+                        {
+                            if (!summons.empty())
                             {
-                                c->SetWalk(false);
-                                c->GetMotionMaster()->MovePoint(0, 11863.35f, -7073.44f, 27.40f);
+                                events.RepeatEvent(5000);
+                                return;
                             }
-                            SummonList::iterator itr2 = itr++;
-                            summons.erase(itr2);
-                            if (count >= 5)
+                            else
                             {
-                                if (!summons.empty())
-                                {
-                                    events.RepeatEvent(5000);
-                                    return;
-                                }
-                                else
-                                {
-                                    return;
-                                }
+                                return;
                             }
                         }
                     }
-                    break;
+                }
+                break;
                 case EVENT_GO_FIGHTPOINT:
                     me->SetWalk(true);
                     me->GetMotionMaster()->MovePoint(0, 11779.30f, -7065.43f, 24.92f);
@@ -299,7 +302,13 @@ public:
                     Talk(SAY_SPAWN_0 + (evId - EVENT_TALK_SPAWN_0));
                     break;
                 case EVENT_SUMMON_MORLEN:
-                    if (Creature* c = me->SummonCreature(NPC_MORLEN_COLDGRIP, 11766.70f, -7050.57f, 25.17f, 5.56f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
+                    if (Creature* c = me->SummonCreature(NPC_MORLEN_COLDGRIP,
+                            11766.70f,
+                            -7050.57f,
+                            25.17f,
+                            5.56f,
+                            TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                            5000))
                         morlenGUID = c->GetGUID();
                     break;
                 case EVENT_TALK_MORLEN_0:
@@ -317,49 +326,52 @@ public:
                         {
                             // emerge cast tr false 66947
                             case EVENT_SPAWN_WAVE_1:
-                                {
-                                    Position spawnPos = c->GetPosition();
-                                    spawnPos.SetOrientation(5.80f);
-                                    spawnPos.m_positionX += 5.0f * cos(4.5f);
-                                    spawnPos.m_positionY += 5.0f * std::sin(4.5f);
-                                    for (uint8 i = 0; i < 5; ++i)
-                                        if (me->SummonCreature(NPC_SCOURGE_ZOMBIE, spawnPos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 2000))
-                                        {
-                                            spawnPos.m_positionX += 2.5f * cos(4.5f);
-                                            spawnPos.m_positionY += 2.5f * std::sin(4.5f);
-                                        }
-                                }
-                                break;
+                            {
+                                Position spawnPos = c->GetPosition();
+                                spawnPos.SetOrientation(5.80f);
+                                spawnPos.m_positionX += 5.0f * cos(4.5f);
+                                spawnPos.m_positionY += 5.0f * std::sin(4.5f);
+                                for (uint8 i = 0; i < 5; ++i)
+                                    if (me->SummonCreature(
+                                            NPC_SCOURGE_ZOMBIE, spawnPos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 2000))
+                                    {
+                                        spawnPos.m_positionX += 2.5f * cos(4.5f);
+                                        spawnPos.m_positionY += 2.5f * std::sin(4.5f);
+                                    }
+                            }
+                            break;
                             case EVENT_SPAWN_WAVE_2:
-                                {
-                                    Position spawnPos = c->GetPosition();
-                                    spawnPos.SetOrientation(5.80f);
-                                    spawnPos.m_positionX += 7.0f * cos(4.0f);
-                                    spawnPos.m_positionY += 7.0f * std::sin(4.0f);
-                                    for (uint8 i = 0; i < 3; ++i)
-                                        if (Creature* s = me->SummonCreature(NPC_GHOUL_INVADER, spawnPos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 2000))
-                                        {
-                                            s->CastSpell(s, 66947, false); // emerge effect
-                                            spawnPos.m_positionX += 4.0f * cos(4.5f);
-                                            spawnPos.m_positionY += 4.0f * std::sin(4.5f);
-                                        }
-                                }
-                                break;
+                            {
+                                Position spawnPos = c->GetPosition();
+                                spawnPos.SetOrientation(5.80f);
+                                spawnPos.m_positionX += 7.0f * cos(4.0f);
+                                spawnPos.m_positionY += 7.0f * std::sin(4.0f);
+                                for (uint8 i = 0; i < 3; ++i)
+                                    if (Creature* s = me->SummonCreature(
+                                            NPC_GHOUL_INVADER, spawnPos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 2000))
+                                    {
+                                        s->CastSpell(s, 66947, false); // emerge effect
+                                        spawnPos.m_positionX += 4.0f * cos(4.5f);
+                                        spawnPos.m_positionY += 4.0f * std::sin(4.5f);
+                                    }
+                            }
+                            break;
                             case EVENT_SPAWN_WAVE_3:
-                                {
-                                    Position spawnPos = c->GetPosition();
-                                    spawnPos.SetOrientation(5.80f);
-                                    spawnPos.m_positionX += 8.0f * cos(4.0f);
-                                    spawnPos.m_positionY += 8.0f * std::sin(4.0f);
-                                    for (uint8 i = 0; i < 3; ++i)
-                                        if (Creature* s = me->SummonCreature(NPC_CRYPT_RAIDER, spawnPos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 2000))
-                                        {
-                                            s->CastSpell(s, 66947, false); // emerge effect
-                                            spawnPos.m_positionX += 4.0f * cos(4.5f);
-                                            spawnPos.m_positionY += 4.0f * std::sin(4.5f);
-                                        }
-                                }
-                                break;
+                            {
+                                Position spawnPos = c->GetPosition();
+                                spawnPos.SetOrientation(5.80f);
+                                spawnPos.m_positionX += 8.0f * cos(4.0f);
+                                spawnPos.m_positionY += 8.0f * std::sin(4.0f);
+                                for (uint8 i = 0; i < 3; ++i)
+                                    if (Creature* s = me->SummonCreature(
+                                            NPC_CRYPT_RAIDER, spawnPos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 2000))
+                                    {
+                                        s->CastSpell(s, 66947, false); // emerge effect
+                                        spawnPos.m_positionX += 4.0f * cos(4.5f);
+                                        spawnPos.m_positionY += 4.0f * std::sin(4.5f);
+                                    }
+                            }
+                            break;
                         }
                     }
                     events.ScheduleEvent(EVENT_SUMMONS_ATTACK, 3000);
@@ -461,7 +473,7 @@ class spell_bh_cleanse_quel_delar : public SpellScript
 {
     PrepareSpellScript(spell_bh_cleanse_quel_delar);
 
-    void OnEffect(SpellEffIndex  /*effIndex*/)
+    void OnEffect(SpellEffIndex /*effIndex*/)
     {
         if (Unit* caster = GetCaster())
             if (Creature* c = caster->FindNearestCreature(NPC_ROMMATH, 50.0f, true))
@@ -512,19 +524,21 @@ public:
         {
             if (a == -1 && !me->isActiveObject())
             {
-                me->SummonGameObject(GO_QUEL_DELAR, 1688.24f, 621.769f, 29.1745f, 0.523177f, 0.0f, 0.0f, 0.0f, 0.0f, 86400);
-                me->SummonCreature(NPC_SUNWELL_VISUAL_BUNNY, 1688.24f, 621.769f, 29.1745f, 0.523177f, TEMPSUMMON_MANUAL_DESPAWN);
+                me->SummonGameObject(
+                    GO_QUEL_DELAR, 1688.24f, 621.769f, 29.1745f, 0.523177f, 0.0f, 0.0f, 0.0f, 0.0f, 86400);
+                me->SummonCreature(
+                    NPC_SUNWELL_VISUAL_BUNNY, 1688.24f, 621.769f, 29.1745f, 0.523177f, TEMPSUMMON_MANUAL_DESPAWN);
                 me->setActive(true);
                 events.Reset();
-                events.ScheduleEvent(1, 1000); // guard talk
-                events.ScheduleEvent(2, 4000); // theron talk
-                events.ScheduleEvent(3, 10000); // npcs walk
-                events.ScheduleEvent(4, 17000); // rommath talk
-                events.ScheduleEvent(5, 20000); // theron talk
-                events.ScheduleEvent(6, 28000); // theron talk
-                events.ScheduleEvent(7, 37000); // rommath talk
-                events.ScheduleEvent(8, 44000); // rommath talk
-                events.ScheduleEvent(9, 52000); // rommath talk
+                events.ScheduleEvent(1, 1000);   // guard talk
+                events.ScheduleEvent(2, 4000);   // theron talk
+                events.ScheduleEvent(3, 10000);  // npcs walk
+                events.ScheduleEvent(4, 17000);  // rommath talk
+                events.ScheduleEvent(5, 20000);  // theron talk
+                events.ScheduleEvent(6, 28000);  // theron talk
+                events.ScheduleEvent(7, 37000);  // rommath talk
+                events.ScheduleEvent(8, 44000);  // rommath talk
+                events.ScheduleEvent(9, 52000);  // rommath talk
                 events.ScheduleEvent(10, 60000); // auric talk
                 events.ScheduleEvent(11, 66000); // auric talk
                 events.ScheduleEvent(12, 76000); // rommath talk
@@ -603,18 +617,21 @@ public:
                         go->RemoveGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
                     me->SetWalk(true);
                     if (me->GetCreatureData())
-                        me->GetMotionMaster()->MovePoint(0, me->GetCreatureData()->posX, me->GetCreatureData()->posY, me->GetCreatureData()->posZ);
+                        me->GetMotionMaster()->MovePoint(
+                            0, me->GetCreatureData()->posX, me->GetCreatureData()->posY, me->GetCreatureData()->posZ);
                     if (Creature* c = me->FindNearestCreature(NPC_THERON, 60.0f, true))
                     {
                         c->SetWalk(true);
                         if (c->GetCreatureData())
-                            c->GetMotionMaster()->MovePoint(0, c->GetCreatureData()->posX, c->GetCreatureData()->posY, c->GetCreatureData()->posZ);
+                            c->GetMotionMaster()->MovePoint(
+                                0, c->GetCreatureData()->posX, c->GetCreatureData()->posY, c->GetCreatureData()->posZ);
                     }
                     if (Creature* c = me->FindNearestCreature(NPC_AURIC, 60.0f, true))
                     {
                         c->SetWalk(true);
                         if (c->GetCreatureData())
-                            c->GetMotionMaster()->MovePoint(0, c->GetCreatureData()->posX, c->GetCreatureData()->posY, c->GetCreatureData()->posZ);
+                            c->GetMotionMaster()->MovePoint(
+                                0, c->GetCreatureData()->posX, c->GetCreatureData()->posY, c->GetCreatureData()->posZ);
                     }
                     break;
             }

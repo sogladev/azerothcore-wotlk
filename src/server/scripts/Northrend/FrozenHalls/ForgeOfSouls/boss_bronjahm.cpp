@@ -25,30 +25,30 @@
 
 enum Yells
 {
-    SAY_AGGRO           = 0,
-    SAY_SLAY            = 1,
-    SAY_DEATH           = 2,
-    SAY_SOUL_STORM      = 3,
-    SAY_CORRUPT_SOUL    = 4,
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_SOUL_STORM = 3,
+    SAY_CORRUPT_SOUL = 4,
 };
 
 enum eSpells
 {
-    SPELL_SOULSTORM_CHANNEL_OOC     = 69008,
+    SPELL_SOULSTORM_CHANNEL_OOC = 69008,
 
-    SPELL_SHADOW_BOLT               = 70043,
-    SPELL_FEAR                      = 68950,
-    SPELL_MAGICS_BANE               = 68793,
-    SPELL_CORRUPT_SOUL              = 68839,
-    SPELL_CONSUME_SOUL              = 68861,
+    SPELL_SHADOW_BOLT = 70043,
+    SPELL_FEAR = 68950,
+    SPELL_MAGICS_BANE = 68793,
+    SPELL_CORRUPT_SOUL = 68839,
+    SPELL_CONSUME_SOUL = 68861,
     //SPELL_CONSUME_SOUL_HEAL       = 68858,
 
-    SPELL_TELEPORT                  = 68988,
-    SPELL_TELEPORT_VISUAL           = 52096,
+    SPELL_TELEPORT = 68988,
+    SPELL_TELEPORT_VISUAL = 52096,
 
-    SPELL_SOULSTORM_VISUAL          = 68870,
-    SPELL_SOULSTORM_VISUAL2         = 68904,
-    SPELL_SOULSTORM                 = 68872,
+    SPELL_SOULSTORM_VISUAL = 68870,
+    SPELL_SOULSTORM_VISUAL2 = 68904,
+    SPELL_SOULSTORM = 68872,
 };
 
 enum eEvents
@@ -120,7 +120,7 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit*  /*target*/, SpellInfo const* spell) override
+        void SpellHitTarget(Unit* /*target*/, SpellInfo const* spell) override
         {
             if (spell->Id == SPELL_TELEPORT)
             {
@@ -275,7 +275,7 @@ class spell_bronjahm_magic_bane : public SpellScript
 
         if (Unit* caster = GetCaster())
         {
-            const int32 maxDamage = caster->GetMap()->GetSpawnMode() == 1 ? 15000 : 10000;
+            int32 const maxDamage = caster->GetMap()->GetSpawnMode() == 1 ? 15000 : 10000;
             int32 newDamage = GetHitDamage();
             newDamage += GetHitUnit()->GetMaxPower(POWER_MANA) / 2;
             newDamage = std::min<int32>(maxDamage, newDamage);
@@ -296,7 +296,10 @@ class spell_bronjahm_soulstorm_channel_ooc_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SOULSTORM_VISUAL2, SPELL_SOULSTORM_VISUAL2+1, SPELL_SOULSTORM_VISUAL2+2, SPELL_SOULSTORM_VISUAL2+3 });
+        return ValidateSpellInfo({SPELL_SOULSTORM_VISUAL2,
+            SPELL_SOULSTORM_VISUAL2 + 1,
+            SPELL_SOULSTORM_VISUAL2 + 2,
+            SPELL_SOULSTORM_VISUAL2 + 3});
     }
 
     void HandlePeriodicTick(AuraEffect const* aurEff)
@@ -307,7 +310,8 @@ class spell_bronjahm_soulstorm_channel_ooc_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_bronjahm_soulstorm_channel_ooc_aura::HandlePeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_bronjahm_soulstorm_channel_ooc_aura::HandlePeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -317,7 +321,7 @@ class spell_bronjahm_soulstorm_visual_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ 68886, 68896, 68897, 68898 });
+        return ValidateSpellInfo({68886, 68896, 68897, 68898});
     }
 
     void HandlePeriodicTick(AuraEffect const* aurEff)
@@ -344,7 +348,8 @@ class spell_bronjahm_soulstorm_visual_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_bronjahm_soulstorm_visual_aura::HandlePeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_bronjahm_soulstorm_visual_aura::HandlePeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -359,7 +364,8 @@ class spell_bronjahm_soulstorm_targeting : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_bronjahm_soulstorm_targeting::FilterTargets, EFFECT_ALL, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_bronjahm_soulstorm_targeting::FilterTargets, EFFECT_ALL, TARGET_UNIT_DEST_AREA_ENEMY);
     }
 };
 

@@ -26,7 +26,10 @@ bool SQLQueryHolderBase::SetPreparedQueryImpl(std::size_t index, PreparedStateme
 {
     if (m_queries.size() <= index)
     {
-        LOG_ERROR("sql.sql", "Query index ({}) out of range (size: {}) for prepared statement", uint32(index), (uint32)m_queries.size());
+        LOG_ERROR("sql.sql",
+            "Query index ({}) out of range (size: {}) for prepared statement",
+            uint32(index),
+            (uint32)m_queries.size());
         return false;
     }
 
@@ -37,8 +40,10 @@ bool SQLQueryHolderBase::SetPreparedQueryImpl(std::size_t index, PreparedStateme
 PreparedQueryResult SQLQueryHolderBase::GetPreparedResult(std::size_t index) const
 {
     // Don't call to this function if the index is of a prepared statement
-    ASSERT(index < m_queries.size(), "Query holder result index out of range, tried to access index {} but there are only {} results",
-        index, m_queries.size());
+    ASSERT(index < m_queries.size(),
+        "Query holder result index out of range, tried to access index {} but there are only {} results",
+        index,
+        m_queries.size());
 
     return m_queries[index].second;
 }

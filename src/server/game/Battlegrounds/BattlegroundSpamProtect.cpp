@@ -35,9 +35,7 @@ namespace
     {
         auto const& itr = _players.find(guid);
         if (itr != _players.end())
-        {
             return itr->second;
-        }
 
         return 0;
     }
@@ -45,9 +43,10 @@ namespace
     bool IsCorrectDelay(ObjectGuid guid)
     {
         // Skip if spam time < 30 secs (default)
-        return GameTime::GetGameTime().count() - GetTime(guid) >= sWorld->getIntConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_SPAM_DELAY);
+        return GameTime::GetGameTime().count() - GetTime(guid) >=
+               sWorld->getIntConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_SPAM_DELAY);
     }
-}
+} // namespace
 
 BGSpamProtect* BGSpamProtect::instance()
 {
@@ -61,9 +60,7 @@ bool BGSpamProtect::CanAnnounce(Player* player, Battleground* bg, uint32 minLeve
 
     // Check prev time
     if (!IsCorrectDelay(guid))
-    {
         return false;
-    }
 
     if (bg)
     {
@@ -74,7 +71,8 @@ bool BGSpamProtect::CanAnnounce(Player* player, Battleground* bg, uint32 minLeve
             // limit only RBG for 80, WSG for lower levels
             auto bgTypeToLimit = minLevel == 80 ? BATTLEGROUND_RB : BATTLEGROUND_WS;
 
-            if (bg->GetBgTypeID() == bgTypeToLimit && queueTotal < sWorld->getIntConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_LIMIT_MIN_PLAYERS))
+            if (bg->GetBgTypeID() == bgTypeToLimit &&
+                queueTotal < sWorld->getIntConfig(CONFIG_BATTLEGROUND_QUEUE_ANNOUNCER_LIMIT_MIN_PLAYERS))
             {
                 return false;
             }

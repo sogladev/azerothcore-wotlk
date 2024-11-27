@@ -22,16 +22,20 @@
 #include <utf8.h>
 
 WorldPackets::InvalidStringValueException::InvalidStringValueException(std::string const& value) :
-    ByteBufferInvalidValueException("string", value.c_str()) { }
+    ByteBufferInvalidValueException("string", value.c_str())
+{ }
 
 WorldPackets::InvalidUtf8ValueException::InvalidUtf8ValueException(std::string const& value) :
-    InvalidStringValueException(value) { }
+    InvalidStringValueException(value)
+{ }
 
 WorldPackets::InvalidHyperlinkException::InvalidHyperlinkException(std::string const& value) :
-    InvalidStringValueException(value) { }
+    InvalidStringValueException(value)
+{ }
 
 WorldPackets::IllegalHyperlinkException::IllegalHyperlinkException(std::string const& value) :
-    InvalidStringValueException(value) { }
+    InvalidStringValueException(value)
+{ }
 
 bool WorldPackets::Strings::Utf8::Validate(std::string const& value)
 {
@@ -57,7 +61,8 @@ bool WorldPackets::Strings::NoHyperlinks::Validate(std::string const& value)
     return true;
 }
 
-WorldPackets::PacketArrayMaxCapacityException::PacketArrayMaxCapacityException(std::size_t requestedSize, std::size_t sizeLimit)
+WorldPackets::PacketArrayMaxCapacityException::PacketArrayMaxCapacityException(
+    std::size_t requestedSize, std::size_t sizeLimit)
 {
     std::ostringstream builder;
     builder << "Attempted to read more array elements from packet " << requestedSize << " than allowed " << sizeLimit;

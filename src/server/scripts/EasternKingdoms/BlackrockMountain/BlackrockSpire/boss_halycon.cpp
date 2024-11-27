@@ -21,22 +21,22 @@
 
 enum Spells
 {
-    SPELL_REND                      = 13738,
-    SPELL_THRASH                    = 3391,
+    SPELL_REND = 13738,
+    SPELL_THRASH = 3391,
 };
 
 enum Says
 {
-    EMOTE_DEATH                     = 0
+    EMOTE_DEATH = 0
 };
 
 enum Events
 {
-    EVENT_REND                      = 1,
-    EVENT_THRASH                    = 2,
+    EVENT_REND = 1,
+    EVENT_THRASH = 2,
 };
 
-const Position SummonLocation = { -167.9561f, -411.7844f, 76.23057f, 1.53589f };
+Position const SummonLocation = {-167.9561f, -411.7844f, 76.23057f, 1.53589f};
 
 class boss_halycon : public CreatureScript
 {

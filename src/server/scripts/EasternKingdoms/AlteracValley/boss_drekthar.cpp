@@ -21,22 +21,22 @@
 
 enum Spells
 {
-    SPELL_WHIRLWIND                               = 15589,
-    SPELL_WHIRLWIND2                              = 13736,
-    SPELL_KNOCKDOWN                               = 19128,
-    SPELL_FRENZY                                  = 8269,
-    SPELL_SWEEPING_STRIKES                        = 18765, // not sure
-    SPELL_CLEAVE                                  = 20677, // not sure
-    SPELL_WINDFURY                                = 35886, // not sure
-    SPELL_STORMPIKE                               = 51876  // not sure
+    SPELL_WHIRLWIND = 15589,
+    SPELL_WHIRLWIND2 = 13736,
+    SPELL_KNOCKDOWN = 19128,
+    SPELL_FRENZY = 8269,
+    SPELL_SWEEPING_STRIKES = 18765, // not sure
+    SPELL_CLEAVE = 20677,           // not sure
+    SPELL_WINDFURY = 35886,         // not sure
+    SPELL_STORMPIKE = 51876         // not sure
 };
 
 enum Yells
 {
-    YELL_AGGRO                                    = 0,
-    YELL_EVADE                                    = 1,
-    YELL_RESPAWN                                  = 2,
-    YELL_RANDOM                                   = 3
+    YELL_AGGRO = 0,
+    YELL_EVADE = 1,
+    YELL_RESPAWN = 2,
+    YELL_RANDOM = 3
 };
 
 class boss_drekthar : public CreatureScript
@@ -96,9 +96,7 @@ public:
                             if (Creature* marshall = bg->GetBGCreature(i))
                             {
                                 if (marshall->IsAIEnabled && !marshall->GetVictim())
-                                {
                                     marshall->AI()->AttackStart(victim);
-                                }
                             }
                         }
                     }
@@ -124,9 +122,7 @@ public:
                             if (Creature* marshall = bg->GetBGCreature(i))
                             {
                                 if (marshall->IsAIEnabled && !marshall->IsInEvadeMode())
-                                {
                                     marshall->AI()->EnterEvadeMode();
-                                }
                             }
                         }
                     }
@@ -142,37 +138,42 @@ public:
             if (WhirlwindTimer <= diff)
             {
                 DoCastVictim(SPELL_WHIRLWIND);
-                WhirlwindTimer =  urand(8 * IN_MILLISECONDS, 18 * IN_MILLISECONDS);
+                WhirlwindTimer = urand(8 * IN_MILLISECONDS, 18 * IN_MILLISECONDS);
             }
-            else WhirlwindTimer -= diff;
+            else
+                WhirlwindTimer -= diff;
 
             if (Whirlwind2Timer <= diff)
             {
                 DoCastVictim(SPELL_WHIRLWIND2);
                 Whirlwind2Timer = urand(7 * IN_MILLISECONDS, 25 * IN_MILLISECONDS);
             }
-            else Whirlwind2Timer -= diff;
+            else
+                Whirlwind2Timer -= diff;
 
             if (KnockdownTimer <= diff)
             {
                 DoCastVictim(SPELL_KNOCKDOWN);
                 KnockdownTimer = urand(10 * IN_MILLISECONDS, 15 * IN_MILLISECONDS);
             }
-            else KnockdownTimer -= diff;
+            else
+                KnockdownTimer -= diff;
 
             if (FrenzyTimer <= diff)
             {
                 DoCastVictim(SPELL_FRENZY);
                 FrenzyTimer = urand(20 * IN_MILLISECONDS, 30 * IN_MILLISECONDS);
             }
-            else FrenzyTimer -= diff;
+            else
+                FrenzyTimer -= diff;
 
             if (YellTimer <= diff)
             {
                 Talk(YELL_RANDOM);
                 YellTimer = urand(20 * IN_MILLISECONDS, 30 * IN_MILLISECONDS); //20 to 30 seconds
             }
-            else YellTimer -= diff;
+            else
+                YellTimer -= diff;
 
             // check if creature is not outside of building
             if (ResetTimer <= diff)
@@ -184,7 +185,8 @@ public:
                 }
                 ResetTimer = 5 * IN_MILLISECONDS;
             }
-            else ResetTimer -= diff;
+            else
+                ResetTimer -= diff;
 
             DoMeleeAttackIfReady();
         }

@@ -24,16 +24,16 @@
 
 enum spells
 {
-    GROUND_SPIKE_H              = 59750,
-    BOULDER_TOSS                = 50843,
-    BOULDER_TOSS_H              = 59742,
-    SHATTER                     = 50810,
-    SHATTER_H                   = 61546,
-    STOMP                       = 50868,
-    STOMP_H                     = 59744,
-    GROUND_SLAM                 = 50827,
-    GROUND_SLAM_STONED_EFFECT   = 50812,
-    SPELL_SHATTER_EFFECT        = 50811,
+    GROUND_SPIKE_H = 59750,
+    BOULDER_TOSS = 50843,
+    BOULDER_TOSS_H = 59742,
+    SHATTER = 50810,
+    SHATTER_H = 61546,
+    STOMP = 50868,
+    STOMP_H = 59744,
+    GROUND_SLAM = 50827,
+    GROUND_SLAM_STONED_EFFECT = 50812,
+    SPELL_SHATTER_EFFECT = 50811,
 };
 
 enum events
@@ -49,10 +49,10 @@ enum events
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_KILL                                    = 1,
-    SAY_DEATH                                   = 2,
-    SAY_SHATTER                                 = 3
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_DEATH = 2,
+    SAY_SHATTER = 3
 };
 
 class boss_krystallus : public CreatureScript
@@ -82,7 +82,7 @@ public:
                 pInstance->SetData(BOSS_KRYSTALLUS, NOT_STARTED);
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             events.Reset();
             events.RescheduleEvent(EVENT_BOULDER, 8s);
@@ -103,7 +103,7 @@ public:
             if (map->IsDungeon())
             {
                 Map::PlayerList const& players = map->GetPlayers();
-                for(Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                     if (itr->GetSource()->IsAlive())
                         itr->GetSource()->RemoveAura(GROUND_SLAM_STONED_EFFECT);
             }
@@ -122,51 +122,51 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_BOULDER:
-                    {
-                        if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
-                            me->CastSpell(target, DUNGEON_MODE(BOULDER_TOSS, BOULDER_TOSS_H), false);
+                {
+                    if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0))
+                        me->CastSpell(target, DUNGEON_MODE(BOULDER_TOSS, BOULDER_TOSS_H), false);
 
-                        events.Repeat(5s, 7s);
-                        break;
-                    }
+                    events.Repeat(5s, 7s);
+                    break;
+                }
                 case EVENT_GROUND_SPIKE:
-                    {
-                        me->CastSpell(me->GetVictim(), GROUND_SPIKE_H, false); // current enemy target
-                        events.Repeat(8s, 11s);
-                        break;
-                    }
+                {
+                    me->CastSpell(me->GetVictim(), GROUND_SPIKE_H, false); // current enemy target
+                    events.Repeat(8s, 11s);
+                    break;
+                }
                 case EVENT_STOMP:
-                    {
-                        me->CastSpell(me, DUNGEON_MODE(STOMP, STOMP_H), false);
-                        events.Repeat(13s, 18s);
-                        break;
-                    }
+                {
+                    me->CastSpell(me, DUNGEON_MODE(STOMP, STOMP_H), false);
+                    events.Repeat(13s, 18s);
+                    break;
+                }
                 case EVENT_GROUND_SLAM:
-                    {
-                        events.Repeat(10s, 13s);
-                        me->CastSpell(me->GetVictim(), GROUND_SLAM, true);
-                        events.DelayEvents(10s);
-                        events.RescheduleEvent(EVENT_SHATTER, 8s);
-                        break;
-                    }
+                {
+                    events.Repeat(10s, 13s);
+                    me->CastSpell(me->GetVictim(), GROUND_SLAM, true);
+                    events.DelayEvents(10s);
+                    events.RescheduleEvent(EVENT_SHATTER, 8s);
+                    break;
+                }
                 case EVENT_SHATTER:
-                    {
-                        me->CastSpell((Unit*)nullptr, DUNGEON_MODE(SHATTER, SHATTER_H), false);
-                        Talk(SAY_SHATTER);
-                        events.RescheduleEvent(EVENT_REMOVE_STONED, 1500ms);
-                        break;
-                    }
+                {
+                    me->CastSpell((Unit*)nullptr, DUNGEON_MODE(SHATTER, SHATTER_H), false);
+                    Talk(SAY_SHATTER);
+                    events.RescheduleEvent(EVENT_REMOVE_STONED, 1500ms);
+                    break;
+                }
                 case EVENT_REMOVE_STONED:
-                    {
-                        RemoveStonedEffect();
-                        break;
-                    }
+                {
+                    RemoveStonedEffect();
+                    break;
+                }
             }
 
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit*  /*killer*/) override
+        void JustDied(Unit* /*killer*/) override
         {
             Talk(SAY_DEATH);
             if (pInstance)
@@ -186,7 +186,7 @@ class spell_krystallus_shatter : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SHATTER_EFFECT });
+        return ValidateSpellInfo({SPELL_SHATTER_EFFECT});
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)
@@ -200,7 +200,8 @@ class spell_krystallus_shatter : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_krystallus_shatter::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_krystallus_shatter::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

@@ -36,12 +36,10 @@ void MapInstanced::InitVisibilityDistance()
         return;
     //initialize visibility distances for all instance copies
     for (InstancedMaps::iterator i = m_InstancedMaps.begin(); i != m_InstancedMaps.end(); ++i)
-    {
         (*i).second->InitVisibilityDistance();
-    }
 }
 
-void MapInstanced::Update(const uint32 t, const uint32 s_diff, bool /*thread*/)
+void MapInstanced::Update(uint32 const t, uint32 const s_diff, bool /*thread*/)
 {
     // take care of loaded GridMaps (when unused, unload it!)
     Map::Update(t, s_diff, false);
@@ -53,7 +51,7 @@ void MapInstanced::Update(const uint32 t, const uint32 s_diff, bool /*thread*/)
     {
         if (i->second->CanUnload(t))
         {
-            if (!DestroyInstance(i))                             // iterator incremented
+            if (!DestroyInstance(i)) // iterator incremented
             {
                 //m_unloadTimer
             }
@@ -70,7 +68,7 @@ void MapInstanced::Update(const uint32 t, const uint32 s_diff, bool /*thread*/)
     }
 }
 
-void MapInstanced::DelayedUpdate(const uint32 diff)
+void MapInstanced::DelayedUpdate(uint32 const diff)
 {
     for (InstancedMaps::iterator i = m_InstancedMaps.begin(); i != m_InstancedMaps.end(); ++i)
         i->second->DelayedUpdate(diff);
@@ -107,7 +105,7 @@ void MapInstanced::UnloadAll()
 - create the instance if it's not created already
 - the player is not actually added to the instance (only in InstanceMap::Add)
 */
-Map* MapInstanced::CreateInstanceForPlayer(const uint32 mapId, Player* player)
+Map* MapInstanced::CreateInstanceForPlayer(uint32 const mapId, Player* player)
 {
     if (GetId() != mapId || !player)
         return nullptr;
@@ -150,7 +148,8 @@ Map* MapInstanced::CreateInstanceForPlayer(const uint32 mapId, Player* player)
                 map = CreateInstance(destInstId, pSave, realdiff);
             else if (IsSharedDifficultyMap(mapId) && !map->HavePlayers() && map->GetDifficulty() != realdiff)
             {
-                if (player->isBeingLoaded()) // pussywizard: crashfix (assert(passengers.empty) fail in ~transport), could be added to a transport during loading from db
+                if (player
+                        ->isBeingLoaded()) // pussywizard: crashfix (assert(passengers.empty) fail in ~transport), could be added to a transport during loading from db
                     return nullptr;
 
                 if (!map->AllTransportsEmpty())
@@ -169,7 +168,8 @@ Map* MapInstanced::CreateInstanceForPlayer(const uint32 mapId, Player* player)
         {
             uint32 newInstanceId = sMapMgr->GenerateInstanceId();
             ASSERT(!FindInstanceMap(newInstanceId)); // pussywizard: instance with new id can't exist
-            Difficulty diff = player->GetGroup() ? player->GetGroup()->GetDifficulty(IsRaid()) : player->GetDifficulty(IsRaid());
+            Difficulty diff =
+                player->GetGroup() ? player->GetGroup()->GetDifficulty(IsRaid()) : player->GetDifficulty(IsRaid());
             map = CreateInstance(newInstanceId, nullptr, diff);
         }
     }
@@ -199,7 +199,12 @@ InstanceMap* MapInstanced::CreateInstance(uint32 InstanceId, InstanceSave* save,
     // some instances only have one difficulty
     GetDownscaledMapDifficultyData(GetId(), difficulty);
 
-    LOG_DEBUG("maps", "MapInstanced::CreateInstance: {} map instance {} for {} created with difficulty {}", save ? "" : "new ", InstanceId, GetId(), difficulty ? "heroic" : "normal");
+    LOG_DEBUG("maps",
+        "MapInstanced::CreateInstance: {} map instance {} for {} created with difficulty {}",
+        save ? "" : "new ",
+        InstanceId,
+        GetId(),
+        difficulty ? "heroic" : "normal");
 
     InstanceMap* map = new InstanceMap(GetId(), InstanceId, difficulty, this);
     ASSERT(map->IsDungeon());

@@ -122,33 +122,60 @@ namespace
     {
         switch (type)
         {
-            case MYSQL_TYPE_BIT:         return "BIT";
-            case MYSQL_TYPE_BLOB:        return "BLOB";
-            case MYSQL_TYPE_DATE:        return "DATE";
-            case MYSQL_TYPE_DATETIME:    return "DATETIME";
-            case MYSQL_TYPE_NEWDECIMAL:  return "NEWDECIMAL";
-            case MYSQL_TYPE_DECIMAL:     return "DECIMAL";
-            case MYSQL_TYPE_DOUBLE:      return "DOUBLE";
-            case MYSQL_TYPE_ENUM:        return "ENUM";
-            case MYSQL_TYPE_FLOAT:       return "FLOAT";
-            case MYSQL_TYPE_GEOMETRY:    return "GEOMETRY";
-            case MYSQL_TYPE_INT24:       return "INT24";
-            case MYSQL_TYPE_LONG:        return "LONG";
-            case MYSQL_TYPE_LONGLONG:    return "LONGLONG";
-            case MYSQL_TYPE_LONG_BLOB:   return "LONG_BLOB";
-            case MYSQL_TYPE_MEDIUM_BLOB: return "MEDIUM_BLOB";
-            case MYSQL_TYPE_NEWDATE:     return "NEWDATE";
-            case MYSQL_TYPE_NULL:        return "NULL";
-            case MYSQL_TYPE_SET:         return "SET";
-            case MYSQL_TYPE_SHORT:       return "SHORT";
-            case MYSQL_TYPE_STRING:      return "STRING";
-            case MYSQL_TYPE_TIME:        return "TIME";
-            case MYSQL_TYPE_TIMESTAMP:   return "TIMESTAMP";
-            case MYSQL_TYPE_TINY:        return "TINY";
-            case MYSQL_TYPE_TINY_BLOB:   return "TINY_BLOB";
-            case MYSQL_TYPE_VAR_STRING:  return "VAR_STRING";
-            case MYSQL_TYPE_YEAR:        return "YEAR";
-            default:                     return "-Unknown-";
+            case MYSQL_TYPE_BIT:
+                return "BIT";
+            case MYSQL_TYPE_BLOB:
+                return "BLOB";
+            case MYSQL_TYPE_DATE:
+                return "DATE";
+            case MYSQL_TYPE_DATETIME:
+                return "DATETIME";
+            case MYSQL_TYPE_NEWDECIMAL:
+                return "NEWDECIMAL";
+            case MYSQL_TYPE_DECIMAL:
+                return "DECIMAL";
+            case MYSQL_TYPE_DOUBLE:
+                return "DOUBLE";
+            case MYSQL_TYPE_ENUM:
+                return "ENUM";
+            case MYSQL_TYPE_FLOAT:
+                return "FLOAT";
+            case MYSQL_TYPE_GEOMETRY:
+                return "GEOMETRY";
+            case MYSQL_TYPE_INT24:
+                return "INT24";
+            case MYSQL_TYPE_LONG:
+                return "LONG";
+            case MYSQL_TYPE_LONGLONG:
+                return "LONGLONG";
+            case MYSQL_TYPE_LONG_BLOB:
+                return "LONG_BLOB";
+            case MYSQL_TYPE_MEDIUM_BLOB:
+                return "MEDIUM_BLOB";
+            case MYSQL_TYPE_NEWDATE:
+                return "NEWDATE";
+            case MYSQL_TYPE_NULL:
+                return "NULL";
+            case MYSQL_TYPE_SET:
+                return "SET";
+            case MYSQL_TYPE_SHORT:
+                return "SHORT";
+            case MYSQL_TYPE_STRING:
+                return "STRING";
+            case MYSQL_TYPE_TIME:
+                return "TIME";
+            case MYSQL_TYPE_TIMESTAMP:
+                return "TIMESTAMP";
+            case MYSQL_TYPE_TINY:
+                return "TINY";
+            case MYSQL_TYPE_TINY_BLOB:
+                return "TINY_BLOB";
+            case MYSQL_TYPE_VAR_STRING:
+                return "VAR_STRING";
+            case MYSQL_TYPE_YEAR:
+                return "YEAR";
+            default:
+                return "-Unknown-";
         }
     }
 
@@ -162,7 +189,7 @@ namespace
         meta->Index = fieldIndex;
         meta->Type = MysqlTypeToFieldType(field->type);
     }
-}
+} // namespace
 
 ResultSet::ResultSet(MySQLResult* result, MySQLField* fields, uint64 rowCount, uint32 fieldCount) :
     _rowCount(rowCount),
@@ -202,7 +229,10 @@ bool ResultSet::NextRow()
     unsigned long* lengths = mysql_fetch_lengths(_result);
     if (!lengths)
     {
-        LOG_WARN("sql.sql", "{}:mysql_fetch_lengths, cannot retrieve value lengths. Error {}.", __FUNCTION__, mysql_error(_result->handle));
+        LOG_WARN("sql.sql",
+            "{}:mysql_fetch_lengths, cannot retrieve value lengths. Error {}.",
+            __FUNCTION__,
+            mysql_error(_result->handle));
         CleanUp();
         return false;
     }
@@ -277,7 +307,10 @@ PreparedResultSet::PreparedResultSet(MySQLStmt* stmt, MySQLResult* result, uint6
     //- This is where we store the (entire) resultset
     if (mysql_stmt_store_result(m_stmt))
     {
-        LOG_WARN("sql.sql", "{}:mysql_stmt_store_result, cannot bind result from MySQL server. Error: {}", __FUNCTION__, mysql_stmt_error(m_stmt));
+        LOG_WARN("sql.sql",
+            "{}:mysql_stmt_store_result, cannot bind result from MySQL server. Error: {}",
+            __FUNCTION__,
+            mysql_stmt_error(m_stmt));
         delete[] m_rBind;
         delete[] m_isNull;
         delete[] m_length;
@@ -316,7 +349,10 @@ PreparedResultSet::PreparedResultSet(MySQLStmt* stmt, MySQLResult* result, uint6
     //- This is where we bind the bind the buffer to the statement
     if (mysql_stmt_bind_result(m_stmt, m_rBind))
     {
-        LOG_WARN("sql.sql", "{}:mysql_stmt_bind_result, cannot bind result from MySQL server. Error: {}", __FUNCTION__, mysql_stmt_error(m_stmt));
+        LOG_WARN("sql.sql",
+            "{}:mysql_stmt_bind_result, cannot bind result from MySQL server. Error: {}",
+            __FUNCTION__,
+            mysql_stmt_error(m_stmt));
         mysql_stmt_free_result(m_stmt);
         CleanUp();
         delete[] m_isNull;
@@ -339,22 +375,22 @@ PreparedResultSet::PreparedResultSet(MySQLStmt* stmt, MySQLResult* result, uint6
                 void* buffer = m_stmt->bind[fIndex].buffer;
                 switch (m_rBind[fIndex].buffer_type)
                 {
-                case MYSQL_TYPE_TINY_BLOB:
-                case MYSQL_TYPE_MEDIUM_BLOB:
-                case MYSQL_TYPE_LONG_BLOB:
-                case MYSQL_TYPE_BLOB:
-                case MYSQL_TYPE_STRING:
-                case MYSQL_TYPE_VAR_STRING:
-                    // warning - the string will not be null-terminated if there is no space for it in the buffer
-                    // when mysql_stmt_fetch returned MYSQL_DATA_TRUNCATED
-                    // we cannot blindly null-terminate the data either as it may be retrieved as binary blob and not specifically a string
-                    // in this case using Field::GetCString will result in garbage
-                    /// @todo: remove Field::GetCString and use std::string_view in C++17
-                    if (fetched_length < buffer_length)
-                        *((char*)buffer + fetched_length) = '\0';
-                    break;
-                default:
-                    break;
+                    case MYSQL_TYPE_TINY_BLOB:
+                    case MYSQL_TYPE_MEDIUM_BLOB:
+                    case MYSQL_TYPE_LONG_BLOB:
+                    case MYSQL_TYPE_BLOB:
+                    case MYSQL_TYPE_STRING:
+                    case MYSQL_TYPE_VAR_STRING:
+                        // warning - the string will not be null-terminated if there is no space for it in the buffer
+                        // when mysql_stmt_fetch returned MYSQL_DATA_TRUNCATED
+                        // we cannot blindly null-terminate the data either as it may be retrieved as binary blob and not specifically a string
+                        // in this case using Field::GetCString will result in garbage
+                        /// @todo: remove Field::GetCString and use std::string_view in C++17
+                        if (fetched_length < buffer_length)
+                            *((char*)buffer + fetched_length) = '\0';
+                        break;
+                    default:
+                        break;
                 }
 
                 m_rows[uint32(m_rowPosition) * m_fieldCount + fIndex].SetByteValue((char const*)buffer, fetched_length);
@@ -423,7 +459,7 @@ void PreparedResultSet::CleanUp()
 
     if (m_rBind)
     {
-        delete[](char*)m_rBind->buffer;
+        delete[] (char*)m_rBind->buffer;
         delete[] m_rBind;
         m_rBind = nullptr;
     }

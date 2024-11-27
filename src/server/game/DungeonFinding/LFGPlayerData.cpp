@@ -20,13 +20,16 @@
 namespace lfg
 {
 
-    LfgPlayerData::LfgPlayerData(): m_State(LFG_STATE_NONE), m_OldState(LFG_STATE_NONE), m_canOverrideRBState(false),
-        m_TeamId(TEAM_ALLIANCE), m_Roles(0), m_Comment("")
-    {}
+    LfgPlayerData::LfgPlayerData() :
+        m_State(LFG_STATE_NONE),
+        m_OldState(LFG_STATE_NONE),
+        m_canOverrideRBState(false),
+        m_TeamId(TEAM_ALLIANCE),
+        m_Roles(0),
+        m_Comment("")
+    { }
 
-    LfgPlayerData::~LfgPlayerData()
-    {
-    }
+    LfgPlayerData::~LfgPlayerData() { }
 
     void LfgPlayerData::SetState(LfgState state)
     {
@@ -112,7 +115,7 @@ namespace lfg
         return m_OldState;
     }
 
-    const LfgLockMap& LfgPlayerData::GetLockedDungeons() const
+    LfgLockMap const& LfgPlayerData::GetLockedDungeons() const
     {
         return m_LockedDungeons;
     }

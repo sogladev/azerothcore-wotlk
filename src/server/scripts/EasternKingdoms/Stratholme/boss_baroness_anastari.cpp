@@ -25,12 +25,12 @@
 
 enum Spells
 {
-    SPELL_BANSHEEWAIL           = 16565,
-    SPELL_BANSHEECURSE          = 16867,
-    SPELL_SILENCE               = 18327,
-    SPELL_POSSESS               = 17244,    // the charm on player
-    SPELL_POSSESSED             = 17246,    // the damage debuff on player
-    SPELL_POSSESS_INV           = 17250     // baroness becomes invisible while possessing a target
+    SPELL_BANSHEEWAIL = 16565,
+    SPELL_BANSHEECURSE = 16867,
+    SPELL_SILENCE = 18327,
+    SPELL_POSSESS = 17244,    // the charm on player
+    SPELL_POSSESSED = 17246,  // the damage debuff on player
+    SPELL_POSSESS_INV = 17250 // baroness becomes invisible while possessing a target
 };
 
 class boss_baroness_anastari : public CreatureScript
@@ -40,9 +40,7 @@ public:
 
     struct boss_baroness_anastariAI : public BossAI
     {
-        boss_baroness_anastariAI(Creature* creature) : BossAI(creature, TYPE_ZIGGURAT1)
-        {
-        }
+        boss_baroness_anastariAI(Creature* creature) : BossAI(creature, TYPE_ZIGGURAT1) { }
 
         void Reset() override
         {
@@ -54,23 +52,27 @@ public:
 
             _scheduler.CancelAll();
 
-            _scheduler.SetValidator([this]
-            {
-                return !me->HasUnitState(UNIT_STATE_CASTING);
-            });
+            _scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
         }
 
         void JustEngagedWith(Unit* /*who*/) override
         {
-            _scheduler.Schedule(1s, [this](TaskContext context){
+            _scheduler
+                .Schedule(1s,
+                    [this](TaskContext context)
+            {
                 DoCastVictim(SPELL_BANSHEEWAIL);
                 context.Repeat(4s);
             })
-            .Schedule(11s, [this](TaskContext context){
+                .Schedule(11s,
+                    [this](TaskContext context)
+            {
                 DoCastVictim(SPELL_BANSHEECURSE);
                 context.Repeat(18s);
             })
-            .Schedule(13s, [this](TaskContext context){
+                .Schedule(13s,
+                    [this](TaskContext context)
+            {
                 DoCastVictim(SPELL_SILENCE);
                 context.Repeat(13s);
             });
@@ -85,7 +87,10 @@ public:
 
         void SchedulePossession()
         {
-            _scheduler.Schedule(20s, 30s, [this](TaskContext context){
+            _scheduler.Schedule(20s,
+                30s,
+                [this](TaskContext context)
+            {
                 if (Unit* possessTarget = SelectTarget(SelectTargetMethod::Random, 1, 0, true, false))
                 {
                     DoCast(possessTarget, SPELL_POSSESS, true);
@@ -95,7 +100,9 @@ public:
 
                     // We must keep track of the possessed player, the aura falls off when their health drops below 50%.
                     // The encounter resumes when the aura falls off.
-                    _scheduler.Schedule(1s, [this](TaskContext possessionContext) {
+                    _scheduler.Schedule(1s,
+                        [this](TaskContext possessionContext)
+                    {
                         if (Player* possessedTarget = ObjectAccessor::GetPlayer(*me, _possessedTargetGuid))
                         {
                             if (!possessedTarget->HasAura(SPELL_POSSESSED) || possessedTarget->HealthBelowPct(50))
@@ -124,12 +131,9 @@ public:
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
-            {
                 return;
-            }
 
-            _scheduler.Update(diff,
-                std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
+            _scheduler.Update(diff, std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
         }
 
     private:

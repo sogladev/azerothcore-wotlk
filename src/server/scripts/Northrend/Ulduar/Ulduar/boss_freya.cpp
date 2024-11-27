@@ -26,100 +26,100 @@
 enum FreyaSpells
 {
     // LIFEBINDER
-    SPELL_AUTO_GROW                             = 62559,
-    SPELL_LIFEBINDER_PHERONOMES                 = 62619,
-    SPELL_LIFEBINDER_VISUAL                     = 62579,
-    SPELL_LIFEBINDER_HEAL_10                    = 62584,
-    SPELL_LIFEBINDER_HEAL_25                    = 64185,
+    SPELL_AUTO_GROW = 62559,
+    SPELL_LIFEBINDER_PHERONOMES = 62619,
+    SPELL_LIFEBINDER_VISUAL = 62579,
+    SPELL_LIFEBINDER_HEAL_10 = 62584,
+    SPELL_LIFEBINDER_HEAL_25 = 64185,
 
     // FREYA
-    SPELL_TOUCH_OF_EONAR_10                     = 62528,
-    SPELL_TOUCH_OF_EONAR_25                     = 62892,
-    SPELL_ATTUNED_TO_NATURE                     = 62519,
-    SPELL_SUMMON_LIFEBINDER                     = 62870,
-    SPELL_SUNBEAM_10                            = 62623,
-    SPELL_SUNBEAM_25                            = 62872,
-    SPELL_NATURE_BOMB_FLIGHT                    = 64648,
-    SPELL_NATURE_BOMB_DAMAGE_10                 = 64587,
-    SPELL_NATURE_BOMB_DAMAGE_25                 = 64650,
-    SPELL_GREEN_BANISH_STATE                    = 32567,
-    SPELL_BERSERK                               = 47008,
+    SPELL_TOUCH_OF_EONAR_10 = 62528,
+    SPELL_TOUCH_OF_EONAR_25 = 62892,
+    SPELL_ATTUNED_TO_NATURE = 62519,
+    SPELL_SUMMON_LIFEBINDER = 62870,
+    SPELL_SUNBEAM_10 = 62623,
+    SPELL_SUNBEAM_25 = 62872,
+    SPELL_NATURE_BOMB_FLIGHT = 64648,
+    SPELL_NATURE_BOMB_DAMAGE_10 = 64587,
+    SPELL_NATURE_BOMB_DAMAGE_25 = 64650,
+    SPELL_GREEN_BANISH_STATE = 32567,
+    SPELL_BERSERK = 47008,
 
     // HARD MODE
-    SPELL_GROUND_TREMOR_FREYA_10                = 62437,
-    SPELL_GROUND_TREMOR_FREYA_25                = 62859,
-    SPELL_IRON_ROOTS_FREYA_10                   = 62862,
-    SPELL_IRON_ROOTS_FREYA_25                   = 62439,
-    SPELL_IRON_ROOTS_FREYA_DAMAGE_10            = 62861,
-    SPELL_IRON_ROOTS_FREYA_DAMAGE_25            = 62438,
-    SPELL_UNSTABLE_SUN_FREYA_DAMAGE_10          = 62451,
-    SPELL_UNSTABLE_SUN_FREYA_DAMAGE_25          = 62865,
-    SPELL_UNSTABLE_SUN_VISUAL                   = 62216,
+    SPELL_GROUND_TREMOR_FREYA_10 = 62437,
+    SPELL_GROUND_TREMOR_FREYA_25 = 62859,
+    SPELL_IRON_ROOTS_FREYA_10 = 62862,
+    SPELL_IRON_ROOTS_FREYA_25 = 62439,
+    SPELL_IRON_ROOTS_FREYA_DAMAGE_10 = 62861,
+    SPELL_IRON_ROOTS_FREYA_DAMAGE_25 = 62438,
+    SPELL_UNSTABLE_SUN_FREYA_DAMAGE_10 = 62451,
+    SPELL_UNSTABLE_SUN_FREYA_DAMAGE_25 = 62865,
+    SPELL_UNSTABLE_SUN_VISUAL = 62216,
 
     // ELDERS
-    SPELL_DRAINED_OF_POWER                      = 62467,
-    SPELL_STONEBARK_ESSENCE                     = 62483,
-    SPELL_IRONBRANCH_ESSENCE                    = 62484,
-    SPELL_BRIGHTLEAF_ESSENCE                    = 62485,
+    SPELL_DRAINED_OF_POWER = 62467,
+    SPELL_STONEBARK_ESSENCE = 62483,
+    SPELL_IRONBRANCH_ESSENCE = 62484,
+    SPELL_BRIGHTLEAF_ESSENCE = 62485,
 
     // BRIGHTLEAF
-    SPELL_BRIGHTLEAF_FLUX                       = 62239,
-    SPELL_SOLAR_FLARE_10                        = 62240,
-    SPELL_SOLAR_FLARE_25                        = 64087,
-    SPELL_UNSTABLE_SUN_BEAM_AURA                = 62211,
-    SPELL_PHOTOSYNTHESIS                        = 62209,
-    SPELL_UNSTABLE_SUN_DAMAGE_10                = 62217,
-    SPELL_UNSTABLE_SUN_DAMAGE_25                = 62922,
+    SPELL_BRIGHTLEAF_FLUX = 62239,
+    SPELL_SOLAR_FLARE_10 = 62240,
+    SPELL_SOLAR_FLARE_25 = 64087,
+    SPELL_UNSTABLE_SUN_BEAM_AURA = 62211,
+    SPELL_PHOTOSYNTHESIS = 62209,
+    SPELL_UNSTABLE_SUN_DAMAGE_10 = 62217,
+    SPELL_UNSTABLE_SUN_DAMAGE_25 = 62922,
 
     // IRONBRANCH
-    SPELL_IMPALE_10                             = 62310,
-    SPELL_IMPALE_25                             = 62928,
-    SPELL_IRON_ROOTS_10                         = 62275,
-    SPELL_IRON_ROOTS_25                         = 62929,
-    SPELL_IRON_ROOTS_DAMAGE_10                  = 62283,
-    SPELL_IRON_ROOTS_DAMAGE_25                  = 62930,
-    SPELL_THORN_SWARM_10                        = 62285,
-    SPELL_THORN_SWARM_25                        = 62931,
+    SPELL_IMPALE_10 = 62310,
+    SPELL_IMPALE_25 = 62928,
+    SPELL_IRON_ROOTS_10 = 62275,
+    SPELL_IRON_ROOTS_25 = 62929,
+    SPELL_IRON_ROOTS_DAMAGE_10 = 62283,
+    SPELL_IRON_ROOTS_DAMAGE_25 = 62930,
+    SPELL_THORN_SWARM_10 = 62285,
+    SPELL_THORN_SWARM_25 = 62931,
 
     // STONEBARK
-    SPELL_FISTS_OF_STONE                        = 62344,
-    SPELL_GROUND_TREMOR_10                      = 62325,
-    SPELL_GROUND_TREMOR_25                      = 62932,
-    SPELL_PETRIFIED_BARK_10                     = 62337,
-    SPELL_PETRIFIED_BARK_25                     = 62933,
+    SPELL_FISTS_OF_STONE = 62344,
+    SPELL_GROUND_TREMOR_10 = 62325,
+    SPELL_GROUND_TREMOR_25 = 62932,
+    SPELL_PETRIFIED_BARK_10 = 62337,
+    SPELL_PETRIFIED_BARK_25 = 62933,
 
     // SNAPLASHER
-    SPELL_HARDENED_BARK_10                      = 62664,
-    SPELL_HARDENED_BARK_25                      = 64191,
+    SPELL_HARDENED_BARK_10 = 62664,
+    SPELL_HARDENED_BARK_25 = 64191,
 
     // ANCIENT WATER SPIRIT
-    SPELL_TIDAL_WAVE_10                         = 62653,
-    SPELL_TIDAL_WAVE_25                         = 62935,
-    SPELL_TIDAL_WAVE_DAMAGE_10                  = 62654,
-    SPELL_TIDAL_WAVE_DAMAGE_25                  = 62936,
-    SPELL_TIDAL_WAVE_AURA                       = 62655,
+    SPELL_TIDAL_WAVE_10 = 62653,
+    SPELL_TIDAL_WAVE_25 = 62935,
+    SPELL_TIDAL_WAVE_DAMAGE_10 = 62654,
+    SPELL_TIDAL_WAVE_DAMAGE_25 = 62936,
+    SPELL_TIDAL_WAVE_AURA = 62655,
 
     // STORM LASHER
-    SPELL_LIGHTNING_LASH_10                     = 62648,
-    SPELL_LIGHTNING_LASH_25                     = 62939,
-    SPELL_STORMBOLT_10                          = 62649,
-    SPELL_STORMBOLT_25                          = 62938,
+    SPELL_LIGHTNING_LASH_10 = 62648,
+    SPELL_LIGHTNING_LASH_25 = 62939,
+    SPELL_STORMBOLT_10 = 62649,
+    SPELL_STORMBOLT_25 = 62938,
 
     // ANCIENT CONSERVATOR
-    SPELL_CONSERVATOR_GRIP                      = 62532,
-    SPELL_NATURE_FURY_10                        = 62589,
-    SPELL_NATURE_FURY_25                        = 63571,
-    SPELL_POTENT_PHEROMONES                     = 62541,
-    SPELL_HEALTHY_SPORE_VISUAL                  = 62538,
-    SPELL_HEALTHY_SPORE_SUMMON                  = 62566,
+    SPELL_CONSERVATOR_GRIP = 62532,
+    SPELL_NATURE_FURY_10 = 62589,
+    SPELL_NATURE_FURY_25 = 63571,
+    SPELL_POTENT_PHEROMONES = 62541,
+    SPELL_HEALTHY_SPORE_VISUAL = 62538,
+    SPELL_HEALTHY_SPORE_SUMMON = 62566,
 
     // DETONATING LASHER
-    SPELL_DETONATE_10                           = 62598,
-    SPELL_DETONATE_25                           = 62937,
-    SPELL_FLAME_LASH                            = 62608,
+    SPELL_DETONATE_10 = 62598,
+    SPELL_DETONATE_25 = 62937,
+    SPELL_FLAME_LASH = 62608,
 
     // ACHIEVEMENT
-    SPELL_DEFORESTATION_CREDIT                  = 65015,
+    SPELL_DEFORESTATION_CREDIT = 65015,
 };
 
 #define SPELL_GROUND_TREMOR                     RAID_MODE(SPELL_GROUND_TREMOR_10, SPELL_GROUND_TREMOR_25)
@@ -147,100 +147,100 @@ enum FreyaSpells
 enum FreyaEvents
 {
     // FREYA
-    EVENT_FREYA_ADDS_SPAM                       = 1,
-    EVENT_FREYA_LIFEBINDER                      = 2,
-    EVENT_FREYA_NATURE_BOMB                     = 3,
-    EVENT_FREYA_SUNBEAM                         = 4,
-    EVENT_FREYA_BERSERK                         = 5,
+    EVENT_FREYA_ADDS_SPAM = 1,
+    EVENT_FREYA_LIFEBINDER = 2,
+    EVENT_FREYA_NATURE_BOMB = 3,
+    EVENT_FREYA_SUNBEAM = 4,
+    EVENT_FREYA_BERSERK = 5,
     // HARD MODE
-    EVENT_FREYA_GROUND_TREMOR                   = 6,
-    EVENT_FREYA_IRON_ROOT                       = 7,
-    EVENT_FREYA_UNSTABLE_SUN_BEAM               = 8,
-    EVENT_FREYA_RESPAWN_TRIO                    = 9,
+    EVENT_FREYA_GROUND_TREMOR = 6,
+    EVENT_FREYA_IRON_ROOT = 7,
+    EVENT_FREYA_UNSTABLE_SUN_BEAM = 8,
+    EVENT_FREYA_RESPAWN_TRIO = 9,
 
     // STONEBARK
-    EVENT_STONEBARK_FISTS_OF_STONE              = 10,
-    EVENT_STONEBARK_GROUND_TREMOR               = 11,
-    EVENT_STONEBARK_PETRIFIED_BARK              = 12,
+    EVENT_STONEBARK_FISTS_OF_STONE = 10,
+    EVENT_STONEBARK_GROUND_TREMOR = 11,
+    EVENT_STONEBARK_PETRIFIED_BARK = 12,
 
     // BRIGHTLEAF
-    EVENT_BRIGHTLEAF_FLUX                       = 20,
-    EVENT_BRIGHTLEAF_SOLAR_FLARE                = 21,
-    EVENT_BRIGHTLEAF_UNSTABLE_SUN_BEAM          = 22,
-    EVENT_BRIGHTLEAF_DESPAWN_SUN_BEAM           = 23,
+    EVENT_BRIGHTLEAF_FLUX = 20,
+    EVENT_BRIGHTLEAF_SOLAR_FLARE = 21,
+    EVENT_BRIGHTLEAF_UNSTABLE_SUN_BEAM = 22,
+    EVENT_BRIGHTLEAF_DESPAWN_SUN_BEAM = 23,
 
     // IRONBRANCH
-    EVENT_IRONBRANCH_IMPALE                     = 30,
-    EVENT_IRONBRANCH_IRON_ROOT                  = 31,
-    EVENT_IRONBRANCH_THORN_SWARM                = 32,
+    EVENT_IRONBRANCH_IMPALE = 30,
+    EVENT_IRONBRANCH_IRON_ROOT = 31,
+    EVENT_IRONBRANCH_THORN_SWARM = 32,
 
     // SUMMONS
-    EVENT_ANCIENT_CONSERVATOR_NATURE_FURY       = 40,
-    EVENT_ANCIENT_CONSERVATOR_GRIP              = 41,
-    EVENT_WATER_SPIRIT_CHARGE                   = 45,
-    EVENT_WATER_SPIRIT_DAMAGE                   = 46,
-    EVENT_STORM_LASHER_LIGHTNING_LASH           = 50,
-    EVENT_STORM_LASHER_STORMBOLT                = 51,
-    EVENT_DETONATING_LASHER_FLAME_LASH          = 55,
+    EVENT_ANCIENT_CONSERVATOR_NATURE_FURY = 40,
+    EVENT_ANCIENT_CONSERVATOR_GRIP = 41,
+    EVENT_WATER_SPIRIT_CHARGE = 45,
+    EVENT_WATER_SPIRIT_DAMAGE = 46,
+    EVENT_STORM_LASHER_LIGHTNING_LASH = 50,
+    EVENT_STORM_LASHER_STORMBOLT = 51,
+    EVENT_DETONATING_LASHER_FLAME_LASH = 55,
 };
 
 enum Texts
 {
     // Elder Brightleaf / Elder Ironbranch / Elder Stonebark
-    SAY_ELDER_AGGRO                              = 0,
-    SAY_ELDER_SLAY                               = 1,
-    SAY_ELDER_DEATH                              = 2,
+    SAY_ELDER_AGGRO = 0,
+    SAY_ELDER_SLAY = 1,
+    SAY_ELDER_DEATH = 2,
 
     // Freya
-    SAY_AGGRO                                    = 0,
-    SAY_AGGRO_WITH_ELDER                         = 1,
-    SAY_SLAY                                     = 2,
-    SAY_DEATH                                    = 3,
-    SAY_BERSERK                                  = 4,
-    SAY_SUMMON_CONSERVATOR                       = 5,
-    SAY_SUMMON_TRIO                              = 6,
-    SAY_SUMMON_LASHERS                           = 7,
-    EMOTE_LIFEBINDERS_GIFT                       = 8,
-    EMOTE_ALLIES_OF_NATURE                       = 9,
-    EMOTE_GROUND_TREMOR                          = 10,
-    EMOTE_IRON_ROOTS                             = 11,
+    SAY_AGGRO = 0,
+    SAY_AGGRO_WITH_ELDER = 1,
+    SAY_SLAY = 2,
+    SAY_DEATH = 3,
+    SAY_BERSERK = 4,
+    SAY_SUMMON_CONSERVATOR = 5,
+    SAY_SUMMON_TRIO = 6,
+    SAY_SUMMON_LASHERS = 7,
+    EMOTE_LIFEBINDERS_GIFT = 8,
+    EMOTE_ALLIES_OF_NATURE = 9,
+    EMOTE_GROUND_TREMOR = 10,
+    EMOTE_IRON_ROOTS = 11,
 };
 
 enum FreyaNPCs
 {
-    NPC_NATURE_BOMB                             = 34129,
-    NPC_IRON_ROOT_TRIGGER                       = 33088,
-    NPC_FREYA_UNSTABLE_SUN_BEAM                 = 33170,
-    NPC_UNSTABLE_SUN_BRIGHTLEAF                 = 33050, // 10 SECS?
+    NPC_NATURE_BOMB = 34129,
+    NPC_IRON_ROOT_TRIGGER = 33088,
+    NPC_FREYA_UNSTABLE_SUN_BEAM = 33170,
+    NPC_UNSTABLE_SUN_BRIGHTLEAF = 33050, // 10 SECS?
 
     // FIRST WAVE
-    NPC_STORM_LASHER                            = 32919,
-    NPC_ANCIENT_WATER_SPIRIT                    = 33202,
-    NPC_SNAPLASHER                              = 32916,
+    NPC_STORM_LASHER = 32919,
+    NPC_ANCIENT_WATER_SPIRIT = 33202,
+    NPC_SNAPLASHER = 32916,
 
     // SEC WAVE
-    NPC_ANCIENT_CONSERVATOR                     = 33203,
-    NPC_HEALTHY_SPORE                           = 33215,
+    NPC_ANCIENT_CONSERVATOR = 33203,
+    NPC_HEALTHY_SPORE = 33215,
 
     // THIRD WAVE
-    NPC_DETONATING_LASHER                       = 32918,
+    NPC_DETONATING_LASHER = 32918,
 };
 
 enum Misc
 {
-    ACTION_REMOVE_10_STACK                      = 10,
-    ACTION_REMOVE_25_STACK                      = 25,
-    ACTION_REMOVE_2_STACK                       = 2,
-    ACTION_RESPAWN_TRIO                         = 1,
-    ACTION_LUMBERJACKED                         = -1,
+    ACTION_REMOVE_10_STACK = 10,
+    ACTION_REMOVE_25_STACK = 25,
+    ACTION_REMOVE_2_STACK = 2,
+    ACTION_RESPAWN_TRIO = 1,
+    ACTION_LUMBERJACKED = -1,
 
-    EVENT_PHASE_ADDS                            = 1,
-    EVENT_PHASE_FINAL                           = 2,
+    EVENT_PHASE_ADDS = 1,
+    EVENT_PHASE_FINAL = 2,
 
-    DATA_GET_ELDER_COUNT                        = 1,
-    DATA_BACK_TO_NATURE                         = 2,
+    DATA_GET_ELDER_COUNT = 1,
+    DATA_BACK_TO_NATURE = 2,
 
-    CRITERIA_LUMBERJACKED                       = 21686,
+    CRITERIA_LUMBERJACKED = 21686,
 };
 
 class boss_freya : public CreatureScript
@@ -347,7 +347,8 @@ public:
                     uint32 chestId = RAID_MODE(GO_FREYA_CHEST, GO_FREYA_CHEST_HERO);
                     chestId -= 2 * _elderCount; // offset
 
-                    if (GameObject* go = me->SummonGameObject(chestId, 2345.61f, -71.20f, 425.104f, 3.0f, 0, 0, 0, 0, 0))
+                    if (GameObject* go =
+                            me->SummonGameObject(chestId, 2345.61f, -71.20f, 425.104f, 3.0f, 0, 0, 0, 0, 0))
                     {
                         go->ReplaceAllGameObjectFlags((GameObjectFlags)0);
                         go->SetLootRecipient(me->GetMap());
@@ -360,10 +361,7 @@ public:
                         m_pInstance->SetData(TYPE_FREYA, DONE);
                     }
 
-                    scheduler.Schedule(14s, [this](TaskContext /*context*/)
-                    {
-                        DoCastSelf(SPELL_TELEPORT);
-                    });
+                    scheduler.Schedule(14s, [this](TaskContext /*context*/) { DoCastSelf(SPELL_TELEPORT); });
                 }
             }
         }
@@ -396,22 +394,41 @@ public:
             if (_waveNumber == 1)
             {
                 Talk(SAY_SUMMON_TRIO);
-                me->SummonCreature(NPC_ANCIENT_WATER_SPIRIT, me->GetPositionX() + urand(5, 15), me->GetPositionY() + urand(5, 15), me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()));
-                me->SummonCreature(NPC_STORM_LASHER, me->GetPositionX() + urand(5, 15), me->GetPositionY() + urand(5, 15), me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()));
-                me->SummonCreature(NPC_SNAPLASHER, me->GetPositionX() + urand(5, 15), me->GetPositionY() + urand(5, 15), me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()));
+                me->SummonCreature(NPC_ANCIENT_WATER_SPIRIT,
+                    me->GetPositionX() + urand(5, 15),
+                    me->GetPositionY() + urand(5, 15),
+                    me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()));
+                me->SummonCreature(NPC_STORM_LASHER,
+                    me->GetPositionX() + urand(5, 15),
+                    me->GetPositionY() + urand(5, 15),
+                    me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()));
+                me->SummonCreature(NPC_SNAPLASHER,
+                    me->GetPositionX() + urand(5, 15),
+                    me->GetPositionY() + urand(5, 15),
+                    me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()));
             }
             // Ancient Conservator
             else if (_waveNumber == 2)
             {
                 Talk(SAY_SUMMON_CONSERVATOR);
-                me->SummonCreature(NPC_ANCIENT_CONSERVATOR, me->GetPositionX() + urand(5, 15), me->GetPositionY() + urand(5, 15), me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()), 0, TEMPSUMMON_CORPSE_DESPAWN);
+                me->SummonCreature(NPC_ANCIENT_CONSERVATOR,
+                    me->GetPositionX() + urand(5, 15),
+                    me->GetPositionY() + urand(5, 15),
+                    me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()),
+                    0,
+                    TEMPSUMMON_CORPSE_DESPAWN);
             }
             // Detonating Lashers
             else if (_waveNumber == 3)
             {
                 Talk(SAY_SUMMON_LASHERS);
                 for (uint8 i = 0; i < 10; ++i)
-                    me->SummonCreature(NPC_DETONATING_LASHER, me->GetPositionX() + urand(5, 20), me->GetPositionY() + urand(5, 20), me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()), 0, TEMPSUMMON_CORPSE_DESPAWN);
+                    me->SummonCreature(NPC_DETONATING_LASHER,
+                        me->GetPositionX() + urand(5, 20),
+                        me->GetPositionY() + urand(5, 20),
+                        me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()),
+                        0,
+                        TEMPSUMMON_CORPSE_DESPAWN);
             }
         }
 
@@ -426,7 +443,8 @@ public:
                 if (_lumberjacked == 1)
                     m_pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, CRITERIA_LUMBERJACKED);
                 else if (_lumberjacked == 3)
-                    m_pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65296 /*SPELL_LUMBERJACKED*/, 0, me);
+                    m_pInstance->DoUpdateAchievementCriteria(
+                        ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65296 /*SPELL_LUMBERJACKED*/, 0, me);
                 return;
             }
 
@@ -447,7 +465,8 @@ public:
             {
                 ++_deforestation;
                 if (_deforestation >= 6 && m_pInstance)
-                    m_pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, SPELL_DEFORESTATION_CREDIT, 0, me);
+                    m_pInstance->DoUpdateAchievementCriteria(
+                        ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, SPELL_DEFORESTATION_CREDIT, 0, me);
                 // do not return
             }
 
@@ -486,7 +505,10 @@ public:
             return 0;
         }
 
-        void JustReachedHome() override { me->setActive(false); }
+        void JustReachedHome() override
+        {
+            me->setActive(false);
+        }
 
         void JustEngagedWith(Unit*) override
         {
@@ -543,19 +565,16 @@ public:
             }
 
             if (_elderGUID[0] || _elderGUID[1] || _elderGUID[2])
-            {
                 Talk(SAY_AGGRO_WITH_ELDER);
-            }
             else
-            {
                 Talk(SAY_AGGRO);
-            }
         }
 
         void SpellHitTarget(Unit* target, SpellInfo const* spell) override
         {
             if (spell->Id == SPELL_NATURE_BOMB_FLIGHT)
-                me->SummonCreature(NPC_NATURE_BOMB, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ());
+                me->SummonCreature(
+                    NPC_NATURE_BOMB, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ());
         }
 
         void UpdateAI(uint32 diff) override
@@ -584,25 +603,26 @@ public:
                     events.Repeat(1min);
                     break;
                 case EVENT_FREYA_LIFEBINDER:
+                {
+                    Talk(EMOTE_LIFEBINDERS_GIFT);
+                    events.Repeat(45s);
+                    float x, y, z;
+                    for (uint8 i = 0; i < 10; ++i)
                     {
-                        Talk(EMOTE_LIFEBINDERS_GIFT);
-                        events.Repeat(45s);
-                        float x, y, z;
-                        for (uint8 i = 0; i < 10; ++i)
+                        x = me->GetPositionX() + urand(7, 25);
+                        y = me->GetPositionY() + urand(7, 25);
+                        z = me->GetMapHeight(x, y, me->GetPositionZ());
+                        if (me->IsWithinLOS(x, y, z))
                         {
-                            x = me->GetPositionX() + urand(7, 25);
-                            y = me->GetPositionY() + urand(7, 25);
-                            z = me->GetMapHeight(x, y, me->GetPositionZ());
-                            if (me->IsWithinLOS(x, y, z))
-                            {
-                                me->CastSpell(x, y, z, SPELL_SUMMON_LIFEBINDER, true);
-                                return;
-                            }
+                            me->CastSpell(x, y, z, SPELL_SUMMON_LIFEBINDER, true);
+                            return;
                         }
-
-                        me->CastSpell(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), SPELL_SUMMON_LIFEBINDER, true);
-                        break;
                     }
+
+                    me->CastSpell(
+                        me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), SPELL_SUMMON_LIFEBINDER, true);
+                    break;
+                }
                 case EVENT_FREYA_SUNBEAM:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random))
                         me->CastSpell(target, SPELL_SUNBEAM, false);
@@ -617,22 +637,22 @@ public:
                     _trioKilled = 0;
                     break;
                 case EVENT_FREYA_NATURE_BOMB:
+                {
+                    uint8 _minCount = me->GetMap()->Is25ManRaid() ? urand(7, 10) : urand(3, 4);
+                    Map::PlayerList const& pList = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr)
                     {
-                        uint8 _minCount = me->GetMap()->Is25ManRaid() ? urand(7, 10) : urand(3, 4);
-                        Map::PlayerList const& pList = me->GetMap()->GetPlayers();
-                        for(Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr)
-                        {
-                            if (me->GetDistance(itr->GetSource()) > 70 || !itr->GetSource()->IsAlive())
-                                continue;
+                        if (me->GetDistance(itr->GetSource()) > 70 || !itr->GetSource()->IsAlive())
+                            continue;
 
-                            me->CastSpell(itr->GetSource(), SPELL_NATURE_BOMB_FLIGHT, true);
+                        me->CastSpell(itr->GetSource(), SPELL_NATURE_BOMB_FLIGHT, true);
 
-                            if (!(--_minCount))
-                                break;
-                        }
-                        events.Repeat(18s);
-                        break;
+                        if (!(--_minCount))
+                            break;
                     }
+                    events.Repeat(18s);
+                    break;
+                }
                 case EVENT_FREYA_BERSERK:
                     Talk(SAY_BERSERK);
                     me->CastSpell(me, SPELL_BERSERK, true);
@@ -648,11 +668,29 @@ public:
                     events.Repeat(45s, 55s);
                     break;
                 case EVENT_FREYA_UNSTABLE_SUN_BEAM:
-                    me->SummonCreature(NPC_FREYA_UNSTABLE_SUN_BEAM, me->GetPositionX() + urand(7, 25), me->GetPositionY() + urand(7, 25), me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
+                    me->SummonCreature(NPC_FREYA_UNSTABLE_SUN_BEAM,
+                        me->GetPositionX() + urand(7, 25),
+                        me->GetPositionY() + urand(7, 25),
+                        me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()),
+                        0,
+                        TEMPSUMMON_TIMED_DESPAWN,
+                        10000);
                     if (Is25ManRaid())
                     {
-                        me->SummonCreature(NPC_FREYA_UNSTABLE_SUN_BEAM, me->GetPositionX() + urand(7, 25), me->GetPositionY() + urand(7, 25), me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
-                        me->SummonCreature(NPC_FREYA_UNSTABLE_SUN_BEAM, me->GetPositionX() + urand(7, 25), me->GetPositionY() + urand(7, 25), me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
+                        me->SummonCreature(NPC_FREYA_UNSTABLE_SUN_BEAM,
+                            me->GetPositionX() + urand(7, 25),
+                            me->GetPositionY() + urand(7, 25),
+                            me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()),
+                            0,
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            10000);
+                        me->SummonCreature(NPC_FREYA_UNSTABLE_SUN_BEAM,
+                            me->GetPositionX() + urand(7, 25),
+                            me->GetPositionY() + urand(7, 25),
+                            me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()),
+                            0,
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            10000);
                     }
                     events.Repeat(38s, 48s);
                     break;
@@ -680,9 +718,7 @@ public:
 
     struct boss_freya_elder_stonebarkAI : public ScriptedAI
     {
-        boss_freya_elder_stonebarkAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-        }
+        boss_freya_elder_stonebarkAI(Creature* pCreature) : ScriptedAI(pCreature) { }
 
         EventMap events;
         uint8 _chargesCount;
@@ -709,7 +745,8 @@ public:
 
             // Lumberjacked
             if (me->GetInstanceScript())
-                if (Creature* freya = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_FREYA)))
+                if (Creature* freya =
+                        ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_FREYA)))
                     freya->AI()->DoAction(ACTION_LUMBERJACKED);
         }
 
@@ -725,7 +762,9 @@ public:
 
         void DamageTaken(Unit*, uint32& damage, DamageEffectType damageType, SpellSchoolMask damageSchoolMask) override
         {
-            if ((damageType == DIRECT_DAMAGE || (damageType == SPELL_DIRECT_DAMAGE && damageSchoolMask & SPELL_SCHOOL_MASK_NORMAL)) && _chargesCount)
+            if ((damageType == DIRECT_DAMAGE ||
+                    (damageType == SPELL_DIRECT_DAMAGE && damageSchoolMask & SPELL_SCHOOL_MASK_NORMAL)) &&
+                _chargesCount)
             {
                 --_chargesCount;
                 damage = 0;
@@ -776,9 +815,7 @@ public:
 
     struct boss_freya_elder_brightleafAI : public ScriptedAI
     {
-        boss_freya_elder_brightleafAI(Creature* pCreature) : ScriptedAI(pCreature), summons(pCreature)
-        {
-        }
+        boss_freya_elder_brightleafAI(Creature* pCreature) : ScriptedAI(pCreature), summons(pCreature) { }
 
         EventMap events;
         SummonList summons;
@@ -805,7 +842,8 @@ public:
 
             // Lumberjacked
             if (me->GetInstanceScript())
-                if (Creature* freya = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_FREYA)))
+                if (Creature* freya =
+                        ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_FREYA)))
                     freya->AI()->DoAction(ACTION_LUMBERJACKED);
         }
 
@@ -838,20 +876,25 @@ public:
                 case EVENT_BRIGHTLEAF_SOLAR_FLARE:
                     if (Aura* aur = me->GetAura(SPELL_BRIGHTLEAF_FLUX))
                     {
-                        me->CastCustomSpell(SPELL_SOLAR_FLARE, SPELLVALUE_MAX_TARGETS, aur->GetStackAmount(), me, false);
+                        me->CastCustomSpell(
+                            SPELL_SOLAR_FLARE, SPELLVALUE_MAX_TARGETS, aur->GetStackAmount(), me, false);
                         me->RemoveAura(aur);
                     }
                     events.Repeat(15s);
                     break;
                 case EVENT_BRIGHTLEAF_UNSTABLE_SUN_BEAM:
                     events.ScheduleEvent(EVENT_BRIGHTLEAF_DESPAWN_SUN_BEAM, 15s);
-                    if (Creature* beam = me->SummonCreature(NPC_UNSTABLE_SUN_BRIGHTLEAF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()))
+                    if (Creature* beam = me->SummonCreature(
+                            NPC_UNSTABLE_SUN_BRIGHTLEAF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()))
                     {
                         beam->CastSpell(beam, SPELL_UNSTABLE_SUN_BEAM_AURA, true);
                         beam->CastSpell(beam, SPELL_PHOTOSYNTHESIS, true);
                         summons.Summon(beam);
                     }
-                    if (Creature* beam = me->SummonCreature(NPC_UNSTABLE_SUN_BRIGHTLEAF, me->GetPositionX() + 8, me->GetPositionY() + 8, me->GetPositionZ()))
+                    if (Creature* beam = me->SummonCreature(NPC_UNSTABLE_SUN_BRIGHTLEAF,
+                            me->GetPositionX() + 8,
+                            me->GetPositionY() + 8,
+                            me->GetPositionZ()))
                     {
                         beam->CastSpell(beam, SPELL_UNSTABLE_SUN_BEAM_AURA, true);
                         beam->CastSpell(beam, SPELL_PHOTOSYNTHESIS, true);
@@ -889,9 +932,7 @@ public:
 
     struct boss_freya_elder_ironbranchAI : public ScriptedAI
     {
-        boss_freya_elder_ironbranchAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-        }
+        boss_freya_elder_ironbranchAI(Creature* pCreature) : ScriptedAI(pCreature) { }
 
         EventMap events;
 
@@ -916,7 +957,8 @@ public:
 
             // Lumberjacked
             if (me->GetInstanceScript())
-                if (Creature* freya = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_FREYA)))
+                if (Creature* freya =
+                        ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_FREYA)))
                     freya->AI()->DoAction(ACTION_LUMBERJACKED);
         }
 
@@ -951,7 +993,11 @@ public:
                     break;
                 case EVENT_IRONBRANCH_THORN_SWARM:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
-                        me->CastSpell(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), SPELL_THORN_SWARM, false);
+                        me->CastSpell(target->GetPositionX(),
+                            target->GetPositionY(),
+                            target->GetPositionZ(),
+                            SPELL_THORN_SWARM,
+                            false);
                     events.Repeat(14s);
                     break;
             }
@@ -983,9 +1029,11 @@ public:
             if (Unit* target = ObjectAccessor::GetUnit(*me, me->ToTempSummon()->GetSummonerGUID()))
             {
                 if (me->GetEntry() == NPC_IRON_ROOT_TRIGGER) // Iron Branch spell
-                    target->RemoveAura(target->GetMap()->Is25ManRaid() ? SPELL_IRON_ROOTS_DAMAGE_25 : SPELL_IRON_ROOTS_DAMAGE_10);
+                    target->RemoveAura(
+                        target->GetMap()->Is25ManRaid() ? SPELL_IRON_ROOTS_DAMAGE_25 : SPELL_IRON_ROOTS_DAMAGE_10);
                 else
-                    target->RemoveAura(target->GetMap()->Is25ManRaid() ? SPELL_IRON_ROOTS_FREYA_DAMAGE_25 : SPELL_IRON_ROOTS_FREYA_DAMAGE_10);
+                    target->RemoveAura(target->GetMap()->Is25ManRaid() ? SPELL_IRON_ROOTS_FREYA_DAMAGE_25
+                                                                       : SPELL_IRON_ROOTS_FREYA_DAMAGE_10);
             }
         }
     };
@@ -1003,9 +1051,7 @@ public:
 
     struct boss_freya_lifebinderAI : public NullCreatureAI
     {
-        boss_freya_lifebinderAI(Creature* pCreature) : NullCreatureAI(pCreature)
-        {
-        }
+        boss_freya_lifebinderAI(Creature* pCreature) : NullCreatureAI(pCreature) { }
 
         uint32 _healTimer;
 
@@ -1023,7 +1069,8 @@ public:
             if (_healTimer >= 12000)
             {
                 me->RemoveAurasDueToSpell(SPELL_AUTO_GROW);
-                me->CastSpell(me, me->GetMap()->Is25ManRaid() ? SPELL_LIFEBINDER_HEAL_25 : SPELL_LIFEBINDER_HEAL_10, true);
+                me->CastSpell(
+                    me, me->GetMap()->Is25ManRaid() ? SPELL_LIFEBINDER_HEAL_25 : SPELL_LIFEBINDER_HEAL_10, true);
                 me->DespawnOrUnsummon(2000);
                 _healTimer = 0;
             }
@@ -1043,9 +1090,7 @@ public:
 
     struct boss_freya_healthy_sporeAI : public NullCreatureAI
     {
-        boss_freya_healthy_sporeAI(Creature* pCreature) : NullCreatureAI(pCreature)
-        {
-        }
+        boss_freya_healthy_sporeAI(Creature* pCreature) : NullCreatureAI(pCreature) { }
 
         uint32 _despawnTimer;
 
@@ -1085,7 +1130,8 @@ public:
         boss_freya_summonsAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
             _freyaGUID = me->GetInstanceScript() ? me->GetInstanceScript()->GetGuidData(TYPE_FREYA) : ObjectGuid::Empty;
-            _isTrio = me->GetEntry() == NPC_ANCIENT_WATER_SPIRIT || me->GetEntry() == NPC_STORM_LASHER || me->GetEntry() == NPC_SNAPLASHER;
+            _isTrio = me->GetEntry() == NPC_ANCIENT_WATER_SPIRIT || me->GetEntry() == NPC_STORM_LASHER ||
+                      me->GetEntry() == NPC_SNAPLASHER;
             _hasDied = false;
         }
 
@@ -1177,8 +1223,8 @@ public:
                     events.Repeat(14s);
                     break;
                 case EVENT_ANCIENT_CONSERVATOR_GRIP:
-                   me->CastSpell(me, SPELL_CONSERVATOR_GRIP, true);
-                   break;
+                    me->CastSpell(me, SPELL_CONSERVATOR_GRIP, true);
+                    break;
                 case EVENT_WATER_SPIRIT_CHARGE:
                     me->CastSpell(me, SPELL_TIDAL_WAVE_AURA, true);
                     me->CastSpell(me->GetVictim(), SPELL_TIDAL_WAVE, false);
@@ -1239,17 +1285,28 @@ public:
             me->CastSpell(me, SPELL_GREEN_BANISH_STATE, true);
 
             _explodeTimer = 0;
-            if (GameObject* go = me->SummonGameObject(194902 /*GO_NATURE_BOMB*/, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, 0, 0, 0, 0, 0))
+            if (GameObject* go = me->SummonGameObject(194902 /*GO_NATURE_BOMB*/,
+                    me->GetPositionX(),
+                    me->GetPositionY(),
+                    me->GetPositionZ(),
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0))
                 _goGUID = go->GetGUID();
         }
 
         uint32 Timer;
+
         void UpdateAI(uint32 diff) override
         {
             _explodeTimer += diff;
             if (_explodeTimer >= 11000)
             {
-                me->CastSpell(me, me->GetMap()->Is25ManRaid() ? SPELL_NATURE_BOMB_DAMAGE_25 : SPELL_NATURE_BOMB_DAMAGE_10, false);
+                me->CastSpell(
+                    me, me->GetMap()->Is25ManRaid() ? SPELL_NATURE_BOMB_DAMAGE_25 : SPELL_NATURE_BOMB_DAMAGE_10, false);
                 me->DespawnOrUnsummon(1000);
                 _explodeTimer = 0;
             }
@@ -1268,9 +1325,10 @@ public:
 class achievement_freya_getting_back_to_nature : public AchievementCriteriaScript
 {
 public:
-    achievement_freya_getting_back_to_nature() : AchievementCriteriaScript("achievement_freya_getting_back_to_nature") {}
+    achievement_freya_getting_back_to_nature() : AchievementCriteriaScript("achievement_freya_getting_back_to_nature")
+    { }
 
-    bool OnCheck(Player*  /*player*/, Unit* target /*Freya*/, uint32 /*criteria_id*/) override
+    bool OnCheck(Player* /*player*/, Unit* target /*Freya*/, uint32 /*criteria_id*/) override
     {
         if (target)
             if (target->GetAI()->GetData(DATA_BACK_TO_NATURE))
@@ -1282,12 +1340,12 @@ public:
 class achievement_freya_knock_on_wood : public AchievementCriteriaScript
 {
 public:
-    achievement_freya_knock_on_wood(char const* name, uint32 count) : AchievementCriteriaScript(name),
+    achievement_freya_knock_on_wood(char const* name, uint32 count) :
+        AchievementCriteriaScript(name),
         _elderCount(count)
-    {
-    }
+    { }
 
-    bool OnCheck(Player*  /*player*/, Unit* target /*Freya*/, uint32 /*criteria_id*/) override
+    bool OnCheck(Player* /*player*/, Unit* target /*Freya*/, uint32 /*criteria_id*/) override
     {
         return target && _elderCount <= target->GetAI()->GetData(DATA_GET_ELDER_COUNT);
     }

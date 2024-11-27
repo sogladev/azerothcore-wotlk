@@ -31,7 +31,8 @@
 //==============================================================
 
 // The hatingUnit is not used yet
-float ThreatCalcHelper::calcThreat(Unit* hatedUnit, float threat, SpellSchoolMask schoolMask, SpellInfo const* threatSpell)
+float ThreatCalcHelper::calcThreat(
+    Unit* hatedUnit, float threat, SpellSchoolMask schoolMask, SpellInfo const* threatSpell)
 {
     if (threatSpell)
     {
@@ -41,7 +42,8 @@ float ThreatCalcHelper::calcThreat(Unit* hatedUnit, float threat, SpellSchoolMas
 
         // Energize is not affected by Mods
         for (uint8 i = 0; i < MAX_SPELL_EFFECTS; i++)
-            if (threatSpell->Effects[i].Effect == SPELL_EFFECT_ENERGIZE || threatSpell->Effects[i].ApplyAuraName == SPELL_AURA_PERIODIC_ENERGIZE)
+            if (threatSpell->Effects[i].Effect == SPELL_EFFECT_ENERGIZE ||
+                threatSpell->Effects[i].ApplyAuraName == SPELL_AURA_PERIODIC_ENERGIZE)
                 return threat;
 
         if (Player* modOwner = hatedUnit->GetSpellModOwner())
@@ -131,7 +133,10 @@ void HostileReference::fireStatusChanged(ThreatRefStatusChangeEvent& threatRefSt
 }
 
 // -- compatibility layer for combat rewrite
-Unit* HostileReference::GetOwner() const { return GetSource()->GetOwner(); }
+Unit* HostileReference::GetOwner() const
+{
+    return GetSource()->GetOwner();
+}
 
 //============================================================
 
@@ -155,9 +160,7 @@ void HostileReference::AddThreat(float modThreat)
         {
             Unit* victimOwner = target->GetCharmerOrOwner();
             if (victimOwner && victimOwner->IsAlive())
-            {
                 GetSource()->AddThreat(victimOwner, 0.0f); // create a threat to the owner of a pet, if the pet attacks
-            }
         }
     }
 }
@@ -189,19 +192,16 @@ void HostileReference::updateOnlineStatus()
     // ref is valid
     // target is no player or not gamemaster
     // target is not in flight
-    if (isValid()
-            && (!getTarget()->IsPlayer() || !getTarget()->ToPlayer()->IsGameMaster())
-            && !getTarget()->IsInFlight()
-            && getTarget()->IsInMap(GetSourceUnit())
-            && getTarget()->InSamePhase(GetSourceUnit())
-       )
+    if (isValid() && (!getTarget()->IsPlayer() || !getTarget()->ToPlayer()->IsGameMaster()) &&
+        !getTarget()->IsInFlight() && getTarget()->IsInMap(GetSourceUnit()) &&
+        getTarget()->InSamePhase(GetSourceUnit()))
     {
         Creature* creature = GetSourceUnit()->ToCreature();
         online = getTarget()->isInAccessiblePlaceFor(creature);
         if (!online)
         {
             if (creature->IsWithinCombatRange(getTarget(), creature->m_CombatDistance))
-                online = true;                              // not accessible but stays online
+                online = true; // not accessible but stays online
         }
     }
 
@@ -272,9 +272,7 @@ HostileReference* ThreatContainer::getReferenceByTarget(ObjectGuid const& guid) 
     {
         HostileReference* ref = (*i);
         if (ref && ref->getUnitGuid() == guid)
-        {
             return ref;
-        }
     }
 
     return nullptr;
@@ -326,9 +324,13 @@ HostileReference* ThreatContainer::SelectNextVictim(Creature* attacker, HostileR
     if (currentVictim)
     {
         Unit* cvUnit = currentVictim->getTarget();
-        if (!attacker->CanCreatureAttack(cvUnit)) // pussywizard: if currentVictim is not valid => don't compare the threat with it, just take the highest threat valid target
+        if (!attacker->CanCreatureAttack(
+                cvUnit)) // pussywizard: if currentVictim is not valid => don't compare the threat with it, just take the highest threat valid target
             currentVictim = nullptr;
-        else if (cvUnit->IsImmunedToDamageOrSchool(attacker->GetMeleeDamageSchoolMask()) || cvUnit->HasNegativeAuraWithInterruptFlag(AURA_INTERRUPT_FLAG_TAKE_DAMAGE)) // pussywizard: no 10%/30% if currentVictim is immune to damage or has auras breakable by damage
+        else if (
+            cvUnit->IsImmunedToDamageOrSchool(attacker->GetMeleeDamageSchoolMask()) ||
+            cvUnit->HasNegativeAuraWithInterruptFlag(
+                AURA_INTERRUPT_FLAG_TAKE_DAMAGE)) // pussywizard: no 10%/30% if currentVictim is immune to damage or has auras breakable by damage
             currentVictim = nullptr;
     }
 
@@ -345,7 +347,9 @@ HostileReference* ThreatContainer::SelectNextVictim(Creature* attacker, HostileR
 
         // pussywizard: don't go to threat comparison if this ref is immune to damage or has aura breakable on damage (second choice target)
         // pussywizard: if this is the last entry on the threat list, then all targets are second choice, set bool to true and loop threat list again, ignoring this section
-        if (!noPriorityTargetFound && (target->IsImmunedToDamageOrSchool(attacker->GetMeleeDamageSchoolMask()) || target->HasNegativeAuraWithInterruptFlag(AURA_INTERRUPT_FLAG_TAKE_DAMAGE) || target->HasAuraTypeWithCaster(SPELL_AURA_IGNORED, attacker->GetGUID())))
+        if (!noPriorityTargetFound && (target->IsImmunedToDamageOrSchool(attacker->GetMeleeDamageSchoolMask()) ||
+                                          target->HasNegativeAuraWithInterruptFlag(AURA_INTERRUPT_FLAG_TAKE_DAMAGE) ||
+                                          target->HasAuraTypeWithCaster(SPELL_AURA_IGNORED, attacker->GetGUID())))
         {
             if (iter != lastRef)
             {
@@ -365,19 +369,22 @@ HostileReference* ThreatContainer::SelectNextVictim(Creature* attacker, HostileR
         {
             if (currentVictim) // pussywizard: if not nullptr then target must have 10%/30% more threat
             {
-                if (currentVictim == currentRef) // pussywizard: nothing found previously was good and enough, currentRef passed all necessary tests, so end now
+                if (currentVictim ==
+                    currentRef) // pussywizard: nothing found previously was good and enough, currentRef passed all necessary tests, so end now
                 {
                     found = true;
                     break;
                 }
 
                 // pussywizard: implement 110% threat rule for targets in melee range and 130% rule for targets in ranged distances
-                if (currentRef->GetThreat() > 1.3f * currentVictim->GetThreat()) // pussywizard: enough in all cases, end
+                if (currentRef->GetThreat() >
+                    1.3f * currentVictim->GetThreat()) // pussywizard: enough in all cases, end
                 {
                     found = true;
                     break;
                 }
-                else if (currentRef->GetThreat() > 1.1f * currentVictim->GetThreat()) // pussywizard: enought only if target in melee range
+                else if (currentRef->GetThreat() >
+                         1.1f * currentVictim->GetThreat()) // pussywizard: enought only if target in melee range
                 {
                     if (attacker->IsWithinMeleeRange(target))
                     {
@@ -410,9 +417,7 @@ HostileReference* ThreatContainer::SelectNextVictim(Creature* attacker, HostileR
 //=================== ThreatMgr ==========================
 //============================================================
 
-ThreatMgr::ThreatMgr(Unit* owner) : iCurrentVictim(nullptr), iOwner(owner), iUpdateTimer(THREAT_UPDATE_INTERVAL)
-{
-}
+ThreatMgr::ThreatMgr(Unit* owner) : iCurrentVictim(nullptr), iOwner(owner), iUpdateTimer(THREAT_UPDATE_INTERVAL) { }
 
 void ThreatMgr::ClearAllThreat()
 {
@@ -442,9 +447,7 @@ void ThreatMgr::AddThreat(Unit* victim, float threat, SpellSchoolMask schoolMask
     if (Creature* hatingCreature = iOwner->ToCreature())
     {
         if (hatingCreature->IsAIEnabled)
-        {
             hatingCreature->AI()->CalculateThreat(victim, threat, threatSpell);
-        }
     }
 
     DoAddThreat(victim, threat);
@@ -460,8 +463,7 @@ void ThreatMgr::DoAddThreat(Unit* victim, float threat)
     {
         if (tempSummonVictim->IsVisibleBySummonerOnly())
         {
-            if (!GetOwner()->ToTempSummon() ||
-                !GetOwner()->ToTempSummon()->IsVisibleBySummonerOnly() ||
+            if (!GetOwner()->ToTempSummon() || !GetOwner()->ToTempSummon()->IsVisibleBySummonerOnly() ||
                 tempSummonVictim->GetSummonerGUID() != GetOwner()->ToTempSummon()->GetSummonerGUID())
             {
                 redirectThreadPct = 100;
@@ -572,9 +574,7 @@ void ThreatMgr::tauntFadeOut(Unit* taunter)
 void ThreatMgr::setCurrentVictim(HostileReference* pHostileReference)
 {
     if (pHostileReference && pHostileReference != iCurrentVictim)
-    {
         iOwner->SendChangeCurrentVictimOpcode(pHostileReference);
-    }
     iCurrentVictim = pHostileReference;
 }
 
@@ -584,7 +584,7 @@ void ThreatMgr::setCurrentVictim(HostileReference* pHostileReference)
 
 void ThreatMgr::processThreatEvent(ThreatRefStatusChangeEvent* threatRefStatusChangeEvent)
 {
-    threatRefStatusChangeEvent->setThreatMgr(this);     // now we can set the threat manager
+    threatRefStatusChangeEvent->setThreatMgr(this); // now we can set the threat manager
 
     HostileReference* hostileRef = threatRefStatusChangeEvent->getReference();
 
@@ -592,8 +592,8 @@ void ThreatMgr::processThreatEvent(ThreatRefStatusChangeEvent* threatRefStatusCh
     {
         case UEV_THREAT_REF_THREAT_CHANGE:
             if ((getCurrentVictim() == hostileRef && threatRefStatusChangeEvent->getFValue() < 0.0f) ||
-                    (getCurrentVictim() != hostileRef && threatRefStatusChangeEvent->getFValue() > 0.0f))
-                setDirty(true);                             // the order in the threat list might have changed
+                (getCurrentVictim() != hostileRef && threatRefStatusChangeEvent->getFValue() > 0.0f))
+                setDirty(true); // the order in the threat list might have changed
             break;
         case UEV_THREAT_REF_ONLINE_STATUS:
             if (!hostileRef->IsOnline())

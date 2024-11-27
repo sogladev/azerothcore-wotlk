@@ -76,12 +76,10 @@ void CombatAI::JustDied(Unit* killer)
 void CombatAI::JustEngagedWith(Unit* who)
 {
     for (SpellVct::iterator i = spells.begin(); i != spells.end(); ++i)
-    {
         if (AISpellInfo[*i].condition == AICOND_AGGRO)
             me->CastSpell(who, *i, false);
         else if (AISpellInfo[*i].condition == AICOND_COMBAT)
             events.ScheduleEvent(*i, AISpellInfo[*i].cooldown + rand() % AISpellInfo[*i].cooldown);
-    }
 }
 
 void CombatAI::UpdateAI(uint32 diff)
@@ -179,7 +177,9 @@ void CasterAI::UpdateAI(uint32 diff)
 ArcherAI::ArcherAI(Creature* c) : CreatureAI(c)
 {
     if (!me->m_spells[0])
-        LOG_ERROR("entities.unit.ai", "ArcherAI set for creature (entry = {}) with spell1=0. AI will do nothing", me->GetEntry());
+        LOG_ERROR("entities.unit.ai",
+            "ArcherAI set for creature (entry = {}) with spell1=0. AI will do nothing",
+            me->GetEntry());
 
     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(me->m_spells[0]);
     m_minRange = spellInfo ? spellInfo->GetMinRange(false) : 0;
@@ -228,7 +228,9 @@ void ArcherAI::UpdateAI(uint32 /*diff*/)
 TurretAI::TurretAI(Creature* c) : CreatureAI(c)
 {
     if (!me->m_spells[0])
-        LOG_ERROR("entities.unit.ai", "TurretAI set for creature (entry = {}) with spell1=0. AI will do nothing", me->GetEntry());
+        LOG_ERROR("entities.unit.ai",
+            "TurretAI set for creature (entry = {}) with spell1=0. AI will do nothing",
+            me->GetEntry());
 
     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(me->m_spells[0]);
     m_minRange = spellInfo ? spellInfo->GetMinRange(false) : 0;
@@ -239,8 +241,8 @@ TurretAI::TurretAI(Creature* c) : CreatureAI(c)
 bool TurretAI::CanAIAttack(Unit const* /*who*/) const
 {
     /// @todo: use one function to replace it
-    if (!me->IsWithinCombatRange(me->GetVictim(), me->m_CombatDistance)
-            || (m_minRange && me->IsWithinCombatRange(me->GetVictim(), m_minRange)))
+    if (!me->IsWithinCombatRange(me->GetVictim(), me->m_CombatDistance) ||
+        (m_minRange && me->IsWithinCombatRange(me->GetVictim(), m_minRange)))
         return false;
     return true;
 }
@@ -291,16 +293,17 @@ void VehicleAI::UpdateAI(uint32 diff)
 void VehicleAI::OnCharmed(bool apply)
 {
     if (!me->GetVehicleKit()->IsVehicleInUse() && !apply && !conditions.empty()) // was used and has conditions
-        m_DoDismiss = true; // needs reset
+        m_DoDismiss = true;                                                      // needs reset
     else if (apply)
         m_DoDismiss = false; // in use again
 
-    m_DismissTimer = VEHICLE_DISMISS_TIME;//reset timer
+    m_DismissTimer = VEHICLE_DISMISS_TIME; //reset timer
 }
 
 void VehicleAI::LoadConditions()
 {
-    conditions = sConditionMgr->GetConditionsForNotGroupedEntry(CONDITION_SOURCE_TYPE_CREATURE_TEMPLATE_VEHICLE, me->GetEntry());
+    conditions =
+        sConditionMgr->GetConditionsForNotGroupedEntry(CONDITION_SOURCE_TYPE_CREATURE_TEMPLATE_VEHICLE, me->GetEntry());
     if (!conditions.empty())
         LOG_DEBUG("condition", "VehicleAI::LoadConditions: loaded {} conditions", uint32(conditions.size()));
 }

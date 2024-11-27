@@ -19,19 +19,17 @@
 #include "InstanceScript.h"
 #include "arcatraz.h"
 
-DoorData const doorData[] =
-{
-    { GO_CONTAINMENT_CORE_SECURITY_FIELD_ALPHA, DATA_SOCCOTHRATES,  DOOR_TYPE_PASSAGE },
-    { GO_CONTAINMENT_CORE_SECURITY_FIELD_BETA,  DATA_DALLIAH,       DOOR_TYPE_PASSAGE },
-    { 0,                                        0,                  DOOR_TYPE_ROOM } // END
+DoorData const doorData[] = {
+    {GO_CONTAINMENT_CORE_SECURITY_FIELD_ALPHA, DATA_SOCCOTHRATES, DOOR_TYPE_PASSAGE},
+    {GO_CONTAINMENT_CORE_SECURITY_FIELD_BETA,  DATA_DALLIAH,      DOOR_TYPE_PASSAGE},
+    {0,                                        0,                 DOOR_TYPE_ROOM   }  // END
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_DALLIAH,      DATA_DALLIAH          },
-    { NPC_SOCCOTHRATES, DATA_SOCCOTHRATES     },
-    { NPC_MELLICHAR,    DATA_WARDEN_MELLICHAR },
-    { 0,                0                     }
+ObjectData const creatureData[] = {
+    {NPC_DALLIAH,      DATA_DALLIAH         },
+    {NPC_SOCCOTHRATES, DATA_SOCCOTHRATES    },
+    {NPC_MELLICHAR,    DATA_WARDEN_MELLICHAR},
+    {0,                0                    }
 };
 
 class instance_arcatraz : public InstanceMapScript

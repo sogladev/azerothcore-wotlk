@@ -26,12 +26,12 @@
 
 enum Spells_VBM
 {
-    SPELL_REVIVE                = 51918
+    SPELL_REVIVE = 51918
 };
 
 enum Says_VBM
 {
-    WHISPER_REVIVE              = 0
+    WHISPER_REVIVE = 0
 };
 
 class npc_valkyr_battle_maiden : public CreatureScript
@@ -76,16 +76,12 @@ public:
                 Player* player = nullptr;
                 if (me->IsSummon())
                 {
-                    if (Unit * summoner = me->ToTempSummon()->GetSummonerUnit())
-                    {
+                    if (Unit* summoner = me->ToTempSummon()->GetSummonerUnit())
                         player = summoner->ToPlayer();
-                    }
                 }
 
                 if (!player)
-                {
                     phase = 3;
-                }
 
                 switch (phase)
                 {
@@ -96,17 +92,13 @@ public:
                         break;
                     case 1:
                         if (player)
-                        {
                             player->GetClosePoint(x, y, z, me->GetObjectSize());
-                        }
                         z += 2.5f;
                         x -= 2.0f;
                         y -= 1.5f;
                         me->GetMotionMaster()->MovePoint(0, x, y, z);
                         if (player)
-                        {
                             me->SetTarget(player->GetGUID());
-                        }
                         me->SetVisible(true);
                         FlyBackTimer = 4500;
                         break;
@@ -132,7 +124,8 @@ public:
                 }
                 ++phase;
             }
-            else FlyBackTimer -= diff;
+            else
+                FlyBackTimer -= diff;
         }
     };
 };

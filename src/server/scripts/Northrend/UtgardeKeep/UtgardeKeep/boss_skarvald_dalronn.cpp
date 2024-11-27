@@ -22,39 +22,39 @@
 enum eTexts
 {
     // Skarvald
-    YELL_SKARVALD_AGGRO                         = 0,
-    YELL_SKARVALD_DAL_DIED                      = 1,
-    YELL_SKARVALD_SKA_DIEDFIRST                 = 2,
-    YELL_SKARVALD_KILL                          = 3,
-    YELL_SKARVALD_DAL_DIEDFIRST                 = 4,
+    YELL_SKARVALD_AGGRO = 0,
+    YELL_SKARVALD_DAL_DIED = 1,
+    YELL_SKARVALD_SKA_DIEDFIRST = 2,
+    YELL_SKARVALD_KILL = 3,
+    YELL_SKARVALD_DAL_DIEDFIRST = 4,
 
     // Dalronn
-    YELL_DALRONN_AGGRO                          = 0,
-    YELL_DALRONN_SKA_DIED                       = 1,
-    YELL_DALRONN_DAL_DIEDFIRST                  = 2,
-    YELL_DALRONN_KILL                           = 3,
-    YELL_DALRONN_SKA_DIEDFIRST                  = 4
+    YELL_DALRONN_AGGRO = 0,
+    YELL_DALRONN_SKA_DIED = 1,
+    YELL_DALRONN_DAL_DIEDFIRST = 2,
+    YELL_DALRONN_KILL = 3,
+    YELL_DALRONN_SKA_DIEDFIRST = 4
 };
 
 enum eSpells
 {
     // Skarvald
-    SPELL_CHARGE                                = 43651,
-    SPELL_STONE_STRIKE                          = 48583,
-    SPELL_ENRAGE                                = 48193,
-    SPELL_SUMMON_SKARVALD_GHOST                 = 48613,
+    SPELL_CHARGE = 43651,
+    SPELL_STONE_STRIKE = 48583,
+    SPELL_ENRAGE = 48193,
+    SPELL_SUMMON_SKARVALD_GHOST = 48613,
     // Dalronn
-    SPELL_SHADOW_BOLT_N                         = 43649,
-    SPELL_SHADOW_BOLT_H                         = 59575,
-    SPELL_DEBILITATE                            = 43650,
-    SPELL_SUMMON_SKELETONS                      = 52611,
-    SPELL_SUMMON_DALRONN_GHOST                  = 48612
+    SPELL_SHADOW_BOLT_N = 43649,
+    SPELL_SHADOW_BOLT_H = 59575,
+    SPELL_DEBILITATE = 43650,
+    SPELL_SUMMON_SKELETONS = 52611,
+    SPELL_SUMMON_DALRONN_GHOST = 48612
 };
 
 enum eEvents
 {
     // Skarvald
-    EVENT_SHARVALD_CHARGE                       = 1,
+    EVENT_SHARVALD_CHARGE = 1,
     EVENT_STONE_STRIKE,
     EVENT_ENRAGE,
     // Dalronn
@@ -93,18 +93,14 @@ public:
             if (me->GetEntry() == NPC_SKARVALD)
             {
                 if (pInstance)
-                {
                     pInstance->SetData(DATA_DALRONN_AND_SKARVALD, NOT_STARTED);
-                }
             }
             else // NPC_SKARVALD_GHOST
-            {
                 if (Unit* target = me->SelectNearestTarget(50.0f))
                 {
                     me->AddThreat(target, 0.0f);
                     AttackStart(target);
                 }
-            }
         }
 
         void DoAction(int32 param) override
@@ -126,9 +122,7 @@ public:
             {
                 Talk(YELL_SKARVALD_AGGRO);
                 if (IsHeroic())
-                {
                     events.ScheduleEvent(EVENT_ENRAGE, 1s);
-                }
             }
             if (pInstance)
             {
@@ -147,12 +141,10 @@ public:
         void KilledUnit(Unit* /*victim*/) override
         {
             if (me->GetEntry() == NPC_SKARVALD)
-            {
                 Talk(YELL_SKARVALD_KILL);
-            }
         }
 
-        void JustDied(Unit*  /*Killer*/) override
+        void JustDied(Unit* /*Killer*/) override
         {
             if (me->GetEntry() != NPC_SKARVALD)
                 return;
@@ -258,18 +250,14 @@ public:
             if (me->GetEntry() == NPC_DALRONN)
             {
                 if (pInstance)
-                {
                     pInstance->SetData(DATA_DALRONN_AND_SKARVALD, NOT_STARTED);
-                }
             }
             else // NPC_DALRONN_GHOST
-            {
                 if (Unit* target = me->SelectNearestTarget(50.0f))
                 {
                     me->AddThreat(target, 0.0f);
                     AttackStart(target);
                 }
-            }
         }
 
         void DoAction(int32 param) override
@@ -291,13 +279,9 @@ public:
             events.RescheduleEvent(EVENT_SHADOW_BOLT, 1s);
             events.RescheduleEvent(EVENT_DEBILITATE, 5s);
             if (IsHeroic())
-            {
                 events.RescheduleEvent(EVENT_SUMMON_SKELETONS, 10s);
-            }
             if (me->GetEntry() == NPC_DALRONN)
-            {
                 events.RescheduleEvent(EVENT_YELL_DALRONN_AGGRO, 5s);
-            }
             if (pInstance)
             {
                 pInstance->SetData(DATA_DALRONN_AND_SKARVALD, IN_PROGRESS);
@@ -315,9 +299,7 @@ public:
         void KilledUnit(Unit* /*victim*/) override
         {
             if (me->GetEntry() == NPC_DALRONN)
-            {
                 Talk(YELL_DALRONN_KILL);
-            }
         }
 
         void JustSummoned(Creature* minions) override
@@ -326,7 +308,7 @@ public:
             minions->SetInCombatWithZone();
         }
 
-        void JustDied(Unit*  /*Killer*/) override
+        void JustDied(Unit* /*Killer*/) override
         {
             if (me->GetEntry() != NPC_DALRONN)
                 return;
@@ -373,9 +355,7 @@ public:
                     break;
                 case EVENT_SHADOW_BOLT:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 40.0f, true))
-                    {
                         me->CastSpell(target, DUNGEON_MODE(SPELL_SHADOW_BOLT_N, SPELL_SHADOW_BOLT_H), false);
-                    }
                     events.Repeat(2s);
                     break;
                 case EVENT_DEBILITATE:

@@ -19,22 +19,22 @@
 #include "GameObjectScript.h"
 #include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
+#include "SpellMgr.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "blood_furnace.h"
-#include "SpellMgr.h"
 
 enum Say
 {
-    SAY_AGGRO               = 0
+    SAY_AGGRO = 0
 };
 
 enum Spells
 {
-    SPELL_SLIME_SPRAY       = 30913,
-    SPELL_POISON_CLOUD      = 30916,
-    SPELL_POISON_BOLT       = 30917,
-    SPELL_POISON            = 30914
+    SPELL_SLIME_SPRAY = 30913,
+    SPELL_POISON_CLOUD = 30916,
+    SPELL_POISON_BOLT = 30917,
+    SPELL_POISON = 30914
 };
 
 struct boss_broggok : public BossAI
@@ -72,15 +72,21 @@ struct boss_broggok : public BossAI
                 instance->SetBossState(DATA_BROGGOK, IN_PROGRESS);
                 break;
             case ACTION_ACTIVATE_BROGGOK:
-                scheduler.Schedule(10s, [this](TaskContext context)
+                scheduler
+                    .Schedule(10s,
+                        [this](TaskContext context)
                 {
                     DoCastVictim(SPELL_SLIME_SPRAY);
                     context.Repeat(7s, 12s);
-                }).Schedule(5s, [this](TaskContext context)
+                })
+                    .Schedule(5s,
+                        [this](TaskContext context)
                 {
                     DoCastRandomTarget(SPELL_POISON_BOLT);
                     context.Repeat(6s, 11s);
-                }).Schedule(7s, [this](TaskContext context)
+                })
+                    .Schedule(7s,
+                        [this](TaskContext context)
                 {
                     DoCastSelf(SPELL_POISON_CLOUD);
                     context.Repeat(20s);
@@ -96,7 +102,7 @@ struct boss_broggok : public BossAI
 class go_broggok_lever : public GameObjectScript
 {
 public:
-    go_broggok_lever() : GameObjectScript("go_broggok_lever") {}
+    go_broggok_lever() : GameObjectScript("go_broggok_lever") { }
 
     bool OnGossipHello(Player* /*player*/, GameObject* go) override
     {
@@ -105,9 +111,7 @@ public:
             if (instance->GetBossState(DATA_BROGGOK) == NOT_STARTED)
             {
                 if (Creature* broggok = instance->GetCreature(DATA_BROGGOK))
-                {
                     broggok->AI()->DoAction(ACTION_PREPARE_BROGGOK);
-                }
             }
         }
         go->UseDoorOrButton();
@@ -134,12 +138,14 @@ class spell_broggok_poison_cloud : public AuraScript
 
         uint32 triggerSpell = GetSpellInfo()->Effects[aurEff->GetEffIndex()].TriggerSpell;
         int32 mod = int32(((float(aurEff->GetTickNumber()) / aurEff->GetTotalTicks()) * 0.9f + 0.1f) * 10000 * 2 / 3);
-        GetTarget()->CastCustomSpell(triggerSpell, SPELLVALUE_RADIUS_MOD, mod, (Unit*)nullptr, TRIGGERED_FULL_MASK, nullptr, aurEff);
+        GetTarget()->CastCustomSpell(
+            triggerSpell, SPELLVALUE_RADIUS_MOD, mod, (Unit*)nullptr, TRIGGERED_FULL_MASK, nullptr, aurEff);
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_broggok_poison_cloud::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_broggok_poison_cloud::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 

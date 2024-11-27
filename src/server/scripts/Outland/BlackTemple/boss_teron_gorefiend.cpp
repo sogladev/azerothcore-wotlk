@@ -16,51 +16,51 @@
  */
 
 #include "CreatureScript.h"
-#include "ScriptedCreature.h"
-#include "SpellScriptLoader.h"
-#include "black_temple.h"
 #include "PassiveAI.h"
 #include "Player.h"
+#include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
 #include "SpellAuras.h"
 #include "SpellScript.h"
+#include "SpellScriptLoader.h"
+#include "black_temple.h"
 
 enum Says
 {
-    SAY_INTRO                       = 0,
-    SAY_AGGRO                       = 1,
-    SAY_SLAY                        = 2,
-    SAY_BLOSSOM                     = 3,
-    SAY_INCINERATE                  = 4,
-    SAY_CRUSHING                    = 5,
-    SAY_DEATH                       = 6
+    SAY_INTRO = 0,
+    SAY_AGGRO = 1,
+    SAY_SLAY = 2,
+    SAY_BLOSSOM = 3,
+    SAY_INCINERATE = 4,
+    SAY_CRUSHING = 5,
+    SAY_DEATH = 6
 };
 
 enum Spells
 {
-    SPELL_INCINERATE                = 40239,
-    SPELL_SUMMON_DOOM_BLOSSOM       = 40188,
-    SPELL_CRUSHING_SHADOWS          = 40243,
-    SPELL_SHADOW_OF_DEATH           = 40251,
-    SPELL_SHADOW_OF_DEATH_REMOVE    = 41999,
-    SPELL_SUMMON_SPIRIT             = 40266,
-    SPELL_SUMMON_SKELETON1          = 40270,
-    SPELL_SUMMON_SKELETON2          = 41948,
-    SPELL_SUMMON_SKELETON3          = 41949,
-    SPELL_SUMMON_SKELETON4          = 41950,
-    SPELL_POSSESS_SPIRIT_IMMUNE     = 40282,
-    SPELL_SPIRITUAL_VENGEANCE       = 40268,
-    SPELL_BRIEF_STUN                = 41421,
-    SPELL_BERSERK                   = 45078,
+    SPELL_INCINERATE = 40239,
+    SPELL_SUMMON_DOOM_BLOSSOM = 40188,
+    SPELL_CRUSHING_SHADOWS = 40243,
+    SPELL_SHADOW_OF_DEATH = 40251,
+    SPELL_SHADOW_OF_DEATH_REMOVE = 41999,
+    SPELL_SUMMON_SPIRIT = 40266,
+    SPELL_SUMMON_SKELETON1 = 40270,
+    SPELL_SUMMON_SKELETON2 = 41948,
+    SPELL_SUMMON_SKELETON3 = 41949,
+    SPELL_SUMMON_SKELETON4 = 41950,
+    SPELL_POSSESS_SPIRIT_IMMUNE = 40282,
+    SPELL_SPIRITUAL_VENGEANCE = 40268,
+    SPELL_BRIEF_STUN = 41421,
+    SPELL_BERSERK = 45078,
 
-    SPELL_SPIRIT_LANCE              = 40157,
-    SPELL_SPIRIT_CHAINS             = 40175,
-    SPELL_SPIRIT_VOLLEY             = 40314
+    SPELL_SPIRIT_LANCE = 40157,
+    SPELL_SPIRIT_CHAINS = 40175,
+    SPELL_SPIRIT_VOLLEY = 40314
 };
 
 enum Misc
 {
-    SET_DATA_INTRO                  = 1
+    SET_DATA_INTRO = 1
 };
 
 struct ShadowOfDeathSelector
@@ -87,7 +87,9 @@ struct boss_teron_gorefiend : public BossAI
 
     void JustEngagedWith(Unit* who) override
     {
-        ScheduleTimedEvent(20s, 30s, [&]
+        ScheduleTimedEvent(20s,
+            30s,
+            [&]
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
             {
@@ -95,47 +97,53 @@ struct boss_teron_gorefiend : public BossAI
                     Talk(SAY_INCINERATE);
                 me->CastSpell(target, SPELL_INCINERATE, false);
             }
-        }, 20s, 50s);
+        },
+            20s,
+            50s);
 
-        ScheduleTimedEvent(5s, 10s, [&]
+        ScheduleTimedEvent(5s,
+            10s,
+            [&]
         {
             if (roll_chance_i(50))
                 Talk(SAY_BLOSSOM);
             me->CastSpell(me, SPELL_SUMMON_DOOM_BLOSSOM, false);
-        }, 35s);
+        },
+            35s);
 
-        ScheduleTimedEvent(17s, 22s, [&]
+        ScheduleTimedEvent(17s,
+            22s,
+            [&]
         {
             if (roll_chance_i(20))
                 Talk(SAY_CRUSHING);
             me->CastCustomSpell(SPELL_CRUSHING_SHADOWS, SPELLVALUE_MAX_TARGETS, 5, me, false);
-        }, 10s, 26s);
+        },
+            10s,
+            26s);
 
-        ScheduleTimedEvent(10s, [&]
+        ScheduleTimedEvent(10s,
+            [&]
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, ShadowOfDeathSelector()))
                 me->CastSpell(target, SPELL_SHADOW_OF_DEATH, false);
-        }, 30s, 50s);
+        },
+            30s,
+            50s);
 
-        ScheduleTimedEvent(10min, [&]
-        {
-            DoCastSelf(SPELL_BERSERK);
-        }, 5min);
+        ScheduleTimedEvent(10min, [&] { DoCastSelf(SPELL_BERSERK); }, 5min);
 
         BossAI::JustEngagedWith(who);
     }
 
-    void KilledUnit(Unit*  victim) override
+    void KilledUnit(Unit* victim) override
     {
         if (!_recentlySpoken && victim->IsPlayer())
         {
             Talk(SAY_SLAY);
             _recentlySpoken = true;
 
-            ScheduleUniqueTimedEvent(6s, [&]
-            {
-                _recentlySpoken = false;
-            }, 1);
+            ScheduleUniqueTimedEvent(6s, [&] { _recentlySpoken = false; }, 1);
         }
     }
 
@@ -172,9 +180,9 @@ struct boss_teron_gorefiend : public BossAI
         DoMeleeAttackIfReady();
     }
 
-    private:
-        bool _recentlySpoken;
-        bool _intro;
+private:
+    bool _recentlySpoken;
+    bool _intro;
 };
 
 struct npc_vengeful_spirit : public NullCreatureAI
@@ -192,7 +200,7 @@ class spell_teron_gorefiend_shadow_of_death : public AuraScript
 {
     PrepareAuraScript(spell_teron_gorefiend_shadow_of_death);
 
-    void Absorb(AuraEffect* /*aurEff*/, DamageInfo&   /*dmgInfo*/, uint32&   /*absorbAmount*/)
+    void Absorb(AuraEffect* /*aurEff*/, DamageInfo& /*dmgInfo*/, uint32& /*absorbAmount*/)
     {
         PreventDefaultAction();
     }
@@ -215,7 +223,10 @@ class spell_teron_gorefiend_shadow_of_death : public AuraScript
     void Register() override
     {
         OnEffectAbsorb += AuraEffectAbsorbFn(spell_teron_gorefiend_shadow_of_death::Absorb, EFFECT_0);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_teron_gorefiend_shadow_of_death::HandleEffectRemove, EFFECT_0, SPELL_AURA_SCHOOL_ABSORB, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_teron_gorefiend_shadow_of_death::HandleEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_SCHOOL_ABSORB,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -229,7 +240,7 @@ class spell_teron_gorefiend_spirit_lance : public AuraScript
             amount -= (amount / effect->GetTotalTicks()) * effect->GetTickNumber();
     }
 
-    void Update(AuraEffect const*  /*effect*/)
+    void Update(AuraEffect const* /*effect*/)
     {
         PreventDefaultAction();
         if (AuraEffect* effect = GetAura()->GetEffect(EFFECT_1))
@@ -238,8 +249,10 @@ class spell_teron_gorefiend_spirit_lance : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_teron_gorefiend_spirit_lance::CalculateAmount, EFFECT_1, SPELL_AURA_MOD_DECREASE_SPEED);
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_teron_gorefiend_spirit_lance::Update, EFFECT_2, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        DoEffectCalcAmount += AuraEffectCalcAmountFn(
+            spell_teron_gorefiend_spirit_lance::CalculateAmount, EFFECT_1, SPELL_AURA_MOD_DECREASE_SPEED);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_teron_gorefiend_spirit_lance::Update, EFFECT_2, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -254,7 +267,10 @@ class spell_teron_gorefiend_spiritual_vengeance : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_teron_gorefiend_spiritual_vengeance::HandleEffectRemove, EFFECT_2, SPELL_AURA_MOD_PACIFY_SILENCE, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_teron_gorefiend_spiritual_vengeance::HandleEffectRemove,
+            EFFECT_2,
+            SPELL_AURA_MOD_PACIFY_SILENCE,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -288,7 +304,10 @@ class spell_teron_gorefiend_shadowy_construct : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_teron_gorefiend_shadowy_construct::HandleEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(spell_teron_gorefiend_shadowy_construct::HandleEffectApply,
+            EFFECT_0,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -298,12 +317,7 @@ class spell_teron_gorefiend_shadow_of_death_remove : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo(
-        {
-            SPELL_SHADOW_OF_DEATH,
-            SPELL_POSSESS_SPIRIT_IMMUNE,
-            SPELL_SPIRITUAL_VENGEANCE
-        });
+        return ValidateSpellInfo({SPELL_SHADOW_OF_DEATH, SPELL_POSSESS_SPIRIT_IMMUNE, SPELL_SPIRITUAL_VENGEANCE});
     }
 
     void HandleOnHit()

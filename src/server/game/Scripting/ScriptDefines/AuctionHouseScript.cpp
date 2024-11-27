@@ -40,7 +40,8 @@ void ScriptMgr::OnAuctionSuccessful(AuctionHouseObject* ah, AuctionEntry* entry)
     ASSERT(ah);
     ASSERT(entry);
 
-    CALL_ENABLED_HOOKS(AuctionHouseScript, AUCTIONHOUSEHOOK_ON_AUCTION_SUCCESSFUL, script->OnAuctionSuccessful(ah, entry));
+    CALL_ENABLED_HOOKS(
+        AuctionHouseScript, AUCTIONHOUSEHOOK_ON_AUCTION_SUCCESSFUL, script->OnAuctionSuccessful(ah, entry));
 }
 
 void ScriptMgr::OnAuctionExpire(AuctionHouseObject* ah, AuctionEntry* entry)
@@ -51,43 +52,76 @@ void ScriptMgr::OnAuctionExpire(AuctionHouseObject* ah, AuctionEntry* entry)
     CALL_ENABLED_HOOKS(AuctionHouseScript, AUCTIONHOUSEHOOK_ON_AUCTION_EXPIRE, script->OnAuctionExpire(ah, entry));
 }
 
-void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionWonMail(AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction, Player* bidder, uint32& bidder_accId, bool& sendNotification, bool& updateAchievementCriteria, bool& sendMail)
+void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionWonMail(AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction,
+    Player* bidder, uint32& bidder_accId, bool& sendNotification, bool& updateAchievementCriteria, bool& sendMail)
 {
-    CALL_ENABLED_HOOKS(AuctionHouseScript, AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_WON_MAIL, script->OnBeforeAuctionHouseMgrSendAuctionWonMail(auctionHouseMgr, auction, bidder, bidder_accId, sendNotification, updateAchievementCriteria, sendMail));
+    CALL_ENABLED_HOOKS(AuctionHouseScript,
+        AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_WON_MAIL,
+        script->OnBeforeAuctionHouseMgrSendAuctionWonMail(
+            auctionHouseMgr, auction, bidder, bidder_accId, sendNotification, updateAchievementCriteria, sendMail));
 }
 
-void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionSalePendingMail(AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction, Player* owner, uint32& owner_accId, bool& sendMail)
+void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionSalePendingMail(
+    AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction, Player* owner, uint32& owner_accId, bool& sendMail)
 {
-    CALL_ENABLED_HOOKS(AuctionHouseScript, AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_SALE_PENDING_MAIL, script->OnBeforeAuctionHouseMgrSendAuctionSalePendingMail(auctionHouseMgr, auction, owner, owner_accId, sendMail));
+    CALL_ENABLED_HOOKS(AuctionHouseScript,
+        AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_SALE_PENDING_MAIL,
+        script->OnBeforeAuctionHouseMgrSendAuctionSalePendingMail(
+            auctionHouseMgr, auction, owner, owner_accId, sendMail));
 }
 
-void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionSuccessfulMail(AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction, Player* owner, uint32& owner_accId, uint32& profit, bool& sendNotification, bool& updateAchievementCriteria, bool& sendMail)
+void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionSuccessfulMail(AuctionHouseMgr* auctionHouseMgr,
+    AuctionEntry* auction, Player* owner, uint32& owner_accId, uint32& profit, bool& sendNotification,
+    bool& updateAchievementCriteria, bool& sendMail)
 {
-    CALL_ENABLED_HOOKS(AuctionHouseScript, AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_SUCCESSFUL_MAIL, script->OnBeforeAuctionHouseMgrSendAuctionSuccessfulMail(auctionHouseMgr, auction, owner, owner_accId, profit, sendNotification, updateAchievementCriteria, sendMail));
+    CALL_ENABLED_HOOKS(AuctionHouseScript,
+        AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_SUCCESSFUL_MAIL,
+        script->OnBeforeAuctionHouseMgrSendAuctionSuccessfulMail(auctionHouseMgr,
+            auction,
+            owner,
+            owner_accId,
+            profit,
+            sendNotification,
+            updateAchievementCriteria,
+            sendMail));
 }
 
-void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionExpiredMail(AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction, Player* owner, uint32& owner_accId, bool& sendNotification, bool& sendMail)
+void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionExpiredMail(AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction,
+    Player* owner, uint32& owner_accId, bool& sendNotification, bool& sendMail)
 {
-    CALL_ENABLED_HOOKS(AuctionHouseScript, AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_EXPIRED_MAIL, script->OnBeforeAuctionHouseMgrSendAuctionExpiredMail(auctionHouseMgr, auction, owner, owner_accId, sendNotification, sendMail));
+    CALL_ENABLED_HOOKS(AuctionHouseScript,
+        AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_EXPIRED_MAIL,
+        script->OnBeforeAuctionHouseMgrSendAuctionExpiredMail(
+            auctionHouseMgr, auction, owner, owner_accId, sendNotification, sendMail));
 }
 
-void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionOutbiddedMail(AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction, Player* oldBidder, uint32& oldBidder_accId, Player* newBidder, uint32& newPrice, bool& sendNotification, bool& sendMail)
+void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionOutbiddedMail(AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction,
+    Player* oldBidder, uint32& oldBidder_accId, Player* newBidder, uint32& newPrice, bool& sendNotification,
+    bool& sendMail)
 {
-    CALL_ENABLED_HOOKS(AuctionHouseScript, AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_OUTBIDDED_MAIL, script->OnBeforeAuctionHouseMgrSendAuctionOutbiddedMail(auctionHouseMgr, auction, oldBidder, oldBidder_accId, newBidder, newPrice, sendNotification, sendMail));
+    CALL_ENABLED_HOOKS(AuctionHouseScript,
+        AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_OUTBIDDED_MAIL,
+        script->OnBeforeAuctionHouseMgrSendAuctionOutbiddedMail(
+            auctionHouseMgr, auction, oldBidder, oldBidder_accId, newBidder, newPrice, sendNotification, sendMail));
 }
 
-void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionCancelledToBidderMail(AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction, Player* bidder, uint32& bidder_accId, bool& sendMail)
+void ScriptMgr::OnBeforeAuctionHouseMgrSendAuctionCancelledToBidderMail(
+    AuctionHouseMgr* auctionHouseMgr, AuctionEntry* auction, Player* bidder, uint32& bidder_accId, bool& sendMail)
 {
-    CALL_ENABLED_HOOKS(AuctionHouseScript, AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_CANCELLED_TO_BIDDER_MAIL, script->OnBeforeAuctionHouseMgrSendAuctionCancelledToBidderMail(auctionHouseMgr, auction, bidder, bidder_accId, sendMail));
+    CALL_ENABLED_HOOKS(AuctionHouseScript,
+        AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_SEND_AUCTION_CANCELLED_TO_BIDDER_MAIL,
+        script->OnBeforeAuctionHouseMgrSendAuctionCancelledToBidderMail(
+            auctionHouseMgr, auction, bidder, bidder_accId, sendMail));
 }
 
 void ScriptMgr::OnBeforeAuctionHouseMgrUpdate()
 {
-    CALL_ENABLED_HOOKS(AuctionHouseScript, AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_UPDATE, script->OnBeforeAuctionHouseMgrUpdate());
+    CALL_ENABLED_HOOKS(
+        AuctionHouseScript, AUCTIONHOUSEHOOK_ON_BEFORE_AUCTIONHOUSEMGR_UPDATE, script->OnBeforeAuctionHouseMgrUpdate());
 }
 
-AuctionHouseScript::AuctionHouseScript(const char* name, std::vector<uint16> enabledHooks)
-    : ScriptObject(name, AUCTIONHOUSEHOOK_END)
+AuctionHouseScript::AuctionHouseScript(char const* name, std::vector<uint16> enabledHooks) :
+    ScriptObject(name, AUCTIONHOUSEHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

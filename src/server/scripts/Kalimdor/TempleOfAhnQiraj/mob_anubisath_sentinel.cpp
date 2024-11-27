@@ -23,34 +23,34 @@
 
 enum Spells
 {
-    SPELL_MENDING_BUFF                  = 2147,
+    SPELL_MENDING_BUFF = 2147,
 
-    SPELL_KNOCK_BUFF                    = 21737,
-    SPELL_KNOCK                         = 25778,
-    SPELL_MANAB_BUFF                    = 812,
-    SPELL_MANAB                         = 25779,
+    SPELL_KNOCK_BUFF = 21737,
+    SPELL_KNOCK = 25778,
+    SPELL_MANAB_BUFF = 812,
+    SPELL_MANAB = 25779,
 
-    SPELL_REFLECTAF_BUFF                = 13022,
-    SPELL_REFLECTSFr_BUFF               = 19595,
-    SPELL_THORNS_BUFF                   = 25777,
+    SPELL_REFLECTAF_BUFF = 13022,
+    SPELL_REFLECTSFr_BUFF = 19595,
+    SPELL_THORNS_BUFF = 25777,
 
-    SPELL_THUNDER_BUFF                  = 2834,
-    SPELL_THUNDER                       = 8732,
+    SPELL_THUNDER_BUFF = 2834,
+    SPELL_THUNDER = 8732,
 
-    SPELL_MSTRIKE_BUFF                  = 9347,
-    SPELL_MSTRIKE                       = 24573,
+    SPELL_MSTRIKE_BUFF = 9347,
+    SPELL_MSTRIKE = 24573,
 
-    SPELL_STORM_BUFF                    = 2148,
-    SPELL_STORM                         = 26546,
+    SPELL_STORM_BUFF = 2148,
+    SPELL_STORM = 26546,
 
-    SPELL_SUMMON_SMALL_OBSIDIAN_CHUNK   = 27627, // Server-side
+    SPELL_SUMMON_SMALL_OBSIDIAN_CHUNK = 27627, // Server-side
 
-    SPELL_TRANSFER_POWER                = 2400,
-    SPELL_HEAL_BRETHEN                  = 26565,
-    SPELL_ENRAGE                        = 8599,
+    SPELL_TRANSFER_POWER = 2400,
+    SPELL_HEAL_BRETHEN = 26565,
+    SPELL_ENRAGE = 8599,
 
-    TALK_ENRAGE                         = 0,
-    TALK_SHARE_BUFFS                    = 1
+    TALK_ENRAGE = 0,
+    TALK_SHARE_BUFFS = 1
 };
 
 class npc_anubisath_sentinel : public CreatureScript
@@ -105,7 +105,7 @@ public:
         aqsentinelAI(Creature* creature) : ScriptedAI(creature)
         {
             ClearBuddyList();
-            abselected = 0;                                     // just initialization of variable
+            abselected = 0; // just initialization of variable
         }
 
         ObjectGuid NearbyGUID[3];
@@ -191,7 +191,7 @@ public:
                     }
                 }
             }
-            return 0;                                           // should never happen
+            return 0; // should never happen
         }
 
         void GetOtherSentinels(Unit* who)
@@ -267,9 +267,7 @@ public:
                 if (Creature* sentinel = target->ToCreature())
                 {
                     if (sentinel->IsAIEnabled)
-                    {
                         CAST_AI(aqsentinelAI, sentinel->AI())->GainSentinelAbility(ability);
-                    }
                 }
             }
         }
@@ -290,14 +288,13 @@ public:
             }
 
             if (cast)
-            {
                 Talk(TALK_SHARE_BUFFS);
-            }
 
             DoCastSelf(SPELL_SUMMON_SMALL_OBSIDIAN_CHUNK, true);
         }
 
-        void DamageTaken(Unit* /*doneBy*/, uint32& damage, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
+        void DamageTaken(Unit* /*doneBy*/, uint32& damage, DamageEffectType /*damagetype*/,
+            SpellSchoolMask /*damageSchoolMask*/) override
         {
             if (!_enraged && me->HealthBelowPctDamaged(50, damage))
             {
@@ -329,7 +326,8 @@ class spell_anubisath_mortal_strike : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_anubisath_mortal_strike::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_anubisath_mortal_strike::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 

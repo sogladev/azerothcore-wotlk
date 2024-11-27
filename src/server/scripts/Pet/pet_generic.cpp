@@ -25,6 +25,7 @@
 #include "SpellAuras.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
+
 /*
  * Ordered alphabetically using scriptname.
  * Scriptnames of files in this file should be prefixed with "npc_pet_gen_".
@@ -32,20 +33,21 @@
 
 enum soulTrader
 {
-    SPELL_STEAL_ESSENCE_VISUAL          = 50101,
-    SPELL_CREATE_TOKEN                  = 50063,
-    SPELL_PROC_TRIGGER_ON_KILL_AURA     = 50051,
-    SPELL_OWNER_KILLED_INFORM           = 50050,
-    SPELL_EMOTE_STATE_SWIM_RUN          = 47127,
+    SPELL_STEAL_ESSENCE_VISUAL = 50101,
+    SPELL_CREATE_TOKEN = 50063,
+    SPELL_PROC_TRIGGER_ON_KILL_AURA = 50051,
+    SPELL_OWNER_KILLED_INFORM = 50050,
+    SPELL_EMOTE_STATE_SWIM_RUN = 47127,
 
-    EVENT_INITIAL_TALK                  = 1,
-    EVENT_ADD_TOKEN                     = 2
+    EVENT_INITIAL_TALK = 1,
+    EVENT_ADD_TOKEN = 2
 };
 
 struct npc_pet_gen_soul_trader_beacon : public ScriptedAI
 {
     ObjectGuid ownerGUID;
     EventMap events;
+
     npc_pet_gen_soul_trader_beacon(Creature* c) : ScriptedAI(c)
     {
         events.Reset();
@@ -58,7 +60,10 @@ struct npc_pet_gen_soul_trader_beacon : public ScriptedAI
             }
     }
 
-    Player* GetOwner() const { return ObjectAccessor::GetPlayer(*me, ownerGUID); }
+    Player* GetOwner() const
+    {
+        return ObjectAccessor::GetPlayer(*me, ownerGUID);
+    }
 
     void SpellHitTarget(Unit* target, SpellInfo const* spellInfo) override
     {
@@ -89,59 +94,57 @@ struct npc_pet_gen_soul_trader_beacon : public ScriptedAI
 
 enum eArgentPony
 {
-    ARGENT_PONY_STATE_NONE          = 0,
-    ARGENT_PONY_STATE_ENCH          = 1,
-    ARGENT_PONY_STATE_VENDOR        = 2,
-    ARGENT_PONY_STATE_BANK          = 3,
-    ARGENT_PONY_STATE_MAILBOX       = 4,
+    ARGENT_PONY_STATE_NONE = 0,
+    ARGENT_PONY_STATE_ENCH = 1,
+    ARGENT_PONY_STATE_VENDOR = 2,
+    ARGENT_PONY_STATE_BANK = 3,
+    ARGENT_PONY_STATE_MAILBOX = 4,
 
-    SPELL_PONY_MOUNT                = 16083,
+    SPELL_PONY_MOUNT = 16083,
 
-    SPELL_AURA_POSTMAN_S            = 67376,
-    SPELL_AURA_SHOP_S               = 67377,
-    SPELL_AURA_BANK_S               = 67368,
-    SPELL_AURA_TIRED_S              = 67401,
+    SPELL_AURA_POSTMAN_S = 67376,
+    SPELL_AURA_SHOP_S = 67377,
+    SPELL_AURA_BANK_S = 67368,
+    SPELL_AURA_TIRED_S = 67401,
 
-    SPELL_AURA_BANK_G               = 68849,
-    SPELL_AURA_POSTMAN_G            = 68850,
-    SPELL_AURA_SHOP_G               = 68851,
-    SPELL_AURA_TIRED_G              = 68852,
+    SPELL_AURA_BANK_G = 68849,
+    SPELL_AURA_POSTMAN_G = 68850,
+    SPELL_AURA_SHOP_G = 68851,
+    SPELL_AURA_TIRED_G = 68852,
 
-    ACHIEVEMENT_PONY_UP             = 3736,
+    ACHIEVEMENT_PONY_UP = 3736,
 
-    GOSSIP_ACTION_MAILBOX           = 1001,
+    GOSSIP_ACTION_MAILBOX = 1001,
 
-    NPC_ARGENT_SQUIRE               = 33238,
-    NPC_ARGENT_GRUNTLING            = 33239,
+    NPC_ARGENT_SQUIRE = 33238,
+    NPC_ARGENT_GRUNTLING = 33239,
 };
 
-static uint32 argentPonyService[2][3] =
-{
-    {ARGENT_PONY_STATE_MAILBOX, ARGENT_PONY_STATE_VENDOR, ARGENT_PONY_STATE_BANK},
-    {ARGENT_PONY_STATE_BANK, ARGENT_PONY_STATE_MAILBOX, ARGENT_PONY_STATE_VENDOR}
+static uint32 argentPonyService[2][3] = {
+    {ARGENT_PONY_STATE_MAILBOX, ARGENT_PONY_STATE_VENDOR,  ARGENT_PONY_STATE_BANK  },
+    {ARGENT_PONY_STATE_BANK,    ARGENT_PONY_STATE_MAILBOX, ARGENT_PONY_STATE_VENDOR}
 };
 
 struct argentPonyBanner
 {
     uint32 achievement;
     uint32 spell;
-    const char* text;
+    char const* text;
 };
 
-static argentPonyBanner argentBanners[MAX_RACES] =
-{
-    {0, 0, ""},
-    {2781, 62594, "Stormwind Champion's Pennant"},
-    {2783, 63433, "Orgrimmar Champion's Pennant"},
-    {2780, 63427, "Ironforge Champion's Pennant"},
-    {2777, 63406, "Darnassus Champion's Pennant"},
-    {2787, 63430, "Forsaken Champion's Pennant"},
+static argentPonyBanner argentBanners[MAX_RACES] = {
+    {0,    0,     ""                                },
+    {2781, 62594, "Stormwind Champion's Pennant"    },
+    {2783, 63433, "Orgrimmar Champion's Pennant"    },
+    {2780, 63427, "Ironforge Champion's Pennant"    },
+    {2777, 63406, "Darnassus Champion's Pennant"    },
+    {2787, 63430, "Forsaken Champion's Pennant"     },
     {2786, 63436, "Thunder Bluff Champion's Pennant"},
-    {2779, 63396, "Gnomeregan Champion's Pennant"},
-    {2784, 63399, "Darkspear Champion's Pennant"},
-    {0, 0, ""},
-    {2785, 63403, "Silvermoon Champion's Pennant"},
-    {2778, 63423, "Exodar Champion's Pennant"}
+    {2779, 63396, "Gnomeregan Champion's Pennant"   },
+    {2784, 63399, "Darkspear Champion's Pennant"    },
+    {0,    0,     ""                                },
+    {2785, 63403, "Silvermoon Champion's Pennant"   },
+    {2778, 63423, "Exodar Champion's Pennant"       }
 };
 
 struct npc_pet_gen_argent_pony_bridle : public ScriptedAI
@@ -197,16 +200,13 @@ struct npc_pet_gen_argent_pony_bridle : public ScriptedAI
                                 break;
                             }
                         }
-                        else
+                        else if (uint32 cooldown = player->GetSpellCooldownDelay(SPELL_AURA_BANK_G + i))
                         {
-                            if (uint32 cooldown = player->GetSpellCooldownDelay(SPELL_AURA_BANK_G + i))
-                            {
-                                duration = cooldown * IN_MILLISECONDS;
-                                aura = SPELL_AURA_BANK_G + i;
-                                _state = argentPonyService[TEAM_HORDE][i];
-                                me->ToTempSummon()->UnSummon(duration);
-                                break;
-                            }
+                            duration = cooldown * IN_MILLISECONDS;
+                            aura = SPELL_AURA_BANK_G + i;
+                            _state = argentPonyService[TEAM_HORDE][i];
+                            me->ToTempSummon()->UnSummon(duration);
+                            break;
                         }
                     }
 
@@ -272,16 +272,20 @@ struct npc_pet_gen_argent_pony_bridle : public ScriptedAI
         {
             uint8 _state = creature->AI()->GetData(0 /*GET_DATA_STATE*/);
             if (_state == ARGENT_PONY_STATE_ENCH || _state == ARGENT_PONY_STATE_VENDOR)
-                AddGossipItemFor(player, GOSSIP_ICON_VENDOR, "Visit a trader.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+                AddGossipItemFor(
+                    player, GOSSIP_ICON_VENDOR, "Visit a trader.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
             if (_state == ARGENT_PONY_STATE_ENCH || _state == ARGENT_PONY_STATE_BANK)
-                AddGossipItemFor(player, GOSSIP_ICON_INTERACT_1, "Visit a bank.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_BANK);
+                AddGossipItemFor(
+                    player, GOSSIP_ICON_INTERACT_1, "Visit a bank.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_BANK);
             if (_state == ARGENT_PONY_STATE_ENCH || _state == ARGENT_PONY_STATE_MAILBOX)
-                AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Visit a mailbox.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_MAILBOX);
+                AddGossipItemFor(
+                    player, GOSSIP_ICON_CHAT, "Visit a mailbox.", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_MAILBOX);
         }
 
         for (uint8 i = RACE_HUMAN; i < MAX_RACES; ++i)
             if (creature->AI()->GetData(i) == uint32(true))
-                AddGossipItemFor(player, GOSSIP_ICON_CHAT, argentBanners[i].text, GOSSIP_SENDER_MAIN, argentBanners[i].spell);
+                AddGossipItemFor(
+                    player, GOSSIP_ICON_CHAT, argentBanners[i].text, GOSSIP_SENDER_MAIN, argentBanners[i].spell);
 
         SendGossipMenuFor(player, player->GetGossipTextId(creature), creature->GetGUID());
         return true;
@@ -306,13 +310,13 @@ struct npc_pet_gen_argent_pony_bridle : public ScriptedAI
                 creature->AI()->DoAction(ARGENT_PONY_STATE_BANK);
                 break;
             case GOSSIP_ACTION_MAILBOX:
-                {
-                    creature->ReplaceAllNpcFlags(UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_MAILBOX);
-                    player->GetSession()->SendShowMailBox(creature->GetGUID());
-                    spellId = player->GetTeamId(true) ? SPELL_AURA_POSTMAN_G : SPELL_AURA_POSTMAN_S;
-                    creature->AI()->DoAction(ARGENT_PONY_STATE_MAILBOX);
-                    break;
-                }
+            {
+                creature->ReplaceAllNpcFlags(UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_MAILBOX);
+                player->GetSession()->SendShowMailBox(creature->GetGUID());
+                spellId = player->GetTeamId(true) ? SPELL_AURA_POSTMAN_G : SPELL_AURA_POSTMAN_S;
+                creature->AI()->DoAction(ARGENT_PONY_STATE_MAILBOX);
+                break;
+            }
             default:
                 if (action > 60000)
                 {
@@ -326,7 +330,9 @@ struct npc_pet_gen_argent_pony_bridle : public ScriptedAI
         {
             creature->CastSpell(creature, spellId, true);
             player->AddSpellCooldown(spellId, 0, 3 * MINUTE * IN_MILLISECONDS);
-            player->AddSpellCooldown(player->GetTeamId(true) ? SPELL_AURA_TIRED_G : SPELL_AURA_TIRED_S, 0, 3 * MINUTE * IN_MILLISECONDS + 4 * HOUR * IN_MILLISECONDS);
+            player->AddSpellCooldown(player->GetTeamId(true) ? SPELL_AURA_TIRED_G : SPELL_AURA_TIRED_S,
+                0,
+                3 * MINUTE * IN_MILLISECONDS + 4 * HOUR * IN_MILLISECONDS);
             creature->DespawnOrUnsummon(3 * MINUTE * IN_MILLISECONDS);
         }
         return true;
@@ -342,14 +348,14 @@ private:
 
 enum eTargetFollowingBomb
 {
-    NPC_EXPLOSIVE_SHEEP             = 2675,
-    SPELL_EXPLOSIVE_SHEEP           = 4050,
+    NPC_EXPLOSIVE_SHEEP = 2675,
+    SPELL_EXPLOSIVE_SHEEP = 4050,
 
-    NPC_GOBLIN_BOMB                 = 8937,
-    SPELL_EXPLOSIVE_GOBLIN          = 13259,
+    NPC_GOBLIN_BOMB = 8937,
+    SPELL_EXPLOSIVE_GOBLIN = 13259,
 
-    NPC_HIGH_EXPLOSIVE_SHEEP        = 24715,
-    SPELL_HIGH_EXPLOSIVE_SHEEP      = 44279,
+    NPC_HIGH_EXPLOSIVE_SHEEP = 24715,
+    SPELL_HIGH_EXPLOSIVE_SHEEP = 44279,
 };
 
 struct npc_pet_gen_target_following_bomb : public NullCreatureAI
@@ -394,9 +400,7 @@ struct npc_pet_gen_target_following_bomb : public NullCreatureAI
             else if (!me->HasUnitState(UNIT_STATE_FOLLOW))
             {
                 if (Unit* owner = me->GetCharmerOrOwner())
-                {
                     me->GetMotionMaster()->MoveFollow(owner, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-                }
             }
         }
     }
@@ -425,7 +429,7 @@ struct npc_pet_gen_gnomish_flame_turret : public ScriptedAI
             DoStartNoMovement(who);
     }
 
-    void UpdateAI(uint32  /*diff*/) override
+    void UpdateAI(uint32 /*diff*/) override
     {
         if (!me->GetVictim())
             return;
@@ -460,7 +464,8 @@ struct npc_pet_gen_valkyr_guardian : public ScriptedAI
 
     void OwnerAttacked(Unit* target) override
     {
-        if (!target || (me->GetVictim() && me->GetVictim()->IsAlive() && !me->GetVictim()->HasBreakableByDamageCrowdControlAura()))
+        if (!target ||
+            (me->GetVictim() && me->GetVictim()->IsAlive() && !me->GetVictim()->HasBreakableByDamageCrowdControlAura()))
             return;
 
         AttackStart(target);
@@ -534,9 +539,10 @@ struct npc_pet_gen_imp_in_a_bottle : public NullCreatureAI
                     if (owner->ToPlayer()->GetGroup())
                     {
                         _hasParty = true;
-                        std::string const& text = sCreatureTextMgr->GetLocalizedChatString(me->GetEntry(), 0, 0 /*text group*/, urand(0, 60) /*text id*/, LOCALE_enUS);
+                        std::string const& text = sCreatureTextMgr->GetLocalizedChatString(
+                            me->GetEntry(), 0, 0 /*text group*/, urand(0, 60) /*text id*/, LOCALE_enUS);
 
-                        _data.Initialize(SMSG_MESSAGECHAT, 200);                // guess size
+                        _data.Initialize(SMSG_MESSAGECHAT, 200); // guess size
                         _data << uint8(CHAT_MSG_MONSTER_PARTY);
                         _data << uint32(LANG_UNIVERSAL);
                         _data << me->GetGUID();
@@ -564,7 +570,8 @@ struct npc_pet_gen_imp_in_a_bottle : public NullCreatureAI
             {
                 uint8 limit = 0;
                 if (player->GetGroup())
-                    for (GroupReference* itr = player->GetGroup()->GetFirstMember(); itr != nullptr && limit < 4; itr = itr->next(), ++limit)
+                    for (GroupReference* itr = player->GetGroup()->GetFirstMember(); itr != nullptr && limit < 4;
+                         itr = itr->next(), ++limit)
                         if (Player* groupPlayer = itr->GetSource())
                             if (groupPlayer != player)
                                 groupPlayer->GetSession()->SendPacket(&_data);
@@ -597,7 +604,8 @@ struct npc_pet_gen_wind_rider_cub : public NullCreatureAI
             checkTimer2 = 0;
             if (Unit* owner = me->GetOwner())
             {
-                if (owner->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) || owner->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_SPEED))
+                if (owner->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) ||
+                    owner->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_SPEED))
                 {
                     isFlying = true;
                     me->SetCanFly(true);
@@ -617,7 +625,7 @@ struct npc_pet_gen_wind_rider_cub : public NullCreatureAI
 
 enum turkey
 {
-    GO_BASIC_CAMPFIRE           = 29784,
+    GO_BASIC_CAMPFIRE = 29784,
     SPELL_TURKEY_STARTS_TO_BURN = 61768,
 };
 
@@ -681,15 +689,16 @@ struct npc_pet_gen_plump_turkey : public PassiveAI
 
 struct npc_pet_gen_toxic_wasteling : public PassiveAI
 {
-    npc_pet_gen_toxic_wasteling(Creature* c) : PassiveAI(c)
-    {
-    }
+    npc_pet_gen_toxic_wasteling(Creature* c) : PassiveAI(c) { }
 
     uint32 checkTimer;
 
-    void Reset() override { checkTimer = 3000; }
+    void Reset() override
+    {
+        checkTimer = 3000;
+    }
 
-    void EnterEvadeMode(EvadeReason /*why*/) override {}
+    void EnterEvadeMode(EvadeReason /*why*/) override { }
 
     void MovementInform(uint32 type, uint32 id) override
     {
@@ -721,7 +730,7 @@ struct npc_pet_gen_toxic_wasteling : public PassiveAI
 enum FetchBall
 {
     SPELL_PET_TOY_FETCH_BALL_COME_HERE = 48649,
-    SPELL_PET_TOY_FETCH_BALL_HAS_BALL  = 48708
+    SPELL_PET_TOY_FETCH_BALL_HAS_BALL = 48708
 };
 
 struct npc_pet_gen_fetch_ball : public NullCreatureAI
@@ -781,8 +790,8 @@ struct npc_pet_gen_moth : public NullCreatureAI
 // Darting Hatchling
 enum Darting
 {
-    SPELL_DARTING_ON_SPAWN      = 62586, // Applied on spawn via creature_template_addon
-    SPELL_DARTING_FEAR          = 62585, // Applied every 20s from SPELL_DARTING_ON_SPAWN
+    SPELL_DARTING_ON_SPAWN = 62586, // Applied on spawn via creature_template_addon
+    SPELL_DARTING_FEAR = 62585,     // Applied every 20s from SPELL_DARTING_ON_SPAWN
 };
 
 struct npc_pet_darting_hatchling : public NullCreatureAI
@@ -799,17 +808,13 @@ struct npc_pet_darting_hatchling : public NullCreatureAI
     void SpellHit(Unit* /*caster*/, SpellInfo const* spellInfo) override
     {
         if (spellInfo->Id == SPELL_DARTING_FEAR)
-        {
             goFast = true;
-        }
     }
 
     void UpdateAI(uint32 diff) override
     {
         if (!goFast)
-        {
             return;
-        }
 
         checkTimer += diff;
         if (checkTimer >= 2000)

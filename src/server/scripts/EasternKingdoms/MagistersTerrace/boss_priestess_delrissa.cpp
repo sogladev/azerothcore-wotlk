@@ -21,46 +21,44 @@
 
 enum Yells
 {
-    SAY_AGGRO         = 0,
-    SAY_HELPER_DIED   = 1,
+    SAY_AGGRO = 0,
+    SAY_HELPER_DIED = 1,
     SAY_PLAYER_KILLED = 5,
-    SAY_DEATH         = 10,
+    SAY_DEATH = 10,
 };
 
 enum Spells
 {
     SPELL_MEDALION_OF_IMMUNITY = 46227,
-    SPELL_DISPEL_MAGIC         = 27609,
-    SPELL_FLASH_HEAL           = 17843,
-    SPELL_SHADOW_WORD_PAIN     = 14032,
-    SPELL_POWER_WORD_SHIELD    = 44291,
-    SPELL_RENEW                = 44174
+    SPELL_DISPEL_MAGIC = 27609,
+    SPELL_FLASH_HEAL = 17843,
+    SPELL_SHADOW_WORD_PAIN = 14032,
+    SPELL_POWER_WORD_SHIELD = 44291,
+    SPELL_RENEW = 44174
 };
 
 enum Misc
 {
-    MAX_ACTIVE_HELPERS             = 4,
-    MAX_HELPERS_COUNT              = 8
+    MAX_ACTIVE_HELPERS = 4,
+    MAX_HELPERS_COUNT = 8
 };
 
-const Position helpersLocations[MAX_ACTIVE_HELPERS] =
-{
-    {123.77f, 17.6007f, -19.921f, 4.98f},
+Position const helpersLocations[MAX_ACTIVE_HELPERS] = {
+    {123.77f,  17.6007f, -19.921f, 4.98f},
     {131.731f, 15.0827f, -19.921f, 4.98f},
     {121.563f, 15.6213f, -19.921f, 4.98f},
     {129.988f, 17.2355f, -19.921f, 4.98f},
 };
 
-const uint32 helpersEntries[MAX_HELPERS_COUNT] =
-{
-    24557,                                                  //Kagani Nightstrike
-    24558,                                                  //Elris Duskhallow
-    24554,                                                  //Eramas Brightblaze
-    24561,                                                  //Yazzaj
-    24559,                                                  //Warlord Salaris
-    24555,                                                  //Garaxxas
-    24553,                                                  //Apoko
-    24556,                                                  //Zelfan
+uint32 const helpersEntries[MAX_HELPERS_COUNT] = {
+    24557, //Kagani Nightstrike
+    24558, //Elris Duskhallow
+    24554, //Eramas Brightblaze
+    24561, //Yazzaj
+    24559, //Warlord Salaris
+    24555, //Garaxxas
+    24553, //Apoko
+    24556, //Zelfan
 };
 
 struct boss_priestess_delrissa : public BossAI
@@ -104,7 +102,7 @@ struct boss_priestess_delrissa : public BossAI
         summons.Summon(summon);
     }
 
-    void SummonedCreatureDies(Creature*  /*summon*/, Unit*) override
+    void SummonedCreatureDies(Creature* /*summon*/, Unit*) override
     {
         if (me->IsAlive() && HelpersKilled < SAY_PLAYER_KILLED)
         {
@@ -115,39 +113,49 @@ struct boss_priestess_delrissa : public BossAI
         else if (HelpersKilled == MAX_ACTIVE_HELPERS)
         {
             me->loot.clear();
-            me->loot.FillLoot(me->GetCreatureTemplate()->lootid, LootTemplates_Creature, me->GetLootRecipient(), false, false, 1, me);
+            me->loot.FillLoot(
+                me->GetCreatureTemplate()->lootid, LootTemplates_Creature, me->GetLootRecipient(), false, false, 1, me);
             instance->SetBossState(DATA_DELRISSA, DONE);
             me->SetDynamicFlag(UNIT_DYNFLAG_LOOTABLE);
         }
         ++HelpersKilled;
     }
 
-    void JustEngagedWith(Unit*  /*who*/) override
+    void JustEngagedWith(Unit* /*who*/) override
     {
         Talk(SAY_AGGRO);
         _JustEngagedWith();
 
-        ScheduleTimedEvent(15s, [&] {
+        ScheduleTimedEvent(15s,
+            [&]
+        {
             if (Unit* target = DoSelectLowestHpFriendly(40.0f, 1000))
                 DoCast(target, SPELL_FLASH_HEAL);
-        }, 15s);
+        },
+            15s);
 
-        ScheduleTimedEvent(10s, [&] {
+        ScheduleTimedEvent(10s,
+            [&]
+        {
             if (Unit* target = DoSelectLowestHpFriendly(40.0f, 1000))
                 DoCast(target, SPELL_RENEW);
-        }, 7s);
+        },
+            7s);
 
-        ScheduleTimedEvent(2s, [&] {
+        ScheduleTimedEvent(2s,
+            [&]
+        {
             std::list<Creature*> cList = DoFindFriendlyMissingBuff(40.0f, SPELL_POWER_WORD_SHIELD);
             if (Unit* target = Acore::Containers::SelectRandomContainerElement(cList))
                 DoCast(target, SPELL_POWER_WORD_SHIELD);
-        }, 10s);
+        },
+            10s);
 
-        ScheduleTimedEvent(5s, [&] {
-            DoCastRandomTarget(SPELL_SHADOW_WORD_PAIN, 0, 30.0f);
-        }, 10s);
+        ScheduleTimedEvent(5s, [&] { DoCastRandomTarget(SPELL_SHADOW_WORD_PAIN, 0, 30.0f); }, 10s);
 
-        ScheduleTimedEvent(7500ms, [&] {
+        ScheduleTimedEvent(7500ms,
+            [&]
+        {
             Unit* target = nullptr;
             switch (urand(0, 2))
             {
@@ -164,11 +172,13 @@ struct boss_priestess_delrissa : public BossAI
 
             if (target)
                 DoCast(target, SPELL_DISPEL_MAGIC);
-        }, 12s);
+        },
+            12s);
 
         if (IsHeroic())
         {
-            scheduler.Schedule(4s, [this](TaskContext context)
+            scheduler.Schedule(4s,
+                [this](TaskContext context)
             {
                 if (me->HasUnitState(UNIT_STATE_LOST_CONTROL))
                 {
@@ -201,10 +211,10 @@ struct boss_priestess_delrissa : public BossAI
 
 enum helpersShared
 {
-    SPELL_HEALING_POTION              = 15503,
+    SPELL_HEALING_POTION = 15503,
 
-    AI_TYPE_MELEE                     = 1,
-    AI_TYPE_RANGED                    = 2
+    AI_TYPE_MELEE = 1,
+    AI_TYPE_RANGED = 2
 };
 
 struct boss_priestess_lackey_commonAI : public ScriptedAI
@@ -219,15 +229,18 @@ struct boss_priestess_lackey_commonAI : public ScriptedAI
     SummonList summons;
     uint8 aiType;
 
-    float GetThreatMod(float dist, float  /*armor*/, uint32 health, uint32 /*maxhealth*/, Unit* target)
+    float GetThreatMod(float dist, float /*armor*/, uint32 health, uint32 /*maxhealth*/, Unit* target)
     {
         float unimportant_dist = (aiType == AI_TYPE_MELEE ? 5.0f : 25.0f);
-        if (dist > unimportant_dist) dist -= unimportant_dist;
-        else dist = 0.0f;
-        const float dist_factor = (aiType == AI_TYPE_MELEE ? 15.0f : 25.0f);
-        float mod_dist = dist_factor / (dist_factor + dist); // 0.2 .. 1.0
+        if (dist > unimportant_dist)
+            dist -= unimportant_dist;
+        else
+            dist = 0.0f;
+        float const dist_factor = (aiType == AI_TYPE_MELEE ? 15.0f : 25.0f);
+        float mod_dist = dist_factor / (dist_factor + dist);                    // 0.2 .. 1.0
         float mod_health = health > 20000 ? 2.0f : (40000 - health) / 10000.0f; // 2.0 .. 4.0
-        float mod_armor = aiType == AI_TYPE_MELEE ? Unit::CalcArmorReducedDamage(me, target, 10000, nullptr) / 10000.0f : 1.0f;
+        float mod_armor =
+            aiType == AI_TYPE_MELEE ? Unit::CalcArmorReducedDamage(me, target, 10000, nullptr) / 10000.0f : 1.0f;
         return mod_dist * mod_health * mod_armor;
     }
 
@@ -239,7 +252,11 @@ struct boss_priestess_lackey_commonAI : public ScriptedAI
             Unit* pUnit = ObjectAccessor::GetUnit(*me, ref->getUnitGuid());
             if (pUnit && pUnit->IsPlayer() && me->GetThreatMgr().GetThreat(pUnit))
             {
-                float threatMod = GetThreatMod(me->GetDistance2d(pUnit), (float)pUnit->GetArmor(), pUnit->GetHealth(), pUnit->GetMaxHealth(), pUnit);
+                float threatMod = GetThreatMod(me->GetDistance2d(pUnit),
+                    (float)pUnit->GetArmor(),
+                    pUnit->GetHealth(),
+                    pUnit->GetMaxHealth(),
+                    pUnit);
                 me->GetThreatMgr().ModifyThreatByPercent(pUnit, -100);
                 if (HostileReference* ref = me->GetThreatMgr().GetOnlineContainer().getReferenceByTarget(pUnit))
                     ref->AddThreat(10000000.0f * threatMod);
@@ -276,7 +293,8 @@ struct boss_priestess_lackey_commonAI : public ScriptedAI
             if (delrissa->IsAlive() && !delrissa->IsEngaged())
                 delrissa->AI()->AttackStart(who);
 
-        scheduler.Schedule(5s, [this](TaskContext context)
+        scheduler.Schedule(5s,
+            [this](TaskContext context)
         {
             if (me->HealthBelowPct(25))
                 DoCastSelf(SPELL_HEALING_POTION, true);
@@ -284,13 +302,12 @@ struct boss_priestess_lackey_commonAI : public ScriptedAI
                 context.Repeat(1s);
         });
 
-        ScheduleTimedEvent(8s, 10s, [&] {
-            RecalculateThreat();
-        }, 8s, 10s);
+        ScheduleTimedEvent(8s, 10s, [&] { RecalculateThreat(); }, 8s, 10s);
 
         if (IsHeroic())
         {
-            scheduler.Schedule(2s, [this](TaskContext context)
+            scheduler.Schedule(2s,
+                [this](TaskContext context)
             {
                 if (me->HasUnitState(UNIT_STATE_LOST_CONTROL))
                 {
@@ -330,19 +347,18 @@ struct boss_priestess_lackey_commonAI : public ScriptedAI
         if (me->HasUnitState(UNIT_STATE_CASTING))
             return;
 
-        scheduler.Update(diff,
-            std::bind(&BossAI::DoMeleeAttackIfReady, this));
+        scheduler.Update(diff, std::bind(&BossAI::DoMeleeAttackIfReady, this));
     }
 };
 
 enum RogueEnum
 {
-    SPELL_KIDNEY_SHOT  = 27615,
-    SPELL_VANISH       = 44290,
-    SPELL_GOUGE        = 12540,
-    SPELL_KICK         = 27613,
-    SPELL_BACKSTAB     = 15657,
-    SPELL_EVISCERATE   = 27611
+    SPELL_KIDNEY_SHOT = 27615,
+    SPELL_VANISH = 44290,
+    SPELL_GOUGE = 12540,
+    SPELL_KICK = 27613,
+    SPELL_BACKSTAB = 15657,
+    SPELL_EVISCERATE = 27611
 };
 
 struct boss_kagani_nightstrike : public boss_priestess_lackey_commonAI
@@ -353,22 +369,22 @@ struct boss_kagani_nightstrike : public boss_priestess_lackey_commonAI
     {
         boss_priestess_lackey_commonAI::JustEngagedWith(who);
 
-        ScheduleTimedEvent(5500ms, [&] {
-            DoCastVictim(SPELL_GOUGE);
-        }, 15s);
+        ScheduleTimedEvent(5500ms, [&] { DoCastVictim(SPELL_GOUGE); }, 15s);
 
-        ScheduleTimedEvent(6s, [&] {
-            DoCastVictim(SPELL_EVISCERATE);
-        }, 10s);
+        ScheduleTimedEvent(6s, [&] { DoCastVictim(SPELL_EVISCERATE); }, 10s);
 
-        ScheduleTimedEvent(1s, [&] {
+        ScheduleTimedEvent(1s,
+            [&]
+        {
             DoCastSelf(SPELL_VANISH);
             DoResetThreatList();
             if (Unit* unit = SelectTarget(SelectTargetMethod::Random, 0))
                 me->AddThreat(unit, 1000.0f);
-        }, 30s);
+        },
+            30s);
 
-        scheduler.Schedule(9s, [this](TaskContext context)
+        scheduler.Schedule(9s,
+            [this](TaskContext context)
         {
             if (me->GetVictim() && me->GetVictim()->HasUnitState(UNIT_STATE_CASTING))
             {
@@ -379,7 +395,8 @@ struct boss_kagani_nightstrike : public boss_priestess_lackey_commonAI
                 context.Repeat(1s);
         });
 
-        scheduler.Schedule(9s, [this](TaskContext context)
+        scheduler.Schedule(9s,
+            [this](TaskContext context)
         {
             if (me->GetVictim() && !me->GetVictim()->HasInArc(static_cast<float>(M_PI), me))
             {
@@ -391,7 +408,7 @@ struct boss_kagani_nightstrike : public boss_priestess_lackey_commonAI
         });
     }
 
-    void MovementInform(uint32 type, uint32  /*point*/) override
+    void MovementInform(uint32 type, uint32 /*point*/) override
     {
         if (type == CHASE_MOTION_TYPE && me->HasAura(SPELL_VANISH) && me->GetVictim())
             me->CastSpell(me->GetVictim(), SPELL_KIDNEY_SHOT, false);
@@ -400,12 +417,12 @@ struct boss_kagani_nightstrike : public boss_priestess_lackey_commonAI
 
 enum WarlockEnum
 {
-    SPELL_IMMOLATE           = 44267,
-    SPELL_SHADOW_BOLT        = 12471,
-    SPELL_CURSE_OF_AGONY     = 14875,
+    SPELL_IMMOLATE = 44267,
+    SPELL_SHADOW_BOLT = 12471,
+    SPELL_CURSE_OF_AGONY = 14875,
     SPELL_SEED_OF_CORRUPTION = 44141,
-    SPELL_FEAR               = 38595,
-    SPELL_SUMMON_IMP         = 44163
+    SPELL_FEAR = 38595,
+    SPELL_SUMMON_IMP = 44163
 };
 
 struct boss_ellris_duskhallow : public boss_priestess_lackey_commonAI
@@ -417,32 +434,22 @@ struct boss_ellris_duskhallow : public boss_priestess_lackey_commonAI
         DoCastAOE(SPELL_SUMMON_IMP);
         boss_priestess_lackey_commonAI::JustEngagedWith(who);
 
-        ScheduleTimedEvent(3s, [&] {
-            DoCastRandomTarget(SPELL_IMMOLATE, 0, 20.0f);
-        }, 12s);
+        ScheduleTimedEvent(3s, [&] { DoCastRandomTarget(SPELL_IMMOLATE, 0, 20.0f); }, 12s);
 
-        ScheduleTimedEvent(1s, [&] {
-            DoCastVictim(SPELL_SHADOW_BOLT);
-        }, 5s);
+        ScheduleTimedEvent(1s, [&] { DoCastVictim(SPELL_SHADOW_BOLT); }, 5s);
 
-        ScheduleTimedEvent(10s, [&] {
-            DoCastRandomTarget(SPELL_SEED_OF_CORRUPTION, 0, 30.0f);
-        }, 18s);
+        ScheduleTimedEvent(10s, [&] { DoCastRandomTarget(SPELL_SEED_OF_CORRUPTION, 0, 30.0f); }, 18s);
 
-        ScheduleTimedEvent(6s, [&] {
-            DoCastRandomTarget(SPELL_CURSE_OF_AGONY, 0, 30.0f);
-        }, 13s);
+        ScheduleTimedEvent(6s, [&] { DoCastRandomTarget(SPELL_CURSE_OF_AGONY, 0, 30.0f); }, 13s);
 
-        ScheduleTimedEvent(15s, [&] {
-            DoCastRandomTarget(SPELL_FEAR, 0, 20.0f);
-        }, 15s);
+        ScheduleTimedEvent(15s, [&] { DoCastRandomTarget(SPELL_FEAR, 0, 20.0f); }, 15s);
     }
 };
 
 enum MonkEnum
 {
-    SPELL_KNOCKDOWN       = 11428,
-    SPELL_SNAP_KICK       = 46182,
+    SPELL_KNOCKDOWN = 11428,
+    SPELL_SNAP_KICK = 46182,
     SPELL_FISTS_OF_ARCANE = 44120
 };
 
@@ -454,29 +461,23 @@ struct boss_eramas_brightblaze : public boss_priestess_lackey_commonAI
     {
         boss_priestess_lackey_commonAI::JustEngagedWith(who);
 
-        ScheduleTimedEvent(6s, [&] {
-            DoCastVictim(SPELL_KNOCKDOWN);
-        }, 10s);
+        ScheduleTimedEvent(6s, [&] { DoCastVictim(SPELL_KNOCKDOWN); }, 10s);
 
-        ScheduleTimedEvent(3s, [&] {
-            DoCastVictim(SPELL_SNAP_KICK);
-        }, 10s);
+        ScheduleTimedEvent(3s, [&] { DoCastVictim(SPELL_SNAP_KICK); }, 10s);
 
-        ScheduleTimedEvent(3s, [&] {
-            DoCastVictim(SPELL_FISTS_OF_ARCANE);
-        }, 10s);
+        ScheduleTimedEvent(3s, [&] { DoCastVictim(SPELL_FISTS_OF_ARCANE); }, 10s);
     }
 };
 
 enum MageEnum
 {
-    SPELL_POLYMORPH      = 13323,
-    SPELL_ICE_BLOCK      = 27619,
-    SPELL_BLIZZARD       = 44178,
-    SPELL_ICE_LANCE      = 44176,
-    SPELL_CONE_OF_COLD   = 12611,
-    SPELL_FROSTBOLT      = 15043,
-    SPELL_BLINK          = 14514
+    SPELL_POLYMORPH = 13323,
+    SPELL_ICE_BLOCK = 27619,
+    SPELL_BLIZZARD = 44178,
+    SPELL_ICE_LANCE = 44176,
+    SPELL_CONE_OF_COLD = 12611,
+    SPELL_FROSTBOLT = 15043,
+    SPELL_BLINK = 14514
 };
 
 struct boss_yazzai : public boss_priestess_lackey_commonAI
@@ -487,32 +488,26 @@ struct boss_yazzai : public boss_priestess_lackey_commonAI
     {
         boss_priestess_lackey_commonAI::JustEngagedWith(who);
 
-        ScheduleTimedEvent(1s, [&] {
-            DoCastRandomTarget(SPELL_POLYMORPH);
-        }, 20s);
+        ScheduleTimedEvent(1s, [&] { DoCastRandomTarget(SPELL_POLYMORPH); }, 20s);
 
-        ScheduleTimedEvent(8s, [&] {
-            DoCastRandomTarget(SPELL_BLIZZARD);
-        }, 20s);
+        ScheduleTimedEvent(8s, [&] { DoCastRandomTarget(SPELL_BLIZZARD); }, 20s);
 
-        ScheduleTimedEvent(12s, [&] {
-            DoCastVictim(SPELL_ICE_LANCE);
-        }, 12s);
+        ScheduleTimedEvent(12s, [&] { DoCastVictim(SPELL_ICE_LANCE); }, 12s);
 
-        ScheduleTimedEvent(10s, [&] {
-            DoCastVictim(SPELL_CONE_OF_COLD);
-        }, 10s);
+        ScheduleTimedEvent(10s, [&] { DoCastVictim(SPELL_CONE_OF_COLD); }, 10s);
 
-        ScheduleTimedEvent(3s, [&] {
-            DoCastVictim(SPELL_FROSTBOLT);
-        }, 8s);
+        ScheduleTimedEvent(3s, [&] { DoCastVictim(SPELL_FROSTBOLT); }, 8s);
 
-        ScheduleTimedEvent(5s, [&] {
+        ScheduleTimedEvent(5s,
+            [&]
+        {
             if (me->SelectNearbyTarget())
                 DoCastAOE(SPELL_BLINK);
-        }, 15s);
+        },
+            15s);
 
-        scheduler.Schedule(1s, [this](TaskContext context)
+        scheduler.Schedule(1s,
+            [this](TaskContext context)
         {
             if (me->HealthBelowPct(35))
                 DoCastSelf(SPELL_ICE_BLOCK, true);
@@ -524,13 +519,13 @@ struct boss_yazzai : public boss_priestess_lackey_commonAI
 
 enum WarriorEnum
 {
-    SPELL_INTERCEPT          = 27577,
-    SPELL_DISARM             = 27581,
-    SPELL_PIERCING_HOWL      = 23600,
-    SPELL_FRIGHTENING_SHOUT  = 19134,
-    SPELL_HAMSTRING          = 27584,
-    SPELL_BATTLE_SHOUT       = 27578,
-    SPELL_MORTAL_STRIKE      = 44268
+    SPELL_INTERCEPT = 27577,
+    SPELL_DISARM = 27581,
+    SPELL_PIERCING_HOWL = 23600,
+    SPELL_FRIGHTENING_SHOUT = 19134,
+    SPELL_HAMSTRING = 27584,
+    SPELL_BATTLE_SHOUT = 27578,
+    SPELL_MORTAL_STRIKE = 44268
 };
 
 struct boss_warlord_salaris : public boss_priestess_lackey_commonAI
@@ -542,42 +537,30 @@ struct boss_warlord_salaris : public boss_priestess_lackey_commonAI
         boss_priestess_lackey_commonAI::JustEngagedWith(who);
         DoCastAOE(SPELL_BATTLE_SHOUT);
 
-        ScheduleTimedEvent(6s, [&] {
-            DoCastVictim(SPELL_INTERCEPT);
-        }, 10s);
+        ScheduleTimedEvent(6s, [&] { DoCastVictim(SPELL_INTERCEPT); }, 10s);
 
-        ScheduleTimedEvent(10s, [&] {
-            DoCastVictim(SPELL_DISARM);
-        }, 16s);
+        ScheduleTimedEvent(10s, [&] { DoCastVictim(SPELL_DISARM); }, 16s);
 
-        ScheduleTimedEvent(18s, [&] {
-            DoCastVictim(SPELL_HAMSTRING);
-        }, 15s);
+        ScheduleTimedEvent(18s, [&] { DoCastVictim(SPELL_HAMSTRING); }, 15s);
 
-        ScheduleTimedEvent(4s, [&] {
-            DoCastVictim(SPELL_MORTAL_STRIKE);
-        }, 10s);
+        ScheduleTimedEvent(4s, [&] { DoCastVictim(SPELL_MORTAL_STRIKE); }, 10s);
 
-        ScheduleTimedEvent(8s, [&] {
-            DoCastAOE(SPELL_PIERCING_HOWL);
-        }, 15s);
+        ScheduleTimedEvent(8s, [&] { DoCastAOE(SPELL_PIERCING_HOWL); }, 15s);
 
-        ScheduleTimedEvent(1s, [&] {
-            DoCastAOE(SPELL_FRIGHTENING_SHOUT);
-        }, 18s);
+        ScheduleTimedEvent(1s, [&] { DoCastAOE(SPELL_FRIGHTENING_SHOUT); }, 18s);
     }
 };
 
 enum HunterEnum
 {
-    SPELL_AIMED_SHOT            = 44271,
-    SPELL_SHOOT                 = 15620,
-    SPELL_CONCUSSIVE_SHOT       = 27634,
-    SPELL_MULTI_SHOT            = 31942,
-    SPELL_WING_CLIP             = 44286,
-    SPELL_FREEZING_TRAP         = 44136,
+    SPELL_AIMED_SHOT = 44271,
+    SPELL_SHOOT = 15620,
+    SPELL_CONCUSSIVE_SHOT = 27634,
+    SPELL_MULTI_SHOT = 31942,
+    SPELL_WING_CLIP = 44286,
+    SPELL_FREEZING_TRAP = 44136,
 
-    NPC_SLIVER                  = 24552
+    NPC_SLIVER = 24552
 };
 
 struct boss_garaxxas : public boss_priestess_lackey_commonAI
@@ -595,37 +578,27 @@ struct boss_garaxxas : public boss_priestess_lackey_commonAI
         boss_priestess_lackey_commonAI::JustEngagedWith(who);
         DoCastAOE(SPELL_FREEZING_TRAP, true);
 
-        ScheduleTimedEvent(8s, [&] {
-            DoCastVictim(SPELL_AIMED_SHOT);
-        }, 15s);
+        ScheduleTimedEvent(8s, [&] { DoCastVictim(SPELL_AIMED_SHOT); }, 15s);
 
-        ScheduleTimedEvent(6s, [&] {
-            DoCastVictim(SPELL_CONCUSSIVE_SHOT);
-        }, 15s);
+        ScheduleTimedEvent(6s, [&] { DoCastVictim(SPELL_CONCUSSIVE_SHOT); }, 15s);
 
-        ScheduleTimedEvent(10s, [&] {
-            DoCastVictim(SPELL_MULTI_SHOT);
-        }, 10s);
+        ScheduleTimedEvent(10s, [&] { DoCastVictim(SPELL_MULTI_SHOT); }, 10s);
 
-        ScheduleTimedEvent(1s, [&] {
-            DoCastVictim(SPELL_SHOOT);
-        }, 2500ms);
+        ScheduleTimedEvent(1s, [&] { DoCastVictim(SPELL_SHOOT); }, 2500ms);
 
-        ScheduleTimedEvent(4s, [&] {
-            DoCastVictim(SPELL_WING_CLIP);
-        }, 4s);
+        ScheduleTimedEvent(4s, [&] { DoCastVictim(SPELL_WING_CLIP); }, 4s);
     }
 };
 
 enum ShamanEnum
 {
-    SPELL_WINDFURY_TOTEM        = 27621,
-    SPELL_FIRE_NOVA_TOTEM       = 44257,
-    SPELL_EARTHBIND_TOTEM       = 15786,
-    SPELL_WAR_STOMP             = 46026,
-    SPELL_PURGE                 = 27626,
-    SPELL_LESSER_HEALING_WAVE   = 44256,
-    SPELL_FROST_SHOCK           = 21401
+    SPELL_WINDFURY_TOTEM = 27621,
+    SPELL_FIRE_NOVA_TOTEM = 44257,
+    SPELL_EARTHBIND_TOTEM = 15786,
+    SPELL_WAR_STOMP = 46026,
+    SPELL_PURGE = 27626,
+    SPELL_LESSER_HEALING_WAVE = 44256,
+    SPELL_FROST_SHOCK = 21401
 };
 
 struct boss_apoko : public boss_priestess_lackey_commonAI
@@ -636,43 +609,34 @@ struct boss_apoko : public boss_priestess_lackey_commonAI
     {
         boss_priestess_lackey_commonAI::JustEngagedWith(who);
 
-        ScheduleTimedEvent(2s, [&] {
-            DoCastAOE(SPELL_WINDFURY_TOTEM);
-        }, 20s);
+        ScheduleTimedEvent(2s, [&] { DoCastAOE(SPELL_WINDFURY_TOTEM); }, 20s);
 
-        ScheduleTimedEvent(4s, [&] {
-            DoCastAOE(SPELL_FIRE_NOVA_TOTEM);
-        }, 20s);
+        ScheduleTimedEvent(4s, [&] { DoCastAOE(SPELL_FIRE_NOVA_TOTEM); }, 20s);
 
-        ScheduleTimedEvent(6s, [&] {
-            DoCastAOE(SPELL_EARTHBIND_TOTEM);
-        }, 20s);
+        ScheduleTimedEvent(6s, [&] { DoCastAOE(SPELL_EARTHBIND_TOTEM); }, 20s);
 
-        ScheduleTimedEvent(10s, [&] {
-            DoCastAOE(SPELL_WAR_STOMP);
-        }, 2min);
+        ScheduleTimedEvent(10s, [&] { DoCastAOE(SPELL_WAR_STOMP); }, 2min);
 
-        ScheduleTimedEvent(14s, [&] {
-            DoCastRandomTarget(SPELL_PURGE, 0, 30.0f);
-        }, 15s);
+        ScheduleTimedEvent(14s, [&] { DoCastRandomTarget(SPELL_PURGE, 0, 30.0f); }, 15s);
 
-        ScheduleTimedEvent(12s, [&] {
+        ScheduleTimedEvent(12s,
+            [&]
+        {
             if (Unit* target = DoSelectLowestHpFriendly(40.0f, 1000))
                 DoCast(target, SPELL_LESSER_HEALING_WAVE);
-        }, 15s);
+        },
+            15s);
 
-        ScheduleTimedEvent(8s, [&] {
-            DoCastVictim(SPELL_FROST_SHOCK);
-        }, 12s);
+        ScheduleTimedEvent(8s, [&] { DoCastVictim(SPELL_FROST_SHOCK); }, 12s);
     }
 };
 
 enum EngineerEnum
 {
-    SPELL_GOBLIN_DRAGON_GUN    = 44272,
-    SPELL_ROCKET_LAUNCH        = 44137,
-    SPELL_FEL_IRON_BOMB        = 46024,
-    SPELL_RECOMBOBULATE        = 44274,
+    SPELL_GOBLIN_DRAGON_GUN = 44272,
+    SPELL_ROCKET_LAUNCH = 44137,
+    SPELL_FEL_IRON_BOMB = 46024,
+    SPELL_RECOMBOBULATE = 44274,
     SPELL_HIGH_EXPLOSIVE_SHEEP = 44276
 };
 
@@ -684,15 +648,13 @@ struct boss_zelfan : public boss_priestess_lackey_commonAI
     {
         boss_priestess_lackey_commonAI::JustEngagedWith(who);
 
-        ScheduleTimedEvent(20s, [&] {
-            DoCastVictim(SPELL_GOBLIN_DRAGON_GUN);
-        }, 20s);
+        ScheduleTimedEvent(20s, [&] { DoCastVictim(SPELL_GOBLIN_DRAGON_GUN); }, 20s);
 
-        ScheduleTimedEvent(7s, [&] {
-            DoCastVictim(SPELL_ROCKET_LAUNCH);
-        }, 20s);
+        ScheduleTimedEvent(7s, [&] { DoCastVictim(SPELL_ROCKET_LAUNCH); }, 20s);
 
-        ScheduleTimedEvent(14s, [&] {
+        ScheduleTimedEvent(14s,
+            [&]
+        {
             std::list<Creature*> cList = DoFindFriendlyMissingBuff(30.0f, SPELL_RECOMBOBULATE);
             for (auto const& creature : cList)
                 if (creature->IsPolymorphed())
@@ -700,15 +662,12 @@ struct boss_zelfan : public boss_priestess_lackey_commonAI
                     DoCast(creature, SPELL_RECOMBOBULATE);
                     break;
                 }
-        }, 10s);
+        },
+            10s);
 
-        ScheduleTimedEvent(10s, [&] {
-            DoCastAOE(SPELL_HIGH_EXPLOSIVE_SHEEP);
-        }, 1min);
+        ScheduleTimedEvent(10s, [&] { DoCastAOE(SPELL_HIGH_EXPLOSIVE_SHEEP); }, 1min);
 
-        ScheduleTimedEvent(5s, [&] {
-            DoCastRandomTarget(SPELL_FEL_IRON_BOMB, 0, 15.0f);
-        }, 20s);
+        ScheduleTimedEvent(5s, [&] { DoCastRandomTarget(SPELL_FEL_IRON_BOMB, 0, 15.0f); }, 20s);
     }
 };
 

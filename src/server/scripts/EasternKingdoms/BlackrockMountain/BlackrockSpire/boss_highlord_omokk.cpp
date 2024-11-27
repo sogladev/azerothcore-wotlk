@@ -21,14 +21,14 @@
 
 enum Spells
 {
-    SPELL_FRENZY                    = 8269,
-    SPELL_KNOCK_AWAY                = 10101
+    SPELL_FRENZY = 8269,
+    SPELL_KNOCK_AWAY = 10101
 };
 
 enum Events
 {
-    EVENT_FRENZY                    = 1,
-    EVENT_KNOCK_AWAY                = 2
+    EVENT_FRENZY = 1,
+    EVENT_KNOCK_AWAY = 2
 };
 
 class boss_highlord_omokk : public CreatureScript

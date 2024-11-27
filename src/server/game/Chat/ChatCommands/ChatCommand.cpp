@@ -44,7 +44,8 @@ void Acore::Impl::ChatCommands::ChatCommandNode::LoadFromBuilder(ChatCommandBuil
 }
 
 /*static*/ void Acore::Impl::ChatCommands::ChatCommandNode::LoadCommandsIntoMap(ChatCommandNode* blank,
-    std::map<std::string_view, Acore::Impl::ChatCommands::ChatCommandNode, StringCompareLessI_T>& map, Acore::ChatCommands::ChatCommandTable const& commands)
+    std::map<std::string_view, Acore::Impl::ChatCommands::ChatCommandNode, StringCompareLessI_T>& map,
+    Acore::ChatCommands::ChatCommandTable const& commands)
 {
     for (ChatCommandBuilder const& builder : commands)
     {
@@ -66,6 +67,7 @@ void Acore::Impl::ChatCommands::ChatCommandNode::LoadFromBuilder(ChatCommandBuil
 }
 
 static ChatSubCommandMap COMMAND_MAP;
+
 /*static*/ ChatSubCommandMap const& Acore::Impl::ChatCommands::ChatCommandNode::GetTopLevelMap()
 {
     if (COMMAND_MAP.empty())
@@ -73,6 +75,7 @@ static ChatSubCommandMap COMMAND_MAP;
 
     return COMMAND_MAP;
 }
+
 /*static*/ void Acore::Impl::ChatCommands::ChatCommandNode::InvalidateCommandMap()
 {
     COMMAND_MAP.clear();
@@ -116,8 +119,11 @@ static ChatSubCommandMap COMMAND_MAP;
 
             if (cmd->_invoker && (cmd->_permission.RequiredLevel != secLevel))
             {
-                LOG_WARN("sql.sql", "Table `command` has permission {} for '{}' which does not match the core ({}). Overriding.",
-                    secLevel, name, cmd->_permission.RequiredLevel);
+                LOG_WARN("sql.sql",
+                    "Table `command` has permission {} for '{}' which does not match the core ({}). Overriding.",
+                    secLevel,
+                    name,
+                    cmd->_permission.RequiredLevel);
 
                 cmd->_permission.RequiredLevel = secLevel;
             }
@@ -128,7 +134,9 @@ static ChatSubCommandMap COMMAND_MAP;
             if (std::holds_alternative<std::monostate>(cmd->_help))
                 cmd->_help.emplace<std::string>(help);
             else
-                LOG_ERROR("sql.sql", "Table `command` contains legacy help text for command '{}', which uses `acore_string`. Skipped.", name);
+                LOG_ERROR("sql.sql",
+                    "Table `command` contains legacy help text for command '{}', which uses `acore_string`. Skipped.",
+                    name);
         } while (result->NextRow());
     }
 
@@ -166,21 +174,26 @@ static void LogCommandUsage(WorldSession const& session, std::string_view cmdStr
     LocaleConstant locale = sWorld->GetDefaultDbcLocale();
 
     if (AreaTableEntry const* area = sAreaTableStore.LookupEntry(areaId))
-    {
         areaName = area->area_name[locale];
-    }
 
     if (AreaTableEntry const* zone = sAreaTableStore.LookupEntry(zoneId))
-    {
         zoneName = zone->area_name[locale];
-    }
 
-    std::string logMessage = Acore::StringFormat("Command: {} [Player: {} ({}) (Account: {}) X: {} Y: {} Z: {} Map: {} ({}) Area: {} ({}) Zone: {} ({}) Selected: {} ({})]",
-        cmdStr, player->GetName(), player->GetGUID().ToString(),
+    std::string logMessage = Acore::StringFormat(
+        "Command: {} [Player: {} ({}) (Account: {}) X: {} Y: {} Z: {} Map: {} ({}) Area: {} ({}) Zone: {} ({}) Selected: {} ({})]",
+        cmdStr,
+        player->GetName(),
+        player->GetGUID().ToString(),
         session.GetAccountId(),
-        player->GetPositionX(), player->GetPositionY(), player->GetPositionZ(), player->GetMapId(),
+        player->GetPositionX(),
+        player->GetPositionY(),
+        player->GetPositionZ(),
+        player->GetMapId(),
         player->FindMap() ? player->FindMap()->GetMapName() : "Unknown",
-        areaId, areaName, zoneId, zoneName,
+        areaId,
+        areaName,
+        zoneId,
+        zoneName,
         (player->GetSelectedUnit()) ? player->GetSelectedUnit()->GetName() : "",
         targetGuid.ToString());
 
@@ -210,22 +223,19 @@ void Acore::Impl::ChatCommands::ChatCommandNode::SendCommandHelp(ChatHandler& ha
         bool const subCommandHasSubCommand = it->second.HasVisibleSubCommands(handler);
 
         if (!subCommandHasSubCommand && !it->second.IsInvokerVisible(handler))
-        {
             continue;
-        }
 
         if (!header)
         {
             if (!hasInvoker)
-            {
                 handler.PSendSysMessage(LANG_CMD_HELP_GENERIC, _name);
-            }
 
             handler.SendSysMessage(LANG_SUBCMDS_LIST);
             header = true;
         }
 
-        handler.PSendSysMessage(subCommandHasSubCommand ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS : LANG_SUBCMDS_LIST_ENTRY, it->second._name);
+        handler.PSendSysMessage(
+            subCommandHasSubCommand ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS : LANG_SUBCMDS_LIST_ENTRY, it->second._name);
     }
 }
 
@@ -233,45 +243,64 @@ namespace Acore::Impl::ChatCommands
 {
     struct FilteredCommandListIterator
     {
-        public:
-            FilteredCommandListIterator(ChatSubCommandMap const& map, ChatHandler const& handler, std::string_view token)
-                : _handler{ handler }, _token{ token }, _it{ map.lower_bound(token) }, _end{ map.end() }
-            {
-                _skip();
-            }
+    public:
+        FilteredCommandListIterator(ChatSubCommandMap const& map, ChatHandler const& handler, std::string_view token) :
+            _handler {handler},
+            _token {token},
+            _it {map.lower_bound(token)},
+            _end {map.end()}
+        {
+            _skip();
+        }
 
-            decltype(auto) operator*() const { return _it.operator*(); }
-            decltype(auto) operator->() const { return _it.operator->(); }
-            FilteredCommandListIterator& operator++()
+        decltype(auto) operator*() const
+        {
+            return _it.operator*();
+        }
+
+        decltype(auto) operator->() const
+        {
+            return _it.operator->();
+        }
+
+        FilteredCommandListIterator& operator++()
+        {
+            ++_it;
+            _skip();
+            return *this;
+        }
+
+        explicit operator bool() const
+        {
+            return (_it != _end);
+        }
+
+        bool operator!() const
+        {
+            return !static_cast<bool>(*this);
+        }
+
+    private:
+        void _skip()
+        {
+            if ((_it != _end) && !StringStartsWithI(_it->first, _token))
+                _it = _end;
+            while ((_it != _end) && !_it->second.IsVisible(_handler))
             {
                 ++_it;
-                _skip();
-                return *this;
-            }
-            explicit operator bool() const { return (_it != _end); }
-            bool operator!() const { return !static_cast<bool>(*this); }
-
-        private:
-            void _skip()
-            {
                 if ((_it != _end) && !StringStartsWithI(_it->first, _token))
                     _it = _end;
-                while ((_it != _end) && !_it->second.IsVisible(_handler))
-                {
-                    ++_it;
-                    if ((_it != _end) && !StringStartsWithI(_it->first, _token))
-                        _it = _end;
-                }
             }
+        }
 
-            ChatHandler const& _handler;
-            std::string_view const _token;
-            ChatSubCommandMap::const_iterator _it, _end;
-
+        ChatHandler const& _handler;
+        std::string_view const _token;
+        ChatSubCommandMap::const_iterator _it, _end;
     };
-}
+} // namespace Acore::Impl::ChatCommands
 
-/*static*/ bool Acore::Impl::ChatCommands::ChatCommandNode::TryExecuteCommand(ChatHandler& handler, std::string_view cmdStr)
+/*static*/ bool Acore::Impl::ChatCommands::ChatCommandNode::TryExecuteCommand(
+    ChatHandler& handler, std::string_view cmdStr)
 {
     ChatCommandNode const* cmd = nullptr;
     ChatSubCommandMap const* map = &GetTopLevelMap();
@@ -305,10 +334,15 @@ namespace Acore::Impl::ChatCommands
                 else
                     handler.PSendSysMessage(LANG_CMD_AMBIGUOUS, token);
 
-                handler.PSendSysMessage(it1->second.HasVisibleSubCommands(handler) ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS : LANG_SUBCMDS_LIST_ENTRY, it1->first);
+                handler.PSendSysMessage(it1->second.HasVisibleSubCommands(handler) ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS
+                                                                                   : LANG_SUBCMDS_LIST_ENTRY,
+                    it1->first);
                 do
                 {
-                    handler.PSendSysMessage(it2->second.HasVisibleSubCommands(handler) ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS : LANG_SUBCMDS_LIST_ENTRY, it2->first);
+                    handler.PSendSysMessage(it2->second.HasVisibleSubCommands(handler)
+                                                ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS
+                                                : LANG_SUBCMDS_LIST_ENTRY,
+                        it2->first);
                 } while (++it2);
 
                 return true;
@@ -346,7 +380,8 @@ namespace Acore::Impl::ChatCommands
     return false;
 }
 
-/*static*/ void Acore::Impl::ChatCommands::ChatCommandNode::SendCommandHelpFor(ChatHandler& handler, std::string_view cmdStr)
+/*static*/ void Acore::Impl::ChatCommands::ChatCommandNode::SendCommandHelpFor(
+    ChatHandler& handler, std::string_view cmdStr)
 {
     ChatCommandNode const* cmd = nullptr;
     ChatSubCommandMap const* map = &GetTopLevelMap();
@@ -378,10 +413,15 @@ namespace Acore::Impl::ChatCommands
                 else
                     handler.PSendSysMessage(LANG_CMD_AMBIGUOUS, token);
 
-                handler.PSendSysMessage(it1->second.HasVisibleSubCommands(handler) ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS : LANG_SUBCMDS_LIST_ENTRY, it1->first);
+                handler.PSendSysMessage(it1->second.HasVisibleSubCommands(handler) ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS
+                                                                                   : LANG_SUBCMDS_LIST_ENTRY,
+                    it1->first);
                 do
                 {
-                    handler.PSendSysMessage(it2->second.HasVisibleSubCommands(handler) ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS : LANG_SUBCMDS_LIST_ENTRY, it2->first);
+                    handler.PSendSysMessage(it2->second.HasVisibleSubCommands(handler)
+                                                ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS
+                                                : LANG_SUBCMDS_LIST_ENTRY,
+                        it2->first);
                 } while (++it2);
 
                 return;
@@ -402,14 +442,17 @@ namespace Acore::Impl::ChatCommands
         handler.SendSysMessage(LANG_AVAILABLE_CMDS);
         do
         {
-            handler.PSendSysMessage(it->second.HasVisibleSubCommands(handler) ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS : LANG_SUBCMDS_LIST_ENTRY, it->second._name);
+            handler.PSendSysMessage(
+                it->second.HasVisibleSubCommands(handler) ? LANG_SUBCMDS_LIST_ENTRY_ELLIPSIS : LANG_SUBCMDS_LIST_ENTRY,
+                it->second._name);
         } while (++it);
     }
     else
         handler.PSendSysMessage(LANG_CMD_INVALID, cmdStr);
 }
 
-/*static*/ std::vector<std::string> Acore::Impl::ChatCommands::ChatCommandNode::GetAutoCompletionsFor(ChatHandler const& handler, std::string_view cmdStr)
+/*static*/ std::vector<std::string> Acore::Impl::ChatCommands::ChatCommandNode::GetAutoCompletionsFor(
+    ChatHandler const& handler, std::string_view cmdStr)
 {
     std::string path;
     ChatCommandNode const* cmd = nullptr;
@@ -439,7 +482,8 @@ namespace Acore::Impl::ChatCommands
             if (it2)
             { /* there are multiple matching subcommands - terminate here and show possibilities */
                 std::vector<std::string> vec;
-                auto possibility = ([prefix = std::string_view(path), suffix = std::string_view(newTail)](std::string_view match)
+                auto possibility =
+                    ([prefix = std::string_view(path), suffix = std::string_view(newTail)](std::string_view match)
                 {
                     if (prefix.empty())
                     {
@@ -447,13 +491,15 @@ namespace Acore::Impl::ChatCommands
                     }
                     else
                     {
-                        return Acore::StringFormat("{}{}{}{}{}", prefix, COMMAND_DELIMITER, match, COMMAND_DELIMITER, suffix);
+                        return Acore::StringFormat(
+                            "{}{}{}{}{}", prefix, COMMAND_DELIMITER, match, COMMAND_DELIMITER, suffix);
                     }
                 });
 
                 vec.emplace_back(possibility(it1->first));
 
-                do vec.emplace_back(possibility(it2->first));
+                do
+                    vec.emplace_back(possibility(it2->first));
                 while (++it2);
 
                 return vec;
@@ -464,9 +510,7 @@ namespace Acore::Impl::ChatCommands
         if (path.empty())
             path.assign(it1->first);
         else
-        {
             path = Acore::StringFormat("{}{}{}", path, COMMAND_DELIMITER, it1->first);
-        }
         cmd = &it1->second;
         map = &cmd->_subCommands;
 
@@ -477,7 +521,7 @@ namespace Acore::Impl::ChatCommands
     { /* there is some trailing text, leave it as is */
         if (cmd)
         { /* if we matched a command at some point, auto-complete it */
-            return { Acore::StringFormat("{}{}{}", path, COMMAND_DELIMITER, oldTail) };
+            return {Acore::StringFormat("{}{}{}", path, COMMAND_DELIMITER, oldTail)};
         }
         else
             return {};
@@ -489,9 +533,7 @@ namespace Acore::Impl::ChatCommands
             if (prefix.empty())
                 return std::string(match);
             else
-            {
                 return Acore::StringFormat("{}{}{}", prefix, COMMAND_DELIMITER, match);
-            }
         });
 
         std::vector<std::string> vec;
@@ -527,8 +569,27 @@ bool Acore::Impl::ChatCommands::ChatCommandNode::HasVisibleSubCommands(ChatHandl
     return false;
 }
 
-void Acore::ChatCommands::LoadCommandMap() { Acore::Impl::ChatCommands::ChatCommandNode::LoadCommandMap(); }
-void Acore::ChatCommands::InvalidateCommandMap() { Acore::Impl::ChatCommands::ChatCommandNode::InvalidateCommandMap(); }
-bool Acore::ChatCommands::TryExecuteCommand(ChatHandler& handler, std::string_view cmd) { return Acore::Impl::ChatCommands::ChatCommandNode::TryExecuteCommand(handler, cmd); }
-void Acore::ChatCommands::SendCommandHelpFor(ChatHandler& handler, std::string_view cmd) { Acore::Impl::ChatCommands::ChatCommandNode::SendCommandHelpFor(handler, cmd); }
-std::vector<std::string> Acore::ChatCommands::GetAutoCompletionsFor(ChatHandler const& handler, std::string_view cmd) { return Acore::Impl::ChatCommands::ChatCommandNode::GetAutoCompletionsFor(handler, cmd); }
+void Acore::ChatCommands::LoadCommandMap()
+{
+    Acore::Impl::ChatCommands::ChatCommandNode::LoadCommandMap();
+}
+
+void Acore::ChatCommands::InvalidateCommandMap()
+{
+    Acore::Impl::ChatCommands::ChatCommandNode::InvalidateCommandMap();
+}
+
+bool Acore::ChatCommands::TryExecuteCommand(ChatHandler& handler, std::string_view cmd)
+{
+    return Acore::Impl::ChatCommands::ChatCommandNode::TryExecuteCommand(handler, cmd);
+}
+
+void Acore::ChatCommands::SendCommandHelpFor(ChatHandler& handler, std::string_view cmd)
+{
+    Acore::Impl::ChatCommands::ChatCommandNode::SendCommandHelpFor(handler, cmd);
+}
+
+std::vector<std::string> Acore::ChatCommands::GetAutoCompletionsFor(ChatHandler const& handler, std::string_view cmd)
+{
+    return Acore::Impl::ChatCommands::ChatCommandNode::GetAutoCompletionsFor(handler, cmd);
+}

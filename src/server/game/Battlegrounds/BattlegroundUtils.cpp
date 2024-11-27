@@ -8,9 +8,7 @@ uint32 GetMinPlayersPerTeam(Battleground* bg, PvPDifficultyEntry const* bracketE
     // or if it's the real BG (then it's the specific bracket minimum level, e.g. "60" for "60-69").
 
     if (!bg->isTemplate() || bg->isArena())
-    {
         return bg->GetMinPlayersPerTeam();
-    }
 
     auto maxPlayerLevel = sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL);
     auto isMaxLevel = bracketEntry->minLevel <= maxPlayerLevel && maxPlayerLevel <= bracketEntry->maxLevel;

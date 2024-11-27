@@ -20,12 +20,12 @@
 #include "CreatureScript.h"
 #include "GameObjectScript.h"
 #include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
 #include "ScriptedCreature.h"
 #include "ScriptedEscortAI.h"
 #include "SpellAuras.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
-#include "GridNotifiersImpl.h"
 
 /*######
 ## npc_draenei_survivor
@@ -33,10 +33,10 @@
 
 enum draeneiSurvivor
 {
-    SAY_HEAL            = 0,
-    SAY_HELP            = 1,
-    SPELL_IRRIDATION    = 35046,
-    SPELL_STUNNED       = 28630
+    SAY_HEAL = 0,
+    SAY_HELP = 1,
+    SPELL_IRRIDATION = 35046,
+    SPELL_STUNNED = 28630
 };
 
 class npc_draenei_survivor : public CreatureScript
@@ -124,7 +124,8 @@ public:
                     RunAwayTimer = 10000;
                     SayThanksTimer = 0;
                 }
-                else SayThanksTimer -= diff;
+                else
+                    SayThanksTimer -= diff;
 
                 return;
             }
@@ -144,7 +145,8 @@ public:
                 CanSayHelp = true;
                 SayHelpTimer = 20000;
             }
-            else SayHelpTimer -= diff;
+            else
+                SayHelpTimer -= diff;
         }
     };
 
@@ -202,20 +204,20 @@ public:
 
 enum Magwin
 {
-    SAY_START                   = 0,
-    SAY_AGGRO                   = 1,
-    SAY_PROGRESS                = 2,
-    SAY_END1                    = 3,
-    SAY_END2                    = 4,
-    EMOTE_HUG                   = 5,
-    NPC_COWLEN                  = 17311,
-    SAY_COWLEN                  = 0,
-    EVENT_ACCEPT_QUEST          = 1,
-    EVENT_START_ESCORT          = 2,
-    EVENT_STAND                 = 3,
-    EVENT_TALK_END              = 4,
-    EVENT_COWLEN_TALK           = 5,
-    QUEST_A_CRY_FOR_HELP        = 9528
+    SAY_START = 0,
+    SAY_AGGRO = 1,
+    SAY_PROGRESS = 2,
+    SAY_END1 = 3,
+    SAY_END2 = 4,
+    EMOTE_HUG = 5,
+    NPC_COWLEN = 17311,
+    SAY_COWLEN = 0,
+    EVENT_ACCEPT_QUEST = 1,
+    EVENT_START_ESCORT = 2,
+    EVENT_STAND = 3,
+    EVENT_TALK_END = 4,
+    EVENT_COWLEN_TALK = 5,
+    QUEST_A_CRY_FOR_HELP = 9528
 };
 
 class npc_magwin : public CreatureScript
@@ -280,17 +282,13 @@ public:
                 {
                     case EVENT_ACCEPT_QUEST:
                         if (Player* player = ObjectAccessor::GetPlayer(*me, _player))
-                        {
                             Talk(SAY_START, player);
-                        }
                         me->SetFaction(FACTION_ESCORTEE_N_NEUTRAL_PASSIVE);
                         _events.ScheduleEvent(EVENT_START_ESCORT, 1s);
                         break;
                     case EVENT_START_ESCORT:
                         if (Player* player = ObjectAccessor::GetPlayer(*me, _player))
-                        {
                             npc_escortAI::Start(true, false, player->GetGUID());
-                        }
                         _events.ScheduleEvent(EVENT_STAND, 2s);
                         break;
                     case EVENT_STAND: // Remove kneel standstate. Using a separate delayed event because it causes unwanted delay before starting waypoint movement.
@@ -298,21 +296,18 @@ public:
                         break;
                     case EVENT_TALK_END:
                         if (Player* player = ObjectAccessor::GetPlayer(*me, _player))
-                        {
                             Talk(SAY_END1, player);
-                        }
                         _events.ScheduleEvent(EVENT_COWLEN_TALK, 2s);
                         break;
                     case EVENT_COWLEN_TALK:
                         if (Creature* cowlen = me->FindNearestCreature(NPC_COWLEN, 50.0f, true))
-                        {
                             cowlen->AI()->Talk(SAY_COWLEN);
-                        }
                         break;
                 }
             }
             npc_escortAI::UpdateEscortAI(diff);
         }
+
     private:
         EventMap _events;
         ObjectGuid _player;
@@ -326,12 +321,12 @@ public:
 
 enum RavegerCage
 {
-    NPC_DEATH_RAVAGER       = 17556,
+    NPC_DEATH_RAVAGER = 17556,
 
-    SPELL_REND              = 13443,
-    SPELL_ENRAGING_BITE     = 30736,
+    SPELL_REND = 13443,
+    SPELL_ENRAGING_BITE = 30736,
 
-    QUEST_STRENGTH_ONE      = 9582
+    QUEST_STRENGTH_ONE = 9582
 };
 
 class go_ravager_cage : public GameObjectScript
@@ -386,14 +381,16 @@ public:
                 DoCastVictim(SPELL_REND);
                 RendTimer = 30000;
             }
-            else RendTimer -= diff;
+            else
+                RendTimer -= diff;
 
             if (EnragingBiteTimer <= diff)
             {
                 DoCastVictim(SPELL_ENRAGING_BITE);
                 EnragingBiteTimer = 15000;
             }
-            else EnragingBiteTimer -= diff;
+            else
+                EnragingBiteTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -411,14 +408,14 @@ public:
 
 enum BristlelimbCage
 {
-    QUEST_THE_PROPHECY_OF_AKIDA         = 9544,
-    NPC_STILLPINE_CAPITIVE              = 17375,
-    GO_BRISTELIMB_CAGE                  = 181714,
+    QUEST_THE_PROPHECY_OF_AKIDA = 9544,
+    NPC_STILLPINE_CAPITIVE = 17375,
+    GO_BRISTELIMB_CAGE = 181714,
 
-    CAPITIVE_SAY                        = 0,
+    CAPITIVE_SAY = 0,
 
-    POINT_INIT                          = 1,
-    EVENT_DESPAWN                       = 1,
+    POINT_INIT = 1,
+    EVENT_DESPAWN = 1,
 };
 
 class npc_stillpine_capitive : public CreatureScript
@@ -511,10 +508,10 @@ public:
 
 enum NestlewoodOwlkin
 {
-    NPC_NESTLEWOOD_OWLKIN_ENTRY   = 16518,
-    NPC_INOCULATED_OWLKIN_ENTRY   = 16534,
+    NPC_NESTLEWOOD_OWLKIN_ENTRY = 16518,
+    NPC_INOCULATED_OWLKIN_ENTRY = 16534,
 
-    TALK_OWLKIN                   = 0
+    TALK_OWLKIN = 0
 };
 
 class spell_inoculate_nestlewood_owlkin : public AuraScript
@@ -522,7 +519,7 @@ class spell_inoculate_nestlewood_owlkin : public AuraScript
 public:
     PrepareAuraScript(spell_inoculate_nestlewood_owlkin)
 
-    void HandleEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+        void HandleEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (Creature* owlkin = GetTarget()->ToCreature())
             if (owlkin->GetEntry() == NPC_NESTLEWOOD_OWLKIN_ENTRY)
@@ -553,8 +550,14 @@ public:
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_inoculate_nestlewood_owlkin::HandleEffectApply, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_inoculate_nestlewood_owlkin::HandleEffectRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(spell_inoculate_nestlewood_owlkin::HandleEffectApply,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_inoculate_nestlewood_owlkin::HandleEffectRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 

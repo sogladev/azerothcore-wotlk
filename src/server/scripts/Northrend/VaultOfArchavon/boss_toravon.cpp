@@ -25,29 +25,29 @@
 enum Spells
 {
     // Toravon
-    SPELL_FREEZING_GROUND              = 72090,
-    SPELL_FROZEN_ORB                   = 72091,
-    SPELL_WHITEOUT                     = 72034,
-    SPELL_WHITEOUT_VISUAL              = 72036,
-    SPELL_FROZEN_MALLET                = 71993,
+    SPELL_FREEZING_GROUND = 72090,
+    SPELL_FROZEN_ORB = 72091,
+    SPELL_WHITEOUT = 72034,
+    SPELL_WHITEOUT_VISUAL = 72036,
+    SPELL_FROZEN_MALLET = 71993,
 
     // Frozen Orb
-    SPELL_FROZEN_ORB_DMG                = 72081,    // priodic dmg aura
-    SPELL_FROZEN_ORB_AURA               = 72067,    // make visible
+    SPELL_FROZEN_ORB_DMG = 72081,  // priodic dmg aura
+    SPELL_FROZEN_ORB_AURA = 72067, // make visible
 
     // Frozen Orb Stalker
-    SPELL_FROZEN_ORB_STALKER_VISUAL     = 72094,
+    SPELL_FROZEN_ORB_STALKER_VISUAL = 72094,
 
     // Whiteout GroundEffect NPC
-    NPC_WHITEOUT_GROUND_EFFECT          = 38440,
+    NPC_WHITEOUT_GROUND_EFFECT = 38440,
 };
 
 enum Events
 {
-    EVENT_FREEZING_GROUND               = 1,
-    EVENT_FROZEN_ORB_STALKER            = 2,
-    EVENT_CAST_WHITEOUT                 = 3,
-    EVENT_CAST_WHITEOUT_GROUND_EFFECT   = 4,
+    EVENT_FREEZING_GROUND = 1,
+    EVENT_FROZEN_ORB_STALKER = 2,
+    EVENT_CAST_WHITEOUT = 3,
+    EVENT_CAST_WHITEOUT_GROUND_EFFECT = 4,
 };
 
 class boss_toravon : public CreatureScript
@@ -98,7 +98,8 @@ public:
 
             events.ScheduleEvent(EVENT_FROZEN_ORB_STALKER, 12s);
             events.ScheduleEvent(EVENT_FREEZING_GROUND, 7s);
-            events.ScheduleEvent(EVENT_CAST_WHITEOUT, 25s); // schedule FIRST whiteout event in 25 seconds -1 for compesate updateai 2seconds check delay
+            events.ScheduleEvent(EVENT_CAST_WHITEOUT,
+                25s); // schedule FIRST whiteout event in 25 seconds -1 for compesate updateai 2seconds check delay
 
             if (pInstance)
                 pInstance->SetData(EVENT_TORAVON, IN_PROGRESS);
@@ -141,11 +142,18 @@ public:
                     break;
                 case EVENT_CAST_WHITEOUT:
                     me->CastSpell(me, SPELL_WHITEOUT, false);
-                    events.ScheduleEvent(EVENT_CAST_WHITEOUT_GROUND_EFFECT, 1s); // triggers after 1 sec "plus 1 from trigger to cast visual"
+                    events.ScheduleEvent(EVENT_CAST_WHITEOUT_GROUND_EFFECT,
+                        1s);            // triggers after 1 sec "plus 1 from trigger to cast visual"
                     events.Repeat(40s); // next whiteout instead first 25 SEC is now 45 SEC
                     break;
                 case EVENT_CAST_WHITEOUT_GROUND_EFFECT: // Whiteout Ground effect trigger
-                    if (Unit* whiteOutGround = me->SummonCreature(NPC_WHITEOUT_GROUND_EFFECT, -43.3316, -288.708, 92.2511, 1.58825, TEMPSUMMON_TIMED_DESPAWN, 4000))
+                    if (Unit* whiteOutGround = me->SummonCreature(NPC_WHITEOUT_GROUND_EFFECT,
+                            -43.3316,
+                            -288.708,
+                            92.2511,
+                            1.58825,
+                            TEMPSUMMON_TIMED_DESPAWN,
+                            4000))
                         whiteOutGround->CastSpell(whiteOutGround, SPELL_WHITEOUT_VISUAL, false); // Cast the spell
                     break;
             }
@@ -167,9 +175,7 @@ public:
 
     struct npc_frozen_orbAI : public ScriptedAI
     {
-        npc_frozen_orbAI(Creature* creature) : ScriptedAI(creature)
-        {
-        }
+        npc_frozen_orbAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 switchTimer;
 
@@ -211,9 +217,7 @@ public:
 
     struct npc_frozen_orb_stalkerAI : public NullCreatureAI
     {
-        npc_frozen_orb_stalkerAI(Creature* creature) : NullCreatureAI(creature)
-        {
-        }
+        npc_frozen_orb_stalkerAI(Creature* creature) : NullCreatureAI(creature) { }
 
         void Reset() override
         {

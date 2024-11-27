@@ -50,7 +50,9 @@ void WorldSession::HandleBankerActivateOpcode(WorldPacket& recvData)
     Creature* unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_BANKER);
     if (!unit)
     {
-        LOG_DEBUG("network", "WORLD: HandleBankerActivateOpcode - Unit ({}) not found or you can not interact with him.", guid.ToString());
+        LOG_DEBUG("network",
+            "WORLD: HandleBankerActivateOpcode - Unit ({}) not found or you can not interact with him.",
+            guid.ToString());
         return;
     }
 
@@ -67,7 +69,9 @@ void WorldSession::HandleAutoBankItemOpcode(WorldPackets::Bank::AutoBankItem& pa
 
     if (!CanUseBank())
     {
-        LOG_DEBUG("network", "WORLD: HandleAutoBankItemOpcode - Unit ({}) not found or you can't interact with him.", m_currentBankerGUID.ToString());
+        LOG_DEBUG("network",
+            "WORLD: HandleAutoBankItemOpcode - Unit ({}) not found or you can't interact with him.",
+            m_currentBankerGUID.ToString());
         return;
     }
 
@@ -101,7 +105,9 @@ void WorldSession::HandleAutoStoreBankItemOpcode(WorldPackets::Bank::AutoStoreBa
 
     if (!CanUseBank())
     {
-        LOG_DEBUG("network", "WORLD: HandleAutoStoreBankItemOpcode - Unit ({}) not found or you can't interact with him.", m_currentBankerGUID.ToString());
+        LOG_DEBUG("network",
+            "WORLD: HandleAutoStoreBankItemOpcode - Unit ({}) not found or you can't interact with him.",
+            m_currentBankerGUID.ToString());
         return;
     }
 
@@ -109,7 +115,7 @@ void WorldSession::HandleAutoStoreBankItemOpcode(WorldPackets::Bank::AutoStoreBa
     if (!item)
         return;
 
-    if (_player->IsBankPos(packet.Bag, packet.Slot))                    // moving from bank to inventory
+    if (_player->IsBankPos(packet.Bag, packet.Slot)) // moving from bank to inventory
     {
         ItemPosCountVec dest;
         InventoryResult msg = _player->CanStoreItem(NULL_BAG, NULL_SLOT, dest, item, false);
@@ -123,7 +129,7 @@ void WorldSession::HandleAutoStoreBankItemOpcode(WorldPackets::Bank::AutoStoreBa
         if (Item const* storedItem = _player->StoreItem(dest, item, true))
             _player->ItemAddedQuestCheck(storedItem->GetEntry(), storedItem->GetCount());
     }
-    else                                                    // moving from inventory to bank
+    else // moving from inventory to bank
     {
         ItemPosCountVec dest;
         InventoryResult msg = _player->CanBankItem(NULL_BAG, NULL_SLOT, dest, item, false);
@@ -147,7 +153,9 @@ void WorldSession::HandleBuyBankSlotOpcode(WorldPackets::Bank::BuyBankSlot& buyB
     {
         packet.Result = ERR_BANKSLOT_NOTBANKER;
         SendPacket(packet.Write());
-        LOG_DEBUG("network", "WORLD: HandleBuyBankSlotOpcode - {} not found or you can't interact with him.", buyBankSlot.Banker.ToString());
+        LOG_DEBUG("network",
+            "WORLD: HandleBuyBankSlotOpcode - {} not found or you can't interact with him.",
+            buyBankSlot.Banker.ToString());
         return;
     }
 

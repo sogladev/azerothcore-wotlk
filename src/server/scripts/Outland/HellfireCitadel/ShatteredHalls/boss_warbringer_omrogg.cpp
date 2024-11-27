@@ -24,22 +24,22 @@
 
 enum Spells
 {
-    SPELL_BLAST_WAVE            = 30600,
-    SPELL_FEAR                  = 30584,
-    SPELL_THUNDERCLAP           = 30633,
-    SPELL_BEATDOWN              = 30618,
-    SPELL_BURNING_MAUL          = 30598
+    SPELL_BLAST_WAVE = 30600,
+    SPELL_FEAR = 30584,
+    SPELL_THUNDERCLAP = 30633,
+    SPELL_BEATDOWN = 30618,
+    SPELL_BURNING_MAUL = 30598
 };
 
 enum Equip
 {
-    EQUIP_STANDARD              = 1,
-    EQUIP_BURNING_MAUL          = 2
+    EQUIP_STANDARD = 1,
+    EQUIP_BURNING_MAUL = 2
 };
 
 enum HeadYells
 {
-    SAY_ON_AGGRO                = 0,
+    SAY_ON_AGGRO = 0,
     SAY_ON_AGGRO_2,
     SAY_ON_AGGRO_3,
     SAY_ON_BEATDOWN,
@@ -52,25 +52,22 @@ enum HeadYells
 
 enum Misc
 {
-    EMOTE_BURNING_MAUL          = 0,
-    DATA_BURNING_MAUL_END       = 1
+    EMOTE_BURNING_MAUL = 0,
+    DATA_BURNING_MAUL_END = 1
 };
 
 enum Phase
 {
-    GROUP_NON_BURNING_PHASE     = 0,
-    GROUP_BURNING_PHASE         = 1,
-    GROUP_FULL_PHASE            = 2
+    GROUP_NON_BURNING_PHASE = 0,
+    GROUP_BURNING_PHASE = 1,
+    GROUP_FULL_PHASE = 2
 };
 
 struct boss_warbringer_omrogg : public BossAI
 {
     boss_warbringer_omrogg(Creature* creature) : BossAI(creature, DATA_OMROGG)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void HandleHeadTalk(HeadYells yell)
@@ -83,11 +80,12 @@ struct boss_warbringer_omrogg : public BossAI
                 if (Creature* leftHead = instance->GetCreature(DATA_OMROGG_LEFT_HEAD))
                 {
                     leftHead->AI()->Talk(group);
-                    _headTalk.Schedule(3600ms, [this, group](TaskContext /*context*/)
-                        {
-                            if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
+                    _headTalk.Schedule(3600ms,
+                        [this, group](TaskContext /*context*/)
+                    {
+                        if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
                             rightHead->AI()->Talk(group);
-                        });
+                    });
                 }
                 break;
             }
@@ -96,22 +94,25 @@ struct boss_warbringer_omrogg : public BossAI
                 if (Creature* leftHead = instance->GetCreature(DATA_OMROGG_LEFT_HEAD))
                 {
                     leftHead->AI()->Talk(SAY_ON_BEATDOWN);
-                    _headTalk.Schedule(3600ms, [this](TaskContext context)
+                    _headTalk.Schedule(3600ms,
+                        [this](TaskContext context)
+                    {
+                        if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
+                            rightHead->AI()->Talk(SAY_ON_BEATDOWN);
+                        context.Schedule(3600ms,
+                            [this](TaskContext context)
                         {
-                            if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
-                                rightHead->AI()->Talk(SAY_ON_BEATDOWN);
-                            context.Schedule(3600ms, [this](TaskContext context)
+                            uint8 group = urand(SAY_ON_BEATDOWN_2, SAY_ON_BEATDOWN_3);
+                            if (Creature* leftHead = instance->GetCreature(DATA_OMROGG_LEFT_HEAD))
+                                leftHead->AI()->Talk(group);
+                            context.Schedule(3600ms,
+                                [this, group](TaskContext /*context*/)
                             {
-                                uint8 group = urand(SAY_ON_BEATDOWN_2, SAY_ON_BEATDOWN_3);
-                                if (Creature* leftHead = instance->GetCreature(DATA_OMROGG_LEFT_HEAD))
-                                    leftHead->AI()->Talk(group);
-                                context.Schedule(3600ms, [this, group](TaskContext /*context*/)
-                                {
-                                    if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
-                                        rightHead->AI()->Talk(group);
-                                });
+                                if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
+                                    rightHead->AI()->Talk(group);
                             });
                         });
+                    });
                 }
                 break;
             }
@@ -120,22 +121,24 @@ struct boss_warbringer_omrogg : public BossAI
                 uint8 group = urand(SAY_ON_KILL, SAY_ON_KILL_2);
                 if (Creature* leftHead = instance->GetCreature(DATA_OMROGG_LEFT_HEAD))
                     leftHead->AI()->Talk(group);
-                _headTalk.Schedule(3600ms, [this, group](TaskContext /*context*/)
-                    {
-                        if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
-                            rightHead->AI()->Talk(group);
-                    });
+                _headTalk.Schedule(3600ms,
+                    [this, group](TaskContext /*context*/)
+                {
+                    if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
+                        rightHead->AI()->Talk(group);
+                });
                 break;
             }
             case SAY_ON_DEATH:
             {
                 if (Creature* leftHead = instance->GetCreature(DATA_OMROGG_LEFT_HEAD))
                     leftHead->AI()->Talk(SAY_ON_DEATH);
-                _headTalk.Schedule(3600ms, [this](TaskContext /*context*/)
-                    {
-                        if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
-                            rightHead->AI()->Talk(SAY_ON_DEATH);
-                    });
+                _headTalk.Schedule(3600ms,
+                    [this](TaskContext /*context*/)
+                {
+                    if (Creature* rightHead = instance->GetCreature(DATA_OMROGG_RIGHT_HEAD))
+                        rightHead->AI()->Talk(SAY_ON_DEATH);
+                });
                 break;
             }
             default:
@@ -155,63 +158,77 @@ struct boss_warbringer_omrogg : public BossAI
 
     void ScheduleNonBurningPhase()
     {
-        scheduler.
-            Schedule(12100ms, 17300ms, GROUP_NON_BURNING_PHASE, [this](TaskContext context)
-                {
-                    DoCastAOE(SPELL_THUNDERCLAP);
-                    context.Repeat(17200ms, 24200ms);
-                })
-            .Schedule(20s, 30s, GROUP_NON_BURNING_PHASE, [this](TaskContext context)
-                {
-                    DoCastSelf(SPELL_BEATDOWN);
-                    me->AttackStop();
-                    me->SetReactState(REACT_PASSIVE);
-                    context.Schedule(200ms, GROUP_NON_BURNING_PHASE, [this](TaskContext context)
-                    {
-                        DoResetThreatList();
-                        if (Unit* newTarget = SelectTarget(SelectTargetMethod::Random, 1))
-                            me->AddThreat(newTarget, 2250.f);
-                        HandleHeadTalk(SAY_ON_BEATDOWN);
-                        context.Schedule(1200ms, GROUP_NON_BURNING_PHASE, [this](TaskContext /*context*/)
-                        {
-                            me->SetReactState(REACT_AGGRESSIVE);
-                        });
-                    });
-                    context.Repeat();
+        scheduler
+            .Schedule(12100ms,
+                17300ms,
+                GROUP_NON_BURNING_PHASE,
+                [this](TaskContext context)
+        {
+            DoCastAOE(SPELL_THUNDERCLAP);
+            context.Repeat(17200ms, 24200ms);
+        })
+            .Schedule(20s,
+                30s,
+                GROUP_NON_BURNING_PHASE,
+                [this](TaskContext context)
+        {
+            DoCastSelf(SPELL_BEATDOWN);
+            me->AttackStop();
+            me->SetReactState(REACT_PASSIVE);
+            context.Schedule(200ms,
+                GROUP_NON_BURNING_PHASE,
+                [this](TaskContext context)
+            {
+                DoResetThreatList();
+                if (Unit* newTarget = SelectTarget(SelectTargetMethod::Random, 1))
+                    me->AddThreat(newTarget, 2250.f);
+                HandleHeadTalk(SAY_ON_BEATDOWN);
+                context.Schedule(1200ms, GROUP_NON_BURNING_PHASE, [this](TaskContext /*context*/) {
+                    me->SetReactState(REACT_AGGRESSIVE);
                 });
+            });
+            context.Repeat();
+        });
     }
 
     void ScheduleBurningPhase()
     {
-        scheduler.
-            Schedule(45s, 60s, GROUP_BURNING_PHASE, [this](TaskContext context)
+        scheduler.Schedule(45s,
+            60s,
+            GROUP_BURNING_PHASE,
+            [this](TaskContext context)
+        {
+            me->AttackStop();
+            me->SetReactState(REACT_PASSIVE);
+            context.CancelGroup(GROUP_NON_BURNING_PHASE);
+            context.Schedule(1200ms,
+                [this](TaskContext context)
             {
-                me->AttackStop();
-                me->SetReactState(REACT_PASSIVE);
-                context.CancelGroup(GROUP_NON_BURNING_PHASE);
-                context.Schedule(1200ms, [this](TaskContext context)
+                DoCastAOE(SPELL_FEAR);
+                DoCast(SPELL_BURNING_MAUL);
+                context.Schedule(200ms,
+                    [this](TaskContext context)
+                {
+                    Talk(EMOTE_BURNING_MAUL);
+                    context.Schedule(2200ms,
+                        [this](TaskContext context)
                     {
-                        DoCastAOE(SPELL_FEAR);
-                        DoCast(SPELL_BURNING_MAUL);
-                        context.Schedule(200ms, [this](TaskContext context)
-                            {
-                                Talk(EMOTE_BURNING_MAUL);
-                                context.Schedule(2200ms, [this](TaskContext context)
-                                    {
-                                        DoResetThreatList();
-                                        if (Unit* newTarget = SelectTarget(SelectTargetMethod::Random, 1))
-                                            me->AddThreat(newTarget, 2250.f);
-                                        me->SetReactState(REACT_AGGRESSIVE);
-                                        context.Schedule(4850ms, 8500ms, GROUP_BURNING_PHASE, [this](TaskContext context)
-                                            {
-                                                DoCastAOE(SPELL_BLAST_WAVE);
-                                                context.Repeat();
-                                            });
-                                    });
-                            });
+                        DoResetThreatList();
+                        if (Unit* newTarget = SelectTarget(SelectTargetMethod::Random, 1))
+                            me->AddThreat(newTarget, 2250.f);
+                        me->SetReactState(REACT_AGGRESSIVE);
+                        context.Schedule(4850ms,
+                            8500ms,
+                            GROUP_BURNING_PHASE,
+                            [this](TaskContext context)
+                        {
+                            DoCastAOE(SPELL_BLAST_WAVE);
+                            context.Repeat();
+                        });
                     });
-
+                });
             });
+        });
     }
 
     void JustEngagedWith(Unit* who) override
@@ -243,14 +260,11 @@ struct boss_warbringer_omrogg : public BossAI
         if (!UpdateVictim())
             return;
 
-        scheduler.Update(diff, [this]
-            {
-                DoMeleeAttackIfReady();
-            });
+        scheduler.Update(diff, [this] { DoMeleeAttackIfReady(); });
     }
 
-    protected:
-        TaskScheduler _headTalk;
+protected:
+    TaskScheduler _headTalk;
 };
 
 class spell_burning_maul : public AuraScript
@@ -278,8 +292,10 @@ class spell_burning_maul : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_burning_maul::HandleOnRemove, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
-        OnEffectApply += AuraEffectApplyFn(spell_burning_maul::HandleOnApply, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_burning_maul::HandleOnRemove, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_burning_maul::HandleOnApply, EFFECT_1, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

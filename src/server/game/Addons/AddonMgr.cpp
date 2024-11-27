@@ -19,8 +19,8 @@
 #include "CryptoHash.h"
 #include "DatabaseEnv.h"
 #include "Log.h"
-#include "Timer.h"
 #include "QueryResult.h"
+#include "Timer.h"
 #include <list>
 
 namespace AddonMgr
@@ -34,7 +34,7 @@ namespace AddonMgr
 
         SavedAddonsList m_knownAddons;
         BannedAddonList m_bannedAddons;
-    }
+    } // namespace
 
     void LoadFromDB()
     {
@@ -104,15 +104,11 @@ namespace AddonMgr
         m_knownAddons.emplace_back(addon.Name, addon.CRC);
     }
 
-    SavedAddon const* GetAddonInfo(const std::string& name)
+    SavedAddon const* GetAddonInfo(std::string const& name)
     {
         for (auto const& addon : m_knownAddons)
-        {
             if (addon.Name == name)
-            {
                 return &addon;
-            }
-        }
 
         return nullptr;
     }
@@ -122,4 +118,4 @@ namespace AddonMgr
         return &m_bannedAddons;
     }
 
-} // Namespace
+} // namespace AddonMgr

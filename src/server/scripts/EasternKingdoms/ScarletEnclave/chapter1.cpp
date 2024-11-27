@@ -30,7 +30,7 @@
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
 
- /*######
+/*######
  ## npc_eye_of_acherus
  ######*/
 
@@ -90,50 +90,44 @@ struct npc_eye_of_acherus : public ScriptedAI
         {
             switch (eventId)
             {
-            case EVENT_ANNOUNCE_LAUNCH_TO_DESTINATION:
-                if (Unit* owner = me->GetCharmerOrOwner())
+                case EVENT_ANNOUNCE_LAUNCH_TO_DESTINATION:
+                    if (Unit* owner = me->GetCharmerOrOwner())
+                        Talk(SAY_LAUNCH_TOWARDS_DESTINATION, owner);
+                    _events.ScheduleEvent(EVENT_UNROOT, 400ms);
+                    break;
+                case EVENT_UNROOT:
+                    me->RemoveAurasDueToSpell(SPELL_ROOT_SELF);
+                    DoCastSelf(SPELL_EYE_OF_ACHERUS_FLIGHT_BOOST);
+                    _events.ScheduleEvent(EVENT_LAUNCH_TOWARDS_DESTINATION, 1s + 200ms);
+                    break;
+                case EVENT_LAUNCH_TOWARDS_DESTINATION:
                 {
-                    Talk(SAY_LAUNCH_TOWARDS_DESTINATION, owner);
-                }
-                _events.ScheduleEvent(EVENT_UNROOT, 400ms);
-                break;
-            case EVENT_UNROOT:
-                me->RemoveAurasDueToSpell(SPELL_ROOT_SELF);
-                DoCastSelf(SPELL_EYE_OF_ACHERUS_FLIGHT_BOOST);
-                _events.ScheduleEvent(EVENT_LAUNCH_TOWARDS_DESTINATION, 1s + 200ms);
-                break;
-            case EVENT_LAUNCH_TOWARDS_DESTINATION:
-            {
-                Position const EYE_DESTINATION_1 = { 2361.21f,  -5660.45f,  496.744f, 0.0f };
-                Position const EYE_DESTINATION_2 = { 2341.571f, -5672.797f, 538.3942f, 0.0f };
-                Position const EYE_DESTINATION_3 = { 1957.4f,   -5844.1f,   273.867f, 0.0f };
-                Position const EYE_DESTINATION_4 = { 1758.01f,  -5876.79f,  166.867f, 0.0f };
+                    Position const EYE_DESTINATION_1 = {2361.21f, -5660.45f, 496.744f, 0.0f};
+                    Position const EYE_DESTINATION_2 = {2341.571f, -5672.797f, 538.3942f, 0.0f};
+                    Position const EYE_DESTINATION_3 = {1957.4f, -5844.1f, 273.867f, 0.0f};
+                    Position const EYE_DESTINATION_4 = {1758.01f, -5876.79f, 166.867f, 0.0f};
 
-                Movement::MoveSplineInit init(me);
-                init.SetFly();
-                if (Unit* owner = me->GetCharmerOrOwner())
-                {
-                    init.SetVelocity(owner->GetSpeed(MOVE_RUN));
-                }
+                    Movement::MoveSplineInit init(me);
+                    init.SetFly();
+                    if (Unit* owner = me->GetCharmerOrOwner())
+                        init.SetVelocity(owner->GetSpeed(MOVE_RUN));
 
-                me->GetMotionMaster()->MovePoint(EYE_POINT_DESTINATION_0, EYE_DESTINATION_1);
-                me->GetMotionMaster()->MovePoint(EYE_POINT_DESTINATION_1, EYE_DESTINATION_2);
-                me->GetMotionMaster()->MovePoint(EYE_POINT_DESTINATION_2, EYE_DESTINATION_3);
-                me->GetMotionMaster()->MovePoint(EYE_POINT_DESTINATION_3, EYE_DESTINATION_4);
-                _events.ScheduleEvent(EVENT_GRANT_CONTROL, 22s);
-                break;
-            }
-            case EVENT_GRANT_CONTROL:
-                if (Unit* owner = me->GetCharmerOrOwner())
-                {
-                    Talk(SAY_EYE_UNDER_CONTROL, owner);
+                    me->GetMotionMaster()->MovePoint(EYE_POINT_DESTINATION_0, EYE_DESTINATION_1);
+                    me->GetMotionMaster()->MovePoint(EYE_POINT_DESTINATION_1, EYE_DESTINATION_2);
+                    me->GetMotionMaster()->MovePoint(EYE_POINT_DESTINATION_2, EYE_DESTINATION_3);
+                    me->GetMotionMaster()->MovePoint(EYE_POINT_DESTINATION_3, EYE_DESTINATION_4);
+                    _events.ScheduleEvent(EVENT_GRANT_CONTROL, 22s);
+                    break;
                 }
-                me->RemoveAurasDueToSpell(SPELL_ROOT_SELF);
-                DoCastSelf(SPELL_EYE_OF_ACHERUS_FLIGHT);
-                me->RemoveAurasDueToSpell(SPELL_EYE_OF_ACHERUS_FLIGHT_BOOST);
-                break;
-            default:
-                break;
+                case EVENT_GRANT_CONTROL:
+                    if (Unit* owner = me->GetCharmerOrOwner())
+                        Talk(SAY_EYE_UNDER_CONTROL, owner);
+                    me->RemoveAurasDueToSpell(SPELL_ROOT_SELF);
+                    DoCastSelf(SPELL_EYE_OF_ACHERUS_FLIGHT);
+                    me->RemoveAurasDueToSpell(SPELL_EYE_OF_ACHERUS_FLIGHT_BOOST);
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -145,11 +139,11 @@ struct npc_eye_of_acherus : public ScriptedAI
 
         switch (pointId)
         {
-        case POINT_NEW_AVALON:
-            DoCastSelf(SPELL_ROOT_SELF);
-            break;
-        default:
-            break;
+            case POINT_NEW_AVALON:
+                DoCastSelf(SPELL_ROOT_SELF);
+                break;
+            default:
+                break;
         }
     }
 
@@ -168,37 +162,43 @@ class spell_q12641_death_comes_from_on_high_summon_ghouls : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SUMMON_GHOULS_ON_SCARLET_CRUSADE });
+        return ValidateSpellInfo({SUMMON_GHOULS_ON_SCARLET_CRUSADE});
     }
 
     void HandleScriptEffect(SpellEffIndex effIndex)
     {
         PreventHitEffect(effIndex);
         if (Unit* target = GetHitUnit())
-            GetCaster()->CastSpell(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), SUMMON_GHOULS_ON_SCARLET_CRUSADE, true);
+            GetCaster()->CastSpell(target->GetPositionX(),
+                target->GetPositionY(),
+                target->GetPositionZ(),
+                SUMMON_GHOULS_ON_SCARLET_CRUSADE,
+                true);
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_q12641_death_comes_from_on_high_summon_ghouls::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget += SpellEffectFn(spell_q12641_death_comes_from_on_high_summon_ghouls::HandleScriptEffect,
+            EFFECT_0,
+            SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
 enum deathsChallenge
 {
-    SPELL_DUEL                  = 52996,
+    SPELL_DUEL = 52996,
     //SPELL_DUEL_TRIGGERED        = 52990,
-    SPELL_DUEL_VICTORY          = 52994,
-    SPELL_DUEL_FLAG             = 52991,
+    SPELL_DUEL_VICTORY = 52994,
+    SPELL_DUEL_FLAG = 52991,
 
-    SAY_DUEL                    = 0,
+    SAY_DUEL = 0,
 
-    QUEST_DEATH_CHALLENGE       = 12733,
+    QUEST_DEATH_CHALLENGE = 12733,
 
-    DATA_IN_PROGRESS            = 0,
+    DATA_IN_PROGRESS = 0,
 
-    EVENT_SPEAK                 = 1, // 1 - 6
-    EVENT_DUEL_LOST             = 7, // 7 - 8
+    EVENT_SPEAK = 1,     // 1 - 6
+    EVENT_DUEL_LOST = 7, // 7 - 8
 };
 
 class npc_death_knight_initiate : public CreatureScript
@@ -344,19 +344,19 @@ public:
                 case EVENT_SPEAK:
                     Talk(SAY_DUEL, ObjectAccessor::GetPlayer(*me, _duelGUID));
                     break;
-                case EVENT_SPEAK+1:
+                case EVENT_SPEAK + 1:
                     Talk(SAY_DUEL + 1, ObjectAccessor::GetPlayer(*me, _duelGUID));
                     break;
-                case EVENT_SPEAK+2:
+                case EVENT_SPEAK + 2:
                     Talk(SAY_DUEL + 2, ObjectAccessor::GetPlayer(*me, _duelGUID));
                     break;
-                case EVENT_SPEAK+3:
+                case EVENT_SPEAK + 3:
                     Talk(SAY_DUEL + 3, ObjectAccessor::GetPlayer(*me, _duelGUID));
                     break;
-                case EVENT_SPEAK+4:
+                case EVENT_SPEAK + 4:
                     Talk(SAY_DUEL + 4, ObjectAccessor::GetPlayer(*me, _duelGUID));
                     break;
-                case EVENT_SPEAK+5:
+                case EVENT_SPEAK + 5:
                     me->SetFaction(FACTION_UNDEAD_SCOURGE_2);
                     if (Player* player = ObjectAccessor::GetPlayer(*me, _duelGUID))
                         AttackStart(player);
@@ -364,7 +364,7 @@ public:
                 case EVENT_DUEL_LOST:
                     me->CastSpell(me, 7267, true);
                     break;
-                case EVENT_DUEL_LOST+1:
+                case EVENT_DUEL_LOST + 1:
                     EnterEvadeMode();
                     return;
             }
@@ -390,19 +390,19 @@ public:
 
 enum GiftOfTheHarvester
 {
-    NPC_GHOUL                   = 28845,
-    MAX_GHOULS                  = 5,
+    NPC_GHOUL = 28845,
+    MAX_GHOULS = 5,
 
-    SPELL_GHOUL_EMERGE          = 50142,
-    SPELL_SUMMON_SCARLET_GHOST  = 52505,
-    SPELL_GHOUL_SUBMERGE        = 26234,
+    SPELL_GHOUL_EMERGE = 50142,
+    SPELL_SUMMON_SCARLET_GHOST = 52505,
+    SPELL_GHOUL_SUBMERGE = 26234,
 
-    EVENT_GHOUL_RESTORE_STATE   = 1,
-    EVENT_GHOUL_CHECK_COMBAT    = 2,
-    EVENT_GHOUL_EMOTE           = 3,
-    EVENT_GHOUL_MOVE_TO_PIT     = 4,
+    EVENT_GHOUL_RESTORE_STATE = 1,
+    EVENT_GHOUL_CHECK_COMBAT = 2,
+    EVENT_GHOUL_EMOTE = 3,
+    EVENT_GHOUL_MOVE_TO_PIT = 4,
 
-    SAY_GOTHIK_PIT              = 0
+    SAY_GOTHIK_PIT = 0
 };
 
 class spell_item_gift_of_the_harvester : public SpellScript
@@ -434,18 +434,20 @@ class spell_q12698_the_gift_that_keeps_on_giving : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SUMMON_SCARLET_GHOST });
+        return ValidateSpellInfo({SPELL_SUMMON_SCARLET_GHOST});
     }
 
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
     {
         if (GetOriginalCaster() && GetHitUnit())
-            GetOriginalCaster()->CastSpell(GetHitUnit(), urand(0, 1) ? GetEffectValue() : SPELL_SUMMON_SCARLET_GHOST, true);
+            GetOriginalCaster()->CastSpell(
+                GetHitUnit(), urand(0, 1) ? GetEffectValue() : SPELL_SUMMON_SCARLET_GHOST, true);
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_q12698_the_gift_that_keeps_on_giving::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget += SpellEffectFn(
+            spell_q12698_the_gift_that_keeps_on_giving::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -461,9 +463,7 @@ public:
 
     struct npc_scarlet_ghoulAI : public ScriptedAI
     {
-        npc_scarlet_ghoulAI(Creature* creature) : ScriptedAI(creature)
-        {
-        }
+        npc_scarlet_ghoulAI(Creature* creature) : ScriptedAI(creature) { }
 
         EventMap events;
         ObjectGuid gothikGUID;
@@ -550,7 +550,10 @@ public:
 
     struct npc_dkc1_gothikAI : public ScriptedAI
     {
-        npc_dkc1_gothikAI(Creature* creature) : ScriptedAI(creature) { spoken = 0; }
+        npc_dkc1_gothikAI(Creature* creature) : ScriptedAI(creature)
+        {
+            spoken = 0;
+        }
 
         int32 spoken;
 
@@ -602,9 +605,13 @@ public:
 
     struct npc_scarlet_cannonAI : public VehicleAI
     {
-        npc_scarlet_cannonAI(Creature* creature) : VehicleAI(creature) { summonAttackers = 0; }
+        npc_scarlet_cannonAI(Creature* creature) : VehicleAI(creature)
+        {
+            summonAttackers = 0;
+        }
 
         uint32 summonAttackers;
+
         void PassengerBoarded(Unit* /*passenger*/, int8 /*seatId*/, bool apply) override
         {
             summonAttackers = apply ? 8000 : 0;
@@ -620,7 +627,13 @@ public:
                 if (summonAttackers >= 15000)
                 {
                     for (uint8 i = 0; i < 15; ++i)
-                        if (Creature* summon = me->SummonCreature(28834 /*NPC_SCARLET_FLEET_DEFENDER*/, 2192.56f + irand(-10, 10), -6147.90f + irand(-10, 10), 5.2f, 4.7f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 45000))
+                        if (Creature* summon = me->SummonCreature(28834 /*NPC_SCARLET_FLEET_DEFENDER*/,
+                                2192.56f + irand(-10, 10),
+                                -6147.90f + irand(-10, 10),
+                                5.2f,
+                                4.7f,
+                                TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                                45000))
                         {
                             summon->SetHomePosition(me->GetHomePosition());
                             summon->AI()->AttackStart(me);
@@ -642,21 +655,21 @@ public:
 
 enum UnworthyInitiate
 {
-    SPELL_SOUL_PRISON_CHAIN         = 54612,
-    SPELL_DK_INITIATE_VISUAL        = 51519,
+    SPELL_SOUL_PRISON_CHAIN = 54612,
+    SPELL_DK_INITIATE_VISUAL = 51519,
 
-    SPELL_ICY_TOUCH                 = 52372,
-    SPELL_PLAGUE_STRIKE             = 52373,
-    SPELL_BLOOD_STRIKE              = 52374,
-    SPELL_DEATH_COIL                = 52375,
+    SPELL_ICY_TOUCH = 52372,
+    SPELL_PLAGUE_STRIKE = 52373,
+    SPELL_BLOOD_STRIKE = 52374,
+    SPELL_DEATH_COIL = 52375,
 
-    SAY_EVENT_START                 = 0,
-    SAY_EVENT_ATTACK                = 1,
+    SAY_EVENT_START = 0,
+    SAY_EVENT_ATTACK = 1,
 
-    EVENT_ICY_TOUCH                 = 1,
-    EVENT_PLAGUE_STRIKE             = 2,
-    EVENT_BLOOD_STRIKE              = 3,
-    EVENT_DEATH_COIL                = 4
+    EVENT_ICY_TOUCH = 1,
+    EVENT_PLAGUE_STRIKE = 2,
+    EVENT_BLOOD_STRIKE = 3,
+    EVENT_DEATH_COIL = 4
 };
 
 enum UnworthyInitiatePhase
@@ -668,21 +681,8 @@ enum UnworthyInitiatePhase
     PHASE_ATTACKING,
 };
 
-uint32 acherus_soul_prison[12] =
-{
-    191577,
-    191580,
-    191581,
-    191582,
-    191583,
-    191584,
-    191585,
-    191586,
-    191587,
-    191588,
-    191589,
-    191590
-};
+uint32 acherus_soul_prison[12] = {
+    191577, 191580, 191581, 191582, 191583, 191584, 191585, 191586, 191587, 191588, 191589, 191590};
 
 //uint32 acherus_unworthy_initiate[5] =
 //{
@@ -890,7 +890,7 @@ public:
 
     struct npc_unworthy_initiate_anchorAI : public PassiveAI
     {
-        npc_unworthy_initiate_anchorAI(Creature* creature) : PassiveAI(creature) {}
+        npc_unworthy_initiate_anchorAI(Creature* creature) : PassiveAI(creature) { }
 
         ObjectGuid prisonerGUID;
 
@@ -929,8 +929,8 @@ public:
 
 enum Spells_SM
 {
-    SPELL_CART_CHECK       = 54173,
-    SPELL_CART_DRAG        = 52465
+    SPELL_CART_CHECK = 54173,
+    SPELL_CART_DRAG = 52465
 };
 
 class npc_scarlet_miner_cart : public CreatureScript
@@ -992,8 +992,8 @@ public:
 
 enum Says_SM
 {
-    SAY_SCARLET_MINER_0         = 0,
-    SAY_SCARLET_MINER_1         = 1
+    SAY_SCARLET_MINER_0 = 0,
+    SAY_SCARLET_MINER_1 = 1
 };
 
 class npc_scarlet_miner : public CreatureScript
@@ -1026,7 +1026,7 @@ public:
 
         void InitWaypoint()
         {
-            AddWaypoint(1, 2389.03f,     -5902.74f,     109.014f, 5000);
+            AddWaypoint(1, 2389.03f, -5902.74f, 109.014f, 5000);
             AddWaypoint(2, 2341.812012f, -5900.484863f, 102.619743f);
             AddWaypoint(3, 2308.34f, -5904.2f, 91.1099f);
             AddWaypoint(4, 2300.69f, -5912.99f, 86.1572f);
@@ -1093,7 +1093,8 @@ public:
                 case 23:
                     if (Creature* car = ObjectAccessor::GetCreature(*me, carGUID))
                     {
-                        car->SetPosition(car->GetPositionX(), car->GetPositionY(), me->GetPositionZ() + 1, car->GetOrientation());
+                        car->SetPosition(
+                            car->GetPositionX(), car->GetPositionY(), me->GetPositionZ() + 1, car->GetOrientation());
                         car->StopMovingOnCurrentPos();
                         me->SetFacingToObject(car);
                         car->RemoveAura(SPELL_CART_DRAG);
@@ -1125,7 +1126,8 @@ public:
                         IntroPhase = 0;
                     }
                 }
-                else IntroTimer -= diff;
+                else
+                    IntroTimer -= diff;
             }
             npc_escortAI::UpdateAI(diff);
         }
@@ -1138,7 +1140,7 @@ public:
 
 enum Spells_Cart
 {
-    SPELL_CART_SUMM        = 52463
+    SPELL_CART_SUMM = 52463
 };
 
 class go_inconspicuous_mine_car : public GameObjectScript
@@ -1151,7 +1153,13 @@ public:
         if (player->GetQuestStatus(12701) == QUEST_STATUS_INCOMPLETE)
         {
             // Hack Why Trinity Dont Support Custom Summon Location
-            if (Creature* miner = player->SummonCreature(28841, 2383.869629f, -5900.312500f, 107.996086f, player->GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 1))
+            if (Creature* miner = player->SummonCreature(28841,
+                    2383.869629f,
+                    -5900.312500f,
+                    107.996086f,
+                    player->GetOrientation(),
+                    TEMPSUMMON_DEAD_DESPAWN,
+                    1))
             {
                 player->CastSpell(player, SPELL_CART_SUMM, true);
                 if (Creature* car = player->GetVehicleCreatureBase())
@@ -1182,27 +1190,68 @@ class spell_death_knight_initiate_visual : public SpellScript
         uint32 spellId;
         switch (target->GetDisplayId())
         {
-            case 25369: spellId = 51552; break; // bloodelf female
-            case 25373: spellId = 51551; break; // bloodelf male
-            case 25363: spellId = 51542; break; // draenei female
-            case 25357: spellId = 51541; break; // draenei male
-            case 25361: spellId = 51537; break; // dwarf female
-            case 25356: spellId = 51538; break; // dwarf male
-            case 25372: spellId = 51550; break; // forsaken female
-            case 25367: spellId = 51549; break; // forsaken male
-            case 25362: spellId = 51540; break; // gnome female
-            case 25359: spellId = 51539; break; // gnome male
-            case 25355: spellId = 51534; break; // human female
-            case 25354: spellId = 51520; break; // human male
-            case 25360: spellId = 51536; break; // nightelf female
-            case 25358: spellId = 51535; break; // nightelf male
-            case 25368: spellId = 51544; break; // orc female
-            case 25364: spellId = 51543; break; // orc male
-            case 25371: spellId = 51548; break; // tauren female
-            case 25366: spellId = 51547; break; // tauren male
-            case 25370: spellId = 51545; break; // troll female
-            case 25365: spellId = 51546; break; // troll male
-            default: return;
+            case 25369:
+                spellId = 51552;
+                break; // bloodelf female
+            case 25373:
+                spellId = 51551;
+                break; // bloodelf male
+            case 25363:
+                spellId = 51542;
+                break; // draenei female
+            case 25357:
+                spellId = 51541;
+                break; // draenei male
+            case 25361:
+                spellId = 51537;
+                break; // dwarf female
+            case 25356:
+                spellId = 51538;
+                break; // dwarf male
+            case 25372:
+                spellId = 51550;
+                break; // forsaken female
+            case 25367:
+                spellId = 51549;
+                break; // forsaken male
+            case 25362:
+                spellId = 51540;
+                break; // gnome female
+            case 25359:
+                spellId = 51539;
+                break; // gnome male
+            case 25355:
+                spellId = 51534;
+                break; // human female
+            case 25354:
+                spellId = 51520;
+                break; // human male
+            case 25360:
+                spellId = 51536;
+                break; // nightelf female
+            case 25358:
+                spellId = 51535;
+                break; // nightelf male
+            case 25368:
+                spellId = 51544;
+                break; // orc female
+            case 25364:
+                spellId = 51543;
+                break; // orc male
+            case 25371:
+                spellId = 51548;
+                break; // tauren female
+            case 25366:
+                spellId = 51547;
+                break; // tauren male
+            case 25370:
+                spellId = 51545;
+                break; // troll female
+            case 25365:
+                spellId = 51546;
+                break; // troll male
+            default:
+                return;
         }
 
         target->CastSpell(target, spellId, true);
@@ -1211,7 +1260,8 @@ class spell_death_knight_initiate_visual : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_death_knight_initiate_visual::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_death_knight_initiate_visual::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -1243,13 +1293,22 @@ class spell_lich_king_vo_blocker : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo
-        ({
-             SPELL_LICHKINGDK001, SPELL_LICHKINGDK002, SPELL_LICHKINGDK003, SPELL_LICHKINGDK004,
-             SPELL_LICHKINGDK005, SPELL_LICHKINGDK006, SPELL_LICHKINGDK007, SPELL_LICHKINGDK008,
-             SPELL_LICHKINGDK009, SPELL_LICHKINGDK010, SPELL_LICHKINGDK011, SPELL_LICHKINGDK012,
-             SPELL_LICHKINGDK013, SPELL_LICHKINGDK014, SPELL_LICHKINGDK015, SPELL_LICHKINGDK016
-        });
+        return ValidateSpellInfo({SPELL_LICHKINGDK001,
+            SPELL_LICHKINGDK002,
+            SPELL_LICHKINGDK003,
+            SPELL_LICHKINGDK004,
+            SPELL_LICHKINGDK005,
+            SPELL_LICHKINGDK006,
+            SPELL_LICHKINGDK007,
+            SPELL_LICHKINGDK008,
+            SPELL_LICHKINGDK009,
+            SPELL_LICHKINGDK010,
+            SPELL_LICHKINGDK011,
+            SPELL_LICHKINGDK012,
+            SPELL_LICHKINGDK013,
+            SPELL_LICHKINGDK014,
+            SPELL_LICHKINGDK015,
+            SPELL_LICHKINGDK016});
     }
 
     void HandleEffectApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -1263,7 +1322,8 @@ class spell_lich_king_vo_blocker : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_lich_king_vo_blocker::HandleEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_lich_king_vo_blocker::HandleEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -1275,7 +1335,7 @@ class spell_lich_king_whisper : public SpellScript
     bool Validate(SpellInfo const* spellInfo) override
     {
         return sObjectMgr->GetBroadcastText(uint32(spellInfo->GetEffect(EFFECT_0).CalcValue())) &&
-            sSoundEntriesStore.LookupEntry(uint32(spellInfo->GetEffect(EFFECT_1).CalcValue()));
+               sSoundEntriesStore.LookupEntry(uint32(spellInfo->GetEffect(EFFECT_1).CalcValue()));
     }
 
     void HandleScript(SpellEffIndex /*effIndex*/)

@@ -22,9 +22,8 @@
 #include "ScriptedCreature.h"
 #include "obsidian_sanctum.h"
 
-BossBoundaryData const boundaries =
-{
-    { DATA_SARTHARION, new RectangleBoundary(3218.86f, 3275.69f, 484.68f, 572.4f) }
+BossBoundaryData const boundaries = {
+    {DATA_SARTHARION, new RectangleBoundary(3218.86f, 3275.69f, 484.68f, 572.4f)}
 };
 
 class instance_obsidian_sanctum : public InstanceMapScript
@@ -82,7 +81,8 @@ public:
             return ObjectGuid::Empty;
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* source, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* source, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {
@@ -149,7 +149,8 @@ public:
                     {
                         if (Creature* sartharion = instance->GetCreature(m_uiSartharionGUID))
                         {
-                            if (GameObject* portal = sartharion->SummonGameObject(GO_TWILIGHT_PORTAL, 3247.29f, 529.804f, 58.9595f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0))
+                            if (GameObject* portal = sartharion->SummonGameObject(
+                                    GO_TWILIGHT_PORTAL, 3247.29f, 529.804f, 58.9595f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0))
                             {
                                 sartharion->RemoveGameObject(portal, false);
                                 m_uiPortalGUID = portal->GetGUID();
@@ -168,9 +169,7 @@ public:
                     if (!portalCount)
                     {
                         if (GameObject* go = instance->GetGameObject(m_uiPortalGUID))
-                        {
                             go->Delete();
-                        }
 
                         DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
                         m_uiPortalGUID.Clear();

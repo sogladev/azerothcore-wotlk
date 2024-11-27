@@ -23,35 +23,35 @@
 
 enum Spells
 {
-    SPELL_SHADOW_BOLT_N                         = 57725,
-    SPELL_SHADOW_BOLT_H                         = 58827,
-    SPELL_STEAL_FLESH_CHANNEL                   = 52708,
-    SPELL_STEAL_FLESH_TARGET                    = 52711,
-    SPELL_STEAL_FLESH_CASTER                    = 52712,
-    SPELL_SUMMON_GHOULS                         = 52451,
-    SPELL_EXPLODE_GHOUL_N                       = 52480,
-    SPELL_EXPLODE_GHOUL_H                       = 58825,
-    SPELL_CURSE_OF_TWISTED_FAITH                = 58845,
+    SPELL_SHADOW_BOLT_N = 57725,
+    SPELL_SHADOW_BOLT_H = 58827,
+    SPELL_STEAL_FLESH_CHANNEL = 52708,
+    SPELL_STEAL_FLESH_TARGET = 52711,
+    SPELL_STEAL_FLESH_CASTER = 52712,
+    SPELL_SUMMON_GHOULS = 52451,
+    SPELL_EXPLODE_GHOUL_N = 52480,
+    SPELL_EXPLODE_GHOUL_H = 58825,
+    SPELL_CURSE_OF_TWISTED_FAITH = 58845,
 };
 
 enum Events
 {
-    EVENT_SPELL_SHADOW_BOLT                     = 1,
-    EVENT_SPELL_STEAL_FLESH                     = 2,
-    EVENT_SPELL_SUMMON_GHOULS                   = 3,
-    EVENT_EXPLODE_GHOUL                         = 4,
-    EVENT_SPELL_CURSE                           = 5,
+    EVENT_SPELL_SHADOW_BOLT = 1,
+    EVENT_SPELL_STEAL_FLESH = 2,
+    EVENT_SPELL_SUMMON_GHOULS = 3,
+    EVENT_EXPLODE_GHOUL = 4,
+    EVENT_SPELL_CURSE = 5,
 };
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_SPAWN                                   = 1,
-    SAY_SLAY                                    = 2,
-    SAY_DEATH                                   = 3,
-    SAY_EXPLODE_GHOUL                           = 4,
-    SAY_STEAL_FLESH                             = 5,
-    SAY_SUMMON_GHOULS                           = 6
+    SAY_AGGRO = 0,
+    SAY_SPAWN = 1,
+    SAY_SLAY = 2,
+    SAY_DEATH = 3,
+    SAY_EXPLODE_GHOUL = 4,
+    SAY_STEAL_FLESH = 5,
+    SAY_SUMMON_GHOULS = 6
 };
 
 class boss_salramm : public CreatureScript
@@ -73,13 +73,17 @@ public:
 
         EventMap events;
         SummonList summons;
+
         void Reset() override
         {
             events.Reset();
             summons.DespawnAll();
         }
 
-        void JustSummoned(Creature* cr) override { summons.Summon(cr); }
+        void JustSummoned(Creature* cr) override
+        {
+            summons.Summon(cr);
+        }
 
         void JustEngagedWith(Unit* /*who*/) override
         {
@@ -98,7 +102,7 @@ public:
             Talk(SAY_DEATH);
         }
 
-        void KilledUnit(Unit*  /*victim*/) override
+        void KilledUnit(Unit* /*victim*/) override
         {
             if (!urand(0, 1))
                 return;
@@ -167,7 +171,7 @@ class spell_boss_salramm_steal_flesh_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_STEAL_FLESH_CASTER, SPELL_STEAL_FLESH_TARGET });
+        return ValidateSpellInfo({SPELL_STEAL_FLESH_CASTER, SPELL_STEAL_FLESH_TARGET});
     }
 
     void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -183,7 +187,10 @@ class spell_boss_salramm_steal_flesh_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_boss_salramm_steal_flesh_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_boss_salramm_steal_flesh_aura::OnRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 

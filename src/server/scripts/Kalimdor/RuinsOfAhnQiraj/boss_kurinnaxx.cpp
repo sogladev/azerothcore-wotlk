@@ -25,22 +25,22 @@
 
 enum Spells
 {
-    SPELL_MORTAL_WOUND      = 25646,
-    SPELL_SAND_TRAP         = 25648,
-    SPELL_ENRAGE            = 26527,
-    SPELL_SUMMON_PLAYER     = 26446,
-    SPELL_WIDE_SLASH        = 25814,
-    SPELL_THRASH            = 3391
+    SPELL_MORTAL_WOUND = 25646,
+    SPELL_SAND_TRAP = 25648,
+    SPELL_ENRAGE = 26527,
+    SPELL_SUMMON_PLAYER = 26446,
+    SPELL_WIDE_SLASH = 25814,
+    SPELL_THRASH = 3391
 };
 
 enum Texts
 {
-    SAY_KURINNAXX_DEATH     = 5 // Yell by 'Ossirian the Unscarred'
+    SAY_KURINNAXX_DEATH = 5 // Yell by 'Ossirian the Unscarred'
 };
 
 struct boss_kurinnaxx : public BossAI
 {
-    boss_kurinnaxx(Creature* creature) : BossAI(creature, DATA_KURINNAXX) {}
+    boss_kurinnaxx(Creature* creature) : BossAI(creature, DATA_KURINNAXX) { }
 
     void InitializeAI() override
     {
@@ -51,31 +51,37 @@ struct boss_kurinnaxx : public BossAI
     {
         BossAI::JustEngagedWith(who);
 
-        scheduler.Schedule(8s, 10s, [this](TaskContext context)
+        scheduler
+            .Schedule(8s,
+                10s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_MORTAL_WOUND);
             context.Repeat(8s, 10s);
-        }).Schedule(5s, 15s, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                15s,
+                [this](TaskContext context)
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 100.f, true))
-            {
                 target->CastSpell(target, SPELL_SAND_TRAP, true, nullptr, nullptr, me->GetGUID());
-            }
             context.Repeat(5s, 15s);
-        }).Schedule(10s, 15s, [this](TaskContext context)
+        })
+            .Schedule(10s,
+                15s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_WIDE_SLASH);
             context.Repeat(12s, 15s);
-        }).Schedule(16s, [this](TaskContext context)
+        })
+            .Schedule(16s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_THRASH);
             context.Repeat(16s);
         });
 
-        ScheduleHealthCheckEvent(30, [&]
-        {
-            DoCastSelf(SPELL_ENRAGE);
-        });
+        ScheduleHealthCheckEvent(30, [&] { DoCastSelf(SPELL_ENRAGE); });
     }
 
     void JustDied(Unit* killer) override
@@ -87,7 +93,8 @@ struct boss_kurinnaxx : public BossAI
 
             if (Player* player = killer->GetCharmerOrOwnerPlayerOrPlayerItself())
             {
-                if (Creature* creature = player->SummonCreature(NPC_ANDOROV, -8538.177f, 1486.0956f, 32.39054f, 3.7638654f, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                if (Creature* creature = player->SummonCreature(
+                        NPC_ANDOROV, -8538.177f, 1486.0956f, 32.39054f, 3.7638654f, TEMPSUMMON_CORPSE_DESPAWN, 0))
                 {
                     creature->setActive(true);
                 }
@@ -110,7 +117,8 @@ struct go_sand_trap : public GameObjectAI
 
     void Reset() override
     {
-        _scheduler.Schedule(5s, [this](TaskContext /*context*/)
+        _scheduler.Schedule(5s,
+            [this](TaskContext /*context*/)
         {
             if (InstanceScript* instance = me->GetInstanceScript())
                 if (Creature* kurinnaxx = instance->GetCreature(DATA_KURINNAXX))

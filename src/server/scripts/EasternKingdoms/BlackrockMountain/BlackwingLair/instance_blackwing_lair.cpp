@@ -30,35 +30,33 @@
 #include "blackwing_lair.h"
 #include <array>
 
-DoorData const doorData[] =
-{
-    { GO_PORTCULLIS_RAZORGORE,      DATA_RAZORGORE_THE_UNTAMED,  DOOR_TYPE_PASSAGE }, // ID 175946 || GUID 7230
-    { GO_PORTCULLIS_RAZORGORE_ROOM, DATA_RAZORGORE_THE_UNTAMED,  DOOR_TYPE_ROOM,   }, // ID 176964 || GUID 75158
-    { GO_PORTCULLIS_VAELASTRASZ,    DATA_VAELASTRAZ_THE_CORRUPT, DOOR_TYPE_PASSAGE }, // ID 175185 || GUID 7229
-    { GO_PORTCULLIS_BROODLORD,      DATA_BROODLORD_LASHLAYER,    DOOR_TYPE_PASSAGE }, // ID 179365 || GUID 75159
-    { GO_PORTCULLIS_CHROMAGGUS_EXIT,DATA_CHROMAGGUS,             DOOR_TYPE_PASSAGE }, // ID 179117 || GUID 75164
-    { GO_PORTCULLIS_CHROMAGGUS_EXIT,DATA_NEFARIAN,               DOOR_TYPE_ROOM    }, // ID 179117 || GUID 75164
-    { GO_PORTCULLIS_NEFARIAN,       DATA_NEFARIAN,               DOOR_TYPE_ROOM    }, // ID 176966
-    { 0,                            0,                           DOOR_TYPE_ROOM    }  // END
+DoorData const doorData[] = {
+    {GO_PORTCULLIS_RAZORGORE, DATA_RAZORGORE_THE_UNTAMED, DOOR_TYPE_PASSAGE}, // ID 175946 || GUID 7230
+    {
+     GO_PORTCULLIS_RAZORGORE_ROOM, DATA_RAZORGORE_THE_UNTAMED,
+     DOOR_TYPE_ROOM, }, // ID 176964 || GUID 75158
+    {GO_PORTCULLIS_VAELASTRASZ, DATA_VAELASTRAZ_THE_CORRUPT, DOOR_TYPE_PASSAGE}, // ID 175185 || GUID 7229
+    {GO_PORTCULLIS_BROODLORD, DATA_BROODLORD_LASHLAYER, DOOR_TYPE_PASSAGE}, // ID 179365 || GUID 75159
+    {GO_PORTCULLIS_CHROMAGGUS_EXIT, DATA_CHROMAGGUS, DOOR_TYPE_PASSAGE}, // ID 179117 || GUID 75164
+    {GO_PORTCULLIS_CHROMAGGUS_EXIT, DATA_NEFARIAN, DOOR_TYPE_ROOM}, // ID 179117 || GUID 75164
+    {GO_PORTCULLIS_NEFARIAN, DATA_NEFARIAN, DOOR_TYPE_ROOM}, // ID 176966
+    {0, 0, DOOR_TYPE_ROOM}  // END
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_GRETHOK,         DATA_GRETHOK              },
-    { NPC_NEFARIAN_TROOPS, DATA_NEFARIAN_TROOPS      },
-    { NPC_VICTOR_NEFARIUS, DATA_LORD_VICTOR_NEFARIUS },
-    { NPC_CHROMAGGUS,      DATA_CHROMAGGUS           },
-    { 0,                   0                         }
+ObjectData const creatureData[] = {
+    {NPC_GRETHOK,         DATA_GRETHOK             },
+    {NPC_NEFARIAN_TROOPS, DATA_NEFARIAN_TROOPS     },
+    {NPC_VICTOR_NEFARIUS, DATA_LORD_VICTOR_NEFARIUS},
+    {NPC_CHROMAGGUS,      DATA_CHROMAGGUS          },
+    {0,                   0                        }
 };
 
-ObjectData const objectData[] =
-{
-    { GO_PORTCULLIS_CHROMAGGUS, DATA_GO_CHROMAGGUS_DOOR },
-    { GO_PORTCULLIS_CHROMAGGUS_EXIT, DATA_GO_CHROMAGGUS_DOOR_EXIT }
+ObjectData const objectData[] = {
+    {GO_PORTCULLIS_CHROMAGGUS,      DATA_GO_CHROMAGGUS_DOOR     },
+    {GO_PORTCULLIS_CHROMAGGUS_EXIT, DATA_GO_CHROMAGGUS_DOOR_EXIT}
 };
 
-Position const SummonPosition[8] =
-{
+Position const SummonPosition[8] = {
     {-7661.207520f, -1043.268188f, 407.199554f, 6.280452f},
     {-7644.145020f, -1065.628052f, 407.204956f, 0.501492f},
     {-7624.260742f, -1095.196899f, 407.205017f, 0.544694f},
@@ -69,7 +67,7 @@ Position const SummonPosition[8] =
     {-7584.175781f, -989.6691289f, 407.199585f, 4.527447f},
 };
 
-uint32 const Entry[3] = { 12422, 12416, 12420 };
+uint32 const Entry[3] = {12422, 12416, 12420};
 
 class instance_blackwing_lair : public InstanceMapScript
 {
@@ -100,9 +98,7 @@ public:
         {
             // This is required because the tempspawn at Vael overwrites his GUID.
             if (creature->GetEntry() == NPC_VICTOR_NEFARIUS && creature->ToTempSummon())
-            {
                 return;
-            }
 
             InstanceScript::OnCreatureCreate(creature);
 
@@ -116,9 +112,7 @@ public:
                     if (Creature* razor = instance->GetCreature(razorgoreGUID))
                     {
                         if (CreatureAI* razorAI = razor->AI())
-                        {
                             razorAI->JustSummoned(creature);
-                        }
                     }
                     break;
                 case NPC_BLACKWING_LEGIONAIRE:
@@ -127,9 +121,7 @@ public:
                     if (Creature* razor = instance->GetCreature(razorgoreGUID))
                     {
                         if (CreatureAI* razorAI = razor->AI())
-                        {
                             razorAI->JustSummoned(creature);
-                        }
                     }
                     break;
                 case NPC_BLACKWING_GUARDSMAN:
@@ -147,9 +139,7 @@ public:
                     if (Creature* nefarius = GetCreature(DATA_LORD_VICTOR_NEFARIUS))
                     {
                         if (CreatureAI* nefariusAI = nefarius->AI())
-                        {
                             nefariusAI->JustSummoned(creature);
-                        }
                     }
                     break;
                 default:
@@ -165,13 +155,9 @@ public:
             {
                 case GO_BLACK_DRAGON_EGG:
                     if (GetBossState(DATA_FIREMAW) == DONE)
-                    {
                         go->SetPhaseMask(2, true);
-                    }
                     else
-                    {
                         EggList.push_back(go->GetGUID());
-                    }
                     break;
                 default:
                     break;
@@ -231,11 +217,9 @@ public:
                         for (ObjectGuid const& guid : EggList)
                         {
                             // Eggs should be destroyed instead
-                           /// @todo: after dynamic spawns
+                            /// @todo: after dynamic spawns
                             if (GameObject* egg = instance->GetGameObject(guid))
-                            {
                                 egg->SetPhaseMask(2, true);
-                            }
                         }
                     }
                     break;
@@ -247,9 +231,7 @@ public:
                             [[fallthrough]];
                         case NOT_STARTED:
                             if (Creature* nefarian = instance->GetCreature(nefarianGUID))
-                            {
                                 nefarian->DespawnOrUnsummon();
-                            }
                             break;
                         default:
                             break;
@@ -284,16 +266,12 @@ public:
                         addsCount.fill(0);
 
                         for (ObjectGuid const& guid : EggList)
-                        {
                             DoRespawnGameObject(guid, 0);
-                        }
 
                         DoRespawnCreature(DATA_GRETHOK);
 
                         for (ObjectGuid const& guid : guardList)
-                        {
                             DoRespawnCreature(guid);
-                        }
 
                         break;
                     case SPECIAL:
@@ -315,14 +293,10 @@ public:
             }
 
             if (type == DATA_NEFARIAN_LEFT_TUNNEL)
-            {
                 NefarianLeftTunnel = data;
-            }
 
             if (type == DATA_NEFARIAN_RIGHT_TUNNEL)
-            {
                 NefarianRightTunnel = data;
-            }
         }
 
         ObjectGuid GetGuidData(uint32 type) const override
@@ -345,17 +319,13 @@ public:
                 case NPC_BLACKWING_DRAGON:
                     --addsCount[0];
                     if (EggEvent != DONE && _events.GetTimeUntilEvent(EVENT_RAZOR_SPAWN) == Milliseconds::max())
-                    {
                         _events.ScheduleEvent(EVENT_RAZOR_SPAWN, 1s);
-                    }
                     break;
                 case NPC_BLACKWING_LEGIONAIRE:
                 case NPC_BLACKWING_MAGE:
                     --addsCount[1];
                     if (EggEvent != DONE && _events.GetTimeUntilEvent(EVENT_RAZOR_SPAWN) == Milliseconds::max())
-                    {
                         _events.ScheduleEvent(EVENT_RAZOR_SPAWN, 1s);
-                    }
                     break;
                 default:
                     break;
@@ -405,15 +375,11 @@ public:
                                 }
 
                                 if (Creature* summon = instance->SummonCreature(mobEntry, SummonPosition[urand(0, 7)]))
-                                {
                                     summon->AI()->DoZoneInCombat();
-                                }
                             }
 
                             if (spawnMoreAdds)
-                            {
                                 _events.ScheduleEvent(EVENT_RAZOR_SPAWN, 15000);
-                            }
                         }
                         break;
                     case EVENT_RAZOR_PHASE_TWO:
@@ -484,7 +450,7 @@ class spell_bwl_shadowflame : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_ONYXIA_SCALE_CLOAK, SPELL_SHADOW_FLAME_DOT });
+        return ValidateSpellInfo({SPELL_ONYXIA_SCALE_CLOAK, SPELL_SHADOW_FLAME_DOT});
     }
 
     void HandleEffectScriptEffect(SpellEffIndex /*effIndex*/)
@@ -497,17 +463,18 @@ class spell_bwl_shadowflame : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_bwl_shadowflame::HandleEffectScriptEffect, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_bwl_shadowflame::HandleEffectScriptEffect, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
     }
 };
 
 enum orb_of_command_misc
 {
     QUEST_BLACKHANDS_COMMAND = 7761,
-    MAP_BWL                  = 469
+    MAP_BWL = 469
 };
 
-const Position orbOfCommandTP = { -7672.46f, -1107.19f, 396.65f, 0.59f };
+Position const orbOfCommandTP = {-7672.46f, -1107.19f, 396.65f, 0.59f};
 
 class at_orb_of_command : public AreaTriggerScript
 {
@@ -518,7 +485,11 @@ public:
     {
         if (!player->IsAlive() && player->GetQuestRewardStatus(QUEST_BLACKHANDS_COMMAND))
         {
-            player->TeleportTo(MAP_BWL, orbOfCommandTP.m_positionX, orbOfCommandTP.m_positionY, orbOfCommandTP.m_positionZ, orbOfCommandTP.m_orientation);
+            player->TeleportTo(MAP_BWL,
+                orbOfCommandTP.m_positionX,
+                orbOfCommandTP.m_positionY,
+                orbOfCommandTP.m_positionZ,
+                orbOfCommandTP.m_orientation);
             return true;
         }
         return false;

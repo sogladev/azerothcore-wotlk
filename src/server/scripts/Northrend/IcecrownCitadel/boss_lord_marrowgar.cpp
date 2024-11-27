@@ -29,32 +29,32 @@
 
 enum ScriptTexts
 {
-    SAY_ENTER_ZONE              = 0,
-    SAY_AGGRO                   = 1,
-    SAY_BONE_STORM              = 2,
-    SAY_BONESPIKE               = 3,
-    SAY_KILL                    = 4,
-    SAY_DEATH                   = 5,
-    SAY_BERSERK                 = 6,
-    EMOTE_BONE_STORM            = 7,
+    SAY_ENTER_ZONE = 0,
+    SAY_AGGRO = 1,
+    SAY_BONE_STORM = 2,
+    SAY_BONESPIKE = 3,
+    SAY_KILL = 4,
+    SAY_DEATH = 5,
+    SAY_BERSERK = 6,
+    EMOTE_BONE_STORM = 7,
 };
 
 enum Spells
 {
     // Lord Marrowgar
-    SPELL_BONE_SLICE            = 69055,
-    SPELL_BONE_STORM            = 69076,
-    SPELL_BONE_SPIKE_GRAVEYARD  = 69057,
-    SPELL_COLDFLAME_NORMAL      = 69140,
-    SPELL_COLDFLAME_BONE_STORM  = 72705,
+    SPELL_BONE_SLICE = 69055,
+    SPELL_BONE_STORM = 69076,
+    SPELL_BONE_SPIKE_GRAVEYARD = 69057,
+    SPELL_COLDFLAME_NORMAL = 69140,
+    SPELL_COLDFLAME_BONE_STORM = 72705,
 
     // Bone Spike
-    SPELL_IMPALED               = 69065,
-    SPELL_RIDE_VEHICLE          = 46598,
+    SPELL_IMPALED = 69065,
+    SPELL_RIDE_VEHICLE = 46598,
 
     // Coldflame
-    SPELL_COLDFLAME_PASSIVE     = 69145,
-    SPELL_COLDFLAME_SUMMON      = 69147,
+    SPELL_COLDFLAME_PASSIVE = 69145,
+    SPELL_COLDFLAME_SUMMON = 69147,
 };
 
 enum Events
@@ -76,6 +76,7 @@ struct BoneStormMoveTargetSelector
 {
 public:
     BoneStormMoveTargetSelector(Creature* source) : _source(source) { }
+
     bool operator()(Unit const* target) const
     {
         if (!target)
@@ -173,13 +174,13 @@ public:
                 _boneSlice = true;
                 break;
             case EVENT_SPELL_BONE_SPIKE_GRAVEYARD:
-                {
-                    bool a = me->HasAura(SPELL_BONE_STORM);
-                    if (IsHeroic() || !a)
-                        me->CastSpell(me, SPELL_BONE_SPIKE_GRAVEYARD, a);
-                    events.Repeat(15s, 20s);
-                }
-                break;
+            {
+                bool a = me->HasAura(SPELL_BONE_STORM);
+                if (IsHeroic() || !a)
+                    me->CastSpell(me, SPELL_BONE_SPIKE_GRAVEYARD, a);
+                events.Repeat(15s, 20s);
+            }
+            break;
             case EVENT_SPELL_COLDFLAME:
                 if (!me->HasAura(SPELL_BONE_STORM))
                     me->CastSpell((Unit*)nullptr, SPELL_COLDFLAME_NORMAL, false);
@@ -201,37 +202,38 @@ public:
                 events.ScheduleEvent(EVENT_BEGIN_BONE_STORM, 3050ms);
                 break;
             case EVENT_BEGIN_BONE_STORM:
-                {
-                    uint32 _boneStormDuration = RAID_MODE<uint32>(20000, 30000, 20000, 30000);
-                    if (Aura* pStorm = me->GetAura(SPELL_BONE_STORM))
-                        pStorm->SetDuration(int32(_boneStormDuration));
-                    events.ScheduleEvent(EVENT_BONE_STORM_MOVE, 0ms);
-                    events.ScheduleEvent(EVENT_END_BONE_STORM, _boneStormDuration + 1);
-                }
-                break;
+            {
+                uint32 _boneStormDuration = RAID_MODE<uint32>(20000, 30000, 20000, 30000);
+                if (Aura* pStorm = me->GetAura(SPELL_BONE_STORM))
+                    pStorm->SetDuration(int32(_boneStormDuration));
+                events.ScheduleEvent(EVENT_BONE_STORM_MOVE, 0ms);
+                events.ScheduleEvent(EVENT_END_BONE_STORM, _boneStormDuration + 1);
+            }
+            break;
             case EVENT_BONE_STORM_MOVE:
+            {
+                if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() == POINT_MOTION_TYPE)
                 {
-                    if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() == POINT_MOTION_TYPE)
-                    {
-                        events.Repeat(1ms);
-                        break;
-                    }
-                    events.Repeat(5s);
-                    Unit* unit = SelectTarget(SelectTargetMethod::Random, 0, BoneStormMoveTargetSelector(me));
-                    if (!unit)
-                    {
-                        if ((unit = SelectTarget(SelectTargetMethod::MaxThreat, 0, 175.0f, true)))
-                            if (unit->GetPositionX() > -337.0f)
-                            {
-                                EnterEvadeMode();
-                                return;
-                            }
-                    }
-                    if (unit)
-                        me->GetMotionMaster()->MoveCharge(unit->GetPositionX(), unit->GetPositionY(), unit->GetPositionZ(), 25.0f, 1337);
+                    events.Repeat(1ms);
                     break;
                 }
+                events.Repeat(5s);
+                Unit* unit = SelectTarget(SelectTargetMethod::Random, 0, BoneStormMoveTargetSelector(me));
+                if (!unit)
+                {
+                    if ((unit = SelectTarget(SelectTargetMethod::MaxThreat, 0, 175.0f, true)))
+                        if (unit->GetPositionX() > -337.0f)
+                        {
+                            EnterEvadeMode();
+                            return;
+                        }
+                }
+                if (unit)
+                    me->GetMotionMaster()->MoveCharge(
+                        unit->GetPositionX(), unit->GetPositionY(), unit->GetPositionZ(), 25.0f, 1337);
                 break;
+            }
+            break;
             case EVENT_END_BONE_STORM:
                 me->StopMoving();
                 me->GetMotionMaster()->MovementExpired();
@@ -254,7 +256,8 @@ public:
         if (_boneSlice && !me->GetCurrentSpell(CURRENT_MELEE_SPELL))
             DoCastVictim(SPELL_BONE_SLICE);
 
-        if (_boneSlice && me->isAttackReady() && me->GetVictim() && !me->HasUnitState(UNIT_STATE_CASTING) && me->IsWithinMeleeRange(me->GetVictim()))
+        if (_boneSlice && me->isAttackReady() && me->GetVictim() && !me->HasUnitState(UNIT_STATE_CASTING) &&
+            me->IsWithinMeleeRange(me->GetVictim()))
         {
             for (uint8 i = 0; i < 3; ++i)
                 _lastBoneSliceTargets[i].Clear();
@@ -291,7 +294,8 @@ public:
 
     void MoveInLineOfSight(Unit* who) override
     {
-        if (!_introDone && me->IsAlive() && who->IsPlayer() && me->GetExactDist2dSq(who) <= 10000.0f) // 100*100, moveinlineofsight limited to 60yd anyway
+        if (!_introDone && me->IsAlive() && who->IsPlayer() &&
+            me->GetExactDist2dSq(who) <= 10000.0f) // 100*100, moveinlineofsight limited to 60yd anyway
         {
             Talk(SAY_ENTER_ZONE);
             _introDone = true;
@@ -313,9 +317,7 @@ public:
 
     struct npc_coldflameAI : public NullCreatureAI
     {
-        npc_coldflameAI(Creature* creature) : NullCreatureAI(creature)
-        {
-        }
+        npc_coldflameAI(Creature* creature) : NullCreatureAI(creature) { }
 
         EventMap events;
 
@@ -335,20 +337,18 @@ public:
                 case 0:
                     break;
                 case 1:
-                    {
-                        me->m_positionZ = 42.5f;
-                        me->DisableSpline();
-                        me->CastSpell(me, SPELL_COLDFLAME_SUMMON, true);
-                        float nx = me->GetPositionX() + 5.0f * cos(me->GetOrientation());
-                        float ny = me->GetPositionY() + 5.0f * std::sin(me->GetOrientation());
-                        if (!me->IsWithinLOS(nx, ny, 42.5f))
-                        {
-                            break;
-                        }
-                        me->NearTeleportTo(nx, ny, 42.5f, me->GetOrientation());
-                        events.Repeat(450ms);
-                    }
-                    break;
+                {
+                    me->m_positionZ = 42.5f;
+                    me->DisableSpline();
+                    me->CastSpell(me, SPELL_COLDFLAME_SUMMON, true);
+                    float nx = me->GetPositionX() + 5.0f * cos(me->GetOrientation());
+                    float ny = me->GetPositionY() + 5.0f * std::sin(me->GetOrientation());
+                    if (!me->IsWithinLOS(nx, ny, 42.5f))
+                        break;
+                    me->NearTeleportTo(nx, ny, 42.5f, me->GetOrientation());
+                    events.Repeat(450ms);
+                }
+                break;
                 case 2:
                     events.Reset();
                     break;
@@ -369,9 +369,7 @@ public:
 
     struct npc_bone_spikeAI : public NullCreatureAI
     {
-        npc_bone_spikeAI(Creature* creature) : NullCreatureAI(creature), hasTrappedUnit(false)
-        {
-        }
+        npc_bone_spikeAI(Creature* creature) : NullCreatureAI(creature), hasTrappedUnit(false) { }
 
         EventMap events;
         bool hasTrappedUnit;
@@ -385,7 +383,8 @@ public:
                 if (Unit* trapped = summ->GetSummonerUnit())
                 {
                     Position exitPos = {me->GetPositionX(), me->GetPositionY(), 60.0f, me->GetOrientation()};
-                    trapped->UpdateAllowedPositionZ(exitPos.GetPositionX(), exitPos.GetPositionY(), exitPos.m_positionZ);
+                    trapped->UpdateAllowedPositionZ(
+                        exitPos.GetPositionX(), exitPos.GetPositionY(), exitPos.m_positionZ);
                     exitPos.m_positionZ += 1.0f;
                     if (Unit* vehBase = trapped->GetVehicleBase())
                         vehBase->RemoveAurasByType(SPELL_AURA_CONTROL_VEHICLE, trapped->GetGUID());
@@ -394,7 +393,11 @@ public:
                     trapped->GetMotionMaster()->Clear();
                     trapped->UpdatePosition(exitPos, true);
                     trapped->StopMovingOnCurrentPos();
-                    trapped->NearTeleportTo(exitPos.GetPositionX(), exitPos.GetPositionY(), exitPos.GetPositionZ(), exitPos.GetOrientation(), false);
+                    trapped->NearTeleportTo(exitPos.GetPositionX(),
+                        exitPos.GetPositionY(),
+                        exitPos.GetPositionZ(),
+                        exitPos.GetOrientation(),
+                        false);
                 }
 
             me->DespawnOrUnsummon(1);
@@ -416,9 +419,7 @@ public:
                     if (Unit* u = v->GetBase())
                     {
                         if (u->GetEntry() == NPC_BONE_SPIKE && u->IsCreature())
-                        {
                             u->ToCreature()->AI()->DoAction(-1337);
-                        }
                     }
                 }
                 ObjectGuid petGUID = summonerUnit->GetPetGUID();
@@ -443,7 +444,9 @@ public:
             {
                 if (Unit* trapped = summ->GetSummonerUnit())
                 {
-                    if (!trapped->IsOnVehicle(me) || !trapped->IsAlive() || !me->GetInstanceScript() || me->GetInstanceScript()->GetBossState(DATA_LORD_MARROWGAR) != IN_PROGRESS || trapped->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
+                    if (!trapped->IsOnVehicle(me) || !trapped->IsAlive() || !me->GetInstanceScript() ||
+                        me->GetInstanceScript()->GetBossState(DATA_LORD_MARROWGAR) != IN_PROGRESS ||
+                        trapped->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
                     {
                         DoAction(-1337);
                         return;
@@ -482,16 +485,22 @@ class spell_marrowgar_coldflame : public SpellScript
     void SelectTarget(std::list<WorldObject*>& targets)
     {
         targets.clear();
-        Unit* target = GetCaster()->GetAI()->SelectTarget(SelectTargetMethod::Random, 1, -1.0f, true,true,  -SPELL_IMPALED); // -1.0f as it takes into account object size
+        Unit* target = GetCaster()->GetAI()->SelectTarget(SelectTargetMethod::Random,
+            1,
+            -1.0f,
+            true,
+            true,
+            -SPELL_IMPALED); // -1.0f as it takes into account object size
         if (!target)
-            target = GetCaster()->GetAI()->SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true); // if only tank or noone outside of boss' model
+            target = GetCaster()->GetAI()->SelectTarget(
+                SelectTargetMethod::Random, 0, 0.0f, true); // if only tank or noone outside of boss' model
         if (!target)
             return;
 
         targets.push_back(target);
     }
 
-    void HandleScriptEffect(SpellEffIndex  /*effIndex*/)
+    void HandleScriptEffect(SpellEffIndex /*effIndex*/)
     {
         Unit* caster = GetCaster();
         float angle = caster->GetAngle(GetHitUnit());
@@ -515,8 +524,10 @@ class spell_marrowgar_coldflame : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_marrowgar_coldflame::SelectTarget, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
-        OnEffectHitTarget += SpellEffectFn(spell_marrowgar_coldflame::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_marrowgar_coldflame::SelectTarget, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_marrowgar_coldflame::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -526,7 +537,7 @@ class spell_marrowgar_bone_spike_graveyard : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_IMPALED });
+        return ValidateSpellInfo({SPELL_IMPALED});
     }
 
     void HandleSpikes(SpellEffIndex effIndex)
@@ -542,15 +553,18 @@ class spell_marrowgar_bone_spike_graveyard : public SpellScript
             Map::PlayerList const& pList = marrowgar->GetMap()->GetPlayers();
             for (Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr)
                 if (Player* plr = itr->GetSource())
-                    if (plr->IsAlive() && !plr->IsGameMaster() && plr->GetExactDist2dSq(marrowgar) < (150.0f * 150.0f) && !plr->HasAura(SPELL_IMPALED))
+                    if (plr->IsAlive() && !plr->IsGameMaster() &&
+                        plr->GetExactDist2dSq(marrowgar) < (150.0f * 150.0f) && !plr->HasAura(SPELL_IMPALED))
                         if (!marrowgar->GetVictim() || marrowgar->GetVictim()->GetGUID() != plr->GetGUID())
-                            if (plr->GetGUID() != marrowgarAI->GetGUID(0) && plr->GetGUID() != marrowgarAI->GetGUID(1) && plr->GetGUID() != marrowgarAI->GetGUID(2)) // not a bone slice target
+                            if (plr->GetGUID() != marrowgarAI->GetGUID(0) &&
+                                plr->GetGUID() != marrowgarAI->GetGUID(1) &&
+                                plr->GetGUID() != marrowgarAI->GetGUID(2)) // not a bone slice target
                                 validPlayers.push_back(plr);
 
             std::vector<Player*>::iterator begin = validPlayers.begin(), end = validPlayers.end();
 
             std::random_device rd;
-            std::shuffle(begin, end, std::default_random_engine{rd()});
+            std::shuffle(begin, end, std::default_random_engine {rd()});
 
             for (uint8 i = 0; i < boneSpikeCount && i < validPlayers.size(); ++i)
             {
@@ -567,7 +581,8 @@ class spell_marrowgar_bone_spike_graveyard : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_marrowgar_bone_spike_graveyard::HandleSpikes, EFFECT_1, SPELL_EFFECT_APPLY_AURA);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_marrowgar_bone_spike_graveyard::HandleSpikes, EFFECT_1, SPELL_EFFECT_APPLY_AURA);
     }
 };
 
@@ -596,7 +611,8 @@ class spell_marrowgar_coldflame_bonestorm : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_marrowgar_coldflame_bonestorm::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget += SpellEffectFn(
+            spell_marrowgar_coldflame_bonestorm::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -607,8 +623,10 @@ class spell_marrowgar_bone_storm : public SpellScript
     void RecalculateDamage()
     {
         float dist = GetHitUnit()->GetExactDist2d(GetCaster());
-        if (dist >= 9.0f) dist -= 9.0f;
-        else dist = 0.0f;
+        if (dist >= 9.0f)
+            dist -= 9.0f;
+        else
+            dist = 0.0f;
         SetHitDamage(int32(GetHitDamage() / std::max(sqrtf(dist), 1.0f)));
     }
 
@@ -643,7 +661,8 @@ class spell_marrowgar_bone_slice : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_marrowgar_bone_slice::CountTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_marrowgar_bone_slice::CountTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
         OnHit += SpellHitFn(spell_marrowgar_bone_slice::SplitDamage);
     }
 

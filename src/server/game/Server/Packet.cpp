@@ -18,13 +18,11 @@
 #include "Packet.h"
 #include "Errors.h"
 
-WorldPackets::Packet::Packet(WorldPacket&& worldPacket) : _worldPacket(std::move(worldPacket))
-{
-}
+WorldPackets::Packet::Packet(WorldPacket&& worldPacket) : _worldPacket(std::move(worldPacket)) { }
 
-WorldPackets::ServerPacket::ServerPacket(OpcodeServer opcode, std::size_t initialSize /*= 200*/) : Packet(WorldPacket(opcode, initialSize))
-{
-}
+WorldPackets::ServerPacket::ServerPacket(OpcodeServer opcode, std::size_t initialSize /*= 200*/) :
+    Packet(WorldPacket(opcode, initialSize))
+{ }
 
 void WorldPackets::ServerPacket::Read()
 {
@@ -36,10 +34,7 @@ WorldPackets::ClientPacket::ClientPacket(OpcodeClient expectedOpcode, WorldPacke
     ASSERT(GetOpcode() == expectedOpcode);
 }
 
-WorldPackets::ClientPacket::ClientPacket(WorldPacket&& packet)
-    : Packet(std::move(packet))
-{
-}
+WorldPackets::ClientPacket::ClientPacket(WorldPacket&& packet) : Packet(std::move(packet)) { }
 
 WorldPacket const* WorldPackets::ClientPacket::Write()
 {

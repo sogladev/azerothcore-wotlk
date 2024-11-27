@@ -22,90 +22,91 @@
 #include "ScriptedCreature.h"
 #include "SpellAuras.h"
 #include "SpellInfo.h"
+#include "SpellMgr.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "TaskScheduler.h"
 #include "karazhan.h"
-#include "SpellMgr.h"
 
 enum Texts
 {
-    SAY_AGGRO              = 0,
-    SAY_FLAMEWREATH        = 1,
-    SAY_BLIZZARD           = 2,
-    SAY_EXPLOSION          = 3,
-    SAY_DRINK              = 4,
-    SAY_ELEMENTALS         = 5,
-    SAY_KILL               = 6,
-    SAY_TIMEOVER           = 7,
-    SAY_DEATH              = 8,
-    SAY_ATIESH             = 9,
+    SAY_AGGRO = 0,
+    SAY_FLAMEWREATH = 1,
+    SAY_BLIZZARD = 2,
+    SAY_EXPLOSION = 3,
+    SAY_DRINK = 4,
+    SAY_ELEMENTALS = 5,
+    SAY_KILL = 6,
+    SAY_TIMEOVER = 7,
+    SAY_DEATH = 8,
+    SAY_ATIESH = 9,
     EMOTE_ARCANE_EXPLOSION = 10
 };
 
 enum Spells
 {
-    SPELL_FROSTBOLT              = 29954,
-    SPELL_FIREBALL               = 29953,
-    SPELL_ARCANE_MISSILE         = 29955,
-    SPELL_CHAINSOFICE            = 29991,
-    SPELL_DRAGONSBREATH          = 29964,
-    SPELL_MASSSLOW               = 30035,
-    SPELL_FLAME_WREATH           = 30004,
-    SPELL_FLAME_WREATH_RING      = 29946,
-    SPELL_FLAME_WREATH_RAN_THRU  = 29947, // You ran through the flames!
+    SPELL_FROSTBOLT = 29954,
+    SPELL_FIREBALL = 29953,
+    SPELL_ARCANE_MISSILE = 29955,
+    SPELL_CHAINSOFICE = 29991,
+    SPELL_DRAGONSBREATH = 29964,
+    SPELL_MASSSLOW = 30035,
+    SPELL_FLAME_WREATH = 30004,
+    SPELL_FLAME_WREATH_RING = 29946,
+    SPELL_FLAME_WREATH_RAN_THRU = 29947, // You ran through the flames!
     SPELL_FLAME_WREATH_EXPLOSION = 29949,
-    SPELL_AOE_CS                 = 29961,
-    SPELL_PLAYERPULL             = 32265,
-    SPELL_AEXPLOSION             = 29973,
-    SPELL_MASS_POLY              = 29963,
-    SPELL_BLINK_CENTER           = 29967,
-    SPELL_CONJURE                = 29975,
-    SPELL_DRINK                  = 30024,
-    SPELL_POTION                 = 32453,
-    SPELL_AOE_PYROBLAST          = 29978,
+    SPELL_AOE_CS = 29961,
+    SPELL_PLAYERPULL = 32265,
+    SPELL_AEXPLOSION = 29973,
+    SPELL_MASS_POLY = 29963,
+    SPELL_BLINK_CENTER = 29967,
+    SPELL_CONJURE = 29975,
+    SPELL_DRINK = 30024,
+    SPELL_POTION = 32453,
+    SPELL_AOE_PYROBLAST = 29978,
 
-    SPELL_SUMMON_WELEMENTAL_1    = 29962,
-    SPELL_SUMMON_WELEMENTAL_2    = 37051,
-    SPELL_SUMMON_WELEMENTAL_3    = 37052,
-    SPELL_SUMMON_WELEMENTAL_4    = 37053,
+    SPELL_SUMMON_WELEMENTAL_1 = 29962,
+    SPELL_SUMMON_WELEMENTAL_2 = 37051,
+    SPELL_SUMMON_WELEMENTAL_3 = 37052,
+    SPELL_SUMMON_WELEMENTAL_4 = 37053,
 
-    SPELL_SUMMON_BLIZZARD        = 29969, // Activates the Blizzard NPC
+    SPELL_SUMMON_BLIZZARD = 29969, // Activates the Blizzard NPC
 
-    SPELL_SHADOW_PYRO            = 29978,
+    SPELL_SHADOW_PYRO = 29978,
 
-    SPELL_ATIESH_VISUAL          = 31796,
+    SPELL_ATIESH_VISUAL = 31796,
 
-    SPELL_CURSE_OF_TONGUE_RANK1  = 1714,
-    SPELL_CURSE_OF_TONGUE_RANK2  = 11719,
-    SPELL_MIND_NUMBING_POISON    = 5760
+    SPELL_CURSE_OF_TONGUE_RANK1 = 1714,
+    SPELL_CURSE_OF_TONGUE_RANK2 = 11719,
+    SPELL_MIND_NUMBING_POISON = 5760
 };
 
 enum Creatures
 {
-    NPC_SHADOW_OF_ARAN           = 18254
+    NPC_SHADOW_OF_ARAN = 18254
 };
 
 enum SuperSpell
 {
-    SUPER_FLAME                  = 0,
+    SUPER_FLAME = 0,
     SUPER_BLIZZARD,
     SUPER_AE,
 };
 
 enum Groups
 {
-    GROUP_DRINKING               = 0
+    GROUP_DRINKING = 0
 };
 
 enum Misc
 {
-    ACTION_ATIESH_REACT          = 1
+    ACTION_ATIESH_REACT = 1
 };
 
 Position const roomCenter = {-11158.f, -1920.f};
 
-std::vector<uint32> immuneSpells = { SPELL_CURSE_OF_TONGUE_RANK1, SPELL_CURSE_OF_TONGUE_RANK2, SPELL_MIND_NUMBING_POISON };
+std::vector<uint32> immuneSpells = {
+    SPELL_CURSE_OF_TONGUE_RANK1, SPELL_CURSE_OF_TONGUE_RANK2, SPELL_MIND_NUMBING_POISON};
 
 struct boss_shade_of_aran : public BossAI
 {
@@ -134,15 +135,18 @@ struct boss_shade_of_aran : public BossAI
             libraryDoor->RemoveGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
         }
 
-        ScheduleHealthCheckEvent(40, [&]{
+        ScheduleHealthCheckEvent(40,
+            [&]
+        {
             Talk(SAY_ELEMENTALS);
 
-            std::vector<uint32> elementalSpells = { SPELL_SUMMON_WELEMENTAL_1, SPELL_SUMMON_WELEMENTAL_2, SPELL_SUMMON_WELEMENTAL_3, SPELL_SUMMON_WELEMENTAL_4 };
+            std::vector<uint32> elementalSpells = {SPELL_SUMMON_WELEMENTAL_1,
+                SPELL_SUMMON_WELEMENTAL_2,
+                SPELL_SUMMON_WELEMENTAL_3,
+                SPELL_SUMMON_WELEMENTAL_4};
 
             for (auto const& spell : elementalSpells)
-            {
                 DoCastAOE(spell, true);
-            }
         });
     }
 
@@ -194,18 +198,21 @@ struct boss_shade_of_aran : public BossAI
         }
     }
 
-    void DamageTaken(Unit* doneBy, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
+    void DamageTaken(
+        Unit* doneBy, uint32& damage, DamageEffectType damagetype, SpellSchoolMask damageSchoolMask) override
     {
         BossAI::DamageTaken(doneBy, damage, damagetype, damageSchoolMask);
 
-        if ((damagetype == DIRECT_DAMAGE || damagetype == SPELL_DIRECT_DAMAGE) && _drinking && me->GetReactState() == REACT_PASSIVE)
+        if ((damagetype == DIRECT_DAMAGE || damagetype == SPELL_DIRECT_DAMAGE) && _drinking &&
+            me->GetReactState() == REACT_PASSIVE)
         {
             me->RemoveAurasDueToSpell(SPELL_DRINK);
             me->SetStandState(UNIT_STAND_STATE_STAND);
             me->SetReactState(REACT_AGGRESSIVE);
             me->SetPower(POWER_MANA, me->GetMaxPower(POWER_MANA) - 32000);
             _drinkScheduler.CancelGroup(GROUP_DRINKING);
-            _drinkScheduler.Schedule(1s, [this](TaskContext)
+            _drinkScheduler.Schedule(1s,
+                [this](TaskContext)
             {
                 DoCastSelf(SPELL_AOE_PYROBLAST, false);
                 _drinking = false;
@@ -222,7 +229,10 @@ struct boss_shade_of_aran : public BossAI
             me->SetReactState(REACT_PASSIVE);
 
             // Start drinking after conjuring drinks
-            _drinkScheduler.Schedule(0s, GROUP_DRINKING, [this](TaskContext)
+            _drinkScheduler
+                .Schedule(0s,
+                    GROUP_DRINKING,
+                    [this](TaskContext)
             {
                 me->InterruptNonMeleeSpells(true);
                 me->RemoveAurasDueToSpell(SPELL_ARCANE_MISSILE);
@@ -230,14 +240,18 @@ struct boss_shade_of_aran : public BossAI
                 DoCastAOE(SPELL_MASS_POLY);
                 // If we set drinking earlier it will break when someone attacks aran while casting poly
                 _drinking = true;
-            }).Schedule(3s, GROUP_DRINKING, [this](TaskContext)
-            {
-                DoCastSelf(SPELL_CONJURE);
-            }).Schedule(6s, GROUP_DRINKING, [this](TaskContext)
+            })
+                .Schedule(3s, GROUP_DRINKING, [this](TaskContext) { DoCastSelf(SPELL_CONJURE); })
+                .Schedule(6s,
+                    GROUP_DRINKING,
+                    [this](TaskContext)
             {
                 me->SetStandState(UNIT_STAND_STATE_SIT);
                 DoCastSelf(SPELL_DRINK);
-            }).Schedule(12s, GROUP_DRINKING, [this](TaskContext)
+            })
+                .Schedule(12s,
+                    GROUP_DRINKING,
+                    [this](TaskContext)
             {
                 me->SetStandState(UNIT_STAND_STATE_STAND);
                 me->SetReactState(REACT_AGGRESSIVE);
@@ -255,23 +269,26 @@ struct boss_shade_of_aran : public BossAI
         Talk(SAY_AGGRO);
 
         //handle timed closing door
-        scheduler.Schedule(15s, [this](TaskContext)
+        scheduler
+            .Schedule(15s,
+                [this](TaskContext)
         {
-            if (GameObject* libraryDoor = instance->instance->GetGameObject(instance->GetGuidData(DATA_GO_LIBRARY_DOOR)))
+            if (GameObject* libraryDoor =
+                    instance->instance->GetGameObject(instance->GetGuidData(DATA_GO_LIBRARY_DOOR)))
             {
                 libraryDoor->SetGoState(GO_STATE_READY);
                 libraryDoor->SetGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
             }
-        }).Schedule(1s, [this](TaskContext context)
+        })
+            .Schedule(1s,
+                [this](TaskContext context)
         {
             if (!_drinking)
             {
                 if (me->IsNonMeleeSpellCast(false))
-                {
                     return;
-                }
 
-                std::list<uint32> normalSpells = { SPELL_ARCANE_MISSILE, SPELL_FIREBALL, SPELL_FROSTBOLT };
+                std::list<uint32> normalSpells = {SPELL_ARCANE_MISSILE, SPELL_FIREBALL, SPELL_FROSTBOLT};
                 normalSpells.remove_if([&](uint32 spell) -> bool { return !me->CanCastSpell(spell); });
 
                 if (!normalSpells.empty())
@@ -281,9 +298,7 @@ struct boss_shade_of_aran : public BossAI
 
                     DoCastRandomTarget(_currentNormalSpell, 0, 100.0f);
                     if (me->GetVictim())
-                    {
                         me->GetMotionMaster()->MoveChase(me->GetVictim(), 45.0f);
-                    }
                 }
                 else
                 {
@@ -293,7 +308,8 @@ struct boss_shade_of_aran : public BossAI
 
                     if (SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(_currentNormalSpell))
                     {
-                        if (int32(me->GetPower(POWER_MANA)) < spellInfo->CalcPowerCost(me, (SpellSchoolMask)spellInfo->SchoolMask))
+                        if (int32(me->GetPower(POWER_MANA)) <
+                            spellInfo->CalcPowerCost(me, (SpellSchoolMask)spellInfo->SchoolMask))
                         {
                             DoCastSelf(SPELL_POTION);
                         }
@@ -301,14 +317,16 @@ struct boss_shade_of_aran : public BossAI
                 }
             }
             context.Repeat(2s);
-        }).Schedule(5s, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                [this](TaskContext context)
         {
             if (!_drinking)
-            {
                 urand(0, 1) ? DoCastSelf(SPELL_AOE_CS) : DoCastRandomTarget(SPELL_CHAINSOFICE);
-            }
             context.Repeat(5s, 20s);
-        }).Schedule(6s, [this](TaskContext context)
+        })
+            .Schedule(6s,
+                [this](TaskContext context)
         {
             if (!_drinking)
             {
@@ -316,11 +334,14 @@ struct boss_shade_of_aran : public BossAI
 
                 DoCastSelf(SPELL_BLINK_CENTER, true);
 
-                std::vector<uint32> superSpells = { SPELL_SUMMON_BLIZZARD, SPELL_AEXPLOSION, SPELL_FLAME_WREATH };
+                std::vector<uint32> superSpells = {SPELL_SUMMON_BLIZZARD, SPELL_AEXPLOSION, SPELL_FLAME_WREATH};
 
                 // Workaround for SelectRandomContainerElementIf
                 std::vector<uint32> allowedSpells;
-                std::copy_if(superSpells.begin(), superSpells.end(), std::back_inserter(allowedSpells), [&](uint32 superSpell) -> bool { return superSpell != _lastSuperSpell; });
+                std::copy_if(superSpells.begin(),
+                    superSpells.end(),
+                    std::back_inserter(allowedSpells),
+                    [&](uint32 superSpell) -> bool { return superSpell != _lastSuperSpell; });
                 _lastSuperSpell = allowedSpells[urand(0, allowedSpells.size() - 1)];
 
                 //  SelectRandomContainerElementIf produces unexpected output. Reintroduce when issue is resolved:
@@ -350,11 +371,14 @@ struct boss_shade_of_aran : public BossAI
                 DoCastAOE(_lastSuperSpell);
             }
             context.Repeat(35s, 40s);
-        }).Schedule(12min, [this](TaskContext context)
+        })
+            .Schedule(12min,
+                [this](TaskContext context)
         {
             for (uint32 i = 0; i < 5; ++i)
             {
-                if (Creature* unit = me->SummonCreature(NPC_SHADOW_OF_ARAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
+                if (Creature* unit = me->SummonCreature(
+                        NPC_SHADOW_OF_ARAN, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000))
                 {
                     unit->Attack(me->GetVictim(), true);
                     unit->SetFaction(me->GetFaction());
@@ -403,7 +427,7 @@ class spell_flamewreath : public SpellScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_FLAME_WREATH_RING });
+        return ValidateSpellInfo({SPELL_FLAME_WREATH_RING});
     }
 
     void FilterTargets(std::list<WorldObject*>& targets)
@@ -411,9 +435,7 @@ class spell_flamewreath : public SpellScript
         uint8 maxSize = 3;
 
         if (targets.size() > maxSize)
-        {
             Acore::Containers::RandomResize(targets, maxSize);
-        }
 
         _targets = targets;
     }
@@ -421,12 +443,8 @@ class spell_flamewreath : public SpellScript
     void HandleFinish()
     {
         for (auto const& target : _targets)
-        {
             if (Unit* targetUnit = target->ToUnit())
-            {
                 GetCaster()->CastSpell(targetUnit, SPELL_FLAME_WREATH_RING, true);
-            }
-        }
     }
 
 private:
@@ -434,7 +452,8 @@ private:
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_flamewreath::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_flamewreath::FilterTargets, EFFECT_ALL, TARGET_UNIT_SRC_AREA_ENEMY);
         AfterCast += SpellCastFn(spell_flamewreath::HandleFinish);
     }
 };
@@ -446,7 +465,7 @@ class spell_flamewreath_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_FLAME_WREATH_RAN_THRU, SPELL_FLAME_WREATH_EXPLOSION });
+        return ValidateSpellInfo({SPELL_FLAME_WREATH_RAN_THRU, SPELL_FLAME_WREATH_EXPLOSION});
     }
 
     void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -459,10 +478,13 @@ class spell_flamewreath_aura : public AuraScript
                 {
                     target->CastSpell(target, SPELL_FLAME_WREATH_RAN_THRU, true);
 
-                    target->m_Events.AddEventAtOffset([target] {
+                    target->m_Events.AddEventAtOffset(
+                        [target]
+                    {
                         target->RemoveAurasDueToSpell(SPELL_FLAME_WREATH_RAN_THRU);
                         target->CastSpell(target, SPELL_FLAME_WREATH_EXPLOSION, true);
-                    }, 1s);
+                    },
+                        1s);
                 }
             }
         }
@@ -470,7 +492,8 @@ class spell_flamewreath_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_flamewreath_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_flamewreath_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -486,9 +509,7 @@ public:
             if (player->HasAura(SPELL_ATIESH_VISUAL))
             {
                 if (Creature* aran = instance->GetCreature(DATA_ARAN))
-                {
                     aran->AI()->SetGUID(player->GetGUID(), ACTION_ATIESH_REACT);
-                }
             }
         }
 

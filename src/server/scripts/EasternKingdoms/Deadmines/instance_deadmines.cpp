@@ -57,9 +57,7 @@ public:
                 case GO_IRON_CLAD_DOOR:
                     gameobject->AllowSaveToDB(true);
                     if (GetStoredGameObjectState(gameobject->GetSpawnId()) == GO_STATE_ACTIVE)
-                    {
                         gameobject->DespawnOrUnsummon();
-                    }
                     break;
             }
         }
@@ -85,7 +83,7 @@ public:
             return saveStream.str();
         }
 
-        void Load(const char* in) override
+        void Load(char const* in) override
         {
             if (!in)
                 return;

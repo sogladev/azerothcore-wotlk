@@ -23,59 +23,59 @@
 enum VolkahnSpells
 {
     // Volkhan
-    SPELL_HEAT_N                        = 52387,
-    SPELL_HEAT_H                        = 59528,
-    SPELL_SHATTERING_STOMP_N            = 52237,
-    SPELL_SHATTERING_STOMP_H            = 59529,
-    SPELL_TEMPER                        = 52238,
-    SPELL_SUMMON_MOLTEN_GOLEM           = 52405,
+    SPELL_HEAT_N = 52387,
+    SPELL_HEAT_H = 59528,
+    SPELL_SHATTERING_STOMP_N = 52237,
+    SPELL_SHATTERING_STOMP_H = 59529,
+    SPELL_TEMPER = 52238,
+    SPELL_SUMMON_MOLTEN_GOLEM = 52405,
 
     //Molten Golem
-    SPELL_BLAST_WAVE                    = 23113,
-    SPELL_IMMOLATION_STRIKE_N           = 52433,
-    SPELL_IMMOLATION_STRIKE_H           = 59530,
-    SPELL_SHATTER_N                     = 52429,
-    SPELL_SHATTER_H                     = 59527,
+    SPELL_BLAST_WAVE = 23113,
+    SPELL_IMMOLATION_STRIKE_N = 52433,
+    SPELL_IMMOLATION_STRIKE_H = 59530,
+    SPELL_SHATTER_N = 52429,
+    SPELL_SHATTER_H = 59527,
 };
 
 enum VolkhanOther
 {
     // NPCs
-    NPC_VOLKHAN_ANVIL                   = 28823,
-    NPC_MOLTEN_GOLEM                    = 28695,
-    NPC_BRITTLE_GOLEM                   = 28681,
+    NPC_VOLKHAN_ANVIL = 28823,
+    NPC_MOLTEN_GOLEM = 28695,
+    NPC_BRITTLE_GOLEM = 28681,
 
     // Misc
-    ACTION_SHATTER                      = 1,
-    ACTION_DESTROYED                    = 2,
+    ACTION_SHATTER = 1,
+    ACTION_DESTROYED = 2,
 
     // Point
-    POINT_ANVIL                         = 1,
+    POINT_ANVIL = 1,
 };
 
 enum VolkhanEvents
 {
     // Volkhan
-    EVENT_HEAT                          = 1,
-    EVENT_CHECK_HEALTH                  = 2,
-    EVENT_SHATTER                       = 3,
-    EVENT_POSITION                      = 4,
-    EVENT_MOVE_TO_ANVIL                 = 5,
+    EVENT_HEAT = 1,
+    EVENT_CHECK_HEALTH = 2,
+    EVENT_SHATTER = 3,
+    EVENT_POSITION = 4,
+    EVENT_MOVE_TO_ANVIL = 5,
 
     // Molten Golem
-    EVENT_BLAST                         = 11,
-    EVENT_IMMOLATION                    = 12,
+    EVENT_BLAST = 11,
+    EVENT_IMMOLATION = 12,
 };
 
 enum Yells
 {
-    SAY_AGGRO                               = 0,
-    SAY_FORGE                               = 1,
-    SAY_STOMP                               = 2,
-    SAY_SLAY                                = 3,
-    SAY_DEATH                               = 4,
-    EMOTE_TO_ANVIL                          = 5,
-    EMOTE_SHATTER                           = 6,
+    SAY_AGGRO = 0,
+    SAY_FORGE = 1,
+    SAY_STOMP = 2,
+    SAY_SLAY = 3,
+    SAY_DEATH = 4,
+    EMOTE_TO_ANVIL = 5,
+    EMOTE_SHATTER = 6,
 };
 
 class boss_volkhan : public CreatureScript
@@ -296,11 +296,11 @@ public:
                     events.Repeat(1s);
                     return;
                 case EVENT_SHATTER:
-                    {
-                        events.Repeat(10s);
-                        summons.DoAction(ACTION_SHATTER);
-                        break;
-                    }
+                {
+                    events.Repeat(10s);
+                    summons.DoAction(ACTION_SHATTER);
+                    break;
+                }
                 case EVENT_MOVE_TO_ANVIL:
                     GetNextPos();
                     me->GetMotionMaster()->MovePoint(PointID, x, y, z);
@@ -400,7 +400,9 @@ public:
                     events.Repeat(14s);
                     break;
                 case EVENT_IMMOLATION:
-                    me->CastSpell(me->GetVictim(), me->GetMap()->IsHeroic() ? SPELL_IMMOLATION_STRIKE_H : SPELL_IMMOLATION_STRIKE_N, false);
+                    me->CastSpell(me->GetVictim(),
+                        me->GetMap()->IsHeroic() ? SPELL_IMMOLATION_STRIKE_H : SPELL_IMMOLATION_STRIKE_N,
+                        false);
                     events.Repeat(5s);
                     break;
             }
@@ -412,41 +414,41 @@ public:
 
 enum monumentSpells
 {
-    SPELL_FREEZE_ANIM           = 16245,
-    SPELL_AWAKEN                = 52875,
+    SPELL_FREEZE_ANIM = 16245,
+    SPELL_AWAKEN = 52875,
 
-    SPELL_PIERCING_HOWL         = 23600,
-    SPELL_PENETRATING_STRIKE    = 52890,
-    SPELL_FRIGHTENING_SHOUT     = 19134,
-    SPELL_BLADE_TURNING_N       = 52891,
-    SPELL_BLADE_TURNING_H       = 59173,
+    SPELL_PIERCING_HOWL = 23600,
+    SPELL_PENETRATING_STRIKE = 52890,
+    SPELL_FRIGHTENING_SHOUT = 19134,
+    SPELL_BLADE_TURNING_N = 52891,
+    SPELL_BLADE_TURNING_H = 59173,
 
-    SPELL_DEADLY_THROW_N        = 52885,
-    SPELL_DEADLY_THROW_H        = 59180,
-    SPELL_DEFLECTION_N          = 52879,
-    SPELL_DEFLECTION_H          = 59181,
-    SPELL_THROW_N               = 52904,
-    SPELL_THROW_H               = 59179,
+    SPELL_DEADLY_THROW_N = 52885,
+    SPELL_DEADLY_THROW_H = 59180,
+    SPELL_DEFLECTION_N = 52879,
+    SPELL_DEFLECTION_H = 59181,
+    SPELL_THROW_N = 52904,
+    SPELL_THROW_H = 59179,
 };
 
 enum monumentEvents
 {
-    EVENT_PIERCING_HOWL         = 1,
-    EVENT_PENETRATING_STRIKE    = 2,
-    EVENT_FRIGHTENING_SHOUT     = 3,
-    EVENT_BLADE_TURNING         = 4,
+    EVENT_PIERCING_HOWL = 1,
+    EVENT_PENETRATING_STRIKE = 2,
+    EVENT_FRIGHTENING_SHOUT = 3,
+    EVENT_BLADE_TURNING = 4,
 
-    EVENT_DEADLY_THROW          = 11,
-    EVENT_DEFLECTION            = 12,
-    EVENT_THROW                 = 13,
+    EVENT_DEADLY_THROW = 11,
+    EVENT_DEFLECTION = 12,
+    EVENT_THROW = 13,
 
-    EVENT_UNFREEZE              = 20,
+    EVENT_UNFREEZE = 20,
 };
 
 class npc_hol_monument : public CreatureScript
 {
 public:
-    npc_hol_monument() : CreatureScript("npc_hol_monument") {}
+    npc_hol_monument() : CreatureScript("npc_hol_monument") { }
 
     CreatureAI* GetAI(Creature* creature) const override
     {
@@ -467,9 +469,7 @@ public:
         bool _isActive;
         ObjectGuid _attackGUID;
 
-        void Reset() override
-        {
-        }
+        void Reset() override { }
 
         void MoveInLineOfSight(Unit* who) override
         {
@@ -477,7 +477,8 @@ public:
                 ScriptedAI::MoveInLineOfSight(who);
             else if (_isActive && who->IsPlayer())
             {
-                if ((who->GetPositionX() < me->GetPositionX() || who->GetPositionY() < -220.0f) && me->GetDistance2d(who) < 40)
+                if ((who->GetPositionX() < me->GetPositionX() || who->GetPositionY() < -220.0f) &&
+                    me->GetDistance2d(who) < 40)
                 {
                     _isActive = false;
                     _attackGUID = who->GetGUID();
@@ -553,15 +554,21 @@ public:
                     events.Repeat(20s, 28s);
                     break;
                 case EVENT_BLADE_TURNING:
-                    me->CastSpell(me->GetVictim(), me->GetMap()->IsHeroic() ? SPELL_BLADE_TURNING_H : SPELL_BLADE_TURNING_N, false);
+                    me->CastSpell(me->GetVictim(),
+                        me->GetMap()->IsHeroic() ? SPELL_BLADE_TURNING_H : SPELL_BLADE_TURNING_N,
+                        false);
                     events.Repeat(12s);
                     break;
                 case EVENT_THROW:
-                    me->CastSpell(SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0), me->GetMap()->IsHeroic() ? SPELL_THROW_H : SPELL_THROW_N, true);
+                    me->CastSpell(SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0),
+                        me->GetMap()->IsHeroic() ? SPELL_THROW_H : SPELL_THROW_N,
+                        true);
                     events.Repeat(10s, 25s);
                     break;
                 case EVENT_DEADLY_THROW:
-                    me->CastSpell(SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0), me->GetMap()->IsHeroic() ? SPELL_DEADLY_THROW_H : SPELL_DEADLY_THROW_N, true);
+                    me->CastSpell(SelectTarget(SelectTargetMethod::Random, 0, 50.0f, true, 0),
+                        me->GetMap()->IsHeroic() ? SPELL_DEADLY_THROW_H : SPELL_DEADLY_THROW_N,
+                        true);
                     events.Repeat(15s, 30s);
                     break;
                 case EVENT_DEFLECTION:

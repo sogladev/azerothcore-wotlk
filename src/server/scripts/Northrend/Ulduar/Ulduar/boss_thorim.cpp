@@ -30,108 +30,108 @@
 enum ThorimSpells
 {
     // THORIM
-    SPELL_LIGHTNING_DESTRUCTION             = 62393,
-    SPELL_SHEATH_OF_LIGHTNING               = 62276,
-    SPELL_STORMHAMMER                       = 62042,
-    SPELL_BERSERK_FRIENDS                   = 62560,
-    SPELL_CHAIN_LIGHTNING_10                = 62131,
-    SPELL_CHAIN_LIGHTNING_25                = 64390,
-    SPELL_UNBALANCING_STRIKE                = 62130,
-    SPELL_BERSERK                           = 26662,
+    SPELL_LIGHTNING_DESTRUCTION = 62393,
+    SPELL_SHEATH_OF_LIGHTNING = 62276,
+    SPELL_STORMHAMMER = 62042,
+    SPELL_BERSERK_FRIENDS = 62560,
+    SPELL_CHAIN_LIGHTNING_10 = 62131,
+    SPELL_CHAIN_LIGHTNING_25 = 64390,
+    SPELL_UNBALANCING_STRIKE = 62130,
+    SPELL_BERSERK = 26662,
 
-    SPELL_CHARGE_ORB                        = 62016,
-    SPELL_LIGHTNING_PILLAR_P1               = 63238,
+    SPELL_CHARGE_ORB = 62016,
+    SPELL_LIGHTNING_PILLAR_P1 = 63238,
 
-    SPELL_LIGHTNING_ORB_VISUAL              = 62186,
-    SPELL_LIGHTNING_CHARGE_DAMAGE           = 62466,
-    SPELL_LIGHTNING_CHARGE_BUFF             = 62279,
-    SPELL_LIGHTNING_PILLAR_P2               = 62976,
-    SPELL_LIGHTNING_ORB_CHARGER             = 62278,
+    SPELL_LIGHTNING_ORB_VISUAL = 62186,
+    SPELL_LIGHTNING_CHARGE_DAMAGE = 62466,
+    SPELL_LIGHTNING_CHARGE_BUFF = 62279,
+    SPELL_LIGHTNING_PILLAR_P2 = 62976,
+    SPELL_LIGHTNING_ORB_CHARGER = 62278,
 
     // SIF
-    SPELL_TOUCH_OF_DOMINION                 = 62507,
-    SPELL_SIF_TRANSFORM                     = 64778,
-    SPELL_SIF_CHANNEL_HOLOGRAM              = 64324,
-    SPELL_FROSTBOLT                         = 62601,
-    SPELL_FROSTBOLT_VALLEY                  = 62604,
-    SPELL_BLIZZARD_10                       = 62577,
-    SPELL_BLIZZARD_25                       = 62603,
-    SPELL_FROST_NOVA                        = 62605,
+    SPELL_TOUCH_OF_DOMINION = 62507,
+    SPELL_SIF_TRANSFORM = 64778,
+    SPELL_SIF_CHANNEL_HOLOGRAM = 64324,
+    SPELL_FROSTBOLT = 62601,
+    SPELL_FROSTBOLT_VALLEY = 62604,
+    SPELL_BLIZZARD_10 = 62577,
+    SPELL_BLIZZARD_25 = 62603,
+    SPELL_FROST_NOVA = 62605,
 
     // DARK RUNE ACOLYTE
-    SPELL_GREATER_HEAL_10                   = 62334,
-    SPELL_GREATER_HEAL_25                   = 62442,
-    SPELL_HOLY_SMITE_10                     = 62335,
-    SPELL_HOLY_SMITE_25                     = 62443,
-    SPELL_RENEW_10                          = 62333,
-    SPELL_RENEW_25                          = 62441,
+    SPELL_GREATER_HEAL_10 = 62334,
+    SPELL_GREATER_HEAL_25 = 62442,
+    SPELL_HOLY_SMITE_10 = 62335,
+    SPELL_HOLY_SMITE_25 = 62443,
+    SPELL_RENEW_10 = 62333,
+    SPELL_RENEW_25 = 62441,
 
     // CAPTURED MERCENARY SOLDIER
-    SPELL_BARBED_SHOT                       = 62318,
-    SPELL_WING_CLIP                         = 40652,
-    SPELL_SHOOT                             = 16496,
+    SPELL_BARBED_SHOT = 62318,
+    SPELL_WING_CLIP = 40652,
+    SPELL_SHOOT = 16496,
 
     // CAPTURED MERCENARY CAPTAIN
-    SPELL_DEVASTATE                         = 62317,
-    SPELL_HEROIC_STRIKE                     = 62444,
+    SPELL_DEVASTATE = 62317,
+    SPELL_HEROIC_STRIKE = 62444,
 
     // JORMUNGAR BEHEMOTH
-    SPELL_ACID_BREATH_10                    = 62315,
-    SPELL_ACID_BREATH_25                    = 62415,
-    SPELL_SWEEP_10                          = 62316,
-    SPELL_SWEEP_25                          = 62417,
+    SPELL_ACID_BREATH_10 = 62315,
+    SPELL_ACID_BREATH_25 = 62415,
+    SPELL_SWEEP_10 = 62316,
+    SPELL_SWEEP_25 = 62417,
 
     // IRON RING GUARD
-    SPELL_IMPALE_10                         = 62331,
-    SPELL_IMPALE_25                         = 62418,
-    SPELL_WHIRLING_TRIP                     = 64151,
+    SPELL_IMPALE_10 = 62331,
+    SPELL_IMPALE_25 = 62418,
+    SPELL_WHIRLING_TRIP = 64151,
 
     // IRON HONOR GUARD
-    SPELL_SHIELD_SMASH_10                   = 62332,
-    SPELL_SHIELD_SMASH_25                   = 62420,
-    SPELL_CLEAVE                            = 42724,
-    SPELL_HAMSTRING                         = 48639,
+    SPELL_SHIELD_SMASH_10 = 62332,
+    SPELL_SHIELD_SMASH_25 = 62420,
+    SPELL_CLEAVE = 42724,
+    SPELL_HAMSTRING = 48639,
 
     // DARK RUNE WARBRINGER
-    SPELL_AURA_OF_CELERITY                  = 62320,
-    SPELL_RUNIC_STRIKE                      = 62322,
+    SPELL_AURA_OF_CELERITY = 62320,
+    SPELL_RUNIC_STRIKE = 62322,
 
     // DARK RUNE EVOKER
-    SPELL_RUNIC_LIGHTNING_10                = 62327,
-    SPELL_RUNIC_LIGHTNING_25                = 62445,
-    SPELL_RUNIC_MENDING_10                  = 62328,
-    SPELL_RUNIC_MENDING_25                  = 62446,
-    SPELL_RUNIC_SHIELD_10                   = 62321,
-    SPELL_RUNIC_SHIELD_25                   = 62529,
+    SPELL_RUNIC_LIGHTNING_10 = 62327,
+    SPELL_RUNIC_LIGHTNING_25 = 62445,
+    SPELL_RUNIC_MENDING_10 = 62328,
+    SPELL_RUNIC_MENDING_25 = 62446,
+    SPELL_RUNIC_SHIELD_10 = 62321,
+    SPELL_RUNIC_SHIELD_25 = 62529,
 
     // DARK RUNE CHAMPION
-    SPELL_CHARGE                            = 32323,
-    SPELL_MORTAL_STRIKE                     = 35054,
-    SPELL_WHIRLWIND                         = 15578,
+    SPELL_CHARGE = 32323,
+    SPELL_MORTAL_STRIKE = 35054,
+    SPELL_WHIRLWIND = 15578,
 
     // DARK RUNE COMMONER
-    SPELL_LOW_BLOW                          = 62326,
-    SPELL_PUMMEL                            = 38313,
+    SPELL_LOW_BLOW = 62326,
+    SPELL_PUMMEL = 38313,
 
     // RUNIC COLOSSUS
-    SPELL_COLOSSUS_CHARGE_10                = 62613,
-    SPELL_COLOSSUS_CHARGE_25                = 62614,
-    SPELL_RUNIC_BARRIER                     = 62338,
-    SPELL_SMASH                             = 62339,
-    SPELL_RUNIC_SMASH_LEFT                  = 62057,
-    SPELL_RUNIC_SMASH_RIGHT                 = 62058,
-    SPELL_RUNIC_SMASH_DAMAGE                = 62465,
+    SPELL_COLOSSUS_CHARGE_10 = 62613,
+    SPELL_COLOSSUS_CHARGE_25 = 62614,
+    SPELL_RUNIC_BARRIER = 62338,
+    SPELL_SMASH = 62339,
+    SPELL_RUNIC_SMASH_LEFT = 62057,
+    SPELL_RUNIC_SMASH_RIGHT = 62058,
+    SPELL_RUNIC_SMASH_DAMAGE = 62465,
 
     // ANCIENT RUNE GIANT
-    SPELL_RUNE_DETONATION                   = 62526,
-    SPELL_RUNIC_FORTIFICATION               = 62942,
-    SPELL_STOMP_10                          = 62411,
-    SPELL_STOMP_25                          = 62413,
+    SPELL_RUNE_DETONATION = 62526,
+    SPELL_RUNIC_FORTIFICATION = 62942,
+    SPELL_STOMP_10 = 62411,
+    SPELL_STOMP_25 = 62413,
 
     // TRAPS
-    SPELL_LIGHTNING_FIELD                   = 64972,
-    SPELL_PARALYTIC_FIELD_FIRST             = 62241,
-    SPELL_PARALYTIC_FIELD_SECOND            = 63540,
+    SPELL_LIGHTNING_FIELD = 64972,
+    SPELL_PARALYTIC_FIELD_FIRST = 62241,
+    SPELL_PARALYTIC_FIELD_SECOND = 63540,
 };
 
 #define SPELL_GREATER_HEAL          RAID_MODE(SPELL_GREATER_HEAL_10, SPELL_GREATER_HEAL_25)
@@ -151,119 +151,118 @@ enum ThorimSpells
 enum ThormNPCandGOs : uint32
 {
     // ARENA INIT
-    NPC_DARK_RUNE_ACOLYTE_I                 = 32886,
-    NPC_CAPTURED_MERCENARY_SOLDIER_ALLY     = 32885,
-    NPC_CAPTURED_MERCENARY_SOLDIER_HORDE    = 32883,
-    NPC_CAPTURED_MERCENARY_CAPTAIN_ALLY     = 32908,
-    NPC_CAPTURED_MERCENARY_CAPTAIN_HORDE    = 32907,
-    NPC_JORMUNGAR_BEHEMOT                   = 32882,
+    NPC_DARK_RUNE_ACOLYTE_I = 32886,
+    NPC_CAPTURED_MERCENARY_SOLDIER_ALLY = 32885,
+    NPC_CAPTURED_MERCENARY_SOLDIER_HORDE = 32883,
+    NPC_CAPTURED_MERCENARY_CAPTAIN_ALLY = 32908,
+    NPC_CAPTURED_MERCENARY_CAPTAIN_HORDE = 32907,
+    NPC_JORMUNGAR_BEHEMOT = 32882,
 
     // ARENA PHASE
-    NPC_DARK_RUNE_WARBRINGER                = 32877,
-    NPC_DARK_RUNE_EVOKER                    = 32878,
-    NPC_DARK_RUNE_CHAMPION                  = 32876,
-    NPC_DARK_RUNE_COMMONER                  = 32904,
+    NPC_DARK_RUNE_WARBRINGER = 32877,
+    NPC_DARK_RUNE_EVOKER = 32878,
+    NPC_DARK_RUNE_CHAMPION = 32876,
+    NPC_DARK_RUNE_COMMONER = 32904,
 
     // GAUNTLET
-    NPC_IRON_RING_GUARD                     = 32874,
-    NPC_RUNIC_COLOSSUS                      = 32872,
-    NPC_ANCIENT_RUNE_GIANT                  = 32873,
-    NPC_DARK_RUNE_ACOLYTE_G                 = 33110,
-    NPC_IRON_HONOR_GUARD                    = 32875,
+    NPC_IRON_RING_GUARD = 32874,
+    NPC_RUNIC_COLOSSUS = 32872,
+    NPC_ANCIENT_RUNE_GIANT = 32873,
+    NPC_DARK_RUNE_ACOLYTE_G = 33110,
+    NPC_IRON_HONOR_GUARD = 32875,
 
     // TRIGGERS
-    NPC_LIGHTNING_ORB                       = 33138,
-    NPC_THUNDER_ORB                         = 33378,
-    NPC_PILLAR                              = 32892,
-    NPC_SIF_BLIZZARD                        = 32879,
+    NPC_LIGHTNING_ORB = 33138,
+    NPC_THUNDER_ORB = 33378,
+    NPC_PILLAR = 32892,
+    NPC_SIF_BLIZZARD = 32879,
 
-    NPC_SIF                                 = 33196,
+    NPC_SIF = 33196,
 };
 
 enum ThorimEvents
 {
-    EVENT_THORIM_START_PHASE1               = 1,
-    EVENT_THORIM_STORMHAMMER                = 2,
-    EVENT_THORIM_CHARGE_ORB                 = 3,
-    EVENT_THORIM_LIGHTNING_ORB              = 4,
-    EVENT_THORIM_NOT_REACH_IN_TIME          = 5,
-    EVENT_THORIM_FILL_ARENA                 = 6,
-    EVENT_THORIM_UNBALANCING_STRIKE         = 7,
-    EVENT_THORIM_LIGHTNING_CHARGE           = 8,
-    EVENT_THORIM_CHAIN_LIGHTNING            = 9,
-    EVENT_THORIM_BERSERK                    = 10,
-    EVENT_THORIM_AGGRO                      = 11,
-    EVENT_THORIM_AGGRO2                     = 12,
-    EVENT_THORIM_OUTRO1                     = 13,
-    EVENT_THORIM_OUTRO2                     = 14,
-    EVENT_THORIM_OUTRO3                     = 15,
-    EVENT_THORIM_OUTRO4                     = 16,
+    EVENT_THORIM_START_PHASE1 = 1,
+    EVENT_THORIM_STORMHAMMER = 2,
+    EVENT_THORIM_CHARGE_ORB = 3,
+    EVENT_THORIM_LIGHTNING_ORB = 4,
+    EVENT_THORIM_NOT_REACH_IN_TIME = 5,
+    EVENT_THORIM_FILL_ARENA = 6,
+    EVENT_THORIM_UNBALANCING_STRIKE = 7,
+    EVENT_THORIM_LIGHTNING_CHARGE = 8,
+    EVENT_THORIM_CHAIN_LIGHTNING = 9,
+    EVENT_THORIM_BERSERK = 10,
+    EVENT_THORIM_AGGRO = 11,
+    EVENT_THORIM_AGGRO2 = 12,
+    EVENT_THORIM_OUTRO1 = 13,
+    EVENT_THORIM_OUTRO2 = 14,
+    EVENT_THORIM_OUTRO3 = 15,
+    EVENT_THORIM_OUTRO4 = 16,
 
-    EVENT_DR_ACOLYTE_GH                     = 20,
-    EVENT_DR_ACOLYTE_HS                     = 21,
-    EVENT_DR_ACOLYTE_R                      = 22,
+    EVENT_DR_ACOLYTE_GH = 20,
+    EVENT_DR_ACOLYTE_HS = 21,
+    EVENT_DR_ACOLYTE_R = 22,
 
-    EVENT_CM_SOLDIER_BS                     = 30,
-    EVENT_CM_SOLDIER_S                      = 31,
-    EVENT_CM_SOLDIER_WC                     = 32,
+    EVENT_CM_SOLDIER_BS = 30,
+    EVENT_CM_SOLDIER_S = 31,
+    EVENT_CM_SOLDIER_WC = 32,
 
-    EVENT_CM_CAPTAIN_D                      = 40,
-    EVENT_CM_CAPTAIN_HC                     = 41,
+    EVENT_CM_CAPTAIN_D = 40,
+    EVENT_CM_CAPTAIN_HC = 41,
 
-    EVENT_JB_ACID_BREATH                    = 50,
-    EVENT_JB_SWEEP                          = 51,
+    EVENT_JB_ACID_BREATH = 50,
+    EVENT_JB_SWEEP = 51,
 
-    EVENT_IR_GUARD_IMPALE                   = 60,
-    EVENT_IR_GUARD_WHIRL                    = 61,
+    EVENT_IR_GUARD_IMPALE = 60,
+    EVENT_IR_GUARD_WHIRL = 61,
 
-    EVENT_RC_RUNIC_BARRIER                  = 70,
-    EVENT_RC_SMASH                          = 71,
-    EVENT_RC_RUNIC_SMASH                    = 72,
-    EVENT_RC_RUNIC_SMASH_TRIGGER            = 73,
-    EVENT_RC_CHARGE                         = 74,
+    EVENT_RC_RUNIC_BARRIER = 70,
+    EVENT_RC_SMASH = 71,
+    EVENT_RC_RUNIC_SMASH = 72,
+    EVENT_RC_RUNIC_SMASH_TRIGGER = 73,
+    EVENT_RC_CHARGE = 74,
 
-    EVENT_ARG_RD                            = 80,
-    EVENT_ARG_RF                            = 81,
-    EVENT_ARG_STOMP                         = 82,
-    EVENT_ARG_SPAWN                         = 83,
+    EVENT_ARG_RD = 80,
+    EVENT_ARG_RF = 81,
+    EVENT_ARG_STOMP = 82,
+    EVENT_ARG_SPAWN = 83,
 
-    EVENT_IH_GUARD_CLEAVE                   = 90,
-    EVENT_IH_GUARD_HAMSTRING                = 91,
-    EVENT_IH_GUARD_SHIELD_SMASH             = 92,
+    EVENT_IH_GUARD_CLEAVE = 90,
+    EVENT_IH_GUARD_HAMSTRING = 91,
+    EVENT_IH_GUARD_SHIELD_SMASH = 92,
 
-    EVENT_SIF_START_TALK                    = 100,
-    EVENT_SIF_JOIN_TALK                     = 101,
-    EVENT_SIF_FINISH_DOMINION               = 102,
-    EVENT_SIF_FROSTBOLT_VALLEY              = 103,
-    EVENT_SIF_BLIZZARD                      = 104,
-    EVENT_SIF_FROST_NOVA_START              = 105,
-    EVENT_SIF_FROST_NOVA_CAST               = 106,
+    EVENT_SIF_START_TALK = 100,
+    EVENT_SIF_JOIN_TALK = 101,
+    EVENT_SIF_FINISH_DOMINION = 102,
+    EVENT_SIF_FROSTBOLT_VALLEY = 103,
+    EVENT_SIF_BLIZZARD = 104,
+    EVENT_SIF_FROST_NOVA_START = 105,
+    EVENT_SIF_FROST_NOVA_CAST = 106,
 
-    EVENT_DR_WARBRINGER_RS                  = 110,
+    EVENT_DR_WARBRINGER_RS = 110,
 
-    EVENT_DR_EVOKER_RL                      = 120,
-    EVENT_DR_EVOKER_RM                      = 121,
-    EVENT_DR_EVOKER_RS                      = 122,
+    EVENT_DR_EVOKER_RL = 120,
+    EVENT_DR_EVOKER_RM = 121,
+    EVENT_DR_EVOKER_RS = 122,
 
-    EVENT_DR_CHAMPION_WH                    = 130,
-    EVENT_DR_CHAMPION_CH                    = 131,
-    EVENT_DR_CHAMPION_MS                    = 132,
+    EVENT_DR_CHAMPION_WH = 130,
+    EVENT_DR_CHAMPION_CH = 131,
+    EVENT_DR_CHAMPION_MS = 132,
 
-    EVENT_DR_COMMONER_PM                    = 140,
-    EVENT_DR_COMMONER_LB                    = 141,
+    EVENT_DR_COMMONER_PM = 140,
+    EVENT_DR_COMMONER_LB = 141,
 };
 
-const Position ArenaNPCs[] =
-{
-    {2178.5f,  -300.2f,  441.97f, 2.5f},
-    {2188.12f, -295.1f,  443.75,  2.5f},
+Position const ArenaNPCs[] = {
+    {2178.5f,  -300.2f,  441.97f, 2.5f },
+    {2188.12f, -295.1f,  443.75,  2.5f },
     {2180.9f,  -286.8f,  433.3f,  2.49f},
     {2193.2f,  -280.6f,  443.14f, 2.79f},
-    {2191.8f,  -270.2f,  438.3f,  3.0f},
-    {2186.84f, -238.5f,  439.7f,  3.4f},
-    {2166.3f,  -213.0f,  440.0f,  4.1f},
-    {2100.5f,  -213.5f,  441.66f, 5.4f},
-    {2091.0f,  -231.26f, 435.17f, 5.5f},
+    {2191.8f,  -270.2f,  438.3f,  3.0f },
+    {2186.84f, -238.5f,  439.7f,  3.4f },
+    {2166.3f,  -213.0f,  440.0f,  4.1f },
+    {2100.5f,  -213.5f,  441.66f, 5.4f },
+    {2091.0f,  -231.26f, 435.17f, 5.5f },
     {2083.2f,  -239.2f,  438.77f, 5.85f},
     {2081.54f, -253.27f, 434.67f, 6.19f},
     {2077.65f, -272.73f, 439.12f, 0.15f},
@@ -274,56 +273,56 @@ const Position ArenaNPCs[] =
 enum Texts
 {
     // Thorim
-    SAY_AGGRO_1                 = 0,
-    SAY_AGGRO_2                 = 1,
-    SAY_SPECIAL_1               = 2, // Unused
-    SAY_SPECIAL_2               = 3,
-    SAY_SPECIAL_3               = 4, // Unused
-    SAY_JUMPDOWN                = 5,
-    SAY_SLAY                    = 6,
-    SAY_BERSERK                 = 7,
-    SAY_WIPE                    = 8,
-    SAY_DEATH                   = 9,
-    SAY_END_NORMAL_1            = 10,
-    SAY_END_NORMAL_2            = 11,
-    SAY_END_NORMAL_3            = 12,
-    SAY_END_HARD_1              = 13,
-    SAY_END_HARD_2              = 14,
-    SAY_END_HARD_3              = 15,
+    SAY_AGGRO_1 = 0,
+    SAY_AGGRO_2 = 1,
+    SAY_SPECIAL_1 = 2, // Unused
+    SAY_SPECIAL_2 = 3,
+    SAY_SPECIAL_3 = 4, // Unused
+    SAY_JUMPDOWN = 5,
+    SAY_SLAY = 6,
+    SAY_BERSERK = 7,
+    SAY_WIPE = 8,
+    SAY_DEATH = 9,
+    SAY_END_NORMAL_1 = 10,
+    SAY_END_NORMAL_2 = 11,
+    SAY_END_NORMAL_3 = 12,
+    SAY_END_HARD_1 = 13,
+    SAY_END_HARD_2 = 14,
+    SAY_END_HARD_3 = 15,
 
     // Sif
-    SAY_SIF_AGGRO               = 0,
-    SAY_SIF_HM_MISSED           = 1,
-    SAY_SIF_HM_REACHED          = 2,
+    SAY_SIF_AGGRO = 0,
+    SAY_SIF_HM_MISSED = 1,
+    SAY_SIF_HM_REACHED = 2,
 
     // Ancient Rune Giant
-    SAY_GIANT_RUNIC_MIGHT       = 0,
+    SAY_GIANT_RUNIC_MIGHT = 0,
 
     // Runic Colossus
-    SAY_COLOSSUS_RUNIC_BARRIER  = 0,
+    SAY_COLOSSUS_RUNIC_BARRIER = 0,
 };
 
 enum Misc
 {
-    ACTION_START_TRASH_DIED     = 1,
-    ACTION_ALLOW_HIT            = 2,
-    ACTION_SIF_JOIN_FIGHT       = 3,
-    ACTION_SIF_START_TALK       = 4,
-    ACTION_SIF_START_DOMINION   = 5,
-    ACTION_SIF_TRANSFORM        = 6,
-    ACTION_IRON_HONOR_DIED      = 7,
+    ACTION_START_TRASH_DIED = 1,
+    ACTION_ALLOW_HIT = 2,
+    ACTION_SIF_JOIN_FIGHT = 3,
+    ACTION_SIF_START_TALK = 4,
+    ACTION_SIF_START_DOMINION = 5,
+    ACTION_SIF_TRANSFORM = 6,
+    ACTION_IRON_HONOR_DIED = 7,
 
-    EVENT_PHASE_START           = 1,
-    EVENT_PHASE_RING            = 2,
-    EVENT_PHASE_OUTRO           = 3,
+    EVENT_PHASE_START = 1,
+    EVENT_PHASE_RING = 2,
+    EVENT_PHASE_OUTRO = 3,
 
-    DATA_HIT_BY_LIGHTNING       = 1,
-    DATA_LOSE_YOUR_ILLUSION     = 2,
+    DATA_HIT_BY_LIGHTNING = 1,
+    DATA_LOSE_YOUR_ILLUSION = 2,
 };
 
-const Position Middle = {2134.68f, -263.13f, 419.44f, M_PI * 1.5f};
+Position const Middle = {2134.68f, -263.13f, 419.44f, M_PI * 1.5f};
 
-const uint32 RollTable[3] = { 32877, 32878, 32876 };
+uint32 const RollTable[3] = {32877, 32878, 32876};
 
 class boss_thorim : public CreatureScript
 {
@@ -383,23 +382,57 @@ public:
             return nullptr;
         }
 
-        void JustSummoned(Creature* cr) override { summons.Summon(cr); }
+        void JustSummoned(Creature* cr) override
+        {
+            summons.Summon(cr);
+        }
 
         void SpawnAllNPCs()
         {
             // Jormungar Behemoth 32882
-            me->SummonCreature(NPC_JORMUNGAR_BEHEMOT, 2149.68f, -263.477f, 419.679f, 3.12102f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
+            me->SummonCreature(
+                NPC_JORMUNGAR_BEHEMOT, 2149.68f, -263.477f, 419.679f, 3.12102f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
 
             // Captured Mercenary Soldier 32885
-            me->SummonCreature(_isAlly ? NPC_CAPTURED_MERCENARY_SOLDIER_ALLY : NPC_CAPTURED_MERCENARY_SOLDIER_HORDE, 2127.24f, -251.309f, 419.793f, 5.89921f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
-            me->SummonCreature(_isAlly ? NPC_CAPTURED_MERCENARY_SOLDIER_ALLY : NPC_CAPTURED_MERCENARY_SOLDIER_HORDE, 2120.1f, -258.99f, 419.764f, 6.24828f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
-            me->SummonCreature(_isAlly ? NPC_CAPTURED_MERCENARY_SOLDIER_ALLY : NPC_CAPTURED_MERCENARY_SOLDIER_HORDE, 2123.32f, -254.771f, 419.789f, 6.17846f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
+            me->SummonCreature(_isAlly ? NPC_CAPTURED_MERCENARY_SOLDIER_ALLY : NPC_CAPTURED_MERCENARY_SOLDIER_HORDE,
+                2127.24f,
+                -251.309f,
+                419.793f,
+                5.89921f,
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                5000);
+            me->SummonCreature(_isAlly ? NPC_CAPTURED_MERCENARY_SOLDIER_ALLY : NPC_CAPTURED_MERCENARY_SOLDIER_HORDE,
+                2120.1f,
+                -258.99f,
+                419.764f,
+                6.24828f,
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                5000);
+            me->SummonCreature(_isAlly ? NPC_CAPTURED_MERCENARY_SOLDIER_ALLY : NPC_CAPTURED_MERCENARY_SOLDIER_HORDE,
+                2123.32f,
+                -254.771f,
+                419.789f,
+                6.17846f,
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                5000);
 
             // Captured Mercenary Captain 32908
-            me->SummonCreature(_isAlly ? NPC_CAPTURED_MERCENARY_CAPTAIN_ALLY : NPC_CAPTURED_MERCENARY_CAPTAIN_HORDE, 2131.31f, -259.182f, 419.974f, 5.91667f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
+            me->SummonCreature(_isAlly ? NPC_CAPTURED_MERCENARY_CAPTAIN_ALLY : NPC_CAPTURED_MERCENARY_CAPTAIN_HORDE,
+                2131.31f,
+                -259.182f,
+                419.974f,
+                5.91667f,
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                5000);
 
             // Dark Rune Acolyte (arena) 32886
-            me->SummonCreature(NPC_DARK_RUNE_ACOLYTE_I, 2129.09f, -277.142f, 419.756f, 1.22173f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000);
+            me->SummonCreature(NPC_DARK_RUNE_ACOLYTE_I,
+                2129.09f,
+                -277.142f,
+                419.756f,
+                1.22173f,
+                TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                5000);
 
             // Iron Ring Guard 32874
             me->SummonCreature(NPC_IRON_RING_GUARD, 2217.69f, -337.394f, 412.177f, 1.23918f);
@@ -514,7 +547,10 @@ public:
                 Talk(SAY_SLAY);
         }
 
-        void JustReachedHome() override { me->setActive(false); }
+        void JustReachedHome() override
+        {
+            me->setActive(false);
+        }
 
         void JustEngagedWith(Unit*) override
         {
@@ -540,7 +576,8 @@ public:
                 events.ScheduleEvent(EVENT_THORIM_BERSERK, 5min, 0, EVENT_PHASE_RING);
 
                 me->GetMotionMaster()->MoveChase(me->GetVictim());
-                me->GetMotionMaster()->MoveJump(Middle.GetPositionX(), Middle.GetPositionY(), Middle.GetPositionZ(), 20, 20);
+                me->GetMotionMaster()->MoveJump(
+                    Middle.GetPositionX(), Middle.GetPositionY(), Middle.GetPositionZ(), 20, 20);
                 me->RemoveAura(SPELL_SHEATH_OF_LIGHTNING);
 
                 Talk(SAY_JUMPDOWN);
@@ -549,7 +586,8 @@ public:
                 if (!me->HasAura(62565 /*TOUCH OF DOMINION TRIGGER*/))
                 {
                     if (m_pInstance)
-                        m_pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 64980 /*SIFFED ACHIEVEMENT*/);
+                        m_pInstance->DoUpdateAchievementCriteria(
+                            ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 64980 /*SIFFED ACHIEVEMENT*/);
 
                     _hardMode = true;
                     EntryCheckPredicate pred(NPC_SIF);
@@ -614,11 +652,15 @@ public:
             for (uint8 i = 0; i < (_spawnCommoners ? 7 : 2); ++i)
             {
                 rnd = urand(0, 13);
-                if ((cr = me->SummonCreature((_spawnCommoners ? NPC_DARK_RUNE_COMMONER : RollTable[urand(0, 2)]), ArenaNPCs[rnd], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000)))
-                    cr->GetMotionMaster()->MoveJump(
-                        Middle.GetPositionX() + urand(19, 24) * cos(Middle.GetAngle(cr)),
+                if ((cr = me->SummonCreature((_spawnCommoners ? NPC_DARK_RUNE_COMMONER : RollTable[urand(0, 2)]),
+                         ArenaNPCs[rnd],
+                         TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                         5000)))
+                    cr->GetMotionMaster()->MoveJump(Middle.GetPositionX() + urand(19, 24) * cos(Middle.GetAngle(cr)),
                         Middle.GetPositionY() + urand(19, 24) * std::sin(Middle.GetAngle(cr)),
-                        Middle.GetPositionZ(), 20, 20);
+                        Middle.GetPositionZ(),
+                        20,
+                        20);
             }
         }
 
@@ -647,9 +689,10 @@ public:
         Player* GetArenaPlayer()
         {
             Map::PlayerList const& pList = me->GetMap()->GetPlayers();
-            for(Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr)
+            for (Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr)
                 if (Player* p = itr->GetSource())
-                    if (p->GetPositionX() > 2085 && p->GetPositionX() < 2185 && p->GetPositionY() < -214 && p->GetPositionY() > -305 && p->IsAlive() && p->GetPositionZ() < 425)
+                    if (p->GetPositionX() > 2085 && p->GetPositionX() < 2185 && p->GetPositionY() < -214 &&
+                        p->GetPositionY() > -305 && p->IsAlive() && p->GetPositionZ() < 425)
                         return p;
             return nullptr;
         }
@@ -674,25 +717,28 @@ public:
 
                     break;
                 case EVENT_THORIM_AGGRO2:
-                    {
-                        Talk(SAY_AGGRO_2);
+                {
+                    Talk(SAY_AGGRO_2);
 
-                        EntryCheckPredicate pred(NPC_SIF);
-                        summons.DoAction(ACTION_SIF_START_TALK, pred);
-                        break;
-                    }
+                    EntryCheckPredicate pred(NPC_SIF);
+                    summons.DoAction(ACTION_SIF_START_TALK, pred);
+                    break;
+                }
                 case EVENT_THORIM_START_PHASE1:
-                    {
-                        events.ScheduleEvent(EVENT_THORIM_STORMHAMMER, 8s, 0, EVENT_PHASE_START);
-                        events.ScheduleEvent(EVENT_THORIM_CHARGE_ORB, 14s, 0, EVENT_PHASE_START);
-                        events.ScheduleEvent(EVENT_THORIM_FILL_ARENA, 0ms, 0, EVENT_PHASE_START);
-                        events.ScheduleEvent(EVENT_THORIM_LIGHTNING_ORB, 5s, 0, EVENT_PHASE_START); // checked every 5 secs if there are players on arena
-                        events.ScheduleEvent(EVENT_THORIM_NOT_REACH_IN_TIME, 5min, 0, EVENT_PHASE_START);
+                {
+                    events.ScheduleEvent(EVENT_THORIM_STORMHAMMER, 8s, 0, EVENT_PHASE_START);
+                    events.ScheduleEvent(EVENT_THORIM_CHARGE_ORB, 14s, 0, EVENT_PHASE_START);
+                    events.ScheduleEvent(EVENT_THORIM_FILL_ARENA, 0ms, 0, EVENT_PHASE_START);
+                    events.ScheduleEvent(EVENT_THORIM_LIGHTNING_ORB,
+                        5s,
+                        0,
+                        EVENT_PHASE_START); // checked every 5 secs if there are players on arena
+                    events.ScheduleEvent(EVENT_THORIM_NOT_REACH_IN_TIME, 5min, 0, EVENT_PHASE_START);
 
-                        EntryCheckPredicate pred(NPC_SIF);
-                        summons.DoAction(ACTION_SIF_START_DOMINION, pred);
-                        break;
-                    }
+                    EntryCheckPredicate pred(NPC_SIF);
+                    summons.DoAction(ACTION_SIF_START_DOMINION, pred);
+                    break;
+                }
                 case EVENT_THORIM_STORMHAMMER:
                     me->CastCustomSpell(SPELL_STORMHAMMER, SPELLVALUE_MAX_TARGETS, 1, me->GetVictim(), false);
                     events.Repeat(16s);
@@ -702,22 +748,22 @@ public:
                     events.Repeat(16s);
                     break;
                 case EVENT_THORIM_LIGHTNING_ORB:
+                {
+                    if (GetArenaPlayer())
                     {
-                        if (GetArenaPlayer())
-                        {
-                            // Player found, repeat and return
-                            events.Repeat(5s);
-                            return;
-                        }
-
-                        // No players found
-                        Talk(SAY_WIPE);
-                        me->SummonCreature(NPC_LIGHTNING_ORB, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
-
-                        _isArenaEmpty = true;
-                        events.CancelEvent(EVENT_THORIM_NOT_REACH_IN_TIME);
-                        break;
+                        // Player found, repeat and return
+                        events.Repeat(5s);
+                        return;
                     }
+
+                    // No players found
+                    Talk(SAY_WIPE);
+                    me->SummonCreature(NPC_LIGHTNING_ORB, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+
+                    _isArenaEmpty = true;
+                    events.CancelEvent(EVENT_THORIM_NOT_REACH_IN_TIME);
+                    break;
+                }
                 case EVENT_THORIM_NOT_REACH_IN_TIME:
                     _isArenaEmpty = true;
                     events.CancelEvent(EVENT_THORIM_LIGHTNING_ORB);
@@ -772,13 +818,9 @@ public:
                     break;
                 case EVENT_THORIM_OUTRO3:
                     if (_hardMode)
-                    {
                         Talk(SAY_END_HARD_3);
-                    }
                     else
-                    {
                         Talk(SAY_END_NORMAL_3);
-                    }
                     // Defeat credit
                     if (m_pInstance)
                         m_pInstance->SetData(TYPE_THORIM, DONE);
@@ -809,8 +851,9 @@ public:
     {
         boss_thorim_sifAI(Creature* pCreature) : ScriptedAI(pCreature) { }
 
-        void MoveInLineOfSight(Unit*) override {}
-        void AttackStart(Unit*) override {}
+        void MoveInLineOfSight(Unit*) override { }
+
+        void AttackStart(Unit*) override { }
 
         bool _allowCast;
         EventMap events;
@@ -829,7 +872,8 @@ public:
             else if (param == ACTION_SIF_START_DOMINION)
             {
                 if (me->GetInstanceScript())
-                    if (Creature* cr = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_THORIM)))
+                    if (Creature* cr =
+                            ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_THORIM)))
                         me->CastSpell(cr, SPELL_TOUCH_OF_DOMINION, false);
 
                 events.ScheduleEvent(EVENT_SIF_FINISH_DOMINION, 150s);
@@ -876,7 +920,8 @@ public:
                     events.Repeat(13s);
                     return;
                 case EVENT_SIF_BLIZZARD:
-                    me->SummonCreature(NPC_SIF_BLIZZARD, 2108.7f, -280.04f, 419.42f, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
+                    me->SummonCreature(
+                        NPC_SIF_BLIZZARD, 2108.7f, -280.04f, 419.42f, 0, TEMPSUMMON_TIMED_DESPAWN, 30000);
                     events.Repeat(30s);
                     return;
                 case EVENT_SIF_FROST_NOVA_START:
@@ -924,9 +969,11 @@ public:
 
         uint32 Timer;
 
-        void EnterEvadeMode(EvadeReason /*why*/) override {}
-        void MoveInLineOfSight(Unit*) override {}
-        void AttackStart(Unit*) override {}
+        void EnterEvadeMode(EvadeReason /*why*/) override { }
+
+        void MoveInLineOfSight(Unit*) override { }
+
+        void AttackStart(Unit*) override { }
 
         void InitWaypoint()
         {
@@ -945,9 +992,7 @@ public:
             me->CastSpell(me, SPELL_LIGHTNING_DESTRUCTION, true);
         }
 
-        void WaypointReached(uint32  /*point*/) override
-        {
-        }
+        void WaypointReached(uint32 /*point*/) override { }
     };
 };
 
@@ -967,7 +1012,11 @@ public:
 
         uint32 _checkTimer;
 
-        void Reset() override { _checkTimer = 1; }
+        void Reset() override
+        {
+            _checkTimer = 1;
+        }
+
         void UpdateAI(uint32 diff) override
         {
             if (_checkTimer)
@@ -978,7 +1027,10 @@ public:
                     if (me->SelectNearbyTarget(nullptr, 12.0f))
                     {
                         me->CastSpell(me, SPELL_LIGHTNING_FIELD, true);
-                        me->CastSpell(me, (me->GetEntry() == 33054 /*NPC_THORIM_TRAP_BUNNY*/ ? SPELL_PARALYTIC_FIELD_FIRST : SPELL_PARALYTIC_FIELD_SECOND), true);
+                        me->CastSpell(me,
+                            (me->GetEntry() == 33054 /*NPC_THORIM_TRAP_BUNNY*/ ? SPELL_PARALYTIC_FIELD_FIRST
+                                                                               : SPELL_PARALYTIC_FIELD_SECOND),
+                            true);
                         _checkTimer = 10000;
                         return;
                     }
@@ -1009,9 +1061,11 @@ public:
             SetDespawnAtEnd(false);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
-        void JustEngagedWith(Unit* /*who*/) override {}
-        void AttackStart(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
+
+        void JustEngagedWith(Unit* /*who*/) override { }
+
+        void AttackStart(Unit* /*who*/) override { }
 
         void InitWaypoint()
         {
@@ -1032,9 +1086,7 @@ public:
             me->CastSpell(me, RAID_MODE(SPELL_BLIZZARD_10, SPELL_BLIZZARD_25), true);
         }
 
-        void WaypointReached(uint32  /*point*/) override
-        {
-        }
+        void WaypointReached(uint32 /*point*/) override { }
     };
 };
 
@@ -1114,7 +1166,8 @@ public:
             if (!_playerAttack && who && (who->IsPlayer() || who->GetOwnerGUID().IsPlayer()))
             {
                 if (me->GetInstanceScript())
-                    if (Creature* thorim = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_THORIM)))
+                    if (Creature* thorim =
+                            ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_THORIM)))
                     {
                         if (!thorim->IsInCombat())
                         {
@@ -1135,11 +1188,12 @@ public:
         void JustDied(Unit*) override
         {
             if (me->GetInstanceScript())
-                if (Creature* thorim = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_THORIM)))
+                if (Creature* thorim =
+                        ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_THORIM)))
                     thorim->AI()->DoAction(ACTION_START_TRASH_DIED);
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             if (me->GetEntry() == NPC_DARK_RUNE_ACOLYTE_I)
             {
@@ -1147,13 +1201,15 @@ public:
                 events.ScheduleEvent(EVENT_DR_ACOLYTE_HS, 5s);
                 events.ScheduleEvent(EVENT_DR_ACOLYTE_R, 7s);
             }
-            else if (me->GetEntry() == NPC_CAPTURED_MERCENARY_SOLDIER_ALLY || me->GetEntry() == NPC_CAPTURED_MERCENARY_SOLDIER_HORDE)
+            else if (me->GetEntry() == NPC_CAPTURED_MERCENARY_SOLDIER_ALLY ||
+                     me->GetEntry() == NPC_CAPTURED_MERCENARY_SOLDIER_HORDE)
             {
                 events.ScheduleEvent(EVENT_CM_SOLDIER_BS, 9s);
                 events.ScheduleEvent(EVENT_CM_SOLDIER_WC, 5s);
                 events.ScheduleEvent(EVENT_CM_SOLDIER_S, 0ms);
             }
-            else if (me->GetEntry() == NPC_CAPTURED_MERCENARY_CAPTAIN_ALLY || me->GetEntry() == NPC_CAPTURED_MERCENARY_CAPTAIN_HORDE)
+            else if (me->GetEntry() == NPC_CAPTURED_MERCENARY_CAPTAIN_ALLY ||
+                     me->GetEntry() == NPC_CAPTURED_MERCENARY_CAPTAIN_HORDE)
             {
                 events.ScheduleEvent(EVENT_CM_CAPTAIN_D, 9s);
                 events.ScheduleEvent(EVENT_CM_CAPTAIN_HC, 5s);
@@ -1258,7 +1314,7 @@ public:
             _isCaster = (me->GetEntry() == NPC_DARK_RUNE_ACOLYTE_G);
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             if (me->GetEntry() == NPC_IRON_RING_GUARD)
             {
@@ -1386,7 +1442,8 @@ public:
         {
             if (me->GetInstanceScript())
             {
-                if (GameObject* go = ObjectAccessor::GetGameObject(*me, me->GetInstanceScript()->GetGuidData(DATA_THORIM_FIRST_DOORS)))
+                if (GameObject* go = ObjectAccessor::GetGameObject(
+                        *me, me->GetInstanceScript()->GetGuidData(DATA_THORIM_FIRST_DOORS)))
                     go->SetGoState(GO_STATE_ACTIVE);
 
                 if (Creature* cr = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(TYPE_THORIM)))
@@ -1446,9 +1503,7 @@ public:
                 case EVENT_RC_RUNIC_SMASH_TRIGGER:
                     _nextTriggerPos += 16.0f;
                     if (_nextTriggerPos <= -260.0f)
-                    {
                         events.RescheduleEvent(EVENT_RC_RUNIC_SMASH_TRIGGER, 500ms);
-                    }
 
                     RunRunicSmash(true);
                     break;
@@ -1521,7 +1576,8 @@ public:
         {
             if (InstanceScript* pInstance = me->GetInstanceScript())
             {
-                if (GameObject* go = ObjectAccessor::GetGameObject(*me, pInstance->GetGuidData(DATA_THORIM_SECOND_DOORS)))
+                if (GameObject* go =
+                        ObjectAccessor::GetGameObject(*me, pInstance->GetGuidData(DATA_THORIM_SECOND_DOORS)))
                     go->SetGoState(GO_STATE_ACTIVE);
 
                 if (Creature* thorim = ObjectAccessor::GetCreature(*me, pInstance->GetGuidData(TYPE_THORIM)))
@@ -1556,7 +1612,13 @@ public:
                     events.Repeat(8s);
                     break;
                 case EVENT_ARG_SPAWN:
-                    if (Creature* cr = me->SummonCreature(NPC_IRON_HONOR_GUARD, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 20000))
+                    if (Creature* cr = me->SummonCreature(NPC_IRON_HONOR_GUARD,
+                            me->GetPositionX(),
+                            me->GetPositionY(),
+                            me->GetPositionZ(),
+                            0,
+                            TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                            20000))
                         if (Unit* target = SelectTargetFromPlayerList(150.0f))
                             cr->AI()->AttackStart(target);
                     events.Repeat(10s);
@@ -1631,7 +1693,8 @@ public:
             uint8 count = 0;
             for (Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr, ++count)
             {
-                if (itr->GetSource()->GetPositionX() > 2180 || !itr->GetSource()->IsAlive() || itr->GetSource()->GetPositionZ() > 425)
+                if (itr->GetSource()->GetPositionX() > 2180 || !itr->GetSource()->IsAlive() ||
+                    itr->GetSource()->GetPositionZ() > 425)
                     continue;
 
                 if (count <= num || !target)
@@ -1742,7 +1805,8 @@ class spell_thorim_lightning_pillar_P2_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_thorim_lightning_pillar_P2_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_thorim_lightning_pillar_P2_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -1750,7 +1814,7 @@ class spell_thorim_trash_impale_aura : public AuraScript
 {
     PrepareAuraScript(spell_thorim_trash_impale_aura);
 
-    void OnPeriodic(AuraEffect const*  /*aurEff*/)
+    void OnPeriodic(AuraEffect const* /*aurEff*/)
     {
         // deals damage until target is healed above 90%
         if (GetUnitOwner()->HealthAbovePct(90))
@@ -1759,14 +1823,16 @@ class spell_thorim_trash_impale_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_thorim_trash_impale_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_thorim_trash_impale_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 
 class achievement_thorim_stand_in_the_lightning : public AchievementCriteriaScript
 {
 public:
-    achievement_thorim_stand_in_the_lightning() : AchievementCriteriaScript("achievement_thorim_stand_in_the_lightning") {}
+    achievement_thorim_stand_in_the_lightning() : AchievementCriteriaScript("achievement_thorim_stand_in_the_lightning")
+    { }
 
     bool OnCheck(Player* player, Unit*, uint32 /*criteria_id*/) override
     {
@@ -1781,7 +1847,7 @@ public:
 class achievement_thorim_lose_your_illusion : public AchievementCriteriaScript
 {
 public:
-    achievement_thorim_lose_your_illusion() : AchievementCriteriaScript("achievement_thorim_lose_your_illusion") {}
+    achievement_thorim_lose_your_illusion() : AchievementCriteriaScript("achievement_thorim_lose_your_illusion") { }
 
     bool OnCheck(Player* player, Unit*, uint32 /*criteria_id*/) override
     {

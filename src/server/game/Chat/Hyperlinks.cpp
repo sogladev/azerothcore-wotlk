@@ -27,7 +27,10 @@
 
 using namespace Acore::Hyperlinks;
 
-inline uint8 toHex(char c) { return (c >= '0' && c <= '9') ? c - '0' + 0x10 : (c >= 'a' && c <= 'f') ? c - 'a' + 0x1a : 0x00; }
+inline uint8 toHex(char c)
+{
+    return (c >= '0' && c <= '9') ? c - '0' + 0x10 : (c >= 'a' && c <= 'f') ? c - 'a' + 0x1a : 0x00;
+}
 
 // Validates a single hyperlink
 HyperlinkInfo Acore::Hyperlinks::ParseSingleHyperlink(std::string_view str)
@@ -47,12 +50,10 @@ HyperlinkInfo Acore::Hyperlinks::ParseSingleHyperlink(std::string_view str)
         return {};
 
     for (uint8 i = 0; i < 8; ++i)
-    {
         if (uint8 hex = toHex(str[i]))
             color = (color << 4) | (hex & 0xf);
         else
             return {};
-    }
 
     str.remove_prefix(8);
 
@@ -65,7 +66,7 @@ HyperlinkInfo Acore::Hyperlinks::ParseSingleHyperlink(std::string_view str)
     if (std::size_t delimPos = str.find('|'); delimPos != std::string_view::npos)
     {
         tag = str.substr(0, delimPos);
-        str.remove_prefix(delimPos+1);
+        str.remove_prefix(delimPos + 1);
     }
     else
         return {};
@@ -73,7 +74,7 @@ HyperlinkInfo Acore::Hyperlinks::ParseSingleHyperlink(std::string_view str)
     // split tag if : is present (data separator)
     if (std::size_t dataStart = tag.find(':'); dataStart != std::string_view::npos)
     {
-        data = tag.substr(dataStart+1);
+        data = tag.substr(dataStart + 1);
         tag = tag.substr(0, dataStart);
     }
 
@@ -98,18 +99,23 @@ HyperlinkInfo Acore::Hyperlinks::ParseSingleHyperlink(std::string_view str)
         return {};
 
     // ok, valid hyperlink, return info
-    return { str, color, tag, data, text };
+    return {str, color, tag, data, text};
 }
 
-template <typename T>
-struct LinkValidator
+template <typename T> struct LinkValidator
 {
-    static bool IsTextValid(typename T::value_type, std::string_view) { return true; }
-    static bool IsColorValid(typename T::value_type, HyperlinkColor) { return true; }
+    static bool IsTextValid(typename T::value_type, std::string_view)
+    {
+        return true;
+    }
+
+    static bool IsColorValid(typename T::value_type, HyperlinkColor)
+    {
+        return true;
+    }
 };
 
-template <>
-struct LinkValidator<LinkTags::achievement>
+template <> struct LinkValidator<LinkTags::achievement>
 {
     static bool IsTextValid(AchievementLinkData const& data, std::string_view text)
     {
@@ -129,8 +135,7 @@ struct LinkValidator<LinkTags::achievement>
     }
 };
 
-template <>
-struct LinkValidator<LinkTags::item>
+template <> struct LinkValidator<LinkTags::item>
 {
     static bool IsTextValid(ItemLinkData const& data, std::string_view text)
     {
@@ -151,18 +156,17 @@ struct LinkValidator<LinkTags::item>
             if (!locale && i != DEFAULT_LOCALE)
                 continue;
 
-            std::string_view name = (i == DEFAULT_LOCALE) ? data.Item->Name1 : ObjectMgr::GetLocaleString(locale->Name, i);
+            std::string_view name =
+                (i == DEFAULT_LOCALE) ? data.Item->Name1 : ObjectMgr::GetLocaleString(locale->Name, i);
             if (name.empty())
                 continue;
 
             if (randomSuffixes)
             {
                 std::string_view randomSuffix((*randomSuffixes)[i]);
-                if ((!randomSuffix.empty()) &&
-                  (text.length() == (name.length() + 1 + randomSuffix.length())) &&
-                  (text.substr(0, name.length()) == name) &&
-                  (text[name.length()] == ' ') &&
-                  (text.substr(name.length() + 1) == randomSuffix))
+                if ((!randomSuffix.empty()) && (text.length() == (name.length() + 1 + randomSuffix.length())) &&
+                    (text.substr(0, name.length()) == name) && (text[name.length()] == ' ') &&
+                    (text.substr(name.length() + 1) == randomSuffix))
                     return true;
             }
             else if (text == name)
@@ -177,8 +181,7 @@ struct LinkValidator<LinkTags::item>
     }
 };
 
-template <>
-struct LinkValidator<LinkTags::quest>
+template <> struct LinkValidator<LinkTags::quest>
 {
     static bool IsTextValid(QuestLinkData const& data, std::string_view text)
     {
@@ -215,8 +218,7 @@ struct LinkValidator<LinkTags::quest>
     }
 };
 
-template <>
-struct LinkValidator<LinkTags::spell>
+template <> struct LinkValidator<LinkTags::spell>
 {
     static bool IsTextValid(SpellInfo const* info, std::string_view text)
     {
@@ -232,8 +234,7 @@ struct LinkValidator<LinkTags::spell>
     }
 };
 
-template <>
-struct LinkValidator<LinkTags::enchant>
+template <> struct LinkValidator<LinkTags::enchant>
 {
     static bool IsTextValid(SpellInfo const* info, std::string_view text)
     {
@@ -256,8 +257,7 @@ struct LinkValidator<LinkTags::enchant>
                 std::string_view spellName = info->SpellName[i];
                 // alternate form [Skill Name: Spell Name]
                 if ((text.length() == (skillName.length() + 2 + spellName.length())) &&
-                    (text.substr(0, skillName.length()) == skillName) &&
-                    (text.substr(skillName.length(), 2) == ": ") &&
+                    (text.substr(0, skillName.length()) == skillName) && (text.substr(skillName.length(), 2) == ": ") &&
                     (text.substr(skillName.length() + 2) == spellName))
                     return true;
             }
@@ -271,8 +271,7 @@ struct LinkValidator<LinkTags::enchant>
     }
 };
 
-template <>
-struct LinkValidator<LinkTags::glyph>
+template <> struct LinkValidator<LinkTags::glyph>
 {
     static bool IsTextValid(GlyphLinkData const& data, std::string_view text)
     {
@@ -288,8 +287,7 @@ struct LinkValidator<LinkTags::glyph>
     }
 };
 
-template <>
-struct LinkValidator<LinkTags::talent>
+template <> struct LinkValidator<LinkTags::talent>
 {
     static bool IsTextValid(TalentLinkData const& data, std::string_view text)
     {
@@ -309,8 +307,7 @@ struct LinkValidator<LinkTags::talent>
     }
 };
 
-template <>
-struct LinkValidator<LinkTags::trade>
+template <> struct LinkValidator<LinkTags::trade>
 {
     static bool IsTextValid(TradeskillLinkData const& data, std::string_view text)
     {
@@ -323,8 +320,7 @@ struct LinkValidator<LinkTags::trade>
     }
 };
 
-template <typename TAG>
-static bool ValidateAs(HyperlinkInfo const& info)
+template <typename TAG> static bool ValidateAs(HyperlinkInfo const& info)
 {
     std::decay_t<typename TAG::value_type> t;
     if (!TAG::StoreTo(t, info.data))

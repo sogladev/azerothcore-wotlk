@@ -22,6 +22,7 @@
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "zulgurub.h"
+
 /*
 Name: Boss_Hakkar
 %Complete: 95
@@ -31,45 +32,45 @@ Category: Zul'Gurub
 
 enum Says
 {
-    SAY_AGGRO                       = 0,
-    SAY_FLEEING                     = 1,
-    SAY_MINION_DESTROY              = 2,
-    SAY_PROTECT_ALTAR               = 3,
-    SAY_PROTECT_GURUBASHI_EMPIRE    = 4,
-    SAY_PLEDGE_ALLEGIANCE           = 5,
-    SAY_WORLD_WILL_SUFFER           = 6,
-    SAY_EVADE                       = 7
+    SAY_AGGRO = 0,
+    SAY_FLEEING = 1,
+    SAY_MINION_DESTROY = 2,
+    SAY_PROTECT_ALTAR = 3,
+    SAY_PROTECT_GURUBASHI_EMPIRE = 4,
+    SAY_PLEDGE_ALLEGIANCE = 5,
+    SAY_WORLD_WILL_SUFFER = 6,
+    SAY_EVADE = 7
 };
 
 enum Spells
 {
-    SPELL_BLOOD_SIPHON          = 24324,
-    SPELL_BLOOD_SIPHON_HEAL     = 24322,
-    SPELL_BLOOD_SIPHON_DAMAGE   = 24323,
-    SPELL_CORRUPTED_BLOOD       = 24328,
-    SPELL_CAUSE_INSANITY        = 24327,
-    SPELL_ENRAGE                = 24318,
+    SPELL_BLOOD_SIPHON = 24324,
+    SPELL_BLOOD_SIPHON_HEAL = 24322,
+    SPELL_BLOOD_SIPHON_DAMAGE = 24323,
+    SPELL_CORRUPTED_BLOOD = 24328,
+    SPELL_CAUSE_INSANITY = 24327,
+    SPELL_ENRAGE = 24318,
     // The Aspects of all High Priests spells
-    SPELL_ASPECT_OF_JEKLIK      = 24687,
-    SPELL_ASPECT_OF_VENOXIS     = 24688,
-    SPELL_ASPECT_OF_MARLI       = 24686,
-    SPELL_ASPECT_OF_THEKAL      = 24689,
-    SPELL_ASPECT_OF_ARLOKK      = 24690,
-    SPELL_POISONOUS_BLOOD       = 24321
+    SPELL_ASPECT_OF_JEKLIK = 24687,
+    SPELL_ASPECT_OF_VENOXIS = 24688,
+    SPELL_ASPECT_OF_MARLI = 24686,
+    SPELL_ASPECT_OF_THEKAL = 24689,
+    SPELL_ASPECT_OF_ARLOKK = 24690,
+    SPELL_POISONOUS_BLOOD = 24321
 };
 
 enum Events
 {
-    EVENT_BLOOD_SIPHON          = 1,
-    EVENT_CORRUPTED_BLOOD       = 2,
-    EVENT_CAUSE_INSANITY        = 3,
-    EVENT_ENRAGE                = 4,
+    EVENT_BLOOD_SIPHON = 1,
+    EVENT_CORRUPTED_BLOOD = 2,
+    EVENT_CAUSE_INSANITY = 3,
+    EVENT_ENRAGE = 4,
     // The Aspects of all High Priests events
-    EVENT_ASPECT_OF_JEKLIK      = 5,
-    EVENT_ASPECT_OF_VENOXIS     = 6,
-    EVENT_ASPECT_OF_MARLI       = 7,
-    EVENT_ASPECT_OF_THEKAL      = 8,
-    EVENT_ASPECT_OF_ARLOKK      = 9
+    EVENT_ASPECT_OF_JEKLIK = 5,
+    EVENT_ASPECT_OF_VENOXIS = 6,
+    EVENT_ASPECT_OF_MARLI = 7,
+    EVENT_ASPECT_OF_THEKAL = 8,
+    EVENT_ASPECT_OF_ARLOKK = 9
 };
 
 class boss_hakkar : public CreatureScript
@@ -164,9 +165,7 @@ public:
                         if (me->GetThreatMgr().GetThreatListSize() > 1)
                         {
                             if (Unit* victim = SelectTarget(SelectTargetMethod::MaxThreat, 0, 30.f, true))
-                            {
                                 DoCast(victim, SPELL_CAUSE_INSANITY);
-                            }
                         }
                         events.ScheduleEvent(EVENT_CAUSE_INSANITY, 35s, 40s);
                         break;
@@ -221,9 +220,9 @@ public:
 class at_zulgurub_entrance_speech : public OnlyOnceAreaTriggerScript
 {
 public:
-    at_zulgurub_entrance_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_entrance_speech") {}
+    at_zulgurub_entrance_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_entrance_speech") { }
 
-    bool _OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool _OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (InstanceScript* instance = player->GetInstanceScript())
         {
@@ -235,9 +234,7 @@ public:
             {
                 hakkar->setActive(true);
                 if (hakkar->GetAI())
-                {
                     hakkar->AI()->Talk(SAY_PROTECT_GURUBASHI_EMPIRE);
-                }
             }
         }
 
@@ -248,22 +245,20 @@ public:
 class at_zulgurub_bridge_speech : public OnlyOnceAreaTriggerScript
 {
 public:
-    at_zulgurub_bridge_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_bridge_speech") {}
+    at_zulgurub_bridge_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_bridge_speech") { }
 
-    bool _OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool _OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (InstanceScript* instance = player->GetInstanceScript())
         {
             // Instance map's enormous, Hakkar's GRID is not loaded by the time players enter.
-           // Without this, the creature never says anything, because it doesn't load in time.
+            // Without this, the creature never says anything, because it doesn't load in time.
             player->GetMap()->LoadGrid(-11783.99f, -1655.27f);
 
             if (Creature* hakkar = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_HAKKAR)))
             {
                 if (hakkar->GetAI())
-                {
                     hakkar->AI()->Talk(SAY_PROTECT_ALTAR);
-                }
             }
         }
 
@@ -274,22 +269,20 @@ public:
 class at_zulgurub_temple_speech : public OnlyOnceAreaTriggerScript
 {
 public:
-    at_zulgurub_temple_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_temple_speech") {}
+    at_zulgurub_temple_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_temple_speech") { }
 
-    bool _OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool _OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (InstanceScript* instance = player->GetInstanceScript())
         {
             // Instance map's enormous, Hakkar's GRID is not loaded by the time players enter.
-           // Without this, the creature never says anything, because it doesn't load in time.
+            // Without this, the creature never says anything, because it doesn't load in time.
             player->GetMap()->LoadGrid(-11783.99f, -1655.27f);
 
             if (Creature* hakkar = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_HAKKAR)))
             {
                 if (hakkar->GetAI())
-                {
                     hakkar->AI()->Talk(SAY_MINION_DESTROY);
-                }
             }
         }
 
@@ -300,22 +293,20 @@ public:
 class at_zulgurub_bloodfire_pit_speech : public OnlyOnceAreaTriggerScript
 {
 public:
-    at_zulgurub_bloodfire_pit_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_bloodfire_pit_speech") {}
+    at_zulgurub_bloodfire_pit_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_bloodfire_pit_speech") { }
 
-    bool _OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool _OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (InstanceScript* instance = player->GetInstanceScript())
         {
             // Instance map's enormous, Hakkar's GRID is not loaded by the time players enter.
-           // Without this, the creature never says anything, because it doesn't load in time.
+            // Without this, the creature never says anything, because it doesn't load in time.
             player->GetMap()->LoadGrid(-11783.99f, -1655.27f);
 
             if (Creature* hakkar = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_HAKKAR)))
             {
                 if (hakkar->GetAI())
-                {
                     hakkar->AI()->Talk(SAY_PLEDGE_ALLEGIANCE, player);
-                }
             }
         }
 
@@ -326,22 +317,20 @@ public:
 class at_zulgurub_edge_of_madness_speech : public OnlyOnceAreaTriggerScript
 {
 public:
-    at_zulgurub_edge_of_madness_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_edge_of_madness_speech") {}
+    at_zulgurub_edge_of_madness_speech() : OnlyOnceAreaTriggerScript("at_zulgurub_edge_of_madness_speech") { }
 
-    bool _OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool _OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (InstanceScript* instance = player->GetInstanceScript())
         {
             // Instance map's enormous, Hakkar's GRID is not loaded by the time players enter.
-           // Without this, the creature never says anything, because it doesn't load in time.
+            // Without this, the creature never says anything, because it doesn't load in time.
             player->GetMap()->LoadGrid(-11783.99f, -1655.27f);
 
             if (Creature* hakkar = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_HAKKAR)))
             {
                 if (hakkar->GetAI())
-                {
                     hakkar->AI()->Talk(SAY_WORLD_WILL_SUFFER, player);
-                }
             }
         }
 
@@ -356,16 +345,14 @@ class spell_blood_siphon : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_BLOOD_SIPHON_DAMAGE, SPELL_BLOOD_SIPHON_HEAL });
+        return ValidateSpellInfo({SPELL_BLOOD_SIPHON_DAMAGE, SPELL_BLOOD_SIPHON_HEAL});
     }
 
     void FilterTargets(std::list<WorldObject*>& targets)
     {
         // Max. 20 targets
         if (!targets.empty())
-        {
             Acore::Containers::RandomResize(targets, 20);
-        }
     }
 
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
@@ -374,15 +361,19 @@ class spell_blood_siphon : public SpellScript
         {
             if (Player* player = GetHitPlayer())
             {
-                player->CastSpell(caster, player->HasAura(SPELL_POISONOUS_BLOOD) ? SPELL_BLOOD_SIPHON_DAMAGE : SPELL_BLOOD_SIPHON_HEAL, true);
+                player->CastSpell(caster,
+                    player->HasAura(SPELL_POISONOUS_BLOOD) ? SPELL_BLOOD_SIPHON_DAMAGE : SPELL_BLOOD_SIPHON_HEAL,
+                    true);
             }
         }
     }
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_blood_siphon::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
-        OnEffectHitTarget += SpellEffectFn(spell_blood_siphon::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_blood_siphon::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_blood_siphon::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -393,7 +384,7 @@ class spell_blood_siphon_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_POISONOUS_BLOOD });
+        return ValidateSpellInfo({SPELL_POISONOUS_BLOOD});
     }
 
     void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -407,7 +398,8 @@ class spell_blood_siphon_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_blood_siphon_aura::OnRemove, EFFECT_1, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_blood_siphon_aura::OnRemove, EFFECT_1, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

@@ -42,11 +42,11 @@ void RASession::Start()
     if (_socket.available() > 0)
     {
         // Handle subnegotiation
-        char buf[1024] = { };
+        char buf[1024] = {};
         _socket.read_some(boost::asio::buffer(buf));
 
         // Send the end-of-negotiation packet
-        uint8 const reply[2] = { 0xFF, 0xF0 };
+        uint8 const reply[2] = {0xFF, 0xF0};
         _socket.write_some(boost::asio::buffer(reply));
     }
 
@@ -120,7 +120,7 @@ std::string RASession::ReadString()
     return line;
 }
 
-bool RASession::CheckAccessLevel(const std::string& user)
+bool RASession::CheckAccessLevel(std::string const& user)
 {
     std::string safeUser = user;
 
@@ -152,7 +152,7 @@ bool RASession::CheckAccessLevel(const std::string& user)
     return true;
 }
 
-bool RASession::CheckPassword(const std::string& user, const std::string& pass)
+bool RASession::CheckPassword(std::string const& user, std::string const& pass)
 {
     std::string safe_user = user;
     std::transform(safe_user.begin(), safe_user.end(), safe_user.begin(), ::toupper);
@@ -197,7 +197,8 @@ bool RASession::ProcessCommand(std::string& command)
     delete _commandExecuting;
     _commandExecuting = new std::promise<void>();
 
-    CliCommandHolder* cmd = new CliCommandHolder(this, command.c_str(), &RASession::CommandPrint, &RASession::CommandFinished);
+    CliCommandHolder* cmd =
+        new CliCommandHolder(this, command.c_str(), &RASession::CommandPrint, &RASession::CommandFinished);
     sWorld->QueueCliCommand(cmd);
 
     // Wait for the command to finish
@@ -209,9 +210,7 @@ bool RASession::ProcessCommand(std::string& command)
 void RASession::CommandPrint(void* callbackArg, std::string_view text)
 {
     if (text.empty())
-    {
         return;
-    }
 
     RASession* session = static_cast<RASession*>(callbackArg);
     session->Send(text);

@@ -23,7 +23,7 @@
 
 enum UtgardeSpells
 {
-    SPELL_BEAST_MARK_NORMAL   = 48876,
+    SPELL_BEAST_MARK_NORMAL = 48876,
     SPELL_BEAST_MARK_DAMAGE_N = 48877,
     SPELL_BEAST_MARK_DAMAGE_H = 59233
 };
@@ -36,7 +36,7 @@ class spell_utgarde_pinnacle_beast_mark : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_BEAST_MARK_DAMAGE_N, SPELL_BEAST_MARK_DAMAGE_H });
+        return ValidateSpellInfo({SPELL_BEAST_MARK_DAMAGE_N, SPELL_BEAST_MARK_DAMAGE_H});
     }
 
     bool CheckProc(ProcEventInfo& eventInfo)
@@ -57,14 +57,16 @@ class spell_utgarde_pinnacle_beast_mark : public AuraScript
     {
         PreventDefaultAction();
         Unit* target = GetTarget();
-        uint32 spellId = (m_scriptSpellId == SPELL_BEAST_MARK_NORMAL) ? SPELL_BEAST_MARK_DAMAGE_N : SPELL_BEAST_MARK_DAMAGE_H;
+        uint32 spellId =
+            (m_scriptSpellId == SPELL_BEAST_MARK_NORMAL) ? SPELL_BEAST_MARK_DAMAGE_N : SPELL_BEAST_MARK_DAMAGE_H;
         target->CastSpell(target, spellId, aurEff);
     }
 
     void Register() override
     {
         DoCheckProc += AuraCheckProcFn(spell_utgarde_pinnacle_beast_mark::CheckProc);
-        OnEffectProc += AuraEffectProcFn(spell_utgarde_pinnacle_beast_mark::HandleProc, EFFECT_0, SPELL_AURA_PROC_TRIGGER_SPELL);
+        OnEffectProc +=
+            AuraEffectProcFn(spell_utgarde_pinnacle_beast_mark::HandleProc, EFFECT_0, SPELL_AURA_PROC_TRIGGER_SPELL);
     }
 };
 

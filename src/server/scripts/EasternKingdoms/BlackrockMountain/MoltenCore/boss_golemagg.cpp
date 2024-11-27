@@ -22,22 +22,22 @@
 
 enum Texts
 {
-    EMOTE_LOWHP                 = 0,
+    EMOTE_LOWHP = 0,
 };
 
 enum Spells
 {
     // Golemagg
-    SPELL_PYROBLAST             = 20228,
-    SPELL_EARTHQUAKE            = 19798,
-    SPELL_ATTRACK_RAGER         = 20544,
-    SPELL_MAGMASPLASH           = 13879,
-    SPELL_GOLEMAGG_TRUST_AURA   = 20556,
-    SPELL_DOUBLE_ATTACK         = 18943,
+    SPELL_PYROBLAST = 20228,
+    SPELL_EARTHQUAKE = 19798,
+    SPELL_ATTRACK_RAGER = 20544,
+    SPELL_MAGMASPLASH = 13879,
+    SPELL_GOLEMAGG_TRUST_AURA = 20556,
+    SPELL_DOUBLE_ATTACK = 18943,
 
     // Core Rager
-    SPELL_MANGLE                = 19820,
-    SPELL_FULL_HEAL             = 17683,
+    SPELL_MANGLE = 19820,
+    SPELL_FULL_HEAL = 17683,
 };
 
 class boss_golemagg : public CreatureScript
@@ -47,11 +47,12 @@ public:
 
     struct boss_golemaggAI : public BossAI
     {
-        boss_golemaggAI(Creature* creature) : BossAI(creature, DATA_GOLEMAGG),
+        boss_golemaggAI(Creature* creature) :
+            BossAI(creature, DATA_GOLEMAGG),
             earthquakeTimer(0),
             pyroblastTimer(0),
             enraged(false)
-        {}
+        { }
 
         void Reset() override
         {
@@ -78,9 +79,7 @@ public:
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             // Should not get impact by cast state (cast should always happen)
             if (earthquakeTimer)
@@ -97,9 +96,7 @@ public:
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             if (pyroblastTimer <= diff)
             {
@@ -134,31 +131,28 @@ public:
 
     struct npc_core_ragerAI : public ScriptedAI
     {
-        npc_core_ragerAI(Creature* creature) : ScriptedAI(creature),
+        npc_core_ragerAI(Creature* creature) :
+            ScriptedAI(creature),
             instance(creature->GetInstanceScript()),
             mangleTimer(7000),
             rangeCheckTimer(1000)
-        {
-        }
+        { }
 
         void Reset() override
         {
-            mangleTimer = 7000;               // These times are probably wrong
+            mangleTimer = 7000; // These times are probably wrong
             rangeCheckTimer = 1000;
 
             if (instance->GetBossState(DATA_GOLEMAGG) == DONE)
-            {
                 DoCastSelf(SPELL_CORE_RAGER_QUIET_SUICIDE, true);
-            }
         }
 
-        void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType /*dmgType*/, SpellSchoolMask /*school*/) override
+        void DamageTaken(
+            Unit* /*attacker*/, uint32& damage, DamageEffectType /*dmgType*/, SpellSchoolMask /*school*/) override
         {
             // Just in case if something will go bad, let players to kill this creature
             if (instance->GetBossState(DATA_GOLEMAGG) == DONE)
-            {
                 return;
-            }
 
             if (me->HealthBelowPctDamaged(50, damage))
             {
@@ -171,9 +165,7 @@ public:
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             // Should have no impact from unit state
             if (rangeCheckTimer <= diff)
@@ -193,9 +185,7 @@ public:
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             // Mangle
             if (mangleTimer <= diff)

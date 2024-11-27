@@ -21,12 +21,13 @@
 #include "QueryResult.h"
 #include "StringFormat.h"
 
-DBCDatabaseLoader::DBCDatabaseLoader(char const* tableName, char const* dbcFormatString, std::vector<char*>& stringPool)
-    : _sqlTableName(tableName),
-      _dbcFormat(dbcFormatString),
-      _sqlIndexPos(0),
-      _recordSize(0),
-      _stringPool(stringPool)
+DBCDatabaseLoader::DBCDatabaseLoader(
+    char const* tableName, char const* dbcFormatString, std::vector<char*>& stringPool) :
+    _sqlTableName(tableName),
+    _dbcFormat(dbcFormatString),
+    _sqlIndexPos(0),
+    _recordSize(0),
+    _stringPool(stringPool)
 {
     // Get sql index position
     int32 indexPos = -1;
@@ -56,7 +57,7 @@ char* DBCDatabaseLoader::Load(uint32& records, char**& indexTable)
     uint32 indexTableSize = std::max(records, (*result)[_sqlIndexPos].Get<uint32>() + 1);
     if (indexTableSize > records)
     {
-        char** tmpIdxTable = new char* [indexTableSize];
+        char** tmpIdxTable = new char*[indexTableSize];
         memset(tmpIdxTable, 0, indexTableSize * sizeof(char*));
         memcpy(tmpIdxTable, indexTable, records * sizeof(char*));
         delete[] indexTable;
@@ -100,7 +101,8 @@ char* DBCDatabaseLoader::Load(uint32& records, char**& indexTable)
                     dataOffset += sizeof(uint8);
                     break;
                 case FT_STRING:
-                    *reinterpret_cast<char**>(&dataValue[dataOffset]) = CloneStringToPool(fields[sqlColumnNumber].Get<std::string>());
+                    *reinterpret_cast<char**>(&dataValue[dataOffset]) =
+                        CloneStringToPool(fields[sqlColumnNumber].Get<std::string>());
                     dataOffset += sizeof(char*);
                     break;
                 case FT_SORT:
@@ -115,7 +117,9 @@ char* DBCDatabaseLoader::Load(uint32& records, char**& indexTable)
             ++sqlColumnNumber;
         }
 
-        ASSERT(sqlColumnNumber == result->GetFieldCount(), "SQL format string does not match database for table: '{}'", _sqlTableName);
+        ASSERT(sqlColumnNumber == result->GetFieldCount(),
+            "SQL format string does not match database for table: '{}'",
+            _sqlTableName);
         ASSERT(dataOffset == _recordSize);
     } while (result->NextRow());
 

@@ -27,21 +27,18 @@
 
 namespace FactorySelector
 {
-    template <class T, class Value>
-    inline int32 GetPermitFor(T const* obj, Value const& value)
+    template <class T, class Value> inline int32 GetPermitFor(T const* obj, Value const& value)
     {
         Permissible<T> const* const p = ASSERT_NOTNULL(dynamic_cast<Permissible<T> const*>(value.second.get()));
         return p->Permit(obj);
     }
 
-    template <class T>
-    struct PermissibleOrderPred
+    template <class T> struct PermissibleOrderPred
     {
     public:
         PermissibleOrderPred(T const* obj) : _obj(obj) { }
 
-        template <class Value>
-        bool operator()(Value const& left, Value const& right) const
+        template <class Value> bool operator()(Value const& left, Value const& right) const
         {
             return GetPermitFor(_obj, left) < GetPermitFor(_obj, right);
         }
@@ -50,12 +47,14 @@ namespace FactorySelector
         T const* const _obj;
     };
 
-    template <class AI, class T>
-    inline FactoryHolder<AI, T> const* SelectFactory(T* obj)
+    template <class AI, class T> inline FactoryHolder<AI, T> const* SelectFactory(T* obj)
     {
-        static_assert(std::is_same<AI, CreatureAI>::value || std::is_same<AI, GameObjectAI>::value, "Invalid template parameter");
-        static_assert(std::is_same<AI, CreatureAI>::value == std::is_same<T, Creature>::value, "Incompatible AI for type");
-        static_assert(std::is_same<AI, GameObjectAI>::value == std::is_same<T, GameObject>::value, "Incompatible AI for type");
+        static_assert(
+            std::is_same<AI, CreatureAI>::value || std::is_same<AI, GameObjectAI>::value, "Invalid template parameter");
+        static_assert(
+            std::is_same<AI, CreatureAI>::value == std::is_same<T, Creature>::value, "Incompatible AI for type");
+        static_assert(
+            std::is_same<AI, GameObjectAI>::value == std::is_same<T, GameObject>::value, "Incompatible AI for type");
 
         using AIRegistry = typename FactoryHolder<AI, T>::FactoryHolderRegistry;
 
@@ -107,4 +106,4 @@ namespace FactorySelector
 
         return SelectFactory<GameObjectAI>(go)->Create(go);
     }
-}
+} // namespace FactorySelector

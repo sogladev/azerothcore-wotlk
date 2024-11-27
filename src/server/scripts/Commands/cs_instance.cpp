@@ -15,7 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
- /* ScriptData
+/* ScriptData
  Name: instance_commandscript
  %Complete: 100
  Comment: All instance related commands
@@ -40,19 +40,17 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable instanceCommandTable =
-        {
-            { "listbinds",    HandleInstanceListBindsCommand,    SEC_MODERATOR,     Console::No },
-            { "unbind",       HandleInstanceUnbindCommand,       SEC_GAMEMASTER,    Console::No },
-            { "stats",        HandleInstanceStatsCommand,        SEC_MODERATOR,     Console::Yes },
-            { "savedata",     HandleInstanceSaveDataCommand,     SEC_ADMINISTRATOR, Console::No },
-            { "setbossstate", HandleInstanceSetBossStateCommand, SEC_GAMEMASTER,    Console::Yes },
-            { "getbossstate", HandleInstanceGetBossStateCommand, SEC_MODERATOR,     Console::Yes },
+        static ChatCommandTable instanceCommandTable = {
+            {"listbinds",    HandleInstanceListBindsCommand,    SEC_MODERATOR,     Console::No },
+            {"unbind",       HandleInstanceUnbindCommand,       SEC_GAMEMASTER,    Console::No },
+            {"stats",        HandleInstanceStatsCommand,        SEC_MODERATOR,     Console::Yes},
+            {"savedata",     HandleInstanceSaveDataCommand,     SEC_ADMINISTRATOR, Console::No },
+            {"setbossstate", HandleInstanceSetBossStateCommand, SEC_GAMEMASTER,    Console::Yes},
+            {"getbossstate", HandleInstanceGetBossStateCommand, SEC_MODERATOR,     Console::Yes},
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "instance", instanceCommandTable },
+        static ChatCommandTable commandTable = {
+            {"instance", instanceCommandTable},
         };
 
         return commandTable;
@@ -68,14 +66,22 @@ public:
 
         for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
         {
-            for (auto const& [mapId, bind] : sInstanceSaveMgr->PlayerGetBoundInstances(player->GetGUID(), Difficulty(i)))
+            for (auto const& [mapId, bind] :
+                sInstanceSaveMgr->PlayerGetBoundInstances(player->GetGUID(), Difficulty(i)))
             {
                 InstanceSave const* save = bind.save;
                 uint32 resetTime = bind.extended ? save->GetExtendedResetTime() : save->GetResetTime();
-                uint32 ttr = (resetTime >= GameTime::GetGameTime().count() ? resetTime - GameTime::GetGameTime().count() : 0);
+                uint32 ttr =
+                    (resetTime >= GameTime::GetGameTime().count() ? resetTime - GameTime::GetGameTime().count() : 0);
                 std::string timeleft = secsToTimeString(ttr);
                 handler->PSendSysMessage("map: {}, inst: {}, perm: {}, diff: {}, canReset: {}, TTR: {}{}",
-                    mapId, save->GetInstanceId(), bind.perm ? "yes" : "no", save->GetDifficulty(), save->CanReset() ? "yes" : "no", timeleft, (bind.extended ? " (extended)" : ""));
+                    mapId,
+                    save->GetInstanceId(),
+                    bind.perm ? "yes" : "no",
+                    save->GetDifficulty(),
+                    save->CanReset() ? "yes" : "no",
+                    timeleft,
+                    (bind.extended ? " (extended)" : ""));
                 counter++;
             }
         }
@@ -85,7 +91,8 @@ public:
         return true;
     }
 
-    static bool HandleInstanceUnbindCommand(ChatHandler* handler, Variant<uint16, EXACT_SEQUENCE("all")> mapArg, Optional<uint8> difficultyArg)
+    static bool HandleInstanceUnbindCommand(
+        ChatHandler* handler, Variant<uint16, EXACT_SEQUENCE("all")> mapArg, Optional<uint8> difficultyArg)
     {
         Player* player = handler->getSelectedPlayer();
         if (!player)
@@ -103,16 +110,27 @@ public:
 
         for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
         {
-            BoundInstancesMap const& m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(player->GetGUID(), Difficulty(i));
+            BoundInstancesMap const& m_boundInstances =
+                sInstanceSaveMgr->PlayerGetBoundInstances(player->GetGUID(), Difficulty(i));
             for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();)
             {
                 InstanceSave const* save = itr->second.save;
-                if (itr->first != player->GetMapId() && (!mapId || mapId == itr->first) && (!difficultyArg || difficultyArg == save->GetDifficulty()))
+                if (itr->first != player->GetMapId() && (!mapId || mapId == itr->first) &&
+                    (!difficultyArg || difficultyArg == save->GetDifficulty()))
                 {
                     uint32 resetTime = itr->second.extended ? save->GetExtendedResetTime() : save->GetResetTime();
-                    uint32 ttr = (resetTime >= GameTime::GetGameTime().count() ? resetTime - GameTime::GetGameTime().count() : 0);
+                    uint32 ttr =
+                        (resetTime >= GameTime::GetGameTime().count() ? resetTime - GameTime::GetGameTime().count()
+                                                                      : 0);
                     std::string timeleft = secsToTimeString(ttr);
-                    handler->PSendSysMessage("unbinding map: {}, inst: {}, perm: {}, diff: {}, canReset: {}, TTR: {}{}", itr->first, save->GetInstanceId(), itr->second.perm ? "yes" : "no", save->GetDifficulty(), save->CanReset() ? "yes" : "no", timeleft, (itr->second.extended ? " (extended)" : ""));
+                    handler->PSendSysMessage("unbinding map: {}, inst: {}, perm: {}, diff: {}, canReset: {}, TTR: {}{}",
+                        itr->first,
+                        save->GetInstanceId(),
+                        itr->second.perm ? "yes" : "no",
+                        save->GetDifficulty(),
+                        save->CanReset() ? "yes" : "no",
+                        timeleft,
+                        (itr->second.extended ? " (extended)" : ""));
                     sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUID(), itr->first, Difficulty(i), true, player);
                     itr = m_boundInstances.begin();
                     counter++;
@@ -131,13 +149,18 @@ public:
     {
         uint32 dungeon = 0, battleground = 0, arena = 0, spectators = 0;
         sMapMgr->GetNumInstances(dungeon, battleground, arena);
-        handler->PSendSysMessage("instances loaded: dungeons ({}), battlegrounds ({}), arenas ({})", dungeon, battleground, arena);
+        handler->PSendSysMessage(
+            "instances loaded: dungeons ({}), battlegrounds ({}), arenas ({})", dungeon, battleground, arena);
         dungeon = 0;
         battleground = 0;
         arena = 0;
         spectators = 0;
         sMapMgr->GetNumPlayersInInstances(dungeon, battleground, arena, spectators);
-        handler->SendErrorMessage("players in instances: dungeons ({}), battlegrounds ({}), arenas ({} + {} spect)", dungeon, battleground, arena, spectators);
+        handler->SendErrorMessage("players in instances: dungeons ({}), battlegrounds ({}), arenas ({} + {} spect)",
+            dungeon,
+            battleground,
+            arena,
+            spectators);
         return false;
     }
 
@@ -162,7 +185,8 @@ public:
         return true;
     }
 
-    static bool HandleInstanceSetBossStateCommand(ChatHandler* handler, uint32 encounterId, uint32 state, Optional<PlayerIdentifier> player)
+    static bool HandleInstanceSetBossStateCommand(
+        ChatHandler* handler, uint32 encounterId, uint32 state, Optional<PlayerIdentifier> player)
     {
         // Character name must be provided when using this from console.
         if (!player && !handler->GetSession())
@@ -206,7 +230,8 @@ public:
         return true;
     }
 
-    static bool HandleInstanceGetBossStateCommand(ChatHandler* handler, uint32 encounterId, Optional<PlayerIdentifier> player)
+    static bool HandleInstanceGetBossStateCommand(
+        ChatHandler* handler, uint32 encounterId, Optional<PlayerIdentifier> player)
     {
         // Character name must be provided when using this from console.
         if (!player && !handler->GetSession())

@@ -21,42 +21,42 @@
 
 enum Spells
 {
-    SPELL_CHARGE                                  = 22911,
-    SPELL_CLEAVE                                  = 40504,
-    SPELL_DEMORALIZING_SHOUT                      = 23511,
-    SPELL_ENRAGE                                  = 8599,
-    SPELL_WHIRLWIND                               = 13736,
+    SPELL_CHARGE = 22911,
+    SPELL_CLEAVE = 40504,
+    SPELL_DEMORALIZING_SHOUT = 23511,
+    SPELL_ENRAGE = 8599,
+    SPELL_WHIRLWIND = 13736,
 
-    SPELL_NORTH_MARSHAL                           = 45828,
-    SPELL_SOUTH_MARSHAL                           = 45829,
-    SPELL_STONEHEARTH_MARSHAL                     = 45830,
-    SPELL_ICEWING_MARSHAL                         = 45831,
-    SPELL_ICEBLOOD_WARMASTER                      = 45822,
-    SPELL_TOWER_POINT_WARMASTER                   = 45823,
-    SPELL_WEST_FROSTWOLF_WARMASTER                = 45824,
-    SPELL_EAST_FROSTWOLF_WARMASTER                = 45826
+    SPELL_NORTH_MARSHAL = 45828,
+    SPELL_SOUTH_MARSHAL = 45829,
+    SPELL_STONEHEARTH_MARSHAL = 45830,
+    SPELL_ICEWING_MARSHAL = 45831,
+    SPELL_ICEBLOOD_WARMASTER = 45822,
+    SPELL_TOWER_POINT_WARMASTER = 45823,
+    SPELL_WEST_FROSTWOLF_WARMASTER = 45824,
+    SPELL_EAST_FROSTWOLF_WARMASTER = 45826
 };
 
 enum Creatures
 {
-    NPC_NORTH_MARSHAL                             = 14762,
-    NPC_SOUTH_MARSHAL                             = 14763,
-    NPC_ICEWING_MARSHAL                           = 14764,
-    NPC_STONEHEARTH_MARSHAL                       = 14765,
-    NPC_EAST_FROSTWOLF_WARMASTER                  = 14772,
-    NPC_ICEBLOOD_WARMASTER                        = 14773,
-    NPC_TOWER_POINT_WARMASTER                     = 14776,
-    NPC_WEST_FROSTWOLF_WARMASTER                  = 14777
+    NPC_NORTH_MARSHAL = 14762,
+    NPC_SOUTH_MARSHAL = 14763,
+    NPC_ICEWING_MARSHAL = 14764,
+    NPC_STONEHEARTH_MARSHAL = 14765,
+    NPC_EAST_FROSTWOLF_WARMASTER = 14772,
+    NPC_ICEBLOOD_WARMASTER = 14773,
+    NPC_TOWER_POINT_WARMASTER = 14776,
+    NPC_WEST_FROSTWOLF_WARMASTER = 14777
 };
 
 enum Events
 {
-    EVENT_CHARGE_TARGET        = 1,
-    EVENT_CLEAVE               = 2,
-    EVENT_DEMORALIZING_SHOUT   = 3,
-    EVENT_WHIRLWIND            = 4,
-    EVENT_ENRAGE               = 5,
-    EVENT_CHECK_RESET          = 6
+    EVENT_CHARGE_TARGET = 1,
+    EVENT_CLEAVE = 2,
+    EVENT_DEMORALIZING_SHOUT = 3,
+    EVENT_WHIRLWIND = 4,
+    EVENT_ENRAGE = 5,
+    EVENT_CHECK_RESET = 6
 };
 
 struct SpellPair
@@ -66,16 +66,15 @@ struct SpellPair
 };
 
 uint8 const MAX_SPELL_PAIRS = 8;
-SpellPair const _auraPairs[MAX_SPELL_PAIRS] =
-{
-    { NPC_NORTH_MARSHAL,            SPELL_NORTH_MARSHAL },
-    { NPC_SOUTH_MARSHAL,            SPELL_SOUTH_MARSHAL },
-    { NPC_STONEHEARTH_MARSHAL,      SPELL_STONEHEARTH_MARSHAL },
-    { NPC_ICEWING_MARSHAL,          SPELL_ICEWING_MARSHAL },
-    { NPC_EAST_FROSTWOLF_WARMASTER, SPELL_EAST_FROSTWOLF_WARMASTER },
-    { NPC_WEST_FROSTWOLF_WARMASTER, SPELL_WEST_FROSTWOLF_WARMASTER },
-    { NPC_TOWER_POINT_WARMASTER,    SPELL_TOWER_POINT_WARMASTER },
-    { NPC_ICEBLOOD_WARMASTER,       SPELL_ICEBLOOD_WARMASTER }
+SpellPair const _auraPairs[MAX_SPELL_PAIRS] = {
+    {NPC_NORTH_MARSHAL,            SPELL_NORTH_MARSHAL           },
+    {NPC_SOUTH_MARSHAL,            SPELL_SOUTH_MARSHAL           },
+    {NPC_STONEHEARTH_MARSHAL,      SPELL_STONEHEARTH_MARSHAL     },
+    {NPC_ICEWING_MARSHAL,          SPELL_ICEWING_MARSHAL         },
+    {NPC_EAST_FROSTWOLF_WARMASTER, SPELL_EAST_FROSTWOLF_WARMASTER},
+    {NPC_WEST_FROSTWOLF_WARMASTER, SPELL_WEST_FROSTWOLF_WARMASTER},
+    {NPC_TOWER_POINT_WARMASTER,    SPELL_TOWER_POINT_WARMASTER   },
+    {NPC_ICEBLOOD_WARMASTER,       SPELL_ICEBLOOD_WARMASTER      }
 };
 
 enum Factions
@@ -124,12 +123,11 @@ public:
                 {
                     if (Battleground* bg = bgMap->GetBG())
                     {
-                        if (Creature* mainBoss = bg->GetBGCreature((me->GetFaction() == FACTION_AV_ALLIANCE ? AV_CPLACE_A_BOSS : AV_CPLACE_H_BOSS)))
+                        if (Creature* mainBoss = bg->GetBGCreature(
+                                (me->GetFaction() == FACTION_AV_ALLIANCE ? AV_CPLACE_A_BOSS : AV_CPLACE_H_BOSS)))
                         {
                             if (mainBoss->IsAIEnabled && !mainBoss->GetVictim())
-                            {
                                 mainBoss->AI()->AttackStart(victim);
-                            }
                         }
                     }
                 }
@@ -149,12 +147,11 @@ public:
                 {
                     if (Battleground* bg = bgMap->GetBG())
                     {
-                        if (Creature* mainBoss = bg->GetBGCreature((me->GetFaction() == FACTION_AV_ALLIANCE ? AV_CPLACE_A_BOSS : AV_CPLACE_H_BOSS)))
+                        if (Creature* mainBoss = bg->GetBGCreature(
+                                (me->GetFaction() == FACTION_AV_ALLIANCE ? AV_CPLACE_A_BOSS : AV_CPLACE_H_BOSS)))
                         {
                             if (mainBoss->IsAIEnabled && !mainBoss->IsInEvadeMode())
-                            {
                                 mainBoss->AI()->EnterEvadeMode();
-                            }
                         }
                     }
                 }
@@ -206,16 +203,16 @@ public:
                         events.ScheduleEvent(EVENT_ENRAGE, 10s, 30s);
                         break;
                     case EVENT_CHECK_RESET:
+                    {
+                        Position const& _homePosition = me->GetHomePosition();
+                        if (me->GetDistance2d(_homePosition.GetPositionX(), _homePosition.GetPositionY()) > 50.0f)
                         {
-                            Position const& _homePosition = me->GetHomePosition();
-                            if (me->GetDistance2d(_homePosition.GetPositionX(), _homePosition.GetPositionY()) > 50.0f)
-                            {
-                                ScriptedAI::EnterEvadeMode();
-                                return;
-                            }
-                            events.ScheduleEvent(EVENT_CHECK_RESET, 5000);
-                            break;
+                            ScriptedAI::EnterEvadeMode();
+                            return;
                         }
+                        events.ScheduleEvent(EVENT_CHECK_RESET, 5000);
+                        break;
+                    }
                 }
             }
 

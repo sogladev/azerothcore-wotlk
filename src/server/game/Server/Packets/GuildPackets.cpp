@@ -22,8 +22,7 @@ void WorldPackets::Guild::QueryGuildInfo::Read()
     _worldPacket >> GuildId;
 }
 
-WorldPackets::Guild::QueryGuildInfoResponse::QueryGuildInfoResponse()
-        : ServerPacket(SMSG_GUILD_QUERY_RESPONSE) { }
+WorldPackets::Guild::QueryGuildInfoResponse::QueryGuildInfoResponse() : ServerPacket(SMSG_GUILD_QUERY_RESPONSE) { }
 
 WorldPacket const* WorldPackets::Guild::QueryGuildInfoResponse::Write()
 {
@@ -153,7 +152,8 @@ WorldPacket const* WorldPackets::Guild::GuildEventLogQueryResults::Write()
         _worldPacket << entry.PlayerGUID;
         if (entry.TransactionType != GUILD_EVENT_LOG_JOIN_GUILD && entry.TransactionType != GUILD_EVENT_LOG_LEAVE_GUILD)
             _worldPacket << entry.OtherGUID;
-        if (entry.TransactionType == GUILD_EVENT_LOG_PROMOTE_PLAYER || entry.TransactionType == GUILD_EVENT_LOG_DEMOTE_PLAYER)
+        if (entry.TransactionType == GUILD_EVENT_LOG_PROMOTE_PLAYER ||
+            entry.TransactionType == GUILD_EVENT_LOG_DEMOTE_PLAYER)
             _worldPacket << uint8(entry.RankID);
         _worldPacket << uint32(entry.TransactionDate);
     }

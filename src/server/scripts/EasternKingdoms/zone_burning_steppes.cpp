@@ -25,26 +25,26 @@
 
 enum MaredisFirestar
 {
-    ITEM_LIBRAM_OF_RUMINATION     = 11732,
-    ITEM_LIBRAM_OF_CONSTITUTION   = 11733,
-    ITEM_LIBRAM_OF_TENACITY       = 11734,
-    ITEM_LIBRAM_OF_RESILIENCE     = 11736,
-    ITEM_LIBRAM_OF_VORACITY       = 11737,
-    GOSSIP_LIBRAM_OF_RUMINATION   = 2299,
+    ITEM_LIBRAM_OF_RUMINATION = 11732,
+    ITEM_LIBRAM_OF_CONSTITUTION = 11733,
+    ITEM_LIBRAM_OF_TENACITY = 11734,
+    ITEM_LIBRAM_OF_RESILIENCE = 11736,
+    ITEM_LIBRAM_OF_VORACITY = 11737,
+    GOSSIP_LIBRAM_OF_RUMINATION = 2299,
     GOSSIP_LIBRAM_OF_CONSTITUTION = 2300,
-    GOSSIP_LIBRAM_OF_TENACITY     = 2301,
-    GOSSIP_LIBRAM_OF_RESILIENCE   = 2302,
-    GOSSIP_LIBRAM_OF_VORACITY     = 2303
+    GOSSIP_LIBRAM_OF_TENACITY = 2301,
+    GOSSIP_LIBRAM_OF_RESILIENCE = 2302,
+    GOSSIP_LIBRAM_OF_VORACITY = 2303
 };
 
 class npc_maredis_firestar : public CreatureScript
 {
 public:
-    npc_maredis_firestar() : CreatureScript("npc_maredis_firestar") {}
+    npc_maredis_firestar() : CreatureScript("npc_maredis_firestar") { }
 
     struct npc_maredis_firestarAI : public CreatureAI
     {
-        npc_maredis_firestarAI(Creature* creature) : CreatureAI(creature) {}
+        npc_maredis_firestarAI(Creature* creature) : CreatureAI(creature) { }
 
         void sGossipHello(Player* player) override
         {

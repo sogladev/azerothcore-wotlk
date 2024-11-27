@@ -43,10 +43,10 @@ EndContentData */
 
 enum Aquementas
 {
-    AGGRO_YELL_AQUE     = 0,
+    AGGRO_YELL_AQUE = 0,
 
-    SPELL_AQUA_JET      = 13586,
-    SPELL_FROST_SHOCK   = 15089
+    SPELL_AQUA_JET = 13586,
+    SPELL_FROST_SHOCK = 15089
 };
 
 class npc_aquementas : public CreatureScript
@@ -85,10 +85,8 @@ public:
         {
             Player* player = receiver->ToPlayer();
 
-            if (player && player->HasItemCount(11169, 1, false) &&
-                    player->HasItemCount(11172, 11, false) &&
-                    player->HasItemCount(11173, 1, false) &&
-                    !player->HasItemCount(11522, 1, true))
+            if (player && player->HasItemCount(11169, 1, false) && player->HasItemCount(11172, 11, false) &&
+                player->HasItemCount(11173, 1, false) && !player->HasItemCount(11522, 1, true))
             {
                 ItemPosCountVec dest;
                 uint8 msg = player->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, 11522, 1, nullptr);
@@ -111,7 +109,8 @@ public:
                     me->SetFaction(FACTION_ELEMENTAL);
                     isFriendly = false;
                 }
-                else SwitchFactionTimer -= diff;
+                else
+                    SwitchFactionTimer -= diff;
             }
 
             if (!UpdateVictim())
@@ -125,7 +124,8 @@ public:
                         SendItem(me->GetVictim());
                     SendItemTimer = 5000;
                 }
-                else SendItemTimer -= diff;
+                else
+                    SendItemTimer -= diff;
             }
 
             if (FrostShockTimer <= diff)
@@ -133,14 +133,16 @@ public:
                 DoCastVictim(SPELL_FROST_SHOCK);
                 FrostShockTimer = 15000;
             }
-            else FrostShockTimer -= diff;
+            else
+                FrostShockTimer -= diff;
 
             if (AquaJetTimer <= diff)
             {
                 DoCast(me, SPELL_AQUA_JET);
                 AquaJetTimer = 15000;
             }
-            else AquaJetTimer -= diff;
+            else
+                AquaJetTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -153,20 +155,20 @@ public:
 
 enum CustodianOfTime
 {
-    WHISPER_CUSTODIAN_1     = 0,
-    WHISPER_CUSTODIAN_2     = 1,
-    WHISPER_CUSTODIAN_3     = 2,
-    WHISPER_CUSTODIAN_4     = 3,
-    WHISPER_CUSTODIAN_5     = 4,
-    WHISPER_CUSTODIAN_6     = 5,
-    WHISPER_CUSTODIAN_7     = 6,
-    WHISPER_CUSTODIAN_8     = 7,
-    WHISPER_CUSTODIAN_9     = 8,
-    WHISPER_CUSTODIAN_10    = 9,
-    WHISPER_CUSTODIAN_11    = 10,
-    WHISPER_CUSTODIAN_12    = 11,
-    WHISPER_CUSTODIAN_13    = 12,
-    WHISPER_CUSTODIAN_14    = 13
+    WHISPER_CUSTODIAN_1 = 0,
+    WHISPER_CUSTODIAN_2 = 1,
+    WHISPER_CUSTODIAN_3 = 2,
+    WHISPER_CUSTODIAN_4 = 3,
+    WHISPER_CUSTODIAN_5 = 4,
+    WHISPER_CUSTODIAN_6 = 5,
+    WHISPER_CUSTODIAN_7 = 6,
+    WHISPER_CUSTODIAN_8 = 7,
+    WHISPER_CUSTODIAN_9 = 8,
+    WHISPER_CUSTODIAN_10 = 9,
+    WHISPER_CUSTODIAN_11 = 10,
+    WHISPER_CUSTODIAN_12 = 11,
+    WHISPER_CUSTODIAN_13 = 12,
+    WHISPER_CUSTODIAN_14 = 13
 };
 
 class npc_custodian_of_time : public CreatureScript
@@ -251,7 +253,6 @@ public:
                                 // for any leave or dead (with not released body) group member at appropriate distance
                                 if (player && player->IsAtGroupRewardDistance(me) && !player->GetCorpse())
                                     DoCast(player, 34883); // QID 10277
-
                             }
                         }
                         else
@@ -274,14 +275,13 @@ public:
                 {
                     float Radius = 10.0f;
                     if (me->IsWithinDistInMap(who, Radius))
-                    {
                         Start(false, false, who->GetGUID());
-                    }
                 }
             }
         }
 
         void JustEngagedWith(Unit* /*who*/) override { }
+
         void Reset() override { }
 
         void UpdateAI(uint32 diff) override
@@ -302,8 +302,8 @@ public:
 
     bool OnQuestAccept(Player* player, Creature* /*creature*/, Quest const* quest) override
     {
-        if (quest->GetQuestId() == 10279)                      //Quest: To The Master's Lair
-            player->CastSpell(player, 34891, true);               //(Flight through Caverns)
+        if (quest->GetQuestId() == 10279)           //Quest: To The Master's Lair
+            player->CastSpell(player, 34891, true); //(Flight through Caverns)
 
         return false;
     }
@@ -312,7 +312,7 @@ public:
     {
         ClearGossipMenuFor(player);
         if (action == GOSSIP_ACTION_INFO_DEF + 1)
-            player->CastSpell(player, 34891, true);               //(Flight through Caverns)
+            player->CastSpell(player, 34891, true); //(Flight through Caverns)
 
         return true;
     }
@@ -320,9 +320,7 @@ public:
     bool OnGossipHello(Player* player, Creature* creature) override
     {
         if (creature->IsQuestGiver())
-        {
             player->PrepareQuestMenu(creature->GetGUID());
-        }
 
         if (player->GetQuestStatus(10279) == QUEST_STATUS_INCOMPLETE || player->GetQuestRewardStatus(10279))
         {
@@ -356,23 +354,23 @@ public:
                 AddGossipItemFor(player, 57001, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
                 SendGossipMenuFor(player, 1675, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+1:
+            case GOSSIP_ACTION_INFO_DEF + 1:
                 AddGossipItemFor(player, 57002, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                 SendGossipMenuFor(player, 1676, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+2:
+            case GOSSIP_ACTION_INFO_DEF + 2:
                 AddGossipItemFor(player, 57003, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
                 SendGossipMenuFor(player, 1677, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+3:
+            case GOSSIP_ACTION_INFO_DEF + 3:
                 AddGossipItemFor(player, 57004, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
                 SendGossipMenuFor(player, 1678, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+4:
+            case GOSSIP_ACTION_INFO_DEF + 4:
                 AddGossipItemFor(player, 57005, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
                 SendGossipMenuFor(player, 1679, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+5:
+            case GOSSIP_ACTION_INFO_DEF + 5:
                 CloseGossipMenuFor(player);
                 player->AreaExploredOrEventHappens(2954);
                 break;
@@ -383,14 +381,10 @@ public:
     bool OnGossipHello(Player* player, Creature* creature) override
     {
         if (creature->IsQuestGiver())
-        {
             player->PrepareQuestMenu(creature->GetGUID());
-        }
 
         if (player->GetQuestStatus(2954) == QUEST_STATUS_INCOMPLETE)
-        {
             AddGossipItemFor(player, 57000, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-        }
 
         SendGossipMenuFor(player, 1674, creature->GetGUID());
 
@@ -404,19 +398,19 @@ public:
 
 enum Tooga
 {
-    SAY_TOOG_WORRIED            = 0,
-    SAY_TOOG_POST_1             = 1,
-    SAY_TORT_POST_2             = 0,
-    SAY_TOOG_POST_3             = 2,
-    SAY_TORT_POST_4             = 1,
-    SAY_TOOG_POST_5             = 3,
-    SAY_TORT_POST_6             = 2,
+    SAY_TOOG_WORRIED = 0,
+    SAY_TOOG_POST_1 = 1,
+    SAY_TORT_POST_2 = 0,
+    SAY_TOOG_POST_3 = 2,
+    SAY_TORT_POST_4 = 1,
+    SAY_TOOG_POST_5 = 3,
+    SAY_TORT_POST_6 = 2,
 
-    QUEST_TOOGA                 = 1560,
-    NPC_TORTA                   = 6015,
+    QUEST_TOOGA = 1560,
+    NPC_TORTA = 6015,
 
-    POINT_ID_TO_WATER           = 1,
-    FACTION_TOOG_ESCORTEE       = 113
+    POINT_ID_TO_WATER = 1,
+    FACTION_TOOG_ESCORTEE = 113
 };
 
 Position const ToWaterLoc = {-7032.664551f, -4906.199219f, -1.606446f, 0.0f};
@@ -426,7 +420,7 @@ class npc_tooga : public CreatureScript
 public:
     npc_tooga() : CreatureScript("npc_tooga") { }
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
     {
         if (quest->GetQuestId() == QUEST_TOOGA)
         {
@@ -466,7 +460,8 @@ public:
         {
             FollowerAI::MoveInLineOfSight(who);
 
-            if (!me->GetVictim() && !HasFollowState(STATE_FOLLOW_COMPLETE | STATE_FOLLOW_POSTEVENT) && who->GetEntry() == NPC_TORTA)
+            if (!me->GetVictim() && !HasFollowState(STATE_FOLLOW_COMPLETE | STATE_FOLLOW_POSTEVENT) &&
+                who->GetEntry() == NPC_TORTA)
             {
                 if (me->IsWithinDistInMap(who, INTERACTION_DISTANCE))
                 {

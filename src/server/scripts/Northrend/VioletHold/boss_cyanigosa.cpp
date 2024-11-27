@@ -22,25 +22,25 @@
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_SLAY                                    = 1,
-    SAY_DEATH                                   = 2,
-    SAY_SPAWN                                   = 3,
-    SAY_DISRUPTION                              = 4,
-    SAY_BREATH_ATTACK                           = 5,
-    SAY_SPECIAL_ATTACK                          = 6
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_SPAWN = 3,
+    SAY_DISRUPTION = 4,
+    SAY_BREATH_ATTACK = 5,
+    SAY_SPECIAL_ATTACK = 6
 };
 
 enum eSpells
 {
-    SPELL_ARCANE_VACUUM                             = 58694,
-    SPELL_BLIZZARD_N                                = 58693,
-    SPELL_BLIZZARD_H                                = 59369,
-    SPELL_MANA_DESTRUCTION                          = 59374,
-    SPELL_TAIL_SWEEP_N                              = 58690,
-    SPELL_TAIL_SWEEP_H                              = 59283,
-    SPELL_UNCONTROLLABLE_ENERGY_N                   = 58688,
-    SPELL_UNCONTROLLABLE_ENERGY_H                   = 59281,
+    SPELL_ARCANE_VACUUM = 58694,
+    SPELL_BLIZZARD_N = 58693,
+    SPELL_BLIZZARD_H = 59369,
+    SPELL_MANA_DESTRUCTION = 59374,
+    SPELL_TAIL_SWEEP_N = 58690,
+    SPELL_TAIL_SWEEP_H = 59283,
+    SPELL_UNCONTROLLABLE_ENERGY_N = 58688,
+    SPELL_UNCONTROLLABLE_ENERGY_H = 59281,
 };
 
 #define SPELL_BLIZZARD                              DUNGEON_MODE(SPELL_BLIZZARD_N, SPELL_BLIZZARD_H)
@@ -102,7 +102,8 @@ public:
             switch (spell->Id)
             {
                 case SPELL_ARCANE_VACUUM:
-                    target->NearTeleportTo(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 10.0f, target->GetOrientation());
+                    target->NearTeleportTo(
+                        me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 10.0f, target->GetOrientation());
                     break;
             }
         }
@@ -164,7 +165,8 @@ public:
             float h = me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
             if (h != INVALID_HEIGHT && me->GetPositionZ() - h > 3.0f)
             {
-                me->UpdatePosition(me->GetPositionX(), me->GetPositionY(), h, me->GetOrientation(), true); // move to ground
+                me->UpdatePosition(
+                    me->GetPositionX(), me->GetPositionY(), h, me->GetOrientation(), true); // move to ground
                 me->StopMovingOnCurrentPos();
                 me->DestroyForNearbyPlayers();
             }
@@ -177,7 +179,7 @@ public:
             Talk(SAY_SLAY);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void EnterEvadeMode(EvadeReason why) override
         {

@@ -41,9 +41,7 @@ void HomeMovementGenerator<Creature>::DoFinalize(Creature* owner)
         owner->RemoveUnitFlag(UNIT_FLAG_SWIMMING);
 }
 
-void HomeMovementGenerator<Creature>::DoReset(Creature*)
-{
-}
+void HomeMovementGenerator<Creature>::DoReset(Creature*) { }
 
 void HomeMovementGenerator<Creature>::_setTargetLocation(Creature* owner)
 {
@@ -69,10 +67,12 @@ void HomeMovementGenerator<Creature>::_setTargetLocation(Creature* owner)
 
     arrived = false;
 
-    owner->ClearUnitState(uint32(UNIT_STATE_ALL_STATE & ~(UNIT_STATE_POSSESSED | UNIT_STATE_EVADE | UNIT_STATE_IGNORE_PATHFINDING | UNIT_STATE_NO_ENVIRONMENT_UPD)));
+    owner->ClearUnitState(
+        uint32(UNIT_STATE_ALL_STATE & ~(UNIT_STATE_POSSESSED | UNIT_STATE_EVADE | UNIT_STATE_IGNORE_PATHFINDING |
+                                          UNIT_STATE_NO_ENVIRONMENT_UPD)));
 }
 
-bool HomeMovementGenerator<Creature>::DoUpdate(Creature* owner, const uint32 /*time_diff*/)
+bool HomeMovementGenerator<Creature>::DoUpdate(Creature* owner, uint32 const /*time_diff*/)
 {
     arrived = owner->movespline->Finalized();
     if (arrived)

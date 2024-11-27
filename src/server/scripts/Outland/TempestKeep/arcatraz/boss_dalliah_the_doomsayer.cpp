@@ -22,24 +22,24 @@
 enum Say
 {
     // Dalliah the Doomsayer
-    SAY_AGGRO                       = 1,
-    SAY_SLAY                        = 2,
-    SAY_WHIRLWIND                   = 3,
-    SAY_HEAL                        = 4,
-    SAY_DEATH                       = 5,
-    SAY_SOCCOTHRATES_DEATH          = 7,
+    SAY_AGGRO = 1,
+    SAY_SLAY = 2,
+    SAY_WHIRLWIND = 3,
+    SAY_HEAL = 4,
+    SAY_DEATH = 5,
+    SAY_SOCCOTHRATES_DEATH = 7,
 
     // Wrath-Scryer Soccothrates
-    SAY_AGGRO_DALLIAH_FIRST         = 0,
-    SAY_DALLIAH_25_PERCENT          = 5
+    SAY_AGGRO_DALLIAH_FIRST = 0,
+    SAY_DALLIAH_25_PERCENT = 5
 };
 
 enum Spells
 {
-    SPELL_GIFT_OF_THE_DOOMSAYER     = 36173,
-    SPELL_WHIRLWIND                 = 36142,
-    SPELL_HEAL                      = 36144,
-    SPELL_SHADOW_WAVE               = 39016
+    SPELL_GIFT_OF_THE_DOOMSAYER = 36173,
+    SPELL_WHIRLWIND = 36142,
+    SPELL_HEAL = 36144,
+    SPELL_SHADOW_WAVE = 39016
 };
 
 struct boss_dalliah_the_doomsayer : public BossAI
@@ -50,12 +50,11 @@ struct boss_dalliah_the_doomsayer : public BossAI
     {
         _Reset();
 
-        ScheduleHealthCheckEvent(25, [&]
+        ScheduleHealthCheckEvent(25,
+            [&]
         {
             if (Creature* soccothrates = instance->GetCreature(DATA_SOCCOTHRATES))
-            {
                 soccothrates->AI()->Talk(SAY_DALLIAH_25_PERCENT);
-            }
         });
     }
 
@@ -72,9 +71,7 @@ struct boss_dalliah_the_doomsayer : public BossAI
         if (Creature* soccothrates = instance->GetCreature(DATA_SOCCOTHRATES))
         {
             if (soccothrates->IsAlive() && !soccothrates->IsInCombat())
-            {
                 soccothrates->AI()->Talk(SAY_RIVAL_DIED, 6s);
-            }
         }
     }
 
@@ -86,22 +83,27 @@ struct boss_dalliah_the_doomsayer : public BossAI
         if (Creature* soccothrates = instance->GetCreature(DATA_SOCCOTHRATES))
         {
             if (soccothrates->IsAlive() && !soccothrates->IsInCombat())
-            {
                 soccothrates->AI()->Talk(SAY_AGGRO_DALLIAH_FIRST, 6s);
-            }
         }
 
-        scheduler.Schedule(8s, 12s, [this](TaskContext context)
+        scheduler
+            .Schedule(8s,
+                12s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_GIFT_OF_THE_DOOMSAYER);
             context.Repeat(17s, 35s);
-        }).Schedule(20s, 30s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                30s,
+                [this](TaskContext context)
         {
             Talk(SAY_WHIRLWIND);
             DoCastAOE(SPELL_WHIRLWIND);
             context.Repeat();
 
-            scheduler.Schedule(7s, [this](TaskContext)
+            scheduler.Schedule(7s,
+                [this](TaskContext)
             {
                 Talk(SAY_HEAL);
                 DoCastSelf(SPELL_HEAL);
@@ -110,7 +112,9 @@ struct boss_dalliah_the_doomsayer : public BossAI
 
         if (IsHeroic())
         {
-            scheduler.Schedule(11s, 30s, [this](TaskContext context)
+            scheduler.Schedule(11s,
+                30s,
+                [this](TaskContext context)
             {
                 DoCastVictim(SPELL_SHADOW_WAVE);
                 context.Repeat();
@@ -121,9 +125,7 @@ struct boss_dalliah_the_doomsayer : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 };
 

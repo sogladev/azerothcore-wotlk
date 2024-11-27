@@ -27,16 +27,16 @@
 
 enum IronhandData
 {
-    IRONHAND_FLAMES_TIMER      = 16000,
+    IRONHAND_FLAMES_TIMER = 16000,
     IRONHAND_FLAMES_TIMER_RAND = 3000,
-    IRONHAND_N_GROUPS          = 3,
-    SPELL_GOUT_OF_FLAMES       = 15529
+    IRONHAND_N_GROUPS = 3,
+    SPELL_GOUT_OF_FLAMES = 15529
 };
 
 class go_shadowforge_brazier : public GameObjectScript
 {
 public:
-    go_shadowforge_brazier() : GameObjectScript("go_shadowforge_brazier") {}
+    go_shadowforge_brazier() : GameObjectScript("go_shadowforge_brazier") { }
 
     bool OnGossipHello(Player* /*player*/, GameObject* go) override
     {
@@ -46,18 +46,15 @@ public:
             GameObject* southBrazier = ObjectAccessor::GetGameObject(*go, instance->GetGuidData(DATA_SF_BRAZIER_S));
 
             if (!northBrazier || !southBrazier)
-            {
                 return false;
-            }
 
             // should only happen on first brazier
             if (instance->GetData(TYPE_LYCEUM) == NOT_STARTED)
-            {
                 instance->SetData(TYPE_LYCEUM, IN_PROGRESS);
-            }
 
             // Check if the opposite brazier is lit - if it is, open the gates.
-            if ((go->GetGUID() == northBrazier->GetGUID() && southBrazier->GetGoState() == GO_STATE_ACTIVE) || (go->GetGUID() == southBrazier->GetGUID() && northBrazier->GetGoState() == GO_STATE_ACTIVE))
+            if ((go->GetGUID() == northBrazier->GetGUID() && southBrazier->GetGoState() == GO_STATE_ACTIVE) ||
+                (go->GetGUID() == southBrazier->GetGUID() && northBrazier->GetGoState() == GO_STATE_ACTIVE))
             {
                 instance->SetData(TYPE_LYCEUM, DONE);
             }
@@ -70,26 +67,28 @@ public:
 class ironhand_guardian : public CreatureScript
 {
 public:
-    ironhand_guardian() : CreatureScript("brd_ironhand_guardian") {}
+    ironhand_guardian() : CreatureScript("brd_ironhand_guardian") { }
 
     CreatureAI* GetAI(Creature* creature) const override
     {
         return GetBlackrockDepthsAI<ironhand_guardianAI>(creature);
     }
 
-   struct ironhand_guardianAI : public CreatureAI
+    struct ironhand_guardianAI : public CreatureAI
     {
-        ironhand_guardianAI(Creature* creature) : CreatureAI(creature) {}
+        ironhand_guardianAI(Creature* creature) : CreatureAI(creature) { }
+
         bool flames_enabled = false;
 
         void SetData(uint32 id, uint32 value) override
         {
-            if (id  == 0)
+            if (id == 0)
             {
                 if (value == 0 || value == 1)
                 {
-                    flames_enabled = (bool) (value);
-                    events.ScheduleEvent(SPELL_GOUT_OF_FLAMES, urand(1, IRONHAND_N_GROUPS) * IRONHAND_FLAMES_TIMER / IRONHAND_N_GROUPS);
+                    flames_enabled = (bool)(value);
+                    events.ScheduleEvent(
+                        SPELL_GOUT_OF_FLAMES, urand(1, IRONHAND_N_GROUPS) * IRONHAND_FLAMES_TIMER / IRONHAND_N_GROUPS);
                 }
             }
         }
@@ -101,16 +100,16 @@ public:
             if (flames_enabled)
             {
                 if (me->HasUnitState(UNIT_STATE_CASTING))
-                {
                     return;
-                }
                 while (uint32 eventId = events.ExecuteEvent())
                 {
                     switch (eventId)
                     {
                         case SPELL_GOUT_OF_FLAMES:
                             DoCast(SPELL_GOUT_OF_FLAMES);
-                            events.RescheduleEvent(SPELL_GOUT_OF_FLAMES, urand(IRONHAND_FLAMES_TIMER - IRONHAND_FLAMES_TIMER_RAND, IRONHAND_FLAMES_TIMER + IRONHAND_FLAMES_TIMER_RAND));
+                            events.RescheduleEvent(SPELL_GOUT_OF_FLAMES,
+                                urand(IRONHAND_FLAMES_TIMER - IRONHAND_FLAMES_TIMER_RAND,
+                                    IRONHAND_FLAMES_TIMER + IRONHAND_FLAMES_TIMER_RAND));
                             break;
                         default:
                             break;
@@ -118,6 +117,7 @@ public:
                 }
             }
         }
+
         EventMap events;
     };
 };
@@ -129,42 +129,31 @@ struct WaveCreature
 };
 
 static WaveCreature RingMobs[] = // different amounts based on the type
-{
-    {NPC_DREDGE_WORM, 3},
-    {NPC_DEEP_STINGER, 3},
-    {NPC_DARK_SCREECHER, 3},
-    {NPC_THUNDERSNOUT, 2},
-    {NPC_CAVE_CREEPER, 3},
-    {NPC_BORER_BEETLE, 6}};
-
-uint32 RingBoss[] =
-{
-    NPC_GOROSH,
-    NPC_GRIZZLE,
-    NPC_EVISCERATOR,
-    NPC_OKTHOR,
-    NPC_ANUBSHIAH,
-    NPC_HEDRUM
+    {
+        {NPC_DREDGE_WORM,    3},
+        {NPC_DEEP_STINGER,   3},
+        {NPC_DARK_SCREECHER, 3},
+        {NPC_THUNDERSNOUT,   2},
+        {NPC_CAVE_CREEPER,   3},
+        {NPC_BORER_BEETLE,   6}
 };
+
+uint32 RingBoss[] = {NPC_GOROSH, NPC_GRIZZLE, NPC_EVISCERATOR, NPC_OKTHOR, NPC_ANUBSHIAH, NPC_HEDRUM};
 
 class at_ring_of_law : public AreaTriggerScript
 {
 public:
     at_ring_of_law() : AreaTriggerScript("at_ring_of_law") { }
 
-    bool OnTrigger(Player* player, const AreaTrigger* /*at*/) override
+    bool OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (InstanceScript* instance = player->GetInstanceScript())
         {
             time_t now = GameTime::GetGameTime().count();
             if (instance->GetData(TYPE_RING_OF_LAW) == IN_PROGRESS || instance->GetData(TYPE_RING_OF_LAW) == DONE)
-            {
                 return false;
-            }
             if (now - instance->GetData(DATA_TIME_RING_FAIL) < 2 * 60) // in case of wipe, so people can rez.
-            {
                 return false;
-            }
 
             instance->SetData(TYPE_RING_OF_LAW, IN_PROGRESS);
             return true;
@@ -176,12 +165,12 @@ public:
 // npc_grimstone
 enum GrimstoneTexts
 {
-    SAY_TEXT1          = 0,
-    SAY_TEXT2          = 1,
-    SAY_TEXT3          = 2,
-    SAY_TEXT4          = 3,
-    SAY_TEXT5          = 4,
-    SAY_TEXT6          = 5
+    SAY_TEXT1 = 0,
+    SAY_TEXT2 = 1,
+    SAY_TEXT3 = 2,
+    SAY_TEXT4 = 3,
+    SAY_TEXT5 = 4,
+    SAY_TEXT6 = 5
 };
 
 class npc_grimstone : public CreatureScript
@@ -199,8 +188,8 @@ public:
         npc_grimstoneAI(Creature* creature) : npc_escortAI(creature), summons(me)
         {
             instance = creature->GetInstanceScript();
-            MobSpawnId    = instance ? instance->GetData(DATA_ARENA_MOBS) : urand(0, 5);
-            BossSpawnId   = instance ? instance->GetData(DATA_ARENA_BOSS) : urand(0, 5);
+            MobSpawnId = instance ? instance->GetData(DATA_ARENA_MOBS) : urand(0, 5);
+            BossSpawnId = instance ? instance->GetData(DATA_ARENA_BOSS) : urand(0, 5);
             eventPhase = 0;
             eventTimer = 1000;
             resetTimer = 0;
@@ -215,7 +204,7 @@ public:
         uint32 eventTimer;
         uint32 resetTimer;
         uint8 MobSpawnId;
-        uint8  BossSpawnId;
+        uint8 BossSpawnId;
         bool theldrenEvent;
 
         void Reset() override
@@ -289,10 +278,12 @@ public:
                 me->SummonCreature(NPC_THELDREN, 644.300f, -175.989f, -53.739f, 3.418f, TEMPSUMMON_DEAD_DESPAWN, 0);
                 uint8 rand = urand(0, 4);
                 for (uint8 i = rand; i < rand + 4; ++i)
-                    me->SummonCreature(theldrenTeam[i], 644.300f, -175.989f, -53.739f, 3.418f, TEMPSUMMON_DEAD_DESPAWN, 0);
+                    me->SummonCreature(
+                        theldrenTeam[i], 644.300f, -175.989f, -53.739f, 3.418f, TEMPSUMMON_DEAD_DESPAWN, 0);
             }
             else
-                me->SummonCreature(RingBoss[BossSpawnId], 644.300f, -175.989f, -53.739f, 3.418f, TEMPSUMMON_DEAD_DESPAWN, 0);
+                me->SummonCreature(
+                    RingBoss[BossSpawnId], 644.300f, -175.989f, -53.739f, 3.418f, TEMPSUMMON_DEAD_DESPAWN, 0);
             resetTimer = 30000;
         }
 
@@ -317,9 +308,7 @@ public:
 
                 resetTimer -= diff;
                 if (resetTimer <= diff)
-                {
                     doReset = true;
-                }
             }
             return doReset;
         }
@@ -328,7 +317,13 @@ public:
         {
             for (uint32 i = 0; i < RingMobs[mobId].amount; i++)
             {
-                me->SummonCreature(RingMobs[mobId].entry, 608.960f + 0.4f * i, -235.322f, -53.907f, 1.857f, TEMPSUMMON_DEAD_DESPAWN, 0);
+                me->SummonCreature(RingMobs[mobId].entry,
+                    608.960f + 0.4f * i,
+                    -235.322f,
+                    -53.907f,
+                    1.857f,
+                    TEMPSUMMON_DEAD_DESPAWN,
+                    0);
             }
             resetTimer = 30000;
         }
@@ -380,7 +375,7 @@ public:
                             break;
                         case 5:
                             SpawnWave(MobSpawnId); // wave 2
-                            eventTimer = 0; // will be set from SummonedCreatureDies
+                            eventTimer = 0;        // will be set from SummonedCreatureDies
                             break;
                         case 6:
                             me->SetVisible(true);
@@ -403,7 +398,8 @@ public:
                             {
                                 // All objects are removed from world once tempsummons despawn, so have a player spawn it instead.
                                 Player* player = me->SelectNearestPlayer(100.0f);
-                                if (GameObject* go = player->SummonGameObject(GO_ARENA_SPOILS, 596.48f, -187.91f, -54.14f, 4.9f, 0.0f, 0.0f, 0.0f, 0.0f, 300))
+                                if (GameObject* go = player->SummonGameObject(
+                                        GO_ARENA_SPOILS, 596.48f, -187.91f, -54.14f, 4.9f, 0.0f, 0.0f, 0.0f, 0.0f, 300))
                                 {
                                     go->SetOwnerGUID(ObjectGuid::Empty);
                                 }
@@ -431,9 +427,9 @@ public:
 // npc_phalanx
 enum PhalanxSpells
 {
-    SPELL_THUNDERCLAP                   = 8732,
-    SPELL_FIREBALLVOLLEY                = 22425,
-    SPELL_MIGHTYBLOW                    = 14099
+    SPELL_THUNDERCLAP = 8732,
+    SPELL_FIREBALLVOLLEY = 22425,
+    SPELL_MIGHTYBLOW = 14099
 };
 
 class npc_phalanx : public CreatureScript
@@ -473,7 +469,8 @@ public:
                 DoCastVictim(SPELL_THUNDERCLAP);
                 ThunderClap_Timer = 10000;
             }
-            else ThunderClap_Timer -= diff;
+            else
+                ThunderClap_Timer -= diff;
 
             //FireballVolley_Timer
             if (HealthBelowPct(51))
@@ -483,7 +480,8 @@ public:
                     DoCastVictim(SPELL_FIREBALLVOLLEY);
                     FireballVolley_Timer = 15000;
                 }
-                else FireballVolley_Timer -= diff;
+                else
+                    FireballVolley_Timer -= diff;
             }
 
             //MightyBlow_Timer
@@ -492,7 +490,8 @@ public:
                 DoCastVictim(SPELL_MIGHTYBLOW);
                 MightyBlow_Timer = 10000;
             }
-            else MightyBlow_Timer -= diff;
+            else
+                MightyBlow_Timer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -502,18 +501,18 @@ public:
 // npc_lokhtos_darkbargainer
 enum LokhtosItems
 {
-    ITEM_THRORIUM_BROTHERHOOD_CONTRACT                     = 18628,
-    ITEM_SULFURON_INGOT                                    = 17203
+    ITEM_THRORIUM_BROTHERHOOD_CONTRACT = 18628,
+    ITEM_SULFURON_INGOT = 17203
 };
 
 enum LokhtosQuests
 {
-    QUEST_A_BINDING_CONTRACT                               = 7604
+    QUEST_A_BINDING_CONTRACT = 7604
 };
 
 enum LokhtosSpells
 {
-    SPELL_CREATE_THORIUM_BROTHERHOOD_CONTRACT_DND          = 23059
+    SPELL_CREATE_THORIUM_BROTHERHOOD_CONTRACT_DND = 23059
 };
 
 class npc_lokhtos_darkbargainer : public CreatureScript
@@ -544,8 +543,8 @@ public:
             AddGossipItemFor(player, 4781, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
 
         if (player->GetQuestRewardStatus(QUEST_A_BINDING_CONTRACT) != 1 &&
-                !player->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1, true) &&
-                player->HasItemCount(ITEM_SULFURON_INGOT))
+            !player->HasItemCount(ITEM_THRORIUM_BROTHERHOOD_CONTRACT, 1, true) &&
+            player->HasItemCount(ITEM_SULFURON_INGOT))
         {
             AddGossipItemFor(player, 4781, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
         }
@@ -562,17 +561,17 @@ public:
 // npc_rocknot
 enum RocknotSays
 {
-    SAY_GOT_BEER                       = 0
+    SAY_GOT_BEER = 0
 };
 
 enum RocknotSpells
 {
-    SPELL_DRUNKEN_RAGE                 = 14872
+    SPELL_DRUNKEN_RAGE = 14872
 };
 
 enum RocknotQuests
 {
-    QUEST_ALE                          = 4295
+    QUEST_ALE = 4295
 };
 
 class npc_rocknot : public CreatureScript
@@ -675,7 +674,8 @@ public:
                     BreakKeg_Timer = 0;
                     BreakDoor_Timer = 1000;
                 }
-                else BreakKeg_Timer -= diff;
+                else
+                    BreakKeg_Timer -= diff;
             }
 
             if (BreakDoor_Timer)
@@ -683,7 +683,7 @@ public:
                 if (BreakDoor_Timer <= diff)
                 {
                     DoGo(DATA_GO_BAR_DOOR, 2);
-                    DoGo(DATA_GO_BAR_KEG_TRAP, 0);               //doesn't work very well, leaving code here for future
+                    DoGo(DATA_GO_BAR_KEG_TRAP, 0); //doesn't work very well, leaving code here for future
                     //spell by trap has effect61, this indicate the bar go hostile
 
                     if (Unit* tmp = ObjectAccessor::GetUnit(*me, instance->GetGuidData(DATA_PHALANX)))
@@ -695,7 +695,8 @@ public:
 
                     BreakDoor_Timer = 0;
                 }
-                else BreakDoor_Timer -= diff;
+                else
+                    BreakDoor_Timer -= diff;
             }
 
             npc_escortAI::UpdateAI(diff);

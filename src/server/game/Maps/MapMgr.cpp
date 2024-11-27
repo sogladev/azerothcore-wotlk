@@ -41,9 +41,7 @@ MapMgr::MapMgr()
     _nextInstanceId = 0;
 }
 
-MapMgr::~MapMgr()
-{
-}
+MapMgr::~MapMgr() { }
 
 MapMgr* MapMgr::instance()
 {
@@ -167,8 +165,10 @@ Map::EnterState MapMgr::PlayerCannotEnter(uint32 mapid, Player* player, bool log
         {
             // probably there must be special opcode, because client has this string constant in GlobalStrings.lua
             /// @todo: this is not a good place to send the message
-            player->GetSession()->SendAreaTriggerMessage(player->GetSession()->GetAcoreString(LANG_INSTANCE_RAID_GROUP_ONLY), mapName);
-            LOG_DEBUG("maps", "MAP: Player '{}' must be in a raid group to enter instance '{}'", player->GetName(), mapName);
+            player->GetSession()->SendAreaTriggerMessage(
+                player->GetSession()->GetAcoreString(LANG_INSTANCE_RAID_GROUP_ONLY), mapName);
+            LOG_DEBUG(
+                "maps", "MAP: Player '{}' must be in a raid group to enter instance '{}'", player->GetName(), mapName);
             return Map::CANNOT_ENTER_NOT_IN_RAID;
         }
     }
@@ -201,14 +201,19 @@ Map::EnterState MapMgr::PlayerCannotEnter(uint32 mapid, Player* player, bool log
             {
                 WorldPacket data(SMSG_CORPSE_NOT_IN_INSTANCE, 0);
                 player->GetSession()->SendPacket(&data);
-                LOG_DEBUG("maps", "MAP: Player '{}' does not have a corpse in instance '{}' and cannot enter.", player->GetName(), mapName);
+                LOG_DEBUG("maps",
+                    "MAP: Player '{}' does not have a corpse in instance '{}' and cannot enter.",
+                    player->GetName(),
+                    mapName);
                 return Map::CANNOT_ENTER_CORPSE_IN_DIFFERENT_INSTANCE;
             }
-            LOG_DEBUG("maps", "MAP: Player '{}' has corpse in instance '{}' and can enter.", player->GetName(), mapName);
+            LOG_DEBUG(
+                "maps", "MAP: Player '{}' has corpse in instance '{}' and can enter.", player->GetName(), mapName);
         }
         else
         {
-            LOG_DEBUG("maps", "Map::PlayerCannotEnter - player '{}' is dead but does not have a corpse!", player->GetName());
+            LOG_DEBUG(
+                "maps", "Map::PlayerCannotEnter - player '{}' is dead but does not have a corpse!", player->GetName());
         }
     }
 
@@ -226,7 +231,8 @@ Map::EnterState MapMgr::PlayerCannotEnter(uint32 mapid, Player* player, bool log
     if (entry->IsNonRaidDungeon() && (!group || !group->isLFGGroup() || !group->IsLfgRandomInstance()))
     {
         uint32 instaceIdToCheck = 0;
-        if (InstanceSave* save = sInstanceSaveMgr->PlayerGetInstanceSave(player->GetGUID(), mapid, player->GetDifficulty(entry->IsRaid())))
+        if (InstanceSave* save = sInstanceSaveMgr->PlayerGetInstanceSave(
+                player->GetGUID(), mapid, player->GetDifficulty(entry->IsRaid())))
             instaceIdToCheck = save->GetInstanceId();
 
         // instaceIdToCheck can be 0 if save not found - means no bind so the instance is new
@@ -238,7 +244,9 @@ Map::EnterState MapMgr::PlayerCannotEnter(uint32 mapid, Player* player, bool log
     }
 
     //Other requirements
-    return player->Satisfy(sObjectMgr->GetAccessRequirement(mapid, targetDifficulty), mapid, true) ? Map::CAN_ENTER : Map::CANNOT_ENTER_UNSPECIFIED_REASON;
+    return player->Satisfy(sObjectMgr->GetAccessRequirement(mapid, targetDifficulty), mapid, true)
+               ? Map::CAN_ENTER
+               : Map::CANNOT_ENTER_UNSPECIFIED_REASON;
 }
 
 void MapMgr::Update(uint32 diff)
@@ -250,19 +258,18 @@ void MapMgr::Update(uint32 diff)
     //if (mapUpdateStep == 0)
     {
         if (m_updater.activated())
-        {
             m_updater.schedule_lfg_update(diff);
-        }
         else
-        {
             sLFGMgr->Update(diff, 1);
-        }
     }
 
     MapMapType::iterator iter = i_maps.begin();
     for (; iter != i_maps.end(); ++iter)
     {
-        bool full = mapUpdateStep < 3 && ((mapUpdateStep == 0 && !iter->second->IsBattlegroundOrArena() && !iter->second->IsDungeon()) || (mapUpdateStep == 1 && iter->second->IsBattlegroundOrArena()) || (mapUpdateStep == 2 && iter->second->IsDungeon()));
+        bool full = mapUpdateStep < 3 &&
+                    ((mapUpdateStep == 0 && !iter->second->IsBattlegroundOrArena() && !iter->second->IsDungeon()) ||
+                        (mapUpdateStep == 1 && iter->second->IsBattlegroundOrArena()) ||
+                        (mapUpdateStep == 2 && iter->second->IsDungeon()));
         if (m_updater.activated())
             m_updater.schedule_update(*iter->second, uint32(full ? i_timer[mapUpdateStep].GetCurrent() : 0), diff);
         else
@@ -276,7 +283,9 @@ void MapMgr::Update(uint32 diff)
     {
         for (iter = i_maps.begin(); iter != i_maps.end(); ++iter)
         {
-            bool full = ((mapUpdateStep == 0 && !iter->second->IsBattlegroundOrArena() && !iter->second->IsDungeon()) || (mapUpdateStep == 1 && iter->second->IsBattlegroundOrArena()) || (mapUpdateStep == 2 && iter->second->IsDungeon()));
+            bool full = ((mapUpdateStep == 0 && !iter->second->IsBattlegroundOrArena() && !iter->second->IsDungeon()) ||
+                         (mapUpdateStep == 1 && iter->second->IsBattlegroundOrArena()) ||
+                         (mapUpdateStep == 2 && iter->second->IsDungeon()));
             if (full)
                 iter->second->DelayedUpdate(uint32(i_timer[mapUpdateStep].GetCurrent()));
         }
@@ -292,9 +301,7 @@ void MapMgr::Update(uint32 diff)
     }
 }
 
-void MapMgr::DoDelayedMovesAndRemoves()
-{
-}
+void MapMgr::DoDelayedMovesAndRemoves() { }
 
 bool MapMgr::ExistMapAndVMap(uint32 mapid, float x, float y)
 {
@@ -311,13 +318,9 @@ bool MapMgr::IsValidMAP(uint32 mapid, bool startUp)
     MapEntry const* mEntry = sMapStore.LookupEntry(mapid);
 
     if (startUp)
-    {
         return mEntry != nullptr;
-    }
     else
-    {
         return mEntry && (!mEntry->IsDungeon() || sObjectMgr->GetInstanceTemplate(mapid));
-    }
 
     /// @todo: add check for battleground template
 }
@@ -344,11 +347,12 @@ void MapMgr::GetNumInstances(uint32& dungeons, uint32& battlegrounds, uint32& ar
             continue;
         MapInstanced::InstancedMaps& maps = ((MapInstanced*)map)->GetInstancedMaps();
         for (MapInstanced::InstancedMaps::iterator mitr = maps.begin(); mitr != maps.end(); ++mitr)
-        {
-            if (mitr->second->IsDungeon()) dungeons++;
-            else if (mitr->second->IsBattleground()) battlegrounds++;
-            else if (mitr->second->IsBattleArena()) arenas++;
-        }
+            if (mitr->second->IsDungeon())
+                dungeons++;
+            else if (mitr->second->IsBattleground())
+                battlegrounds++;
+            else if (mitr->second->IsBattleArena())
+                arenas++;
     }
 }
 
@@ -362,8 +366,10 @@ void MapMgr::GetNumPlayersInInstances(uint32& dungeons, uint32& battlegrounds, u
         MapInstanced::InstancedMaps& maps = ((MapInstanced*)map)->GetInstancedMaps();
         for (MapInstanced::InstancedMaps::iterator mitr = maps.begin(); mitr != maps.end(); ++mitr)
         {
-            if (mitr->second->IsDungeon()) dungeons += ((InstanceMap*)mitr->second)->GetPlayers().getSize();
-            else if (mitr->second->IsBattleground()) battlegrounds += ((InstanceMap*)mitr->second)->GetPlayers().getSize();
+            if (mitr->second->IsDungeon())
+                dungeons += ((InstanceMap*)mitr->second)->GetPlayers().getSize();
+            else if (mitr->second->IsBattleground())
+                battlegrounds += ((InstanceMap*)mitr->second)->GetPlayers().getSize();
             else if (mitr->second->IsBattleArena())
             {
                 uint32 spect = 0;
@@ -406,7 +412,8 @@ uint32 MapMgr::GenerateInstanceId()
     uint32 newInstanceId = _nextInstanceId;
 
     // find the lowest available id starting from the current _nextInstanceId
-    while (_nextInstanceId < 0xFFFFFFFF && ++_nextInstanceId < _instanceIds.size() && _instanceIds[_nextInstanceId]);
+    while (_nextInstanceId < 0xFFFFFFFF && ++_nextInstanceId < _instanceIds.size() && _instanceIds[_nextInstanceId])
+        ;
 
     if (_nextInstanceId == 0xFFFFFFFF)
     {

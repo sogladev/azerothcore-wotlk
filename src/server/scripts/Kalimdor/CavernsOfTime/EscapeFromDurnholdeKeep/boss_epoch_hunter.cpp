@@ -21,18 +21,18 @@
 
 enum Text
 {
-    SAY_AGGRO                    = 5,
-    SAY_SLAY                     = 6,
-    SAY_BREATH                   = 7,
-    SAY_DEATH                    = 8
+    SAY_AGGRO = 5,
+    SAY_SLAY = 6,
+    SAY_BREATH = 7,
+    SAY_DEATH = 8
 };
 
 enum Spells
 {
-    SPELL_SAND_BREATH            = 31914,
-    SPELL_IMPENDING_DEATH        = 31916,
-    SPELL_MAGIC_DISRUPTION_AURA  = 33834,
-    SPELL_WING_BUFFET            = 31475
+    SPELL_SAND_BREATH = 31914,
+    SPELL_IMPENDING_DEATH = 31916,
+    SPELL_MAGIC_DISRUPTION_AURA = 33834,
+    SPELL_WING_BUFFET = 31475
 };
 
 struct boss_epoch_hunter : public BossAI
@@ -43,23 +43,29 @@ struct boss_epoch_hunter : public BossAI
     {
         _JustEngagedWith();
         Talk(SAY_AGGRO);
-        scheduler.Schedule(8s, [this](TaskContext context)
+        scheduler
+            .Schedule(8s,
+                [this](TaskContext context)
         {
             if (roll_chance_i(50))
-            {
                 Talk(SAY_BREATH);
-            }
             DoCastVictim(SPELL_SAND_BREATH);
             context.Repeat(20s);
-        }).Schedule(2s, [this](TaskContext context)
+        })
+            .Schedule(2s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_IMPENDING_DEATH);
             context.Repeat(30s);
-        }).Schedule(20s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_MAGIC_DISRUPTION_AURA);
             context.Repeat(30s);
-        }).Schedule(14s, [this](TaskContext context)
+        })
+            .Schedule(14s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_WING_BUFFET);
             context.Repeat(30s);
@@ -80,7 +86,8 @@ struct boss_epoch_hunter : public BossAI
         _JustDied();
         Talk(SAY_DEATH);
         me->GetInstanceScript()->SetData(DATA_ESCORT_PROGRESS, ENCOUNTER_PROGRESS_EPOCH_KILLED);
-        if (Creature* taretha = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(DATA_TARETHA_GUID)))
+        if (Creature* taretha =
+                ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetGuidData(DATA_TARETHA_GUID)))
         {
             taretha->AI()->DoAction(me->GetEntry());
         }

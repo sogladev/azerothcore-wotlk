@@ -23,24 +23,24 @@
 
 enum Says
 {
-    SAY_AGGRO                   = 0,
-    SAY_KILL                    = 1,
-    SAY_ARCANE_RESONANCE        = 2,
-    SAY_ARCANE_DEVASTATION      = 3,
-    EMOTE_SUMMON                = 4,
-    SAY_SUMMON                  = 5,
-    SAY_DEATH                   = 6
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_ARCANE_RESONANCE = 2,
+    SAY_ARCANE_DEVASTATION = 3,
+    EMOTE_SUMMON = 4,
+    SAY_SUMMON = 5,
+    SAY_DEATH = 6
 };
 
 enum Spells
 {
-    SPELL_ARCANE_RESONANCE      = 34794,
-    SPELL_ARCANE_DEVASTATION    = 34799,
+    SPELL_ARCANE_RESONANCE = 34794,
+    SPELL_ARCANE_DEVASTATION = 34799,
     SPELL_SUMMON_REINFORCEMENTS = 34803,
-    SPELL_SUMMON_MENDER_1       = 34810,
-    SPELL_SUMMON_RESERVIST_1    = 34817,
-    SPELL_SUMMON_RESERVIST_2    = 34818,
-    SPELL_SUMMON_RESERVIST_3    = 34819
+    SPELL_SUMMON_MENDER_1 = 34810,
+    SPELL_SUMMON_RESERVIST_1 = 34817,
+    SPELL_SUMMON_RESERVIST_2 = 34818,
+    SPELL_SUMMON_RESERVIST_3 = 34819
 };
 
 struct boss_commander_sarannis : public BossAI
@@ -53,39 +53,33 @@ struct boss_commander_sarannis : public BossAI
         Talk(SAY_AGGRO);
 
         if (!IsHeroic())
-        {
-            ScheduleHealthCheckEvent(55, [&] {
-                ScheduleReinforcements();
-            });
-        }
+            ScheduleHealthCheckEvent(55, [&] { ScheduleReinforcements(); });
         else
-        {
             ScheduleReinforcements();
-        }
 
-        ScheduleTimedEvent(20s, [&] {
+        ScheduleTimedEvent(20s,
+            [&]
+        {
             if (roll_chance_i(50))
-            {
                 Talk(SAY_ARCANE_RESONANCE);
-            }
             DoCastVictim(SPELL_ARCANE_RESONANCE);
-        }, 27s);
+        },
+            27s);
 
-        ScheduleTimedEvent(10s, [&] {
+        ScheduleTimedEvent(10s,
+            [&]
+        {
             if (roll_chance_i(50))
-            {
                 Talk(SAY_ARCANE_DEVASTATION);
-            }
             DoCastVictim(SPELL_ARCANE_DEVASTATION);
-        }, 17s);
+        },
+            17s);
     }
 
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_KILL);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -96,16 +90,15 @@ struct boss_commander_sarannis : public BossAI
 
     void ScheduleReinforcements()
     {
-        scheduler.Schedule(IsHeroic() ? 1min : 1s, [this](TaskContext context)
+        scheduler.Schedule(IsHeroic() ? 1min : 1s,
+            [this](TaskContext context)
         {
             Talk(EMOTE_SUMMON);
             Talk(SAY_SUMMON);
             DoCast(SPELL_SUMMON_REINFORCEMENTS);
 
             if (IsHeroic())
-            {
                 context.Repeat();
-            }
         });
     }
 };
@@ -117,7 +110,7 @@ class spell_commander_sarannis_arcane_devastation : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_ARCANE_RESONANCE });
+        return ValidateSpellInfo({SPELL_ARCANE_RESONANCE});
     }
 
     void AfterApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -127,34 +120,38 @@ class spell_commander_sarannis_arcane_devastation : public AuraScript
 
     void Register() override
     {
-        AfterEffectApply += AuraEffectApplyFn(spell_commander_sarannis_arcane_devastation::AfterApply, EFFECT_2, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(spell_commander_sarannis_arcane_devastation::AfterApply,
+            EFFECT_2,
+            SPELL_AURA_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
 // 34803 - Summon Reinforcements
- class spell_commander_sarannis_summon_reinforcements : public SpellScript
- {
-     PrepareSpellScript(spell_commander_sarannis_summon_reinforcements);
+class spell_commander_sarannis_summon_reinforcements : public SpellScript
+{
+    PrepareSpellScript(spell_commander_sarannis_summon_reinforcements);
 
-     bool Validate(SpellInfo const* /*spellInfo*/) override
-     {
-         return ValidateSpellInfo({ SPELL_SUMMON_MENDER_1, SPELL_SUMMON_RESERVIST_1, SPELL_SUMMON_RESERVIST_2, SPELL_SUMMON_RESERVIST_3 });
-     }
+    bool Validate(SpellInfo const* /*spellInfo*/) override
+    {
+        return ValidateSpellInfo(
+            {SPELL_SUMMON_MENDER_1, SPELL_SUMMON_RESERVIST_1, SPELL_SUMMON_RESERVIST_2, SPELL_SUMMON_RESERVIST_3});
+    }
 
-     void HandleCast(SpellEffIndex /*effIndex*/)
-     {
-         std::vector<uint32> reinforcementSpells = { SPELL_SUMMON_MENDER_1, SPELL_SUMMON_RESERVIST_1, SPELL_SUMMON_RESERVIST_2, SPELL_SUMMON_RESERVIST_3 };
-         for (uint32 spellId : reinforcementSpells)
-         {
-             GetCaster()->CastSpell((Unit*)nullptr, spellId, true);
-         }
-     }
+    void HandleCast(SpellEffIndex /*effIndex*/)
+    {
+        std::vector<uint32> reinforcementSpells = {
+            SPELL_SUMMON_MENDER_1, SPELL_SUMMON_RESERVIST_1, SPELL_SUMMON_RESERVIST_2, SPELL_SUMMON_RESERVIST_3};
+        for (uint32 spellId : reinforcementSpells)
+            GetCaster()->CastSpell((Unit*)nullptr, spellId, true);
+    }
 
-     void Register() override
-     {
-         OnEffectHitTarget += SpellEffectFn(spell_commander_sarannis_summon_reinforcements::HandleCast, EFFECT_0, SPELL_EFFECT_DUMMY);
-     }
- };
+    void Register() override
+    {
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_commander_sarannis_summon_reinforcements::HandleCast, EFFECT_0, SPELL_EFFECT_DUMMY);
+    }
+};
 
 void AddSC_boss_commander_sarannis()
 {

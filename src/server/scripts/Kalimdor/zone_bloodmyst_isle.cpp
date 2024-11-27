@@ -35,11 +35,41 @@ EndContentData */
 ######*/
 
 //possible creatures to be spawned
-uint32 const possibleSpawns[32] = {17322, 17661, 17496, 17522, 17340, 17352, 17333, 17524, 17654, 17348, 17339, 17345, 17359, 17353, 17336, 17550, 17330, 17701, 17321, 17325, 17320, 17683, 17342, 17715, 17334, 17341, 17338, 17337, 17346, 17344, 17327};
+uint32 const possibleSpawns[32] = {17322,
+    17661,
+    17496,
+    17522,
+    17340,
+    17352,
+    17333,
+    17524,
+    17654,
+    17348,
+    17339,
+    17345,
+    17359,
+    17353,
+    17336,
+    17550,
+    17330,
+    17701,
+    17321,
+    17325,
+    17320,
+    17683,
+    17342,
+    17715,
+    17334,
+    17341,
+    17338,
+    17337,
+    17346,
+    17344,
+    17327};
 
 enum WebbedCreature
 {
-    NPC_EXPEDITION_RESEARCHER                     = 17681
+    NPC_EXPEDITION_RESEARCHER = 17681
 };
 
 class npc_webbed_creature : public CreatureScript
@@ -71,9 +101,7 @@ public:
                         if (Unit* owner = killer->GetOwner())
                         {
                             if (owner->IsPlayer())
-                            {
                                 owner->ToPlayer()->KilledMonsterCredit(NPC_EXPEDITION_RESEARCHER);
-                            }
                         }
                     }
                     spawnCreatureID = NPC_EXPEDITION_RESEARCHER;
@@ -86,7 +114,13 @@ public:
 
             if (spawnCreatureID)
             {
-                me->SummonCreature(spawnCreatureID, 0.0f, 0.0f, 0.0f, me->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                me->SummonCreature(spawnCreatureID,
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                    me->GetOrientation(),
+                    TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                    60000);
             }
         }
     };

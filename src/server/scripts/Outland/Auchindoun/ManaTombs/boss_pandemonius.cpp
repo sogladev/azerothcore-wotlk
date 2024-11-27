@@ -22,10 +22,10 @@
 
 enum Texts
 {
-    SAY_AGGRO           = 0,
-    SAY_KILL            = 1,
-    SAY_DEATH           = 2,
-    EMOTE_DARK_SHELL    = 3
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_DEATH = 2,
+    EMOTE_DARK_SHELL = 3
 };
 
 enum Spells
@@ -41,14 +41,14 @@ enum Groups
 
 enum RoomAdds
 {
-    NPC_SCAVENGER    = 18309,
+    NPC_SCAVENGER = 18309,
     NPC_CRYPT_RAIDER = 18311,
-    NPC_SORCERER     = 18313,
+    NPC_SORCERER = 18313,
 };
 
-float const ROOM_PULL_RANGE    = 70.0f;
-float const ROOM_ENTERANCE     = -50.0f;
-float const ROOM_EXIT          = -145.0f;
+float const ROOM_PULL_RANGE = 70.0f;
+float const ROOM_ENTERANCE = -50.0f;
+float const ROOM_EXIT = -145.0f;
 
 constexpr uint8 MAX_VOID_BLAST = 5;
 
@@ -56,45 +56,40 @@ struct boss_pandemonius : public BossAI
 {
     boss_pandemonius(Creature* creature) : BossAI(creature, DATA_PANDEMONIUS)
     {
-        scheduler.SetValidator([this]
-            {
-                return !me->HasUnitState(UNIT_STATE_CASTING);
-            });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void JustEngagedWith(Unit* who) override
     {
         Talk(SAY_AGGRO);
 
-        scheduler.
-            Schedule(20s, GROUP_VOID_BLAST, [this](TaskContext context)
-            {
-                if (me->IsNonMeleeSpellCast(false))
-                {
-                    me->InterruptNonMeleeSpells(true);
-                }
+        scheduler
+            .Schedule(20s,
+                GROUP_VOID_BLAST,
+                [this](TaskContext context)
+        {
+            if (me->IsNonMeleeSpellCast(false))
+                me->InterruptNonMeleeSpells(true);
 
-                Talk(EMOTE_DARK_SHELL);
-                DoCastSelf(SPELL_DARK_SHELL);
-                context.Repeat();
-            })
-            .Schedule(8s, 23s, [this](TaskContext context)
+            Talk(EMOTE_DARK_SHELL);
+            DoCastSelf(SPELL_DARK_SHELL);
+            context.Repeat();
+        })
+            .Schedule(8s,
+                23s,
+                [this](TaskContext context)
+        {
+            if (!(context.GetRepeatCounter() % (MAX_VOID_BLAST + 1)))
             {
-                if (!(context.GetRepeatCounter() % (MAX_VOID_BLAST + 1)))
-                {
-                    context.Repeat(15s, 25s);
-                }
-                else
-                {
-                    DoCastRandomTarget(SPELL_VOID_BLAST);
-                    context.Repeat(500ms);
-                    context.DelayGroup(GROUP_VOID_BLAST, 500ms);
-                }
-            })
-            .Schedule(0s, [this](TaskContext)
+                context.Repeat(15s, 25s);
+            }
+            else
             {
-                PullRoom();
-            });
+                DoCastRandomTarget(SPELL_VOID_BLAST);
+                context.Repeat(500ms);
+                context.DelayGroup(GROUP_VOID_BLAST, 500ms);
+            }
+        }).Schedule(0s, [this](TaskContext) { PullRoom(); });
 
         BossAI::JustEngagedWith(who);
     }
@@ -118,12 +113,8 @@ struct boss_pandemonius : public BossAI
         GetCreatureListWithEntryInGrid(creatureList, me, NPC_CRYPT_RAIDER, ROOM_PULL_RANGE);
         GetCreatureListWithEntryInGrid(creatureList, me, NPC_SORCERER, ROOM_PULL_RANGE);
         for (Creature* creature : creatureList)
-            {
-                if (creature && (creature->GetPositionY() < ROOM_ENTERANCE && creature->GetPositionY() > ROOM_EXIT))
-                {
-                    creature->SetInCombatWithZone();
-                }
-            }
+            if (creature && (creature->GetPositionY() < ROOM_ENTERANCE && creature->GetPositionY() > ROOM_EXIT))
+                creature->SetInCombatWithZone();
         creatureList.clear();
     }
 };

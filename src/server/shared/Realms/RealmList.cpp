@@ -19,8 +19,8 @@
 #include "DatabaseEnv.h"
 #include "DeadlineTimer.h"
 #include "Log.h"
-#include "Resolver.h"
 #include "QueryResult.h"
+#include "Resolver.h"
 #include "Util.h"
 #include <boost/asio/ip/tcp.hpp>
 #include <memory>
@@ -54,7 +54,8 @@ void RealmList::Close()
 void RealmList::LoadBuildInfo()
 {
     //                                                              0             1              2              3      4                5                6
-    if (auto result = LoginDatabase.Query("SELECT majorVersion, minorVersion, bugfixVersion, hotfixVersion, build, winChecksumSeed, macChecksumSeed FROM build_info ORDER BY build ASC"))
+    if (auto result = LoginDatabase.Query(
+            "SELECT majorVersion, minorVersion, bugfixVersion, hotfixVersion, build, winChecksumSeed, macChecksumSeed FROM build_info ORDER BY build ASC"))
     {
         for (auto const& fields : *result)
         {
@@ -65,28 +66,20 @@ void RealmList::LoadBuildInfo()
             std::string hotfixVersion = fields[3].Get<std::string>();
 
             if (hotfixVersion.length() < build.HotfixVersion.size())
-            {
                 std::copy(hotfixVersion.begin(), hotfixVersion.end(), build.HotfixVersion.begin());
-            }
             else
-            {
                 std::fill(hotfixVersion.begin(), hotfixVersion.end(), '\0');
-            }
 
             build.Build = fields[4].Get<uint32>();
             std::string windowsHash = fields[5].Get<std::string>();
 
             if (windowsHash.length() == build.WindowsHash.size() * 2)
-            {
                 HexStrToByteArray(windowsHash, build.WindowsHash);
-            }
 
             std::string macHash = fields[6].Get<std::string>();
 
             if (macHash.length() == build.MacHash.size() * 2)
-            {
                 HexStrToByteArray(macHash, build.MacHash);
-            }
         }
     }
 }
@@ -108,19 +101,13 @@ void RealmList::UpdateRealm(RealmHandle const& id, uint32 build, std::string con
     realm.PopulationLevel = population;
 
     if (!realm.ExternalAddress || *realm.ExternalAddress != address)
-    {
         realm.ExternalAddress = std::make_unique<boost::asio::ip::address>(std::move(address));
-    }
 
     if (!realm.LocalAddress || *realm.LocalAddress != localAddr)
-    {
         realm.LocalAddress = std::make_unique<boost::asio::ip::address>(std::move(localAddr));
-    }
 
     if (!realm.LocalSubnetMask || *realm.LocalSubnetMask != localSubmask)
-    {
         realm.LocalSubnetMask = std::make_unique<boost::asio::ip::address>(std::move(localSubmask));
-    }
 
     realm.Port = port;
 }
@@ -140,9 +127,7 @@ void RealmList::UpdateRealms(boost::system::error_code const& error)
 
     std::map<RealmHandle, std::string> existingRealms;
     for (auto const& [handle, realm] : _realms)
-    {
         existingRealms[handle] = realm.Name;
-    }
 
     _realms.clear();
 
@@ -160,38 +145,49 @@ void RealmList::UpdateRealms(boost::system::error_code const& error)
                 std::string localSubmaskString = fields[4].Get<std::string>();
                 uint16 port = fields[5].Get<uint16>();
 
-                Optional<boost::asio::ip::tcp::endpoint> externalAddress = _resolver->Resolve(boost::asio::ip::tcp::v4(), externalAddressString, "");
+                Optional<boost::asio::ip::tcp::endpoint> externalAddress =
+                    _resolver->Resolve(boost::asio::ip::tcp::v4(), externalAddressString, "");
                 if (!externalAddress)
                 {
-                    LOG_ERROR("server.authserver", "Could not resolve address {} for realm \"{}\" id {}", externalAddressString, name, realmId);
+                    LOG_ERROR("server.authserver",
+                        "Could not resolve address {} for realm \"{}\" id {}",
+                        externalAddressString,
+                        name,
+                        realmId);
                     continue;
                 }
 
-                Optional<boost::asio::ip::tcp::endpoint> localAddress = _resolver->Resolve(boost::asio::ip::tcp::v4(), localAddressString, "");
+                Optional<boost::asio::ip::tcp::endpoint> localAddress =
+                    _resolver->Resolve(boost::asio::ip::tcp::v4(), localAddressString, "");
                 if (!localAddress)
                 {
-                    LOG_ERROR("server.authserver", "Could not resolve localAddress {} for realm \"{}\" id {}", localAddressString, name, realmId);
+                    LOG_ERROR("server.authserver",
+                        "Could not resolve localAddress {} for realm \"{}\" id {}",
+                        localAddressString,
+                        name,
+                        realmId);
                     continue;
                 }
 
-                Optional<boost::asio::ip::tcp::endpoint> localSubmask = _resolver->Resolve(boost::asio::ip::tcp::v4(), localSubmaskString, "");
+                Optional<boost::asio::ip::tcp::endpoint> localSubmask =
+                    _resolver->Resolve(boost::asio::ip::tcp::v4(), localSubmaskString, "");
                 if (!localSubmask)
                 {
-                    LOG_ERROR("server.authserver", "Could not resolve localSubnetMask {} for realm \"{}\" id {}", localSubmaskString, name, realmId);
+                    LOG_ERROR("server.authserver",
+                        "Could not resolve localSubnetMask {} for realm \"{}\" id {}",
+                        localSubmaskString,
+                        name,
+                        realmId);
                     continue;
                 }
 
                 uint8 icon = fields[6].Get<uint8>();
 
                 if (icon == REALM_TYPE_FFA_PVP)
-                {
                     icon = REALM_TYPE_PVP;
-                }
 
                 if (icon >= MAX_CLIENT_REALM_TYPE)
-                {
                     icon = REALM_TYPE_NORMAL;
-                }
 
                 auto flag = RealmFlags(fields[7].Get<uint8>());
                 uint8 realmTimezone = fields[8].Get<uint8>();
@@ -199,10 +195,21 @@ void RealmList::UpdateRealms(boost::system::error_code const& error)
                 float pop = fields[10].Get<float>();
                 uint32 build = fields[11].Get<uint32>();
 
-                RealmHandle id{ realmId };
+                RealmHandle id {realmId};
 
-                UpdateRealm(id, build, name, externalAddress->address(), localAddress->address(), localSubmask->address(), port, icon, flag,
-                    realmTimezone, (allowedSecurityLevel <= SEC_ADMINISTRATOR ? AccountTypes(allowedSecurityLevel) : SEC_ADMINISTRATOR), pop);
+                UpdateRealm(id,
+                    build,
+                    name,
+                    externalAddress->address(),
+                    localAddress->address(),
+                    localSubmask->address(),
+                    port,
+                    icon,
+                    flag,
+                    realmTimezone,
+                    (allowedSecurityLevel <= SEC_ADMINISTRATOR ? AccountTypes(allowedSecurityLevel)
+                                                               : SEC_ADMINISTRATOR),
+                    pop);
 
                 if (!existingRealms.count(id))
                 {
@@ -210,7 +217,8 @@ void RealmList::UpdateRealms(boost::system::error_code const& error)
                 }
                 else
                 {
-                    LOG_DEBUG("server.authserver", "Updating realm \"{}\" at {}:{}.", name, externalAddressString, port);
+                    LOG_DEBUG(
+                        "server.authserver", "Updating realm \"{}\" at {}:{}.", name, externalAddressString, port);
                 }
 
                 existingRealms.erase(id);
@@ -229,7 +237,7 @@ void RealmList::UpdateRealms(boost::system::error_code const& error)
     if (_updateInterval)
     {
         _updateTimer->expires_from_now(boost::posix_time::seconds(_updateInterval));
-        _updateTimer->async_wait([this](boost::system::error_code const& errorCode){ UpdateRealms(errorCode); });
+        _updateTimer->async_wait([this](boost::system::error_code const& errorCode) { UpdateRealms(errorCode); });
     }
 }
 
@@ -237,9 +245,7 @@ Realm const* RealmList::GetRealm(RealmHandle const& id) const
 {
     auto itr = _realms.find(id);
     if (itr != _realms.end())
-    {
         return &itr->second;
-    }
 
     return nullptr;
 }
@@ -247,12 +253,8 @@ Realm const* RealmList::GetRealm(RealmHandle const& id) const
 RealmBuildInfo const* RealmList::GetBuildInfo(uint32 build) const
 {
     for (RealmBuildInfo const& clientBuild : _builds)
-    {
         if (clientBuild.Build == build)
-        {
             return &clientBuild;
-        }
-    }
 
     return nullptr;
 }

@@ -25,51 +25,51 @@
 #include "SpellScriptLoader.h"
 #include "blackwing_lair.h"
 
-constexpr float aNefariusSpawnLoc[4] = { -7466.16f, -1040.80f, 412.053f, 2.14675f };
+constexpr float aNefariusSpawnLoc[4] = {-7466.16f, -1040.80f, 412.053f, 2.14675f};
 
 enum Says
 {
-   SAY_LINE1                         = 0,
-   SAY_LINE2                         = 1,
-   SAY_LINE3                         = 2,
-   SAY_HALFLIFE                      = 3,
-   SAY_KILLTARGET                    = 4
+    SAY_LINE1 = 0,
+    SAY_LINE2 = 1,
+    SAY_LINE3 = 2,
+    SAY_HALFLIFE = 3,
+    SAY_KILLTARGET = 4
 };
 
 enum Gossip
 {
-   GOSSIP_ID                         = 21334,
+    GOSSIP_ID = 21334,
 };
 
 enum Spells
 {
-   SPELL_ESSENCE_OF_THE_RED           = 23513,
-   SPELL_FLAME_BREATH                 = 23461,
-   SPELL_FIRE_NOVA                    = 23462,
-   SPELL_TAIL_SWEEP                   = 15847,
-   SPELL_CLEAVE                       = 19983,   //Chain cleave is most likely named something different and contains a dummy effect
-   SPELL_NEFARIUS_CORRUPTION          = 23642,
-   SPELL_RED_LIGHTNING                = 19484,
+    SPELL_ESSENCE_OF_THE_RED = 23513,
+    SPELL_FLAME_BREATH = 23461,
+    SPELL_FIRE_NOVA = 23462,
+    SPELL_TAIL_SWEEP = 15847,
+    SPELL_CLEAVE = 19983, //Chain cleave is most likely named something different and contains a dummy effect
+    SPELL_NEFARIUS_CORRUPTION = 23642,
+    SPELL_RED_LIGHTNING = 19484,
 
-   SPELL_BURNING_ADRENALINE           = 18173,
-   SPELL_BURNING_ADRENALINE_EXPLOSION = 23478, // AOE
-   SPELL_BURNING_ADRENALINE_INSTAKILL = 23644 // instakill
+    SPELL_BURNING_ADRENALINE = 18173,
+    SPELL_BURNING_ADRENALINE_EXPLOSION = 23478, // AOE
+    SPELL_BURNING_ADRENALINE_INSTAKILL = 23644  // instakill
 };
 
 enum Events
 {
-    EVENT_SPEECH_1                  = 1,
-    EVENT_SPEECH_2                  = 2,
-    EVENT_SPEECH_3                  = 3,
-    EVENT_SPEECH_4                  = 4,
-    EVENT_SPEECH_5                  = 5,
-    EVENT_SPEECH_6                  = 6,
-    EVENT_SPEECH_7                  = 7,
-    EVENT_FLAME_BREATH              = 8,
-    EVENT_FIRE_NOVA                 = 9,
-    EVENT_TAIL_SWEEP                = 10,
-    EVENT_CLEAVE                    = 11,
-    EVENT_BURNING_ADRENALINE        = 12,
+    EVENT_SPEECH_1 = 1,
+    EVENT_SPEECH_2 = 2,
+    EVENT_SPEECH_3 = 3,
+    EVENT_SPEECH_4 = 4,
+    EVENT_SPEECH_5 = 5,
+    EVENT_SPEECH_6 = 6,
+    EVENT_SPEECH_7 = 7,
+    EVENT_FLAME_BREATH = 8,
+    EVENT_FIRE_NOVA = 9,
+    EVENT_TAIL_SWEEP = 10,
+    EVENT_CLEAVE = 11,
+    EVENT_BURNING_ADRENALINE = 12,
 };
 
 class boss_vaelastrasz : public CreatureScript
@@ -159,7 +159,13 @@ public:
                     {
                         case EVENT_SPEECH_1:
                             me->SetStandState(UNIT_STAND_STATE_STAND);
-                            me->SummonCreature(NPC_VICTOR_NEFARIUS, aNefariusSpawnLoc[0], aNefariusSpawnLoc[1], aNefariusSpawnLoc[2], aNefariusSpawnLoc[3], TEMPSUMMON_TIMED_DESPAWN, 26000);
+                            me->SummonCreature(NPC_VICTOR_NEFARIUS,
+                                aNefariusSpawnLoc[0],
+                                aNefariusSpawnLoc[1],
+                                aNefariusSpawnLoc[2],
+                                aNefariusSpawnLoc[3],
+                                TEMPSUMMON_TIMED_DESPAWN,
+                                26000);
                             _eventsIntro.ScheduleEvent(EVENT_SPEECH_2, 1s);
                             me->SetUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                             break;
@@ -233,7 +239,13 @@ public:
                         {
                             //selects a random target that isn't the current victim and is a mana user (selects mana users) but not pets
                             //it also ignores targets who have the aura. We don't want to place the debuff on the same target twice.
-                            if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, [&](Unit* u) { return u && !u->IsPet() && u->getPowerType() == POWER_MANA && !u->HasAura(SPELL_BURNING_ADRENALINE) && u != me->GetVictim(); }))
+                            if (Unit* target = SelectTarget(SelectTargetMethod::Random,
+                                    0,
+                                    [&](Unit* u)
+                            {
+                                return u && !u->IsPet() && u->getPowerType() == POWER_MANA &&
+                                       !u->HasAura(SPELL_BURNING_ADRENALINE) && u != me->GetVictim();
+                            }))
                             {
                                 me->CastSpell(target, SPELL_BURNING_ADRENALINE, true);
                             }
@@ -280,13 +292,13 @@ public:
             }
         }
 
-        private:
-            ObjectGuid PlayerGUID;
-            ObjectGuid m_nefariusGuid;
-            bool HasYelled;
-            bool _introDone;
-            EventMap _eventsIntro;
-            uint8 _burningAdrenalineCast;
+    private:
+        ObjectGuid PlayerGUID;
+        ObjectGuid m_nefariusGuid;
+        bool HasYelled;
+        bool _introDone;
+        EventMap _eventsIntro;
+        uint8 _burningAdrenalineCast;
     };
 
     CreatureAI* GetAI(Creature* creature) const override
@@ -302,15 +314,13 @@ class spell_vael_burning_adrenaline : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_BURNING_ADRENALINE_EXPLOSION, SPELL_BURNING_ADRENALINE_INSTAKILL });
+        return ValidateSpellInfo({SPELL_BURNING_ADRENALINE_EXPLOSION, SPELL_BURNING_ADRENALINE_INSTAKILL});
     }
 
     void HandleRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (!GetTarget())
-        {
             return;
-        }
 
         // Do the explosion, then kill the target.
         GetTarget()->CastSpell(GetTarget(), SPELL_BURNING_ADRENALINE_EXPLOSION, true);
@@ -319,7 +329,10 @@ class spell_vael_burning_adrenaline : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_vael_burning_adrenaline::HandleRemove, EFFECT_2, SPELL_AURA_PERIODIC_TRIGGER_SPELL, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_vael_burning_adrenaline::HandleRemove,
+            EFFECT_2,
+            SPELL_AURA_PERIODIC_TRIGGER_SPELL,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 

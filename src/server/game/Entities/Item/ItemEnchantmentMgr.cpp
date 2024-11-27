@@ -28,14 +28,12 @@
 
 struct EnchStoreItem
 {
-    uint32  ench;
-    float   chance;
+    uint32 ench;
+    float chance;
 
-    EnchStoreItem()
-        : ench(0), chance(0) {}
+    EnchStoreItem() : ench(0), chance(0) { }
 
-    EnchStoreItem(uint32 _ench, float _chance)
-        : ench(_ench), chance(_chance) {}
+    EnchStoreItem(uint32 _ench, float _chance) : ench(_ench), chance(_chance) { }
 };
 
 typedef std::vector<EnchStoreItem> EnchStoreList;
@@ -47,7 +45,7 @@ void LoadRandomEnchantmentsTable()
 {
     uint32 oldMSTime = getMSTime();
 
-    RandomItemEnch.clear();                                 // for reload case
+    RandomItemEnch.clear(); // for reload case
 
     //                                                 0      1      2
     QueryResult result = WorldDatabase.Query("SELECT entry, ench, chance FROM item_enchantment_template");
@@ -70,12 +68,16 @@ void LoadRandomEnchantmentsTable()
             ++count;
         } while (result->NextRow());
 
-        LOG_INFO("server.loading", ">> Loaded {} Item Enchantment Definitions in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
+        LOG_INFO("server.loading",
+            ">> Loaded {} Item Enchantment Definitions in {} ms",
+            count,
+            GetMSTimeDiffToNow(oldMSTime));
         LOG_INFO("server.loading", " ");
     }
     else
     {
-        LOG_WARN("server.loading", ">> Loaded 0 Item Enchantment definitions. DB table `item_enchantment_template` is empty.");
+        LOG_WARN("server.loading",
+            ">> Loaded 0 Item Enchantment definitions. DB table `item_enchantment_template` is empty.");
         LOG_INFO("server.loading", " ");
     }
 }
@@ -91,7 +93,9 @@ uint32 GetItemEnchantMod(int32 entry)
     EnchantmentStore::const_iterator tab = RandomItemEnch.find(entry);
     if (tab == RandomItemEnch.end())
     {
-        LOG_ERROR("sql.sql", "Item RandomProperty / RandomSuffix id #{} used in `item_template` but it does not have records in `item_enchantment_template` table.", entry);
+        LOG_ERROR("sql.sql",
+            "Item RandomProperty / RandomSuffix id #{} used in `item_template` but it does not have records in `item_enchantment_template` table.",
+            entry);
         return 0;
     }
 
@@ -193,7 +197,7 @@ uint32 GenerateEnchSuffixFactor(uint32 item_id)
             return randomProperty->EpicPropertiesPoints[suffixFactor];
         case ITEM_QUALITY_LEGENDARY:
         case ITEM_QUALITY_ARTIFACT:
-            return 0;                                       // not have random properties
+            return 0; // not have random properties
         default:
             break;
     }

@@ -19,14 +19,13 @@
 #include "ScriptedCreature.h"
 #include "gundrak.h"
 
-DoorData const doorData[] =
-{
-    { GO_ECK_DOORS,             DATA_MOORABI,           DOOR_TYPE_PASSAGE },
-    { GO_ECK_UNDERWATER_GATE,   DATA_ECK_THE_FEROCIOUS, DOOR_TYPE_PASSAGE },
-    { GO_GAL_DARAH_DOORS0,      DATA_GAL_DARAH,         DOOR_TYPE_ROOM    },
-    { GO_GAL_DARAH_DOORS1,      DATA_GAL_DARAH,         DOOR_TYPE_PASSAGE },
-    { GO_GAL_DARAH_DOORS2,      DATA_GAL_DARAH,         DOOR_TYPE_PASSAGE },
-    { 0,                        0,                      DOOR_TYPE_ROOM    }
+DoorData const doorData[] = {
+    {GO_ECK_DOORS,           DATA_MOORABI,           DOOR_TYPE_PASSAGE},
+    {GO_ECK_UNDERWATER_GATE, DATA_ECK_THE_FEROCIOUS, DOOR_TYPE_PASSAGE},
+    {GO_GAL_DARAH_DOORS0,    DATA_GAL_DARAH,         DOOR_TYPE_ROOM   },
+    {GO_GAL_DARAH_DOORS1,    DATA_GAL_DARAH,         DOOR_TYPE_PASSAGE},
+    {GO_GAL_DARAH_DOORS2,    DATA_GAL_DARAH,         DOOR_TYPE_PASSAGE},
+    {0,                      0,                      DOOR_TYPE_ROOM   }
 };
 
 class instance_gundrak : public InstanceMapScript
@@ -72,7 +71,8 @@ public:
                     break;
                 case GO_ALTAR_OF_DRAKKARI:
                     _drakkariAltarGUID = gameobject->GetGUID();
-                    gameobject->SetGoState(GetBossState(DATA_DRAKKARI_COLOSSUS) == DONE ? GO_STATE_ACTIVE : GO_STATE_READY);
+                    gameobject->SetGoState(
+                        GetBossState(DATA_DRAKKARI_COLOSSUS) == DONE ? GO_STATE_ACTIVE : GO_STATE_READY);
                     break;
                 case GO_ALTAR_OF_MOORABI:
                     _moorabiAltarGUID = gameobject->GetGUID();
@@ -80,15 +80,22 @@ public:
                     break;
                 case GO_STATUE_OF_SLAD_RAN:
                     _bridgeGUIDs[0] = gameobject->GetGUID();
-                    gameobject->SetGoState(_keysInCount == 3 ? GO_STATE_ACTIVE_ALTERNATIVE : (GetBossState(DATA_SLAD_RAN) == DONE ? GO_STATE_READY : GO_STATE_ACTIVE));
+                    gameobject->SetGoState(
+                        _keysInCount == 3 ? GO_STATE_ACTIVE_ALTERNATIVE
+                                          : (GetBossState(DATA_SLAD_RAN) == DONE ? GO_STATE_READY : GO_STATE_ACTIVE));
                     break;
                 case GO_STATUE_OF_DRAKKARI:
                     _bridgeGUIDs[1] = gameobject->GetGUID();
-                    gameobject->SetGoState(_keysInCount == 3 ? GO_STATE_ACTIVE_ALTERNATIVE : (GetBossState(DATA_DRAKKARI_COLOSSUS) == DONE ? GO_STATE_READY : GO_STATE_ACTIVE));
+                    gameobject->SetGoState(
+                        _keysInCount == 3
+                            ? GO_STATE_ACTIVE_ALTERNATIVE
+                            : (GetBossState(DATA_DRAKKARI_COLOSSUS) == DONE ? GO_STATE_READY : GO_STATE_ACTIVE));
                     break;
                 case GO_STATUE_OF_MOORABI:
                     _bridgeGUIDs[2] = gameobject->GetGUID();
-                    gameobject->SetGoState(_keysInCount == 3 ? GO_STATE_ACTIVE_ALTERNATIVE : (GetBossState(DATA_MOORABI) == DONE ? GO_STATE_READY : GO_STATE_ACTIVE));
+                    gameobject->SetGoState(
+                        _keysInCount == 3 ? GO_STATE_ACTIVE_ALTERNATIVE
+                                          : (GetBossState(DATA_MOORABI) == DONE ? GO_STATE_READY : GO_STATE_ACTIVE));
                     break;
                 case GO_STATUE_OF_GAL_DARAH:
                     _bridgeGUIDs[3] = gameobject->GetGUID();
@@ -188,12 +195,12 @@ public:
                         altar->RemoveGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
                     break;
                 case DATA_ECK_THE_FEROCIOUS_INIT:
-                    {
-                        Position pos = {1624.70f, 891.43f, 95.08f, 1.2f};
-                        if (instance->IsHeroic())
-                            instance->SummonCreature(NPC_ECK_THE_FEROCIOUS, pos);
-                        break;
-                    }
+                {
+                    Position pos = {1624.70f, 891.43f, 95.08f, 1.2f};
+                    if (instance->IsHeroic())
+                        instance->SummonCreature(NPC_ECK_THE_FEROCIOUS, pos);
+                    break;
+                }
             }
             return true;
         }

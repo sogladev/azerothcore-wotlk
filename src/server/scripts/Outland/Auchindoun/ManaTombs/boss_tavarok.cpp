@@ -21,19 +21,16 @@
 
 enum Spells
 {
-    SPELL_EARTHQUAKE        = 33919,
-    SPELL_CRYSTAL_PRISON    = 32361,
-    SPELL_ARCING_SMASH      = 8374
+    SPELL_EARTHQUAKE = 33919,
+    SPELL_CRYSTAL_PRISON = 32361,
+    SPELL_ARCING_SMASH = 8374
 };
 
 struct boss_tavarok : public BossAI
 {
     boss_tavarok(Creature* creature) : BossAI(creature, DATA_TAVAROK)
     {
-        scheduler.SetValidator([this]
-        {
-            return !me->HasUnitState(UNIT_STATE_CASTING);
-        });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -44,15 +41,23 @@ struct boss_tavarok : public BossAI
     void JustEngagedWith(Unit* /*who*/) override
     {
         _JustEngagedWith();
-        scheduler.Schedule(10s, 14200ms, [this](TaskContext context)
+        scheduler
+            .Schedule(10s,
+                14200ms,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_EARTHQUAKE);
             context.Repeat(20s, 31s);
-        }).Schedule(12s, 22s, [this](TaskContext context)
+        })
+            .Schedule(12s,
+                22s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_CRYSTAL_PRISON);
             context.Repeat(15s, 22s);
-        }).Schedule(5900ms, [this](TaskContext context)
+        })
+            .Schedule(5900ms,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_ARCING_SMASH);
             context.Repeat(8s, 12s);
@@ -64,7 +69,7 @@ struct boss_tavarok : public BossAI
         _JustDied();
     }
 
-    void KilledUnit(Unit* /*victim*/) override {}
+    void KilledUnit(Unit* /*victim*/) override { }
 };
 
 void AddSC_boss_tavarok()

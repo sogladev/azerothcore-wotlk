@@ -61,11 +61,12 @@ void ScriptMgr::OnFailedPasswordChange(uint32 accountId)
 
 bool ScriptMgr::CanAccountCreateCharacter(uint32 accountId, uint8 charRace, uint8 charClass)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(AccountScript, ACCOUNTHOOK_CAN_ACCOUNT_CREATE_CHARACTER, !script->CanAccountCreateCharacter(accountId, charRace, charClass));
+    CALL_ENABLED_BOOLEAN_HOOKS(AccountScript,
+        ACCOUNTHOOK_CAN_ACCOUNT_CREATE_CHARACTER,
+        !script->CanAccountCreateCharacter(accountId, charRace, charClass));
 }
 
-AccountScript::AccountScript(char const* name, std::vector<uint16> enabledHooks) :
-    ScriptObject(name, ACCOUNTHOOK_END)
+AccountScript::AccountScript(char const* name, std::vector<uint16> enabledHooks) : ScriptObject(name, ACCOUNTHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

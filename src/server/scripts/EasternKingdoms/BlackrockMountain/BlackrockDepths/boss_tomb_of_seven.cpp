@@ -23,18 +23,18 @@
 
 enum Spells
 {
-    SPELL_SMELT_DARK_IRON                         = 14891,
-    SPELL_LEARN_SMELT                             = 14894,
+    SPELL_SMELT_DARK_IRON = 14891,
+    SPELL_LEARN_SMELT = 14894,
 };
 
 enum Quests
 {
-    QUEST_SPECTRAL_CHALICE                        = 4083
+    QUEST_SPECTRAL_CHALICE = 4083
 };
 
 enum Misc
 {
-    DATA_SKILLPOINT_MIN                           = 230
+    DATA_SKILLPOINT_MIN = 230
 };
 
 enum Says
@@ -44,13 +44,15 @@ enum Says
 
 enum Gossip
 {
-    GOSSIP_TEXT_CONTINUE                          = 1828, // Continue...
-    GOSSIP_GROOMREL                               = 1945, // Option 1 : Before quest(4083) accepted, option 0 after quest(4083) accepted
-    GOSSIP_DOOMREL_START_COMBAT                   = 1947, // Your bondage is at an end, Doom'rel.  I challenge you!
-    SAY_DOOMREL_HELLO                             = 2601, // Our fate is the doom of all who face the Great Fire.
-    SAY_QUEST_ACCEPTED                            = 2604, // You wish to learn the old craft?  You wish to smelt dark iron?$B$BAppease me, $r.  Show me a sacrifice and I will consider it!
-    SAY_QUEST_COMPLETED                           = 2605, // Your will is strong, and your intent is clear.$B$BPerhaps you are worthy...
-    SAY_QUEST_COMPLETED_END                       = 2606, // You have shown me your desire, and have payed with precious stone.  I will teach you...
+    GOSSIP_TEXT_CONTINUE = 1828,        // Continue...
+    GOSSIP_GROOMREL = 1945,             // Option 1 : Before quest(4083) accepted, option 0 after quest(4083) accepted
+    GOSSIP_DOOMREL_START_COMBAT = 1947, // Your bondage is at an end, Doom'rel.  I challenge you!
+    SAY_DOOMREL_HELLO = 2601,           // Our fate is the doom of all who face the Great Fire.
+    SAY_QUEST_ACCEPTED =
+        2604, // You wish to learn the old craft?  You wish to smelt dark iron?$B$BAppease me, $r.  Show me a sacrifice and I will consider it!
+    SAY_QUEST_COMPLETED = 2605, // Your will is strong, and your intent is clear.$B$BPerhaps you are worthy...
+    SAY_QUEST_COMPLETED_END =
+        2606, // You have shown me your desire, and have payed with precious stone.  I will teach you...
 };
 
 class boss_gloomrel : public CreatureScript
@@ -63,19 +65,19 @@ public:
         ClearGossipMenuFor(player);
         switch (action)
         {
-            case GOSSIP_ACTION_INFO_DEF+1:
+            case GOSSIP_ACTION_INFO_DEF + 1:
                 AddGossipItemFor(player, GOSSIP_TEXT_CONTINUE, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
                 SendGossipMenuFor(player, SAY_QUEST_COMPLETED_END, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+11:
+            case GOSSIP_ACTION_INFO_DEF + 11:
                 CloseGossipMenuFor(player);
                 player->CastSpell(player, SPELL_LEARN_SMELT, false);
                 break;
-            case GOSSIP_ACTION_INFO_DEF+2:
+            case GOSSIP_ACTION_INFO_DEF + 2:
                 AddGossipItemFor(player, GOSSIP_TEXT_CONTINUE, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 22);
                 SendGossipMenuFor(player, SAY_QUEST_ACCEPTED, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+22:
+            case GOSSIP_ACTION_INFO_DEF + 22:
                 CloseGossipMenuFor(player);
                 if (InstanceScript* instance = creature->GetInstanceScript())
                 {
@@ -89,13 +91,15 @@ public:
 
     bool OnGossipHello(Player* player, Creature* creature) override
     {
-        if (player->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) == 1 && player->GetSkillValue(SKILL_MINING) >= DATA_SKILLPOINT_MIN && !player->HasSpell(SPELL_SMELT_DARK_IRON))
+        if (player->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) == 1 &&
+            player->GetSkillValue(SKILL_MINING) >= DATA_SKILLPOINT_MIN && !player->HasSpell(SPELL_SMELT_DARK_IRON))
         {
             AddGossipItemFor(player, GOSSIP_GROOMREL, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
             SendGossipMenuFor(player, SAY_QUEST_COMPLETED, creature->GetGUID());
         }
 
-        if (player->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) == 0 && player->GetSkillValue(SKILL_MINING) >= DATA_SKILLPOINT_MIN)
+        if (player->GetQuestRewardStatus(QUEST_SPECTRAL_CHALICE) == 0 &&
+            player->GetSkillValue(SKILL_MINING) >= DATA_SKILLPOINT_MIN)
             AddGossipItemFor(player, GOSSIP_GROOMREL, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
 
         SendGossipMenuFor(player, player->GetGossipTextId(creature), creature->GetGUID());
@@ -105,19 +109,20 @@ public:
 
 enum DoomrelSpells
 {
-    SPELL_SHADOWBOLTVOLLEY                                 = 15245,
-    SPELL_IMMOLATE                                         = 12742,
-    SPELL_CURSEOFWEAKNESS                                  = 12493,
-    SPELL_DEMONARMOR                                       = 13787,
-    SPELL_SUMMON_VOIDWALKERS                               = 15092
+    SPELL_SHADOWBOLTVOLLEY = 15245,
+    SPELL_IMMOLATE = 12742,
+    SPELL_CURSEOFWEAKNESS = 12493,
+    SPELL_DEMONARMOR = 13787,
+    SPELL_SUMMON_VOIDWALKERS = 15092
 };
+
 enum DoomrelEvents
 {
-    EVENT_SPELL_SHADOWBOLTVOLLEY    = 1,
-    EVENT_SPELL_IMMOLATE            = 2,
-    EVENT_SPELL_CURSEOFWEAKNESS     = 3,
-    EVENT_SPELL_DEMONARMOR          = 4,
-    EVENT_SPELL_SUMMON_VOIDWALKERS  = 5,
+    EVENT_SPELL_SHADOWBOLTVOLLEY = 1,
+    EVENT_SPELL_IMMOLATE = 2,
+    EVENT_SPELL_CURSEOFWEAKNESS = 3,
+    EVENT_SPELL_DEMONARMOR = 4,
+    EVENT_SPELL_SUMMON_VOIDWALKERS = 5,
 };
 
 class boss_doomrel : public CreatureScript
@@ -130,19 +135,17 @@ public:
         ClearGossipMenuFor(player);
         switch (action)
         {
-            case GOSSIP_ACTION_INFO_DEF+1:
+            case GOSSIP_ACTION_INFO_DEF + 1:
                 AddGossipItemFor(player, GOSSIP_TEXT_CONTINUE, 1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                 SendGossipMenuFor(player, SAY_QUEST_COMPLETED, creature->GetGUID());
                 break;
-            case GOSSIP_ACTION_INFO_DEF+2:
+            case GOSSIP_ACTION_INFO_DEF + 2:
                 CloseGossipMenuFor(player);
                 creature->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
                 // Start encounter
                 InstanceScript* instance = creature->GetInstanceScript();
                 if (instance)
-                {
                     instance->SetData(TYPE_TOMB_OF_SEVEN, IN_PROGRESS);
-                }
                 creature->AI()->Talk(SAY_START_FIGHT);
                 break;
         }
@@ -181,7 +184,8 @@ public:
             // was set before event start, so set again
             me->SetImmuneToPC(true);
 
-            if (instance->GetData(TYPE_TOMB_OF_SEVEN) == DONE) // what is this trying to do? Probably some kind of crash recovery
+            if (instance->GetData(TYPE_TOMB_OF_SEVEN) ==
+                DONE) // what is this trying to do? Probably some kind of crash recovery
             {
                 me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_NONE);
             }

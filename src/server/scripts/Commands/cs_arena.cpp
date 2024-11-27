@@ -36,25 +36,24 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable arenaCommandTable =
-        {
-            { "create",         HandleArenaCreateCommand,   SEC_ADMINISTRATOR, Console::Yes },
-            { "disband",        HandleArenaDisbandCommand,  SEC_ADMINISTRATOR, Console::Yes },
-            { "rename",         HandleArenaRenameCommand,   SEC_ADMINISTRATOR, Console::Yes },
-            { "captain",        HandleArenaCaptainCommand,  SEC_ADMINISTRATOR, Console::No  },
-            { "info",           HandleArenaInfoCommand,     SEC_GAMEMASTER,    Console::Yes },
-            { "lookup",         HandleArenaLookupCommand,   SEC_GAMEMASTER,    Console::No  },
+        static ChatCommandTable arenaCommandTable = {
+            {"create",  HandleArenaCreateCommand,  SEC_ADMINISTRATOR, Console::Yes},
+            {"disband", HandleArenaDisbandCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"rename",  HandleArenaRenameCommand,  SEC_ADMINISTRATOR, Console::Yes},
+            {"captain", HandleArenaCaptainCommand, SEC_ADMINISTRATOR, Console::No },
+            {"info",    HandleArenaInfoCommand,    SEC_GAMEMASTER,    Console::Yes},
+            {"lookup",  HandleArenaLookupCommand,  SEC_GAMEMASTER,    Console::No },
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "arena", arenaCommandTable }
+        static ChatCommandTable commandTable = {
+            {"arena", arenaCommandTable}
         };
 
         return commandTable;
     }
 
-    static bool HandleArenaCreateCommand(ChatHandler* handler, Optional<PlayerIdentifier> captain, QuotedString name, ArenaTeamTypes type)
+    static bool HandleArenaCreateCommand(
+        ChatHandler* handler, Optional<PlayerIdentifier> captain, QuotedString name, ArenaTeamTypes type)
     {
         if (sArenaTeamMgr->GetArenaTeamByName(name))
         {
@@ -84,7 +83,8 @@ public:
         }
 
         sArenaTeamMgr->AddArenaTeam(arena);
-        handler->PSendSysMessage(LANG_ARENA_CREATE, arena->GetName(), arena->GetId(), arena->GetType(), arena->GetCaptain().ToString());
+        handler->PSendSysMessage(
+            LANG_ARENA_CREATE, arena->GetName(), arena->GetId(), arena->GetType(), arena->GetCaptain().ToString());
 
         return true;
     }
@@ -108,7 +108,7 @@ public:
         std::string name = arena->GetName();
         arena->Disband();
 
-        delete(arena);
+        delete (arena);
 
         handler->PSendSysMessage(LANG_ARENA_DISBAND, name, teamId);
         return true;
@@ -183,7 +183,8 @@ public:
         sCharacterCache->GetCharacterNameByGuid(arena->GetCaptain(), oldCaptainName);
         arena->SetCaptain(target->GetGUID());
 
-        handler->PSendSysMessage(LANG_ARENA_CAPTAIN, arena->GetName(), arena->GetId(), oldCaptainName, target->GetName());
+        handler->PSendSysMessage(
+            LANG_ARENA_CAPTAIN, arena->GetName(), arena->GetId(), oldCaptainName, target->GetName());
 
         return true;
     }
@@ -197,10 +198,19 @@ public:
             return false;
         }
 
-        handler->PSendSysMessage(LANG_ARENA_INFO_HEADER, arena->GetName(), arena->GetId(), arena->GetRating(), arena->GetType(), arena->GetType());
+        handler->PSendSysMessage(LANG_ARENA_INFO_HEADER,
+            arena->GetName(),
+            arena->GetId(),
+            arena->GetRating(),
+            arena->GetType(),
+            arena->GetType());
 
         for (auto const& itr : arena->GetMembers())
-            handler->PSendSysMessage(LANG_ARENA_INFO_MEMBERS, itr.Name, itr.Guid.ToString(), itr.PersonalRating, (arena->GetCaptain() == itr.Guid ? "- Captain" : ""));
+            handler->PSendSysMessage(LANG_ARENA_INFO_MEMBERS,
+                itr.Name,
+                itr.Guid.ToString(),
+                itr.PersonalRating,
+                (arena->GetCaptain() == itr.Guid ? "- Captain" : ""));
 
         return true;
     }
@@ -217,7 +227,8 @@ public:
             {
                 if (handler->GetSession())
                 {
-                    handler->PSendSysMessage(LANG_ARENA_LOOKUP, team->GetName(), team->GetId(), team->GetType(), team->GetType());
+                    handler->PSendSysMessage(
+                        LANG_ARENA_LOOKUP, team->GetName(), team->GetId(), team->GetType(), team->GetType());
                     found = true;
                     continue;
                 }

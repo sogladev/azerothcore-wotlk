@@ -28,28 +28,28 @@
 enum Spells
 {
     // Ground Phase
-    SPELL_CLEAVE                = 30131,
-    SPELL_TAIL_SWEEP            = 25653,
-    SPELL_SMOLDERING_BREATH     = 30210,
-    SPELL_CHARRED_EARTH         = 30129,
-    SPELL_BELLOWING_ROAR        = 36922,
+    SPELL_CLEAVE = 30131,
+    SPELL_TAIL_SWEEP = 25653,
+    SPELL_SMOLDERING_BREATH = 30210,
+    SPELL_CHARRED_EARTH = 30129,
+    SPELL_BELLOWING_ROAR = 36922,
     // Air Phase
-    SPELL_SMOKING_BLAST         = 30128,
-    SPELL_SMOKING_BLAST_T       = 37057,
-    SPELL_RAIN_OF_BONES         = 37098,
-    SPELL_SUMMON_SKELETON       = 30170,
-    SPELL_DISTRACTING_ASH       = 30130,
+    SPELL_SMOKING_BLAST = 30128,
+    SPELL_SMOKING_BLAST_T = 37057,
+    SPELL_RAIN_OF_BONES = 37098,
+    SPELL_SUMMON_SKELETON = 30170,
+    SPELL_DISTRACTING_ASH = 30130,
     // Both Phases
-    SPELL_FIREBALL_BARRAGE      = 30282
+    SPELL_FIREBALL_BARRAGE = 30282
 };
 
 enum Says
 {
-    EMOTE_SUMMON                = 0,
-    YELL_AGGRO                  = 1,
-    YELL_AIR_PHASE              = 2,
-    YELL_LAND_PHASE             = 3,
-    EMOTE_BREATH                = 4
+    EMOTE_SUMMON = 0,
+    YELL_AGGRO = 1,
+    YELL_AIR_PHASE = 2,
+    YELL_LAND_PHASE = 3,
+    EMOTE_BREATH = 4
 };
 
 enum Actions
@@ -59,37 +59,36 @@ enum Actions
 
 enum Phases
 {
-    PHASE_INTRO                 = 0,
-    PHASE_GROUND                = 1,
-    PHASE_FLY                   = 2,
-    PHASE_TRANSITION            = 3,
+    PHASE_INTRO = 0,
+    PHASE_GROUND = 1,
+    PHASE_FLY = 2,
+    PHASE_TRANSITION = 3,
 };
 
- enum Groups
+enum Groups
 {
-    GROUP_GROUND                = 0,
-    GROUP_AIR                   = 1,
-    GROUP_LAND                  = 2
- };
+    GROUP_GROUND = 0,
+    GROUP_AIR = 1,
+    GROUP_LAND = 2
+};
 
 enum Points
 {
-    POINT_INTRO_TAKE_OFF        =  11,
-    POINT_INTRO_PRE_LAND        =  8,
-    POINT_INTRO_LAND            =  12,
-    POINT_PRE_FLY_EAST          =  21,
-    POINT_PRE_FLY_SOUTH         =  22,
-    POINT_PRE_FLY_WEST          =  23,
-    POINT_PRE_FLY               =  24,
-    POINT_FLY                   =  31,
-    POINT_LANDING_PRE           =  41,
-    POINT_LANDING_WEST          =  42,
-    POINT_PRE_LAND              =  5,
-    POINT_LAND                  =  51,
+    POINT_INTRO_TAKE_OFF = 11,
+    POINT_INTRO_PRE_LAND = 8,
+    POINT_INTRO_LAND = 12,
+    POINT_PRE_FLY_EAST = 21,
+    POINT_PRE_FLY_SOUTH = 22,
+    POINT_PRE_FLY_WEST = 23,
+    POINT_PRE_FLY = 24,
+    POINT_FLY = 31,
+    POINT_LANDING_PRE = 41,
+    POINT_LANDING_WEST = 42,
+    POINT_PRE_LAND = 5,
+    POINT_LAND = 51,
 };
 
-float IntroWay[8][3] =
-{
+float IntroWay[8][3] = {
     {-11053.37f, -1794.48f, 149.00f},
     {-11141.07f, -1841.40f, 125.00f},
     {-11187.28f, -1890.23f, 125.00f},
@@ -100,14 +99,14 @@ float IntroWay[8][3] =
     {-11163.00f, -1903.00f, 91.473f}
 }; //TODO: move to table
 
-Position const homePos        =  {-11003.7f,      -1760.19f,     140.253f};
-Position const introLandPos   =  {-11142.712f,    -1891.193f,    92.25038f};
-Position const preFlySouthPos =  {-11193.77f,     -1921.983f,    107.9845f};
-Position const preFlyEastPos  =  {-11167.065f,    -1976.3473f,   109.91183f};
-Position const preFlyWestPos  =  {-11095.48f,     -1866.5396f,   107.868996};
-Position const preFlyPos      =  {-11154.900391f, -1850.670044f, 103.264999f};
-Position const flyPos         =  {-11160.125f,    -1870.683f,    97.73876f};
-Position const landPos        =  {-11162.231f,    -1900.3287f,   91.47627f};
+Position const homePos = {-11003.7f, -1760.19f, 140.253f};
+Position const introLandPos = {-11142.712f, -1891.193f, 92.25038f};
+Position const preFlySouthPos = {-11193.77f, -1921.983f, 107.9845f};
+Position const preFlyEastPos = {-11167.065f, -1976.3473f, 109.91183f};
+Position const preFlyWestPos = {-11095.48f, -1866.5396f, 107.868996};
+Position const preFlyPos = {-11154.900391f, -1850.670044f, 103.264999f};
+Position const flyPos = {-11160.125f, -1870.683f, 97.73876f};
+Position const landPos = {-11162.231f, -1900.3287f, 91.47627f};
 
 struct boss_nightbane : public BossAI
 {
@@ -129,9 +128,7 @@ struct boss_nightbane : public BossAI
         me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
         me->SetReactState(REACT_PASSIVE);
 
-        ScheduleHealthCheckEvent({ 75, 50, 25 }, [&]{
-            TriggerHealthTakeOff();
-        });
+        ScheduleHealthCheckEvent({75, 50, 25}, [&] { TriggerHealthTakeOff(); });
     }
 
     void JustReachedHome() override
@@ -149,14 +146,13 @@ struct boss_nightbane : public BossAI
         BossAI::EnterEvadeMode(why);
     }
 
-    void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType damageEffectType, SpellSchoolMask spellSchoolMask) override
+    void DamageTaken(
+        Unit* attacker, uint32& damage, DamageEffectType damageEffectType, SpellSchoolMask spellSchoolMask) override
     {
         if (_airPhasesCompleted < 3)
         {
             if (damage >= me->GetHealth())
-            {
                 damage = me->GetHealth() - 1;
-            }
         }
         BossAI::DamageTaken(attacker, damage, damageEffectType, spellSchoolMask);
     }
@@ -177,52 +173,73 @@ struct boss_nightbane : public BossAI
             me->AddUnitState(UNIT_STATE_IGNORE_PATHFINDING);
             _phase = PHASE_INTRO;
             Talk(EMOTE_SUMMON);
-            scheduler.Schedule(2s, [this](TaskContext /*context*/)
+            scheduler
+                .Schedule(2s,
+                    [this](TaskContext /*context*/)
             {
                 me->SetStandState(UNIT_STAND_STATE_STAND);
                 me->SetDisableGravity(true);
-                me->GetMotionMaster()->MoveTakeoff(POINT_INTRO_TAKE_OFF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 10.0f, 13.99879f);
-            }).Schedule(4s, [this](TaskContext /*context*/)
-            {
-                me->GetMotionMaster()->MovePath(me->GetEntry()*10, false);
+                me->GetMotionMaster()->MoveTakeoff(POINT_INTRO_TAKE_OFF,
+                    me->GetPositionX(),
+                    me->GetPositionY(),
+                    me->GetPositionZ() + 10.0f,
+                    13.99879f);
+            }).Schedule(4s, [this](TaskContext /*context*/) {
+                me->GetMotionMaster()->MovePath(me->GetEntry() * 10, false);
             });
         }
-     }
+    }
 
     void ScheduleGround()
     {
-        scheduler.Schedule(18s, 25s, GROUP_GROUND, [this](TaskContext context)
+        scheduler
+            .Schedule(18s,
+                25s,
+                GROUP_GROUND,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_CHARRED_EARTH, 0, 100.0f, true);
             context.Repeat(20s);
-        }).Schedule(25s, 35s, GROUP_GROUND, [this](TaskContext context)
+        })
+            .Schedule(25s,
+                35s,
+                GROUP_GROUND,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_SMOLDERING_BREATH);
             context.Repeat(20s);
-        }).Schedule(45s, GROUP_GROUND, [this](TaskContext context)
+        })
+            .Schedule(45s,
+                GROUP_GROUND,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_BELLOWING_ROAR);
             context.Repeat(32s, 40s);
-        }).Schedule(12s, GROUP_GROUND, [this](TaskContext context)
+        })
+            .Schedule(12s,
+                GROUP_GROUND,
+                [this](TaskContext context)
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100.0f, true))
             {
                 if (!me->HasInArc(M_PI, target))
-                {
                     DoCast(target, SPELL_TAIL_SWEEP);
-                }
             }
             context.Repeat(15s);
-        }).Schedule(5s, GROUP_GROUND, [this](TaskContext context)
+        })
+            .Schedule(5s,
+                GROUP_GROUND,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_CLEAVE);
             context.Repeat(6s, 12s);
-        }).Schedule(25s, GROUP_GROUND, [this](TaskContext context)
+        })
+            .Schedule(25s,
+                GROUP_GROUND,
+                [this](TaskContext context)
         {
             if (SelectTarget(SelectTargetMethod::MinDistance, 0, -40.0f, true))
-            {
                 DoCastAOE(SPELL_FIREBALL_BARRAGE);
-            }
             context.Repeat(3s);
         });
     }
@@ -231,49 +248,67 @@ struct boss_nightbane : public BossAI
     {
         _skeletonSpawnCounter = 0;
 
-        scheduler.Schedule(2s, GROUP_AIR, [this](TaskContext /*context*/)
+        scheduler
+            .Schedule(2s,
+                GROUP_AIR,
+                [this](TaskContext /*context*/)
         {
             DoResetThreatList();
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100.0f))
             {
                 _skeletonSpawnPos = target->GetPosition();
                 me->SetFacingTo(_skeletonSpawnPos.GetOrientation());
-                me->CastSpell(_skeletonSpawnPos.GetPositionX(), _skeletonSpawnPos.GetPositionY(), _skeletonSpawnPos.GetPositionZ(), SPELL_RAIN_OF_BONES, true);
-                _skeletonscheduler.Schedule(50ms, [this](TaskContext context)
+                me->CastSpell(_skeletonSpawnPos.GetPositionX(),
+                    _skeletonSpawnPos.GetPositionY(),
+                    _skeletonSpawnPos.GetPositionZ(),
+                    SPELL_RAIN_OF_BONES,
+                    true);
+                _skeletonscheduler.Schedule(50ms,
+                    [this](TaskContext context)
                 {
                     //spawns skeletons every 2 seconds until skeletonCount is reached
                     if (_skeletonSpawnCounter < _skeletonCount)
                     {
-                        me->CastSpell(_skeletonSpawnPos.GetPositionX(), _skeletonSpawnPos.GetPositionY(), _skeletonSpawnPos.GetPositionZ(), SPELL_SUMMON_SKELETON, true);
+                        me->CastSpell(_skeletonSpawnPos.GetPositionX(),
+                            _skeletonSpawnPos.GetPositionY(),
+                            _skeletonSpawnPos.GetPositionZ(),
+                            SPELL_SUMMON_SKELETON,
+                            true);
                         _skeletonSpawnCounter++;
                         context.Repeat(2s);
                     }
                 });
             }
-        }).Schedule(15s, GROUP_AIR, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                GROUP_AIR,
+                [this](TaskContext context)
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random))
-            {
                 DoCast(target, SPELL_SMOKING_BLAST_T);
-            }
             context.Repeat(6s);
-        }).Schedule(15500ms, GROUP_AIR, [this](TaskContext context)
+        })
+            .Schedule(15500ms,
+                GROUP_AIR,
+                [this](TaskContext context)
         {
             me->SetFacingToObject(me->GetVictim());
             DoCastVictim(SPELL_SMOKING_BLAST);
             context.Repeat(1500ms);
-        }).Schedule(20s, GROUP_AIR, [this](TaskContext /*context*/)
+        })
+            .Schedule(20s,
+                GROUP_AIR,
+                [this](TaskContext /*context*/)
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 100.0f, true))
-            {
                 DoCast(target, SPELL_DISTRACTING_ASH);
-            }
-        }).Schedule(14s, GROUP_AIR, [this](TaskContext context)
+        })
+            .Schedule(14s,
+                GROUP_AIR,
+                [this](TaskContext context)
         {
             if (SelectTarget(SelectTargetMethod::MinDistance, 0, -40.0f, true))
-            {
                 DoCastAOE(SPELL_FIREBALL_BARRAGE);
-            }
             context.Repeat(3s);
         });
     }
@@ -293,15 +328,19 @@ struct boss_nightbane : public BossAI
     void PathEndReached(uint32 pathId) override
     {
         BossAI::PathEndReached(pathId);
-        if (pathId == me->GetEntry()*10) // intro
+        if (pathId == me->GetEntry() * 10) // intro
         {
             me->GetMap()->SetVisibilityRange(DEFAULT_VISIBILITY_INSTANCE); // restore visibility
-            scheduler.Schedule(0s, [this](TaskContext /*context*/)
+            scheduler
+                .Schedule(0s,
+                    [this](TaskContext /*context*/)
             {
                 me->ClearUnitState(UNIT_STATE_IGNORE_PATHFINDING);
                 me->GetMotionMaster()->MovePoint(POINT_INTRO_LAND, introLandPos);
                 me->SetSpeed(MOVE_RUN, 2.0f);
-            }).Schedule(3s, [this](TaskContext /*context*/)
+            })
+                .Schedule(3s,
+                    [this](TaskContext /*context*/)
             {
                 me->SetDisableGravity(false);
                 me->SetCanFly(false);
@@ -310,28 +349,28 @@ struct boss_nightbane : public BossAI
                 _phase = PHASE_GROUND;
                 me->SetReactState(REACT_AGGRESSIVE);
                 me->SetInCombatWithZone();
-            }).Schedule(8s, [this](TaskContext /*context*/)
+            })
+                .Schedule(8s,
+                    [this](TaskContext /*context*/)
             {
                 if (!SelectTargetFromPlayerList(45.0f))
-                {
                     EnterEvadeMode(EVADE_REASON_NO_HOSTILES);
-                }
             });
         }
-        else if (pathId == me->GetEntry()*10+1) // landing
+        else if (pathId == me->GetEntry() * 10 + 1) // landing
         {
             _airPhasesCompleted++;
             if (_triggerCountTakeOffWhileFlying > 0)
             {
                 _triggerCountTakeOffWhileFlying--;
-                scheduler.Schedule(0s, [this](TaskContext /*context*/)
-                {
+                scheduler.Schedule(0s, [this](TaskContext /*context*/) {
                     me->GetMotionMaster()->MovePoint(POINT_PRE_FLY_SOUTH, preFlySouthPos);
                 });
             }
             else
             {
-                scheduler.Schedule(0s, [this](TaskContext /*context*/)
+                scheduler.Schedule(0s,
+                    [this](TaskContext /*context*/)
                 {
                     DoResetThreatList();
                     me->GetMotionMaster()->MovePoint(POINT_LAND, landPos);
@@ -358,23 +397,18 @@ struct boss_nightbane : public BossAI
                 DoStartMovement(me->GetVictim());
                 break;
             case POINT_PRE_FLY_EAST:
-                scheduler.Schedule(0s, [this](TaskContext /*context*/)
-                {
+                scheduler.Schedule(0s, [this](TaskContext /*context*/) {
                     me->GetMotionMaster()->MovePoint(POINT_PRE_FLY_SOUTH, preFlySouthPos);
                 });
                 break;
             case POINT_PRE_FLY_SOUTH:
             case POINT_PRE_FLY_WEST:
-                scheduler.Schedule(0s, [this](TaskContext /*context*/)
-                {
-                    me->GetMotionMaster()->MovePoint(POINT_PRE_FLY, preFlyPos);
-                });
+                scheduler.Schedule(0s,
+                    [this](TaskContext /*context*/) { me->GetMotionMaster()->MovePoint(POINT_PRE_FLY, preFlyPos); });
                 break;
             case POINT_PRE_FLY:
-                scheduler.Schedule(0s, [this](TaskContext /*context*/)
-                {
-                    me->GetMotionMaster()->MovePoint(POINT_FLY, flyPos);
-                });
+                scheduler.Schedule(
+                    0s, [this](TaskContext /*context*/) { me->GetMotionMaster()->MovePoint(POINT_FLY, flyPos); });
                 break;
             case POINT_FLY:
                 _phase = PHASE_FLY;
@@ -383,8 +417,7 @@ struct boss_nightbane : public BossAI
                 ScheduleLand();
                 break;
             case POINT_LANDING_PRE:
-                scheduler.Schedule(0s, [this](TaskContext /*context*/)
-                {
+                scheduler.Schedule(0s, [this](TaskContext /*context*/) {
                     me->GetMotionMaster()->MovePoint(POINT_LANDING_WEST, preFlyWestPos);
                 });
                 break;
@@ -393,16 +426,14 @@ struct boss_nightbane : public BossAI
                 {
                     _airPhasesCompleted++;
                     _triggerCountTakeOffWhileFlying--;
-                    scheduler.Schedule(0s, [this](TaskContext /*context*/)
-                    {
+                    scheduler.Schedule(0s, [this](TaskContext /*context*/) {
                         me->GetMotionMaster()->MovePoint(POINT_PRE_FLY, preFlyPos);
                     });
                 }
                 else
                 {
-                    scheduler.Schedule(0s, [this](TaskContext /*context*/)
-                    {
-                        me->GetMotionMaster()->MovePath(me->GetEntry()*10+1, false);
+                    scheduler.Schedule(0s, [this](TaskContext /*context*/) {
+                        me->GetMotionMaster()->MovePath(me->GetEntry() * 10 + 1, false);
                     });
                 }
                 break;
@@ -460,7 +491,9 @@ struct boss_nightbane : public BossAI
 
     void ScheduleLand()
     {
-        scheduler.Schedule(35s, GROUP_LAND, [this](TaskContext) /*context*/
+        scheduler.Schedule(35s,
+            GROUP_LAND,
+            [this](TaskContext) /*context*/
         {
             Talk(YELL_LAND_PHASE);
             scheduler.CancelGroup(GROUP_AIR);
@@ -480,9 +513,7 @@ struct boss_nightbane : public BossAI
             return;
 
         if (_phase == PHASE_GROUND)
-        {
             DoMeleeAttackIfReady();
-        }
     }
 
 private:
@@ -523,7 +554,10 @@ public:
 
 struct npc_nightbane_helper_target : public NullCreatureAI
 {
-    npc_nightbane_helper_target(Creature* creature) : NullCreatureAI(creature) { me->SetDisableGravity(true); }
+    npc_nightbane_helper_target(Creature* creature) : NullCreatureAI(creature)
+    {
+        me->SetDisableGravity(true);
+    }
 };
 
 // 30282 - Fireball Barrage
@@ -535,14 +569,13 @@ class spell_nightbane_fireball_barrage : public SpellScript
     {
         Unit* caster = GetCaster();
         targets.remove_if([&](WorldObject* target) -> bool
-        {
-            return !target->IsPlayer() || caster->IsWithinCombatRange(target->ToUnit(), 40.0f);
-        });
+        { return !target->IsPlayer() || caster->IsWithinCombatRange(target->ToUnit(), 40.0f); });
     }
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_nightbane_fireball_barrage::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_nightbane_fireball_barrage::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 

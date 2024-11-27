@@ -27,18 +27,30 @@ char const* ObjectGuid::GetTypeName(HighGuid high)
 {
     switch (high)
     {
-        case HighGuid::Item:         return "Item";
-        case HighGuid::Player:       return "Player";
-        case HighGuid::GameObject:   return "Gameobject";
-        case HighGuid::Transport:    return "Transport";
-        case HighGuid::Unit:         return "Creature";
-        case HighGuid::Pet:          return "Pet";
-        case HighGuid::Vehicle:      return "Vehicle";
-        case HighGuid::DynamicObject: return "DynObject";
-        case HighGuid::Corpse:       return "Corpse";
-        case HighGuid::Mo_Transport: return "MoTransport";
-        case HighGuid::Instance:     return "InstanceID";
-        case HighGuid::Group:        return "Group";
+        case HighGuid::Item:
+            return "Item";
+        case HighGuid::Player:
+            return "Player";
+        case HighGuid::GameObject:
+            return "Gameobject";
+        case HighGuid::Transport:
+            return "Transport";
+        case HighGuid::Unit:
+            return "Creature";
+        case HighGuid::Pet:
+            return "Pet";
+        case HighGuid::Vehicle:
+            return "Vehicle";
+        case HighGuid::DynamicObject:
+            return "DynObject";
+        case HighGuid::Corpse:
+            return "Corpse";
+        case HighGuid::Mo_Transport:
+            return "MoTransport";
+        case HighGuid::Instance:
+            return "InstanceID";
+        case HighGuid::Group:
+            return "Group";
         default:
             return "<unknown>";
     }
@@ -92,11 +104,12 @@ ByteBuffer& operator>>(ByteBuffer& buf, PackedGuidReader const& guid)
 
 void ObjectGuidGeneratorBase::HandleCounterOverflow(HighGuid high)
 {
-    LOG_ERROR("entities.object", "{} guid overflow!! Can't continue, shutting down server. ", ObjectGuid::GetTypeName(high));
+    LOG_ERROR(
+        "entities.object", "{} guid overflow!! Can't continue, shutting down server. ", ObjectGuid::GetTypeName(high));
     World::StopNow(ERROR_EXIT_CODE);
 }
 
-#define GUID_TRAIT_INSTANTIATE_GUID( HIGH_GUID ) \
+#define GUID_TRAIT_INSTANTIATE_GUID(HIGH_GUID) \
     template class ObjectGuidGenerator< HIGH_GUID >;
 
 GUID_TRAIT_INSTANTIATE_GUID(HighGuid::Container)

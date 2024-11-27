@@ -49,17 +49,11 @@ void NPCStaveQuestAI::RevealForm()
 void NPCStaveQuestAI::StorePlayerGUID()
 {
     if (!playerGUID.IsEmpty())
-    {
         return;
-    }
 
     for (ThreatContainer::StorageType::const_iterator itr = threatList.begin(); itr != threatList.end(); ++itr)
-    {
         if ((*itr)->getTarget()->IsPlayer())
-        {
             playerGUID = (*itr)->getUnitGuid();
-        }
-    }
 }
 
 Player* NPCStaveQuestAI::GetGossipPlayer()
@@ -69,7 +63,7 @@ Player* NPCStaveQuestAI::GetGossipPlayer()
 
 bool NPCStaveQuestAI::IsAllowedEntry(uint32 entry)
 {
-    uint32 allowedEntries[4] = { 0, 12999, 19833, 19921 }; //player, World Invisible Trigger(traps) and snake trap snakes
+    uint32 allowedEntries[4] = {0, 12999, 19833, 19921}; //player, World Invisible Trigger(traps) and snake trap snakes
     bool isAllowed = std::find(std::begin(allowedEntries), std::end(allowedEntries), entry) != std::end(allowedEntries);
     return isAllowed;
 }
@@ -77,29 +71,22 @@ bool NPCStaveQuestAI::IsAllowedEntry(uint32 entry)
 bool NPCStaveQuestAI::UnitIsUnfair(Unit* unit)
 {
     if (!unit || playerGUID.IsEmpty())
-    {
         return false;
-    }
 
     if (unit->IsPlayer())
     {
         if (playerGUID != unit->GetGUID())
-        {
             return true;
-        }
     }
-    else
+    else if (unit->GetOwnerGUID() != playerGUID)
     {
-        if (unit->GetOwnerGUID() != playerGUID)
-        {
-            // if a creature attacking isn't owned by the player its unfair
-            return true;
-        }
-        else if (!IsAllowedEntry(unit->GetEntry()))
-        {
-            // if not in the whitelist its unfair
-            return true;
-        }
+        // if a creature attacking isn't owned by the player its unfair
+        return true;
+    }
+    else if (!IsAllowedEntry(unit->GetEntry()))
+    {
+        // if not in the whitelist its unfair
+        return true;
     }
 
     return false;
@@ -119,9 +106,7 @@ bool NPCStaveQuestAI::IsFairFight()
         }
 
         if (UnitIsUnfair(unit))
-        {
             return false;
-        }
     }
 
     return true;
@@ -130,9 +115,7 @@ bool NPCStaveQuestAI::IsFairFight()
 bool NPCStaveQuestAI::ValidThreatlist()
 {
     if (threatList.size() == 1)
-    {
         return true;
-    }
 
     bool isFair = IsFairFight();
 
@@ -144,9 +127,7 @@ void NPCStaveQuestAI::SetHomePosition()
     Position homePosition = me->GetPosition();
 
     if (homePosition.IsPositionValid())
-    {
         me->SetHomePosition(homePosition);
-    }
 }
 
 void NPCStaveQuestAI::PrepareForEncounter()
@@ -174,16 +155,12 @@ void NPCStaveQuestAI::ClearLootIfUnfair(Unit* killer)
 bool NPCStaveQuestAI::PlayerEligibleForReward(Unit* killer)
 {
     if (!killer)
-    {
         return true;
-    }
 
     if (Player* player = killer->ToPlayer())
     {
         if (player->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS) != QUEST_STATUS_INCOMPLETE)
-        {
             return false;
-        }
     }
 
     return true;
@@ -192,30 +169,22 @@ bool NPCStaveQuestAI::PlayerEligibleForReward(Unit* killer)
 void NPCStaveQuestAI::StoreAttackerGuidValue(Unit* attacker)
 {
     if (!attacker)
-    {
         return;
-    }
 
     uint64 guidValue = attacker->GetGUID().GetRawValue();
     bool isGUIDPresent = std::find(attackerGuids.begin(), attackerGuids.end(), guidValue) != attackerGuids.end();
 
     // don't store snaketrap's snakes and trap triggers
     if (isGUIDPresent || (IsAllowedEntry(attacker->GetEntry()) && !attacker->IsPlayer()))
-    {
         return;
-    }
     else
-    {
         attackerGuids.push_back(guidValue);
-    }
 }
 
 bool NPCStaveQuestAI::QuestIncomplete(Unit* unit, uint32 questItem)
 {
     if (!unit || !unit->IsPlayer())
-    {
         return true;
-    }
 
     QuestStatus questStatus = unit->ToPlayer()->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS);
     bool hasQuestItem = unit->ToPlayer()->HasItemCount(questItem, 1, true);
@@ -243,17 +212,13 @@ void NPCStaveQuestAI::EvadeOnFeignDeath()
 {
     Player* player = ObjectAccessor::GetPlayer(*me, playerGUID);
     if (player && player->HasAura(SPELL_FEIGN_DEATH))
-    {
         EnterEvadeMode();
-    }
 }
 
 void NPCStaveQuestAI::AttackStart(Unit* target)
 {
     if (playerGUID.IsEmpty() && !InNormalForm())
-    {
         StorePlayerGUID();
-    }
 
     ScriptedAI::AttackStart(target);
 }
@@ -281,7 +246,7 @@ public:
 
     struct npc_artoriusAI : public NPCStaveQuestAI
     {
-        npc_artoriusAI(Creature *creature) : NPCStaveQuestAI(creature) { }
+        npc_artoriusAI(Creature* creature) : NPCStaveQuestAI(creature) { }
 
         EventMap events;
 
@@ -297,14 +262,10 @@ public:
             me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
 
             if (InNormalForm())
-            {
                 return;
-            }
 
             if (who && (UnitIsUnfair(who) || !QuestIncomplete(who, ARTORIUS_HEAD)))
-            {
                 me->CastSpell(who, SPELL_FOOLS_PLIGHT, true);
-            }
 
             events.ScheduleEvent(EVENT_FOOLS_PLIGHT, urand(2000, 3000));
             events.ScheduleEvent(EVENT_RANGE_CHECK, 1000);
@@ -343,29 +304,21 @@ public:
             }
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             // In combat events
             switch (eventId)
             {
                 case EVENT_FOOLS_PLIGHT:
                     if (UnitIsUnfair(me->GetVictim()) || !QuestIncomplete(me->GetVictim(), ARTORIUS_HEAD))
-                    {
                         me->CastSpell(me->GetVictim(), SPELL_FOOLS_PLIGHT, true);
-                    }
                     events.RepeatEvent(urand(3000, 6000));
                     break;
                 case EVENT_RANGE_CHECK:
                     if (!me->GetVictim() || !me->GetVictim()->IsWithinDist2d(me, 60.0f))
-                    {
                         EnterEvadeMode();
-                    }
                     else
-                    {
                         events.RepeatEvent(2000);
-                    }
                     break;
                 case EVENT_UNFAIR_FIGHT:
                     if (!ValidThreatlist())
@@ -380,9 +333,7 @@ public:
                     break;
                 case ARTORIUS_EVENT_DEMONIC_DOOM:
                     if (!me->GetVictim()->HasAura(ARTORIUS_SPELL_DEMONIC_DOOM))
-                    {
                         me->CastSpell(me->GetVictim(), ARTORIUS_SPELL_DEMONIC_DOOM, false);
-                    }
                     events.RepeatEvent(urand(5000, 10000));
                     break;
                 case ARTORIUS_EVENT_DEMONIC_ENRAGE:
@@ -397,18 +348,18 @@ public:
         void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType, SpellSchoolMask) override
         {
             if (attacker == me)
-            {
                 me->LowerPlayerDamageReq(damage);
-            }
         }
 
         void SpellHit(Unit* /*Caster*/, SpellInfo const* Spell) override
         {
-            uint32 serpentStings[12] = { 1978, 13549, 13550, 13551, 13552, 13553, 13554, 13555, 25295, 27016, 49000, 49001 };
+            uint32 serpentStings[12] = {
+                1978, 13549, 13550, 13551, 13552, 13553, 13554, 13555, 25295, 27016, 49000, 49001};
 
             if (!InNormalForm())
             {
-                bool applyAura = std::find(std::begin(serpentStings), std::end(serpentStings), Spell->Id) != std::end(serpentStings);
+                bool applyAura =
+                    std::find(std::begin(serpentStings), std::end(serpentStings), Spell->Id) != std::end(serpentStings);
 
                 if (applyAura)
                 {
@@ -438,7 +389,8 @@ public:
 
     bool OnGossipHello(Player* player, Creature* creature) override
     {
-        if (player->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(ARTORIUS_HEAD, 1, true))
+        if (player->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS) == QUEST_STATUS_INCOMPLETE &&
+            !player->HasItemCount(ARTORIUS_HEAD, 1, true))
         {
             uint32 gossipMenuId = creature->GetCreatureTemplate()->GossipMenuId;
             AddGossipItemFor(player, gossipMenuId, GOSSIP_EVENT_START_OPTION_ID, GOSSIP_SENDER_MAIN, 0);
@@ -462,7 +414,7 @@ public:
 
     struct npc_preciousAI : public NPCStaveQuestAI
     {
-        npc_preciousAI(Creature *creature) : NPCStaveQuestAI(creature) { }
+        npc_preciousAI(Creature* creature) : NPCStaveQuestAI(creature) { }
 
         EventMap events;
         bool flaggedForDespawn;
@@ -526,7 +478,7 @@ public:
 
     struct npc_simoneAI : public NPCStaveQuestAI
     {
-        npc_simoneAI(Creature *creature) : NPCStaveQuestAI(creature) { }
+        npc_simoneAI(Creature* creature) : NPCStaveQuestAI(creature) { }
 
         EventMap events;
         ObjectGuid preciousGUID;
@@ -535,13 +487,12 @@ public:
         {
             if (CreatureGroup* formation = me->GetFormation())
             {
-                const CreatureGroup::CreatureGroupMemberType& members = formation->GetMembers();
-                for (CreatureGroup::CreatureGroupMemberType::const_iterator itr = members.begin(); itr != members.end(); ++itr)
+                CreatureGroup::CreatureGroupMemberType const& members = formation->GetMembers();
+                for (CreatureGroup::CreatureGroupMemberType::const_iterator itr = members.begin(); itr != members.end();
+                     ++itr)
                 {
                     if (itr->first && itr->first->GetOriginalEntry() == PRECIOUS_NORMAL_ENTRY)
-                    {
                         preciousGUID = itr->first->GetGUID();
-                    }
                 }
             }
         }
@@ -549,14 +500,10 @@ public:
         Creature* Precious()
         {
             if (preciousGUID.IsEmpty())
-            {
                 SetPreciousGUID();
-            }
 
             if (!preciousGUID.IsEmpty())
-            {
                 return ObjectAccessor::GetCreature(*me, preciousGUID);
-            }
 
             return nullptr;
         }
@@ -564,9 +511,7 @@ public:
         npc_precious::npc_preciousAI* PreciousAI()
         {
             if (Precious())
-            {
                 return CAST_AI(npc_precious::npc_preciousAI, Precious()->AI());
-            }
 
             return nullptr;
         }
@@ -584,9 +529,7 @@ public:
         void HandlePetRespawn()
         {
             if (Precious() && Precious()->isDead())
-            {
                 RespawnPet();
-            }
         }
 
         void JustRespawned() override
@@ -594,9 +537,7 @@ public:
             // Using Respawn() instead of HandlePetRespawn because we want to respawn pet in
             // normal entry form
             if (Precious())
-            {
                 Precious()->Respawn();
-            }
             Reset();
         }
 
@@ -605,9 +546,7 @@ public:
             NPCStaveQuestAI::JustDied(killer);
 
             if (!Precious())
-            {
                 return;
-            }
 
             if (Precious()->isDead())
             {
@@ -620,17 +559,13 @@ public:
             Position petResetPos = me->GetNearPosition(-5.0f, 0.0f);
 
             if (petResetPos.IsPositionValid())
-            {
                 Precious()->SetHomePosition(petResetPos);
-            }
         }
 
         void CorpseRemoved(uint32& /*respawnDelay*/) override
         {
             if (!Precious())
-            {
                 return;
-            }
 
             if (Precious()->IsInCombat())
             {
@@ -660,9 +595,7 @@ public:
             if (!InNormalForm())
             {
                 if (who && (UnitIsUnfair(who) || !QuestIncomplete(who, SIMONE_HEAD)))
-                {
                     me->CastSpell(who, SPELL_FOOLS_PLIGHT, true);
-                }
 
                 events.ScheduleEvent(EVENT_RANGE_CHECK, 1000);
                 events.ScheduleEvent(EVENT_UNFAIR_FIGHT, 1000);
@@ -692,26 +625,20 @@ public:
                     me->HandleEmoteCommand(EMOTE_ONESHOT_TALK);
                     me->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                     if (Precious())
-                    {
                         Precious()->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-                    }
                     events.ScheduleEvent(EVENT_REVEAL, 5000);
                     break;
                 case EVENT_REVEAL:
                     RevealForm();
                     if (PreciousAI())
-                    {
                         PreciousAI()->RevealForm();
-                    }
                     break;
                 // Prevent hunters from figthing Simone alone
                 case SIMONE_EVENT_CHECK_PET_STATE:
                     if (!me->IsInCombat() && !me->IsInEvadeMode())
                     {
                         if (Precious() && Precious()->isDead())
-                        {
                             HandlePetRespawn();
-                        }
 
                         events.ScheduleEvent(SIMONE_EVENT_CHECK_PET_STATE, 1000);
                     }
@@ -738,7 +665,8 @@ public:
             switch (eventId)
             {
                 case EVENT_FOOLS_PLIGHT:
-                    if (InNormalForm() || UnitIsUnfair(me->GetVictim()) || !QuestIncomplete(me->GetVictim(), SIMONE_HEAD))
+                    if (InNormalForm() || UnitIsUnfair(me->GetVictim()) ||
+                        !QuestIncomplete(me->GetVictim(), SIMONE_HEAD))
                     {
                         me->CastSpell(me->GetVictim(), SPELL_FOOLS_PLIGHT, true);
                     }
@@ -746,13 +674,9 @@ public:
                     break;
                 case EVENT_RANGE_CHECK:
                     if (!me->GetVictim()->IsWithinDist2d(me, 60.0f))
-                    {
                         EnterEvadeMode();
-                    }
                     else
-                    {
                         events.RepeatEvent(2000);
-                    }
                     break;
                 case EVENT_UNFAIR_FIGHT:
                     if (!ValidThreatlist() || (PreciousAI() && !PreciousAI()->ValidThreatlist()))
@@ -760,7 +684,8 @@ public:
                         SetHomePosition();
                         PreciousAI()->SetHomePosition();
 
-                        Precious()->SetUnitFlag(UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_ATTACKABLE_1);
+                        Precious()->SetUnitFlag(
+                            UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_ATTACKABLE_1);
                         Precious()->SetImmuneToAll(true);
                         me->SetUnitFlag(UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_ATTACKABLE_1);
                         me->SetImmuneToAll(true);
@@ -801,9 +726,7 @@ public:
         {
             PrepareForEncounter();
             if (PreciousAI())
-            {
                 PreciousAI()->PrepareForEncounter();
-            }
             gossipPlayerGUID = playerGUID;
             events.ScheduleEvent(EVENT_ENCOUNTER_START, 1000);
         }
@@ -813,16 +736,15 @@ public:
     {
         CloseGossipMenuFor(player);
         if (creature->AI() && CAST_AI(npc_simone::npc_simoneAI, creature->AI()))
-        {
             CAST_AI(npc_simone::npc_simoneAI, creature->AI())->ScheduleEncounterStart(player->GetGUID());
-        }
 
         return true;
     }
 
     bool OnGossipHello(Player* player, Creature* creature) override
     {
-        if (player->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(SIMONE_HEAD, 1, true))
+        if (player->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS) == QUEST_STATUS_INCOMPLETE &&
+            !player->HasItemCount(SIMONE_HEAD, 1, true))
         {
             uint32 gossipMenuId = creature->GetCreatureTemplate()->GossipMenuId;
             AddGossipItemFor(player, gossipMenuId, GOSSIP_EVENT_START_OPTION_ID, GOSSIP_SENDER_MAIN, 0);
@@ -846,7 +768,7 @@ public:
 
     struct npc_nelsonAI : public NPCStaveQuestAI
     {
-        npc_nelsonAI(Creature *creature) : NPCStaveQuestAI(creature) { }
+        npc_nelsonAI(Creature* creature) : NPCStaveQuestAI(creature) { }
 
         EventMap events;
         bool shouldDespawn;
@@ -854,17 +776,13 @@ public:
         void JustSummoned(Creature* summon) override
         {
             if (!summon)
-            {
                 return;
-            }
 
             // Workaround for increasing the Summoned Guardian damage by using the template modifier value
             summon->Unit::UpdateDamagePhysical(BASE_ATTACK);
 
             if (me->IsInCombat())
-            {
                 summon->AI()->AttackStart(me->GetVictim());
-            }
         }
 
         void SummonedCreatureDies(Creature* /*summon*/, Unit* killer) override
@@ -872,9 +790,7 @@ public:
             // This should trigger the despawn event when a another player or unit
             // kills a creeping doom unit
             if (UnitIsUnfair(killer))
-            {
                 shouldDespawn = true;
-            }
         }
 
         void Reset() override
@@ -892,19 +808,13 @@ public:
             me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
 
             if (InNormalForm())
-            {
                 return;
-            }
 
             if (encounterStarted)
-            {
                 me->CastSpell(me, NELSON_SPELL_SOUL_FLAME, true);
-            }
 
             if (who && (UnitIsUnfair(who) || !QuestIncomplete(who, NELSON_HEAD)))
-            {
                 me->CastSpell(who, SPELL_FOOLS_PLIGHT, true);
-            }
 
             events.ScheduleEvent(EVENT_FOOLS_PLIGHT, urand(2000, 3000));
             events.ScheduleEvent(EVENT_RANGE_CHECK, 1000);
@@ -953,20 +863,14 @@ public:
             {
                 case EVENT_FOOLS_PLIGHT:
                     if (UnitIsUnfair(me->GetVictim()) || !QuestIncomplete(me->GetVictim(), NELSON_HEAD))
-                    {
                         me->CastSpell(me->GetVictim(), SPELL_FOOLS_PLIGHT, true);
-                    }
                     events.RepeatEvent(urand(3000, 6000));
                     break;
                 case EVENT_RANGE_CHECK:
                     if (!me->GetVictim()->IsWithinDist2d(me, 60.0f))
-                    {
                         EnterEvadeMode();
-                    }
                     else
-                    {
                         events.RepeatEvent(2000);
-                    }
                     break;
                 case EVENT_UNFAIR_FIGHT:
                     if (!ValidThreatlist() || shouldDespawn)
@@ -999,14 +903,10 @@ public:
         void SpellHit(Unit* /*Caster*/, SpellInfo const* Spell) override
         {
             if (InNormalForm())
-            {
                 return;
-            }
 
             if (me->HasAura(NELSON_SPELL_SOUL_FLAME) && me->HasAura(NELSON_WEAKNESS_FROST_TRAP))
-            {
                 me->RemoveAura(NELSON_SPELL_SOUL_FLAME);
-            }
 
             if (!me->HasAura(NELSON_SPELL_CRIPPLING_CLIP) && Spell->Id == NELSON_WEAKNESS_WING_CLIP)
             {
@@ -1035,7 +935,8 @@ public:
 
     bool OnGossipHello(Player* player, Creature* creature) override
     {
-        if (player->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(NELSON_HEAD, 1, true))
+        if (player->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS) == QUEST_STATUS_INCOMPLETE &&
+            !player->HasItemCount(NELSON_HEAD, 1, true))
         {
             uint32 gossipMenuId = creature->GetCreatureTemplate()->GossipMenuId;
             AddGossipItemFor(player, gossipMenuId, GOSSIP_EVENT_START_OPTION_ID, GOSSIP_SENDER_MAIN, 0);
@@ -1059,7 +960,7 @@ public:
 
     struct npc_franklinAI : public NPCStaveQuestAI
     {
-        npc_franklinAI(Creature *creature) : NPCStaveQuestAI(creature) { }
+        npc_franklinAI(Creature* creature) : NPCStaveQuestAI(creature) { }
 
         EventMap events;
 
@@ -1077,9 +978,7 @@ public:
             if (!InNormalForm())
             {
                 if (who && (UnitIsUnfair(who) || !QuestIncomplete(who, FRANKLIN_HEAD)))
-                {
                     me->CastSpell(who, SPELL_FOOLS_PLIGHT, true);
-                }
 
                 events.ScheduleEvent(FRANKLIN_EVENT_DEMONIC_ENRAGE, urand(9000, 13000));
                 events.ScheduleEvent(EVENT_RANGE_CHECK, 1000);
@@ -1128,7 +1027,8 @@ public:
             switch (eventId)
             {
                 case EVENT_FOOLS_PLIGHT:
-                    if (InNormalForm() || UnitIsUnfair(me->GetVictim()) || !QuestIncomplete(me->GetVictim(), FRANKLIN_HEAD))
+                    if (InNormalForm() || UnitIsUnfair(me->GetVictim()) ||
+                        !QuestIncomplete(me->GetVictim(), FRANKLIN_HEAD))
                     {
                         me->CastSpell(me->GetVictim(), SPELL_FOOLS_PLIGHT, true);
                     }
@@ -1136,13 +1036,9 @@ public:
                     break;
                 case EVENT_RANGE_CHECK:
                     if (!me->GetVictim()->IsWithinDist2d(me, 60.0f))
-                    {
                         EnterEvadeMode();
-                    }
                     else
-                    {
                         events.RepeatEvent(2000);
-                    }
                     break;
                 case EVENT_UNFAIR_FIGHT:
                     if (!ValidThreatlist())
@@ -1171,22 +1067,16 @@ public:
         void SpellHit(Unit* /*Caster*/, SpellInfo const* Spell) override
         {
             if (InNormalForm())
-            {
                 return;
-            }
 
             if (Spell->Id == FRANKLIN_WEAKNESS_SCORPID_STING)
-            {
                 me->CastSpell(me, FRANKLIN_SPELL_ENTROPIC_STING, false);
-            }
         }
 
         void DamageTaken(Unit* attacker, uint32& damage, DamageEffectType, SpellSchoolMask) override
         {
             if (attacker == me)
-            {
                 me->LowerPlayerDamageReq(damage);
-            }
         }
 
         void ScheduleEncounterStart(ObjectGuid playerGUID)
@@ -1201,16 +1091,15 @@ public:
     {
         CloseGossipMenuFor(player);
         if (creature->AI() && CAST_AI(npc_franklin::npc_franklinAI, creature->AI()))
-        {
             CAST_AI(npc_franklin::npc_franklinAI, creature->AI())->ScheduleEncounterStart(player->GetGUID());
-        }
 
         return true;
     }
 
     bool OnGossipHello(Player* player, Creature* creature) override
     {
-        if (player->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS) == QUEST_STATUS_INCOMPLETE && !player->HasItemCount(FRANKLIN_HEAD, 1, true))
+        if (player->GetQuestStatus(QUEST_STAVE_OF_THE_ANCIENTS) == QUEST_STATUS_INCOMPLETE &&
+            !player->HasItemCount(FRANKLIN_HEAD, 1, true))
         {
             uint32 gossipMenuId = creature->GetCreatureTemplate()->GossipMenuId;
             AddGossipItemFor(player, gossipMenuId, GOSSIP_EVENT_START_OPTION_ID, GOSSIP_SENDER_MAIN, 0);

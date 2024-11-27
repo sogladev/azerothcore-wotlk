@@ -22,43 +22,42 @@
 
 enum Texts
 {
-    SAY_AGGRO                   = 0,
-    SAY_KILL                    = 1,
-    SAY_ADDS                    = 2,
-    SAY_DEATH                   = 3
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_ADDS = 2,
+    SAY_DEATH = 3
 };
 
 enum Spells
 {
     // General Zarithrian
-    SPELL_INTIMIDATING_ROAR     = 74384,
-    SPELL_CLEAVE_ARMOR          = 74367,
-    SPELL_SUMMON_FLAMECALLER    = 74398,
+    SPELL_INTIMIDATING_ROAR = 74384,
+    SPELL_CLEAVE_ARMOR = 74367,
+    SPELL_SUMMON_FLAMECALLER = 74398,
 
     // Onyx Flamecaller
-    SPELL_BLAST_NOVA            = 74392,
-    SPELL_LAVA_GOUT             = 74394
+    SPELL_BLAST_NOVA = 74392,
+    SPELL_LAVA_GOUT = 74394
 };
 
 enum Misc
 {
     // General Zarithrian
-    EVENT_CLEAVE                    = 1,
-    EVENT_INTIDMDATING_ROAR         = 2,
-    EVENT_SUMMON_ADDS1              = 3,
-    EVENT_SUMMON_ADDS2              = 4,
-    EVENT_KILL_TALK                 = 5,
+    EVENT_CLEAVE = 1,
+    EVENT_INTIDMDATING_ROAR = 2,
+    EVENT_SUMMON_ADDS1 = 3,
+    EVENT_SUMMON_ADDS2 = 4,
+    EVENT_KILL_TALK = 5,
 
     // Onyx Flamecaller
-    EVENT_BLAST_NOVA                = 6,
-    EVENT_LAVA_GOUT                 = 7,
+    EVENT_BLAST_NOVA = 6,
+    EVENT_LAVA_GOUT = 7,
 
-    MAX_PATH_FLAMECALLER_WAYPOINTS  = 12
+    MAX_PATH_FLAMECALLER_WAYPOINTS = 12
 };
 
 // East
-Position const FlamecallerWaypointsE[MAX_PATH_FLAMECALLER_WAYPOINTS] =
-{
+Position const FlamecallerWaypointsE[MAX_PATH_FLAMECALLER_WAYPOINTS] = {
     {3042.971f, 419.8809f, 86.94320f, 0.0f},
     {3043.971f, 419.8809f, 86.94320f, 0.0f},
     {3044.885f, 428.8281f, 86.19320f, 0.0f},
@@ -74,8 +73,7 @@ Position const FlamecallerWaypointsE[MAX_PATH_FLAMECALLER_WAYPOINTS] =
 };
 
 // West
-Position const FlamecallerWaypointsW[MAX_PATH_FLAMECALLER_WAYPOINTS] =
-{
+Position const FlamecallerWaypointsW[MAX_PATH_FLAMECALLER_WAYPOINTS] = {
     {3062.596f, 636.9980f, 82.50338f, 0.0f},
     {3062.514f, 624.9980f, 83.70634f, 0.0f},
     {3062.486f, 620.9980f, 84.33134f, 0.0f},
@@ -97,14 +95,13 @@ public:
 
     struct boss_general_zarithrianAI : public BossAI
     {
-        boss_general_zarithrianAI(Creature* creature) : BossAI(creature, DATA_GENERAL_ZARITHRIAN)
-        {
-        }
+        boss_general_zarithrianAI(Creature* creature) : BossAI(creature, DATA_GENERAL_ZARITHRIAN) { }
 
         void Reset() override
         {
             BossAI::Reset();
-            if (instance->GetBossState(DATA_SAVIANA_RAGEFIRE) == DONE && instance->GetBossState(DATA_BALTHARUS_THE_WARBORN) == DONE)
+            if (instance->GetBossState(DATA_SAVIANA_RAGEFIRE) == DONE &&
+                instance->GetBossState(DATA_BALTHARUS_THE_WARBORN) == DONE)
             {
                 me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
                 me->SetImmuneToPC(false);
@@ -134,7 +131,7 @@ public:
             Talk(SAY_DEATH);
         }
 
-        void KilledUnit(Unit*  /*victim*/) override
+        void KilledUnit(Unit* /*victim*/) override
         {
             if (events.GetNextEventTime(EVENT_KILL_TALK) == 0)
             {
@@ -156,16 +153,20 @@ public:
             {
                 case EVENT_SUMMON_ADDS1:
                     Talk(SAY_ADDS);
-                    if (Creature* stalker1 = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_ZARITHRIAN_SPAWN_STALKER_1)))
+                    if (Creature* stalker1 =
+                            ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_ZARITHRIAN_SPAWN_STALKER_1)))
                         stalker1->CastSpell(stalker1, SPELL_SUMMON_FLAMECALLER, false);
-                    if (Creature* stalker2 = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_ZARITHRIAN_SPAWN_STALKER_2)))
+                    if (Creature* stalker2 =
+                            ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_ZARITHRIAN_SPAWN_STALKER_2)))
                         stalker2->CastSpell(stalker2, SPELL_SUMMON_FLAMECALLER, false);
                     events.ScheduleEvent(EVENT_SUMMON_ADDS1, 40s);
                     break;
                 case EVENT_SUMMON_ADDS2:
-                    if (Creature* stalker1 = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_ZARITHRIAN_SPAWN_STALKER_1)))
+                    if (Creature* stalker1 =
+                            ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_ZARITHRIAN_SPAWN_STALKER_1)))
                         stalker1->CastSpell(stalker1, SPELL_SUMMON_FLAMECALLER, false);
-                    if (Creature* stalker2 = ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_ZARITHRIAN_SPAWN_STALKER_2)))
+                    if (Creature* stalker2 =
+                            ObjectAccessor::GetCreature(*me, instance->GetGuidData(DATA_ZARITHRIAN_SPAWN_STALKER_2)))
                         stalker2->CastSpell(stalker2, SPELL_SUMMON_FLAMECALLER, false);
                     events.ScheduleEvent(EVENT_SUMMON_ADDS2, 40s);
                     break;
@@ -241,15 +242,17 @@ public:
         void AddWaypoints()
         {
             if (me->GetPositionY() < 500.0f)
-            {
                 for (uint8 i = 0; i < MAX_PATH_FLAMECALLER_WAYPOINTS; i++)
-                    AddWaypoint(i + 1, FlamecallerWaypointsE[i].GetPositionX(), FlamecallerWaypointsE[i].GetPositionY(), FlamecallerWaypointsE[i].GetPositionZ());
-            }
+                    AddWaypoint(i + 1,
+                        FlamecallerWaypointsE[i].GetPositionX(),
+                        FlamecallerWaypointsE[i].GetPositionY(),
+                        FlamecallerWaypointsE[i].GetPositionZ());
             else
-            {
                 for (uint8 i = 0; i < MAX_PATH_FLAMECALLER_WAYPOINTS; i++)
-                    AddWaypoint(i + 1, FlamecallerWaypointsW[i].GetPositionX(), FlamecallerWaypointsW[i].GetPositionY(), FlamecallerWaypointsW[i].GetPositionZ());
-            }
+                    AddWaypoint(i + 1,
+                        FlamecallerWaypointsW[i].GetPositionX(),
+                        FlamecallerWaypointsW[i].GetPositionY(),
+                        FlamecallerWaypointsW[i].GetPositionZ());
         }
 
         void UpdateEscortAI(uint32 diff) override
@@ -282,6 +285,7 @@ public:
 
             DoMeleeAttackIfReady();
         }
+
     private:
         EventMap _events;
         InstanceScript* _instance;

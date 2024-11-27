@@ -18,55 +18,54 @@
 #include "AchievementCriteriaScript.h"
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "gundrak.h"
-#include "SpellScript.h"
 
 enum Spells
 {
-    SPELL_POISON_NOVA                           = 55081,
-    SPELL_POWERFULL_BITE                        = 48287,
-    SPELL_VENOM_BOLT                            = 54970,
+    SPELL_POISON_NOVA = 55081,
+    SPELL_POWERFULL_BITE = 48287,
+    SPELL_VENOM_BOLT = 54970,
 
-    SPELL_SNAKE_WRAP                            = 55126
+    SPELL_SNAKE_WRAP = 55126
 };
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_SLAY                                    = 1,
-    SAY_DEATH                                   = 2,
-    SAY_SUMMON_SNAKES                           = 3,
-    SAY_SUMMON_CONSTRICTORS                     = 4,
-    EMOTE_NOVA                                  = 5,
-    EMOTE_ALTAR                                 = 6
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_SUMMON_SNAKES = 3,
+    SAY_SUMMON_CONSTRICTORS = 4,
+    EMOTE_NOVA = 5,
+    EMOTE_ALTAR = 6
 };
 
 enum Misc
 {
-    NPC_SLADRAN_VIPER                           = 29680,
-    NPC_SLADRAN_CONSTRICTORS                    = 29713,
+    NPC_SLADRAN_VIPER = 29680,
+    NPC_SLADRAN_CONSTRICTORS = 29713,
 
-    MAX_VIPER                                   = 2,
-    MAX_CONSTRICTOR                             = 3,
-    MAX_SUMMONS                                 = 5,
+    MAX_VIPER = 2,
+    MAX_CONSTRICTOR = 3,
+    MAX_SUMMONS = 5,
 
-    EVENT_POISON_NOVA                           = 1,
-    EVENT_POWERFULL_BITE                        = 2,
-    EVENT_VENOM_BOLT                            = 3,
-    EVENT_CHECK_HEALTH1                         = 4,
-    EVENT_CHECK_HEALTH2                         = 5,
-    EVENT_SUMMON1                               = 6,
-    EVENT_SUMMON2                               = 7,
-    EVENT_KILL_TALK                             = 8
+    EVENT_POISON_NOVA = 1,
+    EVENT_POWERFULL_BITE = 2,
+    EVENT_VENOM_BOLT = 3,
+    EVENT_CHECK_HEALTH1 = 4,
+    EVENT_CHECK_HEALTH2 = 5,
+    EVENT_SUMMON1 = 6,
+    EVENT_SUMMON2 = 7,
+    EVENT_KILL_TALK = 8
 };
 
-const Position SpawnLoc[] =
-{
-    {1783.81f, 646.637f, 133.948f, 3.71755f},
-    {1775.03f, 606.586f, 134.165f, 1.43117f},
-    {1765.66f, 646.542f, 134.02f,  5.11381f},
-    {1717.39f, 630.041f, 129.282f, 5.96903f},
+Position const SpawnLoc[] = {
+    {1783.81f, 646.637f, 133.948f, 3.71755f },
+    {1775.03f, 606.586f, 134.165f, 1.43117f },
+    {1765.66f, 646.542f, 134.02f,  5.11381f },
+    {1717.39f, 630.041f, 129.282f, 5.96903f },
     {1716.76f, 635.159f, 129.282f, 0.191986f}
 };
 
@@ -82,9 +81,7 @@ public:
 
     struct boss_slad_ranAI : public BossAI
     {
-        boss_slad_ranAI(Creature* creature) : BossAI(creature, DATA_SLAD_RAN)
-        {
-        }
+        boss_slad_ranAI(Creature* creature) : BossAI(creature, DATA_SLAD_RAN) { }
 
         void Reset() override
         {
@@ -183,12 +180,16 @@ public:
                     break;
                 case EVENT_SUMMON1:
                     for (uint8 i = MAX_CONSTRICTOR; i < MAX_SUMMONS; ++i)
-                        me->SummonCreature(NPC_SLADRAN_VIPER, SpawnLoc[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20 * IN_MILLISECONDS);
+                        me->SummonCreature(
+                            NPC_SLADRAN_VIPER, SpawnLoc[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20 * IN_MILLISECONDS);
                     events.ScheduleEvent(EVENT_SUMMON1, 8s);
                     break;
                 case EVENT_SUMMON2:
                     for (uint8 i = 0; i < MAX_CONSTRICTOR; ++i)
-                        me->SummonCreature(NPC_SLADRAN_CONSTRICTORS, SpawnLoc[i], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20 * IN_MILLISECONDS);
+                        me->SummonCreature(NPC_SLADRAN_CONSTRICTORS,
+                            SpawnLoc[i],
+                            TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                            20 * IN_MILLISECONDS);
                     events.ScheduleEvent(EVENT_SUMMON2, 3s, 5s);
                     break;
             }
@@ -207,10 +208,10 @@ class spell_sladran_grip_of_sladran_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SNAKE_WRAP });
+        return ValidateSpellInfo({SPELL_SNAKE_WRAP});
     }
 
-    void HandlePeriodic(AuraEffect const*  /*aurEff*/)
+    void HandlePeriodic(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction();
         if (GetStackAmount() >= 5)
@@ -222,16 +223,17 @@ class spell_sladran_grip_of_sladran_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_sladran_grip_of_sladran_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_sladran_grip_of_sladran_aura::HandlePeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
 class achievement_snakes_whyd_it_have_to_be_snakes : public AchievementCriteriaScript
 {
 public:
-    achievement_snakes_whyd_it_have_to_be_snakes() : AchievementCriteriaScript("achievement_snakes_whyd_it_have_to_be_snakes")
-    {
-    }
+    achievement_snakes_whyd_it_have_to_be_snakes() :
+        AchievementCriteriaScript("achievement_snakes_whyd_it_have_to_be_snakes")
+    { }
 
     bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {

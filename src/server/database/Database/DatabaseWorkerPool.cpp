@@ -51,8 +51,7 @@ class PingOperation : public SQLOperation
     }
 };
 
-template <class T>
-DatabaseWorkerPool<T>::DatabaseWorkerPool() :
+template <class T> DatabaseWorkerPool<T>::DatabaseWorkerPool() :
     _queue(new ProducerConsumerQueue<SQLOperation*>()),
     _async_threads(0),
     _synch_threads(0)
@@ -62,20 +61,25 @@ DatabaseWorkerPool<T>::DatabaseWorkerPool() :
     bool isSupportClientDB = mysql_get_client_version() >= MIN_MYSQL_CLIENT_VERSION;
     bool isSameClientDB = mysql_get_client_version() == MYSQL_VERSION_ID;
 
-    WPFatal(isSupportClientDB, "AzerothCore does not support MySQL versions below 8.0\n\nFound version: {} / {}. Server compiled with: {}.\nSearch the wiki for ACE00043 in Common Errors (https://www.azerothcore.org/wiki/common-errors#ace00043).",
-        mysql_get_client_info(), mysql_get_client_version(), MYSQL_VERSION_ID);
-    WPFatal(isSameClientDB, "Used MySQL library version ({} id {}) does not match the version id used to compile AzerothCore (id {}).\nSearch the wiki for ACE00046 in Common Errors (https://www.azerothcore.org/wiki/common-errors#ace00046).",
-        mysql_get_client_info(), mysql_get_client_version(), MYSQL_VERSION_ID);
+    WPFatal(isSupportClientDB,
+        "AzerothCore does not support MySQL versions below 8.0\n\nFound version: {} / {}. Server compiled with: {}.\nSearch the wiki for ACE00043 in Common Errors (https://www.azerothcore.org/wiki/common-errors#ace00043).",
+        mysql_get_client_info(),
+        mysql_get_client_version(),
+        MYSQL_VERSION_ID);
+    WPFatal(isSameClientDB,
+        "Used MySQL library version ({} id {}) does not match the version id used to compile AzerothCore (id {}).\nSearch the wiki for ACE00046 in Common Errors (https://www.azerothcore.org/wiki/common-errors#ace00046).",
+        mysql_get_client_info(),
+        mysql_get_client_version(),
+        MYSQL_VERSION_ID);
 }
 
-template <class T>
-DatabaseWorkerPool<T>::~DatabaseWorkerPool()
+template <class T> DatabaseWorkerPool<T>::~DatabaseWorkerPool()
 {
     _queue->Cancel();
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::SetConnectionInfo(std::string_view infoString, uint8 const asyncThreads, uint8 const synchThreads)
+template <class T> void DatabaseWorkerPool<T>::SetConnectionInfo(
+    std::string_view infoString, uint8 const asyncThreads, uint8 const synchThreads)
 {
     _connectionInfo = std::make_unique<MySQLConnectionInfo>(infoString);
 
@@ -83,13 +87,15 @@ void DatabaseWorkerPool<T>::SetConnectionInfo(std::string_view infoString, uint8
     _synch_threads = synchThreads;
 }
 
-template <class T>
-uint32 DatabaseWorkerPool<T>::Open()
+template <class T> uint32 DatabaseWorkerPool<T>::Open()
 {
     WPFatal(_connectionInfo.get(), "Connection info was not set!");
 
-    LOG_INFO("sql.driver", "Opening DatabasePool '{}'. Asynchronous connections: {}, synchronous connections: {}.",
-        GetDatabaseName(), _async_threads, _synch_threads);
+    LOG_INFO("sql.driver",
+        "Opening DatabasePool '{}'. Asynchronous connections: {}, synchronous connections: {}.",
+        GetDatabaseName(),
+        _async_threads,
+        _synch_threads);
 
     uint32 error = OpenConnections(IDX_ASYNC, _async_threads);
 
@@ -100,8 +106,10 @@ uint32 DatabaseWorkerPool<T>::Open()
 
     if (!error)
     {
-        LOG_INFO("sql.driver", "DatabasePool '{}' opened successfully. {} total connections running.",
-            GetDatabaseName(), (_connections[IDX_SYNCH].size() + _connections[IDX_ASYNC].size()));
+        LOG_INFO("sql.driver",
+            "DatabasePool '{}' opened successfully. {} total connections running.",
+            GetDatabaseName(),
+            (_connections[IDX_SYNCH].size() + _connections[IDX_ASYNC].size()));
     }
 
     LOG_INFO("sql.driver", " ");
@@ -109,15 +117,15 @@ uint32 DatabaseWorkerPool<T>::Open()
     return error;
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::Close()
+template <class T> void DatabaseWorkerPool<T>::Close()
 {
     LOG_INFO("sql.driver", "Closing down DatabasePool '{}'.", GetDatabaseName());
 
     //! Closes the actualy MySQL connection.
     _connections[IDX_ASYNC].clear();
 
-    LOG_INFO("sql.driver", "Asynchronous connections on DatabasePool '{}' terminated. Proceeding with synchronous connections.",
+    LOG_INFO("sql.driver",
+        "Asynchronous connections on DatabasePool '{}' terminated. Proceeding with synchronous connections.",
         GetDatabaseName());
 
     //! Shut down the synchronous connections
@@ -129,8 +137,7 @@ void DatabaseWorkerPool<T>::Close()
     LOG_INFO("sql.driver", "All connections on DatabasePool '{}' closed.", GetDatabaseName());
 }
 
-template <class T>
-bool DatabaseWorkerPool<T>::PrepareStatements()
+template <class T> bool DatabaseWorkerPool<T>::PrepareStatements()
 {
     for (auto const& connections : _connections)
     {
@@ -173,8 +180,7 @@ bool DatabaseWorkerPool<T>::PrepareStatements()
     return true;
 }
 
-template <class T>
-QueryResult DatabaseWorkerPool<T>::Query(std::string_view sql)
+template <class T> QueryResult DatabaseWorkerPool<T>::Query(std::string_view sql)
 {
     auto connection = GetFreeConnection();
 
@@ -190,8 +196,7 @@ QueryResult DatabaseWorkerPool<T>::Query(std::string_view sql)
     return QueryResult(result);
 }
 
-template <class T>
-PreparedQueryResult DatabaseWorkerPool<T>::Query(PreparedStatement<T>* stmt)
+template <class T> PreparedQueryResult DatabaseWorkerPool<T>::Query(PreparedStatement<T>* stmt)
 {
     auto connection = GetFreeConnection();
     PreparedResultSet* ret = connection->Query(stmt);
@@ -209,8 +214,7 @@ PreparedQueryResult DatabaseWorkerPool<T>::Query(PreparedStatement<T>* stmt)
     return PreparedQueryResult(ret);
 }
 
-template <class T>
-QueryCallback DatabaseWorkerPool<T>::AsyncQuery(std::string_view sql)
+template <class T> QueryCallback DatabaseWorkerPool<T>::AsyncQuery(std::string_view sql)
 {
     BasicStatementTask* task = new BasicStatementTask(sql, true);
     // Store future result before enqueueing - task might get already processed and deleted before returning from this method
@@ -219,8 +223,7 @@ QueryCallback DatabaseWorkerPool<T>::AsyncQuery(std::string_view sql)
     return QueryCallback(std::move(result));
 }
 
-template <class T>
-QueryCallback DatabaseWorkerPool<T>::AsyncQuery(PreparedStatement<T>* stmt)
+template <class T> QueryCallback DatabaseWorkerPool<T>::AsyncQuery(PreparedStatement<T>* stmt)
 {
     PreparedStatementTask* task = new PreparedStatementTask(stmt, true);
     // Store future result before enqueueing - task might get already processed and deleted before returning from this method
@@ -236,17 +239,15 @@ SQLQueryHolderCallback DatabaseWorkerPool<T>::DelayQueryHolder(std::shared_ptr<S
     // Store future result before enqueueing - task might get already processed and deleted before returning from this method
     QueryResultHolderFuture result = task->GetFuture();
     Enqueue(task);
-    return { std::move(holder), std::move(result) };
+    return {std::move(holder), std::move(result)};
 }
 
-template <class T>
-SQLTransaction<T> DatabaseWorkerPool<T>::BeginTransaction()
+template <class T> SQLTransaction<T> DatabaseWorkerPool<T>::BeginTransaction()
 {
     return std::make_shared<Transaction<T>>();
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::CommitTransaction(SQLTransaction<T> transaction)
+template <class T> void DatabaseWorkerPool<T>::CommitTransaction(SQLTransaction<T> transaction)
 {
 #ifdef ACORE_DEBUG
     //! Only analyze transaction weaknesses in Debug mode.
@@ -254,22 +255,22 @@ void DatabaseWorkerPool<T>::CommitTransaction(SQLTransaction<T> transaction)
     //! so there's no need to waste these CPU cycles in Release mode.
     switch (transaction->GetSize())
     {
-    case 0:
-        LOG_DEBUG("sql.driver", "Transaction contains 0 queries. Not executing.");
-        return;
-    case 1:
-        LOG_DEBUG("sql.driver", "Warning: Transaction only holds 1 query, consider removing Transaction context in code.");
-        break;
-    default:
-        break;
+        case 0:
+            LOG_DEBUG("sql.driver", "Transaction contains 0 queries. Not executing.");
+            return;
+        case 1:
+            LOG_DEBUG("sql.driver",
+                "Warning: Transaction only holds 1 query, consider removing Transaction context in code.");
+            break;
+        default:
+            break;
     }
 #endif // ACORE_DEBUG
 
     Enqueue(new TransactionTask(transaction));
 }
 
-template <class T>
-TransactionCallback DatabaseWorkerPool<T>::AsyncCommitTransaction(SQLTransaction<T> transaction)
+template <class T> TransactionCallback DatabaseWorkerPool<T>::AsyncCommitTransaction(SQLTransaction<T> transaction)
 {
 #ifdef ACORE_DEBUG
     //! Only analyze transaction weaknesses in Debug mode.
@@ -281,7 +282,8 @@ TransactionCallback DatabaseWorkerPool<T>::AsyncCommitTransaction(SQLTransaction
             LOG_DEBUG("sql.driver", "Transaction contains 0 queries. Not executing.");
             break;
         case 1:
-            LOG_DEBUG("sql.driver", "Warning: Transaction only holds 1 query, consider removing Transaction context in code.");
+            LOG_DEBUG("sql.driver",
+                "Warning: Transaction only holds 1 query, consider removing Transaction context in code.");
             break;
         default:
             break;
@@ -294,15 +296,14 @@ TransactionCallback DatabaseWorkerPool<T>::AsyncCommitTransaction(SQLTransaction
     return TransactionCallback(std::move(result));
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::DirectCommitTransaction(SQLTransaction<T>& transaction)
+template <class T> void DatabaseWorkerPool<T>::DirectCommitTransaction(SQLTransaction<T>& transaction)
 {
     T* connection = GetFreeConnection();
     int errorCode = connection->ExecuteTransaction(transaction);
 
     if (!errorCode)
     {
-        connection->Unlock();      // OK, operation succesful
+        connection->Unlock(); // OK, operation succesful
         return;
     }
 
@@ -314,10 +315,8 @@ void DatabaseWorkerPool<T>::DirectCommitTransaction(SQLTransaction<T>& transacti
         uint8 loopBreaker = 5;
 
         for (uint8 i = 0; i < loopBreaker; ++i)
-        {
             if (!connection->ExecuteTransaction(transaction))
                 break;
-        }
     }
 
     //! Clean up now.
@@ -326,14 +325,12 @@ void DatabaseWorkerPool<T>::DirectCommitTransaction(SQLTransaction<T>& transacti
     connection->Unlock();
 }
 
-template <class T>
-PreparedStatement<T>* DatabaseWorkerPool<T>::GetPreparedStatement(PreparedStatementIndex index)
+template <class T> PreparedStatement<T>* DatabaseWorkerPool<T>::GetPreparedStatement(PreparedStatementIndex index)
 {
     return new PreparedStatement<T>(index, _preparedStatementSize[index]);
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::EscapeString(std::string& str)
+template <class T> void DatabaseWorkerPool<T>::EscapeString(std::string& str)
 {
     if (str.empty())
         return;
@@ -344,8 +341,7 @@ void DatabaseWorkerPool<T>::EscapeString(std::string& str)
     delete[] buf;
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::KeepAlive()
+template <class T> void DatabaseWorkerPool<T>::KeepAlive()
 {
     //! Ping synchronous connections
     for (auto& connection : _connections[IDX_SYNCH])
@@ -406,12 +402,11 @@ bool DatabaseIncompatibleVersion(std::string const mysqlVersion)
     auto parsedMySQLVersion = parse(mysqlVersion.substr(offset));
     auto parsedMinVersion = parse(minVersion);
 
-    return std::lexicographical_compare(parsedMySQLVersion.begin(), parsedMySQLVersion.end(),
-                                        parsedMinVersion.begin(), parsedMinVersion.end());
+    return std::lexicographical_compare(
+        parsedMySQLVersion.begin(), parsedMySQLVersion.end(), parsedMinVersion.begin(), parsedMinVersion.end());
 }
 
-template <class T>
-uint32 DatabaseWorkerPool<T>::OpenConnections(InternalIndex type, uint8 numConnections)
+template <class T> uint32 DatabaseWorkerPool<T>::OpenConnections(InternalIndex type, uint8 numConnections)
 {
     for (uint8 i = 0; i < numConnections; ++i)
     {
@@ -420,12 +415,12 @@ uint32 DatabaseWorkerPool<T>::OpenConnections(InternalIndex type, uint8 numConne
         {
             switch (type)
             {
-            case IDX_ASYNC:
-                return std::make_unique<T>(_queue.get(), *_connectionInfo);
-            case IDX_SYNCH:
-                return std::make_unique<T>(*_connectionInfo);
-            default:
-                ABORT();
+                case IDX_ASYNC:
+                    return std::make_unique<T>(_queue.get(), *_connectionInfo);
+                case IDX_SYNCH:
+                    return std::make_unique<T>(*_connectionInfo);
+                default:
+                    ABORT();
             }
         }();
 
@@ -437,8 +432,10 @@ uint32 DatabaseWorkerPool<T>::OpenConnections(InternalIndex type, uint8 numConne
         }
         else if (DatabaseIncompatibleVersion(connection->GetServerInfo()))
         {
-            LOG_ERROR("sql.driver", "AzerothCore does not support MySQL versions below 8.0\n\nFound server version: {}. Server compiled with: {}.",
-                connection->GetServerInfo(), MYSQL_VERSION_ID);
+            LOG_ERROR("sql.driver",
+                "AzerothCore does not support MySQL versions below 8.0\n\nFound server version: {}. Server compiled with: {}.",
+                connection->GetServerInfo(),
+                MYSQL_VERSION_ID);
             return 1;
         }
         else
@@ -451,8 +448,7 @@ uint32 DatabaseWorkerPool<T>::OpenConnections(InternalIndex type, uint8 numConne
     return 0;
 }
 
-template <class T>
-unsigned long DatabaseWorkerPool<T>::EscapeString(char* to, char const* from, unsigned long length)
+template <class T> unsigned long DatabaseWorkerPool<T>::EscapeString(char* to, char const* from, unsigned long length)
 {
     if (!to || !from || !length)
         return 0;
@@ -460,20 +456,17 @@ unsigned long DatabaseWorkerPool<T>::EscapeString(char* to, char const* from, un
     return _connections[IDX_SYNCH].front()->EscapeString(to, from, length);
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::Enqueue(SQLOperation* op)
+template <class T> void DatabaseWorkerPool<T>::Enqueue(SQLOperation* op)
 {
     _queue->Push(op);
 }
 
-template <class T>
-std::size_t DatabaseWorkerPool<T>::QueueSize() const
+template <class T> std::size_t DatabaseWorkerPool<T>::QueueSize() const
 {
     return _queue->Size();
 }
 
-template <class T>
-T* DatabaseWorkerPool<T>::GetFreeConnection()
+template <class T> T* DatabaseWorkerPool<T>::GetFreeConnection()
 {
 #ifdef ACORE_DEBUG
     if (_warnSyncQueries)
@@ -500,14 +493,12 @@ T* DatabaseWorkerPool<T>::GetFreeConnection()
     return connection;
 }
 
-template <class T>
-std::string_view DatabaseWorkerPool<T>::GetDatabaseName() const
+template <class T> std::string_view DatabaseWorkerPool<T>::GetDatabaseName() const
 {
-    return std::string_view{ _connectionInfo->database };
+    return std::string_view {_connectionInfo->database};
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::Execute(std::string_view sql)
+template <class T> void DatabaseWorkerPool<T>::Execute(std::string_view sql)
 {
     if (sql.empty())
         return;
@@ -516,15 +507,13 @@ void DatabaseWorkerPool<T>::Execute(std::string_view sql)
     Enqueue(task);
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::Execute(PreparedStatement<T>* stmt)
+template <class T> void DatabaseWorkerPool<T>::Execute(PreparedStatement<T>* stmt)
 {
     PreparedStatementTask* task = new PreparedStatementTask(stmt);
     Enqueue(task);
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::DirectExecute(std::string_view sql)
+template <class T> void DatabaseWorkerPool<T>::DirectExecute(std::string_view sql)
 {
     if (sql.empty())
         return;
@@ -534,8 +523,7 @@ void DatabaseWorkerPool<T>::DirectExecute(std::string_view sql)
     connection->Unlock();
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::DirectExecute(PreparedStatement<T>* stmt)
+template <class T> void DatabaseWorkerPool<T>::DirectExecute(PreparedStatement<T>* stmt)
 {
     T* connection = GetFreeConnection();
     connection->Execute(stmt);
@@ -545,8 +533,7 @@ void DatabaseWorkerPool<T>::DirectExecute(PreparedStatement<T>* stmt)
     delete stmt;
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::ExecuteOrAppend(SQLTransaction<T>& trans, std::string_view sql)
+template <class T> void DatabaseWorkerPool<T>::ExecuteOrAppend(SQLTransaction<T>& trans, std::string_view sql)
 {
     if (!trans)
         Execute(sql);
@@ -554,8 +541,7 @@ void DatabaseWorkerPool<T>::ExecuteOrAppend(SQLTransaction<T>& trans, std::strin
         trans->Append(sql);
 }
 
-template <class T>
-void DatabaseWorkerPool<T>::ExecuteOrAppend(SQLTransaction<T>& trans, PreparedStatement<T>* stmt)
+template <class T> void DatabaseWorkerPool<T>::ExecuteOrAppend(SQLTransaction<T>& trans, PreparedStatement<T>* stmt)
 {
     if (!trans)
         Execute(stmt);

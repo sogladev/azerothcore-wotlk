@@ -28,20 +28,20 @@ EndScriptData */
 
 enum Spells
 {
-    SPELL_VANISH            = 24699,
-    SPELL_AMBUSH            = 24337,
-    SPELL_GOUGE             = 24698,
-    SPELL_THOUSAND_BLADES   = 24649,
-    SPELL_THRASH            = 3417,
-    SPELL_ENRAGE            = 8269
+    SPELL_VANISH = 24699,
+    SPELL_AMBUSH = 24337,
+    SPELL_GOUGE = 24698,
+    SPELL_THOUSAND_BLADES = 24649,
+    SPELL_THRASH = 3417,
+    SPELL_ENRAGE = 8269
 };
 
 enum Events
 {
-    EVENT_VANISH            = 1,
-    EVENT_AMBUSH            = 2,
-    EVENT_GOUGE             = 3,
-    EVENT_THOUSAND_BLADES   = 4
+    EVENT_VANISH = 1,
+    EVENT_AMBUSH = 2,
+    EVENT_GOUGE = 3,
+    EVENT_THOUSAND_BLADES = 4
 };
 
 class boss_renataki : public CreatureScript
@@ -87,14 +87,13 @@ public:
         {
             if (me->GetThreatMgr().GetThreatListSize() > 1)
             {
-                ThreatContainer::StorageType::const_iterator lastRef = me->GetThreatMgr().GetOnlineContainer().GetThreatList().end();
+                ThreatContainer::StorageType::const_iterator lastRef =
+                    me->GetThreatMgr().GetOnlineContainer().GetThreatList().end();
                 --lastRef;
                 if (Unit* lastTarget = (*lastRef)->getTarget())
                 {
                     if (lastTarget != target)
-                    {
                         return !target->HasAura(SPELL_GOUGE);
-                    }
                 }
             }
 
@@ -109,9 +108,7 @@ public:
         bool CanSeeAlways(WorldObject const* obj) override
         {
             if (me->GetReactState() == REACT_PASSIVE)
-            {
                 return obj->ToCreature() && obj->ToCreature()->IsPet();
-            }
 
             return false;
         }
@@ -119,9 +116,7 @@ public:
         bool CanAlwaysBeDetectable(WorldObject const* seer) override
         {
             if (me->GetReactState() == REACT_PASSIVE)
-            {
                 return seer->ToCreature() && seer->ToCreature()->IsPet();
-            }
 
             return false;
         }
@@ -152,7 +147,10 @@ public:
                     case EVENT_AMBUSH:
                         if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1))
                         {
-                            me->NearTeleportTo(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), me->GetOrientation());
+                            me->NearTeleportTo(target->GetPositionX(),
+                                target->GetPositionY(),
+                                target->GetPositionZ(),
+                                me->GetOrientation());
                             DoCast(target, SPELL_AMBUSH, true);
                         }
                         me->SetDynamicFlag(_dynamicFlags);
@@ -169,14 +167,14 @@ public:
                         {
                             std::vector<Unit*> targetList;
                             ThreatContainer::StorageType const& threatlist = me->GetThreatMgr().GetThreatList();
-                            for (ThreatContainer::StorageType::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+                            for (ThreatContainer::StorageType::const_iterator itr = threatlist.begin();
+                                 itr != threatlist.end();
+                                 ++itr)
                             {
                                 if (Unit* target = (*itr)->getTarget())
                                 {
                                     if (target->IsAlive() && target->IsWithinDist2d(me, 100.f))
-                                    {
                                         targetList.push_back(target);
-                                    }
                                 }
                             }
 
@@ -186,29 +184,19 @@ public:
 
                                 // First get ranged targets
                                 for (Unit* target : targetList)
-                                {
                                     if (!target->IsWithinMeleeRange(me))
-                                    {
                                         _thousandBladesTargets.push_back(target->GetGUID());
-                                    }
-                                }
 
                                 if (_thousandBladesTargets.size() < _thousandBladesCount)
                                 {
                                     // if still not enough, get melee targets
                                     for (Unit* target : targetList)
-                                    {
                                         if (target->IsWithinMeleeRange(me))
-                                        {
                                             _thousandBladesTargets.push_back(target->GetGUID());
-                                        }
-                                    }
                                 }
 
                                 if (!_thousandBladesTargets.empty())
-                                {
                                     Acore::Containers::RandomResize(_thousandBladesTargets, _thousandBladesCount);
-                                }
                             }
                         }
 
@@ -218,9 +206,7 @@ public:
                             std::advance(itr, urand(0, _thousandBladesTargets.size() - 1));
 
                             if (Unit* target = ObjectAccessor::GetUnit(*me, *itr))
-                            {
                                 DoCast(target, SPELL_THOUSAND_BLADES);
-                            }
 
                             if (_thousandBladesTargets.erase(itr) != _thousandBladesTargets.end())
                             {

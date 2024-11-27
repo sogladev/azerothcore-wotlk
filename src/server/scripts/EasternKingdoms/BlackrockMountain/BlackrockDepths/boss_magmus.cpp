@@ -21,8 +21,8 @@
 
 enum Spells
 {
-    SPELL_FIERYBURST                                       = 13900,
-    SPELL_WARSTOMP                                         = 24375
+    SPELL_FIERYBURST = 13900,
+    SPELL_WARSTOMP = 24375
 };
 
 class boss_magmus : public CreatureScript
@@ -37,7 +37,7 @@ public:
 
     struct boss_magmusAI : public BossAI
     {
-        boss_magmusAI(Creature* creature) : BossAI(creature, TYPE_IRON_HALL) {}
+        boss_magmusAI(Creature* creature) : BossAI(creature, TYPE_IRON_HALL) { }
 
         void Reset() override
         {
@@ -57,25 +57,23 @@ public:
         {
             //Return since we have no target
             if (!UpdateVictim())
-            {
                 return;
-            }
             events.Update(diff);
 
             while (uint32 eventId = events.ExecuteEvent())
             {
                 switch (eventId)
                 {
-                case SPELL_WARSTOMP:
-                    DoCastVictim(SPELL_WARSTOMP);
-                    events.ScheduleEvent(SPELL_WARSTOMP, 8s, 12s);
-                    break;
-                case SPELL_FIERYBURST:
-                    DoCastVictim(SPELL_FIERYBURST);
-                    events.ScheduleEvent(SPELL_FIERYBURST, 4s, 8s);
-                    break;
-                default:
-                    break;
+                    case SPELL_WARSTOMP:
+                        DoCastVictim(SPELL_WARSTOMP);
+                        events.ScheduleEvent(SPELL_WARSTOMP, 8s, 12s);
+                        break;
+                    case SPELL_FIERYBURST:
+                        DoCastVictim(SPELL_FIERYBURST);
+                        events.ScheduleEvent(SPELL_FIERYBURST, 4s, 8s);
+                        break;
+                    default:
+                        break;
                 }
             }
 

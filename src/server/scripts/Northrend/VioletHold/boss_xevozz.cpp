@@ -21,27 +21,27 @@
 
 enum Yells
 {
-    SAY_AGGRO                                   = 0,
-    SAY_SLAY                                    = 1,
-    SAY_DEATH                                   = 2,
-    SAY_SPAWN                                   = 3,
-    SAY_CHARGED                                 = 4,
-    SAY_REPEAT_SUMMON                           = 5,
-    SAY_SUMMON_ENERGY                           = 6
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_SPAWN = 3,
+    SAY_CHARGED = 4,
+    SAY_REPEAT_SUMMON = 5,
+    SAY_SUMMON_ENERGY = 6
 };
 
 enum eSpells
 {
-    SPELL_ARCANE_BARRAGE_VOLLEY_N               = 54202,
-    SPELL_ARCANE_BARRAGE_VOLLEY_H               = 59483,
-    SPELL_ARCANE_BUFFET_N                       = 54226,
-    SPELL_ARCANE_BUFFET_H                       = 59485,
-    SPELL_SUMMON_ETHEREAL_SPHERE_1              = 54102,
-    SPELL_SUMMON_ETHEREAL_SPHERE_2              = 54137,
-    SPELL_SUMMON_ETHEREAL_SPHERE_3              = 54138,
+    SPELL_ARCANE_BARRAGE_VOLLEY_N = 54202,
+    SPELL_ARCANE_BARRAGE_VOLLEY_H = 59483,
+    SPELL_ARCANE_BUFFET_N = 54226,
+    SPELL_ARCANE_BUFFET_H = 59485,
+    SPELL_SUMMON_ETHEREAL_SPHERE_1 = 54102,
+    SPELL_SUMMON_ETHEREAL_SPHERE_2 = 54137,
+    SPELL_SUMMON_ETHEREAL_SPHERE_3 = 54138,
 
-    SPELL_ARCANE_POWER_N                        = 54160,
-    SPELL_ARCANE_POWER_H                        = 59474,
+    SPELL_ARCANE_POWER_N = 54160,
+    SPELL_ARCANE_POWER_H = 59474,
     //SPELL_SUMMON_PLAYERS                      = 54164, // not used
     //SPELL_POWER_BALL_VISUAL                   = 54141,
 };
@@ -116,45 +116,50 @@ public:
                     me->CastSpell(me->GetVictim(), SPELL_ARCANE_BUFFET, false);
                     break;
                 case EVENT_SUMMON_SPHERES:
+                {
+                    Talk(SAY_SUMMON_ENERGY);
+                    spheres.DespawnAll();
+                    uint32 entry1 = RAND(
+                        SPELL_SUMMON_ETHEREAL_SPHERE_1, SPELL_SUMMON_ETHEREAL_SPHERE_2, SPELL_SUMMON_ETHEREAL_SPHERE_3);
+                    me->CastSpell((Unit*)nullptr, entry1, true);
+                    if (IsHeroic())
                     {
-                        Talk(SAY_SUMMON_ENERGY);
-                        spheres.DespawnAll();
-                        uint32 entry1 = RAND(SPELL_SUMMON_ETHEREAL_SPHERE_1, SPELL_SUMMON_ETHEREAL_SPHERE_2, SPELL_SUMMON_ETHEREAL_SPHERE_3);
-                        me->CastSpell((Unit*)nullptr, entry1, true);
-                        if (IsHeroic())
+                        uint32 entry2;
+                        do
                         {
-                            uint32 entry2;
-                            do { entry2 = RAND(SPELL_SUMMON_ETHEREAL_SPHERE_1, SPELL_SUMMON_ETHEREAL_SPHERE_2, SPELL_SUMMON_ETHEREAL_SPHERE_3); }
-                            while (entry1 == entry2);
-                            me->CastSpell((Unit*)nullptr, entry2, true);
-                        }
-                        events.RepeatEvent(45000);
-                        events.RescheduleEvent(EVENT_SPELL_ARCANE_BUFFET, 5s);
-                        events.RescheduleEvent(EVENT_CHECK_DISTANCE, 6s);
+                            entry2 = RAND(SPELL_SUMMON_ETHEREAL_SPHERE_1,
+                                SPELL_SUMMON_ETHEREAL_SPHERE_2,
+                                SPELL_SUMMON_ETHEREAL_SPHERE_3);
+                        } while (entry1 == entry2);
+                        me->CastSpell((Unit*)nullptr, entry2, true);
                     }
-                    break;
+                    events.RepeatEvent(45000);
+                    events.RescheduleEvent(EVENT_SPELL_ARCANE_BUFFET, 5s);
+                    events.RescheduleEvent(EVENT_CHECK_DISTANCE, 6s);
+                }
+                break;
                 case EVENT_CHECK_DISTANCE:
+                {
+                    bool found = false;
+                    if (pInstance)
+                        for (ObjectGuid const& guid : spheres)
+                            if (Creature* c = pInstance->instance->GetCreature(guid))
+                                if (me->GetDistance(c) < 3.0f)
+                                {
+                                    c->CastSpell(me, SPELL_ARCANE_POWER, false);
+                                    c->DespawnOrUnsummon(8000);
+                                    found = true;
+                                }
+                    if (found)
                     {
-                        bool found = false;
-                        if (pInstance)
-                            for (ObjectGuid const& guid : spheres)
-                                if (Creature* c = pInstance->instance->GetCreature(guid))
-                                    if (me->GetDistance(c) < 3.0f)
-                                    {
-                                        c->CastSpell(me, SPELL_ARCANE_POWER, false);
-                                        c->DespawnOrUnsummon(8000);
-                                        found = true;
-                                    }
-                        if (found)
-                        {
-                            Talk(SAY_CHARGED);
-                            events.Repeat(9s);
-                            events.RescheduleEvent(EVENT_SUMMON_SPHERES, 10s);
-                        }
-                        else
-                            events.Repeat(2s);
+                        Talk(SAY_CHARGED);
+                        events.Repeat(9s);
+                        events.RescheduleEvent(EVENT_SUMMON_SPHERES, 10s);
                     }
-                    break;
+                    else
+                        events.Repeat(2s);
+                }
+                break;
             }
 
             DoMeleeAttackIfReady();
@@ -198,7 +203,7 @@ public:
             Talk(SAY_SLAY);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void EnterEvadeMode(EvadeReason why) override
         {

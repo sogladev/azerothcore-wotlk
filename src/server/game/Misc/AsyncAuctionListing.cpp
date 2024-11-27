@@ -27,7 +27,7 @@ std::list<AuctionListItemsDelayEvent> AsyncAuctionListingMgr::auctionListingList
 std::list<AuctionListItemsDelayEvent> AsyncAuctionListingMgr::auctionListingListTemp;
 std::mutex AsyncAuctionListingMgr::auctionListingTempLock;
 
-bool AuctionListOwnerItemsDelayEvent::Execute(uint64  /*e_time*/, uint32  /*p_time*/)
+bool AuctionListOwnerItemsDelayEvent::Execute(uint64 /*e_time*/, uint32 /*p_time*/)
 {
     if (Player* plr = ObjectAccessor::FindPlayer(playerguid))
         plr->GetSession()->HandleAuctionListOwnerItemsEvent(creatureGuid);
@@ -49,7 +49,7 @@ bool AuctionListItemsDelayEvent::Execute()
     WorldPacket data(SMSG_AUCTION_LIST_RESULT, (4 + 4 + 4) + 50 * ((16 + MAX_INSPECTED_ENCHANTMENT_SLOT * 3) * 4));
     uint32 count = 0;
     uint32 totalcount = 0;
-    data << (uint32) 0;
+    data << (uint32)0;
 
     // converting string that we try to find to lower case
     std::wstring wsearchedname;
@@ -59,16 +59,28 @@ bool AuctionListItemsDelayEvent::Execute()
     wstrToLower(wsearchedname);
 
     uint32 searchTimeout = sWorld->getIntConfig(CONFIG_AUCTION_HOUSE_SEARCH_TIMEOUT);
-    bool result = auctionHouse->BuildListAuctionItems(data, plr,
-                  wsearchedname, _listfrom, _levelmin, _levelmax, _usable,
-                  _auctionSlotID, _auctionMainCategory, _auctionSubCategory, _quality,
-                  count, totalcount, _getAll, _sortOrder, Milliseconds(searchTimeout));
+    bool result = auctionHouse->BuildListAuctionItems(data,
+        plr,
+        wsearchedname,
+        _listfrom,
+        _levelmin,
+        _levelmax,
+        _usable,
+        _auctionSlotID,
+        _auctionMainCategory,
+        _auctionSubCategory,
+        _quality,
+        count,
+        totalcount,
+        _getAll,
+        _sortOrder,
+        Milliseconds(searchTimeout));
 
     if (result)
     {
         data.put<uint32>(0, count);
-        data << (uint32) totalcount;
-        data << (uint32) 300; // clientside search cooldown [ms] (gray search button)
+        data << (uint32)totalcount;
+        data << (uint32)300; // clientside search cooldown [ms] (gray search button)
         plr->GetSession()->SendPacket(&data);
     }
 

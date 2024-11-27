@@ -34,7 +34,10 @@ public:
 
     struct instance_oculus_InstanceMapScript : public InstanceScript
     {
-        instance_oculus_InstanceMapScript(Map* pMap) : InstanceScript(pMap) { Initialize(); }
+        instance_oculus_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
+        {
+            Initialize();
+        }
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         ObjectGuid DragonCageDoorGUID[3];
@@ -85,7 +88,7 @@ public:
             switch (pGo->GetEntry())
             {
                 case GO_DRAGON_CAGE_DOOR:
-                    for( uint8 i = 0; i < 3; ++i )
+                    for (uint8 i = 0; i < 3; ++i)
                     {
                         if (DragonCageDoorGUID[i])
                             continue;
@@ -94,7 +97,7 @@ public:
                         break;
                     }
                     if (m_auiEncounter[DATA_DRAKOS] == DONE)
-                        if (pGo->GetGoState() != GO_STATE_ACTIVE )
+                        if (pGo->GetGoState() != GO_STATE_ACTIVE)
                         {
                             pGo->SetLootState(GO_READY);
                             pGo->UseDoorOrButton(0, false);
@@ -167,9 +170,7 @@ public:
                         if (GameObject* cache = instance->GetGameObject(EregosCacheGUID))
                         {
                             if (Creature* eregos = instance->GetCreature(uiEregosGUID))
-                            {
                                 cache->SetLootRecipient(eregos);
-                            }
                         }
                     }
                     break;
@@ -250,33 +251,31 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << m_auiEncounter[0] << ' '
-                << m_auiEncounter[1] << ' '
-                << m_auiEncounter[2] << ' '
-                << m_auiEncounter[3] << ' '
-                << CentrifugeCount;
+            data << m_auiEncounter[0] << ' ' << m_auiEncounter[1] << ' ' << m_auiEncounter[2] << ' '
+                 << m_auiEncounter[3] << ' ' << CentrifugeCount;
         }
 
-        bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* source, Unit const*  /*target*/, uint32  /*miscvalue1*/) override
+        bool CheckAchievementCriteriaMeet(
+            uint32 criteria_id, Player const* source, Unit const* /*target*/, uint32 /*miscvalue1*/) override
         {
             switch (criteria_id)
             {
                 case CRITERIA_EXPERIENCED_AMBER:
                     if (source)
                         if (Unit* drake = source->GetVehicleBase())
-                            if (drake->GetEntry() == NPC_AMBER_DRAKE )
+                            if (drake->GetEntry() == NPC_AMBER_DRAKE)
                                 return true;
                     break;
                 case CRITERIA_EXPERIENCED_EMERALD:
                     if (source)
                         if (Unit* drake = source->GetVehicleBase())
-                            if (drake->GetEntry() == NPC_EMERALD_DRAKE )
+                            if (drake->GetEntry() == NPC_EMERALD_DRAKE)
                                 return true;
                     break;
                 case CRITERIA_EXPERIENCED_RUBY:
                     if (source)
                         if (Unit* drake = source->GetVehicleBase())
-                            if (drake->GetEntry() == NPC_RUBY_DRAKE )
+                            if (drake->GetEntry() == NPC_RUBY_DRAKE)
                                 return true;
                     break;
                 case CRITERIA_AMBER_VOID:

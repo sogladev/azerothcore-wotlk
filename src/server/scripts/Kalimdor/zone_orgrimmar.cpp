@@ -39,7 +39,7 @@ EndContentData */
 
 enum Shenthul : uint32
 {
-    QUEST_SHATTERED_SALUTE  = 2460
+    QUEST_SHATTERED_SALUTE = 2460
 };
 
 class npc_shenthul : public CreatureScript
@@ -91,12 +91,14 @@ public:
                 {
                     if (Player* player = ObjectAccessor::GetPlayer(*me, PlayerGUID))
                     {
-                        if (player->IsPlayer() && player->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
+                        if (player->IsPlayer() &&
+                            player->GetQuestStatus(QUEST_SHATTERED_SALUTE) == QUEST_STATUS_INCOMPLETE)
                             player->FailQuest(QUEST_SHATTERED_SALUTE);
                     }
                     Reset();
                 }
-                else ResetTimer -= diff;
+                else
+                    ResetTimer -= diff;
             }
 
             if (CanTalk && !CanEmote)
@@ -107,7 +109,8 @@ public:
                     CanEmote = true;
                     ResetTimer = 60000;
                 }
-                else SaluteTimer -= diff;
+                else
+                    SaluteTimer -= diff;
             }
 
             if (!UpdateVictim())
@@ -136,32 +139,32 @@ public:
 
 enum ThrallWarchief : uint32
 {
-    SPELL_CHAIN_LIGHTNING          = 16033,
-    SPELL_SHOCK                    = 16034,
+    SPELL_CHAIN_LIGHTNING = 16033,
+    SPELL_SHOCK = 16034,
 
     // For The Horde! (ID: 4974)
-    QUEST_FOR_THE_HORDE            = 4974,
-    SPELL_WARCHIEF_BLESSING        = 16609,
-    NPC_HERALD_OF_THRALL           = 10719,
-    ACTION_START_TALKING           = 0,
+    QUEST_FOR_THE_HORDE = 4974,
+    SPELL_WARCHIEF_BLESSING = 16609,
+    NPC_HERALD_OF_THRALL = 10719,
+    ACTION_START_TALKING = 0,
 
-    SAY_THRALL_ON_QUEST_REWARD_0   = 0,
-    SAY_THRALL_ON_QUEST_REWARD_1   = 1,
+    SAY_THRALL_ON_QUEST_REWARD_0 = 0,
+    SAY_THRALL_ON_QUEST_REWARD_1 = 1,
 
-    AREA_ORGRIMMAR                 = 1637,
-    AREA_RAZOR_HILL                = 362,
-    AREA_CAMP_TAURAJO              = 378,
-    AREA_CROSSROADS                = 380,
+    AREA_ORGRIMMAR = 1637,
+    AREA_RAZOR_HILL = 362,
+    AREA_CAMP_TAURAJO = 378,
+    AREA_CROSSROADS = 380,
 
-    GO_UNADORNED_SPIKE             = 175787,
+    GO_UNADORNED_SPIKE = 175787,
 
     // What the Wind Carries (ID: 6566)
-    QUEST_WHAT_THE_WIND_CARRIES     = 6566,
-    GOSSIP_MENU_THRALL              = 3664,
-    GOSSIP_RESPONSE_THRALL_FIRST    = 5733,
+    QUEST_WHAT_THE_WIND_CARRIES = 6566,
+    GOSSIP_MENU_THRALL = 3664,
+    GOSSIP_RESPONSE_THRALL_FIRST = 5733,
 };
 
-const Position heraldOfThrallPos = { -462.404f, -2637.68f, 96.0656f, 5.8606f };
+Position const heraldOfThrallPos = {-462.404f, -2637.68f, 96.0656f, 5.8606f};
 
 /// @todo verify abilities/timers
 class npc_thrall_warchief : public CreatureScript
@@ -175,7 +178,7 @@ public:
 
         uint32 DiscussionOrder = action - GOSSIP_ACTION_INFO_DEF;
 
-        if (DiscussionOrder>= 1 && DiscussionOrder <= 6)
+        if (DiscussionOrder >= 1 && DiscussionOrder <= 6)
         {
             uint32 NextAction = GOSSIP_ACTION_INFO_DEF + DiscussionOrder + 1;
             uint32 GossipResponse = GOSSIP_RESPONSE_THRALL_FIRST + DiscussionOrder - 1;
@@ -195,14 +198,10 @@ public:
     bool OnGossipHello(Player* player, Creature* creature) override
     {
         if (creature->IsQuestGiver())
-        {
             player->PrepareQuestMenu(creature->GetGUID());
-        }
 
         if (player->GetQuestStatus(QUEST_WHAT_THE_WIND_CARRIES) == QUEST_STATUS_INCOMPLETE)
-        {
             AddGossipItemFor(player, GOSSIP_MENU_THRALL, 0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        }
 
         SendGossipMenuFor(player, player->GetGossipTextId(creature), creature->GetGUID());
         return true;
@@ -213,9 +212,7 @@ public:
         if (quest->GetQuestId() == QUEST_FOR_THE_HORDE)
         {
             if (creature && creature->AI())
-            {
                 creature->AI()->DoAction(ACTION_START_TALKING);
-            }
         }
 
         return true;
@@ -247,18 +244,19 @@ public:
             {
                 me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
                 me->GetMap()->LoadGrid(heraldOfThrallPos.GetPositionX(), heraldOfThrallPos.GetPositionY());
-                me->SummonCreature(NPC_HERALD_OF_THRALL, heraldOfThrallPos, TEMPSUMMON_TIMED_DESPAWN, 20 * IN_MILLISECONDS);
+                me->SummonCreature(
+                    NPC_HERALD_OF_THRALL, heraldOfThrallPos, TEMPSUMMON_TIMED_DESPAWN, 20 * IN_MILLISECONDS);
                 me->HandleEmoteCommand(EMOTE_ONESHOT_ROAR);
-                scheduler.Schedule(1s, [this](TaskContext /*context*/)
+                scheduler
+                    .Schedule(1s,
+                        [this](TaskContext /*context*/)
                 {
                     if (GameObject* spike = me->FindNearestGameObject(GO_UNADORNED_SPIKE, 10.0f))
-                    {
                         spike->SetGoState(GO_STATE_ACTIVE);
-                    }
-                }).Schedule(2s, [this](TaskContext /*context*/)
-                {
-                    Talk(SAY_THRALL_ON_QUEST_REWARD_0);
-                }).Schedule(9s, [this](TaskContext /*context*/)
+                })
+                    .Schedule(2s, [this](TaskContext /*context*/) { Talk(SAY_THRALL_ON_QUEST_REWARD_0); })
+                    .Schedule(9s,
+                        [this](TaskContext /*context*/)
                 {
                     Talk(SAY_THRALL_ON_QUEST_REWARD_1);
                     DoCastAOE(SPELL_WARCHIEF_BLESSING, true);
@@ -268,21 +266,19 @@ public:
                         if (player->IsAlive() && !player->IsGameMaster())
                         {
                             if (player->GetAreaId() == AREA_ORGRIMMAR)
-                            {
                                 player->CastSpell(player, SPELL_WARCHIEF_BLESSING, true);
-                            }
                         }
                     });
-                }).Schedule(19s, [this](TaskContext /*context*/)
+                })
+                    .Schedule(19s,
+                        [this](TaskContext /*context*/)
                 {
                     me->GetMap()->DoForAllPlayers([&](Player* player)
                     {
                         if (player->IsAlive() && !player->IsGameMaster())
                         {
                             if (player->GetAreaId() == AREA_CROSSROADS)
-                            {
                                 player->CastSpell(player, SPELL_WARCHIEF_BLESSING, true);
-                            }
                         }
                     });
                 });
@@ -301,14 +297,16 @@ public:
                 DoCastVictim(SPELL_CHAIN_LIGHTNING);
                 ChainLightningTimer = 9000;
             }
-            else ChainLightningTimer -= diff;
+            else
+                ChainLightningTimer -= diff;
 
             if (ShockTimer <= diff)
             {
                 DoCastVictim(SPELL_SHOCK);
                 ShockTimer = 15000;
             }
-            else ShockTimer -= diff;
+            else
+                ShockTimer -= diff;
 
             DoMeleeAttackIfReady();
         }

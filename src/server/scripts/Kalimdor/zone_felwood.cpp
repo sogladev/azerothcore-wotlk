@@ -40,13 +40,13 @@ EndContentData */
 
 enum RiverbreezeAndSilversky
 {
-    SPELL_CENARION_BEACON       = 15120,
+    SPELL_CENARION_BEACON = 15120,
 
-    NPC_ARATHANDRIS_SILVERSKY   = 9528,
-    NPC_MAYBESS_RIVERBREEZE     = 9529,
+    NPC_ARATHANDRIS_SILVERSKY = 9528,
+    NPC_MAYBESS_RIVERBREEZE = 9529,
 
-    QUEST_CLEASING_FELWOOD_A    = 4101,
-    QUEST_CLEASING_FELWOOD_H    = 4102
+    QUEST_CLEASING_FELWOOD_A = 4101,
+    QUEST_CLEASING_FELWOOD_H = 4102
 };
 
 class npcs_riverbreeze_and_silversky : public CreatureScript
@@ -76,7 +76,8 @@ public:
         {
             if (player->GetQuestRewardStatus(QUEST_CLEASING_FELWOOD_A))
             {
-                AddGossipItemFor(player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                AddGossipItemFor(
+                    player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
                 SendGossipMenuFor(player, 2848, creature->GetGUID());
             }
             else if (player->GetTeamId() == TEAM_HORDE)
@@ -89,7 +90,8 @@ public:
         {
             if (player->GetQuestRewardStatus(QUEST_CLEASING_FELWOOD_H))
             {
-                AddGossipItemFor(player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                AddGossipItemFor(
+                    player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_BEACON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
                 SendGossipMenuFor(player, 2849, creature->GetGUID());
             }
             else if (player->GetTeamId() == TEAM_ALLIANCE)
@@ -108,10 +110,10 @@ public:
 
 enum AncientMisc
 {
-    QUEST_ANCIENT_LEAF      = 7632,
-    NPC_VARTRUS             = 14524,
-    NPC_STOMA               = 14525,
-    NPC_HASTAT              = 14526,
+    QUEST_ANCIENT_LEAF = 7632,
+    NPC_VARTRUS = 14524,
+    NPC_STOMA = 14525,
+    NPC_HASTAT = 14526,
     CREATURE_GROUP_ANCIENTS = 1
 };
 
@@ -126,10 +128,13 @@ public:
             return false;
 
         // Handle Call Ancients event start - The area trigger summons 3 ancients
-        if ((player->GetQuestStatus(QUEST_ANCIENT_LEAF) == QUEST_STATUS_COMPLETE) || (player->GetQuestStatus(QUEST_ANCIENT_LEAF) == QUEST_STATUS_REWARDED))
+        if ((player->GetQuestStatus(QUEST_ANCIENT_LEAF) == QUEST_STATUS_COMPLETE) ||
+            (player->GetQuestStatus(QUEST_ANCIENT_LEAF) == QUEST_STATUS_REWARDED))
         {
             // If ancients are already spawned, skip the rest
-            if (GetClosestCreatureWithEntry(player, NPC_VARTRUS, 50.0f) || GetClosestCreatureWithEntry(player, NPC_STOMA, 50.0f) || GetClosestCreatureWithEntry(player, NPC_HASTAT, 50.0f))
+            if (GetClosestCreatureWithEntry(player, NPC_VARTRUS, 50.0f) ||
+                GetClosestCreatureWithEntry(player, NPC_STOMA, 50.0f) ||
+                GetClosestCreatureWithEntry(player, NPC_HASTAT, 50.0f))
                 return true;
 
             player->GetMap()->SummonCreatureGroup(CREATURE_GROUP_ANCIENTS);

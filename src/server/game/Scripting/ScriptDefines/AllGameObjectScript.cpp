@@ -23,34 +23,24 @@ void ScriptMgr::OnGameObjectAddWorld(GameObject* go)
 {
     ASSERT(go);
 
-    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        script->OnGameObjectAddWorld(go);
-    });
+    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script) { script->OnGameObjectAddWorld(go); });
 }
 
 void ScriptMgr::OnGameObjectRemoveWorld(GameObject* go)
 {
     ASSERT(go);
 
-    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        script->OnGameObjectRemoveWorld(go);
-    });
+    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script) { script->OnGameObjectRemoveWorld(go); });
 }
 
 void ScriptMgr::OnGameObjectSaveToDB(GameObject* go)
 {
     ASSERT(go);
 
-    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script)
-    {
-        script->OnGameObjectSaveToDB(go);
-    });
+    ExecuteScript<AllGameObjectScript>([&](AllGameObjectScript* script) { script->OnGameObjectSaveToDB(go); });
 }
 
-AllGameObjectScript::AllGameObjectScript(const char* name) :
-    ScriptObject(name)
+AllGameObjectScript::AllGameObjectScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<AllGameObjectScript>::AddScript(this);
 }

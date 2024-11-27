@@ -29,90 +29,90 @@
 enum ScriptTexts
 {
     // Lady Deathwhisper
-    SAY_INTRO_1                 = 0,
-    SAY_INTRO_2                 = 1,
-    SAY_INTRO_3                 = 2,
-    SAY_INTRO_4                 = 3,
-    SAY_INTRO_5                 = 4,
-    SAY_INTRO_6                 = 5,
-    SAY_INTRO_7                 = 6,
-    SAY_AGGRO                   = 7,
-    SAY_PHASE_2                 = 8,
-    EMOTE_PHASE_2               = 9,
-    SAY_DOMINATE_MIND           = 10,
-    SAY_DARK_EMPOWERMENT        = 11,
-    SAY_DARK_TRANSFORMATION     = 12,
-    SAY_ANIMATE_DEAD            = 13,
-    SAY_KILL                    = 14,
-    SAY_BERSERK                 = 15,
-    SAY_DEATH                   = 16,
+    SAY_INTRO_1 = 0,
+    SAY_INTRO_2 = 1,
+    SAY_INTRO_3 = 2,
+    SAY_INTRO_4 = 3,
+    SAY_INTRO_5 = 4,
+    SAY_INTRO_6 = 5,
+    SAY_INTRO_7 = 6,
+    SAY_AGGRO = 7,
+    SAY_PHASE_2 = 8,
+    EMOTE_PHASE_2 = 9,
+    SAY_DOMINATE_MIND = 10,
+    SAY_DARK_EMPOWERMENT = 11,
+    SAY_DARK_TRANSFORMATION = 12,
+    SAY_ANIMATE_DEAD = 13,
+    SAY_KILL = 14,
+    SAY_BERSERK = 15,
+    SAY_DEATH = 16,
 
     // Darnavan
-    SAY_DARNAVAN_AGGRO          = 0,
-    SAY_DARNAVAN_RESCUED        = 1,
+    SAY_DARNAVAN_AGGRO = 0,
+    SAY_DARNAVAN_RESCUED = 1,
 };
 
 enum Spells
 {
     // Lady Deathwhisper
-    SPELL_SHADOW_CHANNELING           = 43897, // during intro
-    SPELL_MANA_BARRIER                = 70842,
-    SPELL_DEATH_AND_DECAY             = 71001,
-    SPELL_DOMINATE_MIND_25            = 71289,
-    SPELL_SHADOW_BOLT                 = 71254,
-    SPELL_DARK_MARTYRDOM_T            = 70897,
-    SPELL_DARK_TRANSFORMATION_T       = 70895,
-    SPELL_DARK_EMPOWERMENT_T          = 70896,
-    SPELL_FROSTBOLT                   = 71420,
-    SPELL_FROSTBOLT_VOLLEY            = 72905,
-    SPELL_TOUCH_OF_INSIGNIFICANCE     = 71204,
-    SPELL_SUMMON_SHADE                = 71363,
+    SPELL_SHADOW_CHANNELING = 43897, // during intro
+    SPELL_MANA_BARRIER = 70842,
+    SPELL_DEATH_AND_DECAY = 71001,
+    SPELL_DOMINATE_MIND_25 = 71289,
+    SPELL_SHADOW_BOLT = 71254,
+    SPELL_DARK_MARTYRDOM_T = 70897,
+    SPELL_DARK_TRANSFORMATION_T = 70895,
+    SPELL_DARK_EMPOWERMENT_T = 70896,
+    SPELL_FROSTBOLT = 71420,
+    SPELL_FROSTBOLT_VOLLEY = 72905,
+    SPELL_TOUCH_OF_INSIGNIFICANCE = 71204,
+    SPELL_SUMMON_SHADE = 71363,
 
     // Fanatics
-    SPELL_NECROTIC_STRIKE             = 70659,
-    SPELL_SHADOW_CLEAVE               = 70670,
-    SPELL_VAMPIRIC_MIGHT              = 70674,
-    SPELL_DARK_MARTYRDOM_FANATIC      = 71236,
-    SPELL_DARK_MARTYRDOM_FANATIC_25N  = 72495,
-    SPELL_DARK_MARTYRDOM_FANATIC_10H  = 72496,
-    SPELL_DARK_MARTYRDOM_FANATIC_25H  = 72497,
-    SPELL_FANATIC_S_DETERMINATION     = 71235,
-    SPELL_DARK_TRANSFORMATION         = 70900,
+    SPELL_NECROTIC_STRIKE = 70659,
+    SPELL_SHADOW_CLEAVE = 70670,
+    SPELL_VAMPIRIC_MIGHT = 70674,
+    SPELL_DARK_MARTYRDOM_FANATIC = 71236,
+    SPELL_DARK_MARTYRDOM_FANATIC_25N = 72495,
+    SPELL_DARK_MARTYRDOM_FANATIC_10H = 72496,
+    SPELL_DARK_MARTYRDOM_FANATIC_25H = 72497,
+    SPELL_FANATIC_S_DETERMINATION = 71235,
+    SPELL_DARK_TRANSFORMATION = 70900,
 
     //  Adherents
-    SPELL_FROST_FEVER                 = 67767,
-    SPELL_DEATHCHILL_BOLT             = 70594,
-    SPELL_DEATHCHILL_BLAST            = 70906,
-    SPELL_CURSE_OF_TORPOR             = 71237,
-    SPELL_SHORUD_OF_THE_OCCULT        = 70768,
-    SPELL_DARK_MARTYRDOM_ADHERENT     = 70903,
+    SPELL_FROST_FEVER = 67767,
+    SPELL_DEATHCHILL_BOLT = 70594,
+    SPELL_DEATHCHILL_BLAST = 70906,
+    SPELL_CURSE_OF_TORPOR = 71237,
+    SPELL_SHORUD_OF_THE_OCCULT = 70768,
+    SPELL_DARK_MARTYRDOM_ADHERENT = 70903,
     SPELL_DARK_MARTYRDOM_ADHERENT_25N = 72498,
     SPELL_DARK_MARTYRDOM_ADHERENT_10H = 72499,
     SPELL_DARK_MARTYRDOM_ADHERENT_25H = 72500,
-    SPELL_ADHERENT_S_DETERMINATION    = 71234,
-    SPELL_DARK_EMPOWERMENT            = 70901,
+    SPELL_ADHERENT_S_DETERMINATION = 71234,
+    SPELL_DARK_EMPOWERMENT = 70901,
 
     // Vengeful Shade
-    SPELL_VENGEFUL_BLAST_PASSIVE      = 71494,
-    SPELL_VENGEFUL_BLAST_10N          = 71544,
-    SPELL_VENGEFUL_BLAST_25N          = 72010,
-    SPELL_VENGEFUL_BLAST_10H          = 72011,
-    SPELL_VENGEFUL_BLAST_25H          = 72012,
+    SPELL_VENGEFUL_BLAST_PASSIVE = 71494,
+    SPELL_VENGEFUL_BLAST_10N = 71544,
+    SPELL_VENGEFUL_BLAST_25N = 72010,
+    SPELL_VENGEFUL_BLAST_10H = 72011,
+    SPELL_VENGEFUL_BLAST_25H = 72012,
 
     // Darnavan
-    SPELL_BLADESTORM                  = 65947,
-    SPELL_CHARGE                      = 65927,
-    SPELL_INTIMIDATING_SHOUT          = 65930,
-    SPELL_MORTAL_STRIKE               = 65926,
-    SPELL_SHATTERING_THROW            = 65940,
-    SPELL_SUNDER_ARMOR                = 65936,
+    SPELL_BLADESTORM = 65947,
+    SPELL_CHARGE = 65927,
+    SPELL_INTIMIDATING_SHOUT = 65930,
+    SPELL_MORTAL_STRIKE = 65926,
+    SPELL_SHATTERING_THROW = 65940,
+    SPELL_SUNDER_ARMOR = 65936,
 
     // misc
-    SPELL_FULL_HOUSE                  = 72827, // achievement
-    SPELL_TELEPORT_VISUAL             = 52096, // used by adds
-    SPELL_CLEAR_ALL_DEBUFFS           = 34098,
-    SPELL_FULL_HEAL                   = 17683,
-    SPELL_PERMANENT_FEIGN_DEATH       = 70628,
+    SPELL_FULL_HOUSE = 72827,      // achievement
+    SPELL_TELEPORT_VISUAL = 52096, // used by adds
+    SPELL_CLEAR_ALL_DEBUFFS = 34098,
+    SPELL_FULL_HEAL = 17683,
+    SPELL_PERMANENT_FEIGN_DEATH = 70628,
 };
 
 enum EventTypes
@@ -167,24 +167,24 @@ enum EventTypes
 
 enum Phases
 {
-    PHASE_ALL       = 0,
-    PHASE_INTRO     = 1,
-    PHASE_ONE       = 2,
-    PHASE_TWO       = 3,
+    PHASE_ALL = 0,
+    PHASE_INTRO = 1,
+    PHASE_ONE = 2,
+    PHASE_TWO = 3,
 
-    PHASE_INTRO_MASK    = 1 << (PHASE_INTRO - 1),
-    PHASE_ONE_MASK      = 1 << (PHASE_ONE - 1),
+    PHASE_INTRO_MASK = 1 << (PHASE_INTRO - 1),
+    PHASE_ONE_MASK = 1 << (PHASE_ONE - 1),
 };
 
 enum DeprogrammingData
 {
-    NPC_DARNAVAN_10         = 38472,
-    NPC_DARNAVAN_25         = 38485,
-    NPC_DARNAVAN_CREDIT_10  = 39091,
-    NPC_DARNAVAN_CREDIT_25  = 39092,
+    NPC_DARNAVAN_10 = 38472,
+    NPC_DARNAVAN_25 = 38485,
+    NPC_DARNAVAN_CREDIT_10 = 39091,
+    NPC_DARNAVAN_CREDIT_25 = 39092,
 
-    ACTION_COMPLETE_QUEST   = -384720,
-    POINT_DESPAWN           = 384721,
+    ACTION_COMPLETE_QUEST = -384720,
+    POINT_DESPAWN = 384721,
 };
 
 enum Actions
@@ -197,8 +197,7 @@ enum Actions
 #define QUEST_DEPROGRAMMING RAID_MODE<uint32>(QUEST_DEPROGRAMMING_10, QUEST_DEPROGRAMMING_25, QUEST_DEPROGRAMMING_10, QUEST_DEPROGRAMMING_25)
 
 uint32 const SummonEntries[2] = {NPC_CULT_FANATIC, NPC_CULT_ADHERENT};
-Position const SummonPositions[7] =
-{
+Position const SummonPositions[7] = {
     {-578.7066f, 2154.167f, 51.01529f, 1.692969f}, // 1 Left Door 1 (Cult Fanatic)
     {-598.9028f, 2155.005f, 51.01530f, 1.692969f}, // 2 Left Door 2 (Cult Adherent)
     {-619.2864f, 2154.460f, 51.01530f, 1.692969f}, // 3 Left Door 3 (Cult Fanatic)
@@ -302,7 +301,8 @@ public:
             {
                 // reset threat
                 ThreatContainer::StorageType const& threatlist = me->GetThreatMgr().GetThreatList();
-                for (ThreatContainer::StorageType::const_iterator itr = threatlist.begin(); itr != threatlist.end(); ++itr)
+                for (ThreatContainer::StorageType::const_iterator itr = threatlist.begin(); itr != threatlist.end();
+                     ++itr)
                 {
                     Unit* unit = ObjectAccessor::GetUnit((*me), (*itr)->getUnitGuid());
 
@@ -372,43 +372,44 @@ public:
                     events.Repeat(22s, 30s);
                     break;
                 case EVENT_SPELL_DOMINATE_MIND_25:
+                {
+                    Talk(SAY_DOMINATE_MIND);
+
+                    std::vector<Player*> validPlayers;
+                    Map::PlayerList const& pList = me->GetMap()->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr)
+                        if (Player* plr = itr->GetSource())
+                            if (plr->IsAlive() && !plr->IsGameMaster() && plr->GetExactDist2dSq(me) < (150.0f * 150.0f))
+                                if (!me->GetVictim() || me->GetVictim()->GetGUID() != plr->GetGUID())
+                                {
+                                    // shouldn't be casted on any victim of summoned mobs
+                                    bool valid = true;
+                                    for (ObjectGuid const& guid : summons)
+                                        if (Creature* c = ObjectAccessor::GetCreature(*me, guid))
+                                            if (c->IsAlive() && c->GetVictim() &&
+                                                c->GetVictim()->GetGUID() == plr->GetGUID())
+                                            {
+                                                valid = false;
+                                                break;
+                                            }
+                                    if (valid)
+                                        validPlayers.push_back(plr);
+                                }
+
+                    std::vector<Player*>::iterator begin = validPlayers.begin(), end = validPlayers.end();
+
+                    std::random_device rd;
+                    std::shuffle(begin, end, std::default_random_engine {rd()});
+
+                    for (uint8 i = 0; i < RAID_MODE<uint8>(0, 1, 1, 3) && i < validPlayers.size(); i++)
                     {
-                        Talk(SAY_DOMINATE_MIND);
-
-                        std::vector<Player*> validPlayers;
-                        Map::PlayerList const& pList = me->GetMap()->GetPlayers();
-                        for (Map::PlayerList::const_iterator itr = pList.begin(); itr != pList.end(); ++itr)
-                            if (Player* plr = itr->GetSource())
-                                if (plr->IsAlive() && !plr->IsGameMaster() && plr->GetExactDist2dSq(me) < (150.0f * 150.0f))
-                                    if (!me->GetVictim() || me->GetVictim()->GetGUID() != plr->GetGUID())
-                                    {
-                                        // shouldn't be casted on any victim of summoned mobs
-                                        bool valid = true;
-                                        for (ObjectGuid const& guid : summons)
-                                            if (Creature* c = ObjectAccessor::GetCreature(*me, guid))
-                                                if (c->IsAlive() && c->GetVictim() && c->GetVictim()->GetGUID() == plr->GetGUID())
-                                                {
-                                                    valid = false;
-                                                    break;
-                                                }
-                                        if (valid)
-                                            validPlayers.push_back(plr);
-                                    }
-
-                        std::vector<Player*>::iterator begin = validPlayers.begin(), end = validPlayers.end();
-
-                        std::random_device rd;
-                        std::shuffle(begin, end, std::default_random_engine{rd()});
-
-                        for (uint8 i = 0; i < RAID_MODE<uint8>(0, 1, 1, 3) && i < validPlayers.size(); i++)
-                        {
-                            Unit* target = validPlayers[i];
-                            me->CastSpell(target, SPELL_DOMINATE_MIND_25, true);
-                        }
-
-                        events.Repeat(40s, 45s);
+                        Unit* target = validPlayers[i];
+                        me->CastSpell(target, SPELL_DOMINATE_MIND_25, true);
                     }
-                    break;
+
+                    events.Repeat(40s, 45s);
+                }
+                break;
                 case EVENT_SPELL_SHADOW_BOLT:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random))
                         me->CastSpell(target, SPELL_SHADOW_BOLT, false);
@@ -439,19 +440,19 @@ public:
                     events.Repeat(45s);
                     break;
                 case EVENT_SPELL_SUMMON_SHADE:
-                    {
-                        uint8 count = 1;
-                        if (GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
-                            count = 2;
-                        else if (GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
-                            count = 3;
+                {
+                    uint8 count = 1;
+                    if (GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+                        count = 2;
+                    else if (GetDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+                        count = 3;
 
-                        std::list<Unit*> targets;
-                        SelectTargetList(targets, count, SelectTargetMethod::Random, 0, NonTankTargetSelector(me, true));
-                        if (!targets.empty())
-                            for (std::list<Unit*>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
-                                me->CastSpell(*itr, SPELL_SUMMON_SHADE, true);
-                    }
+                    std::list<Unit*> targets;
+                    SelectTargetList(targets, count, SelectTargetMethod::Random, 0, NonTankTargetSelector(me, true));
+                    if (!targets.empty())
+                        for (std::list<Unit*>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
+                            me->CastSpell(*itr, SPELL_SUMMON_SHADE, true);
+                }
                     events.Repeat(12s);
                     break;
             }
@@ -509,7 +510,8 @@ public:
                         livingAddEntries.insert(unit->GetEntry());
 
             if (livingAddEntries.size() >= 5)
-                instance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, SPELL_FULL_HOUSE, 0, me);
+                instance->DoUpdateAchievementCriteria(
+                    ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, SPELL_FULL_HOUSE, 0, me);
 
             if (Creature* darnavan = ObjectAccessor::GetCreature(*me, _darnavanGUID))
             {
@@ -522,7 +524,8 @@ public:
                     darnavan->GetMotionMaster()->MoveIdle();
                     darnavan->StopMoving();
                     darnavan->SetReactState(REACT_PASSIVE);
-                    darnavan->m_Events.AddEvent(new DaranavanMoveEvent(*darnavan), darnavan->m_Events.CalculateTime(10000));
+                    darnavan->m_Events.AddEvent(
+                        new DaranavanMoveEvent(*darnavan), darnavan->m_Events.CalculateTime(10000));
                     darnavan->AI()->Talk(SAY_DARNAVAN_RESCUED);
                     if (Player* owner = killer->GetCharmerOrOwnerPlayerOrPlayerItself())
                     {
@@ -607,7 +610,7 @@ public:
         }
 
         // helper for summoning wave mobs
-        void Summon(uint32 entry, const Position& pos)
+        void Summon(uint32 entry, Position const& pos)
         {
             if (me->SummonCreature(entry, pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000))
                 if (TempSummon* trigger = me->SummonCreature(WORLD_TRIGGER, pos, TEMPSUMMON_TIMED_DESPAWN, 2000))
@@ -641,7 +644,9 @@ public:
                 me->CastSpell(cultist, SPELL_DARK_MARTYRDOM_T);
             else
             {
-                me->CastSpell(cultist, cultist->GetEntry() == NPC_CULT_FANATIC ? SPELL_DARK_TRANSFORMATION_T : SPELL_DARK_EMPOWERMENT_T, true);
+                me->CastSpell(cultist,
+                    cultist->GetEntry() == NPC_CULT_FANATIC ? SPELL_DARK_TRANSFORMATION_T : SPELL_DARK_EMPOWERMENT_T,
+                    true);
                 Talk(uint8(cultist->GetEntry() == NPC_CULT_FANATIC ? SAY_DARK_TRANSFORMATION : SAY_DARK_EMPOWERMENT));
             }
         }
@@ -650,7 +655,7 @@ public:
         {
             if (spell->Id == SPELL_DOMINATE_MIND_25)
             {
-                const int32 val = 100;
+                int32 const val = 100;
                 target->CastCustomSpell(target, 73261, &val, nullptr, nullptr, true); // scale aura, +100% size
             }
         }
@@ -674,7 +679,7 @@ public:
 
     struct npc_cult_fanaticAI : public ScriptedAI
     {
-        npc_cult_fanaticAI(Creature* creature) : ScriptedAI(creature), _instance(creature->GetInstanceScript()) {}
+        npc_cult_fanaticAI(Creature* creature) : ScriptedAI(creature), _instance(creature->GetInstanceScript()) { }
 
         EventMap events;
         InstanceScript* _instance;
@@ -718,7 +723,10 @@ public:
             }
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override { DoZoneInCombat(); }
+        void JustEngagedWith(Unit* /*who*/) override
+        {
+            DoZoneInCombat();
+        }
 
         void UpdateAI(uint32 diff) override
         {
@@ -749,12 +757,14 @@ public:
                     me->RemoveDynamicFlag(UNIT_DYNFLAG_DEAD);
                     me->RemoveUnitFlag2(UNIT_FLAG2_FEIGN_DEATH);
                     me->UpdateEntry(NPC_REANIMATED_FANATIC);
-                    me->RemoveUnitFlag(UNIT_FLAG_STUNNED | UNIT_FLAG_PREVENT_EMOTES_FROM_CHAT_TEXT | UNIT_FLAG_NOT_SELECTABLE);
+                    me->RemoveUnitFlag(
+                        UNIT_FLAG_STUNNED | UNIT_FLAG_PREVENT_EMOTES_FROM_CHAT_TEXT | UNIT_FLAG_NOT_SELECTABLE);
                     me->SetReactState(REACT_AGGRESSIVE);
                     DoZoneInCombat(me);
                     me->CastSpell(me, SPELL_FANATIC_S_DETERMINATION);
 
-                    if (Creature* ladyDeathwhisper = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_LADY_DEATHWHISPER)))
+                    if (Creature* ladyDeathwhisper =
+                            ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_LADY_DEATHWHISPER)))
                         ladyDeathwhisper->AI()->Talk(SAY_ANIMATE_DEAD);
                     break;
                 case EVENT_SPELL_CULTIST_DARK_MARTYRDOM:
@@ -763,7 +773,8 @@ public:
                     me->CastSpell(me, SPELL_FULL_HEAL, true);
                     me->SetDynamicFlag(UNIT_DYNFLAG_DEAD);
                     me->SetUnitFlag2(UNIT_FLAG2_FEIGN_DEATH);
-                    me->SetUnitFlag(UNIT_FLAG_STUNNED | UNIT_FLAG_PREVENT_EMOTES_FROM_CHAT_TEXT | UNIT_FLAG_NOT_SELECTABLE);
+                    me->SetUnitFlag(
+                        UNIT_FLAG_STUNNED | UNIT_FLAG_PREVENT_EMOTES_FROM_CHAT_TEXT | UNIT_FLAG_NOT_SELECTABLE);
                     Reset();
                     events.ScheduleEvent(EVENT_CULTIST_DARK_MARTYRDOM_REVIVE, 6s);
                     break;
@@ -786,7 +797,7 @@ public:
 
     struct npc_cult_adherentAI : public ScriptedAI
     {
-        npc_cult_adherentAI(Creature* creature) : ScriptedAI(creature), _instance(creature->GetInstanceScript()) {}
+        npc_cult_adherentAI(Creature* creature) : ScriptedAI(creature), _instance(creature->GetInstanceScript()) { }
 
         EventMap events;
         InstanceScript* _instance;
@@ -831,7 +842,10 @@ public:
             }
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override { DoZoneInCombat(); }
+        void JustEngagedWith(Unit* /*who*/) override
+        {
+            DoZoneInCombat();
+        }
 
         void UpdateAI(uint32 diff) override
         {
@@ -870,12 +884,14 @@ public:
                     me->RemoveDynamicFlag(UNIT_DYNFLAG_DEAD);
                     me->RemoveUnitFlag2(UNIT_FLAG2_FEIGN_DEATH);
                     me->UpdateEntry(NPC_REANIMATED_ADHERENT);
-                    me->RemoveUnitFlag(UNIT_FLAG_STUNNED | UNIT_FLAG_PREVENT_EMOTES_FROM_CHAT_TEXT | UNIT_FLAG_NOT_SELECTABLE);
+                    me->RemoveUnitFlag(
+                        UNIT_FLAG_STUNNED | UNIT_FLAG_PREVENT_EMOTES_FROM_CHAT_TEXT | UNIT_FLAG_NOT_SELECTABLE);
                     me->SetReactState(REACT_AGGRESSIVE);
                     DoZoneInCombat(me);
                     me->CastSpell(me, SPELL_ADHERENT_S_DETERMINATION);
 
-                    if (Creature* ladyDeathwhisper = ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_LADY_DEATHWHISPER)))
+                    if (Creature* ladyDeathwhisper =
+                            ObjectAccessor::GetCreature(*me, _instance->GetGuidData(DATA_LADY_DEATHWHISPER)))
                         ladyDeathwhisper->AI()->Talk(SAY_ANIMATE_DEAD);
                     break;
                 case EVENT_SPELL_CULTIST_DARK_MARTYRDOM:
@@ -884,7 +900,8 @@ public:
                     me->CastSpell(me, SPELL_FULL_HEAL, true);
                     me->SetDynamicFlag(UNIT_DYNFLAG_DEAD);
                     me->SetUnitFlag2(UNIT_FLAG2_FEIGN_DEATH);
-                    me->SetUnitFlag(UNIT_FLAG_STUNNED | UNIT_FLAG_PREVENT_EMOTES_FROM_CHAT_TEXT | UNIT_FLAG_NOT_SELECTABLE);
+                    me->SetUnitFlag(
+                        UNIT_FLAG_STUNNED | UNIT_FLAG_PREVENT_EMOTES_FROM_CHAT_TEXT | UNIT_FLAG_NOT_SELECTABLE);
                     Reset();
                     events.ScheduleEvent(EVENT_CULTIST_DARK_MARTYRDOM_REVIVE, 6s);
                     break;
@@ -984,8 +1001,9 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void MoveInLineOfSight(Unit*  /*who*/) override {}
-        void EnterEvadeMode(EvadeReason /*why*/ = EVADE_REASON_OTHER) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
+
+        void EnterEvadeMode(EvadeReason /*why*/ = EVADE_REASON_OTHER) override { }
     };
 
     CreatureAI* GetAI(Creature* creature) const override
@@ -1001,7 +1019,7 @@ public:
 
     struct npc_darnavanAI : public ScriptedAI
     {
-        npc_darnavanAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_darnavanAI(Creature* creature) : ScriptedAI(creature) { }
 
         EventMap events;
         bool _canCharge;
@@ -1130,7 +1148,8 @@ class spell_deathwhisper_mana_barrier_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_deathwhisper_mana_barrier_aura::HandlePeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_deathwhisper_mana_barrier_aura::HandlePeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -1141,7 +1160,7 @@ class spell_deathwhisper_dark_reckoning : public AuraScript
 
     bool Validate(SpellInfo const* spell) override
     {
-        return ValidateSpellInfo({ spell->Effects[EFFECT_0].TriggerSpell });
+        return ValidateSpellInfo({spell->Effects[EFFECT_0].TriggerSpell});
     }
 
     void OnPeriodic(AuraEffect const* aurEff)
@@ -1156,7 +1175,8 @@ class spell_deathwhisper_dark_reckoning : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_deathwhisper_dark_reckoning::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_deathwhisper_dark_reckoning::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -1170,7 +1190,8 @@ public:
         if (InstanceScript* instance = player->GetInstanceScript())
             if (instance->GetBossState(DATA_LADY_DEATHWHISPER) != DONE)
                 if (!player->IsGameMaster())
-                    if (Creature* ladyDeathwhisper = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_LADY_DEATHWHISPER)))
+                    if (Creature* ladyDeathwhisper =
+                            ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_LADY_DEATHWHISPER)))
                         ladyDeathwhisper->AI()->DoAction(ACTION_START_INTRO);
         return true;
     }

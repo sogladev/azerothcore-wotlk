@@ -25,35 +25,26 @@
 
 namespace
 {
-    template<class ScriptName>
-    void ForeachMaps(Map* map, std::function<void(ScriptName*)> const& executeHook)
+    template <class ScriptName> void ForeachMaps(Map* map, std::function<void(ScriptName*)> const& executeHook)
     {
         auto mapEntry = map->GetEntry();
         if (!mapEntry)
-        {
             return;
-        }
 
         if constexpr (std::is_same_v<ScriptName, WorldMapScript>)
         {
             if (!mapEntry->IsWorldMap())
-            {
                 return;
-            }
         }
         else if constexpr (std::is_same_v<ScriptName, InstanceMapScript>)
         {
             if (!mapEntry->IsDungeon())
-            {
                 return;
-            }
         }
         else if constexpr (std::is_same_v<ScriptName, BattlegroundMapScript>)
         {
             if (!mapEntry->IsBattleground())
-            {
                 return;
-            }
         }
         else
         {
@@ -61,28 +52,22 @@ namespace
         }
 
         if (ScriptRegistry<ScriptName>::ScriptPointerList.empty())
-        {
             return;
-        }
 
         for (auto const& [scriptID, script] : ScriptRegistry<ScriptName>::ScriptPointerList)
         {
             auto const scriptEntry = script->GetEntry();
             if (!scriptEntry)
-            {
                 continue;
-            }
 
             if (scriptEntry->MapID != map->GetId())
-            {
                 continue;
-            }
 
             executeHook(script);
             return;
         }
     }
-}
+} // namespace
 
 void ScriptMgr::OnCreateMap(Map* map)
 {
@@ -90,23 +75,12 @@ void ScriptMgr::OnCreateMap(Map* map)
 
     CALL_ENABLED_HOOKS(AllMapScript, ALLMAPHOOK_ON_CREATE_MAP, script->OnCreateMap(map));
 
-    ForeachMaps<WorldMapScript>(map,
-    [&](WorldMapScript* script)
-    {
-        script->OnCreate(map);
-    });
+    ForeachMaps<WorldMapScript>(map, [&](WorldMapScript* script) { script->OnCreate(map); });
 
-    ForeachMaps<InstanceMapScript>(map,
-    [&](InstanceMapScript* script)
-    {
-        script->OnCreate((InstanceMap*)map);
-    });
+    ForeachMaps<InstanceMapScript>(map, [&](InstanceMapScript* script) { script->OnCreate((InstanceMap*)map); });
 
-    ForeachMaps<BattlegroundMapScript>(map,
-    [&](BattlegroundMapScript* script)
-    {
-        script->OnCreate((BattlegroundMap*)map);
-    });
+    ForeachMaps<BattlegroundMapScript>(
+        map, [&](BattlegroundMapScript* script) { script->OnCreate((BattlegroundMap*)map); });
 }
 
 void ScriptMgr::OnDestroyMap(Map* map)
@@ -115,23 +89,12 @@ void ScriptMgr::OnDestroyMap(Map* map)
 
     CALL_ENABLED_HOOKS(AllMapScript, ALLMAPHOOK_ON_DESTROY_MAP, script->OnDestroyMap(map));
 
-    ForeachMaps<WorldMapScript>(map,
-    [&](WorldMapScript* script)
-    {
-        script->OnDestroy(map);
-    });
+    ForeachMaps<WorldMapScript>(map, [&](WorldMapScript* script) { script->OnDestroy(map); });
 
-    ForeachMaps<InstanceMapScript>(map,
-    [&](InstanceMapScript* script)
-    {
-        script->OnDestroy((InstanceMap*)map);
-    });
+    ForeachMaps<InstanceMapScript>(map, [&](InstanceMapScript* script) { script->OnDestroy((InstanceMap*)map); });
 
-    ForeachMaps<BattlegroundMapScript>(map,
-    [&](BattlegroundMapScript* script)
-    {
-        script->OnDestroy((BattlegroundMap*)map);
-    });
+    ForeachMaps<BattlegroundMapScript>(
+        map, [&](BattlegroundMapScript* script) { script->OnDestroy((BattlegroundMap*)map); });
 }
 
 void ScriptMgr::OnLoadGridMap(Map* map, GridMap* gmap, uint32 gx, uint32 gy)
@@ -139,23 +102,13 @@ void ScriptMgr::OnLoadGridMap(Map* map, GridMap* gmap, uint32 gx, uint32 gy)
     ASSERT(map);
     ASSERT(gmap);
 
-    ForeachMaps<WorldMapScript>(map,
-    [&](WorldMapScript* script)
-    {
-        script->OnLoadGridMap(map, gmap, gx, gy);
-    });
+    ForeachMaps<WorldMapScript>(map, [&](WorldMapScript* script) { script->OnLoadGridMap(map, gmap, gx, gy); });
 
-    ForeachMaps<InstanceMapScript>(map,
-    [&](InstanceMapScript* script)
-    {
-        script->OnLoadGridMap((InstanceMap*)map, gmap, gx, gy);
-    });
+    ForeachMaps<InstanceMapScript>(
+        map, [&](InstanceMapScript* script) { script->OnLoadGridMap((InstanceMap*)map, gmap, gx, gy); });
 
-    ForeachMaps<BattlegroundMapScript>(map,
-    [&](BattlegroundMapScript* script)
-    {
-        script->OnLoadGridMap((BattlegroundMap*)map, gmap, gx, gy);
-    });
+    ForeachMaps<BattlegroundMapScript>(
+        map, [&](BattlegroundMapScript* script) { script->OnLoadGridMap((BattlegroundMap*)map, gmap, gx, gy); });
 }
 
 void ScriptMgr::OnUnloadGridMap(Map* map, GridMap* gmap, uint32 gx, uint32 gy)
@@ -163,23 +116,13 @@ void ScriptMgr::OnUnloadGridMap(Map* map, GridMap* gmap, uint32 gx, uint32 gy)
     ASSERT(map);
     ASSERT(gmap);
 
-    ForeachMaps<WorldMapScript>(map,
-    [&](WorldMapScript* script)
-    {
-        script->OnUnloadGridMap(map, gmap, gx, gy);
-    });
+    ForeachMaps<WorldMapScript>(map, [&](WorldMapScript* script) { script->OnUnloadGridMap(map, gmap, gx, gy); });
 
-    ForeachMaps<InstanceMapScript>(map,
-    [&](InstanceMapScript* script)
-    {
-        script->OnUnloadGridMap((InstanceMap*)map, gmap, gx, gy);
-    });
+    ForeachMaps<InstanceMapScript>(
+        map, [&](InstanceMapScript* script) { script->OnUnloadGridMap((InstanceMap*)map, gmap, gx, gy); });
 
-    ForeachMaps<BattlegroundMapScript>(map,
-    [&](BattlegroundMapScript* script)
-    {
-        script->OnUnloadGridMap((BattlegroundMap*)map, gmap, gx, gy);
-    });
+    ForeachMaps<BattlegroundMapScript>(
+        map, [&](BattlegroundMapScript* script) { script->OnUnloadGridMap((BattlegroundMap*)map, gmap, gx, gy); });
 }
 
 void ScriptMgr::OnPlayerEnterMap(Map* map, Player* player)
@@ -189,28 +132,15 @@ void ScriptMgr::OnPlayerEnterMap(Map* map, Player* player)
 
     CALL_ENABLED_HOOKS(AllMapScript, ALLMAPHOOK_ON_PLAYER_ENTER_ALL, script->OnPlayerEnterAll(map, player));
 
-    ExecuteScript<PlayerScript>([=](PlayerScript* script)
-    {
-        script->OnMapChanged(player);
-    });
+    ExecuteScript<PlayerScript>([=](PlayerScript* script) { script->OnMapChanged(player); });
 
-    ForeachMaps<WorldMapScript>(map,
-    [&](WorldMapScript* script)
-    {
-        script->OnPlayerEnter(map, player);
-    });
+    ForeachMaps<WorldMapScript>(map, [&](WorldMapScript* script) { script->OnPlayerEnter(map, player); });
 
-    ForeachMaps<InstanceMapScript>(map,
-    [&](InstanceMapScript* script)
-    {
-        script->OnPlayerEnter((InstanceMap*)map, player);
-    });
+    ForeachMaps<InstanceMapScript>(
+        map, [&](InstanceMapScript* script) { script->OnPlayerEnter((InstanceMap*)map, player); });
 
-    ForeachMaps<BattlegroundMapScript>(map,
-    [&](BattlegroundMapScript* script)
-    {
-        script->OnPlayerEnter((BattlegroundMap*)map, player);
-    });
+    ForeachMaps<BattlegroundMapScript>(
+        map, [&](BattlegroundMapScript* script) { script->OnPlayerEnter((BattlegroundMap*)map, player); });
 }
 
 void ScriptMgr::OnPlayerLeaveMap(Map* map, Player* player)
@@ -220,23 +150,13 @@ void ScriptMgr::OnPlayerLeaveMap(Map* map, Player* player)
 
     CALL_ENABLED_HOOKS(AllMapScript, ALLMAPHOOK_ON_PLAYER_LEAVE_ALL, script->OnPlayerLeaveAll(map, player));
 
-    ForeachMaps<WorldMapScript>(map,
-    [&](WorldMapScript* script)
-    {
-        script->OnPlayerLeave(map, player);
-    });
+    ForeachMaps<WorldMapScript>(map, [&](WorldMapScript* script) { script->OnPlayerLeave(map, player); });
 
-    ForeachMaps<InstanceMapScript>(map,
-    [&](InstanceMapScript* script)
-    {
-        script->OnPlayerLeave((InstanceMap*)map, player);
-    });
+    ForeachMaps<InstanceMapScript>(
+        map, [&](InstanceMapScript* script) { script->OnPlayerLeave((InstanceMap*)map, player); });
 
-    ForeachMaps<BattlegroundMapScript>(map,
-    [&](BattlegroundMapScript* script)
-    {
-        script->OnPlayerLeave((BattlegroundMap*)map, player);
-    });
+    ForeachMaps<BattlegroundMapScript>(
+        map, [&](BattlegroundMapScript* script) { script->OnPlayerLeave((BattlegroundMap*)map, player); });
 }
 
 void ScriptMgr::OnMapUpdate(Map* map, uint32 diff)
@@ -245,28 +165,20 @@ void ScriptMgr::OnMapUpdate(Map* map, uint32 diff)
 
     CALL_ENABLED_HOOKS(AllMapScript, ALLMAPHOOK_ON_MAP_UPDATE, script->OnMapUpdate(map, diff));
 
-    ForeachMaps<WorldMapScript>(map,
-    [&](WorldMapScript* script)
-    {
-        script->OnUpdate(map, diff);
-    });
+    ForeachMaps<WorldMapScript>(map, [&](WorldMapScript* script) { script->OnUpdate(map, diff); });
 
-    ForeachMaps<InstanceMapScript>(map,
-    [&](InstanceMapScript* script)
-    {
-        script->OnUpdate((InstanceMap*)map, diff);
-    });
+    ForeachMaps<InstanceMapScript>(map, [&](InstanceMapScript* script) { script->OnUpdate((InstanceMap*)map, diff); });
 
-    ForeachMaps<BattlegroundMapScript>(map,
-    [&](BattlegroundMapScript* script)
-    {
-        script->OnUpdate((BattlegroundMap*)map, diff);
-    });
+    ForeachMaps<BattlegroundMapScript>(
+        map, [&](BattlegroundMapScript* script) { script->OnUpdate((BattlegroundMap*)map, diff); });
 }
 
-void ScriptMgr::OnBeforeCreateInstanceScript(InstanceMap* instanceMap, InstanceScript** instanceData, bool load, std::string data, uint32 completedEncounterMask)
+void ScriptMgr::OnBeforeCreateInstanceScript(
+    InstanceMap* instanceMap, InstanceScript** instanceData, bool load, std::string data, uint32 completedEncounterMask)
 {
-    CALL_ENABLED_HOOKS(AllMapScript, ALLMAPHOOK_ON_BEFORE_CREATE_INSTANCE_SCRIPT, script->OnBeforeCreateInstanceScript(instanceMap, instanceData, load, data, completedEncounterMask));
+    CALL_ENABLED_HOOKS(AllMapScript,
+        ALLMAPHOOK_ON_BEFORE_CREATE_INSTANCE_SCRIPT,
+        script->OnBeforeCreateInstanceScript(instanceMap, instanceData, load, data, completedEncounterMask));
 }
 
 void ScriptMgr::OnDestroyInstance(MapInstanced* mapInstanced, Map* map)
@@ -274,7 +186,7 @@ void ScriptMgr::OnDestroyInstance(MapInstanced* mapInstanced, Map* map)
     CALL_ENABLED_HOOKS(AllMapScript, ALLMAPHOOK_ON_DESTROY_INSTANCE, script->OnDestroyInstance(mapInstanced, map));
 }
 
-AllMapScript::AllMapScript(const char* name, std::vector<uint16> enabledHooks) : ScriptObject(name, ALLMAPHOOK_END)
+AllMapScript::AllMapScript(char const* name, std::vector<uint16> enabledHooks) : ScriptObject(name, ALLMAPHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

@@ -37,8 +37,8 @@ enum GuardShattrath
 {
     SPELL_BANISHED_SHATTRATH_A = 36642,
     SPELL_BANISHED_SHATTRATH_S = 36671,
-    SPELL_BANISH_TELEPORT      = 36643,
-    SPELL_EXILE                = 39533
+    SPELL_BANISH_TELEPORT = 36643,
+    SPELL_EXILE = 39533
 };
 
 class guard_shattrath_scryer : public CreatureScript
@@ -76,7 +76,8 @@ public:
                     exileTimer = 8500;
                     canTeleport = false;
                 }
-                else exileTimer -= diff;
+                else
+                    exileTimer -= diff;
             }
             else if (banishTimer <= diff)
             {
@@ -90,7 +91,8 @@ public:
                         canTeleport = true;
                 }
             }
-            else banishTimer -= diff;
+            else
+                banishTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
@@ -143,7 +145,8 @@ public:
                     exileTimer = 8500;
                     canTeleport = false;
                 }
-                else exileTimer -= diff;
+                else
+                    exileTimer -= diff;
             }
             else if (banishTimer <= diff)
             {
@@ -157,10 +160,12 @@ public:
                         canTeleport = true;
                 }
             }
-            else banishTimer -= diff;
+            else
+                banishTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
+
     private:
         uint32 exileTimer;
         uint32 banishTimer;

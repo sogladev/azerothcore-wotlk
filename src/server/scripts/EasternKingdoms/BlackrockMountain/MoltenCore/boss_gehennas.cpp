@@ -21,15 +21,15 @@
 
 enum Spells
 {
-    SPELL_GEHENNAS_CURSE        = 19716,
-    SPELL_RAIN_OF_FIRE          = 19717,
-    SPELL_SHADOW_BOLT_RANDOM    = 19728,
-    SPELL_SHADOW_BOLT_VICTIM    = 19729,
+    SPELL_GEHENNAS_CURSE = 19716,
+    SPELL_RAIN_OF_FIRE = 19717,
+    SPELL_SHADOW_BOLT_RANDOM = 19728,
+    SPELL_SHADOW_BOLT_VICTIM = 19729,
 };
 
 enum Events
 {
-    EVENT_GEHENNAS_CURSE    = 1,
+    EVENT_GEHENNAS_CURSE = 1,
     EVENT_RAIN_OF_FIRE,
     EVENT_SHADOW_BOLT,
 };
@@ -41,7 +41,7 @@ public:
 
     struct boss_gehennasAI : public BossAI
     {
-        boss_gehennasAI(Creature* creature) : BossAI(creature, DATA_GEHENNAS) {}
+        boss_gehennasAI(Creature* creature) : BossAI(creature, DATA_GEHENNAS) { }
 
         void JustEngagedWith(Unit* /*attacker*/) override
         {
@@ -64,29 +64,19 @@ public:
                 case EVENT_RAIN_OF_FIRE:
                 {
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 0.0f, true))
-                    {
                         DoCast(target, SPELL_RAIN_OF_FIRE, true);
-                    }
                     events.RepeatEvent(6000);
                     break;
                 }
                 case EVENT_SHADOW_BOLT:
                 {
                     if (urand(0, 1))
-                    {
                         if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 0.0f, true))
-                        {
                             DoCast(target, SPELL_SHADOW_BOLT_RANDOM);
-                        }
                         else
-                        {
                             DoCastVictim(SPELL_SHADOW_BOLT_VICTIM);
-                        }
-                    }
                     else
-                    {
                         DoCastVictim(SPELL_SHADOW_BOLT_VICTIM);
-                    }
 
                     events.RepeatEvent(5000);
                     break;

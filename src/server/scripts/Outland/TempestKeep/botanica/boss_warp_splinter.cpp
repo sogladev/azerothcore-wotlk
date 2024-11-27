@@ -21,20 +21,20 @@
 
 enum Says
 {
-    SAY_AGGRO               = 0,
-    SAY_SLAY                = 1,
-    SAY_SUMMON              = 2,
-    SAY_DEATH               = 3
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_SUMMON = 2,
+    SAY_DEATH = 3
 };
 
 enum Spells
 {
-    SPELL_WAR_STOMP                 = 34716,
-    SPELL_SUMMON_TREANTS            = 34730, // 34727, 34730 - 34737, 34739
-    SPELL_ARCANE_VOLLEY             = 36705,
+    SPELL_WAR_STOMP = 34716,
+    SPELL_SUMMON_TREANTS = 34730, // 34727, 34730 - 34737, 34739
+    SPELL_ARCANE_VOLLEY = 36705,
 
-    SPELL_SUMMON_SAPLINGS_SUMMON    = 34730,
-    SPELL_SUMMON_SAPLINGS_PERIODIC  = 34741
+    SPELL_SUMMON_SAPLINGS_SUMMON = 34730,
+    SPELL_SUMMON_SAPLINGS_PERIODIC = 34741
 };
 
 struct boss_warp_splinter : public BossAI
@@ -46,22 +46,26 @@ struct boss_warp_splinter : public BossAI
         _JustEngagedWith();
         Talk(SAY_AGGRO);
 
-        scheduler.Schedule(8s, [this](TaskContext context)
+        scheduler
+            .Schedule(8s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_ARCANE_VOLLEY);
             context.Repeat(20s);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             DoCastAOE(SPELL_WAR_STOMP);
             context.Repeat(30s);
-        }).Schedule(20s, [this](TaskContext context)
+        })
+            .Schedule(20s,
+                [this](TaskContext context)
         {
             Talk(SAY_SUMMON);
             DoCastAOE(SPELL_SUMMON_SAPLINGS_PERIODIC, true);
             for (uint8 i = 0; i < 6; ++i)
-            {
                 DoCastAOE(SPELL_SUMMON_SAPLINGS_SUMMON + i, true);
-            }
             context.Repeat(40s);
         });
     }
@@ -69,9 +73,7 @@ struct boss_warp_splinter : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override

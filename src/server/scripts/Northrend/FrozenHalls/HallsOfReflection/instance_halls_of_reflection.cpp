@@ -16,10 +16,10 @@
  */
 
 #include "InstanceMapScript.h"
+#include "InstanceScript.h"
 #include "MapMgr.h"
 #include "Transport.h"
 #include "halls_of_reflection.h"
-#include "InstanceScript.h"
 
 class UtherBatteredHiltEvent : public BasicEvent
 {
@@ -47,9 +47,7 @@ public:
                 if (InstanceScript* instance = _owner.GetInstanceScript())
                     instance->SetData(DATA_BATTERED_HILT, 4);
                 if (Creature* quel = _owner.FindNearestCreature(NPC_QUEL_DELAR, 50))
-                {
                     quel->AI()->Talk(EMOTE_QUEL_SPAWN);
-                }
                 _owner.m_Events.AddEvent(new UtherBatteredHiltEvent(_owner, 4), _owner.m_Events.CalculateTime(3500));
                 break;
             case 4:
@@ -68,13 +66,9 @@ public:
                 break;
             case 7:
                 if (InstanceScript* instance = _owner.GetInstanceScript())
-                {
                     instance->SetData(DATA_BATTERED_HILT, 7);
-                }
                 if (Creature* quel = _owner.FindNearestCreature(NPC_QUEL_DELAR, 50))
-                {
                     quel->AI()->Talk(EMOTE_QUEL_PREPARE);
-                }
                 _owner.m_Events.AddEvent(new UtherBatteredHiltEvent(_owner, 8), _owner.m_Events.CalculateTime(4000));
                 break;
             case 8:
@@ -85,37 +79,46 @@ public:
                 break;
             case 9:
                 _owner.AI()->Talk(SAY_BATTERED_HILT_OUTRO1);
-                _owner.m_Events.AddEvent(new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(11000));
+                _owner.m_Events.AddEvent(
+                    new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(11000));
                 break;
             case 10:
                 _owner.AI()->Talk(SAY_BATTERED_HILT_OUTRO2);
-                _owner.m_Events.AddEvent(new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(7500));
+                _owner.m_Events.AddEvent(
+                    new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(7500));
                 break;
             case 11:
                 _owner.AI()->Talk(SAY_BATTERED_HILT_OUTRO3);
-                _owner.m_Events.AddEvent(new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(8000));
+                _owner.m_Events.AddEvent(
+                    new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(8000));
                 break;
             case 12:
                 _owner.AI()->Talk(SAY_BATTERED_HILT_OUTRO4);
-                _owner.m_Events.AddEvent(new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(5000));
+                _owner.m_Events.AddEvent(
+                    new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(5000));
                 break;
             case 13:
                 _owner.CastSpell((Unit*)nullptr, 73036, true);
-                _owner.m_Events.AddEvent(new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(3000));
+                _owner.m_Events.AddEvent(
+                    new UtherBatteredHiltEvent(_owner, _eventId + 1), _owner.m_Events.CalculateTime(3000));
                 break;
             case 14:
-                {
-                    Position homePos = _owner.GetHomePosition();
-                    _owner.SetReactState(REACT_PASSIVE);
-                    _owner.SetImmuneToAll(true);
-                    _owner.SetVisible(false);
-                    _owner.UpdatePosition(homePos.GetPositionX(), homePos.GetPositionY(), homePos.GetPositionZ(), homePos.GetOrientation(), true);
-                    _owner.StopMovingOnCurrentPos();
-                    _owner.GetMotionMaster()->Clear();
-                    if (InstanceScript* instance = _owner.GetInstanceScript())
-                        instance->SetData(DATA_BATTERED_HILT, 9);
-                }
-                break;
+            {
+                Position homePos = _owner.GetHomePosition();
+                _owner.SetReactState(REACT_PASSIVE);
+                _owner.SetImmuneToAll(true);
+                _owner.SetVisible(false);
+                _owner.UpdatePosition(homePos.GetPositionX(),
+                    homePos.GetPositionY(),
+                    homePos.GetPositionZ(),
+                    homePos.GetOrientation(),
+                    true);
+                _owner.StopMovingOnCurrentPos();
+                _owner.GetMotionMaster()->Clear();
+                if (InstanceScript* instance = _owner.GetInstanceScript())
+                    instance->SetData(DATA_BATTERED_HILT, 9);
+            }
+            break;
         }
         return true;
     }
@@ -210,7 +213,8 @@ public:
 
         bool IsEncounterInProgress() const override
         {
-            return (instance->HavePlayers() && WaveNumber)  || IsDuringLKFight; // during LK fight npcs are active and will unset this variable
+            return (instance->HavePlayers() && WaveNumber) ||
+                   IsDuringLKFight; // during LK fight npcs are active and will unset this variable
         }
 
         void OnCreatureCreate(Creature* creature) override
@@ -299,11 +303,14 @@ public:
                         creature->SetVisible(false);
                     if (!(EncounterMask & (1 << DATA_LK_INTRO)))
                     {
-                        creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_ATTACK2HTIGHT); //the fight cannot be in the form of an emote, it is causing bugs
+                        creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,
+                            EMOTE_ONESHOT_ATTACK2HTIGHT); //the fight cannot be in the form of an emote, it is causing bugs
                         creature->CastSpell(creature, SPELL_SOUL_REAPER, true);
                     }
                     else if (!(EncounterMask & (1 << DATA_LICH_KING)))
-                        creature->AddAura(TeamIdInInstance == TEAM_ALLIANCE ? SPELL_JAINA_ICE_PRISON : SPELL_SYLVANAS_DARK_BINDING, creature);
+                        creature->AddAura(
+                            TeamIdInInstance == TEAM_ALLIANCE ? SPELL_JAINA_ICE_PRISON : SPELL_SYLVANAS_DARK_BINDING,
+                            creature);
                     else
                         creature->SetVisible(false);
 
@@ -326,9 +333,15 @@ public:
                     if (!(EncounterMask & (1 << DATA_LK_INTRO)))
                     {
                         creature->SetSheath(SHEATH_STATE_MELEE);
-                        creature->SetUInt32Value(UNIT_NPC_EMOTESTATE, TeamIdInInstance == TEAM_ALLIANCE ? EMOTE_ONESHOT_ATTACK2HTIGHT : EMOTE_ONESHOT_ATTACK1H); //the fight cannot be in the form of an emote, it is causing bugs.
+                        creature->SetUInt32Value(UNIT_NPC_EMOTESTATE,
+                            TeamIdInInstance == TEAM_ALLIANCE
+                                ? EMOTE_ONESHOT_ATTACK2HTIGHT
+                                : EMOTE_ONESHOT_ATTACK1H); //the fight cannot be in the form of an emote, it is causing bugs.
                         creature->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_QUESTGIVER);
-                        creature->CastSpell(creature, TeamIdInInstance == TEAM_ALLIANCE ? SPELL_JAINA_ICE_BARRIER : SPELL_SYLVANAS_CLOAK_OF_DARKNESS, true);
+                        creature->CastSpell(creature,
+                            TeamIdInInstance == TEAM_ALLIANCE ? SPELL_JAINA_ICE_BARRIER
+                                                              : SPELL_SYLVANAS_CLOAK_OF_DARKNESS,
+                            true);
                     }
                     else if (!(EncounterMask & (1 << DATA_LICH_KING)))
                     {
@@ -339,7 +352,8 @@ public:
                     }
                     else
                     {
-                        instance->LoadGrid(PathWaypoints[PATH_WP_COUNT - 1].GetPositionX(), PathWaypoints[PATH_WP_COUNT - 1].GetPositionY());
+                        instance->LoadGrid(PathWaypoints[PATH_WP_COUNT - 1].GetPositionX(),
+                            PathWaypoints[PATH_WP_COUNT - 1].GetPositionY());
                         creature->UpdatePosition(PathWaypoints[PATH_WP_COUNT - 1], true);
                         creature->StopMovingOnCurrentPos();
                     }
@@ -446,9 +460,7 @@ public:
                                 c->SetReactState(REACT_AGGRESSIVE);
                             }
                             if (Creature* c = instance->GetCreature(NPC_FrostswornGeneralGUID))
-                            {
                                 c->HandleEmoteCommand(EMOTE_ONESHOT_EMERGE);
-                            }
                             WaveNumber = 0;
                             DoUpdateWorldState(WORLD_STATE_HOR_COUNTER, 0);
 
@@ -456,7 +468,10 @@ public:
                             Map::PlayerList const& pl = instance->GetPlayers();
                             for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                                 if (Player* p = itr->GetSource())
-                                    p->CastSpell(p, p->GetTeamId() == TEAM_ALLIANCE ? SPELL_HOR_START_QUEST_ALLY : SPELL_HOR_START_QUEST_HORDE, true);
+                                    p->CastSpell(p,
+                                        p->GetTeamId() == TEAM_ALLIANCE ? SPELL_HOR_START_QUEST_ALLY
+                                                                        : SPELL_HOR_START_QUEST_HORDE,
+                                        true);
                         }
                     }
                     break;
@@ -471,32 +486,32 @@ public:
                     }
                     break;
                 case ACTION_SPIRITUAL_REFLECTIONS_COPY:
-                    {
-                        uint8 i = 0;
-                        Map::PlayerList const& pl = instance->GetPlayers();
-                        for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
-                            if (Player* p = itr->GetSource())
-                                if (p->IsAlive() && !p->IsGameMaster())
-                                    if (Creature* c = instance->GetCreature(NPC_SpiritualReflectionGUID[i++]))
-                                    {
-                                        if (!c->IsAlive())
-                                            c->Respawn();
-                                        c->SetCanFly(true);
-                                        c->SetDisableGravity(true);
-                                        c->SetVisible(true);
+                {
+                    uint8 i = 0;
+                    Map::PlayerList const& pl = instance->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
+                        if (Player* p = itr->GetSource())
+                            if (p->IsAlive() && !p->IsGameMaster())
+                                if (Creature* c = instance->GetCreature(NPC_SpiritualReflectionGUID[i++]))
+                                {
+                                    if (!c->IsAlive())
+                                        c->Respawn();
+                                    c->SetCanFly(true);
+                                    c->SetDisableGravity(true);
+                                    c->SetVisible(true);
 
-                                        Item* i;
-                                        i = p->GetWeaponForAttack(BASE_ATTACK);
-                                        c->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, i ? i->GetEntry() : 0);
-                                        i = p->GetWeaponForAttack(OFF_ATTACK);
-                                        c->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, i ? i->GetEntry() : 0);
-                                        i = p->GetWeaponForAttack(RANGED_ATTACK);
-                                        c->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, i ? i->GetEntry() : 0);
-                                        p->CastSpell(c, SPELL_HOR_CLONE, true);
-                                        p->CastSpell(c, SPELL_HOR_CLONE_NAME, true);
-                                    }
-                    }
-                    break;
+                                    Item* i;
+                                    i = p->GetWeaponForAttack(BASE_ATTACK);
+                                    c->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, i ? i->GetEntry() : 0);
+                                    i = p->GetWeaponForAttack(OFF_ATTACK);
+                                    c->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, i ? i->GetEntry() : 0);
+                                    i = p->GetWeaponForAttack(RANGED_ATTACK);
+                                    c->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, i ? i->GetEntry() : 0);
+                                    p->CastSpell(c, SPELL_HOR_CLONE, true);
+                                    p->CastSpell(c, SPELL_HOR_CLONE_NAME, true);
+                                }
+                }
+                break;
                 case ACTION_SPIRITUAL_REFLECTIONS_ACTIVATE:
                     if (Creature* fg = instance->GetCreature(NPC_FrostswornGeneralGUID))
                         for (uint8 i = 0; i < 5; ++i)
@@ -506,7 +521,8 @@ public:
                                     c->SetInCombatWithZone();
                                     c->SetCanFly(false);
                                     c->SetDisableGravity(false);
-                                    c->GetMotionMaster()->MoveJump(fg->GetPositionX(), fg->GetPositionY(), fg->GetPositionZ(), 20.0f, 10.0f);
+                                    c->GetMotionMaster()->MoveJump(
+                                        fg->GetPositionX(), fg->GetPositionY(), fg->GetPositionZ(), 20.0f, 10.0f);
                                 }
                     break;
                 case ACTION_SPIRITUAL_REFLECTIONS_HIDE:
@@ -526,9 +542,7 @@ public:
                     break;
                 case ACTION_STOP_LK_FIGHT:
                     if (!IsDuringLKFight)
-                    {
                         break;
-                    }
                     instance->LoadGrid(LeaderEscapePos.GetPositionX(), LeaderEscapePos.GetPositionY());
                     if (Creature* c = instance->GetCreature(NPC_LeaderGUID))
                     {
@@ -563,7 +577,9 @@ public:
                         c->UpdatePosition(c->GetHomePosition(), true);
                         c->StopMovingOnCurrentPos();
                         c->RemoveAllAuras();
-                        c->AddAura(TeamIdInInstance == TEAM_ALLIANCE ? SPELL_JAINA_ICE_PRISON : SPELL_SYLVANAS_DARK_BINDING, c);
+                        c->AddAura(
+                            TeamIdInInstance == TEAM_ALLIANCE ? SPELL_JAINA_ICE_PRISON : SPELL_SYLVANAS_DARK_BINDING,
+                            c);
                         c->AI()->Reset();
                         c->setActive(false);
                         c->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
@@ -593,71 +609,74 @@ public:
                     }
                     break;
                 case DATA_BATTERED_HILT:
-                    {
-                        if (EncounterMask & (1 << DATA_BATTERED_HILT))
-                            return;
+                {
+                    if (EncounterMask & (1 << DATA_BATTERED_HILT))
+                        return;
 
-                        switch (data)
-                        {
-                            case 1: // talked to leader
-                                EncounterMask |= (1 << DATA_BATTERED_HILT);
-                                SaveToDB();
+                    switch (data)
+                    {
+                        case 1: // talked to leader
+                            EncounterMask |= (1 << DATA_BATTERED_HILT);
+                            SaveToDB();
+                            break;
+                        case 2:
+                            if (BatteredHiltStatus)
                                 break;
-                            case 2:
-                                if (BatteredHiltStatus)
-                                    break;
-                                BatteredHiltStatus |= BHSF_STARTED;
-                                if (Creature* c = instance->GetCreature(NPC_AltarBunnyGUID))
-                                    c->CastSpell(c, 70720, true);
-                                if (Creature* c = instance->GetCreature(NPC_UtherGUID))
-                                    c->m_Events.AddEvent(new UtherBatteredHiltEvent(*c, 1), c->m_Events.CalculateTime(3000));
+                            BatteredHiltStatus |= BHSF_STARTED;
+                            if (Creature* c = instance->GetCreature(NPC_AltarBunnyGUID))
+                                c->CastSpell(c, 70720, true);
+                            if (Creature* c = instance->GetCreature(NPC_UtherGUID))
+                                c->m_Events.AddEvent(
+                                    new UtherBatteredHiltEvent(*c, 1), c->m_Events.CalculateTime(3000));
+                            break;
+                        case 3:
+                            if ((BatteredHiltStatus & BHSF_STARTED) == 0 || (BatteredHiltStatus & BHSF_THROWN))
                                 break;
-                            case 3:
-                                if ((BatteredHiltStatus & BHSF_STARTED) == 0 || (BatteredHiltStatus & BHSF_THROWN))
-                                    break;
-                                BatteredHiltStatus |= BHSF_THROWN;
-                                if (Creature* c = instance->GetCreature(NPC_UtherGUID))
-                                {
-                                    c->m_Events.AddEvent(new UtherBatteredHiltEvent(*c, 3), c->m_Events.CalculateTime(5500));
-                                }
-                                break;
-                            case 4:
-                                if (Creature* c = instance->GetCreature(NPC_QuelDelarGUID))
-                                {
-                                    c->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                                    c->SetSpeed(MOVE_RUN, 2.5f);
-                                }
-                                break;
-                            case 5:
-                                if (Creature* c = instance->GetCreature(NPC_UtherGUID))
-                                    c->m_Events.AddEvent(new UtherBatteredHiltEvent(*c, 6), c->m_Events.CalculateTime(3000));
-                                break;
-                            case 6:
-                                if (Creature* c = instance->GetCreature(NPC_QuelDelarGUID))
-                                {
-                                    c->SetSpeed(MOVE_RUN, c->GetCreatureTemplate()->speed_run);
-                                    c->GetMotionMaster()->MoveLand(0, c->GetPositionX(), c->GetPositionY(), 707.70f, 7.0f);
-                                }
-                                break;
-                            case 7:
-                                if (Creature* c = instance->GetCreature(NPC_QuelDelarGUID))
-                                {
-                                    c->SetReactState(REACT_AGGRESSIVE);
-                                    c->SetImmuneToAll(false);
-                                    c->RemoveAurasDueToSpell(70300);
-                                }
-                                break;
-                            case 8:
-                                if (Creature* c = instance->GetCreature(NPC_QuelDelarGUID))
-                                    c->SetInCombatWithZone();
-                                break;
-                            case 9:
-                                EncounterMask |= (1 << DATA_BATTERED_HILT);
-                                BatteredHiltStatus |= BHSF_FINISHED;
-                                SaveToDB();
-                                break;
-                        }
+                            BatteredHiltStatus |= BHSF_THROWN;
+                            if (Creature* c = instance->GetCreature(NPC_UtherGUID))
+                            {
+                                c->m_Events.AddEvent(
+                                    new UtherBatteredHiltEvent(*c, 3), c->m_Events.CalculateTime(5500));
+                            }
+                            break;
+                        case 4:
+                            if (Creature* c = instance->GetCreature(NPC_QuelDelarGUID))
+                            {
+                                c->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                                c->SetSpeed(MOVE_RUN, 2.5f);
+                            }
+                            break;
+                        case 5:
+                            if (Creature* c = instance->GetCreature(NPC_UtherGUID))
+                                c->m_Events.AddEvent(
+                                    new UtherBatteredHiltEvent(*c, 6), c->m_Events.CalculateTime(3000));
+                            break;
+                        case 6:
+                            if (Creature* c = instance->GetCreature(NPC_QuelDelarGUID))
+                            {
+                                c->SetSpeed(MOVE_RUN, c->GetCreatureTemplate()->speed_run);
+                                c->GetMotionMaster()->MoveLand(0, c->GetPositionX(), c->GetPositionY(), 707.70f, 7.0f);
+                            }
+                            break;
+                        case 7:
+                            if (Creature* c = instance->GetCreature(NPC_QuelDelarGUID))
+                            {
+                                c->SetReactState(REACT_AGGRESSIVE);
+                                c->SetImmuneToAll(false);
+                                c->RemoveAurasDueToSpell(70300);
+                            }
+                            break;
+                        case 8:
+                            if (Creature* c = instance->GetCreature(NPC_QuelDelarGUID))
+                                c->SetInCombatWithZone();
+                            break;
+                        case 9:
+                            EncounterMask |= (1 << DATA_BATTERED_HILT);
+                            BatteredHiltStatus |= BHSF_FINISHED;
+                            SaveToDB();
+                            break;
                     }
+                }
                     return;
             }
 
@@ -704,9 +723,9 @@ public:
                 case NPC_SYLVANAS_PART2:
                     return NPC_LeaderGUID;
                 case NPC_ICE_WALL_TARGET:
-                case NPC_ICE_WALL_TARGET+1:
-                case NPC_ICE_WALL_TARGET+2:
-                case NPC_ICE_WALL_TARGET+3:
+                case NPC_ICE_WALL_TARGET + 1:
+                case NPC_ICE_WALL_TARGET + 2:
+                case NPC_ICE_WALL_TARGET + 3:
                     return NPC_IceWallTargetGUID[type - NPC_ICE_WALL_TARGET];
                 case GO_FROSTMOURNE:
                     return GO_FrostmourneGUID;
@@ -732,7 +751,9 @@ public:
         void OnUnitDeath(Unit* unit) override
         {
             if (WaveNumber && reqKillCount)
-                if (unit->GetEntry() == NPC_WAVE_MERCENARY || unit->GetEntry() == NPC_WAVE_FOOTMAN || unit->GetEntry() == NPC_WAVE_RIFLEMAN || unit->GetEntry() == NPC_WAVE_PRIEST || unit->GetEntry() == NPC_WAVE_MAGE)
+                if (unit->GetEntry() == NPC_WAVE_MERCENARY || unit->GetEntry() == NPC_WAVE_FOOTMAN ||
+                    unit->GetEntry() == NPC_WAVE_RIFLEMAN || unit->GetEntry() == NPC_WAVE_PRIEST ||
+                    unit->GetEntry() == NPC_WAVE_MAGE)
                     if ((--reqKillCount) == 0 && WaveNumber % 5 && NextWaveTimer > 5000)
                         NextWaveTimer = 5000;
 
@@ -788,7 +809,8 @@ public:
                     {
                         uint32 entry = chosenComposition[WaveNumber][i];
                         bool forward = !!urand(0, 1);
-                        for (int8 j = (forward ? 0 : NUM_OF_TRASH - 1); (forward ? j<NUM_OF_TRASH : j >= 0); (forward ? ++j : --j))
+                        for (int8 j = (forward ? 0 : NUM_OF_TRASH - 1); (forward ? j < NUM_OF_TRASH : j >= 0);
+                             (forward ? ++j : --j))
                             if (!TrashActive[j])
                                 if (Creature* c = instance->GetCreature(NPC_TrashGUID[j]))
                                     if (c->GetEntry() == entry)
@@ -866,7 +888,8 @@ public:
                 {
                     uint32 entry = chosenComposition[WaveNumber - (WaveNumber > 5 ? 2 : 1)][i];
                     bool forward = !!urand(0, 1);
-                    for (int8 j = (forward ? 0 : NUM_OF_TRASH - 1); (forward ? j<NUM_OF_TRASH : j >= 0); (forward ? ++j : --j))
+                    for (int8 j = (forward ? 0 : NUM_OF_TRASH - 1); (forward ? j < NUM_OF_TRASH : j >= 0);
+                         (forward ? ++j : --j))
                         if (!TrashActive[j])
                             if (Creature* c = instance->GetCreature(NPC_TrashGUID[j]))
                                 if (c->GetEntry() == entry)
@@ -955,7 +978,8 @@ public:
                         bool allInRangeAndAlive = (instance->GetPlayersCountExceptGMs() > 0);
                         for (Map::PlayerList::const_iterator itr = pl.begin(); itr != pl.end(); ++itr)
                             if (Player* p = itr->GetSource())
-                                if (!p->IsGameMaster() && (p->GetExactDist2d(&CenterPos) > MAX_DIST_FROM_CENTER_TO_START || !p->IsAlive()))
+                                if (!p->IsGameMaster() &&
+                                    (p->GetExactDist2d(&CenterPos) > MAX_DIST_FROM_CENTER_TO_START || !p->IsAlive()))
                                 {
                                     allInRangeAndAlive = false;
                                     break;
@@ -1021,16 +1045,9 @@ public:
                             if (Creature* pFalric = instance->GetCreature(NPC_FalricGUID))
                             {
                                 if (pFalric->IsAlive())
-                                {
                                     pFalric->AI()->Talk(SAY_FALRIC_INTRO_2); // Between wave 1 and 4
-                                }
-                                else
-                                {
-                                    if (Creature* marwyn = instance->GetCreature(NPC_MarwynGUID))
-                                    {
-                                        marwyn->AI()->Talk(SAY_MARWYN_WIPE_AFTER_FALRIC); // Between wave 6 and 9
-                                    }
-                                }
+                                else if (Creature* marwyn = instance->GetCreature(NPC_MarwynGUID))
+                                    marwyn->AI()->Talk(SAY_MARWYN_WIPE_AFTER_FALRIC); // Between wave 6 and 9
                             }
                             SetData(ACTION_SHOW_TRASH, 1);
                             ResumeFirstEventStep = 0;
@@ -1083,14 +1100,14 @@ public:
                             outroTimer = 500;
                             break;
                         case 2:
-                            {
-                                uint32 entry = TeamIdInInstance == TEAM_ALLIANCE ? GO_THE_SKYBREAKER : GO_ORGRIMS_HAMMER;
-                                T1 = sTransportMgr->CreateTransport(entry, 0, instance);
+                        {
+                            uint32 entry = TeamIdInInstance == TEAM_ALLIANCE ? GO_THE_SKYBREAKER : GO_ORGRIMS_HAMMER;
+                            T1 = sTransportMgr->CreateTransport(entry, 0, instance);
 
-                                ++outroStep;
-                                outroTimer = TeamIdInInstance == TEAM_ALLIANCE ? 10000 : 10500;
-                            }
-                            break;
+                            ++outroStep;
+                            outroTimer = TeamIdInInstance == TEAM_ALLIANCE ? 10000 : 10500;
+                        }
+                        break;
                         case 3:
                             if (T1)
                                 T1->EnableMovement(false);
@@ -1146,7 +1163,19 @@ public:
                                 uint8 index = TeamIdInInstance == TEAM_ALLIANCE ? 0 : 1;
                                 for (uint8 i = 0; i < 3; ++i)
                                     if (StairsPos[index][i].GetPositionX())
-                                        if (GameObject* go = leader->SummonGameObject(TeamIdInInstance == TEAM_ALLIANCE ? GO_STAIRS_ALLIANCE : GO_STAIRS_HORDE, StairsPos[index][i].GetPositionX(), StairsPos[index][i].GetPositionY(), StairsPos[index][i].GetPositionZ(), StairsPos[index][i].GetOrientation(), 0.0f, 0.0f, 0.0f, 0.0f, 86400, false))
+                                        if (GameObject* go = leader->SummonGameObject(TeamIdInInstance == TEAM_ALLIANCE
+                                                                                          ? GO_STAIRS_ALLIANCE
+                                                                                          : GO_STAIRS_HORDE,
+                                                StairsPos[index][i].GetPositionX(),
+                                                StairsPos[index][i].GetPositionY(),
+                                                StairsPos[index][i].GetPositionZ(),
+                                                StairsPos[index][i].GetOrientation(),
+                                                0.0f,
+                                                0.0f,
+                                                0.0f,
+                                                0.0f,
+                                                86400,
+                                                false))
                                             go->SetGameObjectFlag(GO_FLAG_INTERACT_COND | GO_FLAG_NOT_SELECTABLE);
                                 //Position pos = TeamIdInInstance == TEAM_ALLIANCE ? AllyPortalPos : HordePortalPos;
                                 //leader->SummonGameObject(GO_PORTAL_TO_DALARAN, pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation(), 0.0f, 0.0f, 0.0f, 0.0f, 86400);
@@ -1170,7 +1199,8 @@ public:
                             break;
                         case 9:
                             if (Creature* c = instance->GetCreature(NPC_LeaderGUID))
-                                c->AI()->Talk(TeamIdInInstance == TEAM_ALLIANCE ? SAY_JAINA_FINAL_1 : SAY_SYLVANA_FINAL);
+                                c->AI()->Talk(
+                                    TeamIdInInstance == TEAM_ALLIANCE ? SAY_JAINA_FINAL_1 : SAY_SYLVANA_FINAL);
                             HandleGameObject(GO_CaveInGUID, true);
                             ++outroStep;
                             outroTimer = 11000;
@@ -1178,7 +1208,9 @@ public:
                         case 10:
                             ++outroStep;
                             outroTimer = 0;
-                            for (Map::PlayerList::const_iterator itr = instance->GetPlayers().begin(); itr != instance->GetPlayers().end(); ++itr)
+                            for (Map::PlayerList::const_iterator itr = instance->GetPlayers().begin();
+                                 itr != instance->GetPlayers().end();
+                                 ++itr)
                                 if (Player* p = itr->GetSource())
                                     p->KilledMonsterCredit(NPC_WRATH_OF_THE_LICH_KING_CREDIT);
                             if (TeamIdInInstance == TEAM_ALLIANCE)

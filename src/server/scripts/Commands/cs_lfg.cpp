@@ -22,7 +22,7 @@
 #include "Language.h"
 #include "Player.h"
 
-void GetPlayerInfo(ChatHandler*  handler, Player* player)
+void GetPlayerInfo(ChatHandler* handler, Player* player)
 {
     if (!player)
         return;
@@ -31,9 +31,13 @@ void GetPlayerInfo(ChatHandler*  handler, Player* player)
     lfg::LfgDungeonSet dungeons = sLFGMgr->GetSelectedDungeons(guid);
 
     std::string const& state = lfg::GetStateString(sLFGMgr->GetState(guid));
-    handler->PSendSysMessage(LANG_LFG_PLAYER_INFO, player->GetName(),
-                             state, uint8(dungeons.size()), lfg::ConcatenateDungeons(dungeons),
-                             lfg::GetRolesString(sLFGMgr->GetRoles(guid)), sLFGMgr->GetComment(guid));
+    handler->PSendSysMessage(LANG_LFG_PLAYER_INFO,
+        player->GetName(),
+        state,
+        uint8(dungeons.size()),
+        lfg::ConcatenateDungeons(dungeons),
+        lfg::GetRolesString(sLFGMgr->GetRoles(guid)),
+        sLFGMgr->GetComment(guid));
 }
 
 using namespace Acore::ChatCommands;
@@ -45,18 +49,16 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable lfgCommandTable =
-        {
-            { "player",  HandleLfgPlayerInfoCommand, SEC_MODERATOR,     Console::No },
-            { "group",   HandleLfgGroupInfoCommand,  SEC_MODERATOR,     Console::No },
-            { "queue",   HandleLfgQueueInfoCommand,  SEC_MODERATOR,     Console::Yes },
-            { "clean",   HandleLfgCleanCommand,      SEC_ADMINISTRATOR, Console::Yes },
-            { "options", HandleLfgOptionsCommand,    SEC_GAMEMASTER,    Console::Yes },
+        static ChatCommandTable lfgCommandTable = {
+            {"player",  HandleLfgPlayerInfoCommand, SEC_MODERATOR,     Console::No },
+            {"group",   HandleLfgGroupInfoCommand,  SEC_MODERATOR,     Console::No },
+            {"queue",   HandleLfgQueueInfoCommand,  SEC_MODERATOR,     Console::Yes},
+            {"clean",   HandleLfgCleanCommand,      SEC_ADMINISTRATOR, Console::Yes},
+            {"options", HandleLfgOptionsCommand,    SEC_GAMEMASTER,    Console::Yes},
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "lfg", lfgCommandTable },
+        static ChatCommandTable commandTable = {
+            {"lfg", lfgCommandTable},
         };
         return commandTable;
     }
@@ -95,8 +97,7 @@ public:
 
         ObjectGuid guid = groupTarget->GetGUID();
         std::string const& state = lfg::GetStateString(sLFGMgr->GetState(guid));
-        handler->PSendSysMessage(LANG_LFG_GROUP_INFO, groupTarget->isLFGGroup(),
-                                 state, sLFGMgr->GetDungeon(guid));
+        handler->PSendSysMessage(LANG_LFG_GROUP_INFO, groupTarget->isLFGGroup(), state, sLFGMgr->GetDungeon(guid));
 
         for (GroupReference* itr = groupTarget->GetFirstMember(); itr != nullptr; itr = itr->next())
             GetPlayerInfo(handler, itr->GetSource());

@@ -25,8 +25,7 @@
 #include "World.h"
 
 //----- Point Movement Generator
-template<class T>
-void PointMovementGenerator<T>::DoInitialize(T* unit)
+template <class T> void PointMovementGenerator<T>::DoInitialize(T* unit)
 {
     if (unit->HasUnitState(UNIT_STATE_NOT_MOVE) || unit->IsMovementPreventedByCasting())
     {
@@ -41,9 +40,7 @@ void PointMovementGenerator<T>::DoInitialize(T* unit)
 
     unit->AddUnitState(UNIT_STATE_ROAMING | UNIT_STATE_ROAMING_MOVE);
     if (id == EVENT_CHARGE || id == EVENT_CHARGE_PREPATH)
-    {
         unit->AddUnitState(UNIT_STATE_CHARGING);
-    }
 
     i_recalculateSpeed = false;
     Movement::MoveSplineInit init(unit);
@@ -85,15 +82,12 @@ void PointMovementGenerator<T>::DoInitialize(T* unit)
         init.SetVelocity(speed);
 
     if (i_orientation > 0.0f)
-    {
         init.SetFacing(i_orientation);
-    }
 
     init.Launch();
 }
 
-template<class T>
-bool PointMovementGenerator<T>::DoUpdate(T* unit, uint32 /*diff*/)
+template <class T> bool PointMovementGenerator<T>::DoUpdate(T* unit, uint32 /*diff*/)
 {
     if (!unit)
         return false;
@@ -107,9 +101,7 @@ bool PointMovementGenerator<T>::DoUpdate(T* unit, uint32 /*diff*/)
     if (unit->HasUnitState(UNIT_STATE_NOT_MOVE))
     {
         if (!unit->HasUnitState(UNIT_STATE_CHARGING))
-        {
             unit->StopMoving();
-        }
 
         return true;
     }
@@ -130,7 +122,8 @@ bool PointMovementGenerator<T>::DoUpdate(T* unit, uint32 /*diff*/)
             m_precomputedPath.erase(m_precomputedPath.begin(), offsetItr);
 
             // restore 0 element (current position)
-            m_precomputedPath.insert(m_precomputedPath.begin(), G3D::Vector3(unit->GetPositionX(), unit->GetPositionY(), unit->GetPositionZ()));
+            m_precomputedPath.insert(m_precomputedPath.begin(),
+                G3D::Vector3(unit->GetPositionX(), unit->GetPositionY(), unit->GetPositionZ()));
 
             if (m_precomputedPath.size() > 2)
                 init.MovebyPath(m_precomputedPath);
@@ -143,9 +136,7 @@ bool PointMovementGenerator<T>::DoUpdate(T* unit, uint32 /*diff*/)
             init.SetVelocity(speed);
 
         if (i_orientation > 0.0f)
-        {
             init.SetFacing(i_orientation);
-        }
 
         init.Launch();
     }
@@ -153,8 +144,7 @@ bool PointMovementGenerator<T>::DoUpdate(T* unit, uint32 /*diff*/)
     return !unit->movespline->Finalized();
 }
 
-template<class T>
-void PointMovementGenerator<T>::DoFinalize(T* unit)
+template <class T> void PointMovementGenerator<T>::DoFinalize(T* unit)
 {
     unit->ClearUnitState(UNIT_STATE_ROAMING | UNIT_STATE_ROAMING_MOVE);
     if (id == EVENT_CHARGE || id == EVENT_CHARGE_PREPATH)
@@ -164,9 +154,7 @@ void PointMovementGenerator<T>::DoFinalize(T* unit)
         if (_chargeTargetGUID && _chargeTargetGUID == unit->GetTarget())
         {
             if (Unit* target = ObjectAccessor::GetUnit(*unit, _chargeTargetGUID))
-            {
                 unit->Attack(target, true);
-            }
         }
     }
 
@@ -174,23 +162,17 @@ void PointMovementGenerator<T>::DoFinalize(T* unit)
         MovementInform(unit);
 }
 
-template<class T>
-void PointMovementGenerator<T>::DoReset(T* unit)
+template <class T> void PointMovementGenerator<T>::DoReset(T* unit)
 {
     if (!unit->IsStopped())
         unit->StopMoving();
 
     unit->AddUnitState(UNIT_STATE_ROAMING | UNIT_STATE_ROAMING_MOVE);
     if (id == EVENT_CHARGE || id == EVENT_CHARGE_PREPATH)
-    {
         unit->AddUnitState(UNIT_STATE_CHARGING);
-    }
 }
 
-template<class T>
-void PointMovementGenerator<T>::MovementInform(T* /*unit*/)
-{
-}
+template <class T> void PointMovementGenerator<T>::MovementInform(T* /*unit*/) { }
 
 template <> void PointMovementGenerator<Creature>::MovementInform(Creature* unit)
 {
@@ -200,9 +182,7 @@ template <> void PointMovementGenerator<Creature>::MovementInform(Creature* unit
     if (Unit* summoner = unit->GetCharmerOrOwner())
     {
         if (UnitAI* AI = summoner->GetAI())
-        {
             AI->SummonMovementInform(unit, POINT_MOTION_TYPE, id);
-        }
     }
 }
 
@@ -220,7 +200,8 @@ void AssistanceMovementGenerator::Finalize(Unit* unit)
     unit->ToCreature()->SetNoCallAssistance(false);
     unit->ToCreature()->CallAssistance();
     if (unit->IsAlive())
-        unit->GetMotionMaster()->MoveSeekAssistanceDistract(sWorld->getIntConfig(CONFIG_CREATURE_FAMILY_ASSISTANCE_DELAY));
+        unit->GetMotionMaster()->MoveSeekAssistanceDistract(
+            sWorld->getIntConfig(CONFIG_CREATURE_FAMILY_ASSISTANCE_DELAY));
 }
 
 bool EffectMovementGenerator::Update(Unit* unit, uint32)
@@ -233,7 +214,8 @@ void EffectMovementGenerator::Finalize(Unit* unit)
     if (!unit->IsCreature())
         return;
 
-    if (unit->IsCreature() && unit->HasUnitMovementFlag(MOVEMENTFLAG_FALLING) && unit->movespline->isFalling()) // pussywizard
+    if (unit->IsCreature() && unit->HasUnitMovementFlag(MOVEMENTFLAG_FALLING) &&
+        unit->movespline->isFalling()) // pussywizard
         unit->RemoveUnitMovementFlag(MOVEMENTFLAG_FALLING);
 
     // Need restore previous movement since we have no proper states system

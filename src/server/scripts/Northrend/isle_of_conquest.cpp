@@ -27,13 +27,13 @@
 
 enum eIoCTurrent
 {
-    EVENT_RESTORE_FLAG          = 1
+    EVENT_RESTORE_FLAG = 1
 };
 
 class npc_isle_of_conquest_turret : public CreatureScript
 {
 public:
-    npc_isle_of_conquest_turret() : CreatureScript("npc_isle_of_conquest_turret") {}
+    npc_isle_of_conquest_turret() : CreatureScript("npc_isle_of_conquest_turret") { }
 
     struct npc_isle_of_conquest_turretAI : public VehicleAI
     {
@@ -90,7 +90,7 @@ public:
 class npc_four_car_garage : public CreatureScript
 {
 public:
-    npc_four_car_garage() : CreatureScript("npc_four_car_garage") {}
+    npc_four_car_garage() : CreatureScript("npc_four_car_garage") { }
 
     struct npc_four_car_garageAI : public NullCreatureAI
     {
@@ -131,9 +131,7 @@ public:
             if (killer)
             {
                 if (Player* player = killer->GetCharmerOrOwnerPlayerOrPlayerItself())
-                {
                     player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_GET_KILLING_BLOWS, 1, 0, me);
-                }
             }
         }
     };
@@ -146,7 +144,7 @@ public:
 
 enum Events
 {
-    EVENT_TALK  = 1,
+    EVENT_TALK = 1,
     EVENT_DESPAWN
 };
 
@@ -208,24 +206,24 @@ public:
 
 enum BossIoCEvents
 {
-    EVENT_CHECK_RAGE                = 1,
-    EVENT_BRUTAL_STRIKE             = 2,
-    EVENT_CRUSHING_LEAP             = 3,
-    EVENT_DAGGER_THROW              = 4,
+    EVENT_CHECK_RAGE = 1,
+    EVENT_BRUTAL_STRIKE = 2,
+    EVENT_CRUSHING_LEAP = 3,
+    EVENT_DAGGER_THROW = 4,
 };
 
 enum BossIoCSpells
 {
-    SPELL_IOCBOSS_BRUTAL_STRIKE     = 58460,
-    SPELL_IOCBOSS_CRUSHING_LEAP     = 68506,
-    SPELL_IOCBOSS_DAGGER_THROW      = 67280,
-    SPELL_IOCBOSS_RAGE              = 66776,
+    SPELL_IOCBOSS_BRUTAL_STRIKE = 58460,
+    SPELL_IOCBOSS_CRUSHING_LEAP = 68506,
+    SPELL_IOCBOSS_DAGGER_THROW = 67280,
+    SPELL_IOCBOSS_RAGE = 66776,
 };
 
 class boss_isle_of_conquest : public CreatureScript
 {
 public:
-    boss_isle_of_conquest() : CreatureScript("boss_isle_of_conquest") {}
+    boss_isle_of_conquest() : CreatureScript("boss_isle_of_conquest") { }
 
     struct boss_isle_of_conquestAI : public ScriptedAI
     {
@@ -233,6 +231,7 @@ public:
 
         EventMap events;
         bool rage;
+
         void Reset() override
         {
             events.Reset();
@@ -249,17 +248,15 @@ public:
                     me->CastSpell(me, SPELL_IOCBOSS_RAGE, true);
                 }
             }
-            else
+            else if (me->GetDistance(me->GetHomePosition()) < 40.0f &&
+                     std::abs(me->GetPositionZ() - me->GetHomePosition().GetPositionZ()) < 5.0f)
             {
-                if (me->GetDistance(me->GetHomePosition()) < 40.0f && std::abs(me->GetPositionZ() - me->GetHomePosition().GetPositionZ()) < 5.0f)
-                {
-                    rage = false;
-                    me->RemoveAurasDueToSpell(SPELL_IOCBOSS_RAGE);
-                }
+                rage = false;
+                me->RemoveAurasDueToSpell(SPELL_IOCBOSS_RAGE);
             }
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             events.ScheduleEvent(EVENT_CHECK_RAGE, 2s);
             events.ScheduleEvent(EVENT_BRUTAL_STRIKE, 6s);
@@ -314,7 +311,7 @@ class spell_ioc_repair_turret_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_REPAIR_TURRET_DUMMY });
+        return ValidateSpellInfo({SPELL_REPAIR_TURRET_DUMMY});
     }
 
     void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -325,18 +322,19 @@ class spell_ioc_repair_turret_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_ioc_repair_turret_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_ioc_repair_turret_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
 enum blastCriteria
 {
-    SPELL_SEAFORIUM_BLAST         = 66676,
-    SPELL_SEAFORIUM_BLAST_H       = 67814,
-    SPELL_HUGE_SEAFORIUM_BLAST    = 66672,
-    SPELL_HUGE_SEAFORIUM_BLAST_H  = 67813,
-    SPELL_BOMB_INABLE_CREDIT      = 68366,
-    SPELL_BOMB_INATION_CREDIT     = 68367
+    SPELL_SEAFORIUM_BLAST = 66676,
+    SPELL_SEAFORIUM_BLAST_H = 67814,
+    SPELL_HUGE_SEAFORIUM_BLAST = 66672,
+    SPELL_HUGE_SEAFORIUM_BLAST_H = 67813,
+    SPELL_BOMB_INABLE_CREDIT = 68366,
+    SPELL_BOMB_INATION_CREDIT = 68367
 };
 
 class spell_ioc_bomb_blast_criteria : public SpellScript
@@ -345,7 +343,7 @@ class spell_ioc_bomb_blast_criteria : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_BOMB_INABLE_CREDIT, SPELL_BOMB_INATION_CREDIT });
+        return ValidateSpellInfo({SPELL_BOMB_INABLE_CREDIT, SPELL_BOMB_INATION_CREDIT});
     }
 
     void HandleGameObjectDamage(SpellEffIndex /*effIndex*/)
@@ -366,7 +364,8 @@ class spell_ioc_bomb_blast_criteria : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_ioc_bomb_blast_criteria::HandleGameObjectDamage, EFFECT_1, SPELL_EFFECT_GAMEOBJECT_DAMAGE);
+        OnEffectHitTarget += SpellEffectFn(
+            spell_ioc_bomb_blast_criteria::HandleGameObjectDamage, EFFECT_1, SPELL_EFFECT_GAMEOBJECT_DAMAGE);
     }
 };
 
@@ -405,8 +404,10 @@ class spell_ioc_gunship_portal : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_ioc_gunship_portal::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
-        OnEffectHitTarget += SpellEffectFn(spell_ioc_gunship_portal::HandleScript2, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_ioc_gunship_portal::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_ioc_gunship_portal::HandleScript2, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -416,7 +417,7 @@ class spell_ioc_parachute_ic_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_PARACHUTE_IC });
+        return ValidateSpellInfo({SPELL_PARACHUTE_IC});
     }
 
     void HandleTriggerSpell(AuraEffect const* /*aurEff*/)
@@ -428,7 +429,8 @@ class spell_ioc_parachute_ic_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_ioc_parachute_ic_aura::HandleTriggerSpell, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_ioc_parachute_ic_aura::HandleTriggerSpell, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -450,14 +452,19 @@ class spell_ioc_launch : public SpellScript
         {
             player->ExitVehicle();
             player->DisableSpline();
-            player->GetMap()->PlayerRelocation(player, GetCaster()->GetPositionX(), GetCaster()->GetPositionY(), GetCaster()->GetPositionZ(), GetCaster()->GetOrientation());
+            player->GetMap()->PlayerRelocation(player,
+                GetCaster()->GetPositionX(),
+                GetCaster()->GetPositionY(),
+                GetCaster()->GetPositionZ(),
+                GetCaster()->GetOrientation());
 
             float dist = position->GetExactDist2d(player->GetPositionX(), player->GetPositionY());
             float elevation = GetSpell()->m_targets.GetElevation();
             float speedZ = std::max(10.0f, float(50.0f * std::sin(elevation)));
             float speedXY = dist * 10.0f / speedZ;
 
-            player->GetMotionMaster()->MoveJump(position->GetPositionX(), position->GetPositionY(), position->GetPositionZ(), speedXY, speedZ);
+            player->GetMotionMaster()->MoveJump(
+                position->GetPositionX(), position->GetPositionY(), position->GetPositionZ(), speedXY, speedZ);
         }
     }
 

@@ -22,46 +22,46 @@
 
 enum Spells
 {
-    SPELL_WHIRLWIND                 = 13736, // sniffed
-    SPELL_CLEAVE                    = 15284,
-    SPELL_MORTAL_STRIKE             = 16856,
-    SPELL_FRENZY                    = 8269,
-    SPELL_KNOCKDOWN                 = 13360  // On spawn during Gyth fight
+    SPELL_WHIRLWIND = 13736, // sniffed
+    SPELL_CLEAVE = 15284,
+    SPELL_MORTAL_STRIKE = 16856,
+    SPELL_FRENZY = 8269,
+    SPELL_KNOCKDOWN = 13360 // On spawn during Gyth fight
 };
 
 enum Says
 {
     // Rend Blackhand
-    SAY_BLACKHAND_1                 = 0,
-    SAY_BLACKHAND_2                 = 1,
-    EMOTE_BLACKHAND_DISMOUNT        = 2,
+    SAY_BLACKHAND_1 = 0,
+    SAY_BLACKHAND_2 = 1,
+    EMOTE_BLACKHAND_DISMOUNT = 2,
     // Victor Nefarius
-    SAY_NEFARIUS_0                  = 0,
-    SAY_NEFARIUS_1                  = 1,
-    SAY_NEFARIUS_2                  = 2,
-    SAY_NEFARIUS_3                  = 3,
-    SAY_NEFARIUS_4                  = 4,
-    SAY_NEFARIUS_5                  = 5,
-    SAY_NEFARIUS_6                  = 6,
-    SAY_NEFARIUS_7                  = 7,
-    SAY_NEFARIUS_8                  = 8,
-    SAY_NEFARIUS_9                  = 9,
+    SAY_NEFARIUS_0 = 0,
+    SAY_NEFARIUS_1 = 1,
+    SAY_NEFARIUS_2 = 2,
+    SAY_NEFARIUS_3 = 3,
+    SAY_NEFARIUS_4 = 4,
+    SAY_NEFARIUS_5 = 5,
+    SAY_NEFARIUS_6 = 6,
+    SAY_NEFARIUS_7 = 7,
+    SAY_NEFARIUS_8 = 8,
+    SAY_NEFARIUS_9 = 9,
 };
 
 enum Adds
 {
-    NPC_CHROMATIC_WHELP             = 10442,
-    NPC_CHROMATIC_DRAGONSPAWN       = 10447,
-    NPC_BLACKHAND_DRAGON_HANDLER    = 10742
+    NPC_CHROMATIC_WHELP = 10442,
+    NPC_CHROMATIC_DRAGONSPAWN = 10447,
+    NPC_BLACKHAND_DRAGON_HANDLER = 10742
 };
 
 enum Misc
 {
-    NEFARIUS_PATH_1                 = 1379670,
-    NEFARIUS_PATH_2                 = 1379671,
-    NEFARIUS_PATH_3                 = 1379672,
-    REND_PATH_1                     = 1379680,
-    REND_PATH_2                     = 1379681,
+    NEFARIUS_PATH_1 = 1379670,
+    NEFARIUS_PATH_2 = 1379671,
+    NEFARIUS_PATH_3 = 1379672,
+    REND_PATH_1 = 1379680,
+    REND_PATH_2 = 1379681,
 };
 
 /*Position const GythLoc =      { 211.762f,  -397.5885f, 111.1817f,  4.747295f   };
@@ -70,33 +70,33 @@ Position const Teleport2Loc = { 216.485f,  -434.93f,   110.888f,  -0.01225555f }
 
 enum Events
 {
-    EVENT_START_1                   = 1,
-    EVENT_START_2                   = 2,
-    EVENT_START_3                   = 3,
-    EVENT_START_4                   = 4,
-    EVENT_TURN_TO_REND              = 5,
-    EVENT_TURN_TO_PLAYER            = 6,
-    EVENT_TURN_TO_FACING_1          = 7,
-    EVENT_TURN_TO_FACING_2          = 8,
-    EVENT_TURN_TO_FACING_3          = 9,
-    EVENT_SPAWN_WAVE                = 10,
-    EVENT_WAVES_TEXT_1              = 16,
-    EVENT_WAVES_TEXT_2              = 17,
-    EVENT_WAVES_TEXT_3              = 18,
-    EVENT_WAVES_TEXT_4              = 19,
-    EVENT_WAVES_TEXT_5              = 20,
-    EVENT_WAVES_COMPLETE_TEXT_1     = 21,
-    EVENT_WAVES_COMPLETE_TEXT_2     = 22,
-    EVENT_WAVES_COMPLETE_TEXT_3     = 23,
-    EVENT_WAVES_EMOTE_1             = 24,
-    EVENT_WAVES_EMOTE_2             = 25,
-    EVENT_PATH_REND                 = 26,
-    EVENT_PATH_NEFARIUS             = 27,
-    EVENT_TELEPORT_1                = 28,
-    EVENT_TELEPORT_2                = 29,
-    EVENT_WHIRLWIND                 = 30,
-    EVENT_CLEAVE                    = 31,
-    EVENT_MORTAL_STRIKE             = 32,
+    EVENT_START_1 = 1,
+    EVENT_START_2 = 2,
+    EVENT_START_3 = 3,
+    EVENT_START_4 = 4,
+    EVENT_TURN_TO_REND = 5,
+    EVENT_TURN_TO_PLAYER = 6,
+    EVENT_TURN_TO_FACING_1 = 7,
+    EVENT_TURN_TO_FACING_2 = 8,
+    EVENT_TURN_TO_FACING_3 = 9,
+    EVENT_SPAWN_WAVE = 10,
+    EVENT_WAVES_TEXT_1 = 16,
+    EVENT_WAVES_TEXT_2 = 17,
+    EVENT_WAVES_TEXT_3 = 18,
+    EVENT_WAVES_TEXT_4 = 19,
+    EVENT_WAVES_TEXT_5 = 20,
+    EVENT_WAVES_COMPLETE_TEXT_1 = 21,
+    EVENT_WAVES_COMPLETE_TEXT_2 = 22,
+    EVENT_WAVES_COMPLETE_TEXT_3 = 23,
+    EVENT_WAVES_EMOTE_1 = 24,
+    EVENT_WAVES_EMOTE_2 = 25,
+    EVENT_PATH_REND = 26,
+    EVENT_PATH_NEFARIUS = 27,
+    EVENT_TELEPORT_1 = 28,
+    EVENT_TELEPORT_2 = 29,
+    EVENT_WHIRLWIND = 30,
+    EVENT_CLEAVE = 31,
+    EVENT_MORTAL_STRIKE = 32,
 };
 
 class boss_rend_blackhand : public CreatureScript
@@ -140,9 +140,7 @@ public:
         void SummonedCreatureDies(Creature* /*creature*/, Unit* /*killer*/) override
         {
             if (!summons.IsAnyCreatureAlive())
-            {
                 events.ScheduleEvent(EVENT_WAVES_TEXT_1 + _currentWave, 10s);
-            }
         }
 
         void JustSummoned(Creature* summon) override
@@ -194,9 +192,7 @@ public:
         void SummonedCreatureDespawn(Creature* creature) override
         {
             if (creature->IsAlive() && !summons.IsAnyCreatureInCombat())
-            {
                 instance->SetBossState(DATA_WARCHIEF_REND_BLACKHAND, FAIL);
-            }
 
             BossAI::SummonedCreatureDespawn(creature);
         }
@@ -212,9 +208,7 @@ public:
                     if (Creature* victor = me->FindNearestCreature(NPC_LORD_VICTOR_NEFARIUS, 5.0f))
                     {
                         if (!victor->IsAlive())
-                        {
                             victor->Respawn(true);
-                        }
 
                         victorGUID = victor->GetGUID();
                     }
@@ -258,7 +252,8 @@ public:
                             if (Creature* victor = ObjectAccessor::GetCreature(*me, victorGUID))
                                 victor->AI()->Talk(SAY_NEFARIUS_0);
 
-                            if (GameObject* door2 = me->GetMap()->GetGameObject(instance->GetGuidData(GO_GYTH_ENTRY_DOOR)))
+                            if (GameObject* door2 =
+                                    me->GetMap()->GetGameObject(instance->GetGuidData(GO_GYTH_ENTRY_DOOR)))
                                 door2->SetGoState(GO_STATE_READY);
 
                             events.ScheduleEvent(EVENT_START_2, 4s);
@@ -418,15 +413,13 @@ public:
             me->SummonCreatureGroup(_currentWave);
 
             if (GameObject* waveDoor = me->GetMap()->GetGameObject(waveDoorGUID))
-            {
                 waveDoor->UseDoorOrButton();
-            }
 
             ++_currentWave;
         }
 
     private:
-        bool   gythEvent;
+        bool gythEvent;
         uint8 _currentWave;
         ObjectGuid victorGUID;
         ObjectGuid waveDoorGUID;

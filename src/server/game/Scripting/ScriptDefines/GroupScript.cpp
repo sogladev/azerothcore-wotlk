@@ -33,18 +33,21 @@ void ScriptMgr::OnGroupInviteMember(Group* group, ObjectGuid guid)
     CALL_ENABLED_HOOKS(GroupScript, GROUPHOOK_ON_INVITE_MEMBER, script->OnInviteMember(group, guid));
 }
 
-void ScriptMgr::OnGroupRemoveMember(Group* group, ObjectGuid guid, RemoveMethod method, ObjectGuid kicker, const char* reason)
+void ScriptMgr::OnGroupRemoveMember(
+    Group* group, ObjectGuid guid, RemoveMethod method, ObjectGuid kicker, char const* reason)
 {
     ASSERT(group);
 
-    CALL_ENABLED_HOOKS(GroupScript, GROUPHOOK_ON_REMOVE_MEMBER, script->OnRemoveMember(group, guid, method, kicker, reason));
+    CALL_ENABLED_HOOKS(
+        GroupScript, GROUPHOOK_ON_REMOVE_MEMBER, script->OnRemoveMember(group, guid, method, kicker, reason));
 }
 
 void ScriptMgr::OnGroupChangeLeader(Group* group, ObjectGuid newLeaderGuid, ObjectGuid oldLeaderGuid)
 {
     ASSERT(group);
 
-    CALL_ENABLED_HOOKS(GroupScript, GROUPHOOK_ON_CHANGE_LEADER, script->OnChangeLeader(group, newLeaderGuid, oldLeaderGuid));
+    CALL_ENABLED_HOOKS(
+        GroupScript, GROUPHOOK_ON_CHANGE_LEADER, script->OnChangeLeader(group, newLeaderGuid, oldLeaderGuid));
 }
 
 void ScriptMgr::OnGroupDisband(Group* group)
@@ -54,9 +57,12 @@ void ScriptMgr::OnGroupDisband(Group* group)
     CALL_ENABLED_HOOKS(GroupScript, GROUPHOOK_ON_DISBAND, script->OnDisband(group));
 }
 
-bool ScriptMgr::CanGroupJoinBattlegroundQueue(Group const* group, Player* member, Battleground const* bgTemplate, uint32 MinPlayerCount, bool isRated, uint32 arenaSlot)
+bool ScriptMgr::CanGroupJoinBattlegroundQueue(Group const* group, Player* member, Battleground const* bgTemplate,
+    uint32 MinPlayerCount, bool isRated, uint32 arenaSlot)
 {
-    CALL_ENABLED_BOOLEAN_HOOKS(GroupScript, GROUPHOOK_CAN_GROUP_JOIN_BATTLEGROUND_QUEUE, !script->CanGroupJoinBattlegroundQueue(group, member, bgTemplate, MinPlayerCount, isRated, arenaSlot));
+    CALL_ENABLED_BOOLEAN_HOOKS(GroupScript,
+        GROUPHOOK_CAN_GROUP_JOIN_BATTLEGROUND_QUEUE,
+        !script->CanGroupJoinBattlegroundQueue(group, member, bgTemplate, MinPlayerCount, isRated, arenaSlot));
 }
 
 void ScriptMgr::OnCreate(Group* group, Player* leader)
@@ -64,8 +70,7 @@ void ScriptMgr::OnCreate(Group* group, Player* leader)
     CALL_ENABLED_HOOKS(GroupScript, GROUPHOOK_ON_CREATE, script->OnCreate(group, leader));
 }
 
-GroupScript::GroupScript(const char* name, std::vector<uint16> enabledHooks)
-    : ScriptObject(name, GROUPHOOK_END)
+GroupScript::GroupScript(char const* name, std::vector<uint16> enabledHooks) : ScriptObject(name, GROUPHOOK_END)
 {
     // If empty - enable all available hooks.
     if (enabledHooks.empty())

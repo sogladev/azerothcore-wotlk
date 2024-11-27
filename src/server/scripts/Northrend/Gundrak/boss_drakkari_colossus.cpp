@@ -17,62 +17,61 @@
 
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "gundrak.h"
-#include "SpellScript.h"
 
 enum Spells
 {
-    SPELL_MOJO_PUDDLE                   = 55627,
-    SPELL_MOJO_WAVE                     = 55626,
-    SPELL_FREEZE_ANIM                   = 52656,
-    SPELL_MIGHTY_BLOW                   = 54719,
+    SPELL_MOJO_PUDDLE = 55627,
+    SPELL_MOJO_WAVE = 55626,
+    SPELL_FREEZE_ANIM = 52656,
+    SPELL_MIGHTY_BLOW = 54719,
 
-    SPELL_ELEMENTAL_SPAWN_EFFECT        = 54888,
-    SPELL_EMERGE                        = 54850,
-    SPELL_EMERGE_SUMMON                 = 54851,
-    SPELL_MOJO_VOLLEY                   = 54849,
+    SPELL_ELEMENTAL_SPAWN_EFFECT = 54888,
+    SPELL_EMERGE = 54850,
+    SPELL_EMERGE_SUMMON = 54851,
+    SPELL_MOJO_VOLLEY = 54849,
 
-    SPELL_SURGE_VISUAL                  = 54827,
-    SPELL_SURGE                         = 54801,
-    SPELL_SURGE_DAMAGE                  = 54819,
+    SPELL_SURGE_VISUAL = 54827,
+    SPELL_SURGE = 54801,
+    SPELL_SURGE_DAMAGE = 54819,
 
-    SPELL_FACE_ME                       = 54991,
-    SPELL_MERGE                         = 54878,
+    SPELL_FACE_ME = 54991,
+    SPELL_MERGE = 54878,
 };
 
 enum Misc
 {
-    NPC_LIVING_MOJO                     = 29830,
-    NPC_DRAKKARI_ELEMENTAL              = 29573,
+    NPC_LIVING_MOJO = 29830,
+    NPC_DRAKKARI_ELEMENTAL = 29573,
 
-    ACTION_MERGE                        = 1,
-    ACTION_INFORM                       = 2,
+    ACTION_MERGE = 1,
+    ACTION_INFORM = 2,
 
-    POINT_MERGE                         = 1,
-    SAY_SURGE                           = 0,
-    EMOTE_ALTAR                         = 1,
+    POINT_MERGE = 1,
+    SAY_SURGE = 0,
+    EMOTE_ALTAR = 1,
 
-    EVENT_COLOSSUS_MIGHTY_BLOW          = 1,
-    EVENT_COLOSSUS_HEALTH_1             = 2,
-    EVENT_COLOSSUS_HEALTH_2             = 3,
-    EVENT_COLOSSUS_START_FIGHT          = 4,
+    EVENT_COLOSSUS_MIGHTY_BLOW = 1,
+    EVENT_COLOSSUS_HEALTH_1 = 2,
+    EVENT_COLOSSUS_HEALTH_2 = 3,
+    EVENT_COLOSSUS_START_FIGHT = 4,
 
-    EVENT_ELEMENTAL_HEALTH              = 10,
-    EVENT_ELEMENTAL_SURGE               = 11,
-    EVENT_ELEMENTAL_VOLLEY              = 12,
+    EVENT_ELEMENTAL_HEALTH = 10,
+    EVENT_ELEMENTAL_SURGE = 11,
+    EVENT_ELEMENTAL_VOLLEY = 12,
 
-    EVENT_MOJO_MOJO_WAVE                = 20,
-    EVENT_MOJO_MOJO_PUDDLE              = 21,
+    EVENT_MOJO_MOJO_WAVE = 20,
+    EVENT_MOJO_MOJO_PUDDLE = 21,
 };
 
-static Position mojoPosition[] =
-{
-    {1663.1f, 743.6f, 143.1f, 0.0f},
+static Position mojoPosition[] = {
+    {1663.1f,  743.6f, 143.1f, 0.0f},
     {1669.97f, 753.7f, 143.1f, 0.0f},
-    {1680.7f, 750.7f, 143.1f, 0.0f},
-    {1680.7f, 737.1f, 143.1f, 0.0f},
-    {1670.4f, 733.5f, 143.1f, 0.0f}
+    {1680.7f,  750.7f, 143.1f, 0.0f},
+    {1680.7f,  737.1f, 143.1f, 0.0f},
+    {1670.4f,  733.5f, 143.1f, 0.0f}
 };
 
 class RestoreFight : public BasicEvent
@@ -100,15 +99,12 @@ public:
     {
         return GetGundrakAI<boss_drakkari_colossusAI>(creature);
     }
+
     struct boss_drakkari_colossusAI : public BossAI
     {
-        boss_drakkari_colossusAI(Creature* creature) : BossAI(creature, DATA_DRAKKARI_COLOSSUS)
-        {
-        }
+        boss_drakkari_colossusAI(Creature* creature) : BossAI(creature, DATA_DRAKKARI_COLOSSUS) { }
 
-        void MoveInLineOfSight(Unit*  /*who*/) override
-        {
-        }
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void DoAction(int32 param) override
         {
@@ -124,7 +120,13 @@ public:
         {
             BossAI::Reset();
             for (uint8 i = 0; i < 5; i++)
-                me->SummonCreature(NPC_LIVING_MOJO, mojoPosition[i].GetPositionX(), mojoPosition[i].GetPositionY(), mojoPosition[i].GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN, 0);
+                me->SummonCreature(NPC_LIVING_MOJO,
+                    mojoPosition[i].GetPositionX(),
+                    mojoPosition[i].GetPositionY(),
+                    mojoPosition[i].GetPositionZ(),
+                    0,
+                    TEMPSUMMON_MANUAL_DESPAWN,
+                    0);
 
             me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
             me->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
@@ -187,7 +189,7 @@ public:
             }
         }
 
-        void DamageTaken(Unit*  /*attacker*/, uint32& damage, DamageEffectType, SpellSchoolMask) override
+        void DamageTaken(Unit* /*attacker*/, uint32& damage, DamageEffectType, SpellSchoolMask) override
         {
             if (damage >= me->GetHealth())
                 damage = 0;
@@ -278,9 +280,7 @@ public:
             Talk(EMOTE_ALTAR);
         }
 
-        void JustEngagedWith(Unit*) override
-        {
-        }
+        void JustEngagedWith(Unit*) override { }
 
         void UpdateAI(uint32 diff) override
         {
@@ -333,9 +333,7 @@ public:
 
     struct npc_living_mojoAI : public ScriptedAI
     {
-        npc_living_mojoAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-        }
+        npc_living_mojoAI(Creature* pCreature) : ScriptedAI(pCreature) { }
 
         EventMap events;
 
@@ -389,17 +387,17 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_MOJO_MOJO_PUDDLE:
-                    {
-                        me->CastSpell(me, SPELL_MOJO_PUDDLE, false);
-                        events.ScheduleEvent(EVENT_MOJO_MOJO_PUDDLE, 13s);
-                        break;
-                    }
+                {
+                    me->CastSpell(me, SPELL_MOJO_PUDDLE, false);
+                    events.ScheduleEvent(EVENT_MOJO_MOJO_PUDDLE, 13s);
+                    break;
+                }
                 case EVENT_MOJO_MOJO_WAVE:
-                    {
-                        me->CastSpell(me->GetVictim(), SPELL_MOJO_WAVE, false);
-                        events.ScheduleEvent(EVENT_MOJO_MOJO_WAVE, 15s);
-                        break;
-                    }
+                {
+                    me->CastSpell(me->GetVictim(), SPELL_MOJO_WAVE, false);
+                    events.ScheduleEvent(EVENT_MOJO_MOJO_WAVE, 15s);
+                    break;
+                }
             }
 
             DoMeleeAttackIfReady();
@@ -413,7 +411,7 @@ class spell_drakkari_colossus_emerge : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_FREEZE_ANIM });
+        return ValidateSpellInfo({SPELL_FREEZE_ANIM});
     }
 
     void HandleDummy(SpellEffIndex /*effIndex*/)
@@ -433,7 +431,7 @@ class spell_drakkari_colossus_surge : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SURGE_DAMAGE });
+        return ValidateSpellInfo({SPELL_SURGE_DAMAGE});
     }
 
     void HandleDummy(SpellEffIndex /*effIndex*/)
@@ -463,7 +461,8 @@ class spell_drakkari_colossus_face_me : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_drakkari_colossus_face_me::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_drakkari_colossus_face_me::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 

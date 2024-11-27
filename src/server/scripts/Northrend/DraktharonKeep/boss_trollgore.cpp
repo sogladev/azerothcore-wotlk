@@ -18,45 +18,45 @@
 #include "AchievementCriteriaScript.h"
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
-#include "SpellAuras.h"
-#include "SpellScriptLoader.h"
-#include "drak_tharon_keep.h"
 #include "SpellAuraEffects.h"
+#include "SpellAuras.h"
 #include "SpellMgr.h"
 #include "SpellScript.h"
+#include "SpellScriptLoader.h"
+#include "drak_tharon_keep.h"
 
 enum Yells
 {
-    SAY_AGGRO                           = 0,
-    SAY_KILL                            = 1,
-    SAY_CONSUME                         = 2,
-    SAY_EXPLODE                         = 3,
-    SAY_DEATH                           = 4
+    SAY_AGGRO = 0,
+    SAY_KILL = 1,
+    SAY_CONSUME = 2,
+    SAY_EXPLODE = 3,
+    SAY_DEATH = 4
 };
 
 enum Spells
 {
-    SPELL_SUMMON_INVADER_A              = 49456,
-    SPELL_SUMMON_INVADER_B              = 49457,
-    SPELL_SUMMON_INVADER_C              = 49458,
+    SPELL_SUMMON_INVADER_A = 49456,
+    SPELL_SUMMON_INVADER_B = 49457,
+    SPELL_SUMMON_INVADER_C = 49458,
 
-    SPELL_INFECTED_WOUND                = 49637,
-    SPELL_CRUSH                         = 49639,
-    SPELL_CONSUME                       = 49380,
-    SPELL_CORPSE_EXPLODE                = 49555,
+    SPELL_INFECTED_WOUND = 49637,
+    SPELL_CRUSH = 49639,
+    SPELL_CONSUME = 49380,
+    SPELL_CORPSE_EXPLODE = 49555,
 
-    SPELL_CORPSE_EXPLODE_DAMAGE         = 49618,
-    SPELL_CONSUME_AURA                  = 49381,
+    SPELL_CORPSE_EXPLODE_DAMAGE = 49618,
+    SPELL_CONSUME_AURA = 49381,
 };
 
 enum Events
 {
-    EVENT_SPELL_INFECTED_WOUND          = 1,
-    EVENT_SPELL_CRUSH                   = 2,
-    EVENT_SPELL_CONSUME                 = 3,
-    EVENT_SPELL_CORPSE_EXPLODE          = 4,
-    EVENT_SPAWN_INVADERS                = 5,
-    EVENT_KILL_TALK                     = 6
+    EVENT_SPELL_INFECTED_WOUND = 1,
+    EVENT_SPELL_CRUSH = 2,
+    EVENT_SPELL_CONSUME = 3,
+    EVENT_SPELL_CORPSE_EXPLODE = 4,
+    EVENT_SPAWN_INVADERS = 5,
+    EVENT_KILL_TALK = 6
 };
 
 class boss_trollgore : public CreatureScript
@@ -66,9 +66,7 @@ public:
 
     struct boss_trollgoreAI : public BossAI
     {
-        boss_trollgoreAI(Creature* creature) : BossAI(creature, DATA_TROLLGORE)
-        {
-        }
+        boss_trollgoreAI(Creature* creature) : BossAI(creature, DATA_TROLLGORE) { }
 
         void Reset() override
         {
@@ -100,7 +98,7 @@ public:
             BossAI::JustDied(killer);
         }
 
-        void KilledUnit(Unit*  /*victim*/) override
+        void KilledUnit(Unit* /*victim*/) override
         {
             if (events.GetNextEventTime(EVENT_KILL_TALK) == 0)
             {
@@ -180,7 +178,7 @@ class spell_trollgore_consume : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CONSUME_AURA });
+        return ValidateSpellInfo({SPELL_CONSUME_AURA});
     }
 
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
@@ -191,7 +189,8 @@ class spell_trollgore_consume : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_trollgore_consume::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_trollgore_consume::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -201,7 +200,7 @@ class spell_trollgore_corpse_explode_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CORPSE_EXPLODE_DAMAGE });
+        return ValidateSpellInfo({SPELL_CORPSE_EXPLODE_DAMAGE});
     }
 
     void PeriodicTick(AuraEffect const* aurEff)
@@ -219,8 +218,12 @@ class spell_trollgore_corpse_explode_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_trollgore_corpse_explode_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_trollgore_corpse_explode_aura::HandleRemove, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_trollgore_corpse_explode_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_trollgore_corpse_explode_aura::HandleRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DUMMY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -236,16 +239,15 @@ class spell_trollgore_invader_taunt : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_trollgore_invader_taunt::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_trollgore_invader_taunt::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
 class achievement_consumption_junction : public AchievementCriteriaScript
 {
 public:
-    achievement_consumption_junction() : AchievementCriteriaScript("achievement_consumption_junction")
-    {
-    }
+    achievement_consumption_junction() : AchievementCriteriaScript("achievement_consumption_junction") { }
 
     bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {

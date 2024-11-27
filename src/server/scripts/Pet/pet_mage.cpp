@@ -30,13 +30,13 @@
 
 enum MageSpells
 {
-    SPELL_MAGE_CLONE_ME                 = 45204,
-    SPELL_MAGE_MASTERS_THREAT_LIST      = 58838,
-    SPELL_PET_HIT_SCALING               = 61013,
-    SPELL_SUMMON_MIRROR_IMAGE1          = 58831,
-    SPELL_SUMMON_MIRROR_IMAGE2          = 58833,
-    SPELL_SUMMON_MIRROR_IMAGE3          = 58834,
-    SPELL_SUMMON_MIRROR_IMAGE_GLYPH     = 65047
+    SPELL_MAGE_CLONE_ME = 45204,
+    SPELL_MAGE_MASTERS_THREAT_LIST = 58838,
+    SPELL_PET_HIT_SCALING = 61013,
+    SPELL_SUMMON_MIRROR_IMAGE1 = 58831,
+    SPELL_SUMMON_MIRROR_IMAGE2 = 58833,
+    SPELL_SUMMON_MIRROR_IMAGE3 = 58834,
+    SPELL_SUMMON_MIRROR_IMAGE_GLYPH = 65047
 };
 
 class DeathEvent : public BasicEvent
@@ -90,7 +90,14 @@ struct npc_pet_mage_mirror_image : CasterAI
 
         ((Minion*)me)->SetFollowAngle(angle);
         if (owner->IsInCombat())
-            me->NearTeleportTo(me->GetPositionX() + cos(angle)*dist, me->GetPositionY() + std::sin(angle)*dist, me->GetPositionZ(), me->GetOrientation(), false, false, false, false);
+            me->NearTeleportTo(me->GetPositionX() + cos(angle) * dist,
+                me->GetPositionY() + std::sin(angle) * dist,
+                me->GetPositionZ(),
+                me->GetOrientation(),
+                false,
+                false,
+                false,
+                false);
         else
             me->GetMotionMaster()->MoveFollow(owner, PET_FOLLOW_DIST, me->GetFollowAngle(), MOTION_SLOT_ACTIVE);
 
@@ -114,7 +121,8 @@ struct npc_pet_mage_mirror_image : CasterAI
             if (Aura* visAura = itr->second->GetBase())
             {
                 // Ebon Gargoyle
-                if (visAura->GetId() == 49206 && me->GetUInt32Value(UNIT_CREATED_BY_SPELL) == SPELL_SUMMON_MIRROR_IMAGE1)
+                if (visAura->GetId() == 49206 &&
+                    me->GetUInt32Value(UNIT_CREATED_BY_SPELL) == SPELL_SUMMON_MIRROR_IMAGE1)
                 {
                     if (Unit* gargoyle = visAura->GetCaster())
                         _ebonGargoyleGUID = gargoyle->GetGUID();
@@ -123,7 +131,8 @@ struct npc_pet_mage_mirror_image : CasterAI
                 SpellScriptsBounds bounds = sObjectMgr->GetSpellScriptsBounds(visAura->GetId());
                 if (bounds.first != bounds.second)
                     continue;
-                std::vector<int32> const* spellTriggered = sSpellMgr->GetSpellLinked(visAura->GetId() + SPELL_LINK_AURA);
+                std::vector<int32> const* spellTriggered =
+                    sSpellMgr->GetSpellLinked(visAura->GetId() + SPELL_LINK_AURA);
                 if (!spellTriggered || !spellTriggered->empty())
                     continue;
                 if (Aura* newAura = me->AddAura(visAura->GetId(), me))

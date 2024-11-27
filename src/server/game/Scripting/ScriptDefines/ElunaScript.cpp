@@ -18,7 +18,7 @@
 #include "ElunaScript.h"
 #include "ScriptMgr.h"
 
-ElunaScript::ElunaScript(const char* name) : ScriptObject(name)
+ElunaScript::ElunaScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<ElunaScript>::AddScript(this);
 }

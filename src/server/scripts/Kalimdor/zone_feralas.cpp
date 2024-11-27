@@ -20,6 +20,7 @@
 #include "ScriptedCreature.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
+
 /* ScriptData
 SDName: Feralas
 SD%Complete: 100
@@ -39,7 +40,16 @@ class spell_gordunni_trap : public SpellScript
     void HandleDummy()
     {
         if (Unit* caster = GetCaster())
-            if (GameObject* chest = caster->SummonGameObject(GO_GORDUNNI_DIRT_MOUND, caster->GetPositionX(), caster->GetPositionY(), caster->GetPositionZ(), 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0))
+            if (GameObject* chest = caster->SummonGameObject(GO_GORDUNNI_DIRT_MOUND,
+                    caster->GetPositionX(),
+                    caster->GetPositionY(),
+                    caster->GetPositionZ(),
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                    0))
             {
                 chest->SetSpellId(GetSpellInfo()->Id);
                 caster->RemoveGameObject(chest, false);

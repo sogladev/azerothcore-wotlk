@@ -24,13 +24,13 @@
 
 enum Spells
 {
-    SPELL_ARCHAEDAS_AWAKEN      = 10347,
-    SPELL_AWAKEN_VAULT_WALKER   = 10258,
+    SPELL_ARCHAEDAS_AWAKEN = 10347,
+    SPELL_AWAKEN_VAULT_WALKER = 10258,
 };
 
 enum Events
 {
-    EVENT_SUB_BOSS_AGGRO        = 2228
+    EVENT_SUB_BOSS_AGGRO = 2228
 };
 
 class instance_uldaman : public InstanceMapScript
@@ -97,9 +97,7 @@ public:
         uint32 GetData(uint32 data) const override
         {
             if (data < MAX_ENCOUNTERS)
-            {
                 return _encounters[data];
-            }
             return 0;
         }
 
@@ -112,9 +110,8 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << _encounters[DATA_IRONAYA_DOORS] << ' '
-                << _encounters[DATA_STONE_KEEPERS] << ' '
-                << _encounters[DATA_ARCHAEDAS];
+            data << _encounters[DATA_IRONAYA_DOORS] << ' ' << _encounters[DATA_STONE_KEEPERS] << ' '
+                 << _encounters[DATA_ARCHAEDAS];
         }
 
         void OnCreatureCreate(Creature* creature) override
@@ -144,7 +141,7 @@ class spell_uldaman_sub_boss_agro_keepers : public SpellScript
 {
     PrepareSpellScript(spell_uldaman_sub_boss_agro_keepers);
 
-    void HandleSendEvent(SpellEffIndex  /*effIndex*/)
+    void HandleSendEvent(SpellEffIndex /*effIndex*/)
     {
         if (Creature* keeper = GetCaster()->FindNearestCreature(NPC_STONE_KEEPER, 100.0f, true))
             keeper->AI()->SetData(1, 1);
@@ -152,7 +149,8 @@ class spell_uldaman_sub_boss_agro_keepers : public SpellScript
 
     void Register() override
     {
-        OnEffectLaunch += SpellEffectFn(spell_uldaman_sub_boss_agro_keepers::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
+        OnEffectLaunch +=
+            SpellEffectFn(spell_uldaman_sub_boss_agro_keepers::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
     }
 };
 
@@ -186,8 +184,10 @@ class spell_uldaman_stoned_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectApply += AuraEffectApplyFn(spell_uldaman_stoned_aura::HandleEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
-        OnEffectRemove += AuraEffectRemoveFn(spell_uldaman_stoned_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectApply += AuraEffectApplyFn(
+            spell_uldaman_stoned_aura::HandleEffectApply, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_uldaman_stoned_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -195,7 +195,7 @@ class spell_uldaman_boss_agro_archaedas : public SpellScript
 {
     PrepareSpellScript(spell_uldaman_boss_agro_archaedas);
 
-    void HandleSendEvent(SpellEffIndex  /*effIndex*/)
+    void HandleSendEvent(SpellEffIndex /*effIndex*/)
     {
         InstanceScript* instance = GetCaster()->GetInstanceScript();
 
@@ -209,7 +209,8 @@ class spell_uldaman_boss_agro_archaedas : public SpellScript
 
     void Register() override
     {
-        OnEffectLaunch += SpellEffectFn(spell_uldaman_boss_agro_archaedas::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
+        OnEffectLaunch +=
+            SpellEffectFn(spell_uldaman_boss_agro_archaedas::HandleSendEvent, EFFECT_0, SPELL_EFFECT_SEND_EVENT);
     }
 };
 

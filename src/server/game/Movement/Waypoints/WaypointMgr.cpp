@@ -21,9 +21,7 @@
 #include "Log.h"
 #include "QueryResult.h"
 
-WaypointMgr::WaypointMgr()
-{
-}
+WaypointMgr::WaypointMgr() { }
 
 WaypointMgr::~WaypointMgr()
 {
@@ -49,7 +47,8 @@ void WaypointMgr::Load()
     uint32 oldMSTime = getMSTime();
 
     //                                                0    1         2           3          4            5           6        7      8           9
-    QueryResult result = WorldDatabase.Query("SELECT id, point, position_x, position_y, position_z, orientation, move_type, delay, action, action_chance FROM waypoint_data ORDER BY id, point");
+    QueryResult result = WorldDatabase.Query(
+        "SELECT id, point, position_x, position_y, position_z, orientation, move_type, delay, action, action_chance FROM waypoint_data ORDER BY id, point");
 
     if (!result)
     {
@@ -71,7 +70,7 @@ void WaypointMgr::Load()
         float x = fields[2].Get<float>();
         float y = fields[3].Get<float>();
         float z = fields[4].Get<float>();
-        std::optional<float > o;
+        std::optional<float> o;
         if (!fields[5].IsNull())
             o = fields[5].Get<float>();
 

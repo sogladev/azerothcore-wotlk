@@ -25,9 +25,7 @@ void ScriptMgr::OnInstall(Vehicle* veh)
     ASSERT(veh->GetBase()->IsCreature());
 
     if (auto tempScript = ScriptRegistry<VehicleScript>::GetScriptById(veh->GetBase()->ToCreature()->GetScriptId()))
-    {
         tempScript->OnInstall(veh);
-    }
 }
 
 void ScriptMgr::OnUninstall(Vehicle* veh)
@@ -36,9 +34,7 @@ void ScriptMgr::OnUninstall(Vehicle* veh)
     ASSERT(veh->GetBase()->IsCreature());
 
     if (auto tempScript = ScriptRegistry<VehicleScript>::GetScriptById(veh->GetBase()->ToCreature()->GetScriptId()))
-    {
         tempScript->OnUninstall(veh);
-    }
 }
 
 void ScriptMgr::OnReset(Vehicle* veh)
@@ -47,9 +43,7 @@ void ScriptMgr::OnReset(Vehicle* veh)
     ASSERT(veh->GetBase()->IsCreature());
 
     if (auto tempScript = ScriptRegistry<VehicleScript>::GetScriptById(veh->GetBase()->ToCreature()->GetScriptId()))
-    {
         tempScript->OnReset(veh);
-    }
 }
 
 void ScriptMgr::OnInstallAccessory(Vehicle* veh, Creature* accessory)
@@ -59,9 +53,7 @@ void ScriptMgr::OnInstallAccessory(Vehicle* veh, Creature* accessory)
     ASSERT(accessory);
 
     if (auto tempScript = ScriptRegistry<VehicleScript>::GetScriptById(veh->GetBase()->ToCreature()->GetScriptId()))
-    {
         tempScript->OnInstallAccessory(veh, accessory);
-    }
 }
 
 void ScriptMgr::OnAddPassenger(Vehicle* veh, Unit* passenger, int8 seatId)
@@ -71,9 +63,7 @@ void ScriptMgr::OnAddPassenger(Vehicle* veh, Unit* passenger, int8 seatId)
     ASSERT(passenger);
 
     if (auto tempScript = ScriptRegistry<VehicleScript>::GetScriptById(veh->GetBase()->ToCreature()->GetScriptId()))
-    {
         tempScript->OnAddPassenger(veh, passenger, seatId);
-    }
 }
 
 void ScriptMgr::OnRemovePassenger(Vehicle* veh, Unit* passenger)
@@ -83,13 +73,10 @@ void ScriptMgr::OnRemovePassenger(Vehicle* veh, Unit* passenger)
     ASSERT(passenger);
 
     if (auto tempScript = ScriptRegistry<VehicleScript>::GetScriptById(veh->GetBase()->ToCreature()->GetScriptId()))
-    {
         tempScript->OnRemovePassenger(veh, passenger);
-    }
 }
 
-VehicleScript::VehicleScript(const char* name)
-    : ScriptObject(name)
+VehicleScript::VehicleScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<VehicleScript>::AddScript(this);
 }

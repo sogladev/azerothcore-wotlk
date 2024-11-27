@@ -21,19 +21,38 @@
 #include "MySQLHacks.h"
 #include "PreparedStatement.h"
 
-template<typename T>
-struct MySQLType { };
+template <typename T> struct MySQLType
+{ };
 
-template<> struct MySQLType<uint8> : std::integral_constant<enum_field_types, MYSQL_TYPE_TINY> { };
-template<> struct MySQLType<uint16> : std::integral_constant<enum_field_types, MYSQL_TYPE_SHORT> { };
-template<> struct MySQLType<uint32> : std::integral_constant<enum_field_types, MYSQL_TYPE_LONG> { };
-template<> struct MySQLType<uint64> : std::integral_constant<enum_field_types, MYSQL_TYPE_LONGLONG> { };
-template<> struct MySQLType<int8> : std::integral_constant<enum_field_types, MYSQL_TYPE_TINY> { };
-template<> struct MySQLType<int16> : std::integral_constant<enum_field_types, MYSQL_TYPE_SHORT> { };
-template<> struct MySQLType<int32> : std::integral_constant<enum_field_types, MYSQL_TYPE_LONG> { };
-template<> struct MySQLType<int64> : std::integral_constant<enum_field_types, MYSQL_TYPE_LONGLONG> { };
-template<> struct MySQLType<float> : std::integral_constant<enum_field_types, MYSQL_TYPE_FLOAT> { };
-template<> struct MySQLType<double> : std::integral_constant<enum_field_types, MYSQL_TYPE_DOUBLE> { };
+template <> struct MySQLType<uint8> : std::integral_constant<enum_field_types, MYSQL_TYPE_TINY>
+{ };
+
+template <> struct MySQLType<uint16> : std::integral_constant<enum_field_types, MYSQL_TYPE_SHORT>
+{ };
+
+template <> struct MySQLType<uint32> : std::integral_constant<enum_field_types, MYSQL_TYPE_LONG>
+{ };
+
+template <> struct MySQLType<uint64> : std::integral_constant<enum_field_types, MYSQL_TYPE_LONGLONG>
+{ };
+
+template <> struct MySQLType<int8> : std::integral_constant<enum_field_types, MYSQL_TYPE_TINY>
+{ };
+
+template <> struct MySQLType<int16> : std::integral_constant<enum_field_types, MYSQL_TYPE_SHORT>
+{ };
+
+template <> struct MySQLType<int32> : std::integral_constant<enum_field_types, MYSQL_TYPE_LONG>
+{ };
+
+template <> struct MySQLType<int64> : std::integral_constant<enum_field_types, MYSQL_TYPE_LONGLONG>
+{ };
+
+template <> struct MySQLType<float> : std::integral_constant<enum_field_types, MYSQL_TYPE_FLOAT>
+{ };
+
+template <> struct MySQLType<double> : std::integral_constant<enum_field_types, MYSQL_TYPE_DOUBLE>
+{ };
 
 MySQLPreparedStatement::MySQLPreparedStatement(MySQLStmt* stmt, std::string_view queryString) :
     m_stmt(nullptr),
@@ -67,28 +86,27 @@ MySQLPreparedStatement::~MySQLPreparedStatement()
 
 void MySQLPreparedStatement::BindParameters(PreparedStatementBase* stmt)
 {
-    m_stmt = stmt;     // Cross reference them for debug output
+    m_stmt = stmt; // Cross reference them for debug output
 
     uint8 pos = 0;
     for (PreparedStatementData const& data : stmt->GetParameters())
     {
-        std::visit([&](auto&& param)
-        {
-            SetParameter(pos, param);
-        }, data.data);
+        std::visit([&](auto&& param) { SetParameter(pos, param); }, data.data);
 
         ++pos;
     }
 
 #ifdef _DEBUG
     if (pos < m_paramCount)
-        LOG_WARN("sql.sql", "[WARNING]: BindParameters() for statement {} did not bind all allocated parameters", stmt->GetIndex());
+        LOG_WARN("sql.sql",
+            "[WARNING]: BindParameters() for statement {} did not bind all allocated parameters",
+            stmt->GetIndex());
 #endif
 }
 
 void MySQLPreparedStatement::ClearParameters()
 {
-    for (uint32 i=0; i < m_paramCount; ++i)
+    for (uint32 i = 0; i < m_paramCount; ++i)
     {
         delete m_bind[i].length;
         m_bind[i].length = nullptr;
@@ -100,8 +118,12 @@ void MySQLPreparedStatement::ClearParameters()
 
 static bool ParamenterIndexAssertFail(uint32 stmtIndex, uint8 index, uint32 paramCount)
 {
-    LOG_ERROR("sql.driver", "Attempted to bind parameter {}{} on a PreparedStatement {} (statement has only {} parameters)",
-        uint32(index) + 1, (index == 1 ? "st" : (index == 2 ? "nd" : (index == 3 ? "rd" : "nd"))), stmtIndex, paramCount);
+    LOG_ERROR("sql.driver",
+        "Attempted to bind parameter {}{} on a PreparedStatement {} (statement has only {} parameters)",
+        uint32(index) + 1,
+        (index == 1 ? "st" : (index == 2 ? "nd" : (index == 3 ? "rd" : "nd"))),
+        stmtIndex,
+        paramCount);
 
     return false;
 }
@@ -112,11 +134,13 @@ void MySQLPreparedStatement::AssertValidIndex(uint8 index)
     ASSERT(index < m_paramCount || ParamenterIndexAssertFail(m_stmt->GetIndex(), index, m_paramCount));
 
     if (m_paramsSet[index])
-        LOG_ERROR("sql.sql", "[ERROR] Prepared Statement (id: {}) trying to bind value on already bound index ({}).", m_stmt->GetIndex(), index);
+        LOG_ERROR("sql.sql",
+            "[ERROR] Prepared Statement (id: {}) trying to bind value on already bound index ({}).",
+            m_stmt->GetIndex(),
+            index);
 }
 
-template<typename T>
-void MySQLPreparedStatement::SetParameter(const uint8 index, T value)
+template <typename T> void MySQLPreparedStatement::SetParameter(uint8 const index, T value)
 {
     AssertValidIndex(index);
     m_paramsSet[index] = true;
@@ -133,12 +157,12 @@ void MySQLPreparedStatement::SetParameter(const uint8 index, T value)
     memcpy(param->buffer, &value, len);
 }
 
-void MySQLPreparedStatement::SetParameter(const uint8 index, bool value)
+void MySQLPreparedStatement::SetParameter(uint8 const index, bool value)
 {
     SetParameter(index, uint8(value ? 1 : 0));
 }
 
-void MySQLPreparedStatement::SetParameter(const uint8 index, std::nullptr_t /*value*/)
+void MySQLPreparedStatement::SetParameter(uint8 const index, std::nullptr_t /*value*/)
 {
     AssertValidIndex(index);
     m_paramsSet[index] = true;
@@ -196,10 +220,8 @@ std::string MySQLPreparedStatement::getQueryString() const
     {
         pos = queryString.find('?', pos);
 
-        std::string replaceStr = std::visit([&](auto&& data)
-        {
-            return PreparedStatementData::ToString(data);
-        }, data.data);
+        std::string replaceStr =
+            std::visit([&](auto&& data) { return PreparedStatementData::ToString(data); }, data.data);
 
         queryString.replace(pos, 1, replaceStr);
         pos += replaceStr.length();

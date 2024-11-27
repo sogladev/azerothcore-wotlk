@@ -33,10 +33,7 @@ public:
 class MapUpdateRequest : public UpdateRequest
 {
 public:
-    MapUpdateRequest(Map& m, MapUpdater& u, uint32 d, uint32 sd)
-        : m_map(m), m_updater(u), m_diff(d), s_diff(sd)
-    {
-    }
+    MapUpdateRequest(Map& m, MapUpdater& u, uint32 d, uint32 sd) : m_map(m), m_updater(u), m_diff(d), s_diff(sd) { }
 
     void call() override
     {
@@ -55,29 +52,26 @@ private:
 class LFGUpdateRequest : public UpdateRequest
 {
 public:
-    LFGUpdateRequest(MapUpdater& u, uint32 d) : m_updater(u), m_diff(d) {}
+    LFGUpdateRequest(MapUpdater& u, uint32 d) : m_updater(u), m_diff(d) { }
 
     void call() override
     {
         sLFGMgr->Update(m_diff, 1);
         m_updater.update_finished();
     }
+
 private:
     MapUpdater& m_updater;
     uint32 m_diff;
 };
 
-MapUpdater::MapUpdater(): pending_requests(0)
-{
-}
+MapUpdater::MapUpdater() : pending_requests(0) { }
 
 void MapUpdater::activate(std::size_t num_threads)
 {
     _workerThreads.reserve(num_threads);
     for (std::size_t i = 0; i < num_threads; ++i)
-    {
         _workerThreads.push_back(std::thread(&MapUpdater::WorkerThread, this));
-    }
 }
 
 void MapUpdater::deactivate()
@@ -89,12 +83,8 @@ void MapUpdater::deactivate()
     _queue.Cancel();
 
     for (auto& thread : _workerThreads)
-    {
         if (thread.joinable())
-        {
             thread.join();
-        }
-    }
 }
 
 void MapUpdater::wait()

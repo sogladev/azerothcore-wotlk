@@ -29,25 +29,23 @@ EndScriptData */
 #include "InstanceScript.h"
 #include "zulgurub.h"
 
-DoorData const doorData[] =
-{
-    { GO_FORCEFIELD, DATA_ARLOKK, DOOR_TYPE_ROOM },
-    { 0,             0,           DOOR_TYPE_ROOM }
+DoorData const doorData[] = {
+    {GO_FORCEFIELD, DATA_ARLOKK, DOOR_TYPE_ROOM},
+    {0,             0,           DOOR_TYPE_ROOM}
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_HIGH_PRIEST_THEKAL, DATA_THEKAL  },
-    { NPC_ZEALOT_LORKHAN,     DATA_LORKHAN },
-    { NPC_ZEALOT_ZATH,        DATA_ZATH    },
-    { NPC_PRIESTESS_MARLI,    DATA_MARLI   },
-    { 0,                      0            }
+ObjectData const creatureData[] = {
+    {NPC_HIGH_PRIEST_THEKAL, DATA_THEKAL },
+    {NPC_ZEALOT_LORKHAN,     DATA_LORKHAN},
+    {NPC_ZEALOT_ZATH,        DATA_ZATH   },
+    {NPC_PRIESTESS_MARLI,    DATA_MARLI  },
+    {0,                      0           }
 };
 
 class instance_zulgurub : public InstanceMapScript
 {
 public:
-    instance_zulgurub(): InstanceMapScript(ZGScriptName, 309) { }
+    instance_zulgurub() : InstanceMapScript(ZGScriptName, 309) { }
 
     struct instance_zulgurub_InstanceMapScript : public InstanceScript
     {
@@ -79,9 +77,7 @@ public:
                     break;
                 case NPC_SPAWN_OF_MARLI:
                     if (Creature* marli = GetCreature(DATA_MARLI))
-                    {
                         marli->AI()->JustSummoned(creature);
-                    }
                     break;
                 case NPC_GAHZRANKA:
                     _gahzrankaGUID = creature->GetGUID();
@@ -137,9 +133,7 @@ public:
         uint32 GetData(uint32 type) const override
         {
             if (type == DATA_GAHZRANKA)
-            {
                 return _gahzrankaGUID || GetBossState(DATA_GAHZRANKA) == DONE;
-            }
 
             return 0;
         }
@@ -147,9 +141,7 @@ public:
         void RemoveHakkarPowerStack()
         {
             if (Creature* hakkar = instance->GetCreature(_hakkarGUID))
-            {
                 hakkar->CastSpell(hakkar, SPELL_HAKKAR_POWER_DOWN, true);
-            }
         }
 
         bool SetBossState(uint32 type, EncounterState state) override
@@ -195,21 +187,20 @@ public:
 
 enum EdgeOfMadnessEnum
 {
-    EVENT_EDGE_OF_MADNESS_GRILEK    = 27,
-    EVENT_EDGE_OF_MADNESS_HAZZARAH  = 28,
-    EVENT_EDGE_OF_MADNESS_RENATAKI  = 29,
+    EVENT_EDGE_OF_MADNESS_GRILEK = 27,
+    EVENT_EDGE_OF_MADNESS_HAZZARAH = 28,
+    EVENT_EDGE_OF_MADNESS_RENATAKI = 29,
     EVENT_EDGE_OF_MADNESS_WUSHOOLAY = 30
 };
 
-std::vector<std::pair<uint32, uint32>> BrazierOfMadnessContainer =
-{
-    { EVENT_EDGE_OF_MADNESS_GRILEK,     NPC_GRILEK      },
-    { EVENT_EDGE_OF_MADNESS_HAZZARAH,   NPC_HAZZARAH    },
-    { EVENT_EDGE_OF_MADNESS_RENATAKI,   NPC_RENATAKI    },
-    { EVENT_EDGE_OF_MADNESS_WUSHOOLAY,  NPC_WUSHOOLAY   }
+std::vector<std::pair<uint32, uint32>> BrazierOfMadnessContainer = {
+    {EVENT_EDGE_OF_MADNESS_GRILEK,    NPC_GRILEK   },
+    {EVENT_EDGE_OF_MADNESS_HAZZARAH,  NPC_HAZZARAH },
+    {EVENT_EDGE_OF_MADNESS_RENATAKI,  NPC_RENATAKI },
+    {EVENT_EDGE_OF_MADNESS_WUSHOOLAY, NPC_WUSHOOLAY}
 };
 
-Position const edgeOfMagnessSummonPos = { -11901.229f, -1906.366f, 65.358f, 0.942f };
+Position const edgeOfMagnessSummonPos = {-11901.229f, -1906.366f, 65.358f, 0.942f};
 
 struct go_brazier_of_madness : public GameObjectAI
 {
@@ -218,16 +209,12 @@ struct go_brazier_of_madness : public GameObjectAI
     bool GossipHello(Player* /*player*/, bool reportUse) override
     {
         if (reportUse)
-        {
             return true;
-        }
 
         if (InstanceScript* instanceScript = me->GetInstanceScript())
         {
             if (instanceScript->GetGuidData(DATA_EDGE_OF_MADNESS))
-            {
                 return false;
-            }
         }
 
         uint32 bossEntry = 0;
@@ -242,7 +229,8 @@ struct go_brazier_of_madness : public GameObjectAI
 
         if (bossEntry)
         {
-            me->SummonCreature(bossEntry, edgeOfMagnessSummonPos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 2 * HOUR * IN_MILLISECONDS);
+            me->SummonCreature(
+                bossEntry, edgeOfMagnessSummonPos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 2 * HOUR * IN_MILLISECONDS);
         }
 
         return false;

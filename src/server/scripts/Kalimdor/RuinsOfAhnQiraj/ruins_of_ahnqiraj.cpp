@@ -24,15 +24,15 @@
 enum Spells
 {
     // Hive'Zara Stinger
-    SPELL_HIVEZARA_CATALYST             = 25187,
-    SPELL_STINGER_CHARGE_NORMAL         = 25190,
-    SPELL_STINGER_CHARGE_BUFFED         = 25191,
+    SPELL_HIVEZARA_CATALYST = 25187,
+    SPELL_STINGER_CHARGE_NORMAL = 25190,
+    SPELL_STINGER_CHARGE_BUFFED = 25191,
 
     // Obsidian Destroyer
-    SPELL_PURGE                         = 25756,
-    SPELL_DRAIN_MANA                    = 25755,
-    SPELL_DRAIN_MANA_VISUAL             = 26639,
-    SPELL_SUMMON_SMALL_OBSIDIAN_CHUNK   = 27627, // Server-side
+    SPELL_PURGE = 25756,
+    SPELL_DRAIN_MANA = 25755,
+    SPELL_DRAIN_MANA_VISUAL = 26639,
+    SPELL_SUMMON_SMALL_OBSIDIAN_CHUNK = 27627, // Server-side
 };
 
 struct npc_hivezara_stinger : public ScriptedAI
@@ -46,25 +46,29 @@ struct npc_hivezara_stinger : public ScriptedAI
 
     void JustEngagedWith(Unit* who) override
     {
-        DoCast(who ,who->HasAura(SPELL_HIVEZARA_CATALYST) ? SPELL_STINGER_CHARGE_BUFFED : SPELL_STINGER_CHARGE_NORMAL, true);
+        DoCast(who,
+            who->HasAura(SPELL_HIVEZARA_CATALYST) ? SPELL_STINGER_CHARGE_BUFFED : SPELL_STINGER_CHARGE_NORMAL,
+            true);
 
-        scheduler.Schedule(5s, [this](TaskContext context)
+        scheduler.Schedule(5s,
+            [this](TaskContext context)
         {
-            Unit* target = SelectTarget(SelectTargetMethod::Random, 1, [&](Unit* u)
-            {
+            Unit* target = SelectTarget(SelectTargetMethod::Random, 1, [&](Unit* u) {
                 return u && !u->IsPet() && u->IsWithinDist2d(me, 20.f) && u->HasAura(SPELL_HIVEZARA_CATALYST);
             });
             if (!target)
             {
-                target = SelectTarget(SelectTargetMethod::Random, 1, [&](Unit* u)
-                {
+                target = SelectTarget(SelectTargetMethod::Random, 1, [&](Unit* u) {
                     return u && !u->IsPet() && u->IsWithinDist2d(me, 20.f);
                 });
             }
 
             if (target)
             {
-                DoCast(target, target->HasAura(SPELL_HIVEZARA_CATALYST) ? SPELL_STINGER_CHARGE_BUFFED : SPELL_STINGER_CHARGE_NORMAL, true);
+                DoCast(target,
+                    target->HasAura(SPELL_HIVEZARA_CATALYST) ? SPELL_STINGER_CHARGE_BUFFED
+                                                             : SPELL_STINGER_CHARGE_NORMAL,
+                    true);
             }
 
             context.Repeat(4500ms, 6500ms);
@@ -74,12 +78,9 @@ struct npc_hivezara_stinger : public ScriptedAI
     void UpdateAI(uint32 diff) override
     {
         if (!UpdateVictim())
-        {
             return;
-        }
 
-        scheduler.Update(diff,
-            std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
+        scheduler.Update(diff, std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
     }
 };
 
@@ -95,23 +96,19 @@ struct npc_obsidian_destroyer : public ScriptedAI
 
     void JustEngagedWith(Unit* /*who*/) override
     {
-        scheduler.Schedule(6s, [this](TaskContext context)
+        scheduler.Schedule(6s,
+            [this](TaskContext context)
         {
             std::list<Unit*> targets;
-            SelectTargetList(targets, 6, SelectTargetMethod::Random, 1, [&](Unit* target)
-            {
+            SelectTargetList(targets, 6, SelectTargetMethod::Random, 1, [&](Unit* target) {
                 return target && target->IsPlayer() && target->GetPower(POWER_MANA) > 0;
             });
 
             for (Unit* target : targets)
-            {
                 DoCast(target, SPELL_DRAIN_MANA, true);
-            }
 
             if (me->GetPowerPct(POWER_MANA) >= 100.f)
-            {
                 DoCastAOE(SPELL_PURGE, true);
-            }
 
             context.Repeat(6s);
         });
@@ -125,12 +122,9 @@ struct npc_obsidian_destroyer : public ScriptedAI
     void UpdateAI(uint32 diff) override
     {
         if (!UpdateVictim())
-        {
             return;
-        }
 
-        scheduler.Update(diff,
-            std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
+        scheduler.Update(diff, std::bind(&ScriptedAI::DoMeleeAttackIfReady, this));
     }
 };
 
@@ -143,9 +137,7 @@ class spell_drain_mana : public SpellScript
         if (Unit* caster = GetCaster())
         {
             if (Unit* target = GetHitUnit())
-            {
                 target->CastSpell(caster, SPELL_DRAIN_MANA_VISUAL, true);
-            }
         }
     }
 

@@ -53,7 +53,8 @@ MySQLConnection::MySQLConnection(MySQLConnectionInfo& connInfo) :
     m_Mysql(nullptr),
     m_queue(nullptr),
     m_connectionInfo(connInfo),
-    m_connectionFlags(CONNECTION_SYNCH) { }
+    m_connectionFlags(CONNECTION_SYNCH)
+{ }
 
 MySQLConnection::MySQLConnection(ProducerConsumerQueue<SQLOperation*>* queue, MySQLConnectionInfo& connInfo) :
     m_reconnecting(false),
@@ -99,20 +100,20 @@ uint32 MySQLConnection::Open()
     mysql_options(mysqlInit, MYSQL_SET_CHARSET_NAME, "utf8");
 
 #ifdef _WIN32
-    if (m_connectionInfo.host == ".")                                           // named pipe use option (Windows)
+    if (m_connectionInfo.host == ".") // named pipe use option (Windows)
     {
         unsigned int opt = MYSQL_PROTOCOL_PIPE;
         mysql_options(mysqlInit, MYSQL_OPT_PROTOCOL, (char const*)&opt);
         port = 0;
         unix_socket = 0;
     }
-    else                                                    // generic case
+    else // generic case
     {
         port = *Acore::StringTo<uint32>(m_connectionInfo.port_or_socket);
         unix_socket = 0;
     }
 #else
-    if (m_connectionInfo.host == ".")                                           // socket use option (Unix/Linux)
+    if (m_connectionInfo.host == ".") // socket use option (Unix/Linux)
     {
         unsigned int opt = MYSQL_PROTOCOL_SOCKET;
         mysql_options(mysqlInit, MYSQL_OPT_PROTOCOL, (char const*)&opt);
@@ -120,7 +121,7 @@ uint32 MySQLConnection::Open()
         port = 0;
         unix_socket = m_connectionInfo.port_or_socket.c_str();
     }
-    else                                                    // generic case
+    else // generic case
     {
         port = *Acore::StringTo<uint32>(m_connectionInfo.port_or_socket);
         unix_socket = nullptr;
@@ -131,15 +132,19 @@ uint32 MySQLConnection::Open()
     {
         mysql_ssl_mode opt_use_ssl = SSL_MODE_DISABLED;
         if (m_connectionInfo.ssl == "ssl")
-        {
             opt_use_ssl = SSL_MODE_REQUIRED;
-        }
 
         mysql_options(mysqlInit, MYSQL_OPT_SSL_MODE, (char const*)&opt_use_ssl);
     }
 
-    m_Mysql = reinterpret_cast<MySQLHandle*>(mysql_real_connect(mysqlInit, m_connectionInfo.host.c_str(), m_connectionInfo.user.c_str(),
-        m_connectionInfo.password.c_str(), m_connectionInfo.database.c_str(), port, unix_socket, 0));
+    m_Mysql = reinterpret_cast<MySQLHandle*>(mysql_real_connect(mysqlInit,
+        m_connectionInfo.host.c_str(),
+        m_connectionInfo.user.c_str(),
+        m_connectionInfo.password.c_str(),
+        m_connectionInfo.database.c_str(),
+        port,
+        unix_socket,
+        0));
 
     if (m_Mysql)
     {
@@ -159,7 +164,10 @@ uint32 MySQLConnection::Open()
     }
     else
     {
-        LOG_ERROR("sql.driver", "Could not connect to MySQL database at {}: {}", m_connectionInfo.host, mysql_error(mysqlInit));
+        LOG_ERROR("sql.driver",
+            "Could not connect to MySQL database at {}: {}",
+            m_connectionInfo.host,
+            mysql_error(mysqlInit));
         uint32 errorCode = mysql_errno(mysqlInit);
         mysql_close(mysqlInit);
         return errorCode;
@@ -187,7 +195,8 @@ bool MySQLConnection::Execute(std::string_view sql)
             LOG_INFO("sql.sql", "SQL: {}", sql);
             LOG_ERROR("sql.sql", "[{}] {}", lErrno, mysql_error(m_Mysql));
 
-            if (_HandleMySQLErrno(lErrno, mysql_error(m_Mysql)))  // If it returns true, an error was handled successfully (i.e. reconnection)
+            if (_HandleMySQLErrno(lErrno,
+                    mysql_error(m_Mysql))) // If it returns true, an error was handled successfully (i.e. reconnection)
                 return Execute(sql);       // Try again
 
             return false;
@@ -223,10 +232,13 @@ bool MySQLConnection::Execute(PreparedStatementBase* stmt)
 #endif
     {
         uint32 lErrno = mysql_errno(m_Mysql);
-        LOG_ERROR("sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
+        LOG_ERROR(
+            "sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
 
-        if (_HandleMySQLErrno(lErrno, mysql_stmt_error(msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
-            return Execute(stmt);       // Try again
+        if (_HandleMySQLErrno(lErrno,
+                mysql_stmt_error(
+                    msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
+            return Execute(stmt); // Try again
 
         m_mStmt->ClearParameters();
         return false;
@@ -235,10 +247,13 @@ bool MySQLConnection::Execute(PreparedStatementBase* stmt)
     if (mysql_stmt_execute(msql_STMT))
     {
         uint32 lErrno = mysql_errno(m_Mysql);
-        LOG_ERROR("sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
+        LOG_ERROR(
+            "sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
 
-        if (_HandleMySQLErrno(lErrno, mysql_stmt_error(msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
-            return Execute(stmt);       // Try again
+        if (_HandleMySQLErrno(lErrno,
+                mysql_stmt_error(
+                    msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
+            return Execute(stmt); // Try again
 
         m_mStmt->ClearParameters();
         return false;
@@ -250,7 +265,8 @@ bool MySQLConnection::Execute(PreparedStatementBase* stmt)
     return true;
 }
 
-bool MySQLConnection::_Query(PreparedStatementBase* stmt, MySQLPreparedStatement** mysqlStmt, MySQLResult** pResult, uint64* pRowCount, uint32* pFieldCount)
+bool MySQLConnection::_Query(PreparedStatementBase* stmt, MySQLPreparedStatement** mysqlStmt, MySQLResult** pResult,
+    uint64* pRowCount, uint32* pFieldCount)
 {
     if (!m_Mysql)
         return false;
@@ -258,7 +274,7 @@ bool MySQLConnection::_Query(PreparedStatementBase* stmt, MySQLPreparedStatement
     uint32 index = stmt->GetIndex();
 
     MySQLPreparedStatement* m_mStmt = GetPreparedStatement(index);
-    ASSERT(m_mStmt);            // Can only be null if preparation failed, server side error or bad query
+    ASSERT(m_mStmt); // Can only be null if preparation failed, server side error or bad query
 
     m_mStmt->BindParameters(stmt);
     *mysqlStmt = m_mStmt;
@@ -275,10 +291,13 @@ bool MySQLConnection::_Query(PreparedStatementBase* stmt, MySQLPreparedStatement
 #endif
     {
         uint32 lErrno = mysql_errno(m_Mysql);
-        LOG_ERROR("sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
+        LOG_ERROR(
+            "sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
 
-        if (_HandleMySQLErrno(lErrno, mysql_stmt_error(msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
-            return _Query(stmt, mysqlStmt, pResult, pRowCount, pFieldCount);       // Try again
+        if (_HandleMySQLErrno(lErrno,
+                mysql_stmt_error(
+                    msql_STMT))) // If it returns true, an error was handled successfully (i.e. reconnection)
+            return _Query(stmt, mysqlStmt, pResult, pRowCount, pFieldCount); // Try again
 
         m_mStmt->ClearParameters();
         return false;
@@ -287,10 +306,13 @@ bool MySQLConnection::_Query(PreparedStatementBase* stmt, MySQLPreparedStatement
     if (mysql_stmt_execute(msql_STMT))
     {
         uint32 lErrno = mysql_errno(m_Mysql);
-        LOG_ERROR("sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
+        LOG_ERROR(
+            "sql.sql", "SQL(p): {}\n [ERROR]: [{}] {}", m_mStmt->getQueryString(), lErrno, mysql_stmt_error(msql_STMT));
 
-        if (_HandleMySQLErrno(lErrno, mysql_stmt_error(msql_STMT)))  // If it returns true, an error was handled successfully (i.e. reconnection)
-            return _Query(stmt, mysqlStmt, pResult, pRowCount, pFieldCount);      // Try again
+        if (_HandleMySQLErrno(lErrno,
+                mysql_stmt_error(
+                    msql_STMT))) // If it returns true, an error was handled successfully (i.e. reconnection)
+            return _Query(stmt, mysqlStmt, pResult, pRowCount, pFieldCount); // Try again
 
         m_mStmt->ClearParameters();
         return false;
@@ -323,7 +345,8 @@ ResultSet* MySQLConnection::Query(std::string_view sql)
     return new ResultSet(result, fields, rowCount, fieldCount);
 }
 
-bool MySQLConnection::_Query(std::string_view sql, MySQLResult** pResult, MySQLField** pFields, uint64* pRowCount, uint32* pFieldCount)
+bool MySQLConnection::_Query(
+    std::string_view sql, MySQLResult** pResult, MySQLField** pFields, uint64* pRowCount, uint32* pFieldCount)
 {
     if (!m_Mysql)
         return false;
@@ -337,8 +360,9 @@ bool MySQLConnection::_Query(std::string_view sql, MySQLResult** pResult, MySQLF
             LOG_INFO("sql.sql", "SQL: {}", sql);
             LOG_ERROR("sql.sql", "[{}] {}", lErrno, mysql_error(m_Mysql));
 
-            if (_HandleMySQLErrno(lErrno, mysql_error(m_Mysql))) // If it returns true, an error was handled successfully (i.e. reconnection)
-                return _Query(sql, pResult, pFields, pRowCount, pFieldCount);    // We try again
+            if (_HandleMySQLErrno(lErrno,
+                    mysql_error(m_Mysql))) // If it returns true, an error was handled successfully (i.e. reconnection)
+                return _Query(sql, pResult, pFields, pRowCount, pFieldCount); // We try again
 
             return false;
         }
@@ -399,7 +423,7 @@ int MySQLConnection::ExecuteTransaction(std::shared_ptr<TransactionBase> transac
                 {
                     stmt = std::get<PreparedStatementBase*>(data.element);
                 }
-                catch (const std::bad_variant_access& ex)
+                catch (std::bad_variant_access const& ex)
                 {
                     LOG_FATAL("sql.sql", "> PreparedStatementBase not found in SQLElementData. {}", ex.what());
                     ABORT();
@@ -418,13 +442,13 @@ int MySQLConnection::ExecuteTransaction(std::shared_ptr<TransactionBase> transac
             break;
             case SQL_ELEMENT_RAW:
             {
-                std::string sql{};
+                std::string sql {};
 
                 try
                 {
                     sql = std::get<std::string>(data.element);
                 }
-                catch (const std::bad_variant_access& ex)
+                catch (std::bad_variant_access const& ex)
                 {
                     LOG_FATAL("sql.sql", "> std::string not found in SQLElementData. {}", ex.what());
                     ABORT();
@@ -453,7 +477,7 @@ int MySQLConnection::ExecuteTransaction(std::shared_ptr<TransactionBase> transac
     return 0;
 }
 
-std::size_t MySQLConnection::EscapeString(char* to, const char* from, std::size_t length)
+std::size_t MySQLConnection::EscapeString(char* to, char const* from, std::size_t length)
 {
     return mysql_real_escape_string(m_Mysql, to, from, length);
 }
@@ -490,14 +514,21 @@ std::string MySQLConnection::GetServerInfo() const
 
 MySQLPreparedStatement* MySQLConnection::GetPreparedStatement(uint32 index)
 {
-    ASSERT(index < m_stmts.size(), "Tried to access invalid prepared statement index {} (max index {}) on database `{}`, connection type: {}",
-        index, m_stmts.size(), m_connectionInfo.database, (m_connectionFlags & CONNECTION_ASYNC) ? "asynchronous" : "synchronous");
+    ASSERT(index < m_stmts.size(),
+        "Tried to access invalid prepared statement index {} (max index {}) on database `{}`, connection type: {}",
+        index,
+        m_stmts.size(),
+        m_connectionInfo.database,
+        (m_connectionFlags & CONNECTION_ASYNC) ? "asynchronous" : "synchronous");
 
     MySQLPreparedStatement* ret = m_stmts[index].get();
 
     if (!ret)
-        LOG_ERROR("sql.sql", "Could not fetch prepared statement {} on database `{}`, connection type: {}.",
-            index, m_connectionInfo.database, (m_connectionFlags & CONNECTION_ASYNC) ? "asynchronous" : "synchronous");
+        LOG_ERROR("sql.sql",
+            "Could not fetch prepared statement {} on database `{}`, connection type: {}.",
+            index,
+            m_connectionInfo.database,
+            (m_connectionFlags & CONNECTION_ASYNC) ? "asynchronous" : "synchronous");
 
     return ret;
 }
@@ -520,18 +551,15 @@ void MySQLConnection::PrepareStatement(uint32 index, std::string_view sql, Conne
         LOG_ERROR("sql.sql", "{}", mysql_error(m_Mysql));
         m_prepareError = true;
     }
-    else
+    else if (mysql_stmt_prepare(stmt, std::string(sql).c_str(), static_cast<unsigned long>(sql.size())))
     {
-        if (mysql_stmt_prepare(stmt, std::string(sql).c_str(), static_cast<unsigned long>(sql.size())))
-        {
-            LOG_ERROR("sql.sql", "In mysql_stmt_prepare() id: {}, sql: \"{}\"", index, sql);
-            LOG_ERROR("sql.sql", "{}", mysql_stmt_error(stmt));
-            mysql_stmt_close(stmt);
-            m_prepareError = true;
-        }
-        else
-            m_stmts[index] = std::make_unique<MySQLPreparedStatement>(reinterpret_cast<MySQLStmt*>(stmt), sql);
+        LOG_ERROR("sql.sql", "In mysql_stmt_prepare() id: {}, sql: \"{}\"", index, sql);
+        LOG_ERROR("sql.sql", "{}", mysql_stmt_error(stmt));
+        mysql_stmt_close(stmt);
+        m_prepareError = true;
     }
+    else
+        m_stmts[index] = std::make_unique<MySQLPreparedStatement>(reinterpret_cast<MySQLStmt*>(stmt), sql);
 }
 
 PreparedResultSet* MySQLConnection::Query(PreparedStatementBase* stmt)
@@ -545,9 +573,7 @@ PreparedResultSet* MySQLConnection::Query(PreparedStatementBase* stmt)
         return nullptr;
 
     if (mysql_more_results(m_Mysql))
-    {
         mysql_next_result(m_Mysql);
-    }
 
     return new PreparedResultSet(mysqlStmt->GetSTMT(), result, rowCount, fieldCount);
 }
@@ -588,9 +614,12 @@ bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, char const* err, uint8 att
                     ABORT("{}\n\n[{}] {}", str, errNo, err);
                 }
 
-                LOG_INFO("sql.sql", "Successfully reconnected to {} @{}:{} ({}).",
-                    m_connectionInfo.database, m_connectionInfo.host, m_connectionInfo.port_or_socket,
-                        (m_connectionFlags & CONNECTION_ASYNC) ? "asynchronous" : "synchronous");
+                LOG_INFO("sql.sql",
+                    "Successfully reconnected to {} @{}:{} ({}).",
+                    m_connectionInfo.database,
+                    m_connectionInfo.host,
+                    m_connectionInfo.port_or_socket,
+                    (m_connectionFlags & CONNECTION_ASYNC) ? "asynchronous" : "synchronous");
 
                 m_reconnecting = false;
                 return true;
@@ -611,7 +640,7 @@ bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, char const* err, uint8 att
             {
                 // It's possible this attempted reconnect throws 2006 at us.
                 // To prevent crazy recursive calls, sleep here.
-                std::this_thread::sleep_for(3s); // Sleep 3 seconds
+                std::this_thread::sleep_for(3s);                                  // Sleep 3 seconds
                 return _HandleMySQLErrno(lErrno, mysql_error(m_Mysql), attempts); // Call self (recursive)
             }
             [[fallthrough]];
@@ -628,7 +657,8 @@ bool MySQLConnection::_HandleMySQLErrno(uint32 errNo, char const* err, uint8 att
         // Outdated table or database structure - terminate core
         case ER_BAD_FIELD_ERROR:
         case ER_NO_SUCH_TABLE:
-            str = "Your database structure is not up to date. Please make sure you've executed all queries in the sql/updates folders.";
+            str =
+                "Your database structure is not up to date. Please make sure you've executed all queries in the sql/updates folders.";
             LOG_FATAL("sql.sql", "{}", str);
             std::this_thread::sleep_for(10s);
             ABORT("{}\n\n[{}] {}", str, errNo, err);

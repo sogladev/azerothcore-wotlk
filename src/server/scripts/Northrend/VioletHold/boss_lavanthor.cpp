@@ -21,13 +21,13 @@
 
 enum eSpells
 {
-    SPELL_CAUTERIZING_FLAMES                  = 59466,
-    SPELL_FIREBOLT_N                          = 54235,
-    SPELL_FIREBOLT_H                          = 59468,
-    SPELL_FLAME_BREATH_N                      = 54282,
-    SPELL_FLAME_BREATH_H                      = 59469,
-    SPELL_LAVA_BURN_N                         = 54249,
-    SPELL_LAVA_BURN_H                         = 59594,
+    SPELL_CAUTERIZING_FLAMES = 59466,
+    SPELL_FIREBOLT_N = 54235,
+    SPELL_FIREBOLT_H = 59468,
+    SPELL_FLAME_BREATH_N = 54282,
+    SPELL_FLAME_BREATH_H = 59469,
+    SPELL_LAVA_BURN_N = 54249,
+    SPELL_LAVA_BURN_H = 59594,
 };
 
 #define SPELL_FIREBOLT                      DUNGEON_MODE(SPELL_FIREBOLT_N, SPELL_FIREBOLT_H)
@@ -119,7 +119,7 @@ public:
                 pInstance->SetData(DATA_BOSS_DIED, 0);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void EnterEvadeMode(EvadeReason why) override
         {

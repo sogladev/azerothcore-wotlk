@@ -23,21 +23,21 @@
 
 enum Text
 {
-    SAY_ENTER                = 0,
-    SAY_AGGRO                = 1,
-    SAY_SLAY                 = 2,
-    SAY_MORTAL               = 3,
-    SAY_SHOUT                = 4,
-    SAY_DEATH                = 5
+    SAY_ENTER = 0,
+    SAY_AGGRO = 1,
+    SAY_SLAY = 2,
+    SAY_MORTAL = 3,
+    SAY_SHOUT = 4,
+    SAY_DEATH = 5
 };
 
 enum Spells
 {
-    SPELL_WHIRLWIND          = 31909,
-    SPELL_EXPLODING_SHOT     = 33792,
-    SPELL_HAMSTRING          = 9080,
-    SPELL_MORTAL_STRIKE      = 31911,
-    SPELL_FRIGHTENING_SHOUT  = 33789
+    SPELL_WHIRLWIND = 31909,
+    SPELL_EXPLODING_SHOT = 33792,
+    SPELL_HAMSTRING = 9080,
+    SPELL_MORTAL_STRIKE = 31911,
+    SPELL_FRIGHTENING_SHOUT = 33789
 };
 
 struct boss_lieutenant_drake : public BossAI
@@ -55,36 +55,40 @@ struct boss_lieutenant_drake : public BossAI
     {
         _JustEngagedWith();
         Talk(SAY_AGGRO);
-        scheduler.Schedule(4s, [this](TaskContext context)
+        scheduler
+            .Schedule(4s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_WHIRLWIND);
             context.Repeat(25s);
-        }).Schedule(14s, [this](TaskContext context)
+        })
+            .Schedule(14s,
+                [this](TaskContext context)
         {
             if (roll_chance_i(40))
-            {
                 Talk(SAY_SHOUT);
-            }
             DoCastSelf(SPELL_FRIGHTENING_SHOUT);
             context.Repeat(25s);
-        }).Schedule(9s, [this](TaskContext context)
+        })
+            .Schedule(9s,
+                [this](TaskContext context)
         {
             if (roll_chance_i(40))
-            {
                 Talk(SAY_MORTAL);
-            }
             DoCastVictim(SPELL_MORTAL_STRIKE);
             context.Repeat(10s);
-        }).Schedule(18s, [this](TaskContext context)
+        })
+            .Schedule(18s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_HAMSTRING);
             context.Repeat(25s);
-        }).Schedule(1s, [this](TaskContext context)
+        })
+            .Schedule(1s,
+                [this](TaskContext context)
         {
             if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 40.0f))
-            {
                 DoCast(target, SPELL_EXPLODING_SHOT);
-            }
             context.Repeat(25s);
         });
     }
@@ -92,9 +96,7 @@ struct boss_lieutenant_drake : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_SLAY);
-        }
     }
 
     void JustDied(Unit* /*killer*/) override
@@ -106,9 +108,7 @@ struct boss_lieutenant_drake : public BossAI
     void MovementInform(uint32 type, uint32 point) override
     {
         if (type != WAYPOINT_MOTION_TYPE)
-        {
             return;
-        }
 
         if (pathId == me->GetEntry() * 10)
         {

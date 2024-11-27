@@ -38,23 +38,23 @@ EndContentData */
 enum DaphneStilwell
 {
     // Yells
-    SAY_DS_START        = 0,
-    SAY_DS_DOWN_1       = 1,
-    SAY_DS_DOWN_2       = 2,
-    SAY_DS_DOWN_3       = 3,
-    SAY_DS_PROLOGUE     = 4,
+    SAY_DS_START = 0,
+    SAY_DS_DOWN_1 = 1,
+    SAY_DS_DOWN_2 = 2,
+    SAY_DS_DOWN_3 = 3,
+    SAY_DS_PROLOGUE = 4,
 
     // Spells
-    SPELL_SHOOT         = 6660,
+    SPELL_SHOOT = 6660,
 
     // Quests
-    QUEST_TOME_VALOR    = 1651,
+    QUEST_TOME_VALOR = 1651,
 
     // Creatures
-    NPC_DEFIAS_RAIDER   = 6180,
+    NPC_DEFIAS_RAIDER = 6180,
 
     // Equips
-    EQUIP_ID_RIFLE      = 2511
+    EQUIP_ID_RIFLE = 2511
 };
 
 class npc_daphne_stilwell : public CreatureScript
@@ -62,7 +62,7 @@ class npc_daphne_stilwell : public CreatureScript
 public:
     npc_daphne_stilwell() : CreatureScript("npc_daphne_stilwell") { }
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
     {
         if (quest->GetQuestId() == QUEST_TOME_VALOR)
         {
@@ -108,24 +108,96 @@ public:
                     me->HandleEmoteCommand(EMOTE_STATE_USE_STANDING_NO_SHEATHE);
                     break;
                 case 7:
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11435.52f, 1601.26f, 68.06f, 4.1f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11440.96f, 1599.69f, 66.35f, 4.09f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11433.44f, 1594.24f, 66.99f, 4.05f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11435.52f,
+                        1601.26f,
+                        68.06f,
+                        4.1f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11440.96f,
+                        1599.69f,
+                        66.35f,
+                        4.09f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11433.44f,
+                        1594.24f,
+                        66.99f,
+                        4.05f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
                     break;
                 case 8:
                     me->SetSheath(SHEATH_STATE_RANGED);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11435.52f, 1601.26f, 68.06f, 4.1f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11440.96f, 1599.69f, 66.35f, 4.09f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11433.44f, 1594.24f, 66.99f, 4.05f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11428.29f, 1598.37f, 70.90f, 3.9f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11435.52f,
+                        1601.26f,
+                        68.06f,
+                        4.1f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11440.96f,
+                        1599.69f,
+                        66.35f,
+                        4.09f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11433.44f,
+                        1594.24f,
+                        66.99f,
+                        4.05f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11428.29f,
+                        1598.37f,
+                        70.90f,
+                        3.9f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
                     break;
                 case 9:
                     me->SetSheath(SHEATH_STATE_RANGED);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11435.52f, 1601.26f, 68.06f, 4.1f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11440.96f, 1599.69f, 66.35f, 4.09f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11433.44f, 1594.24f, 66.99f, 4.05f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11428.29f, 1598.37f, 70.90f, 3.9f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_DEFIAS_RAIDER, -11438.14f, 1607.6f, 70.94f, 4.38f, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11435.52f,
+                        1601.26f,
+                        68.06f,
+                        4.1f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11440.96f,
+                        1599.69f,
+                        66.35f,
+                        4.09f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11433.44f,
+                        1594.24f,
+                        66.99f,
+                        4.05f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11428.29f,
+                        1598.37f,
+                        70.90f,
+                        3.9f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
+                    me->SummonCreature(NPC_DEFIAS_RAIDER,
+                        -11438.14f,
+                        1607.6f,
+                        70.94f,
+                        4.38f,
+                        TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,
+                        60000);
                     break;
                 case 10:
                     SetRun(false);
@@ -173,7 +245,7 @@ public:
                 Talk(textCounter++, GetPlayerForEscort());
         }
 
-        void Update(const uint32 diff)
+        void Update(uint32 const diff)
         {
             npc_escortAI::UpdateAI(diff);
 

@@ -22,7 +22,7 @@
 #include "Player.h"
 #include "UpdateData.h"
 
-Bag::Bag(): Item()
+Bag::Bag() : Item()
 {
     m_objectType |= TYPEMASK_CONTAINER;
     m_objectTypeId = TYPEID_CONTAINER;
@@ -39,9 +39,15 @@ Bag::~Bag()
         {
             if (item->IsInWorld())
             {
-                LOG_FATAL("entities.item", "Item {} (slot {}, bag slot {}) in bag {} (slot {}, bag slot {}, m_bagslot {}) is to be deleted but is still in world.",
-                               item->GetEntry(), (uint32)item->GetSlot(), (uint32)item->GetBagSlot(),
-                               GetEntry(), (uint32)GetSlot(), (uint32)GetBagSlot(), (uint32)i);
+                LOG_FATAL("entities.item",
+                    "Item {} (slot {}, bag slot {}) in bag {} (slot {}, bag slot {}, m_bagslot {}) is to be deleted but is still in world.",
+                    item->GetEntry(),
+                    (uint32)item->GetSlot(),
+                    (uint32)item->GetBagSlot(),
+                    GetEntry(),
+                    (uint32)GetSlot(),
+                    (uint32)GetBagSlot(),
+                    (uint32)i);
                 item->RemoveFromWorld();
             }
             delete m_bagslot[i];

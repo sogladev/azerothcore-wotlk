@@ -24,17 +24,17 @@
 
 enum eSpells
 {
-    SPELL_RAY_OF_SUFFERING_N                = 54442,
-    SPELL_RAY_OF_SUFFERING_H                = 59524,
+    SPELL_RAY_OF_SUFFERING_N = 54442,
+    SPELL_RAY_OF_SUFFERING_H = 59524,
     //SPELL_RAY_OF_SUFFERING_TRIGGERED      = 54417,
 
-    SPELL_RAY_OF_PAIN_N                     = 54438,
-    SPELL_RAY_OF_PAIN_H                     = 59523,
+    SPELL_RAY_OF_PAIN_N = 54438,
+    SPELL_RAY_OF_PAIN_H = 59523,
     //SPELL_RAY_OF_PAIN_TRIGGERED_N         = 54416,
     //SPELL_RAY_OF_PAIN_TRIGGERED_H         = 59525,
 
-    SPELL_CORROSIVE_SALIVA                  = 54527,
-    SPELL_OPTIC_LINK                        = 54396,
+    SPELL_CORROSIVE_SALIVA = 54527,
+    SPELL_OPTIC_LINK = 54396,
 };
 
 #define SPELL_RAY_OF_SUFFERING              DUNGEON_MODE(SPELL_RAY_OF_SUFFERING_N, SPELL_RAY_OF_SUFFERING_H)
@@ -119,7 +119,7 @@ public:
                 pInstance->SetData(DATA_BOSS_DIED, 0);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void EnterEvadeMode(EvadeReason why) override
         {
@@ -141,12 +141,15 @@ class spell_optic_link_aura : public AuraScript
         if (Unit* target = GetTarget())
             if (Unit* caster = GetCaster())
                 if (GetAura() && GetAura()->GetEffect(0))
-                    GetAura()->GetEffect(0)->SetAmount(aurEff->GetSpellInfo()->Effects[EFFECT_0].BasePoints + (((int32)target->GetExactDist(caster)) * 25) + (aurEff->GetTickNumber() * 100));
+                    GetAura()->GetEffect(0)->SetAmount(aurEff->GetSpellInfo()->Effects[EFFECT_0].BasePoints +
+                                                       (((int32)target->GetExactDist(caster)) * 25) +
+                                                       (aurEff->GetTickNumber() * 100));
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_optic_link_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_optic_link_aura::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 

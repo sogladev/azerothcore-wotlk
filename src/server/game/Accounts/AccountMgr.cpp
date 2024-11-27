@@ -30,16 +30,16 @@ namespace AccountMgr
     AccountOpResult CreateAccount(std::string username, std::string password)
     {
         if (utf8length(username) > MAX_ACCOUNT_STR)
-            return AOR_NAME_TOO_LONG;                           // username's too long
+            return AOR_NAME_TOO_LONG; // username's too long
 
         if (utf8length(password) > MAX_PASS_STR)
-            return AOR_PASS_TOO_LONG;                           // password's too long
+            return AOR_PASS_TOO_LONG; // password's too long
 
         Utf8ToUpperOnlyLatin(username);
         Utf8ToUpperOnlyLatin(password);
 
         if (GetId(username))
-            return AOR_NAME_ALREADY_EXIST;                      // username does already exist
+            return AOR_NAME_ALREADY_EXIST; // username does already exist
 
         LoginDatabasePreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_INS_ACCOUNT);
 
@@ -55,7 +55,7 @@ namespace AccountMgr
 
         LoginDatabase.Execute(stmt);
 
-        return AOR_OK;                                          // everything's fine
+        return AOR_OK; // everything's fine
     }
 
     AccountOpResult ChangeEmail(uint32 accountId, std::string newEmail)
@@ -65,13 +65,13 @@ namespace AccountMgr
         if (!GetName(accountId, username))
         {
             sScriptMgr->OnFailedEmailChange(accountId);
-            return AOR_NAME_NOT_EXIST;                          // account doesn't exist
+            return AOR_NAME_NOT_EXIST; // account doesn't exist
         }
 
         if (utf8length(newEmail) > MAX_EMAIL_STR)
         {
             sScriptMgr->OnFailedEmailChange(accountId);
-            return AOR_EMAIL_TOO_LONG;                           // email's too long
+            return AOR_EMAIL_TOO_LONG; // email's too long
         }
 
         Utf8ToUpperOnlyLatin(newEmail);
@@ -113,11 +113,11 @@ namespace AccountMgr
                 if (Player* p = ObjectAccessor::FindPlayer(guid))
                 {
                     WorldSession* s = p->GetSession();
-                    s->KickPlayer("Delete account");            // mark session to remove at next session list update
-                    s->LogoutPlayer(false);                     // logout player without waiting next session list update
+                    s->KickPlayer("Delete account"); // mark session to remove at next session list update
+                    s->LogoutPlayer(false);          // logout player without waiting next session list update
                 }
 
-                Player::DeleteFromDB(guid.GetCounter(), accountId, false, true);       // no need to update realm characters
+                Player::DeleteFromDB(guid.GetCounter(), accountId, false, true); // no need to update realm characters
             } while (result->NextRow());
         }
 
@@ -175,7 +175,7 @@ namespace AccountMgr
             return AOR_NAME_TOO_LONG;
 
         if (utf8length(newPassword) > MAX_PASS_STR)
-            return AOR_PASS_TOO_LONG;                           // password's too long
+            return AOR_PASS_TOO_LONG; // password's too long
 
         Utf8ToUpperOnlyLatin(newUsername);
         Utf8ToUpperOnlyLatin(newPassword);
@@ -202,13 +202,13 @@ namespace AccountMgr
         if (!GetName(accountId, username))
         {
             sScriptMgr->OnFailedPasswordChange(accountId);
-            return AOR_NAME_NOT_EXIST;                          // account doesn't exist
+            return AOR_NAME_NOT_EXIST; // account doesn't exist
         }
 
         if (utf8length(newPassword) > MAX_PASS_STR)
         {
             sScriptMgr->OnFailedEmailChange(accountId);
-            return AOR_PASS_TOO_LONG;                           // password's too long
+            return AOR_PASS_TOO_LONG; // password's too long
         }
 
         Utf8ToUpperOnlyLatin(username);

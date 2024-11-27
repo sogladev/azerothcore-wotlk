@@ -115,10 +115,7 @@ void OPvPCapturePointGH::ChangeState()
 class OutdoorPvP_grizzly_hills : public OutdoorPvPScript
 {
 public:
-    OutdoorPvP_grizzly_hills()
-        : OutdoorPvPScript("outdoorpvp_gh")
-    {
-    }
+    OutdoorPvP_grizzly_hills() : OutdoorPvPScript("outdoorpvp_gh") { }
 
     OutdoorPvP* GetOutdoorPvP() const override
     {

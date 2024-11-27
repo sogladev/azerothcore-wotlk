@@ -26,62 +26,63 @@
 
 enum Yells
 {
-    SAY_SATH_AGGRO                              = 0,
-    SAY_SATH_SLAY                               = 1,
-    SAY_SATH_DEATH                              = 2,
-    SAY_SATH_SPELL1                             = 3,
-    SAY_SATH_SPELL2                             = 4,
+    SAY_SATH_AGGRO = 0,
+    SAY_SATH_SLAY = 1,
+    SAY_SATH_DEATH = 2,
+    SAY_SATH_SPELL1 = 3,
+    SAY_SATH_SPELL2 = 4,
 
-    SAY_EVIL_AGGRO                              = 0,
-    SAY_EVIL_SLAY                               = 1,
-    SAY_GOOD_PLRWIN                             = 2,
-    SAY_EVIL_ENRAGE                             = 3,
-    SAY_SATH_ENRAGE_ME                          = 4,
-    SAY_KALEC_ENRAGE_SATH                       = 5,
+    SAY_EVIL_AGGRO = 0,
+    SAY_EVIL_SLAY = 1,
+    SAY_GOOD_PLRWIN = 2,
+    SAY_EVIL_ENRAGE = 3,
+    SAY_SATH_ENRAGE_ME = 4,
+    SAY_KALEC_ENRAGE_SATH = 5,
 
-    SAY_GOOD_AGGRO                              = 0,
-    SAY_GOOD_NEAR_DEATH                         = 1,
-    SAY_GOOD_NEAR_DEATH2                        = 2,
-    SAY_GOOD_MADRIGOSA                          = 3 // Madrigosa deserved a far better fate. You did what had to be done, but this battle is far from over!
+    SAY_GOOD_AGGRO = 0,
+    SAY_GOOD_NEAR_DEATH = 1,
+    SAY_GOOD_NEAR_DEATH2 = 2,
+    SAY_GOOD_MADRIGOSA =
+        3 // Madrigosa deserved a far better fate. You did what had to be done, but this battle is far from over!
 };
 
 enum Spells
 {
-    SPELL_SPECTRAL_EXHAUSTION           = 44867,
-    SPELL_SPECTRAL_BLAST                = 44869,
-    SPELL_SPECTRAL_BLAST_PORTAL         = 44866,
-    SPELL_SPECTRAL_BLAST_AA             = 46648,
-    SPELL_TELEPORT_SPECTRAL             = 46019,
+    SPELL_SPECTRAL_EXHAUSTION = 44867,
+    SPELL_SPECTRAL_BLAST = 44869,
+    SPELL_SPECTRAL_BLAST_PORTAL = 44866,
+    SPELL_SPECTRAL_BLAST_AA = 46648,
+    SPELL_TELEPORT_SPECTRAL = 46019,
 
-    SPELL_TELEPORT_NORMAL_REALM         = 46020,
-    SPELL_SPECTRAL_REALM                = 46021,
-    SPELL_SPECTRAL_INVISIBILITY         = 44801,
-    SPELL_DEMONIC_VISUAL                = 44800,
+    SPELL_TELEPORT_NORMAL_REALM = 46020,
+    SPELL_SPECTRAL_REALM = 46021,
+    SPELL_SPECTRAL_INVISIBILITY = 44801,
+    SPELL_DEMONIC_VISUAL = 44800,
 
-    SPELL_ARCANE_BUFFET                 = 45018,
-    SPELL_FROST_BREATH                  = 44799,
-    SPELL_TAIL_LASH                     = 45122,
+    SPELL_ARCANE_BUFFET = 45018,
+    SPELL_FROST_BREATH = 44799,
+    SPELL_TAIL_LASH = 45122,
 
-    SPELL_BANISH                        = 44836,
-    SPELL_TRANSFORM_KALEC               = 44670,
-    SPELL_CRAZED_RAGE                   = 44807,
+    SPELL_BANISH = 44836,
+    SPELL_TRANSFORM_KALEC = 44670,
+    SPELL_CRAZED_RAGE = 44807,
 
-    SPELL_CORRUPTION_STRIKE             = 45029,
-    SPELL_CURSE_OF_BOUNDLESS_AGONY      = 45032,
-    SPELL_CURSE_OF_BOUNDLESS_AGONY_PLR  = 45034,
-    SPELL_SHADOW_BOLT                   = 45031,
+    SPELL_CORRUPTION_STRIKE = 45029,
+    SPELL_CURSE_OF_BOUNDLESS_AGONY = 45032,
+    SPELL_CURSE_OF_BOUNDLESS_AGONY_PLR = 45034,
+    SPELL_SHADOW_BOLT = 45031,
 
-    SPELL_HEROIC_STRIKE                 = 45026,
-    SPELL_REVITALIZE                    = 45027
+    SPELL_HEROIC_STRIKE = 45026,
+    SPELL_REVITALIZE = 45027
 };
 
 enum SWPActions
 {
-    ACTION_ENRAGE                       = 1,
-    ACTION_BANISH                       = 2,
-    ACTION_SATH_BANISH                  = 3,
-    ACTION_KALEC_DIED                   = 4,
-    ACTION_ENRAGE_OTHER                 = 5,
+    ACTION_ENRAGE = 1,
+    ACTION_BANISH = 2,
+    ACTION_SATH_BANISH = 3,
+    ACTION_KALEC_DIED = 4,
+    ACTION_ENRAGE_OTHER = 5,
 };
 
 #define DRAGON_REALM_Z  53.079f
@@ -124,15 +125,15 @@ struct boss_kalecgos : public BossAI
         _sathBanished = false;
         ClearPlayerAuras();
 
-        ScheduleHealthCheckEvent(10, [&] {
+        ScheduleHealthCheckEvent(10,
+            [&]
+        {
             if (Creature* Sath = instance->GetCreature(DATA_SATHROVARR))
                 Sath->AI()->DoAction(ACTION_ENRAGE_OTHER);
             DoAction(ACTION_ENRAGE);
         });
 
-        ScheduleHealthCheckEvent(1, [&] {
-            DoAction(ACTION_BANISH);
-        });
+        ScheduleHealthCheckEvent(1, [&] { DoAction(ACTION_BANISH); });
     }
 
     void ClearPlayerAuras() const
@@ -161,23 +162,32 @@ struct boss_kalecgos : public BossAI
         {
             scheduler.CancelAll();
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 me->SetReactState(REACT_PASSIVE);
                 me->CombatStop();
                 me->RemoveAllAuras();
                 me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 Talk(SAY_EVIL_ENRAGE);
-            }, 1s);
+            },
+                1s);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 me->SetDisableGravity(true);
                 me->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-            }, 4s);
+            },
+                4s);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 me->SetVisible(false);
                 EnterEvadeMode();
-            }, 9s);
+            },
+                9s);
 
             ClearPlayerAuras();
             return;
@@ -187,34 +197,46 @@ struct boss_kalecgos : public BossAI
         {
             scheduler.CancelAll();
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 me->SetRegeneratingHealth(false);
                 me->RemoveAllAuras();
                 me->SetReactState(REACT_PASSIVE);
                 me->CombatStop();
                 me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 me->SetFaction(FACTION_FRIENDLY);
-            }, 1s);
+            },
+                1s);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 if (Creature* Sath = instance->GetCreature(DATA_SATHROVARR))
                 {
                     summons.Despawn(Sath);
                     Unit::Kill(me, Sath);
                 }
-            }, 2s);
+            },
+                2s);
 
             Talk(SAY_GOOD_PLRWIN, 10s);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 me->SetDisableGravity(true);
                 me->HandleEmoteCommand(EMOTE_ONESHOT_LIFTOFF);
-            }, 15s);
+            },
+                15s);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 me->SetVisible(false);
                 me->KillSelf();
-            }, 20s);
+            },
+                20s);
 
             ClearPlayerAuras();
             if (Creature* Sath = instance->GetCreature(DATA_SATHROVARR))
@@ -231,30 +253,25 @@ struct boss_kalecgos : public BossAI
     {
         BossAI::JustEngagedWith(who);
 
-        ScheduleTimedEvent(6s, [&] {
-            DoCastAOE(SPELL_ARCANE_BUFFET);
-        }, 8s);
+        ScheduleTimedEvent(6s, [&] { DoCastAOE(SPELL_ARCANE_BUFFET); }, 8s);
 
-        ScheduleTimedEvent(15s, [&] {
-            DoCastVictim(SPELL_FROST_BREATH);
-        }, 15s);
+        ScheduleTimedEvent(15s, [&] { DoCastVictim(SPELL_FROST_BREATH); }, 15s);
 
         ScheduleTimedEvent(10s, [&] {
             me->CastCustomSpell(RAND(44978, 45001, 45002, 45004, 45006, 45010), SPELLVALUE_MAX_TARGETS, 1, me, false);
         }, 20s);
 
-        ScheduleTimedEvent(25s, [&] {
-            DoCastVictim(SPELL_TAIL_LASH);
-        }, 15s);
+        ScheduleTimedEvent(25s, [&] { DoCastVictim(SPELL_TAIL_LASH); }, 15s);
 
-        ScheduleTimedEvent(20s, [&] {
-            DoCastAOE(SPELL_SPECTRAL_BLAST);
-        }, 15s, 25s);
+        ScheduleTimedEvent(20s, [&] { DoCastAOE(SPELL_SPECTRAL_BLAST); }, 15s, 25s);
 
-        me->m_Events.AddEventAtOffset([&] {
+        me->m_Events.AddEventAtOffset(
+            [&]
+        {
             me->SummonCreature(NPC_KALEC, 1702.21f, 931.7f, -74.56f, 5.07f, TEMPSUMMON_MANUAL_DESPAWN);
             me->SummonCreature(NPC_SATHROVARR, 1704.62f, 927.78f, -73.9f, 2.0f, TEMPSUMMON_MANUAL_DESPAWN);
-        }, 16s);
+        },
+            16s);
 
         me->SetStandState(UNIT_STAND_STATE_STAND);
         Talk(SAY_EVIL_AGGRO);
@@ -266,18 +283,18 @@ struct boss_kalecgos : public BossAI
             Talk(SAY_EVIL_SLAY);
     }
 
-    private:
-        bool _sathBanished;
+private:
+    bool _sathBanished;
 };
 
 enum Kalec
 {
     SPELL_OPEN_BRUTALLUS_BACK_DOOR = 46650,
-    MODEL_KALECGOS_DRAGON       = 23487,
+    MODEL_KALECGOS_DRAGON = 23487,
 
-    EVENT_KALEC_SCENE_1         = 101,
-    EVENT_KALEC_SCENE_2         = 102,
-    EVENT_KALEC_SCENE_3         = 103
+    EVENT_KALEC_SCENE_1 = 101,
+    EVENT_KALEC_SCENE_2 = 102,
+    EVENT_KALEC_SCENE_3 = 103
 };
 
 struct boss_kalec : public ScriptedAI
@@ -296,21 +313,30 @@ struct boss_kalec : public ScriptedAI
             me->SetDisableGravity(true);
             me->GetMotionMaster()->MovePoint(0, 1483.30f, 657.99f, 28.0f, false, true);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 Talk(SAY_GOOD_MADRIGOSA);
                 me->GetMotionMaster()->MovePoint(0, 1509.0f, 560.0f, 30.0f, false, true);
-            }, 9s);
+            },
+                9s);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 DoCastAOE(SPELL_OPEN_BRUTALLUS_BACK_DOOR, true);
                 me->GetInstanceScript()->SetBossState(DATA_FELMYST_DOORS, NOT_STARTED);
                 me->GetInstanceScript()->SetBossState(DATA_FELMYST_DOORS, DONE);
-            }, 16s);
+            },
+                16s);
 
-            me->m_Events.AddEventAtOffset([&] {
+            me->m_Events.AddEventAtOffset(
+                [&]
+            {
                 me->GetMotionMaster()->MovePoint(0, 1400.0f, 630.0f, 90.0f, false, true);
                 me->DespawnOrUnsummon(6000);
-            }, 22s);
+            },
+                22s);
         }
         else
             DoCastSelf(SPELL_SPECTRAL_INVISIBILITY, true);
@@ -318,15 +344,12 @@ struct boss_kalec : public ScriptedAI
 
     void JustEngagedWith(Unit*) override
     {
-        ScheduleTimedEvent(5s, [&] {
-            DoCastSelf(SPELL_REVITALIZE);
-        }, 10s);
+        ScheduleTimedEvent(5s, [&] { DoCastSelf(SPELL_REVITALIZE); }, 10s);
 
-        ScheduleTimedEvent(3s, [&] {
-            DoCastVictim(SPELL_HEROIC_STRIKE);
-        }, 5s);
+        ScheduleTimedEvent(3s, [&] { DoCastVictim(SPELL_HEROIC_STRIKE); }, 5s);
 
-        scheduler.Schedule(1s, [this](TaskContext context)
+        scheduler.Schedule(1s,
+            [this](TaskContext context)
         {
             if (me->HealthBelowPct(50))
                 Talk(SAY_GOOD_NEAR_DEATH);
@@ -334,7 +357,8 @@ struct boss_kalec : public ScriptedAI
                 context.Repeat();
         });
 
-        scheduler.Schedule(1s, [this](TaskContext context)
+        scheduler.Schedule(1s,
+            [this](TaskContext context)
         {
             if (me->HealthBelowPct(10))
                 Talk(SAY_GOOD_NEAR_DEATH2);
@@ -357,8 +381,7 @@ struct boss_kalec : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-        scheduler.Update(diff,
-            std::bind(&BossAI::DoMeleeAttackIfReady, this));
+        scheduler.Update(diff, std::bind(&BossAI::DoMeleeAttackIfReady, this));
     }
 };
 
@@ -385,23 +408,30 @@ struct boss_sathrovarr : public ScriptedAI
     {
         Talk(SAY_SATH_AGGRO);
 
-        ScheduleTimedEvent(7s, [&] {
+        ScheduleTimedEvent(7s,
+            [&]
+        {
             if (roll_chance_i(20))
                 Talk(SAY_SATH_SPELL1);
             DoCastVictim(SPELL_SHADOW_BOLT);
-        }, 9s);
+        },
+            9s);
 
         ScheduleTimedEvent(20s, [&] {
             me->CastCustomSpell(SPELL_CURSE_OF_BOUNDLESS_AGONY, SPELLVALUE_MAX_TARGETS, 1, me, false);
         }, 30s);
 
-        ScheduleTimedEvent(20s, [&] {
+        ScheduleTimedEvent(20s,
+            [&]
+        {
             if (roll_chance_i(20))
                 Talk(SAY_SATH_SPELL2);
             DoCastVictim(SPELL_CORRUPTION_STRIKE);
-        }, 9s);
+        },
+            9s);
 
-        scheduler.Schedule(1s, [this](TaskContext context)
+        scheduler.Schedule(1s,
+            [this](TaskContext context)
         {
             if (me->HealthBelowPct(10))
             {
@@ -413,7 +443,8 @@ struct boss_sathrovarr : public ScriptedAI
                 context.Repeat();
         });
 
-        scheduler.Schedule(1s, [this](TaskContext context)
+        scheduler.Schedule(1s,
+            [this](TaskContext context)
         {
             if (me->HealthBelowPct(1))
             {
@@ -450,8 +481,7 @@ struct boss_sathrovarr : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-        scheduler.Update(diff,
-            std::bind(&BossAI::DoMeleeAttackIfReady, this));
+        scheduler.Update(diff, std::bind(&BossAI::DoMeleeAttackIfReady, this));
     }
 
 private:
@@ -465,8 +495,10 @@ public:
 
     bool operator()(WorldObject* unit)
     {
-        return unit->GetPositionZ() < 50.0f || unit->ToUnit()->HasAura(SPELL_SPECTRAL_EXHAUSTION) || unit->GetGUID() == _victim->GetGUID();
+        return unit->GetPositionZ() < 50.0f || unit->ToUnit()->HasAura(SPELL_SPECTRAL_EXHAUSTION) ||
+               unit->GetGUID() == _victim->GetGUID();
     }
+
 private:
     Unit* _victim;
 };
@@ -477,7 +509,7 @@ class spell_kalecgos_spectral_blast_dummy : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SPECTRAL_BLAST_PORTAL, SPELL_SPECTRAL_BLAST_AA, SPELL_TELEPORT_SPECTRAL });
+        return ValidateSpellInfo({SPELL_SPECTRAL_BLAST_PORTAL, SPELL_SPECTRAL_BLAST_AA, SPELL_TELEPORT_SPECTRAL});
     }
 
     void FilterTargets(std::list<WorldObject*>& targets)
@@ -499,8 +531,10 @@ class spell_kalecgos_spectral_blast_dummy : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_kalecgos_spectral_blast_dummy::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
-        OnEffectHitTarget += SpellEffectFn(spell_kalecgos_spectral_blast_dummy::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_kalecgos_spectral_blast_dummy::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_kalecgos_spectral_blast_dummy::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
 
@@ -510,14 +544,15 @@ class spell_kalecgos_curse_of_boundless_agony_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CURSE_OF_BOUNDLESS_AGONY_PLR });
+        return ValidateSpellInfo({SPELL_CURSE_OF_BOUNDLESS_AGONY_PLR});
     }
 
-    void OnRemove(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (InstanceScript* instance = GetUnitOwner()->GetInstanceScript())
             if (instance->IsEncounterInProgress())
-                GetUnitOwner()->CastCustomSpell(SPELL_CURSE_OF_BOUNDLESS_AGONY_PLR, SPELLVALUE_MAX_TARGETS, 1, GetUnitOwner(), true);
+                GetUnitOwner()->CastCustomSpell(
+                    SPELL_CURSE_OF_BOUNDLESS_AGONY_PLR, SPELLVALUE_MAX_TARGETS, 1, GetUnitOwner(), true);
     }
 
     void OnPeriodic(AuraEffect const* aurEff)
@@ -528,8 +563,12 @@ class spell_kalecgos_curse_of_boundless_agony_aura : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_kalecgos_curse_of_boundless_agony_aura::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_kalecgos_curse_of_boundless_agony_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_kalecgos_curse_of_boundless_agony_aura::OnRemove,
+            EFFECT_0,
+            SPELL_AURA_PERIODIC_DAMAGE,
+            AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_kalecgos_curse_of_boundless_agony_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE);
     }
 };
 
@@ -539,7 +578,7 @@ class spell_kalecgos_spectral_realm_dummy : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SPECTRAL_EXHAUSTION, SPELL_TELEPORT_SPECTRAL });
+        return ValidateSpellInfo({SPELL_SPECTRAL_EXHAUSTION, SPELL_TELEPORT_SPECTRAL});
     }
 
     SpellCastResult CheckCast()
@@ -559,7 +598,8 @@ class spell_kalecgos_spectral_realm_dummy : public SpellScript
     void Register() override
     {
         OnCheckCast += SpellCheckCastFn(spell_kalecgos_spectral_realm_dummy::CheckCast);
-        OnEffectHitTarget += SpellEffectFn(spell_kalecgos_spectral_realm_dummy::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget += SpellEffectFn(
+            spell_kalecgos_spectral_realm_dummy::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -569,10 +609,10 @@ class spell_kalecgos_spectral_realm_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_SPECTRAL_EXHAUSTION, SPELL_TELEPORT_NORMAL_REALM });
+        return ValidateSpellInfo({SPELL_SPECTRAL_EXHAUSTION, SPELL_TELEPORT_NORMAL_REALM});
     }
 
-    void OnRemove(AuraEffect const*  /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         GetUnitOwner()->CastSpell(GetUnitOwner(), SPELL_SPECTRAL_EXHAUSTION, true);
         GetUnitOwner()->CastSpell(GetUnitOwner(), SPELL_TELEPORT_NORMAL_REALM, true);
@@ -580,7 +620,10 @@ class spell_kalecgos_spectral_realm_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_kalecgos_spectral_realm_aura::OnRemove, EFFECT_1, SPELL_AURA_MOD_INVISIBILITY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(spell_kalecgos_spectral_realm_aura::OnRemove,
+            EFFECT_1,
+            SPELL_AURA_MOD_INVISIBILITY,
+            AURA_EFFECT_HANDLE_REAL);
     }
 };
 

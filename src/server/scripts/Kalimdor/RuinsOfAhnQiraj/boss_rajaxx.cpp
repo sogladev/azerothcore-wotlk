@@ -26,19 +26,19 @@
 
 enum Yells
 {
-     // The time of our retribution is at hand! Let darkness reign in the hearts of our enemies! Sound: 8645 Emote: 35
-    SAY_DEATH                 = 9,
-    SAY_CHANGEAGGRO           = 10,
-    SAY_KILLS_ANDOROV         = 11,
-    SAY_COMPLETE_QUEST        = 12    // Yell when realm complete quest 8743 for world event
-                                      // Warriors, Captains, continue the fight! Sound: 8640
+    // The time of our retribution is at hand! Let darkness reign in the hearts of our enemies! Sound: 8645 Emote: 35
+    SAY_DEATH = 9,
+    SAY_CHANGEAGGRO = 10,
+    SAY_KILLS_ANDOROV = 11,
+    SAY_COMPLETE_QUEST = 12 // Yell when realm complete quest 8743 for world event
+                            // Warriors, Captains, continue the fight! Sound: 8640
 };
 
 enum Spells
 {
-    SPELL_DISARM              = 6713,
-    SPELL_FRENZY              = 8269,
-    SPELL_THUNDERCRASH        = 25599,
+    SPELL_DISARM = 6713,
+    SPELL_FRENZY = 8269,
+    SPELL_THUNDERCRASH = 25599,
 
     // Server-side
     SPELL_CENARION_REPUTATION = 26342
@@ -46,9 +46,9 @@ enum Spells
 
 enum Events
 {
-    EVENT_DISARM            = 1,        // 03:58:27, 03:58:49
-    EVENT_THUNDERCRASH      = 2,        // 03:58:29, 03:58:50
-    EVENT_CHANGE_AGGRO      = 3,
+    EVENT_DISARM = 1,       // 03:58:27, 03:58:49
+    EVENT_THUNDERCRASH = 2, // 03:58:29, 03:58:50
+    EVENT_CHANGE_AGGRO = 3,
 };
 
 struct boss_rajaxx : public BossAI
@@ -73,16 +73,12 @@ struct boss_rajaxx : public BossAI
         me->GetMap()->DoForAllPlayers([&, creatureList](Player* player)
         {
             for (uint8 i = 0; i < creatureList.size(); ++i)
-            {
                 player->CastSpell(player, SPELL_CENARION_REPUTATION, true);
-            }
 
             if (Creature* andorov = instance->instance->GetCreature(instance->GetGuidData(DATA_ANDOROV)))
             {
                 if (andorov->IsAlive())
-                {
                     player->CastSpell(player, SPELL_CENARION_REPUTATION, true);
-                }
             }
         });
     }
@@ -134,38 +130,37 @@ class spell_rajaxx_thundercrash : public SpellScript
     {
         int32 damage = GetHitUnit()->GetHealth() / 2;
         if (damage < 100)
-        {
             damage = 100;
-        }
 
         SetHitDamage(damage);
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_rajaxx_thundercrash::HandleDamageCalc, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_rajaxx_thundercrash::HandleDamageCalc, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
     }
 };
 
 enum AndorovMisc
 {
     // Factions
-    FACTION_ANDOROV_ESCORT  = 250,
+    FACTION_ANDOROV_ESCORT = 250,
 
     // Spells
-    SPELL_AURA_OF_COMMAND    = 25516,
-    SPELL_BASH               = 25515,
-    SPELL_STRIKE             = 22591,
+    SPELL_AURA_OF_COMMAND = 25516,
+    SPELL_BASH = 25515,
+    SPELL_STRIKE = 22591,
 
     // Texts
-    SAY_ANDOROV_INTRO        = 0,   // Before for the first wave
-    SAY_ANDOROV_ATTACK       = 1,   // Beginning the event
+    SAY_ANDOROV_INTRO = 0,  // Before for the first wave
+    SAY_ANDOROV_ATTACK = 1, // Beginning the event
 
     // Gossips
-    GOSSIP_ANDRNOV           = 7047,
+    GOSSIP_ANDRNOV = 7047,
 
     // Events
-    EVENT_BASH               = 1,
+    EVENT_BASH = 1,
     EVENT_COMMAND_AURA,
     EVENT_STRIKE
 };
@@ -269,27 +264,21 @@ struct npc_general_andorov : public npc_escortAI
         if (killer->GetEntry() == NPC_RAJAXX)
         {
             if (Creature* rajaxx = instance->GetCreature(DATA_RAJAXX))
-            {
                 rajaxx->AI()->Talk(SAY_KILLS_ANDOROV);
-            }
         }
     }
 
     void KilledUnit(Unit* victim) override
     {
         if (victim->GetEntry() == NPC_RAJAXX)
-        {
             Talk(SAY_ANDOROV_ATTACK);
-        }
     }
 
     void MoveInLineOfSight(Unit* who) override
     {
         // If Rajaxx is in range attack him
         if (who->GetEntry() == NPC_RAJAXX && me->IsWithinDistInMap(who, 50.0f))
-        {
             AttackStart(who);
-        }
 
         ScriptedAI::MoveInLineOfSight(who);
     }
@@ -297,9 +286,7 @@ struct npc_general_andorov : public npc_escortAI
     uint32 GetData(uint32 type) const override
     {
         if (type == DATA_ANDOROV)
-        {
             return Endwaypoint;
-        }
 
         return 0;
     }
@@ -315,9 +302,7 @@ struct npc_general_andorov : public npc_escortAI
                 _initialAttackTimer = 0;
 
                 if (Creature* queez = instance->GetCreature(DATA_QUUEZ))
-                {
                     queez->AI()->AttackStart(me);
-                }
             }
             else
             {
@@ -332,16 +317,12 @@ struct npc_general_andorov : public npc_escortAI
         }
 
         if (!UpdateVictim())
-        {
             return;
-        }
 
         events.Update(diff);
 
         if (me->HasUnitState(UNIT_STATE_CASTING))
-        {
             return;
-        }
 
         while (uint32 eventId = events.ExecuteEvent())
         {

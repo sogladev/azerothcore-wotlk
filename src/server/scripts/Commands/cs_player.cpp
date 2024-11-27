@@ -27,20 +27,19 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable playerCommandTable =
-        {
-            { "learn",   HandlePlayerLearnCommand,   SEC_GAMEMASTER, Console::Yes },
-            { "unlearn", HandlePlayerUnLearnCommand, SEC_GAMEMASTER, Console::Yes }
+        static ChatCommandTable playerCommandTable = {
+            {"learn",   HandlePlayerLearnCommand,   SEC_GAMEMASTER, Console::Yes},
+            {"unlearn", HandlePlayerUnLearnCommand, SEC_GAMEMASTER, Console::Yes}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "player", playerCommandTable }
+        static ChatCommandTable commandTable = {
+            {"player", playerCommandTable}
         };
         return commandTable;
     }
 
-    static bool HandlePlayerLearnCommand(ChatHandler* handler, Optional<PlayerIdentifier> player, SpellInfo const* spell, Optional<EXACT_SEQUENCE("all")> allRanks)
+    static bool HandlePlayerLearnCommand(ChatHandler* handler, Optional<PlayerIdentifier> player,
+        SpellInfo const* spell, Optional<EXACT_SEQUENCE("all")> allRanks)
     {
         if (!player)
             player = PlayerIdentifier::FromTargetOrSelf(handler);
@@ -51,7 +50,8 @@ public:
         return Acore::PlayerCommand::HandleLearnSpellCommand(handler, targetPlayer, spell, allRanks);
     }
 
-    static bool HandlePlayerUnLearnCommand(ChatHandler* handler, Optional<PlayerIdentifier> player, SpellInfo const* spell, Optional<EXACT_SEQUENCE("all")> allRanks)
+    static bool HandlePlayerUnLearnCommand(ChatHandler* handler, Optional<PlayerIdentifier> player,
+        SpellInfo const* spell, Optional<EXACT_SEQUENCE("all")> allRanks)
     {
         if (!player)
             player = PlayerIdentifier::FromTargetOrSelf(handler);

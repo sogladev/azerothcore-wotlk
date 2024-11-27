@@ -29,8 +29,7 @@
 //    sScriptMgr->DecreaseScriptCount();
 //}
 
-template<class TMap>
-void MapScript<TMap>::checkMap()
+template <class TMap> void MapScript<TMap>::checkMap()
 {
     _mapEntry = sMapStore.LookupEntry(_mapId);
 

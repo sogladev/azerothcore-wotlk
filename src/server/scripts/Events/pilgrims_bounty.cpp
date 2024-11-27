@@ -33,71 +33,71 @@
 enum tableEvent
 {
     // Spells
-    SPELL_PASS_TURKEY               = 66250,
-    SPELL_PASS_STUFFING             = 66259,
-    SPELL_PASS_PIE                  = 66260,
-    SPELL_PASS_CRANBERRY            = 66261,
-    SPELL_PASS_SWEET_POTATO         = 66262,
+    SPELL_PASS_TURKEY = 66250,
+    SPELL_PASS_STUFFING = 66259,
+    SPELL_PASS_PIE = 66260,
+    SPELL_PASS_CRANBERRY = 66261,
+    SPELL_PASS_SWEET_POTATO = 66262,
 
-    SPELL_VISUAL_THROW_TURKEY       = 61822,
-    SPELL_VISUAL_THROW_STUFFING     = 61823,
-    SPELL_VISUAL_THROW_PIE          = 61825,
-    SPELL_VISUAL_THROW_CRANBERRY    = 61821,
+    SPELL_VISUAL_THROW_TURKEY = 61822,
+    SPELL_VISUAL_THROW_STUFFING = 61823,
+    SPELL_VISUAL_THROW_PIE = 61825,
+    SPELL_VISUAL_THROW_CRANBERRY = 61821,
     SPELL_VISUAL_THROW_SWEET_POTATO = 61824,
 
-    SPELL_VISUAL_BOUNCE_TURKEY      = 61928,
-    SPELL_VISUAL_BOUNCE_STUFFING    = 61927,
-    SPELL_VISUAL_BOUNCE_PIE         = 61926,
-    SPELL_VISUAL_BOUNCE_CRANBERRY   = 61925,
+    SPELL_VISUAL_BOUNCE_TURKEY = 61928,
+    SPELL_VISUAL_BOUNCE_STUFFING = 61927,
+    SPELL_VISUAL_BOUNCE_PIE = 61926,
+    SPELL_VISUAL_BOUNCE_CRANBERRY = 61925,
     SPELL_VISUAL_BOUNCE_SWEET_POTATO = 61929,
 
-    SPELL_PLATE_TURKEY              = 61835,
-    SPELL_PLATE_STUFFING            = 61836,
-    SPELL_PLATE_PIE                 = 61838,
-    SPELL_PLATE_CRANBERRY           = 61833,
-    SPELL_PLATE_SWEET_POTATO        = 61837,
+    SPELL_PLATE_TURKEY = 61835,
+    SPELL_PLATE_STUFFING = 61836,
+    SPELL_PLATE_PIE = 61838,
+    SPELL_PLATE_CRANBERRY = 61833,
+    SPELL_PLATE_SWEET_POTATO = 61837,
 
-    SPELL_STORE_TURKEY              = 61807,
-    SPELL_STORE_STUFFING            = 61806,
-    SPELL_STORE_PIE                 = 61805,
-    SPELL_STORE_CRANBERRY           = 61804,
-    SPELL_STORE_SWEET_POTATO        = 61808,
+    SPELL_STORE_TURKEY = 61807,
+    SPELL_STORE_STUFFING = 61806,
+    SPELL_STORE_PIE = 61805,
+    SPELL_STORE_CRANBERRY = 61804,
+    SPELL_STORE_SWEET_POTATO = 61808,
 
-    SPELL_CAN_EAT_TURKEY            = 61801,
-    SPELL_CAN_EAT_STUFFING          = 61800,
-    SPELL_CAN_EAT_PIE               = 61799,
-    SPELL_CAN_EAT_CRANBERRY         = 61798,
-    SPELL_CAN_EAT_SWEET_POTATO      = 61802,
+    SPELL_CAN_EAT_TURKEY = 61801,
+    SPELL_CAN_EAT_STUFFING = 61800,
+    SPELL_CAN_EAT_PIE = 61799,
+    SPELL_CAN_EAT_CRANBERRY = 61798,
+    SPELL_CAN_EAT_SWEET_POTATO = 61802,
 
-    SPELL_FEAST_ON_TURKEY           = 61784,
-    SPELL_FEAST_ON_STUFFING         = 61788,
-    SPELL_FEAST_ON_PIE              = 61787,
-    SPELL_FEAST_ON_CRANBERRY        = 61785,
-    SPELL_FEAST_ON_SWEET_POTATOES   = 61786,
+    SPELL_FEAST_ON_TURKEY = 61784,
+    SPELL_FEAST_ON_STUFFING = 61788,
+    SPELL_FEAST_ON_PIE = 61787,
+    SPELL_FEAST_ON_CRANBERRY = 61785,
+    SPELL_FEAST_ON_SWEET_POTATOES = 61786,
 
-    SPELL_PLAYER_TURKEY             = 61842,
-    SPELL_PLAYER_STUFFING           = 61843,
-    SPELL_PLAYER_PIE                = 61845,
-    SPELL_PLAYER_CRANBERRY          = 61841,
-    SPELL_PLAYER_SWEET_POTATOES     = 61844,
+    SPELL_PLAYER_TURKEY = 61842,
+    SPELL_PLAYER_STUFFING = 61843,
+    SPELL_PLAYER_PIE = 61845,
+    SPELL_PLAYER_CRANBERRY = 61841,
+    SPELL_PLAYER_SWEET_POTATOES = 61844,
 
-    SPELL_WELL_FED_TURKEY           = 65414,
-    SPELL_WELL_FED_STUFFING         = 65416,
-    SPELL_WELL_FED_PIE              = 65415,
-    SPELL_WELL_FED_CRANBERRY        = 65412,
-    SPELL_WELL_FED_SWEET_POTATOES   = 65410,
+    SPELL_WELL_FED_TURKEY = 65414,
+    SPELL_WELL_FED_STUFFING = 65416,
+    SPELL_WELL_FED_PIE = 65415,
+    SPELL_WELL_FED_CRANBERRY = 65412,
+    SPELL_WELL_FED_SWEET_POTATOES = 65410,
 
-    SPELL_ACHI_PASS_TURKEY          = 66373,
-    SPELL_ACHI_PASS_STUFFING        = 66375,
-    SPELL_ACHI_PASS_PIE             = 66374,
-    SPELL_ACHI_PASS_CRANBERRY       = 66372,
-    SPELL_ACHI_PASS_SWEET_POTATOES  = 66376,
+    SPELL_ACHI_PASS_TURKEY = 66373,
+    SPELL_ACHI_PASS_STUFFING = 66375,
+    SPELL_ACHI_PASS_PIE = 66374,
+    SPELL_ACHI_PASS_CRANBERRY = 66372,
+    SPELL_ACHI_PASS_SWEET_POTATOES = 66376,
 
-    SPELL_SPIRIT_OF_SHARING         = 61849,
+    SPELL_SPIRIT_OF_SHARING = 61849,
 
     // NPCs
-    NPC_STRUDY_PLATE                = 32839,
-    NPC_BOUNTIFUL_TABLE             = 32823,
+    NPC_STRUDY_PLATE = 32839,
+    NPC_BOUNTIFUL_TABLE = 32823,
 };
 
 /////////////////////////////
@@ -114,10 +114,11 @@ struct npc_pilgrims_bounty_chair : public VehicleAI
         me->SetReactState(REACT_PASSIVE);
     }
 
-    void MoveInLineOfSight(Unit*  /*who*/) override {}
-    void AttackStart(Unit*) override {}
+    void MoveInLineOfSight(Unit* /*who*/) override { }
 
-    void PassengerBoarded(Unit* who, int8  /*seatId*/, bool apply) override
+    void AttackStart(Unit*) override { }
+
+    void PassengerBoarded(Unit* who, int8 /*seatId*/, bool apply) override
     {
         if (apply && who->IsPlayer())
             who->ToPlayer()->SetClientControl(me, 0, true);
@@ -127,7 +128,10 @@ struct npc_pilgrims_bounty_chair : public VehicleAI
     uint32 timerSpawnPlate;
     uint32 timerRotateChair;
 
-    Creature* GetPlate() { return plateGUID ? ObjectAccessor::GetCreature(*me, plateGUID) : nullptr; }
+    Creature* GetPlate()
+    {
+        return plateGUID ? ObjectAccessor::GetCreature(*me, plateGUID) : nullptr;
+    }
 
     void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
     {
@@ -212,7 +216,7 @@ struct npc_pilgrims_bounty_chair : public VehicleAI
         charm->ToCreature()->AI()->DoAction(spellInfo->Id);
     }
 
-    void SpellHit(Unit*  /*target*/, SpellInfo const* spellInfo) override
+    void SpellHit(Unit* /*target*/, SpellInfo const* spellInfo) override
     {
         switch (spellInfo->Id)
         {
@@ -254,7 +258,8 @@ struct npc_pilgrims_bounty_chair : public VehicleAI
                             return;
 
                         uint8 vehicleSeatId = itr->first;
-                        Creature* plate = me->SummonCreature(NPC_STRUDY_PLATE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0.0f);
+                        Creature* plate = me->SummonCreature(
+                            NPC_STRUDY_PLATE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0.0f);
                         if (!plate)
                             return;
 
@@ -283,7 +288,7 @@ struct npc_pilgrims_bounty_plate : public NullCreatureAI
 {
     npc_pilgrims_bounty_plate(Creature* creature) : NullCreatureAI(creature) { }
 
-    void SpellHit(Unit*  /*caster*/, SpellInfo const* spellInfo) override
+    void SpellHit(Unit* /*caster*/, SpellInfo const* spellInfo) override
     {
         switch (spellInfo->Id)
         {
@@ -382,7 +387,8 @@ class spell_pilgrims_bounty_pass_generic : public SpellScript
                         {
                             if (Player* casterPlayer = GetCaster()->GetCharmerOrOwnerPlayerOrPlayerItself())
                             {
-                                casterPlayer->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_CAST_SPELL2, GetVisualThrow(GetSpellInfo()->Id, true));
+                                casterPlayer->UpdateAchievementCriteria(
+                                    ACHIEVEMENT_CRITERIA_TYPE_CAST_SPELL2, GetVisualThrow(GetSpellInfo()->Id, true));
                             }
                         }
                     }
@@ -430,7 +436,8 @@ class spell_pilgrims_bounty_pass_generic : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_pilgrims_bounty_pass_generic::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_pilgrims_bounty_pass_generic::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
 
@@ -516,22 +523,23 @@ class spell_pilgrims_bounty_feast_on_generic : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_pilgrims_bounty_feast_on_generic::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_pilgrims_bounty_feast_on_generic::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
     }
 };
 
 enum tTracker
 {
-    SPELL_TURKEY_TRACKER                = 62014,
-    SPELL_ACHI_TURKINATOR_CREDIT        = 62021
+    SPELL_TURKEY_TRACKER = 62014,
+    SPELL_ACHI_TURKINATOR_CREDIT = 62021
 };
 
 enum Say
 {
-    SAY_TURKEY_HUNTER                       = 33163,
-    SAY_TURKEY_DOMINATION                   = 33164,
-    SAY_TURKEY_SLAUGHTER                    = 33165,
-    SAY_TURKEY_TRIUMPH                      = 33167
+    SAY_TURKEY_HUNTER = 33163,
+    SAY_TURKEY_DOMINATION = 33164,
+    SAY_TURKEY_SLAUGHTER = 33165,
+    SAY_TURKEY_TRIUMPH = 33167
 };
 
 class spell_pilgrims_bounty_turkey_tracker : public SpellScript
@@ -568,7 +576,8 @@ class spell_pilgrims_bounty_turkey_tracker : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_pilgrims_bounty_turkey_tracker::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget += SpellEffectFn(
+            spell_pilgrims_bounty_turkey_tracker::HandleScriptEffect, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -585,7 +594,8 @@ class spell_pilgrims_bounty_serve_generic : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_pilgrims_bounty_serve_generic::OnAuraRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_pilgrims_bounty_serve_generic::OnAuraRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -608,9 +618,11 @@ class spell_pilgrims_bounty_food_aura : public AuraScript
     void Register() override
     {
         if (m_scriptSpellId == 66041)
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_pilgrims_bounty_food_aura::RecalculateHook, EFFECT_0, SPELL_AURA_MOD_POWER_REGEN);
+            DoEffectCalcAmount += AuraEffectCalcAmountFn(
+                spell_pilgrims_bounty_food_aura::RecalculateHook, EFFECT_0, SPELL_AURA_MOD_POWER_REGEN);
         else if (m_scriptSpellId != 66477)
-            DoEffectCalcAmount += AuraEffectCalcAmountFn(spell_pilgrims_bounty_food_aura::RecalculateHook, EFFECT_0, SPELL_AURA_MOD_REGEN);
+            DoEffectCalcAmount += AuraEffectCalcAmountFn(
+                spell_pilgrims_bounty_food_aura::RecalculateHook, EFFECT_0, SPELL_AURA_MOD_REGEN);
     }
 };
 
@@ -631,7 +643,8 @@ class spell_pilgrims_bounty_food : public SpellScript
     void Register() override
     {
         if (m_scriptSpellId == 66477)
-            OnEffectHitTarget += SpellEffectFn(spell_pilgrims_bounty_food::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+            OnEffectHitTarget +=
+                SpellEffectFn(spell_pilgrims_bounty_food::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -640,10 +653,10 @@ class spell_pilgrims_bounty_food : public SpellScript
 /////////////////////////////
 enum pilgrimsPeril
 {
-    ITEM_PILGRIMS_ROBE          = 46824,
-    ITEM_PILGRIMS_ATTIRE        = 46800,
-    ITEM_PILGRIMS_DRESS         = 44785,
-    ITEM_PILGRIMS_HAT           = 46723,
+    ITEM_PILGRIMS_ROBE = 46824,
+    ITEM_PILGRIMS_ATTIRE = 46800,
+    ITEM_PILGRIMS_DRESS = 44785,
+    ITEM_PILGRIMS_HAT = 46723,
 };
 
 class achievement_pb_pilgrims_peril : public AchievementCriteriaScript
@@ -653,7 +666,9 @@ public:
 
     bool OnCheck(Player* source, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
-        if (source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_DRESS, 1) || source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_ROBE, 1) || source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_ATTIRE, 1))
+        if (source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_DRESS, 1) ||
+            source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_ROBE, 1) ||
+            source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_ATTIRE, 1))
             return true;
 
         return false;
@@ -667,7 +682,10 @@ public:
 
     bool OnCheck(Player* source, Unit* /*target*/, uint32 /*criteria_id*/) override
     {
-        if (source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_HAT, 1) && (source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_DRESS, 1) || source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_ROBE, 1) || source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_ATTIRE, 1)))
+        if (source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_HAT, 1) &&
+            (source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_DRESS, 1) ||
+                source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_ROBE, 1) ||
+                source->HasItemOrGemWithIdEquipped(ITEM_PILGRIMS_ATTIRE, 1)))
             return true;
 
         return false;

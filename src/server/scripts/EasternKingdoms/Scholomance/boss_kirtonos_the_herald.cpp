@@ -24,48 +24,47 @@
 
 enum Spells
 {
-    SPELL_SWOOP                       = 18144,
-    SPELL_WING_FLAP                   = 12882,
-    SPELL_PIERCE_ARMOR                = 6016,
-    SPELL_DISARM                      = 8379,
-    SPELL_KIRTONOS_TRANSFORM          = 16467,
-    SPELL_SHADOW_BOLT_VOLLEY          = 17228,
-    SPELL_CURSE_OF_TONGUES            = 12889,
-    SPELL_DOMINATE_MIND               = 14515,
-    SPELL_TRANSFORM_VISUAL            = 24085
+    SPELL_SWOOP = 18144,
+    SPELL_WING_FLAP = 12882,
+    SPELL_PIERCE_ARMOR = 6016,
+    SPELL_DISARM = 8379,
+    SPELL_KIRTONOS_TRANSFORM = 16467,
+    SPELL_SHADOW_BOLT_VOLLEY = 17228,
+    SPELL_CURSE_OF_TONGUES = 12889,
+    SPELL_DOMINATE_MIND = 14515,
+    SPELL_TRANSFORM_VISUAL = 24085
 };
 
 enum Events
 {
-    INTRO_1                           = 1,
-    INTRO_2                           = 2,
-    INTRO_3                           = 3,
-    INTRO_4                           = 4,
-    INTRO_5                           = 5,
-    INTRO_6                           = 6,
-    EVENT_SWOOP                       = 7,
-    EVENT_WING_FLAP                   = 8,
-    EVENT_PIERCE_ARMOR                = 9,
-    EVENT_DISARM                      = 10,
-    EVENT_SHADOW_BOLT_VOLLEY          = 11,
-    EVENT_CURSE_OF_TONGUES            = 12,
-    EVENT_DOMINATE_MIND               = 13,
-    EVENT_KIRTONOS_TRANSFORM          = 14
+    INTRO_1 = 1,
+    INTRO_2 = 2,
+    INTRO_3 = 3,
+    INTRO_4 = 4,
+    INTRO_5 = 5,
+    INTRO_6 = 6,
+    EVENT_SWOOP = 7,
+    EVENT_WING_FLAP = 8,
+    EVENT_PIERCE_ARMOR = 9,
+    EVENT_DISARM = 10,
+    EVENT_SHADOW_BOLT_VOLLEY = 11,
+    EVENT_CURSE_OF_TONGUES = 12,
+    EVENT_DOMINATE_MIND = 13,
+    EVENT_KIRTONOS_TRANSFORM = 14
 };
 
 enum Misc
 {
-    WEAPON_KIRTONOS_STAFF             = 11365,
-    POINT_KIRTONOS_LAND               = 13,
-    KIRTONOS_PATH                     = 105061,
+    WEAPON_KIRTONOS_STAFF = 11365,
+    POINT_KIRTONOS_LAND = 13,
+    KIRTONOS_PATH = 105061,
 
-    EMOTE_SUMMONED                    = 0
+    EMOTE_SUMMONED = 0
 };
 
-Position const PosMove[2] =
-{
-    { 299.4884f, 92.76137f, 105.6335f, 0.0f },
-    { 314.8673f, 90.30210f, 101.6459f, 0.0f }
+Position const PosMove[2] = {
+    {299.4884f, 92.76137f, 105.6335f, 0.0f},
+    {314.8673f, 90.30210f, 101.6459f, 0.0f}
 };
 
 class boss_kirtonos_the_herald : public CreatureScript
@@ -164,22 +163,16 @@ public:
                     break;
                 case INTRO_6:
                     if (!me->IsInCombat())
-                    {
                         me->GetMotionMaster()->MovePoint(0, PosMove[1]);
-                    }
                     break;
             }
 
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             events.Update(diff);
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             switch (events.ExecuteEvent())
             {
@@ -209,9 +202,7 @@ public:
                     break;
                 case EVENT_DOMINATE_MIND:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 1, 20.0f, true))
-                    {
                         me->CastSpell(target, SPELL_DOMINATE_MIND, false);
-                    }
                     break;
                 case EVENT_KIRTONOS_TRANSFORM:
                     TransformsCount++;
@@ -238,9 +229,7 @@ public:
                         me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, uint32(WEAPON_KIRTONOS_STAFF));
                         // Schedule Dominate Mind on every 2nd caster transform
                         if ((TransformsCount - 2) % 4 == 0)
-                        {
                             events.ScheduleEvent(EVENT_DOMINATE_MIND, 4s, 8s);
-                        }
                     }
 
                     events.ScheduleEvent(EVENT_KIRTONOS_TRANSFORM, 20s);

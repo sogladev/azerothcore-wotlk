@@ -27,7 +27,11 @@
 #include "Util.h"
 
 Vehicle::Vehicle(Unit* unit, VehicleEntry const* vehInfo, uint32 creatureEntry) :
-    _me(unit), _vehicleInfo(vehInfo), _usableSeatNum(0), _creatureEntry(creatureEntry), _status(STATUS_NONE)
+    _me(unit),
+    _vehicleInfo(vehInfo),
+    _usableSeatNum(0),
+    _creatureEntry(creatureEntry),
+    _status(STATUS_NONE)
 {
     for (uint32 i = 0; i < MAX_VEHICLE_SEATS; ++i)
     {
@@ -60,7 +64,13 @@ Vehicle::~Vehicle()
         {
             if (Unit* unit = ObjectAccessor::GetUnit(*_me, itr->second.Passenger.Guid))
             {
-                LOG_FATAL("vehicles", "Vehicle(), unit: {}, entry: {}, typeid: {}, this_entry: {}, this_typeid: {}!", unit->GetName(), unit->GetEntry(), unit->GetTypeId(), _me ? _me->GetEntry() : 0, _me ? _me->GetTypeId() : 0);
+                LOG_FATAL("vehicles",
+                    "Vehicle(), unit: {}, entry: {}, typeid: {}, this_entry: {}, this_typeid: {}!",
+                    unit->GetName(),
+                    unit->GetEntry(),
+                    unit->GetTypeId(),
+                    _me ? _me->GetEntry() : 0,
+                    _me ? _me->GetTypeId() : 0);
                 unit->_ExitVehicle();
             }
             else
@@ -86,14 +96,14 @@ void Vehicle::Install()
 void Vehicle::InstallAllAccessories(bool evading)
 {
     if (GetBase()->IsPlayer() || !evading)
-        RemoveAllPassengers();   // We might have aura's saved in the DB with now invalid casters - remove
+        RemoveAllPassengers(); // We might have aura's saved in the DB with now invalid casters - remove
 
     VehicleAccessoryList const* accessories = sObjectMgr->GetVehicleAccessoryList(this);
     if (!accessories)
         return;
 
     for (VehicleAccessoryList::const_iterator itr = accessories->begin(); itr != accessories->end(); ++itr)
-        if (!evading || itr->IsMinion)  // only install minions on evade mode
+        if (!evading || itr->IsMinion) // only install minions on evade mode
             InstallAccessory(itr->AccessoryEntry, itr->SeatId, itr->IsMinion, itr->SummonedType, itr->SummonTime);
 }
 
@@ -102,8 +112,10 @@ void Vehicle::Uninstall()
     /// @Prevent recursive uninstall call. (Bad script in OnUninstall/OnRemovePassenger/PassengerBoarded hook.)
     if (_status == STATUS_UNINSTALLING && !GetBase()->HasUnitTypeMask(UNIT_MASK_MINION))
     {
-        LOG_ERROR("vehicles", "Vehicle {} attempts to uninstall, but already has STATUS_UNINSTALLING! "
-                       "Check Uninstall/PassengerBoarded script hooks for errors.", _me->GetGUID().ToString());
+        LOG_ERROR("vehicles",
+            "Vehicle {} attempts to uninstall, but already has STATUS_UNINSTALLING! "
+            "Check Uninstall/PassengerBoarded script hooks for errors.",
+            _me->GetGUID().ToString());
         return;
     }
     _status = STATUS_UNINSTALLING;
@@ -111,9 +123,7 @@ void Vehicle::Uninstall()
     RemoveAllPassengers();
 
     if (_me && _me->IsCreature())
-    {
         sScriptMgr->OnUninstall(this);
-    }
 }
 
 void Vehicle::Reset(bool evading /*= false*/)
@@ -145,7 +155,8 @@ void Vehicle::ApplyAllImmunities()
     //_me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK_DEST, true);
 
     // Mechanical units & vehicles ( which are not Bosses, they have own immunities in DB ) should be also immune on healing ( exceptions in switch below )
-    if (_me->ToCreature() && _me->ToCreature()->GetCreatureTemplate()->type == CREATURE_TYPE_MECHANICAL && !_me->ToCreature()->isWorldBoss())
+    if (_me->ToCreature() && _me->ToCreature()->GetCreatureTemplate()->type == CREATURE_TYPE_MECHANICAL &&
+        !_me->ToCreature()->isWorldBoss())
     {
         // Heal & dispel ...
         _me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_HEAL, true);
@@ -159,7 +170,8 @@ void Vehicle::ApplyAllImmunities()
         //_me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_UNATTACKABLE, true);
         _me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_SHIELD, true);
         _me->ApplySpellImmune(0, IMMUNITY_MECHANIC, MECHANIC_IMMUNE_SHIELD, true);
-        if (_me->GetZoneId() == BATTLEFIELD_WG_ZONEID || _me->ToCreature()->GetSpawnId() || (_me->FindMap() && _me->FindMap()->Instanceable()))
+        if (_me->GetZoneId() == BATTLEFIELD_WG_ZONEID || _me->ToCreature()->GetSpawnId() ||
+            (_me->FindMap() && _me->FindMap()->Instanceable()))
             _me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_SCHOOL_ABSORB, true);
 
         // ... Resistance, Split damage, Change stats ...
@@ -248,7 +260,8 @@ int8 Vehicle::GetNextEmptySeat(int8 seatId, bool next) const
     if (seat == Seats.end())
         return -1;
 
-    while (!seat->second.IsEmpty() || (!seat->second.SeatInfo->CanEnterOrExit() && !seat->second.SeatInfo->IsUsableByOverride()))
+    while (!seat->second.IsEmpty() ||
+           (!seat->second.SeatInfo->CanEnterOrExit() && !seat->second.SeatInfo->IsUsableByOverride()))
     {
         if (next)
         {
@@ -275,12 +288,20 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion, uint8 typ
     /// @Prevent adding accessories when vehicle is uninstalling. (Bad script in OnUninstall/OnRemovePassenger/PassengerBoarded hook.)
     if (_status == STATUS_UNINSTALLING)
     {
-        LOG_ERROR("vehicles", "Vehicle {} attempts to install accessory Entry: {} on seat {} with STATUS_UNINSTALLING! "
-                       "Check Uninstall/PassengerBoarded script hooks for errors.", _me->GetGUID().ToString(), entry, (int32)seatId);
+        LOG_ERROR("vehicles",
+            "Vehicle {} attempts to install accessory Entry: {} on seat {} with STATUS_UNINSTALLING! "
+            "Check Uninstall/PassengerBoarded script hooks for errors.",
+            _me->GetGUID().ToString(),
+            entry,
+            (int32)seatId);
         return;
     }
 
-    LOG_DEBUG("vehicles", "Vehicle: Installing accessory entry {} on vehicle entry {} (seat:{})", entry, GetCreatureEntry(), seatId);
+    LOG_DEBUG("vehicles",
+        "Vehicle: Installing accessory entry {} on vehicle entry {} (seat:{})",
+        entry,
+        GetCreatureEntry(),
+        seatId);
     if (Unit* passenger = GetPassenger(seatId))
     {
         // already installed
@@ -319,8 +340,11 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
     /// @Prevent adding passengers when vehicle is uninstalling. (Bad script in OnUninstall/OnRemovePassenger/PassengerBoarded hook.)
     if (_status == STATUS_UNINSTALLING)
     {
-        LOG_DEBUG("vehicles", "Passenger {}, attempting to board vehicle {} during uninstall! SeatId: {}",
-            unit->GetGUID().ToString(), _me->GetGUID().ToString(), (int32)seatId);
+        LOG_DEBUG("vehicles",
+            "Passenger {}, attempting to board vehicle {} during uninstall! SeatId: {}",
+            unit->GetGUID().ToString(),
+            _me->GetGUID().ToString(),
+            (int32)seatId);
         return false;
     }
 
@@ -331,7 +355,8 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
     if (seatId < 0) // no specific seat requirement
     {
         for (seat = Seats.begin(); seat != Seats.end(); ++seat)
-            if (seat->second.IsEmpty() && (seat->second.SeatInfo->CanEnterOrExit() || seat->second.SeatInfo->IsUsableByOverride()))
+            if (seat->second.IsEmpty() &&
+                (seat->second.SeatInfo->CanEnterOrExit() || seat->second.SeatInfo->IsUsableByOverride()))
                 break;
 
         if (seat == Seats.end()) // no available seat
@@ -357,8 +382,13 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
     if (!seat->second.SeatInfo)
         return false;
 
-    LOG_DEBUG("vehicles", "Unit {} enter vehicle entry {} id {} ({}) seat {}",
-        unit->GetName(), _me->GetEntry(), _vehicleInfo->m_ID, _me->GetGUID().ToString(), (int32)seat->first);
+    LOG_DEBUG("vehicles",
+        "Unit {} enter vehicle entry {} id {} ({}) seat {}",
+        unit->GetName(),
+        _me->GetEntry(),
+        _vehicleInfo->m_ID,
+        _me->GetGUID().ToString(),
+        (int32)seat->first);
 
     seat->second.Passenger.Guid = unit->GetGUID();
     seat->second.Passenger.IsUnselectable = unit->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
@@ -370,7 +400,7 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
         if (!_usableSeatNum)
             _me->RemoveNpcFlag(_me->IsPlayer() ? UNIT_NPC_FLAG_PLAYER_VEHICLE : UNIT_NPC_FLAG_SPELLCLICK);
         else
-            _me->SetNpcFlag(_me->IsPlayer() ?  UNIT_NPC_FLAG_PLAYER_VEHICLE : UNIT_NPC_FLAG_SPELLCLICK);
+            _me->SetNpcFlag(_me->IsPlayer() ? UNIT_NPC_FLAG_PLAYER_VEHICLE : UNIT_NPC_FLAG_SPELLCLICK);
     }
 
     if (!_me || !_me->IsInWorld() || _me->IsDuringRemoveFromWorld())
@@ -398,9 +428,7 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
     unit->m_movementInfo.transport.guid = _me->GetGUID();
 
     // xinef: removed seat->first == 0 check...
-    if (_me->IsCreature()
-            && unit->IsPlayer()
-            && seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
+    if (_me->IsCreature() && unit->IsPlayer() && seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
     {
         // Removed try catch + ABORT() here, and make it as simple condition check.
         if (!_me->SetCharmedBy(unit, CHARM_TYPE_VEHICLE))
@@ -414,15 +442,25 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
             LOG_INFO("vehicles", "Crash recovered in Unit::SetCharmedBy(). Is2: {}!", _me->IsDuringRemoveFromWorld());
             LOG_INFO("vehicles", "Crash recovered in Unit::SetCharmedBy(). Unit {}!", _me->GetName());
             LOG_INFO("vehicles", "Crash recovered in Unit::SetCharmedBy(). typeid: {}!", _me->GetTypeId());
-            LOG_INFO("vehicles", "Crash recovered in Unit::SetCharmedBy(). Unit {}, typeid: {}, in world: {}, duringremove: {} has wrong CharmType! Charmer {}, typeid: {}, in world: {}, duringremove: {}.", _me->GetName(), _me->GetTypeId(), _me->IsInWorld(), _me->IsDuringRemoveFromWorld(), unit->GetName(), unit->GetTypeId(), unit->IsInWorld(), unit->IsDuringRemoveFromWorld());
+            LOG_INFO("vehicles",
+                "Crash recovered in Unit::SetCharmedBy(). Unit {}, typeid: {}, in world: {}, duringremove: {} has wrong CharmType! Charmer {}, typeid: {}, in world: {}, duringremove: {}.",
+                _me->GetName(),
+                _me->GetTypeId(),
+                _me->IsInWorld(),
+                _me->IsDuringRemoveFromWorld(),
+                unit->GetName(),
+                unit->GetTypeId(),
+                unit->IsInWorld(),
+                unit->IsDuringRemoveFromWorld());
             return false;
         }
     }
 
     if (_me->IsInWorld())
     {
-        unit->SendClearTarget();                                // SMSG_BREAK_TARGET
-        unit->SetControlled(true, UNIT_STATE_ROOT);              // SMSG_FORCE_ROOT - In some cases we send SMSG_SPLINE_MOVE_ROOT here (for creatures)
+        unit->SendClearTarget(); // SMSG_BREAK_TARGET
+        unit->SetControlled(true,
+            UNIT_STATE_ROOT); // SMSG_FORCE_ROOT - In some cases we send SMSG_SPLINE_MOVE_ROOT here (for creatures)
         // also adds MOVEMENTFLAG_ROOT
         Movement::MoveSplineInit init(unit);
         init.DisableTransportPathTransformations();
@@ -468,19 +506,28 @@ void Vehicle::RemovePassenger(Unit* unit)
     // ASSERT(seat != Seats.end());
     if (seat == Seats.end())
     {
-        LOG_ERROR("vehicles", "Vehicle::RemovePassenger: Vehicle entry ({}) id ({}) is dissmised and removed all existing passangers, but the unit ({}) was not on the vehicle!",
-            _me->GetEntry(), _vehicleInfo->m_ID, unit->GetName());
+        LOG_ERROR("vehicles",
+            "Vehicle::RemovePassenger: Vehicle entry ({}) id ({}) is dissmised and removed all existing passangers, but the unit ({}) was not on the vehicle!",
+            _me->GetEntry(),
+            _vehicleInfo->m_ID,
+            unit->GetName());
         return;
     }
 
-    LOG_DEBUG("vehicles", "Unit {} exit vehicle entry {} id {} ({}) seat {}",
-        unit->GetName(), _me->GetEntry(), _vehicleInfo->m_ID, _me->GetGUID().ToString(), (int32)seat->first);
+    LOG_DEBUG("vehicles",
+        "Unit {} exit vehicle entry {} id {} ({}) seat {}",
+        unit->GetName(),
+        _me->GetEntry(),
+        _vehicleInfo->m_ID,
+        _me->GetGUID().ToString(),
+        (int32)seat->first);
 
     if (seat->second.SeatInfo->CanEnterOrExit() && ++_usableSeatNum)
         _me->SetNpcFlag((_me->IsPlayer() ? UNIT_NPC_FLAG_PLAYER_VEHICLE : UNIT_NPC_FLAG_SPELLCLICK));
 
     // Remove UNIT_FLAG_NOT_SELECTABLE if passenger did not have it before entering vehicle
-    if (seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_PASSENGER_NOT_SELECTABLE && !seat->second.Passenger.IsUnselectable)
+    if (seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_PASSENGER_NOT_SELECTABLE &&
+        !seat->second.Passenger.IsUnselectable)
         unit->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
 
     seat->second.Passenger.Reset();
@@ -500,7 +547,9 @@ void Vehicle::RemovePassenger(Unit* unit)
     }
 
     // only for flyable vehicles
-    if (_me->IsFlying() && !_me->GetInstanceId() && unit->IsPlayer() && !(unit->ToPlayer()->GetDelayedOperations() & DELAYED_VEHICLE_TELEPORT) && _me->GetEntry() != 30275 /*NPC_WILD_WYRM*/)
+    if (_me->IsFlying() && !_me->GetInstanceId() && unit->IsPlayer() &&
+        !(unit->ToPlayer()->GetDelayedOperations() & DELAYED_VEHICLE_TELEPORT) &&
+        _me->GetEntry() != 30275 /*NPC_WILD_WYRM*/)
         _me->CastSpell(unit, VEHICLE_SPELL_PARACHUTE, true);
 
     if (_me->IsCreature())
@@ -552,7 +601,8 @@ bool Vehicle::IsVehicleInUse()
         {
             if (passenger->IsPlayer())
                 return true;
-            else if (passenger->IsCreature() && passenger->GetVehicleKit() && passenger->GetVehicleKit()->IsVehicleInUse())
+            else if (passenger->IsCreature() && passenger->GetVehicleKit() &&
+                     passenger->GetVehicleKit()->IsVehicleInUse())
                 return true;
         }
 
@@ -619,7 +669,8 @@ uint8 Vehicle::GetAvailableSeatCount() const
     uint8 ret = 0;
     SeatMap::const_iterator itr;
     for (itr = Seats.begin(); itr != Seats.end(); ++itr)
-        if (itr->second.IsEmpty() && (itr->second.SeatInfo->CanEnterOrExit() || itr->second.SeatInfo->IsUsableByOverride()))
+        if (itr->second.IsEmpty() &&
+            (itr->second.SeatInfo->CanEnterOrExit() || itr->second.SeatInfo->IsUsableByOverride()))
             ++ret;
 
     return ret;

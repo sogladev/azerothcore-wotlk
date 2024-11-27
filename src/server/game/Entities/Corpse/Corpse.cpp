@@ -36,9 +36,7 @@ Corpse::Corpse(CorpseType type) : WorldObject(type != CORPSE_BONES), m_type(type
     lootRecipient = nullptr;
 }
 
-Corpse::~Corpse()
-{
-}
+Corpse::~Corpse() { }
 
 void Corpse::AddToWorld()
 {
@@ -72,8 +70,12 @@ bool Corpse::Create(ObjectGuid::LowType guidlow, Player* owner)
 
     if (!IsPositionValid())
     {
-        LOG_ERROR("entities.player", "Corpse (guidlow {}, owner {}) not created. Suggested coordinates isn't valid (X: {} Y: {})",
-            guidlow, owner->GetName(), owner->GetPositionX(), owner->GetPositionY());
+        LOG_ERROR("entities.player",
+            "Corpse (guidlow {}, owner {}) not created. Suggested coordinates isn't valid (X: {} Y: {})",
+            guidlow,
+            owner->GetName(),
+            owner->GetPositionX(),
+            owner->GetPositionY());
         return false;
     }
 
@@ -94,23 +96,23 @@ void Corpse::SaveToDB()
     DeleteFromDB(trans);
 
     CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CORPSE);
-    stmt->SetData(0, GetOwnerGUID().GetCounter());                            // guid
-    stmt->SetData (1, GetPositionX());                                         // posX
-    stmt->SetData (2, GetPositionY());                                         // posY
-    stmt->SetData (3, GetPositionZ());                                         // posZ
-    stmt->SetData (4, GetOrientation());                                       // orientation
-    stmt->SetData(5, GetMapId());                                             // mapId
-    stmt->SetData(6, GetUInt32Value(CORPSE_FIELD_DISPLAY_ID));                // displayId
-    stmt->SetData(7, _ConcatFields(CORPSE_FIELD_ITEM, EQUIPMENT_SLOT_END));   // itemCache
-    stmt->SetData(8, GetUInt32Value(CORPSE_FIELD_BYTES_1));                   // bytes1
-    stmt->SetData(9, GetUInt32Value(CORPSE_FIELD_BYTES_2));                   // bytes2
-    stmt->SetData(10, GetUInt32Value(CORPSE_FIELD_GUILD));                    // guildId
-    stmt->SetData (11, GetUInt32Value(CORPSE_FIELD_FLAGS));                    // flags
-    stmt->SetData (12, GetUInt32Value(CORPSE_FIELD_DYNAMIC_FLAGS));            // dynFlags
-    stmt->SetData(13, uint32(m_time));                                        // time
-    stmt->SetData (14, GetType());                                             // corpseType
-    stmt->SetData(15, GetInstanceId());                                       // instanceId
-    stmt->SetData(16, GetPhaseMask());                                        // phaseMask
+    stmt->SetData(0, GetOwnerGUID().GetCounter());                          // guid
+    stmt->SetData(1, GetPositionX());                                       // posX
+    stmt->SetData(2, GetPositionY());                                       // posY
+    stmt->SetData(3, GetPositionZ());                                       // posZ
+    stmt->SetData(4, GetOrientation());                                     // orientation
+    stmt->SetData(5, GetMapId());                                           // mapId
+    stmt->SetData(6, GetUInt32Value(CORPSE_FIELD_DISPLAY_ID));              // displayId
+    stmt->SetData(7, _ConcatFields(CORPSE_FIELD_ITEM, EQUIPMENT_SLOT_END)); // itemCache
+    stmt->SetData(8, GetUInt32Value(CORPSE_FIELD_BYTES_1));                 // bytes1
+    stmt->SetData(9, GetUInt32Value(CORPSE_FIELD_BYTES_2));                 // bytes2
+    stmt->SetData(10, GetUInt32Value(CORPSE_FIELD_GUILD));                  // guildId
+    stmt->SetData(11, GetUInt32Value(CORPSE_FIELD_FLAGS));                  // flags
+    stmt->SetData(12, GetUInt32Value(CORPSE_FIELD_DYNAMIC_FLAGS));          // dynFlags
+    stmt->SetData(13, uint32(m_time));                                      // time
+    stmt->SetData(14, GetType());                                           // corpseType
+    stmt->SetData(15, GetInstanceId());                                     // instanceId
+    stmt->SetData(16, GetPhaseMask());                                      // phaseMask
     trans->Append(stmt);
 
     CharacterDatabase.CommitTransaction(trans);
@@ -134,10 +136,10 @@ bool Corpse::LoadCorpseFromDB(ObjectGuid::LowType guid, Field* fields)
 
     //        0     1     2     3            4      5          6          7       8       9        10     11        12    13          14          15         16
     // SELECT posX, posY, posZ, orientation, mapId, displayId, itemCache, bytes1, bytes2, guildId, flags, dynFlags, time, corpseType, instanceId, phaseMask, guid FROM corpse WHERE mapId = ? AND instanceId = ?
-    float posX   = fields[0].Get<float>();
-    float posY   = fields[1].Get<float>();
-    float posZ   = fields[2].Get<float>();
-    float o      = fields[3].Get<float>();
+    float posX = fields[0].Get<float>();
+    float posY = fields[1].Get<float>();
+    float posZ = fields[2].Get<float>();
+    float o = fields[3].Get<float>();
     uint32 mapId = fields[4].Get<uint16>();
 
     Object::_Create(guid, 0, HighGuid::Corpse);
@@ -147,8 +149,11 @@ bool Corpse::LoadCorpseFromDB(ObjectGuid::LowType guid, Field* fields)
 
     if (!_LoadIntoDataField(fields[6].Get<std::string>(), CORPSE_FIELD_ITEM, EQUIPMENT_SLOT_END))
     {
-        LOG_ERROR("entities.player", "Corpse ({}, owner: {}) is not created, given equipment info is not valid ('{}')",
-            GetGUID().ToString(), GetOwnerGUID().ToString(), fields[6].Get<std::string>());
+        LOG_ERROR("entities.player",
+            "Corpse ({}, owner: {}) is not created, given equipment info is not valid ('{}')",
+            GetGUID().ToString(),
+            GetOwnerGUID().ToString(),
+            fields[6].Get<std::string>());
     }
 
     SetUInt32Value(CORPSE_FIELD_BYTES_1, fields[7].Get<uint32>());
@@ -160,8 +165,8 @@ bool Corpse::LoadCorpseFromDB(ObjectGuid::LowType guid, Field* fields)
 
     m_time = time_t(fields[12].Get<uint32>());
 
-    uint32 instanceId  = fields[14].Get<uint32>();
-    uint32 phaseMask   = fields[15].Get<uint32>();
+    uint32 instanceId = fields[14].Get<uint32>();
+    uint32 phaseMask = fields[15].Get<uint32>();
 
     // place
     SetLocationInstanceId(instanceId);
@@ -171,8 +176,13 @@ bool Corpse::LoadCorpseFromDB(ObjectGuid::LowType guid, Field* fields)
 
     if (!IsPositionValid())
     {
-        LOG_ERROR("entities.player", "Corpse ( {}, owner: {}) is not created, given coordinates are not valid (X: {}, Y: {}, Z: {})",
-            GetGUID().ToString(), GetOwnerGUID().ToString(), posX, posY, posZ);
+        LOG_ERROR("entities.player",
+            "Corpse ( {}, owner: {}) is not created, given coordinates are not valid (X: {}, Y: {}, Z: {})",
+            GetGUID().ToString(),
+            GetOwnerGUID().ToString(),
+            posX,
+            posY,
+            posZ);
         return false;
     }
 
@@ -211,14 +221,17 @@ void Corpse::BuildValuesUpdate(uint8 updateType, ByteBuffer* data, Player* targe
 
     for (uint16 index = 0; index < m_valuesCount; ++index)
     {
-        if (_fieldNotifyFlags & flags[index] || ((updateType == UPDATETYPE_VALUES ? _changesMask.GetBit(index) : m_uint32Values[index]) && (flags[index] & visibleFlag)))
+        if (_fieldNotifyFlags & flags[index] ||
+            ((updateType == UPDATETYPE_VALUES ? _changesMask.GetBit(index) : m_uint32Values[index]) &&
+                (flags[index] & visibleFlag)))
         {
             updateMask.SetBit(index);
 
             if (index == CORPSE_FIELD_BYTES_1 || index == CORPSE_FIELD_BYTES_2)
             {
                 Player* owner = ObjectAccessor::GetPlayer(*this, GetOwnerGUID());
-                if (owner && owner != target && sWorld->getBoolConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GROUP) && owner->IsInRaidWith(target) && owner->GetTeamId() != target->GetTeamId())
+                if (owner && owner != target && sWorld->getBoolConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GROUP) &&
+                    owner->IsInRaidWith(target) && owner->GetTeamId() != target->GetTeamId())
                 {
                     uint32 playerBytes = target->GetUInt32Value(PLAYER_BYTES);
                     uint32 playerBytes2 = target->GetUInt32Value(PLAYER_BYTES_2);
@@ -230,17 +243,14 @@ void Corpse::BuildValuesUpdate(uint8 updateType, ByteBuffer* data, Player* targe
                     uint8 haircolor = (uint8)(playerBytes >> 24);
                     uint8 facialhair = (uint8)(playerBytes2);
 
-                    uint32 corpseBytes1 = ((0x00) | (race << 8) | (target->GetByteValue(PLAYER_BYTES_3, 0) << 16) | (skin << 24));
+                    uint32 corpseBytes1 =
+                        ((0x00) | (race << 8) | (target->GetByteValue(PLAYER_BYTES_3, 0) << 16) | (skin << 24));
                     uint32 corpseBytes2 = ((face) | (hairstyle << 8) | (haircolor << 16) | (facialhair << 24));
 
                     if (index == CORPSE_FIELD_BYTES_1)
-                    {
                         fieldBuffer << corpseBytes1;
-                    }
                     else
-                    {
                         fieldBuffer << corpseBytes2;
-                    }
                 }
                 else
                 {

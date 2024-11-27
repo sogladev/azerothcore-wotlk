@@ -29,43 +29,41 @@ PreparedStatementBase::PreparedStatementBase(uint32 index, uint8 capacity) :
 PreparedStatementBase::~PreparedStatementBase() { }
 
 //- Bind to buffer
-template<typename T>
-Acore::Types::is_non_string_view_v<T> PreparedStatementBase::SetValidData(const uint8 index, T const& value)
+template <typename T>
+Acore::Types::is_non_string_view_v<T> PreparedStatementBase::SetValidData(uint8 const index, T const& value)
 {
     ASSERT(index < statement_data.size());
     statement_data[index].data.emplace<T>(value);
 }
 
 // Non template functions
-void PreparedStatementBase::SetValidData(const uint8 index)
+void PreparedStatementBase::SetValidData(uint8 const index)
 {
     ASSERT(index < statement_data.size());
     statement_data[index].data.emplace<std::nullptr_t>(nullptr);
 }
 
-void PreparedStatementBase::SetValidData(const uint8 index, std::string_view value)
+void PreparedStatementBase::SetValidData(uint8 const index, std::string_view value)
 {
     ASSERT(index < statement_data.size());
     statement_data[index].data.emplace<std::string>(value);
 }
 
-template void PreparedStatementBase::SetValidData(const uint8 index, uint8 const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, int8 const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, uint16 const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, int16 const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, uint32 const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, int32 const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, uint64 const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, int64 const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, bool const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, float const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, std::string const& value);
-template void PreparedStatementBase::SetValidData(const uint8 index, std::vector<uint8> const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, uint8 const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, int8 const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, uint16 const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, int16 const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, uint32 const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, int32 const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, uint64 const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, int64 const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, bool const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, float const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, std::string const& value);
+template void PreparedStatementBase::SetValidData(uint8 const index, std::vector<uint8> const& value);
 
 //- Execution
-PreparedStatementTask::PreparedStatementTask(PreparedStatementBase* stmt, bool async) :
-    m_stmt(stmt),
-    m_result(nullptr)
+PreparedStatementTask::PreparedStatementTask(PreparedStatementBase* stmt, bool async) : m_stmt(stmt), m_result(nullptr)
 {
     m_has_result = async; // If it's async, then there's a result
 
@@ -100,14 +98,12 @@ bool PreparedStatementTask::Execute()
     return m_conn->Execute(m_stmt);
 }
 
-template<typename T>
-std::string PreparedStatementData::ToString(T value)
+template <typename T> std::string PreparedStatementData::ToString(T value)
 {
     return Acore::StringFormat("{}", value);
 }
 
-template<>
-std::string PreparedStatementData::ToString(std::vector<uint8> /*value*/)
+template <> std::string PreparedStatementData::ToString(std::vector<uint8> /*value*/)
 {
     return "BINARY";
 }

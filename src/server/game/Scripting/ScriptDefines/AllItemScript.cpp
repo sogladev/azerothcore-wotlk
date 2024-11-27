@@ -27,15 +27,11 @@ bool ScriptMgr::OnQuestAccept(Player* player, Item* item, Quest const* quest)
     ASSERT(item);
     ASSERT(quest);
 
-    auto ret = IsValidBoolScript<AllItemScript>([&](AllItemScript* script)
-    {
-        return !script->CanItemQuestAccept(player, item, quest);
-    });
+    auto ret = IsValidBoolScript<AllItemScript>(
+        [&](AllItemScript* script) { return !script->CanItemQuestAccept(player, item, quest); });
 
     if (ret && *ret)
-    {
         return false;
-    }
 
     auto tempScript = ScriptRegistry<ItemScript>::GetScriptById(item->GetScriptId());
     ClearGossipMenuFor(player);
@@ -47,15 +43,11 @@ bool ScriptMgr::OnItemUse(Player* player, Item* item, SpellCastTargets const& ta
     ASSERT(player);
     ASSERT(item);
 
-    auto ret = IsValidBoolScript<AllItemScript>([&](AllItemScript* script)
-    {
-        return script->CanItemUse(player, item, targets);
-    });
+    auto ret = IsValidBoolScript<AllItemScript>(
+        [&](AllItemScript* script) { return script->CanItemUse(player, item, targets); });
 
     if (ret && *ret)
-    {
         return true;
-    }
 
     auto tempScript = ScriptRegistry<ItemScript>::GetScriptById(item->GetScriptId());
     return tempScript ? tempScript->OnUse(player, item, targets) : false;
@@ -66,15 +58,11 @@ bool ScriptMgr::OnItemExpire(Player* player, ItemTemplate const* proto)
     ASSERT(player);
     ASSERT(proto);
 
-    auto ret = IsValidBoolScript<AllItemScript>([&](AllItemScript* script)
-    {
-        return !script->CanItemExpire(player, proto);
-    });
+    auto ret =
+        IsValidBoolScript<AllItemScript>([&](AllItemScript* script) { return !script->CanItemExpire(player, proto); });
 
     if (ret && *ret)
-    {
         return false;
-    }
 
     auto tempScript = ScriptRegistry<ItemScript>::GetScriptById(proto->ScriptId);
     return tempScript ? tempScript->OnExpire(player, proto) : false;
@@ -85,15 +73,11 @@ bool ScriptMgr::OnItemRemove(Player* player, Item* item)
     ASSERT(player);
     ASSERT(item);
 
-    auto ret = IsValidBoolScript<AllItemScript>([&](AllItemScript* script)
-    {
-        return !script->CanItemRemove(player, item);
-    });
+    auto ret =
+        IsValidBoolScript<AllItemScript>([&](AllItemScript* script) { return !script->CanItemRemove(player, item); });
 
     if (ret && *ret)
-    {
         return false;
-    }
 
     auto tempScript = ScriptRegistry<ItemScript>::GetScriptById(item->GetScriptId());
     return tempScript ? tempScript->OnRemove(player, item) : false;
@@ -115,41 +99,31 @@ void ScriptMgr::OnGossipSelect(Player* player, Item* item, uint32 sender, uint32
     ASSERT(player);
     ASSERT(item);
 
-    ExecuteScript<AllItemScript>([&](AllItemScript* script)
-    {
-        script->OnItemGossipSelect(player, item, sender, action);
-    });
+    ExecuteScript<AllItemScript>(
+        [&](AllItemScript* script) { script->OnItemGossipSelect(player, item, sender, action); });
 
     if (auto tempScript = ScriptRegistry<ItemScript>::GetScriptById(item->GetScriptId()))
-    {
         tempScript->OnGossipSelect(player, item, sender, action);
-    }
 }
 
-void ScriptMgr::OnGossipSelectCode(Player* player, Item* item, uint32 sender, uint32 action, const char* code)
+void ScriptMgr::OnGossipSelectCode(Player* player, Item* item, uint32 sender, uint32 action, char const* code)
 {
     ASSERT(player);
     ASSERT(item);
 
-    ExecuteScript<AllItemScript>([&](AllItemScript* script)
-    {
-        script->OnItemGossipSelectCode(player, item, sender, action, code);
-    });
+    ExecuteScript<AllItemScript>(
+        [&](AllItemScript* script) { script->OnItemGossipSelectCode(player, item, sender, action, code); });
 
     if (auto tempScript = ScriptRegistry<ItemScript>::GetScriptById(item->GetScriptId()))
-    {
         tempScript->OnGossipSelectCode(player, item, sender, action, code);
-    }
 }
 
-AllItemScript::AllItemScript(const char* name) :
-    ScriptObject(name)
+AllItemScript::AllItemScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<AllItemScript>::AddScript(this);
 }
 
-ItemScript::ItemScript(const char* name) :
-    ScriptObject(name)
+ItemScript::ItemScript(char const* name) : ScriptObject(name)
 {
     ScriptRegistry<ItemScript>::AddScript(this);
 }

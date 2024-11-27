@@ -88,9 +88,7 @@ ObjectGuid InstanceScript::GetObjectGuid(uint32 type) const
     ObjectGuidMap::const_iterator i = _objectGuids.find(type);
 
     if (i != _objectGuids.end())
-    {
         return i->second;
-    }
 
     return ObjectGuid::Empty;
 }
@@ -117,9 +115,7 @@ void InstanceScript::HandleGameObject(ObjectGuid GUID, bool open, GameObject* go
     if (go)
         go->SetGoState(open ? GO_STATE_ACTIVE : GO_STATE_READY);
     else
-    {
         LOG_DEBUG("scripts.ai", "InstanceScript: HandleGameObject failed");
-    }
 }
 
 bool InstanceScript::IsEncounterInProgress() const
@@ -131,7 +127,7 @@ bool InstanceScript::IsEncounterInProgress() const
     return false;
 }
 
-void InstanceScript::LoadBossBoundaries(const BossBoundaryData& data)
+void InstanceScript::LoadBossBoundaries(BossBoundaryData const& data)
 {
     for (BossBoundaryEntry const& entry : data)
         if (entry.bossId < bosses.size())
@@ -141,15 +137,11 @@ void InstanceScript::LoadBossBoundaries(const BossBoundaryData& data)
 void InstanceScript::SetHeaders(std::string const& dataHeaders)
 {
     for (char header : dataHeaders)
-    {
         if (isalpha(header))
-        {
             headers.push_back(header);
-        }
-    }
 }
 
-void InstanceScript::LoadMinionData(const MinionData* data)
+void InstanceScript::LoadMinionData(MinionData const* data)
 {
     while (data->entry)
     {
@@ -161,7 +153,7 @@ void InstanceScript::LoadMinionData(const MinionData* data)
     LOG_DEBUG("scripts.ai", "InstanceScript::LoadMinionData: {} minions loaded.", uint64(minions.size()));
 }
 
-void InstanceScript::LoadDoorData(const DoorData* data)
+void InstanceScript::LoadDoorData(DoorData const* data)
 {
     while (data->entry)
     {
@@ -176,16 +168,13 @@ void InstanceScript::LoadDoorData(const DoorData* data)
 void InstanceScript::LoadObjectData(ObjectData const* creatureData, ObjectData const* gameObjectData)
 {
     if (creatureData)
-    {
         LoadObjectData(creatureData, _creatureInfo);
-    }
 
     if (gameObjectData)
-    {
         LoadObjectData(gameObjectData, _gameObjectInfo);
-    }
 
-    LOG_DEBUG("scripts", "InstanceScript::LoadObjectData: {} objects loaded.", _creatureInfo.size() + _gameObjectInfo.size());
+    LOG_DEBUG(
+        "scripts", "InstanceScript::LoadObjectData: {} objects loaded.", _creatureInfo.size() + _gameObjectInfo.size());
 }
 
 void InstanceScript::LoadObjectData(ObjectData const* data, ObjectInfoMap& objectInfo)
@@ -219,13 +208,8 @@ void InstanceScript::UpdateMinionState(Creature* minion, EncounterState state)
         case IN_PROGRESS:
             if (!minion->IsAlive())
                 minion->Respawn();
-            else
-            {
-                if (minion->GetReactState() == REACT_AGGRESSIVE)
-                {
-                    minion->AI()->DoZoneInCombat(nullptr, 100.0f);
-                }
-            }
+            else if (minion->GetReactState() == REACT_AGGRESSIVE)
+                minion->AI()->DoZoneInCombat(nullptr, 100.0f);
             break;
         default:
             break;
@@ -271,9 +255,7 @@ void InstanceScript::AddObject(Creature* obj, bool add)
 {
     ObjectInfoMap::const_iterator j = _creatureInfo.find(obj->GetEntry());
     if (j != _creatureInfo.end())
-    {
         AddObject(obj, j->second, add);
-    }
 }
 
 void InstanceScript::RemoveObject(Creature* obj)
@@ -285,9 +267,7 @@ void InstanceScript::AddObject(GameObject* obj, bool add)
 {
     ObjectInfoMap::const_iterator j = _gameObjectInfo.find(obj->GetEntry());
     if (j != _gameObjectInfo.end())
-    {
         AddObject(obj, j->second, add);
-    }
 }
 
 void InstanceScript::RemoveObject(GameObject* obj)
@@ -305,9 +285,7 @@ void InstanceScript::AddObject(WorldObject* obj, uint32 type, bool add)
     {
         ObjectGuidMap::iterator i = _objectGuids.find(type);
         if (i != _objectGuids.end() && i->second == obj->GetGUID())
-        {
             _objectGuids.erase(i);
-        }
     }
 }
 
@@ -327,9 +305,7 @@ void InstanceScript::AddDoor(GameObject* door, bool add)
         DoorInfo const& data = range.first->second;
 
         if (add)
-        {
             data.bossInfo->door[data.type].insert(door);
-        }
         else
             data.bossInfo->door[data.type].erase(door);
     }
@@ -411,7 +387,11 @@ void InstanceScript::StorePersistentData(uint32 index, uint32 data)
 {
     if (index > persistentData.size())
     {
-        LOG_ERROR("scripts", "InstanceScript::StorePersistentData() index larger than storage size. Index: {} Size: {} Data: {}.", index, persistentData.size(), data);
+        LOG_ERROR("scripts",
+            "InstanceScript::StorePersistentData() index larger than storage size. Index: {} Size: {} Data: {}.",
+            index,
+            persistentData.size(),
+            data);
         return;
     }
 
@@ -428,15 +408,11 @@ void InstanceScript::DoForAllMinions(uint32 id, std::function<void(Creature*)> e
     MinionSet listCopy = bossInfo->minion;
 
     for (auto const& minion : listCopy)
-    {
         if (minion)
-        {
             exec(minion);
-        }
-    }
 }
 
-void InstanceScript::Load(const char* data)
+void InstanceScript::Load(char const* data)
 {
     if (!data)
     {
@@ -492,9 +468,7 @@ void InstanceScript::ReadSaveDataBossStates(std::istringstream& data)
 void InstanceScript::ReadSavePersistentData(std::istringstream& data)
 {
     for (uint32 i = 0; i < persistentData.size(); ++i)
-    {
         data >> persistentData[i];
-    }
 }
 
 std::string InstanceScript::GetSaveData()
@@ -516,25 +490,19 @@ std::string InstanceScript::GetSaveData()
 void InstanceScript::WriteSaveDataHeaders(std::ostringstream& data)
 {
     for (char header : headers)
-    {
         data << header << ' ';
-    }
 }
 
 void InstanceScript::WriteSaveDataBossStates(std::ostringstream& data)
 {
     for (BossInfo const& bossInfo : bosses)
-    {
         data << uint32(bossInfo.state) << ' ';
-    }
 }
 
 void InstanceScript::WritePersistentData(std::ostringstream& data)
 {
     for (auto const& entry : persistentData)
-    {
         data << entry << ' ';
-    }
 }
 
 void InstanceScript::DoUseDoorOrButton(ObjectGuid uiGuid, uint32 uiWithRestoreTime, bool bUseAlternativeState)
@@ -554,7 +522,10 @@ void InstanceScript::DoUseDoorOrButton(ObjectGuid uiGuid, uint32 uiWithRestoreTi
                 go->ResetDoorOrButton();
         }
         else
-            LOG_ERROR("scripts.ai", "SD2: Script call DoUseDoorOrButton, but gameobject entry {} is type {}.", go->GetEntry(), go->GetGoType());
+            LOG_ERROR("scripts.ai",
+                "SD2: Script call DoUseDoorOrButton, but gameobject entry {} is type {}.",
+                go->GetEntry(),
+                go->GetGoType());
     }
 }
 
@@ -569,7 +540,10 @@ void InstanceScript::DoRespawnGameObject(ObjectGuid uiGuid, uint32 uiTimeToDespa
             case GAMEOBJECT_TYPE_TRAP:
             case GAMEOBJECT_TYPE_FISHINGNODE:
                 // not expect any of these should ever be handled
-                LOG_ERROR("scripts", "InstanceScript: DoRespawnGameObject can't respawn gameobject entry {}, because type is {}.", go->GetEntry(), go->GetGoType());
+                LOG_ERROR("scripts",
+                    "InstanceScript: DoRespawnGameObject can't respawn gameobject entry {}, because type is {}.",
+                    go->GetEntry(),
+                    go->GetGoType());
                 return;
             default:
                 break;
@@ -587,17 +561,13 @@ void InstanceScript::DoRespawnGameObject(ObjectGuid uiGuid, uint32 uiTimeToDespa
 void InstanceScript::DoRespawnCreature(ObjectGuid guid, bool force)
 {
     if (Creature* creature = instance->GetCreature(guid))
-    {
         creature->Respawn(force);
-    }
 }
 
 void InstanceScript::DoRespawnCreature(uint32 type, bool force)
 {
     if (Creature* creature = instance->GetCreature(GetObjectGuid(type)))
-    {
         creature->Respawn(force);
-    }
 }
 
 void InstanceScript::DoUpdateWorldState(uint32 uiStateId, uint32 uiStateData)
@@ -627,38 +597,29 @@ void InstanceScript::DoSendNotifyToInstance(char const* format, ...)
         vsnprintf(buff, 1024, format, ap);
         va_end(ap);
 
-        instance->DoForAllPlayers([&, buff](Player* player)
-        {
-            ChatHandler(player->GetSession()).SendNotification("{}", buff);
-        });
+        instance->DoForAllPlayers(
+            [&, buff](Player* player) { ChatHandler(player->GetSession()).SendNotification("{}", buff); });
     }
 }
 
 // Update Achievement Criteria for all players in instance
-void InstanceScript::DoUpdateAchievementCriteria(AchievementCriteriaTypes type, uint32 miscValue1 /*= 0*/, uint32 miscValue2 /*= 0*/, Unit* unit /*= nullptr*/)
+void InstanceScript::DoUpdateAchievementCriteria(
+    AchievementCriteriaTypes type, uint32 miscValue1 /*= 0*/, uint32 miscValue2 /*= 0*/, Unit* unit /*= nullptr*/)
 {
-    instance->DoForAllPlayers([&](Player* player)
-    {
-        player->UpdateAchievementCriteria(type, miscValue1, miscValue2, unit);
-    });
+    instance->DoForAllPlayers(
+        [&](Player* player) { player->UpdateAchievementCriteria(type, miscValue1, miscValue2, unit); });
 }
 
 // Start timed achievement for all players in instance
 void InstanceScript::DoStartTimedAchievement(AchievementCriteriaTimedTypes type, uint32 entry)
 {
-    instance->DoForAllPlayers([&](Player* player)
-    {
-        player->StartTimedAchievement(type, entry);
-    });
+    instance->DoForAllPlayers([&](Player* player) { player->StartTimedAchievement(type, entry); });
 }
 
 // Stop timed achievement for all players in instance
 void InstanceScript::DoStopTimedAchievement(AchievementCriteriaTimedTypes type, uint32 entry)
 {
-    instance->DoForAllPlayers([&](Player* player)
-    {
-        player->RemoveTimedAchievement(type, entry);
-    });
+    instance->DoForAllPlayers([&](Player* player) { player->RemoveTimedAchievement(type, entry); });
 }
 
 // Remove Auras due to Spell on all players in instance
@@ -675,13 +636,11 @@ void InstanceScript::DoRemoveAurasDueToSpellOnPlayers(uint32 spell)
 // Cast spell on all players in instance
 void InstanceScript::DoCastSpellOnPlayers(uint32 spell)
 {
-    instance->DoForAllPlayers([&](Player* player)
-    {
-        player->CastSpell(player, spell, true);
-    });
+    instance->DoForAllPlayers([&](Player* player) { player->CastSpell(player, spell, true); });
 }
 
-void InstanceScript::DoCastSpellOnPlayer(Player* player, uint32 spell, bool includePets /*= false*/, bool includeControlled /*= false*/)
+void InstanceScript::DoCastSpellOnPlayer(
+    Player* player, uint32 spell, bool includePets /*= false*/, bool includeControlled /*= false*/)
 {
     if (!player)
         return;
@@ -710,10 +669,13 @@ void InstanceScript::DoCastSpellOnPlayer(Player* player, uint32 spell, bool incl
     }
 }
 
-bool InstanceScript::CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/ /*= nullptr*/, uint32 /*miscvalue1*/ /*= 0*/)
+bool InstanceScript::CheckAchievementCriteriaMeet(
+    uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/ /*= nullptr*/, uint32 /*miscvalue1*/ /*= 0*/)
 {
-    LOG_ERROR("scripts.ai", "Achievement system call InstanceScript::CheckAchievementCriteriaMeet but instance script for map {} not have implementation for achievement criteria {}",
-                   instance->GetId(), criteria_id);
+    LOG_ERROR("scripts.ai",
+        "Achievement system call InstanceScript::CheckAchievementCriteriaMeet but instance script for map {} not have implementation for achievement criteria {}",
+        instance->GetId(),
+        criteria_id);
     return false;
 }
 
@@ -729,14 +691,16 @@ void InstanceScript::SetCompletedEncountersMask(uint32 newMask, bool save)
         if (iSave)
             iSave->SetCompletedEncounterMask(completedEncounters);
 
-        CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_INSTANCE_SAVE_ENCOUNTERMASK);
+        CharacterDatabasePreparedStatement* stmt =
+            CharacterDatabase.GetPreparedStatement(CHAR_UPD_INSTANCE_SAVE_ENCOUNTERMASK);
         stmt->SetData(0, completedEncounters);
         stmt->SetData(1, instance->GetInstanceId());
         CharacterDatabase.Execute(stmt);
     }
 }
 
-void InstanceScript::SendEncounterUnit(uint32 type, Unit* unit /*= nullptr*/, uint8 param1 /*= 0*/, uint8 param2 /*= 0*/)
+void InstanceScript::SendEncounterUnit(
+    uint32 type, Unit* unit /*= nullptr*/, uint8 param1 /*= 0*/, uint8 param2 /*= 0*/)
 {
     // size of this packet is at most 15 (usually less)
     WorldPacket data(SMSG_UPDATE_INSTANCE_ENCOUNTER_UNIT, 15);
@@ -832,9 +796,7 @@ uint8 InstanceScript::GetStoredGameObjectState(ObjectGuid::LowType spawnId) cons
     auto i = _objectStateMap.find(spawnId);
 
     if (i != _objectStateMap.end())
-    {
         return i->second;
-    }
 
     return 3; // Any state higher than 2 to get the default state for the object we are loading.
 }
@@ -842,9 +804,7 @@ uint8 InstanceScript::GetStoredGameObjectState(ObjectGuid::LowType spawnId) cons
 bool InstanceHasScript(WorldObject const* obj, char const* scriptName)
 {
     if (InstanceMap* instance = obj->GetMap()->ToInstanceMap())
-    {
         return instance->GetScriptName() == scriptName;
-    }
 
     return false;
 }

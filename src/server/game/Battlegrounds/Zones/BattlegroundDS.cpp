@@ -43,35 +43,36 @@ void BattlegroundDS::PostUpdateImpl(uint32 diff)
     {
         switch (eventId)
         {
-        case BG_DS_EVENT_WATERFALL_WARNING:
-            // Add the water
-            DoorClose(BG_DS_OBJECT_WATER_2);
-            _events.ScheduleEvent(BG_DS_EVENT_WATERFALL_ON, BG_DS_WATERFALL_WARNING_DURATION);
-            break;
-        case BG_DS_EVENT_WATERFALL_ON:
-            // Active collision and start knockback timer
-            DoorClose(BG_DS_OBJECT_WATER_1);
-            _events.ScheduleEvent(BG_DS_EVENT_WATERFALL_OFF, BG_DS_WATERFALL_DURATION);
-            _events.ScheduleEvent(BG_DS_EVENT_WATERFALL_KNOCKBACK, BG_DS_WATERFALL_KNOCKBACK_TIMER);
-            break;
-        case BG_DS_EVENT_WATERFALL_OFF:
-            // Remove collision and water
-            DoorOpen(BG_DS_OBJECT_WATER_1);
-            DoorOpen(BG_DS_OBJECT_WATER_2);
-            _events.CancelEvent(BG_DS_EVENT_WATERFALL_KNOCKBACK);
-            _events.ScheduleEvent(BG_DS_EVENT_WATERFALL_WARNING, BG_DS_WATERFALL_TIMER_MIN, BG_DS_WATERFALL_TIMER_MAX);
-            break;
-        case BG_DS_EVENT_WATERFALL_KNOCKBACK:
-            // Repeat knockback while the waterfall still active
-            if (Creature* waterSpout = GetBGCreature(BG_DS_NPC_WATERFALL_KNOCKBACK))
-                waterSpout->CastSpell(waterSpout, BG_DS_SPELL_WATER_SPOUT, true);
-            _events.ScheduleEvent(eventId, BG_DS_WATERFALL_KNOCKBACK_TIMER);
-            break;
-        case BG_DS_EVENT_PIPE_KNOCKBACK:
-            for (uint32 i = BG_DS_NPC_PIPE_KNOCKBACK_1; i <= BG_DS_NPC_PIPE_KNOCKBACK_2; ++i)
-                if (Creature* waterSpout = GetBGCreature(i))
-                    waterSpout->CastSpell(waterSpout, BG_DS_SPELL_FLUSH, true);
-            break;
+            case BG_DS_EVENT_WATERFALL_WARNING:
+                // Add the water
+                DoorClose(BG_DS_OBJECT_WATER_2);
+                _events.ScheduleEvent(BG_DS_EVENT_WATERFALL_ON, BG_DS_WATERFALL_WARNING_DURATION);
+                break;
+            case BG_DS_EVENT_WATERFALL_ON:
+                // Active collision and start knockback timer
+                DoorClose(BG_DS_OBJECT_WATER_1);
+                _events.ScheduleEvent(BG_DS_EVENT_WATERFALL_OFF, BG_DS_WATERFALL_DURATION);
+                _events.ScheduleEvent(BG_DS_EVENT_WATERFALL_KNOCKBACK, BG_DS_WATERFALL_KNOCKBACK_TIMER);
+                break;
+            case BG_DS_EVENT_WATERFALL_OFF:
+                // Remove collision and water
+                DoorOpen(BG_DS_OBJECT_WATER_1);
+                DoorOpen(BG_DS_OBJECT_WATER_2);
+                _events.CancelEvent(BG_DS_EVENT_WATERFALL_KNOCKBACK);
+                _events.ScheduleEvent(
+                    BG_DS_EVENT_WATERFALL_WARNING, BG_DS_WATERFALL_TIMER_MIN, BG_DS_WATERFALL_TIMER_MAX);
+                break;
+            case BG_DS_EVENT_WATERFALL_KNOCKBACK:
+                // Repeat knockback while the waterfall still active
+                if (Creature* waterSpout = GetBGCreature(BG_DS_NPC_WATERFALL_KNOCKBACK))
+                    waterSpout->CastSpell(waterSpout, BG_DS_SPELL_WATER_SPOUT, true);
+                _events.ScheduleEvent(eventId, BG_DS_WATERFALL_KNOCKBACK_TIMER);
+                break;
+            case BG_DS_EVENT_PIPE_KNOCKBACK:
+                for (uint32 i = BG_DS_NPC_PIPE_KNOCKBACK_1; i <= BG_DS_NPC_PIPE_KNOCKBACK_2; ++i)
+                    if (Creature* waterSpout = GetBGCreature(i))
+                        waterSpout->CastSpell(waterSpout, BG_DS_SPELL_FLUSH, true);
+                break;
         }
     }
 
@@ -161,7 +162,7 @@ void BattlegroundDS::HandleAreaTrigger(Player* player, uint32 trigger)
         case 5344: // -60
             player->NearTeleportTo(1330.0f, 800.0f, 3.16f, player->GetOrientation());
             break;
-        /*default:
+            /*default:
             Battleground::HandleAreaTrigger(player, trigger);
             break;*/
     }
@@ -175,28 +176,126 @@ bool BattlegroundDS::HandlePlayerUnderMap(Player* player)
 
 void BattlegroundDS::FillInitialWorldStates(WorldPacket& data)
 {
-    data << uint32(3610) << uint32(1);                                              // 9 show
+    data << uint32(3610) << uint32(1); // 9 show
     Arena::FillInitialWorldStates(data);
 }
 
 bool BattlegroundDS::SetupBattleground()
 {
     // gates
-    if (!AddObject(BG_DS_OBJECT_DOOR_1, BG_DS_OBJECT_TYPE_DOOR_1, 1350.95f, 817.2f, 20.8096f, 3.15f, 0, 0, 0.99627f, 0.0862864f, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_DS_OBJECT_DOOR_2, BG_DS_OBJECT_TYPE_DOOR_2, 1232.65f, 764.913f, 20.0729f, 6.3f, 0, 0, 0.0310211f, -0.999519f, RESPAWN_IMMEDIATELY)
-            // water
-            || !AddObject(BG_DS_OBJECT_WATER_1, BG_DS_OBJECT_TYPE_WATER_1, 1291.56f, 790.837f, 7.1f, 3.14238f, 0, 0, 0.694215f, -0.719768f, 120)
-            || !AddObject(BG_DS_OBJECT_WATER_2, BG_DS_OBJECT_TYPE_WATER_2, 1291.56f, 790.837f, 7.1f, 3.14238f, 0, 0, 0.694215f, -0.719768f, 120)
-            // buffs
-            || !AddObject(BG_DS_OBJECT_BUFF_1, BG_DS_OBJECT_TYPE_BUFF_1, 1291.7f, 813.424f, 7.11472f, 4.64562f, 0, 0, 0.730314f, -0.683111f, 120)
-            || !AddObject(BG_DS_OBJECT_BUFF_2, BG_DS_OBJECT_TYPE_BUFF_2, 1291.7f, 768.911f, 7.11472f, 1.55194f, 0, 0, 0.700409f, 0.713742f, 120)
-            // knockback creatures
-            || !AddCreature(BG_DS_NPC_TYPE_WATER_SPOUT, BG_DS_NPC_WATERFALL_KNOCKBACK, 1291.76f, 791.02f, 7.115f, 3.054326f, RESPAWN_IMMEDIATELY)
-            || !AddCreature(BG_DS_NPC_TYPE_WATER_SPOUT, BG_DS_NPC_PIPE_KNOCKBACK_1, 1369.977f, 817.2882f, 16.08718f, 3.106686f, RESPAWN_IMMEDIATELY)
-            || !AddCreature(BG_DS_NPC_TYPE_WATER_SPOUT, BG_DS_NPC_PIPE_KNOCKBACK_2, 1212.833f, 765.3871f, 16.09484f, 0.0f, RESPAWN_IMMEDIATELY)
-            // Arena Ready Marker
-            || !AddObject(BG_DS_OBJECT_READY_MARKER_1, ARENA_READY_MARKER_ENTRY, 1229.44f, 759.35f, 17.89f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 300)
-            || !AddObject(BG_DS_OBJECT_READY_MARKER_2, ARENA_READY_MARKER_ENTRY, 1352.90f, 822.77f, 17.96f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 300))
+    if (!AddObject(BG_DS_OBJECT_DOOR_1,
+            BG_DS_OBJECT_TYPE_DOOR_1,
+            1350.95f,
+            817.2f,
+            20.8096f,
+            3.15f,
+            0,
+            0,
+            0.99627f,
+            0.0862864f,
+            RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_DS_OBJECT_DOOR_2,
+            BG_DS_OBJECT_TYPE_DOOR_2,
+            1232.65f,
+            764.913f,
+            20.0729f,
+            6.3f,
+            0,
+            0,
+            0.0310211f,
+            -0.999519f,
+            RESPAWN_IMMEDIATELY)
+        // water
+        || !AddObject(BG_DS_OBJECT_WATER_1,
+               BG_DS_OBJECT_TYPE_WATER_1,
+               1291.56f,
+               790.837f,
+               7.1f,
+               3.14238f,
+               0,
+               0,
+               0.694215f,
+               -0.719768f,
+               120) ||
+        !AddObject(BG_DS_OBJECT_WATER_2,
+            BG_DS_OBJECT_TYPE_WATER_2,
+            1291.56f,
+            790.837f,
+            7.1f,
+            3.14238f,
+            0,
+            0,
+            0.694215f,
+            -0.719768f,
+            120)
+        // buffs
+        || !AddObject(BG_DS_OBJECT_BUFF_1,
+               BG_DS_OBJECT_TYPE_BUFF_1,
+               1291.7f,
+               813.424f,
+               7.11472f,
+               4.64562f,
+               0,
+               0,
+               0.730314f,
+               -0.683111f,
+               120) ||
+        !AddObject(BG_DS_OBJECT_BUFF_2,
+            BG_DS_OBJECT_TYPE_BUFF_2,
+            1291.7f,
+            768.911f,
+            7.11472f,
+            1.55194f,
+            0,
+            0,
+            0.700409f,
+            0.713742f,
+            120)
+        // knockback creatures
+        || !AddCreature(BG_DS_NPC_TYPE_WATER_SPOUT,
+               BG_DS_NPC_WATERFALL_KNOCKBACK,
+               1291.76f,
+               791.02f,
+               7.115f,
+               3.054326f,
+               RESPAWN_IMMEDIATELY) ||
+        !AddCreature(BG_DS_NPC_TYPE_WATER_SPOUT,
+            BG_DS_NPC_PIPE_KNOCKBACK_1,
+            1369.977f,
+            817.2882f,
+            16.08718f,
+            3.106686f,
+            RESPAWN_IMMEDIATELY) ||
+        !AddCreature(BG_DS_NPC_TYPE_WATER_SPOUT,
+            BG_DS_NPC_PIPE_KNOCKBACK_2,
+            1212.833f,
+            765.3871f,
+            16.09484f,
+            0.0f,
+            RESPAWN_IMMEDIATELY)
+        // Arena Ready Marker
+        || !AddObject(BG_DS_OBJECT_READY_MARKER_1,
+               ARENA_READY_MARKER_ENTRY,
+               1229.44f,
+               759.35f,
+               17.89f,
+               0.0f,
+               0.0f,
+               0.0f,
+               0.0f,
+               0.0f,
+               300) ||
+        !AddObject(BG_DS_OBJECT_READY_MARKER_2,
+            ARENA_READY_MARKER_ENTRY,
+            1352.90f,
+            822.77f,
+            17.96f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            300))
     {
         LOG_ERROR("sql.sql", "BatteGroundDS: Failed to spawn some object!");
         return false;

@@ -18,45 +18,45 @@
 #include "AchievementCriteriaScript.h"
 #include "CreatureScript.h"
 #include "ScriptedCreature.h"
+#include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "gundrak.h"
-#include "SpellScript.h"
 
 enum Spells
 {
-    SPELL_START_VISUAL                  = 54988,
-    SPELL_ENRAGE                        = 55285,
-    SPELL_IMPALING_CHARGE               = 54956,
-    SPELL_IMPALING_CHARGE_VEHICLE       = 54958,
-    SPELL_STOMP                         = 55292,
-    SPELL_PUNCTURE                      = 55276,
-    SPELL_STAMPEDE                      = 55218,
-    SPELL_STAMPEDE_DMG                  = 55220,
-    SPELL_WHIRLING_SLASH                = 55250,
-    SPELL_TRANSFORM_TO_RHINO            = 55297,
-    SPELL_TRANSFORM_TO_TROLL            = 55299
+    SPELL_START_VISUAL = 54988,
+    SPELL_ENRAGE = 55285,
+    SPELL_IMPALING_CHARGE = 54956,
+    SPELL_IMPALING_CHARGE_VEHICLE = 54958,
+    SPELL_STOMP = 55292,
+    SPELL_PUNCTURE = 55276,
+    SPELL_STAMPEDE = 55218,
+    SPELL_STAMPEDE_DMG = 55220,
+    SPELL_WHIRLING_SLASH = 55250,
+    SPELL_TRANSFORM_TO_RHINO = 55297,
+    SPELL_TRANSFORM_TO_TROLL = 55299
 };
 
 enum Yells
 {
-    SAY_AGGRO                           = 0,
-    SAY_SLAY                            = 1,
-    SAY_DEATH                           = 2,
-    SAY_SUMMON_RHINO                    = 3,
-    SAY_TRANSFORM_1                     = 4,
-    SAY_TRANSFORM_2                     = 5
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_DEATH = 2,
+    SAY_SUMMON_RHINO = 3,
+    SAY_TRANSFORM_1 = 4,
+    SAY_TRANSFORM_2 = 5
 };
 
 enum Events
 {
-    EVENT_STAMPEDE                      = 1,
-    EVENT_WHIRLING_SLASH                = 2,
-    EVENT_PUNCTURE                      = 3,
-    EVENT_ENRAGE                        = 4,
-    EVENT_IMPALING_CHARGE               = 5,
-    EVENT_UNSUMMON_RHINO                = 6,
-    EVENT_STOMP                         = 7,
-    EVENT_KILL_TALK                     = 8
+    EVENT_STAMPEDE = 1,
+    EVENT_WHIRLING_SLASH = 2,
+    EVENT_PUNCTURE = 3,
+    EVENT_ENRAGE = 4,
+    EVENT_IMPALING_CHARGE = 5,
+    EVENT_UNSUMMON_RHINO = 6,
+    EVENT_STOMP = 7,
+    EVENT_KILL_TALK = 8
 };
 
 class boss_gal_darah : public CreatureScript
@@ -71,9 +71,7 @@ public:
 
     struct boss_gal_darahAI : public BossAI
     {
-        boss_gal_darahAI(Creature* creature) : BossAI(creature, DATA_GAL_DARAH)
-        {
-        }
+        boss_gal_darahAI(Creature* creature) : BossAI(creature, DATA_GAL_DARAH) { }
 
         uint8 phaseCounter;
         GuidSet impaledList;
@@ -136,7 +134,7 @@ public:
             summon->DespawnOrUnsummon(despawnTime);
         }
 
-        uint32 GetData(uint32  /*type*/) const override
+        uint32 GetData(uint32 /*type*/) const override
         {
             return impaledList.size();
         }
@@ -226,7 +224,7 @@ class spell_galdarah_impaling_charge : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_IMPALING_CHARGE_VEHICLE });
+        return ValidateSpellInfo({SPELL_IMPALING_CHARGE_VEHICLE});
     }
 
     void HandleApplyAura(SpellEffIndex /*effIndex*/)
@@ -237,7 +235,8 @@ class spell_galdarah_impaling_charge : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_galdarah_impaling_charge::HandleApplyAura, EFFECT_1, SPELL_EFFECT_APPLY_AURA);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_galdarah_impaling_charge::HandleApplyAura, EFFECT_1, SPELL_EFFECT_APPLY_AURA);
     }
 };
 
@@ -247,7 +246,7 @@ class spell_galdarah_transform : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_TRANSFORM_TO_RHINO });
+        return ValidateSpellInfo({SPELL_TRANSFORM_TO_RHINO});
     }
 
     void HandleScriptEffect(SpellEffIndex /*effIndex*/)
@@ -258,16 +257,15 @@ class spell_galdarah_transform : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_galdarah_transform::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_galdarah_transform::HandleScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
 class achievement_share_the_love : public AchievementCriteriaScript
 {
 public:
-    achievement_share_the_love() : AchievementCriteriaScript("achievement_share_the_love")
-    {
-    }
+    achievement_share_the_love() : AchievementCriteriaScript("achievement_share_the_love") { }
 
     bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {

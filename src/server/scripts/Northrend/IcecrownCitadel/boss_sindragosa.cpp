@@ -21,84 +21,84 @@
 #include "GameTime.h"
 #include "GridNotifiers.h"
 #include "ObjectMgr.h"
+#include "PassiveAI.h"
 #include "Player.h"
 #include "ScriptedCreature.h"
+#include "SpellAuraEffects.h"
 #include "SpellScriptLoader.h"
 #include "icecrown_citadel.h"
-#include "PassiveAI.h"
-#include "SpellAuraEffects.h"
 
 enum Texts
 {
-    SAY_AGGRO                           = 0, // You are fools to have come to this place! The icy winds of Northrend will consume your souls!
-    SAY_UNCHAINED_MAGIC                 = 1, // Suffer, mortals, as your pathetic magic betrays you!
-    EMOTE_WARN_BLISTERING_COLD          = 2, // %s prepares to unleash a wave of blistering cold!
-    SAY_BLISTERING_COLD                 = 3, // Can you feel the cold hand of death upon your heart?
-    SAY_RESPITE_FOR_A_TORMENTED_SOUL    = 4, // Aaah! It burns! What sorcery is this?!
-    SAY_AIR_PHASE                       = 5, // Your incursion ends here! None shall survive!
-    SAY_PHASE_2                         = 6, // Now feel my master's limitless power and despair!
-    EMOTE_WARN_FROZEN_ORB               = 7, // %s fires a frozen orb towards $N!
-    SAY_KILL                            = 8, // Perish!
+    SAY_AGGRO = 0, // You are fools to have come to this place! The icy winds of Northrend will consume your souls!
+    SAY_UNCHAINED_MAGIC = 1,              // Suffer, mortals, as your pathetic magic betrays you!
+    EMOTE_WARN_BLISTERING_COLD = 2,       // %s prepares to unleash a wave of blistering cold!
+    SAY_BLISTERING_COLD = 3,              // Can you feel the cold hand of death upon your heart?
+    SAY_RESPITE_FOR_A_TORMENTED_SOUL = 4, // Aaah! It burns! What sorcery is this?!
+    SAY_AIR_PHASE = 5,                    // Your incursion ends here! None shall survive!
+    SAY_PHASE_2 = 6,                      // Now feel my master's limitless power and despair!
+    EMOTE_WARN_FROZEN_ORB = 7,            // %s fires a frozen orb towards $N!
+    SAY_KILL = 8,                         // Perish!
     // A flaw of mortality...
-    SAY_BERSERK                         = 9, // Enough! I tire of these games!
-    SAY_DEATH                           = 10, // Free...at last...
-    EMOTE_BERSERK_RAID                  = 11,
-    EMOTE_WEAKENING                     = 101, // %s appears to be weakening!
+    SAY_BERSERK = 9, // Enough! I tire of these games!
+    SAY_DEATH = 10,  // Free...at last...
+    EMOTE_BERSERK_RAID = 11,
+    EMOTE_WEAKENING = 101, // %s appears to be weakening!
 };
 
 enum Spells
 {
     // Sindragosa
-    SPELL_SINDRAGOSA_S_FURY     = 70608,
-    SPELL_TANK_MARKER           = 71039,
-    SPELL_TANK_MARKER_AURA      = 71038,
-    SPELL_FROST_AURA            = 70084,
-    SPELL_PERMAEATING_CHILL     = 70109,
-    SPELL_CLEAVE                = 19983,
-    SPELL_TAIL_SMASH            = 71077,
-    SPELL_FROST_BREATH_P1       = 69649,
-    SPELL_FROST_BREATH_P2       = 73061,
-    SPELL_UNCHAINED_MAGIC       = 69762,
-    SPELL_INSTABILITY           = 69766,
-    SPELL_BACKLASH              = 69770,
-    SPELL_ICY_GRIP              = 70117,
-    SPELL_ICY_GRIP_JUMP         = 70122,
-    SPELL_BLISTERING_COLD       = 70123,
-    SPELL_FROST_BEACON          = 70126,
-    SPELL_ICE_TOMB_TARGET       = 69712,
-    SPELL_ICE_TOMB_DUMMY        = 69675,
+    SPELL_SINDRAGOSA_S_FURY = 70608,
+    SPELL_TANK_MARKER = 71039,
+    SPELL_TANK_MARKER_AURA = 71038,
+    SPELL_FROST_AURA = 70084,
+    SPELL_PERMAEATING_CHILL = 70109,
+    SPELL_CLEAVE = 19983,
+    SPELL_TAIL_SMASH = 71077,
+    SPELL_FROST_BREATH_P1 = 69649,
+    SPELL_FROST_BREATH_P2 = 73061,
+    SPELL_UNCHAINED_MAGIC = 69762,
+    SPELL_INSTABILITY = 69766,
+    SPELL_BACKLASH = 69770,
+    SPELL_ICY_GRIP = 70117,
+    SPELL_ICY_GRIP_JUMP = 70122,
+    SPELL_BLISTERING_COLD = 70123,
+    SPELL_FROST_BEACON = 70126,
+    SPELL_ICE_TOMB_TARGET = 69712,
+    SPELL_ICE_TOMB_DUMMY = 69675,
     SPELL_ICE_TOMB_UNTARGETABLE = 69700,
-    SPELL_ICE_TOMB_DAMAGE       = 70157,
-    SPELL_ASPHYXIATION          = 71665,
-    SPELL_FROST_BOMB_TRIGGER    = 69846,
-    SPELL_FROST_BOMB_VISUAL     = 70022,
-    SPELL_BIRTH_NO_VISUAL       = 40031,
-    SPELL_FROST_BOMB            = 69845,
-    SPELL_MYSTIC_BUFFET         = 70128,
+    SPELL_ICE_TOMB_DAMAGE = 70157,
+    SPELL_ASPHYXIATION = 71665,
+    SPELL_FROST_BOMB_TRIGGER = 69846,
+    SPELL_FROST_BOMB_VISUAL = 70022,
+    SPELL_BIRTH_NO_VISUAL = 40031,
+    SPELL_FROST_BOMB = 69845,
+    SPELL_MYSTIC_BUFFET = 70128,
 
     // Spinestalker
-    SPELL_BELLOWING_ROAR        = 36922,
-    SPELL_CLEAVE_SPINESTALKER   = 40505,
-    SPELL_TAIL_SWEEP            = 71370,
+    SPELL_BELLOWING_ROAR = 36922,
+    SPELL_CLEAVE_SPINESTALKER = 40505,
+    SPELL_TAIL_SWEEP = 71370,
 
     // Rimefang
-    SPELL_FROST_BREATH          = 71386,
-    SPELL_FROST_AURA_RIMEFANG   = 71387,
-    SPELL_ICY_BLAST             = 71376,
-    SPELL_ICY_BLAST_AREA        = 71380,
+    SPELL_FROST_BREATH = 71386,
+    SPELL_FROST_AURA_RIMEFANG = 71387,
+    SPELL_ICY_BLAST = 71376,
+    SPELL_ICY_BLAST_AREA = 71380,
 
     // Frostwarden Handler
-    SPELL_FOCUS_FIRE            = 71350,
-    SPELL_ORDER_WHELP           = 71357,
-    SPELL_CONCUSSIVE_SHOCK      = 71337,
+    SPELL_FOCUS_FIRE = 71350,
+    SPELL_ORDER_WHELP = 71357,
+    SPELL_CONCUSSIVE_SHOCK = 71337,
 };
 
 enum Shadowmourne
 {
-    QUEST_FROST_INFUSION        = 24757,
+    QUEST_FROST_INFUSION = 24757,
     SPELL_FROST_INFUSION_CREDIT = 72289,
-    SPELL_FROST_IMBUED_BLADE    = 72290,
-    SPELL_FROST_INFUSION        = 72292,
+    SPELL_FROST_IMBUED_BLADE = 72290,
+    SPELL_FROST_INFUSION = 72292,
 };
 
 enum Events
@@ -125,52 +125,52 @@ enum Events
     EVENT_ICE_TOMB,
 
     // Spinestalker
-    EVENT_BELLOWING_ROAR            = 13,
-    EVENT_CLEAVE_SPINESTALKER       = 14,
-    EVENT_TAIL_SWEEP                = 15,
+    EVENT_BELLOWING_ROAR = 13,
+    EVENT_CLEAVE_SPINESTALKER = 14,
+    EVENT_TAIL_SWEEP = 15,
 
     // Rimefang
-    EVENT_FROST_BREATH_RIMEFANG     = 16,
-    EVENT_ICY_BLAST                 = 17,
-    EVENT_ICY_BLAST_CAST            = 18,
+    EVENT_FROST_BREATH_RIMEFANG = 16,
+    EVENT_ICY_BLAST = 17,
+    EVENT_ICY_BLAST_CAST = 18,
 
     // Trash
-    EVENT_FROSTWARDEN_ORDER_WHELP   = 19,
-    EVENT_CONCUSSIVE_SHOCK          = 20,
-    EVENT_WHELP_FROST_BLAST         = 21,
+    EVENT_FROSTWARDEN_ORDER_WHELP = 19,
+    EVENT_CONCUSSIVE_SHOCK = 20,
+    EVENT_WHELP_FROST_BLAST = 21,
 
     // event groups
-    EVENT_GROUP_LAND_PHASE          = 1,
+    EVENT_GROUP_LAND_PHASE = 1,
 };
 
 enum FrostwingData
 {
-    DATA_MYSTIC_BUFFET_STACK    = 0,
-    DATA_FROSTWYRM_OWNER        = 1,
-    DATA_WHELP_MARKER           = 2,
-    DATA_LINKED_GAMEOBJECT      = 3,
-    DATA_TRAPPED_PLAYER         = 4,
+    DATA_MYSTIC_BUFFET_STACK = 0,
+    DATA_FROSTWYRM_OWNER = 1,
+    DATA_WHELP_MARKER = 2,
+    DATA_LINKED_GAMEOBJECT = 3,
+    DATA_TRAPPED_PLAYER = 4,
 };
 
 enum MovementPoints
 {
-    POINT_FROSTWYRM_FLY_IN  = 1,
-    POINT_FROSTWYRM_LAND    = 2,
-    POINT_AIR_PHASE         = 3,
-    POINT_TAKEOFF           = 4,
-    POINT_LAND              = 5,
-    POINT_AIR_PHASE_FAR     = 6,
-    POINT_LAND_GROUND       = 7,
-    POINT_CHASE_VICTIM      = 8,
+    POINT_FROSTWYRM_FLY_IN = 1,
+    POINT_FROSTWYRM_LAND = 2,
+    POINT_AIR_PHASE = 3,
+    POINT_TAKEOFF = 4,
+    POINT_LAND = 5,
+    POINT_AIR_PHASE_FAR = 6,
+    POINT_LAND_GROUND = 7,
+    POINT_CHASE_VICTIM = 8,
 };
 
-Position const RimefangFlyPos      = {4413.309f, 2456.421f, 233.3795f, 2.890186f};
-Position const RimefangLandPos     = {4413.309f, 2456.421f, 203.3848f, 2.890186f};
-Position const SpinestalkerFlyPos  = {4418.895f, 2514.233f, 230.4864f, 3.396045f};
+Position const RimefangFlyPos = {4413.309f, 2456.421f, 233.3795f, 2.890186f};
+Position const RimefangLandPos = {4413.309f, 2456.421f, 203.3848f, 2.890186f};
+Position const SpinestalkerFlyPos = {4418.895f, 2514.233f, 230.4864f, 3.396045f};
 Position const SpinestalkerLandPos = {4418.895f, 2514.233f, 203.3848f, 3.396045f};
-Position const SindragosaFlyInPos  = {4420.190f, 2484.360f, 232.5150f, 3.141593f};
-Position const SindragosaLandPos   = {4419.190f, 2484.570f, 203.3848f, 3.141593f};
-Position const SindragosaAirPos    = {4475.990f, 2484.430f, 247.9340f, 3.141593f};
+Position const SindragosaFlyInPos = {4420.190f, 2484.360f, 232.5150f, 3.141593f};
+Position const SindragosaLandPos = {4419.190f, 2484.570f, 203.3848f, 3.141593f};
+Position const SindragosaAirPos = {4475.990f, 2484.430f, 247.9340f, 3.141593f};
 Position const SindragosaAirPosFar = {4525.600f, 2485.150f, 245.0820f, 3.141593f};
 
 class FrostwyrmLandEvent : public BasicEvent
@@ -227,7 +227,16 @@ public:
             {
                 summon->AI()->SetGUID(_owner->GetGUID(), DATA_TRAPPED_PLAYER);
                 _owner->CastSpell(_owner, SPELL_ICE_TOMB_UNTARGETABLE, true);
-                if (GameObject* go = summon->SummonGameObject(GO_ICE_BLOCK, pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation(), 0.0f, 0.0f, 0.0f, 0.0f, 0))
+                if (GameObject* go = summon->SummonGameObject(GO_ICE_BLOCK,
+                        pos.GetPositionX(),
+                        pos.GetPositionY(),
+                        pos.GetPositionZ(),
+                        pos.GetOrientation(),
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        0.0f,
+                        0))
                 {
                     go->SetSpellId(SPELL_ICE_TOMB_DAMAGE);
                     summon->AddGameObject(go);
@@ -246,6 +255,7 @@ struct LastPhaseIceTombTargetSelector
 {
 public:
     LastPhaseIceTombTargetSelector(Creature* source) : _source(source) { }
+
     bool operator()(Unit const* target) const
     {
         if (!target)
@@ -260,7 +270,9 @@ public:
         if (target->HasAura(SPELL_FROST_IMBUED_BLADE))
             return false;
 
-        if (target->IsImmunedToDamageOrSchool(SPELL_SCHOOL_MASK_ALL) || target->HasAura(SPELL_ICE_TOMB_UNTARGETABLE) || target->HasAura(SPELL_ICE_TOMB_DAMAGE) || target->HasAura(SPELL_TANK_MARKER_AURA) || target->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
+        if (target->IsImmunedToDamageOrSchool(SPELL_SCHOOL_MASK_ALL) || target->HasAura(SPELL_ICE_TOMB_UNTARGETABLE) ||
+            target->HasAura(SPELL_ICE_TOMB_DAMAGE) || target->HasAura(SPELL_TANK_MARKER_AURA) ||
+            target->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
             return false;
 
         return target != _source->GetVictim();
@@ -384,13 +396,12 @@ public:
                 me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 me->SetSpeed(MOVE_RUN, 4.28571f);
                 float moveTime = me->GetExactDist(&SindragosaFlyInPos) / (me->GetSpeed(MOVE_RUN) * 0.001f);
-                me->m_Events.AddEvent(new FrostwyrmLandEvent(*me, SindragosaLandPos), me->m_Events.CalculateTime(uint64(moveTime) + 250));
+                me->m_Events.AddEvent(
+                    new FrostwyrmLandEvent(*me, SindragosaLandPos), me->m_Events.CalculateTime(uint64(moveTime) + 250));
                 me->GetMotionMaster()->MovePoint(POINT_FROSTWYRM_FLY_IN, SindragosaFlyInPos);
 
                 if (!instance->GetData(DATA_SINDRAGOSA_INTRO))
-                {
                     DoCastAOE(SPELL_SINDRAGOSA_S_FURY);
-                }
             }
         }
 
@@ -422,9 +433,11 @@ public:
                     events.ScheduleEvent(EVENT_AIR_MOVEMENT, 0ms);
                     break;
                 case POINT_AIR_PHASE:
-                    me->CastCustomSpell(SPELL_ICE_TOMB_TARGET, SPELLVALUE_MAX_TARGETS, RAID_MODE<int32>(2, 5, 2, 6), nullptr);
+                    me->CastCustomSpell(
+                        SPELL_ICE_TOMB_TARGET, SPELLVALUE_MAX_TARGETS, RAID_MODE<int32>(2, 5, 2, 6), nullptr);
                     me->SetFacingTo(float(M_PI));
-                    events.ScheduleEvent(EVENT_AIR_MOVEMENT_FAR, 0ms); // won't be processed during cast time anyway, so 0
+                    events.ScheduleEvent(
+                        EVENT_AIR_MOVEMENT_FAR, 0ms); // won't be processed during cast time anyway, so 0
                     events.ScheduleEvent(EVENT_FROST_BOMB, 7s);
                     _bombCount = 0;
                     break;
@@ -435,15 +448,15 @@ public:
                     events.ScheduleEvent(EVENT_LAND_GROUND, 0ms);
                     break;
                 case POINT_LAND_GROUND:
-                    {
-                        _isInAirPhase = false;
-                        me->SetDisableGravity(false);
-                        me->SetSpeed(MOVE_RUN, me->GetCreatureTemplate()->speed_run);
-                        me->SetReactState(REACT_AGGRESSIVE);
-                        if (Unit* target = me->SelectVictim())
-                            AttackStart(target);
-                        break;
-                    }
+                {
+                    _isInAirPhase = false;
+                    me->SetDisableGravity(false);
+                    me->SetSpeed(MOVE_RUN, me->GetCreatureTemplate()->speed_run);
+                    me->SetReactState(REACT_AGGRESSIVE);
+                    if (Unit* target = me->SelectVictim())
+                        AttackStart(target);
+                    break;
+                }
                 default:
                     break;
             }
@@ -478,7 +491,8 @@ public:
         {
             summons.Summon(summon);
             if (summon->GetEntry() == NPC_FROST_BOMB)
-                summon->m_Events.AddEvent(new FrostBombExplosion(summon, me->GetGUID()), summon->m_Events.CalculateTime(5500));
+                summon->m_Events.AddEvent(
+                    new FrostBombExplosion(summon, me->GetGUID()), summon->m_Events.CalculateTime(5500));
         }
 
         void SummonedCreatureDespawn(Creature* summon) override
@@ -531,7 +545,8 @@ public:
                     me->DisableRotate(true);
                     me->SetControlled(true, UNIT_STATE_ROOT);
                     me->SendMovementFlagUpdate();
-                    me->CastSpell(me->GetVictim(), _isThirdPhase ? SPELL_FROST_BREATH_P2 : SPELL_FROST_BREATH_P1, false);
+                    me->CastSpell(
+                        me->GetVictim(), _isThirdPhase ? SPELL_FROST_BREATH_P2 : SPELL_FROST_BREATH_P1, false);
                     events.DelayEventsToMax(1, 0);
                     events.ScheduleEvent(EVENT_UNROOT, 0ms);
                     events.ScheduleEvent(EVENT_FROST_BREATH, 20s, 25s, EVENT_GROUP_LAND_PHASE);
@@ -583,7 +598,8 @@ public:
                     me->GetMotionMaster()->MoveIdle();
                     me->StopMoving();
                     me->SetDisableGravity(true);
-                    me->GetMotionMaster()->MoveTakeoff(POINT_TAKEOFF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 20.0f, 10.0f);
+                    me->GetMotionMaster()->MoveTakeoff(
+                        POINT_TAKEOFF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ() + 20.0f, 10.0f);
                     events.CancelEventGroup(EVENT_GROUP_LAND_PHASE);
                     events.ScheduleEvent(EVENT_AIR_PHASE, 110s);
                     break;
@@ -594,36 +610,36 @@ public:
                     me->GetMotionMaster()->MovePoint(POINT_AIR_PHASE_FAR, SindragosaAirPosFar);
                     break;
                 case EVENT_FROST_BOMB:
+                {
+                    ++_bombCount;
+                    float destX, destY, destZ;
+                    std::list<GameObject*> gl;
+                    me->GetGameObjectListWithEntryInGrid(gl, GO_ICE_BLOCK, SIZE_OF_GRIDS);
+                    uint8 triesLeft = 10;
+                    do
                     {
-                        ++_bombCount;
-                        float destX, destY, destZ;
-                        std::list<GameObject*> gl;
-                        me->GetGameObjectListWithEntryInGrid(gl, GO_ICE_BLOCK, SIZE_OF_GRIDS);
-                        uint8 triesLeft = 10;
-                        do
-                        {
-                            destX = float(rand_norm()) * 75.0f + 4350.0f;
-                            destY = float(rand_norm()) * 75.0f + 2450.0f;
-                            destZ = 205.0f; // random number close to ground, get exact in next call
-                            me->UpdateGroundPositionZ(destX, destY, destZ);
-                            bool ok = true;
-                            for (std::list<GameObject*>::const_iterator itr = gl.begin(); itr != gl.end(); ++itr)
-                                if ((*itr)->GetExactDist2dSq(destX, destY) < 3.0f * 3.0f)
-                                {
-                                    ok = false;
-                                    break;
-                                }
-                            if (ok)
+                        destX = float(rand_norm()) * 75.0f + 4350.0f;
+                        destY = float(rand_norm()) * 75.0f + 2450.0f;
+                        destZ = 205.0f; // random number close to ground, get exact in next call
+                        me->UpdateGroundPositionZ(destX, destY, destZ);
+                        bool ok = true;
+                        for (std::list<GameObject*>::const_iterator itr = gl.begin(); itr != gl.end(); ++itr)
+                            if ((*itr)->GetExactDist2dSq(destX, destY) < 3.0f * 3.0f)
+                            {
+                                ok = false;
                                 break;
-                        } while (--triesLeft);
+                            }
+                        if (ok)
+                            break;
+                    } while (--triesLeft);
 
-                        me->CastSpell(destX, destY, destZ, SPELL_FROST_BOMB_TRIGGER, false);
-                        if (_bombCount >= 4)
-                            events.ScheduleEvent(EVENT_LAND, 5500ms);
-                        else
-                            events.ScheduleEvent(EVENT_FROST_BOMB, 6s);
-                        break;
-                    }
+                    me->CastSpell(destX, destY, destZ, SPELL_FROST_BOMB_TRIGGER, false);
+                    if (_bombCount >= 4)
+                        events.ScheduleEvent(EVENT_LAND, 5500ms);
+                    else
+                        events.ScheduleEvent(EVENT_FROST_BOMB, 6s);
+                    break;
+                }
                 case EVENT_LAND:
                     me->GetMotionMaster()->MovePoint(POINT_LAND, SindragosaFlyInPos);
                     break;
@@ -662,8 +678,14 @@ public:
                     break;
             }
 
-            if (me->GetVictim() && me->IsWithinMeleeRange(me->GetVictim()) && me->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE && !me->IsWithinLOSInMap(me->GetVictim()))
-                me->GetMotionMaster()->MoveCharge(me->GetVictim()->GetPositionX(), me->GetVictim()->GetPositionY(), me->GetVictim()->GetPositionZ(), me->GetSpeed(MOVE_RUN), POINT_CHASE_VICTIM);
+            if (me->GetVictim() && me->IsWithinMeleeRange(me->GetVictim()) &&
+                me->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE &&
+                !me->IsWithinLOSInMap(me->GetVictim()))
+                me->GetMotionMaster()->MoveCharge(me->GetVictim()->GetPositionX(),
+                    me->GetVictim()->GetPositionY(),
+                    me->GetVictim()->GetPositionZ(),
+                    me->GetSpeed(MOVE_RUN),
+                    POINT_CHASE_VICTIM);
             DoMeleeAttackIfReady();
         }
 
@@ -807,7 +829,8 @@ class spell_sindragosa_s_fury : public SpellScript
     {
         PreventHitDefaultEffect(effIndex);
 
-        if (!GetHitUnit()->IsAlive() || (GetHitUnit()->IsPlayer() && GetHitUnit()->ToPlayer()->IsGameMaster()) || !_targetCount)
+        if (!GetHitUnit()->IsAlive() || (GetHitUnit()->IsPlayer() && GetHitUnit()->ToPlayer()->IsGameMaster()) ||
+            !_targetCount)
             return;
 
         float resistance = float(GetHitUnit()->GetResistance(SpellSchoolMask(GetSpellInfo()->SchoolMask)));
@@ -815,7 +838,7 @@ class spell_sindragosa_s_fury : public SpellScript
         if (ResistFactor > 0.9f)
             ResistFactor = 0.9f;
 
-        uint32 damage = uint32( (GetEffectValue() / _targetCount) * (1.0f - ResistFactor));
+        uint32 damage = uint32((GetEffectValue() / _targetCount) * (1.0f - ResistFactor));
 
         SpellNonMeleeDamage damageInfo(GetCaster(), GetHitUnit(), GetSpellInfo(), GetSpellInfo()->SchoolMask);
         damageInfo.damage = damage;
@@ -826,7 +849,8 @@ class spell_sindragosa_s_fury : public SpellScript
     void Register() override
     {
         BeforeCast += SpellCastFn(spell_sindragosa_s_fury::SelectDest);
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_sindragosa_s_fury::CountTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ENTRY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_sindragosa_s_fury::CountTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ENTRY);
         OnEffectHitTarget += SpellEffectFn(spell_sindragosa_s_fury::HandleDummy, EFFECT_1, SPELL_EFFECT_DUMMY);
     }
 
@@ -848,15 +872,19 @@ public:
             if (p->IsClass(CLASS_HUNTER))
                 return true;
             uint8 maxIndex = p->GetMostPointsTalentTree();
-            if ((p->IsClass(CLASS_PALADIN) && maxIndex >= 1) || (p->IsClass(CLASS_SHAMAN) && maxIndex == 1) || (p->IsClass(CLASS_DRUID) && maxIndex == 1))
+            if ((p->IsClass(CLASS_PALADIN) && maxIndex >= 1) || (p->IsClass(CLASS_SHAMAN) && maxIndex == 1) ||
+                (p->IsClass(CLASS_DRUID) && maxIndex == 1))
                 return true;
-            if (_removeHealers == ((p->IsClass(CLASS_DRUID) && maxIndex == 2) || (p->IsClass(CLASS_PALADIN) && maxIndex == 0) || (p->IsClass(CLASS_PRIEST) && maxIndex <= 1) || (p->IsClass(CLASS_SHAMAN) && maxIndex == 2)))
+            if (_removeHealers ==
+                ((p->IsClass(CLASS_DRUID) && maxIndex == 2) || (p->IsClass(CLASS_PALADIN) && maxIndex == 0) ||
+                    (p->IsClass(CLASS_PRIEST) && maxIndex <= 1) || (p->IsClass(CLASS_SHAMAN) && maxIndex == 2)))
                 return true;
 
             return false;
         }
         return true;
     }
+
 private:
     bool _removeHealers;
 };
@@ -883,7 +911,8 @@ class spell_sindragosa_unchained_magic : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_sindragosa_unchained_magic::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_sindragosa_unchained_magic::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -908,18 +937,26 @@ class spell_sindragosa_instability_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_BACKLASH });
+        return ValidateSpellInfo({SPELL_BACKLASH});
     }
 
     void OnRemove(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
     {
         if (GetTargetApplication()->GetRemoveMode() == AURA_REMOVE_BY_EXPIRE)
-            GetTarget()->CastCustomSpell(SPELL_BACKLASH, SPELLVALUE_BASE_POINT0, aurEff->GetAmount(), GetTarget(), true, nullptr, aurEff, GetCasterGUID());
+            GetTarget()->CastCustomSpell(SPELL_BACKLASH,
+                SPELLVALUE_BASE_POINT0,
+                aurEff->GetAmount(),
+                GetTarget(),
+                true,
+                nullptr,
+                aurEff,
+                GetCasterGUID());
     }
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_sindragosa_instability_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(
+            spell_sindragosa_instability_aura::OnRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -929,7 +966,7 @@ class spell_sindragosa_icy_grip : public SpellScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_ICY_GRIP_JUMP });
+        return ValidateSpellInfo({SPELL_ICY_GRIP_JUMP});
     }
 
     void HandleScript(SpellEffIndex effIndex)
@@ -943,7 +980,8 @@ class spell_sindragosa_icy_grip : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_sindragosa_icy_grip::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_sindragosa_icy_grip::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -973,7 +1011,8 @@ class spell_sindragosa_icy_grip_jump : public SpellScript
 
     void Register() override
     {
-        OnEffectLaunchTarget += SpellEffectFn(spell_sindragosa_icy_grip_jump::HandleSpecial, EFFECT_0, SPELL_EFFECT_JUMP);
+        OnEffectLaunchTarget +=
+            SpellEffectFn(spell_sindragosa_icy_grip_jump::HandleSpecial, EFFECT_0, SPELL_EFFECT_JUMP);
     }
 };
 
@@ -983,7 +1022,7 @@ class spell_sindragosa_frost_beacon_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_ICE_TOMB_DAMAGE });
+        return ValidateSpellInfo({SPELL_ICE_TOMB_DAMAGE});
     }
 
     void PeriodicTick(AuraEffect const* /*aurEff*/)
@@ -995,7 +1034,8 @@ class spell_sindragosa_frost_beacon_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_sindragosa_frost_beacon_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_sindragosa_frost_beacon_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -1009,7 +1049,8 @@ public:
 
     bool operator()(WorldObject* object) const
     {
-        return object->ToUnit() && (object->ToUnit()->HasAura(SPELL_FROST_IMBUED_BLADE) || object->ToUnit()->IsImmunedToDamageOrSchool(SPELL_SCHOOL_MASK_ALL));
+        return object->ToUnit() && (object->ToUnit()->HasAura(SPELL_FROST_IMBUED_BLADE) ||
+                                       object->ToUnit()->IsImmunedToDamageOrSchool(SPELL_SCHOOL_MASK_ALL));
     }
 };
 
@@ -1024,7 +1065,8 @@ class spell_sindragosa_ice_tomb_filter : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_sindragosa_ice_tomb_filter::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_sindragosa_ice_tomb_filter::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -1056,8 +1098,10 @@ class spell_sindragosa_ice_tomb_trap : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_sindragosa_ice_tomb_trap::FilterTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ENEMY);
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_sindragosa_ice_tomb_trap::FilterTargetsSubseq, EFFECT_2, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_sindragosa_ice_tomb_trap::FilterTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_sindragosa_ice_tomb_trap::FilterTargetsSubseq, EFFECT_2, TARGET_UNIT_DEST_AREA_ENEMY);
     }
 
 private:
@@ -1070,7 +1114,7 @@ class spell_sindragosa_ice_tomb_trap_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_ASPHYXIATION, SPELL_ICE_TOMB_UNTARGETABLE });
+        return ValidateSpellInfo({SPELL_ASPHYXIATION, SPELL_ICE_TOMB_UNTARGETABLE});
     }
 
     void PeriodicTick(AuraEffect const* /*aurEff*/)
@@ -1081,7 +1125,8 @@ class spell_sindragosa_ice_tomb_trap_aura : public AuraScript
     void AfterApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
     {
         if (Unit* c = GetCaster())
-            GetTarget()->m_Events.AddEvent(new IceTombSummonEvent(GetTarget(), c->GetGUID()), GetTarget()->m_Events.CalculateTime(500));
+            GetTarget()->m_Events.AddEvent(
+                new IceTombSummonEvent(GetTarget(), c->GetGUID()), GetTarget()->m_Events.CalculateTime(500));
     }
 
     void ExtraRemoveEffect(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -1092,9 +1137,14 @@ class spell_sindragosa_ice_tomb_trap_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_sindragosa_ice_tomb_trap_aura::PeriodicTick, EFFECT_2, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
-        AfterEffectRemove += AuraEffectRemoveFn(spell_sindragosa_ice_tomb_trap_aura::ExtraRemoveEffect, EFFECT_1, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
-        AfterEffectApply += AuraEffectApplyFn(spell_sindragosa_ice_tomb_trap_aura::AfterApply, EFFECT_1, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_sindragosa_ice_tomb_trap_aura::PeriodicTick, EFFECT_2, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_sindragosa_ice_tomb_trap_aura::ExtraRemoveEffect,
+            EFFECT_1,
+            SPELL_AURA_MOD_STUN,
+            AURA_EFFECT_HANDLE_REAL);
+        AfterEffectApply += AuraEffectApplyFn(
+            spell_sindragosa_ice_tomb_trap_aura::AfterApply, EFFECT_1, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -1117,7 +1167,14 @@ public:
         float ox, oy, oz;
         _caster->GetPosition(ox, oy, oz);
         DynamicMapTree const& dTree = unit->GetMap()->GetDynamicMapTree();
-        return !dTree.isInLineOfSight(unit->GetPositionX(), unit->GetPositionY(), unit->GetPositionZ() + 2.f, ox, oy, oz + 2.f, unit->GetPhaseMask(), VMAP::ModelIgnoreFlags::Nothing);
+        return !dTree.isInLineOfSight(unit->GetPositionX(),
+            unit->GetPositionY(),
+            unit->GetPositionZ() + 2.f,
+            ox,
+            oy,
+            oz + 2.f,
+            unit->GetPhaseMask(),
+            VMAP::ModelIgnoreFlags::Nothing);
     }
 
 private:
@@ -1135,7 +1192,8 @@ class spell_sindragosa_mystic_buffet : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_sindragosa_mystic_buffet::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_sindragosa_mystic_buffet::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -1145,10 +1203,10 @@ class spell_sindragosa_soul_preservation_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ 72466, 72424 });
+        return ValidateSpellInfo({72466, 72424});
     }
 
-    void PeriodicTick(AuraEffect const*  /*aurEff*/)
+    void PeriodicTick(AuraEffect const* /*aurEff*/)
     {
         PreventDefaultAction();
         if (Unit* s = GetTarget())
@@ -1156,14 +1214,16 @@ class spell_sindragosa_soul_preservation_aura : public AuraScript
             {
                 s->CastSpell(s, 72466, true);
                 s->RemoveAurasDueToSpell(72424);
-                if (s->IsCreature()) s->ToCreature()->SetLootMode(3);
+                if (s->IsCreature())
+                    s->ToCreature()->SetLootMode(3);
                 SetDuration(1);
             }
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_sindragosa_soul_preservation_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_sindragosa_soul_preservation_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -1187,15 +1247,18 @@ public:
 
     struct npc_spinestalkerAI : public ScriptedAI
     {
-        npc_spinestalkerAI(Creature* creature) : ScriptedAI(creature), _instance(creature->GetInstanceScript()), _summoned(false)
-        {
-        }
+        npc_spinestalkerAI(Creature* creature) :
+            ScriptedAI(creature),
+            _instance(creature->GetInstanceScript()),
+            _summoned(false)
+        { }
 
         void InitializeAI() override
         {
             if (!me->isDead())
             {
-                _instance->SetData(DATA_SINDRAGOSA_FROSTWYRMS, me->GetSpawnId());  // this cannot be in Reset because reset also happens on evade
+                _instance->SetData(DATA_SINDRAGOSA_FROSTWYRMS,
+                    me->GetSpawnId()); // this cannot be in Reset because reset also happens on evade
                 Reset();
             }
         }
@@ -1209,24 +1272,21 @@ public:
             me->SetReactState(REACT_DEFENSIVE);
 
             if (!_summoned)
-            {
                 me->SetDisableGravity(true);
-            }
         }
 
         void JustReachedHome() override
         {
             ScriptedAI::JustReachedHome();
             if (_summoned)
-            {
                 me->SetDisableGravity(false);
-            }
         }
 
         void JustRespawned() override
         {
             ScriptedAI::JustRespawned();
-            _instance->SetData(DATA_SINDRAGOSA_FROSTWYRMS, me->GetSpawnId());  // this cannot be in Reset because reset also happens on evade
+            _instance->SetData(DATA_SINDRAGOSA_FROSTWYRMS,
+                me->GetSpawnId()); // this cannot be in Reset because reset also happens on evade
         }
 
         void JustDied(Unit* /*killer*/) override
@@ -1248,7 +1308,8 @@ public:
                 me->setActive(true);
                 me->SetImmuneToPC(true);
                 float moveTime = me->GetExactDist(&SpinestalkerFlyPos) / (me->GetSpeed(MOVE_RUN) * 0.001f);
-                me->m_Events.AddEvent(new FrostwyrmLandEvent(*me, SpinestalkerLandPos), me->m_Events.CalculateTime(uint64(moveTime) + 250));
+                me->m_Events.AddEvent(new FrostwyrmLandEvent(*me, SpinestalkerLandPos),
+                    me->m_Events.CalculateTime(uint64(moveTime) + 250));
                 me->SetDefaultMovementType(IDLE_MOTION_TYPE);
                 me->GetMotionMaster()->MoveIdle();
                 me->StopMoving();
@@ -1318,15 +1379,18 @@ public:
 
     struct npc_rimefangAI : public ScriptedAI
     {
-        npc_rimefangAI(Creature* creature) : ScriptedAI(creature), _instance(creature->GetInstanceScript()), _summoned(false)
-        {
-        }
+        npc_rimefangAI(Creature* creature) :
+            ScriptedAI(creature),
+            _instance(creature->GetInstanceScript()),
+            _summoned(false)
+        { }
 
         void InitializeAI() override
         {
             if (!me->isDead())
             {
-                _instance->SetData(DATA_SINDRAGOSA_FROSTWYRMS, me->GetSpawnId());  // this cannot be in Reset because reset also happens on evade
+                _instance->SetData(DATA_SINDRAGOSA_FROSTWYRMS,
+                    me->GetSpawnId()); // this cannot be in Reset because reset also happens on evade
                 Reset();
             }
         }
@@ -1340,24 +1404,21 @@ public:
             _icyBlastCounter = 0;
 
             if (!_summoned)
-            {
                 me->SetDisableGravity(true);
-            }
         }
 
         void JustReachedHome() override
         {
             ScriptedAI::JustReachedHome();
             if (_summoned)
-            {
                 me->SetDisableGravity(false);
-            }
         }
 
         void JustRespawned() override
         {
             ScriptedAI::JustRespawned();
-            _instance->SetData(DATA_SINDRAGOSA_FROSTWYRMS, me->GetSpawnId());  // this cannot be in Reset because reset also happens on evade
+            _instance->SetData(DATA_SINDRAGOSA_FROSTWYRMS,
+                me->GetSpawnId()); // this cannot be in Reset because reset also happens on evade
         }
 
         void JustDied(Unit* /*killer*/) override
@@ -1379,7 +1440,8 @@ public:
                 me->setActive(true);
                 me->SetImmuneToPC(true);
                 float moveTime = me->GetExactDist(&RimefangFlyPos) / (me->GetSpeed(MOVE_RUN) * 0.001f);
-                me->m_Events.AddEvent(new FrostwyrmLandEvent(*me, RimefangLandPos), me->m_Events.CalculateTime(uint64(moveTime) + 250));
+                me->m_Events.AddEvent(
+                    new FrostwyrmLandEvent(*me, RimefangLandPos), me->m_Events.CalculateTime(uint64(moveTime) + 250));
                 me->SetDefaultMovementType(IDLE_MOTION_TYPE);
                 me->GetMotionMaster()->MoveIdle();
                 me->StopMoving();
@@ -1436,26 +1498,29 @@ public:
                         _events.ScheduleEvent(EVENT_FROST_BREATH_RIMEFANG, 5s);
                     break;
                 case EVENT_ICY_BLAST:
-                    {
-                        _icyBlastCounter = RAID_MODE<uint8>(5, 7, 6, 8);
-                        me->SetReactState(REACT_PASSIVE);
+                {
+                    _icyBlastCounter = RAID_MODE<uint8>(5, 7, 6, 8);
+                    me->SetReactState(REACT_PASSIVE);
 
-                        me->GetMotionMaster()->MoveIdle();
-                        me->StopMoving();
-                        me->SendMeleeAttackStop(me->GetVictim());
+                    me->GetMotionMaster()->MoveIdle();
+                    me->StopMoving();
+                    me->SendMeleeAttackStop(me->GetVictim());
 
-                        me->AttackStop();
-                        me->SetDisableGravity(true);
-                        float floorZ = me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
-                        float destZ;
-                        if (floorZ > 190.0f) destZ = floorZ + 25.0f;
-                        else destZ = me->GetPositionZ() + 25.0f;
-                        me->GetMotionMaster()->MoveTakeoff(0, me->GetPositionX(), me->GetPositionY(), destZ, me->GetSpeed(MOVE_RUN));
-                        float moveTime = std::fabs(destZ - me->GetPositionZ()) / (me->GetSpeed(MOVE_RUN) * 0.001f);
-                        _events.ScheduleEvent(EVENT_ICY_BLAST, uint32(moveTime) + urand(60000, 70000));
-                        _events.ScheduleEvent(EVENT_ICY_BLAST_CAST, uint32(moveTime) + 250);
-                        break;
-                    }
+                    me->AttackStop();
+                    me->SetDisableGravity(true);
+                    float floorZ = me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+                    float destZ;
+                    if (floorZ > 190.0f)
+                        destZ = floorZ + 25.0f;
+                    else
+                        destZ = me->GetPositionZ() + 25.0f;
+                    me->GetMotionMaster()->MoveTakeoff(
+                        0, me->GetPositionX(), me->GetPositionY(), destZ, me->GetSpeed(MOVE_RUN));
+                    float moveTime = std::fabs(destZ - me->GetPositionZ()) / (me->GetSpeed(MOVE_RUN) * 0.001f);
+                    _events.ScheduleEvent(EVENT_ICY_BLAST, uint32(moveTime) + urand(60000, 70000));
+                    _events.ScheduleEvent(EVENT_ICY_BLAST_CAST, uint32(moveTime) + 250);
+                    break;
+                }
                 case EVENT_ICY_BLAST_CAST:
                     if (--_icyBlastCounter)
                     {
@@ -1470,10 +1535,13 @@ public:
                     {
                         float floorZ = me->GetMapHeight(me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
                         float destZ;
-                        if (floorZ > 190.0f) destZ = floorZ;
-                        else destZ = me->GetPositionZ() - 25.0f;
+                        if (floorZ > 190.0f)
+                            destZ = floorZ;
+                        else
+                            destZ = me->GetPositionZ() - 25.0f;
                         me->SendMeleeAttackStop(me->GetVictim());
-                        me->GetMotionMaster()->MoveLand(POINT_LAND_GROUND, me->GetPositionX(), me->GetPositionY(), destZ, me->GetSpeed(MOVE_RUN));
+                        me->GetMotionMaster()->MoveLand(
+                            POINT_LAND_GROUND, me->GetPositionX(), me->GetPositionY(), destZ, me->GetSpeed(MOVE_RUN));
                     }
                     break;
                 default:
@@ -1502,7 +1570,7 @@ class spell_rimefang_icy_blast : public SpellScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_ICY_BLAST_AREA });
+        return ValidateSpellInfo({SPELL_ICY_BLAST_AREA});
     }
 
     void HandleTriggerMissile(SpellEffIndex effIndex)
@@ -1515,7 +1583,8 @@ class spell_rimefang_icy_blast : public SpellScript
 
     void Register() override
     {
-        OnEffectHit += SpellEffectFn(spell_rimefang_icy_blast::HandleTriggerMissile, EFFECT_1, SPELL_EFFECT_TRIGGER_MISSILE);
+        OnEffectHit +=
+            SpellEffectFn(spell_rimefang_icy_blast::HandleTriggerMissile, EFFECT_1, SPELL_EFFECT_TRIGGER_MISSILE);
     }
 };
 
@@ -1529,14 +1598,16 @@ public:
         if (InstanceScript* instance = player->GetInstanceScript())
         {
             if (!instance->GetData(DATA_SPINESTALKER))
-                if (Creature* spinestalker = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_SPINESTALKER)))
+                if (Creature* spinestalker =
+                        ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_SPINESTALKER)))
                     spinestalker->AI()->DoAction(ACTION_START_FROSTWYRM);
 
             if (!instance->GetData(DATA_RIMEFANG))
                 if (Creature* rimefang = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_RIMEFANG)))
                     rimefang->AI()->DoAction(ACTION_START_FROSTWYRM);
 
-            if (!instance->GetData(DATA_SINDRAGOSA_FROSTWYRMS) && instance->GetBossState(DATA_SINDRAGOSA) != IN_PROGRESS)
+            if (!instance->GetData(DATA_SINDRAGOSA_FROSTWYRMS) &&
+                instance->GetBossState(DATA_SINDRAGOSA) != IN_PROGRESS)
             {
                 player->GetMap()->LoadGrid(SindragosaSpawnPos.GetPositionX(), SindragosaSpawnPos.GetPositionY());
                 if (Creature* sindragosa = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_SINDRAGOSA)))
@@ -1568,7 +1639,8 @@ public:
             if (!me->isDead())
             {
                 if (me->GetEntry() == NPC_FROSTWING_WHELP)
-                    _instance->SetData(_frostwyrmId, me->GetSpawnId());  // this cannot be in Reset because reset also happens on evade
+                    _instance->SetData(
+                        _frostwyrmId, me->GetSpawnId()); // this cannot be in Reset because reset also happens on evade
                 Reset();
             }
         }
@@ -1611,7 +1683,8 @@ public:
 
             // Increase add count
             if (me->GetEntry() == NPC_FROSTWING_WHELP)
-                _instance->SetData(_frostwyrmId, me->GetSpawnId());  // this cannot be in Reset because reset also happens on evade
+                _instance->SetData(
+                    _frostwyrmId, me->GetSpawnId()); // this cannot be in Reset because reset also happens on evade
         }
 
         void SetData(uint32 type, uint32 data) override
@@ -1679,7 +1752,8 @@ public:
 
     bool operator()(Creature* creature)
     {
-        if (!creature->AI()->GetData(DATA_WHELP_MARKER) && creature->AI()->GetData(DATA_FROSTWYRM_OWNER) == _owner->AI()->GetData(DATA_FROSTWYRM_OWNER))
+        if (!creature->AI()->GetData(DATA_WHELP_MARKER) &&
+            creature->AI()->GetData(DATA_FROSTWYRM_OWNER) == _owner->AI()->GetData(DATA_FROSTWYRM_OWNER))
             return false;
         return true;
     }
@@ -1694,7 +1768,7 @@ class spell_frostwarden_handler_order_whelp : public SpellScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_FOCUS_FIRE });
+        return ValidateSpellInfo({SPELL_FOCUS_FIRE});
     }
 
     void FilterTargets(std::list<WorldObject*>& targets)
@@ -1720,13 +1794,16 @@ class spell_frostwarden_handler_order_whelp : public SpellScript
         if (unitList.empty())
             return;
 
-        Acore::Containers::SelectRandomContainerElement(unitList)->CastSpell(GetHitUnit(), uint32(GetEffectValue()), true);
+        Acore::Containers::SelectRandomContainerElement(unitList)->CastSpell(
+            GetHitUnit(), uint32(GetEffectValue()), true);
     }
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_frostwarden_handler_order_whelp::HandleForcedCast, EFFECT_0, SPELL_EFFECT_FORCE_CAST);
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_frostwarden_handler_order_whelp::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_frostwarden_handler_order_whelp::HandleForcedCast, EFFECT_0, SPELL_EFFECT_FORCE_CAST);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_frostwarden_handler_order_whelp::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ENEMY);
     }
 };
 
@@ -1743,7 +1820,8 @@ class spell_frostwarden_handler_focus_fire : public SpellScript
 
     void Register() override
     {
-        OnEffectHitTarget += SpellEffectFn(spell_frostwarden_handler_focus_fire::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
+        OnEffectHitTarget +=
+            SpellEffectFn(spell_frostwarden_handler_focus_fire::HandleScript, EFFECT_1, SPELL_EFFECT_SCRIPT_EFFECT);
     }
 };
 
@@ -1763,7 +1841,8 @@ class spell_frostwarden_handler_focus_fire_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_frostwarden_handler_focus_fire_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_frostwarden_handler_focus_fire_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
     }
 };
 
@@ -1773,7 +1852,7 @@ class spell_sindragosa_frost_breath : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_UNSATED_CRAVING, SPELL_FROST_IMBUED_BLADE, SPELL_FROST_INFUSION });
+        return ValidateSpellInfo({SPELL_UNSATED_CRAVING, SPELL_FROST_IMBUED_BLADE, SPELL_FROST_INFUSION});
     }
 
     void HandleInfusion()
@@ -1783,7 +1862,8 @@ class spell_sindragosa_frost_breath : public SpellScript
             return;
 
         // Check difficulty and quest status
-        if (!(target->GetRaidDifficulty() & RAID_DIFFICULTY_MASK_25MAN) || target->GetQuestStatus(QUEST_FROST_INFUSION) != QUEST_STATUS_INCOMPLETE)
+        if (!(target->GetRaidDifficulty() & RAID_DIFFICULTY_MASK_25MAN) ||
+            target->GetQuestStatus(QUEST_FROST_INFUSION) != QUEST_STATUS_INCOMPLETE)
             return;
 
         // Check if player has Shadow's Edge equipped and not ready for infusion

@@ -47,23 +47,15 @@ public:
                 case NPC_IMMOL_THAR:
                     _immoltharGUID = creature->GetGUID();
                     if (_pylonsState == ALL_PYLONS_OFF)
-                    {
                         creature->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-                    }
                     else
-                    {
                         creature->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-                    }
                     break;
                 case NPC_HIGHBORNE_SUMMONER:
                     if (_pylonsState == ALL_PYLONS_OFF)
-                    {
                         creature->DespawnOrUnsummon(5000);
-                    }
                     else
-                    {
                         creature->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-                    }
                     HighborneSummoners.push_back(creature->GetGUID());
                     break;
             }
@@ -78,14 +70,14 @@ public:
                         gameobject->SetGoState(GO_STATE_ACTIVE);
                     break;
                 case GO_GORDOK_TRIBUTE:
-                    {
-                        uint32 fullLootMode = 0x3F;
-                        for (uint32 i = 0; i < _northWingBosses; ++i)
-                            fullLootMode >>= 1;
+                {
+                    uint32 fullLootMode = 0x3F;
+                    for (uint32 i = 0; i < _northWingBosses; ++i)
+                        fullLootMode >>= 1;
 
-                        gameobject->SetLootMode(fullLootMode);
-                        break;
-                    }
+                    gameobject->SetLootMode(fullLootMode);
+                    break;
+                }
             }
         }
 
@@ -121,12 +113,8 @@ public:
                             immol->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                         }
                         for (auto const& guid : HighborneSummoners)
-                        {
                             if (Creature* summoner = instance->GetCreature(guid))
-                            {
                                 summoner->RemoveUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-                            }
-                        }
                     }
                     break;
             }
@@ -157,11 +145,8 @@ public:
 
         void WriteSaveDataMore(std::ostringstream& data) override
         {
-            data << _eastWingProgress << ' '
-                << _westWingProgress << ' '
-                << _pylonsState << ' '
-                << _northWingProgress << ' '
-                << _northWingBosses;
+            data << _eastWingProgress << ' ' << _westWingProgress << ' ' << _pylonsState << ' ' << _northWingProgress
+                 << ' ' << _northWingBosses;
         }
 
     private:

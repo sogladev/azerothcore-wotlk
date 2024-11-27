@@ -21,9 +21,9 @@
 #include "DatabaseEnv.h"
 #include "DatabaseLoader.h"
 #include "Log.h"
+#include "QueryResult.h"
 #include "StartProcess.h"
 #include "UpdateFetcher.h"
-#include "QueryResult.h"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -49,7 +49,8 @@ bool DBUpdaterUtil::CheckExecutable()
             return true;
         }
 
-        LOG_FATAL("sql.updates", "Didn't find any executable MySQL binary at \'{}\' or in path, correct the path in the *.conf (\"MySQLExecutable\").",
+        LOG_FATAL("sql.updates",
+            "Didn't find any executable MySQL binary at \'{}\' or in path, correct the path in the *.conf (\"MySQLExecutable\").",
             absolute(exe).generic_string());
 
         return false;
@@ -64,114 +65,97 @@ std::string& DBUpdaterUtil::corrected_path()
 }
 
 // Auth Database
-template<>
-std::string DBUpdater<LoginDatabaseConnection>::GetConfigEntry()
+template <> std::string DBUpdater<LoginDatabaseConnection>::GetConfigEntry()
 {
     return "Updates.Auth";
 }
 
-template<>
-std::string DBUpdater<LoginDatabaseConnection>::GetTableName()
+template <> std::string DBUpdater<LoginDatabaseConnection>::GetTableName()
 {
     return "Auth";
 }
 
-template<>
-std::string DBUpdater<LoginDatabaseConnection>::GetBaseFilesDirectory()
+template <> std::string DBUpdater<LoginDatabaseConnection>::GetBaseFilesDirectory()
 {
     return BuiltInConfig::GetSourceDirectory() + "/data/sql/base/db_auth/";
 }
 
-template<>
-bool DBUpdater<LoginDatabaseConnection>::IsEnabled(uint32 const updateMask)
+template <> bool DBUpdater<LoginDatabaseConnection>::IsEnabled(uint32 const updateMask)
 {
     // This way silences warnings under msvc
     return (updateMask & DatabaseLoader::DATABASE_LOGIN) ? true : false;
 }
 
-template<>
-std::string DBUpdater<LoginDatabaseConnection>::GetDBModuleName()
+template <> std::string DBUpdater<LoginDatabaseConnection>::GetDBModuleName()
 {
     return "db-auth";
 }
 
 // World Database
-template<>
-std::string DBUpdater<WorldDatabaseConnection>::GetConfigEntry()
+template <> std::string DBUpdater<WorldDatabaseConnection>::GetConfigEntry()
 {
     return "Updates.World";
 }
 
-template<>
-std::string DBUpdater<WorldDatabaseConnection>::GetTableName()
+template <> std::string DBUpdater<WorldDatabaseConnection>::GetTableName()
 {
     return "World";
 }
 
-template<>
-std::string DBUpdater<WorldDatabaseConnection>::GetBaseFilesDirectory()
+template <> std::string DBUpdater<WorldDatabaseConnection>::GetBaseFilesDirectory()
 {
     return BuiltInConfig::GetSourceDirectory() + "/data/sql/base/db_world/";
 }
 
-template<>
-bool DBUpdater<WorldDatabaseConnection>::IsEnabled(uint32 const updateMask)
+template <> bool DBUpdater<WorldDatabaseConnection>::IsEnabled(uint32 const updateMask)
 {
     // This way silences warnings under msvc
     return (updateMask & DatabaseLoader::DATABASE_WORLD) ? true : false;
 }
 
-template<>
-std::string DBUpdater<WorldDatabaseConnection>::GetDBModuleName()
+template <> std::string DBUpdater<WorldDatabaseConnection>::GetDBModuleName()
 {
     return "db-world";
 }
 
 // Character Database
-template<>
-std::string DBUpdater<CharacterDatabaseConnection>::GetConfigEntry()
+template <> std::string DBUpdater<CharacterDatabaseConnection>::GetConfigEntry()
 {
     return "Updates.Character";
 }
 
-template<>
-std::string DBUpdater<CharacterDatabaseConnection>::GetTableName()
+template <> std::string DBUpdater<CharacterDatabaseConnection>::GetTableName()
 {
     return "Character";
 }
 
-template<>
-std::string DBUpdater<CharacterDatabaseConnection>::GetBaseFilesDirectory()
+template <> std::string DBUpdater<CharacterDatabaseConnection>::GetBaseFilesDirectory()
 {
     return BuiltInConfig::GetSourceDirectory() + "/data/sql/base/db_characters/";
 }
 
-template<>
-bool DBUpdater<CharacterDatabaseConnection>::IsEnabled(uint32 const updateMask)
+template <> bool DBUpdater<CharacterDatabaseConnection>::IsEnabled(uint32 const updateMask)
 {
     // This way silences warnings under msvc
     return (updateMask & DatabaseLoader::DATABASE_CHARACTER) ? true : false;
 }
 
-template<>
-std::string DBUpdater<CharacterDatabaseConnection>::GetDBModuleName()
+template <> std::string DBUpdater<CharacterDatabaseConnection>::GetDBModuleName()
 {
     return "db-characters";
 }
 
 // All
-template<class T>
-BaseLocation DBUpdater<T>::GetBaseLocationType()
+template <class T> BaseLocation DBUpdater<T>::GetBaseLocationType()
 {
     return LOCATION_REPOSITORY;
 }
 
-template<class T>
-bool DBUpdater<T>::Create(DatabaseWorkerPool<T>& pool)
+template <class T> bool DBUpdater<T>::Create(DatabaseWorkerPool<T>& pool)
 {
     LOG_WARN("sql.updates", "Database \"{}\" does not exist", pool.GetConnectionInfo()->database);
 
-    const char* disableInteractive = std::getenv("AC_DISABLE_INTERACTIVE");
+    char const* disableInteractive = std::getenv("AC_DISABLE_INTERACTIVE");
 
     if (!sConfigMgr->isDryRun() && (disableInteractive == nullptr || std::strcmp(disableInteractive, "1") != 0))
     {
@@ -195,17 +179,26 @@ bool DBUpdater<T>::Create(DatabaseWorkerPool<T>& pool)
         return false;
     }
 
-    file << "CREATE DATABASE `" << pool.GetConnectionInfo()->database << "` DEFAULT CHARACTER SET UTF8MB4 COLLATE utf8mb4_general_ci;\n\n";
+    file << "CREATE DATABASE `" << pool.GetConnectionInfo()->database
+         << "` DEFAULT CHARACTER SET UTF8MB4 COLLATE utf8mb4_general_ci;\n\n";
     file.close();
 
     try
     {
-        DBUpdater<T>::ApplyFile(pool, pool.GetConnectionInfo()->host, pool.GetConnectionInfo()->user, pool.GetConnectionInfo()->password,
-                                pool.GetConnectionInfo()->port_or_socket, "", pool.GetConnectionInfo()->ssl, temp);
+        DBUpdater<T>::ApplyFile(pool,
+            pool.GetConnectionInfo()->host,
+            pool.GetConnectionInfo()->user,
+            pool.GetConnectionInfo()->password,
+            pool.GetConnectionInfo()->port_or_socket,
+            "",
+            pool.GetConnectionInfo()->ssl,
+            temp);
     }
     catch (UpdateException&)
     {
-        LOG_FATAL("sql.updates", "Failed to create database {}! Does the user (named in *.conf) have `CREATE`, `ALTER`, `DROP`, `INSERT` and `DELETE` privileges on the MySQL server?", pool.GetConnectionInfo()->database);
+        LOG_FATAL("sql.updates",
+            "Failed to create database {}! Does the user (named in *.conf) have `CREATE`, `ALTER`, `DROP`, `INSERT` and `DELETE` privileges on the MySQL server?",
+            pool.GetConnectionInfo()->database);
         std::filesystem::remove(temp);
         return false;
     }
@@ -216,8 +209,7 @@ bool DBUpdater<T>::Create(DatabaseWorkerPool<T>& pool)
     return true;
 }
 
-template<class T>
-bool DBUpdater<T>::Update(DatabaseWorkerPool<T>& pool, std::string_view modulesList /*= {}*/)
+template <class T> bool DBUpdater<T>::Update(DatabaseWorkerPool<T>& pool, std::string_view modulesList /*= {}*/)
 {
     if (!DBUpdaterUtil::CheckExecutable())
         return false;
@@ -228,8 +220,9 @@ bool DBUpdater<T>::Update(DatabaseWorkerPool<T>& pool, std::string_view modulesL
 
     if (!is_directory(sourceDirectory))
     {
-        LOG_ERROR("sql.updates", "DBUpdater: The given source directory {} does not exist, change the path to the directory where your sql directory exists (for example c:\\source\\azerothcore). Shutting down.",
-                  sourceDirectory.generic_string());
+        LOG_ERROR("sql.updates",
+            "DBUpdater: The given source directory {} does not exist, change the path to the directory where your sql directory exists (for example c:\\source\\azerothcore). Shutting down.",
+            sourceDirectory.generic_string());
         return false;
     }
 
@@ -248,7 +241,9 @@ bool DBUpdater<T>::Update(DatabaseWorkerPool<T>& pool, std::string_view modulesL
             }
             catch (UpdateException&)
             {
-                LOG_FATAL("sql.updates", "Failed apply file to database {}! Does the user (named in *.conf) have `INSERT` and `DELETE` privileges on the MySQL server?", pool.GetConnectionInfo()->database);
+                LOG_FATAL("sql.updates",
+                    "Failed apply file to database {}! Does the user (named in *.conf) have `INSERT` and `DELETE` privileges on the MySQL server?",
+                    pool.GetConnectionInfo()->database);
                 return false;
             }
 
@@ -261,49 +256,48 @@ bool DBUpdater<T>::Update(DatabaseWorkerPool<T>& pool, std::string_view modulesL
     if (!CheckUpdateTable("updates") || !CheckUpdateTable("updates_include"))
         return false;
 
-    UpdateFetcher updateFetcher(sourceDirectory, [&](std::string const & query) { DBUpdater<T>::Apply(pool, query); },
-    [&](Path const & file) { DBUpdater<T>::ApplyFile(pool, file); },
-    [&](std::string const & query) -> QueryResult { return DBUpdater<T>::Retrieve(pool, query); }, DBUpdater<T>::GetDBModuleName(), modulesList);
+    UpdateFetcher updateFetcher(sourceDirectory, [&](std::string const& query) {
+        DBUpdater<T>::Apply(pool, query);
+    }, [&](Path const& file) { DBUpdater<T>::ApplyFile(pool, file); }, [&](std::string const& query) -> QueryResult {
+        return DBUpdater<T>::Retrieve(pool, query);
+    }, DBUpdater<T>::GetDBModuleName(), modulesList);
 
     UpdateResult result;
     try
     {
-        result = updateFetcher.Update(
-                     sConfigMgr->GetOption<bool>("Updates.Redundancy", true),
-                     sConfigMgr->GetOption<bool>("Updates.AllowRehash", true),
-                     sConfigMgr->GetOption<bool>("Updates.ArchivedRedundancy", false),
-                     sConfigMgr->GetOption<int32>("Updates.CleanDeadRefMaxCount", 3));
+        result = updateFetcher.Update(sConfigMgr->GetOption<bool>("Updates.Redundancy", true),
+            sConfigMgr->GetOption<bool>("Updates.AllowRehash", true),
+            sConfigMgr->GetOption<bool>("Updates.ArchivedRedundancy", false),
+            sConfigMgr->GetOption<int32>("Updates.CleanDeadRefMaxCount", 3));
     }
     catch (UpdateException&)
     {
         return false;
     }
 
-    std::string const info = Acore::StringFormat("Containing {} new and {} archived updates.", result.recent, result.archived);
+    std::string const info =
+        Acore::StringFormat("Containing {} new and {} archived updates.", result.recent, result.archived);
 
     if (!result.updated)
         LOG_INFO("sql.updates", ">> {} database is up-to-date! {}", DBUpdater<T>::GetTableName(), info);
     else
-        LOG_INFO("sql.updates", ">> Applied {} {}. {}", result.updated, result.updated == 1 ? "query" : "queries", info);
+        LOG_INFO(
+            "sql.updates", ">> Applied {} {}. {}", result.updated, result.updated == 1 ? "query" : "queries", info);
 
     LOG_INFO("sql.updates", " ");
 
     return true;
 }
 
-template<class T>
+template <class T>
 bool DBUpdater<T>::Update(DatabaseWorkerPool<T>& pool, std::vector<std::string> const* setDirectories)
 {
     if (!DBUpdaterUtil::CheckExecutable())
-    {
         return false;
-    }
 
     Path const sourceDirectory(BuiltInConfig::GetSourceDirectory());
     if (!is_directory(sourceDirectory))
-    {
         return false;
-    }
 
     auto CheckUpdateTable = [&](std::string const& tableName)
     {
@@ -327,22 +321,21 @@ bool DBUpdater<T>::Update(DatabaseWorkerPool<T>& pool, std::vector<std::string> 
     };
 
     if (!CheckUpdateTable("updates") || !CheckUpdateTable("updates_include"))
-    {
         return false;
-    }
 
-    UpdateFetcher updateFetcher(sourceDirectory, [&](std::string const & query) { DBUpdater<T>::Apply(pool, query); },
-    [&](Path const & file) { DBUpdater<T>::ApplyFile(pool, file); },
-    [&](std::string const & query) -> QueryResult { return DBUpdater<T>::Retrieve(pool, query); }, DBUpdater<T>::GetDBModuleName(), setDirectories);
+    UpdateFetcher updateFetcher(sourceDirectory, [&](std::string const& query) {
+        DBUpdater<T>::Apply(pool, query);
+    }, [&](Path const& file) { DBUpdater<T>::ApplyFile(pool, file); }, [&](std::string const& query) -> QueryResult {
+        return DBUpdater<T>::Retrieve(pool, query);
+    }, DBUpdater<T>::GetDBModuleName(), setDirectories);
 
     UpdateResult result;
     try
     {
-        result = updateFetcher.Update(
-                     sConfigMgr->GetOption<bool>("Updates.Redundancy", true),
-                     sConfigMgr->GetOption<bool>("Updates.AllowRehash", true),
-                     sConfigMgr->GetOption<bool>("Updates.ArchivedRedundancy", false),
-                     sConfigMgr->GetOption<int32>("Updates.CleanDeadRefMaxCount", 3));
+        result = updateFetcher.Update(sConfigMgr->GetOption<bool>("Updates.Redundancy", true),
+            sConfigMgr->GetOption<bool>("Updates.AllowRehash", true),
+            sConfigMgr->GetOption<bool>("Updates.ArchivedRedundancy", false),
+            sConfigMgr->GetOption<int32>("Updates.CleanDeadRefMaxCount", 3));
     }
     catch (UpdateException&)
     {
@@ -352,8 +345,7 @@ bool DBUpdater<T>::Update(DatabaseWorkerPool<T>& pool, std::vector<std::string> 
     return true;
 }
 
-template<class T>
-bool DBUpdater<T>::Populate(DatabaseWorkerPool<T>& pool)
+template <class T> bool DBUpdater<T>::Populate(DatabaseWorkerPool<T>& pool)
 {
     {
         QueryResult const result = Retrieve(pool, "SHOW TABLES");
@@ -385,10 +377,8 @@ bool DBUpdater<T>::Populate(DatabaseWorkerPool<T>& pool)
     uint32 FilesCount = 0;
 
     for (std::filesystem::directory_iterator itr(DirPath); itr != DirItr; ++itr)
-    {
         if (itr->path().extension() == ".sql")
             FilesCount++;
-    }
 
     if (!FilesCount)
     {
@@ -418,28 +408,31 @@ bool DBUpdater<T>::Populate(DatabaseWorkerPool<T>& pool)
     return true;
 }
 
-template<class T>
-QueryResult DBUpdater<T>::Retrieve(DatabaseWorkerPool<T>& pool, std::string const& query)
+template <class T> QueryResult DBUpdater<T>::Retrieve(DatabaseWorkerPool<T>& pool, std::string const& query)
 {
     return pool.Query(query.c_str());
 }
 
-template<class T>
-void DBUpdater<T>::Apply(DatabaseWorkerPool<T>& pool, std::string const& query)
+template <class T> void DBUpdater<T>::Apply(DatabaseWorkerPool<T>& pool, std::string const& query)
 {
     pool.DirectExecute(query.c_str());
 }
 
-template<class T>
-void DBUpdater<T>::ApplyFile(DatabaseWorkerPool<T>& pool, Path const& path)
+template <class T> void DBUpdater<T>::ApplyFile(DatabaseWorkerPool<T>& pool, Path const& path)
 {
-    DBUpdater<T>::ApplyFile(pool, pool.GetConnectionInfo()->host, pool.GetConnectionInfo()->user, pool.GetConnectionInfo()->password,
-                            pool.GetConnectionInfo()->port_or_socket, pool.GetConnectionInfo()->database, pool.GetConnectionInfo()->ssl, path);
+    DBUpdater<T>::ApplyFile(pool,
+        pool.GetConnectionInfo()->host,
+        pool.GetConnectionInfo()->user,
+        pool.GetConnectionInfo()->password,
+        pool.GetConnectionInfo()->port_or_socket,
+        pool.GetConnectionInfo()->database,
+        pool.GetConnectionInfo()->ssl,
+        path);
 }
 
-template<class T>
-void DBUpdater<T>::ApplyFile(DatabaseWorkerPool<T>& pool, std::string const& host, std::string const& user,
-                             std::string const& password, std::string const& port_or_socket, std::string const& database, std::string const& ssl, Path const& path)
+template <class T> void DBUpdater<T>::ApplyFile(DatabaseWorkerPool<T>& pool, std::string const& host,
+    std::string const& user, std::string const& password, std::string const& port_or_socket,
+    std::string const& database, std::string const& ssl, Path const& path)
 {
     std::string configTempDir = sConfigMgr->GetOption<std::string>("TempDir", "");
 
@@ -449,7 +442,7 @@ void DBUpdater<T>::ApplyFile(DatabaseWorkerPool<T>& pool, std::string const& hos
 
     std::string confFileName = "mysql_ac.conf";
 
-    std::ofstream outfile (tempDir + confFileName);
+    std::ofstream outfile(tempDir + confFileName);
 
     outfile << "[client]\npassword = \"" << password << '"' << std::endl;
 
@@ -458,7 +451,7 @@ void DBUpdater<T>::ApplyFile(DatabaseWorkerPool<T>& pool, std::string const& hos
     std::vector<std::string> args;
     args.reserve(9);
 
-    args.emplace_back("--defaults-extra-file="+tempDir + confFileName+"");
+    args.emplace_back("--defaults-extra-file=" + tempDir + confFileName + "");
 
     // CLI Client connection info
     args.emplace_back("-h" + host);
@@ -505,17 +498,18 @@ void DBUpdater<T>::ApplyFile(DatabaseWorkerPool<T>& pool, std::string const& hos
         args.emplace_back(database);
 
     // Invokes a mysql process which doesn't leak credentials to logs
-    int const ret = Acore::StartProcess(DBUpdaterUtil::GetCorrectedMySQLExecutable(), args,
-        "sql.updates", "", true);
+    int const ret = Acore::StartProcess(DBUpdaterUtil::GetCorrectedMySQLExecutable(), args, "sql.updates", "", true);
 
     if (ret != EXIT_SUCCESS)
     {
-        LOG_FATAL("sql.updates", "Applying of file \'{}\' to database \'{}\' failed!" \
+        LOG_FATAL("sql.updates",
+            "Applying of file \'{}\' to database \'{}\' failed!"
             " If you are a user, please pull the latest revision from the repository. "
             "Also make sure you have not applied any of the databases with your sql client. "
             "You cannot use auto-update system and import sql files from AzerothCore repository with your sql client. "
             "If you are a developer, please fix your sql query.",
-            path.generic_string(), pool.GetConnectionInfo()->database);
+            path.generic_string(),
+            pool.GetConnectionInfo()->database);
 
         throw UpdateException("update failed");
     }

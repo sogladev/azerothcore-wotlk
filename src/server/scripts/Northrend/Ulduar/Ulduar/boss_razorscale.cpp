@@ -30,38 +30,38 @@
 enum Spells
 {
     // Razorscale
-    SPELL_FLAMEBUFFET_10                    = 64016,
-    SPELL_FLAMEBUFFET_25                    = 64023,
-    SPELL_FIREBALL                          = 63815,
-    SPELL_WINGBUFFET                        = 62666,
-    SPELL_FLAMEBREATH_10                    = 63317,
-    SPELL_FLAMEBREATH_25                    = 64021,
-    SPELL_FUSEARMOR                         = 64771,
-    SPELL_FUSED_ARMOR                       = 64774, // Applied on 5th stack of SPELL_FUSEARMOR
-    SPELL_DEVOURINGFLAME                    = 63236,
-    SPELL_BERSERK                           = 47008,
+    SPELL_FLAMEBUFFET_10 = 64016,
+    SPELL_FLAMEBUFFET_25 = 64023,
+    SPELL_FIREBALL = 63815,
+    SPELL_WINGBUFFET = 62666,
+    SPELL_FLAMEBREATH_10 = 63317,
+    SPELL_FLAMEBREATH_25 = 64021,
+    SPELL_FUSEARMOR = 64771,
+    SPELL_FUSED_ARMOR = 64774, // Applied on 5th stack of SPELL_FUSEARMOR
+    SPELL_DEVOURINGFLAME = 63236,
+    SPELL_BERSERK = 47008,
 
     // Haproons
-    SPELL_CHAIN_1                           = 49679,
-    SPELL_CHAIN_2                           = 49682,
-    SPELL_CHAIN_3                           = 49683,
-    SPELL_CHAIN_4                           = 49684,
-    SPELL_LAUNCH_CHAIN                      = 62505,
+    SPELL_CHAIN_1 = 49679,
+    SPELL_CHAIN_2 = 49682,
+    SPELL_CHAIN_3 = 49683,
+    SPELL_CHAIN_4 = 49684,
+    SPELL_LAUNCH_CHAIN = 62505,
 
     // Dark Rune Sentinel
-    SPELL_WHIRLWIND                         = 63808,
-    SPELL_BATTLE_SHOUT_10                   = 46763,
-    SPELL_BATTLE_SHOUT_25                   = 64062,
+    SPELL_WHIRLWIND = 63808,
+    SPELL_BATTLE_SHOUT_10 = 46763,
+    SPELL_BATTLE_SHOUT_25 = 64062,
 
     // Dark Rune Guardian
-    SPELL_STORMSTRIKE_DMG                   = 65971,
-    SPELL_STORMSTRIKE_DEBUFF                = 64757,
+    SPELL_STORMSTRIKE_DMG = 65971,
+    SPELL_STORMSTRIKE_DEBUFF = 64757,
 
     // Dark Rune Watcher
-    SPELL_LIGHTINGBOLT_10                   = 63809,
-    SPELL_LIGHTINGBOLT_25                   = 64696,
-    SPELL_CHAINLIGHTNING_10                 = 64758,
-    SPELL_CHAINLIGHTNING_25                 = 64759,
+    SPELL_LIGHTINGBOLT_10 = 63809,
+    SPELL_LIGHTINGBOLT_25 = 64696,
+    SPELL_CHAINLIGHTNING_10 = 64758,
+    SPELL_CHAINLIGHTNING_25 = 64759,
 };
 
 #define SPELL_FLAMEBUFFET                   RAID_MODE(SPELL_FLAMEBUFFET_10, SPELL_FLAMEBUFFET_25)
@@ -73,22 +73,22 @@ enum Spells
 
 enum NPCs
 {
-    NPC_DARK_RUNE_SENTINEL                  = 33846,
-    NPC_DARK_RUNE_GUARDIAN                  = 33388,
-    NPC_DARK_RUNE_WATCHER                   = 33453,
-    NPC_EXPEDITION_ENGINEER                 = 33287,
-    NPC_EXPEDITION_COMMANDER                = 33210,
-    NPC_RAZORSCALE_CONTROLLER               = 33233, // Trigger Creature
+    NPC_DARK_RUNE_SENTINEL = 33846,
+    NPC_DARK_RUNE_GUARDIAN = 33388,
+    NPC_DARK_RUNE_WATCHER = 33453,
+    NPC_EXPEDITION_ENGINEER = 33287,
+    NPC_EXPEDITION_COMMANDER = 33210,
+    NPC_RAZORSCALE_CONTROLLER = 33233, // Trigger Creature
 };
 
 enum GOs
 {
-    GO_DRILL                                = 195305,
-    GO_HARPOON_GUN_1                        = 194519,
-    GO_HARPOON_GUN_2                        = 194541,
-    GO_HARPOON_GUN_3                        = 194542,
-    GO_HARPOON_GUN_4                        = 194543,
-    GO_BROKEN_HARPOON                       = 194565,
+    GO_DRILL = 195305,
+    GO_HARPOON_GUN_1 = 194519,
+    GO_HARPOON_GUN_2 = 194541,
+    GO_HARPOON_GUN_3 = 194542,
+    GO_HARPOON_GUN_4 = 194543,
+    GO_BROKEN_HARPOON = 194565,
 };
 
 enum eEvents
@@ -114,36 +114,36 @@ enum eEvents
 enum Texts
 {
     // Razorscale
-    EMOTE_PERMA_GROUND                      = 0,
-    EMOTE_BREATH                            = 1,
-    EMOTE_BERSERK                           = 2,
+    EMOTE_PERMA_GROUND = 0,
+    EMOTE_BREATH = 1,
+    EMOTE_BERSERK = 2,
 
     // Expedition Commander
-    SAY_COMMANDER_AGGRO                     = 0,
-    SAY_COMMANDER_GROUND_PHASE              = 1,
-    SAY_COMMANDER_ENGINEERS_DEAD            = 2, // Should be called when all engineers are dead, currently unused
+    SAY_COMMANDER_AGGRO = 0,
+    SAY_COMMANDER_GROUND_PHASE = 1,
+    SAY_COMMANDER_ENGINEERS_DEAD = 2, // Should be called when all engineers are dead, currently unused
 
     // Expedition Engineer
-    SAY_EE_AGGRO                            = 0,
-    SAY_EE_START_REPAIR                     = 1,
-    SAY_EE_REBUILD_TURRETS                  = 2,
+    SAY_EE_AGGRO = 0,
+    SAY_EE_START_REPAIR = 1,
+    SAY_EE_REBUILD_TURRETS = 2,
 
     // Harpoon
-    EMOTE_HARPOON                           = 0,
+    EMOTE_HARPOON = 0,
 };
 
 enum Misc
 {
-    POINT_RAZORSCALE_INIT                   = 1,
-    REPAIR_POINTS                           = 25,
+    POINT_RAZORSCALE_INIT = 1,
+    REPAIR_POINTS = 25,
 
     // Expedition Commander Gossip
-    GOSSIP_MENU_START_ENCOUNTER             = 10314,
-    NPC_TEXT_COMMANDER                      = 40100,
+    GOSSIP_MENU_START_ENCOUNTER = 10314,
+    NPC_TEXT_COMMANDER = 40100,
 };
 
-const Position CORDS_GROUND                 = {588.0f, -166.0f, 391.1f};
-const Position CORDS_AIR                    = {588.0f, -178.0f, 490.0f};
+Position const CORDS_GROUND = {588.0f, -166.0f, 391.1f};
+Position const CORDS_AIR = {588.0f, -178.0f, 490.0f};
 
 class boss_razorscale : public CreatureScript
 {
@@ -207,7 +207,7 @@ public:
                 me->GetMotionMaster()->MoveChase(who);
         }
 
-        void JustEngagedWith(Unit*  /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             me->SetInCombatWithZone();
             events.Reset();
@@ -221,7 +221,7 @@ public:
             std::list<Creature*> eeList;
             me->GetCreaturesWithEntryInRange(eeList, 300.0f, NPC_EXPEDITION_ENGINEER);
             uint8 i = 0;
-            for( std::list<Creature*>::iterator itr = eeList.begin(); itr != eeList.end(); ++itr )
+            for (std::list<Creature*>::iterator itr = eeList.begin(); itr != eeList.end(); ++itr)
             {
                 if (i > 2)
                     break;
@@ -237,7 +237,7 @@ public:
                 pInstance->SetData(TYPE_RAZORSCALE, IN_PROGRESS);
         }
 
-        void JustDied(Unit*  /*Killer*/) override
+        void JustDied(Unit* /*Killer*/) override
         {
             summons.DespawnAll();
 
@@ -253,65 +253,62 @@ public:
             switch (spell->Id)
             {
                 case SPELL_LAUNCH_CHAIN:
-                    {
-                        uint32 spellId = SPELL_CHAIN_4;
+                {
+                    uint32 spellId = SPELL_CHAIN_4;
 
-                        if (caster->GetGUID() == pInstance->GetGuidData(DATA_HARPOON_FIRE_STATE_1))
-                        {
-                            spellId = SPELL_CHAIN_1;
-                        }
-                        else if (caster->GetGUID() == pInstance->GetGuidData(DATA_HARPOON_FIRE_STATE_2))
-                        {
-                            spellId = SPELL_CHAIN_2;
-                        }
-                        else if (caster->GetGUID() == pInstance->GetGuidData(DATA_HARPOON_FIRE_STATE_3))
-                        {
-                            spellId = SPELL_CHAIN_3;
-                        }
+                    if (caster->GetGUID() == pInstance->GetGuidData(DATA_HARPOON_FIRE_STATE_1))
+                        spellId = SPELL_CHAIN_1;
+                    else if (caster->GetGUID() == pInstance->GetGuidData(DATA_HARPOON_FIRE_STATE_2))
+                        spellId = SPELL_CHAIN_2;
+                    else if (caster->GetGUID() == pInstance->GetGuidData(DATA_HARPOON_FIRE_STATE_3))
+                        spellId = SPELL_CHAIN_3;
 
-                        caster->CastSpell(me, spellId, true);
-                    }
-                    break;
+                    caster->CastSpell(me, spellId, true);
+                }
+                break;
                 case SPELL_CHAIN_1:
                 case SPELL_CHAIN_2:
                 case SPELL_CHAIN_3:
                 case SPELL_CHAIN_4:
+                {
+                    uint8 count = 0;
+                    if (me->HasAura(SPELL_CHAIN_1))
+                        count++;
+                    if (me->HasAura(SPELL_CHAIN_3))
+                        count++;
+                    if (RAID_MODE(0, 1))
                     {
-                        uint8 count = 0;
-                        if (me->HasAura(SPELL_CHAIN_1))
+                        if (me->HasAura(SPELL_CHAIN_2))
                             count++;
-                        if (me->HasAura(SPELL_CHAIN_3))
+                        if (me->HasAura(SPELL_CHAIN_4))
                             count++;
-                        if (RAID_MODE(0, 1))
-                        {
-                            if (me->HasAura(SPELL_CHAIN_2))
-                                count++;
-                            if (me->HasAura(SPELL_CHAIN_4))
-                                count++;
-                        }
-                        if (count >= REQ_CHAIN_COUNT)
-                        {
-                            if (Creature* commander = ObjectAccessor::GetCreature(*me, CommanderGUID))
-                                commander->AI()->Talk(SAY_COMMANDER_GROUND_PHASE);
-
-                            me->InterruptNonMeleeSpells(true);
-                            events.CancelEvent(EVENT_SPELL_FIREBALL);
-                            events.CancelEvent(EVENT_SPELL_DEVOURING_FLAME);
-                            events.CancelEvent(EVENT_SUMMON_MOLE_MACHINES);
-                            me->SetTarget();
-                            me->SendMeleeAttackStop(me->GetVictim());
-                            me->GetMotionMaster()->MoveLand(0, CORDS_GROUND, 25.0f);
-                        }
                     }
-                    break;
+                    if (count >= REQ_CHAIN_COUNT)
+                    {
+                        if (Creature* commander = ObjectAccessor::GetCreature(*me, CommanderGUID))
+                            commander->AI()->Talk(SAY_COMMANDER_GROUND_PHASE);
+
+                        me->InterruptNonMeleeSpells(true);
+                        events.CancelEvent(EVENT_SPELL_FIREBALL);
+                        events.CancelEvent(EVENT_SPELL_DEVOURING_FLAME);
+                        events.CancelEvent(EVENT_SUMMON_MOLE_MACHINES);
+                        me->SetTarget();
+                        me->SendMeleeAttackStop(me->GetVictim());
+                        me->GetMotionMaster()->MoveLand(0, CORDS_GROUND, 25.0f);
+                    }
+                }
+                break;
             }
         }
 
-        void DamageTaken(Unit*, uint32& damage, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
+        void DamageTaken(
+            Unit*, uint32& damage, DamageEffectType /*damagetype*/, SpellSchoolMask /*damageSchoolMask*/) override
         {
-            if (me->GetPositionZ() > 440.0f) // protection, razorscale is attackable (so harpoons can hit him, etc.), but should not receive dmg while in air
+            if (me->GetPositionZ() >
+                440.0f) // protection, razorscale is attackable (so harpoons can hit him, etc.), but should not receive dmg while in air
                 damage = 0;
-            else if (!bGroundPhase && ((me->GetHealth() * 100) / me->GetMaxHealth() < 50) && me->HasAura(62794)) // already below 50%, but still in chains and stunned
+            else if (!bGroundPhase && ((me->GetHealth() * 100) / me->GetMaxHealth() < 50) &&
+                     me->HasAura(62794)) // already below 50%, but still in chains and stunned
                 events.RescheduleEvent(EVENT_WARN_DEEP_BREATH, 0ms);
         }
 
@@ -407,41 +404,45 @@ public:
                     events.Repeat(13s);
                     break;
                 case EVENT_SUMMON_MOLE_MACHINES:
+                {
+                    memset(cords, '\0', sizeof(cords));
+                    uint8 num = RAID_MODE(urand(2, 3), urand(2, 4));
+                    for (int i = 0; i < num; ++i)
                     {
-                        memset(cords, '\0', sizeof(cords));
-                        uint8 num = RAID_MODE( urand(2, 3), urand(2, 4));
-                        for( int i = 0; i < num; ++i )
+                        // X: (550, 625) Y: (-185, -230)
+                        cords[i][0] = urand(550, 625);
+                        cords[i][1] = -230 + rand() % 45;
+                        if (GameObject* drill = me->SummonGameObject(
+                                GO_DRILL, cords[i][0], cords[i][1], 391.1f, M_PI / 4, 0.0f, 0.0f, 0.0f, 0.0f, 8))
                         {
-                            // X: (550, 625) Y: (-185, -230)
-                            cords[i][0] = urand(550, 625);
-                            cords[i][1] = -230 + rand() % 45;
-                            if (GameObject* drill = me->SummonGameObject(GO_DRILL, cords[i][0], cords[i][1], 391.1f, M_PI / 4, 0.0f, 0.0f, 0.0f, 0.0f, 8))
-                            {
-                                //drill->SetGoAnimProgress(0);
-                                //drill->SetLootState(GO_READY);
-                                //drill->UseDoorOrButton(8);
-                                //drill->SetGoState(GO_STATE_READY);
-                                drill->SetGoState(GO_STATE_ACTIVE);
-                                drill->SetGoAnimProgress(0);
-                            }
+                            //drill->SetGoAnimProgress(0);
+                            //drill->SetLootState(GO_READY);
+                            //drill->UseDoorOrButton(8);
+                            //drill->SetGoState(GO_STATE_READY);
+                            drill->SetGoState(GO_STATE_ACTIVE);
+                            drill->SetGoAnimProgress(0);
                         }
-                        events.Repeat(45s);
-                        events.RescheduleEvent(EVENT_SUMMON_ADDS, 4s);
                     }
-                    break;
+                    events.Repeat(45s);
+                    events.RescheduleEvent(EVENT_SUMMON_ADDS, 4s);
+                }
+                break;
                 case EVENT_SUMMON_ADDS:
-                    for( int i = 0; i < 4; ++i )
+                    for (int i = 0; i < 4; ++i)
                     {
                         if (!cords[i][0])
                             break;
 
                         uint8 opt;
                         uint8 r = urand(1, 100);
-                        if (r <= 30) opt = 1;
-                        else if (r <= 65) opt = 2;
-                        else opt = 3;
+                        if (r <= 30)
+                            opt = 1;
+                        else if (r <= 65)
+                            opt = 2;
+                        else
+                            opt = 3;
 
-                        for( int j = 0; j < 4; ++j )
+                        for (int j = 0; j < 4; ++j)
                         {
                             float x = cords[i][0] + 4.0f * cos(j * M_PI / 2);
                             float y = cords[i][1] + 4.0f * std::sin(j * M_PI / 2);
@@ -450,7 +451,8 @@ public:
                             switch (opt)
                             {
                                 case 1:
-                                    if (j == 1) npc_entry = NPC_DARK_RUNE_SENTINEL;
+                                    if (j == 1)
+                                        npc_entry = NPC_DARK_RUNE_SENTINEL;
                                     break;
                                 case 2:
                                     switch (j)
@@ -480,7 +482,8 @@ public:
                             }
 
                             if (npc_entry)
-                                if (Creature* c = me->SummonCreature(npc_entry, x, y, 391.1f, j * M_PI / 2, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
+                                if (Creature* c = me->SummonCreature(
+                                        npc_entry, x, y, 391.1f, j * M_PI / 2, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
                                     DoZoneInCombat(c);
                         }
                     }
@@ -497,11 +500,17 @@ public:
                 case EVENT_FLY_UP:
                     me->SetInCombatWithZone(); // just in case
                     if (pInstance)
-                        for( int i = 0; i < 4; ++i )
+                        for (int i = 0; i < 4; ++i)
                             if (ObjectGuid guid = pInstance->GetGuidData(DATA_HARPOON_FIRE_STATE_1 + i))
                                 if (Creature* hfs = ObjectAccessor::GetCreature(*me, guid))
                                 {
-                                    me->SummonCreature(34188, hfs->GetPositionX(), hfs->GetPositionY(), hfs->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 22000);
+                                    me->SummonCreature(34188,
+                                        hfs->GetPositionX(),
+                                        hfs->GetPositionY(),
+                                        hfs->GetPositionZ(),
+                                        0,
+                                        TEMPSUMMON_TIMED_DESPAWN,
+                                        22000);
                                     hfs->AI()->SetData(1, 0);
                                 }
 
@@ -515,7 +524,7 @@ public:
                     }
                     me->CastSpell(me, SPELL_WINGBUFFET, true);
 
-                    if ((me->GetHealth() * 100) / me->GetMaxHealth() < 50 ) // start phase 3
+                    if ((me->GetHealth() * 100) / me->GetMaxHealth() < 50) // start phase 3
                     {
                         Talk(EMOTE_PERMA_GROUND);
                         me->SetControlled(false, UNIT_STATE_ROOT);
@@ -595,7 +604,7 @@ public:
                 DoMeleeAttackIfReady();
         }
 
-        void MoveInLineOfSight(Unit* /*who*/) override {}
+        void MoveInLineOfSight(Unit* /*who*/) override { }
 
         void JustReachedHome() override
         {
@@ -618,7 +627,8 @@ public:
         {
             if (victim && victim->GetEntry() == NPC_DARK_RUNE_GUARDIAN)
                 if (pInstance)
-                    pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, NPC_DARK_RUNE_GUARDIAN, 1, me);
+                    pInstance->DoUpdateAchievementCriteria(
+                        ACHIEVEMENT_CRITERIA_TYPE_KILL_CREATURE, NPC_DARK_RUNE_GUARDIAN, 1, me);
         }
 
         void EnterEvadeMode(EvadeReason why) override
@@ -657,7 +667,7 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32  /*uiSender*/, uint32 uiAction) override
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 uiAction) override
     {
         if (!player || !creature)
             return true;
@@ -676,14 +686,16 @@ public:
 
                 // reset npcs NPC_HARPOON_FIRE_STATE
                 for (uint8 i = 0; i < 4; ++i)
-                    if (Creature* hfs = ObjectAccessor::GetCreature(*creature, instance->GetGuidData(DATA_HARPOON_FIRE_STATE_1 + i)))
+                    if (Creature* hfs = ObjectAccessor::GetCreature(
+                            *creature, instance->GetGuidData(DATA_HARPOON_FIRE_STATE_1 + i)))
                         hfs->AI()->SetData(1, 0);
 
                 if (razorscale->AI())
                 {
                     razorscale->AI()->AttackStart(player);
                     razorscale->GetMotionMaster()->MoveIdle();
-                    razorscale->GetMotionMaster()->MovePoint(POINT_RAZORSCALE_INIT, 588.0f, -178.0f, 490.0f, false, false);
+                    razorscale->GetMotionMaster()->MovePoint(
+                        POINT_RAZORSCALE_INIT, 588.0f, -178.0f, 490.0f, false, false);
                 }
             }
         }
@@ -715,7 +727,7 @@ public:
                 return;
 
             _introSpoken = true;
-           //Talk(SAY_COMMANDER_INTRO); // No source leads to showing any text messages, perhaps only SOUND ID 15647 is played?
+            //Talk(SAY_COMMANDER_INTRO); // No source leads to showing any text messages, perhaps only SOUND ID 15647 is played?
         }
 
     private:
@@ -791,10 +803,25 @@ public:
                         {
                             if (GameObject* bh = me->FindNearestGameObject(GO_BROKEN_HARPOON, 4.0f))
                                 bh->SetPhaseMask(2, true);
-                            if (GameObject* wh = me->SummonGameObject(GetHarpoonGunIdForThisHFS(), me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 3 * M_PI / 2, 0.0f, 0.0f, 0.0f, 0.0f, 0))
+                            if (GameObject* wh = me->SummonGameObject(GetHarpoonGunIdForThisHFS(),
+                                    me->GetPositionX(),
+                                    me->GetPositionY(),
+                                    me->GetPositionZ(),
+                                    3 * M_PI / 2,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0))
                             {
                                 me->RemoveGameObject(wh, false);
-                                if (Creature* cr = me->SummonCreature(NPC_RAZORSCALE_CONTROLLER, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 5000))
+                                if (Creature* cr = me->SummonCreature(NPC_RAZORSCALE_CONTROLLER,
+                                        me->GetPositionX(),
+                                        me->GetPositionY(),
+                                        me->GetPositionZ(),
+                                        0,
+                                        TEMPSUMMON_TIMED_DESPAWN,
+                                        5000))
                                     cr->AI()->Talk(EMOTE_HARPOON);
                             }
                         }
@@ -803,7 +830,8 @@ public:
                 case 3: // shoot
                     if (pInstance)
                     {
-                        Creature* razorscale = ObjectAccessor::GetCreature(*me, pInstance->GetGuidData(TYPE_RAZORSCALE));
+                        Creature* razorscale =
+                            ObjectAccessor::GetCreature(*me, pInstance->GetGuidData(TYPE_RAZORSCALE));
                         if (!razorscale)
                             return;
                         if (!razorscale->HasAura(value))
@@ -854,7 +882,7 @@ public:
             fixingGUID.Clear();
         }
 
-        void SetData(uint32 id, uint32  /*value*/) override
+        void SetData(uint32 id, uint32 /*value*/) override
         {
             switch (id)
             {
@@ -884,7 +912,7 @@ public:
                         if (Creature* c = ObjectAccessor::GetCreature(*me, fixingGUID))
                             if (me->GetExactDist2dSq(c) <= 25.0f)
                             {
-                                if (me->GetUInt32Value(UNIT_NPC_EMOTESTATE) != EMOTE_STATE_WORK )
+                                if (me->GetUInt32Value(UNIT_NPC_EMOTESTATE) != EMOTE_STATE_WORK)
                                     me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_WORK);
 
                                 if (std::fabs(me->GetOrientation() - me->GetAngle(c)) > M_PI / 4)
@@ -909,13 +937,16 @@ public:
                             return;
                         }
 
-                        for( int i = 0; i < 4; ++i )
+                        for (int i = 0; i < 4; ++i)
                             if (ObjectGuid fs_GUID = pInstance->GetGuidData(DATA_HARPOON_FIRE_STATE_1 + i))
                                 if (Creature* fs = ObjectAccessor::GetCreature(*me, fs_GUID))
                                     if (!fs->AI()->GetData(2))
                                     {
                                         float a = rand_norm() * M_PI;
-                                        me->GetMotionMaster()->MovePoint(0, fs->GetPositionX() + 3.0f * cos(a), fs->GetPositionY() + 3.0f * std::sin(a), fs->GetPositionZ());
+                                        me->GetMotionMaster()->MovePoint(0,
+                                            fs->GetPositionX() + 3.0f * cos(a),
+                                            fs->GetPositionY() + 3.0f * std::sin(a),
+                                            fs->GetPositionZ());
                                         fixingGUID = fs->GetGUID();
                                         return;
                                     }
@@ -1020,12 +1051,16 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (timer2 <= diff) timer2 = 0;
-            else timer2 -= diff;
+            if (timer2 <= diff)
+                timer2 = 0;
+            else
+                timer2 -= diff;
             if (timer2 == 0 && me->GetVictim() && me->IsWithinMeleeRange(me->GetVictim()))
             {
                 me->CastSpell(me->GetVictim(), SPELL_STORMSTRIKE_DMG, true);
-                me->CastSpell(me->GetVictim(), SPELL_STORMSTRIKE_DMG, true); // cast the same twice cus second one requires setting offhand damage
+                me->CastSpell(me->GetVictim(),
+                    SPELL_STORMSTRIKE_DMG,
+                    true); // cast the same twice cus second one requires setting offhand damage
                 me->CastSpell(me->GetVictim(), SPELL_STORMSTRIKE_DEBUFF, true);
                 timer2 = urand(8000, 10000);
                 return;
@@ -1133,8 +1168,10 @@ public:
             else
                 timer1 -= diff;
 
-            if (timer2 <= diff) timer2 = 0;
-            else timer2 -= diff;
+            if (timer2 <= diff)
+                timer2 = 0;
+            else
+                timer2 -= diff;
             if (timer2 == 0 && me->GetVictim() && me->IsWithinMeleeRange(me->GetVictim()))
             {
                 me->CastSpell(me, SPELL_WHIRLWIND, false);
@@ -1149,20 +1186,21 @@ public:
 class achievement_quick_shave : public AchievementCriteriaScript
 {
 public:
-    achievement_quick_shave() : AchievementCriteriaScript("achievement_quick_shave") {}
+    achievement_quick_shave() : AchievementCriteriaScript("achievement_quick_shave") { }
 
-    bool OnCheck(Player*  /*player*/, Unit* target, uint32 /*criteria_id*/) override
+    bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {
-        return target && target->IsCreature() && target->GetEntry() == NPC_RAZORSCALE && target->ToCreature()->AI()->GetData(1);
+        return target && target->IsCreature() && target->GetEntry() == NPC_RAZORSCALE &&
+               target->ToCreature()->AI()->GetData(1);
     }
 };
 
 class achievement_iron_dwarf_medium_rare : public AchievementCriteriaScript
 {
 public:
-    achievement_iron_dwarf_medium_rare() : AchievementCriteriaScript("achievement_iron_dwarf_medium_rare") {}
+    achievement_iron_dwarf_medium_rare() : AchievementCriteriaScript("achievement_iron_dwarf_medium_rare") { }
 
-    bool OnCheck(Player*  /*player*/, Unit* target, uint32 /*criteria_id*/) override
+    bool OnCheck(Player* /*player*/, Unit* target, uint32 /*criteria_id*/) override
     {
         return target && target->GetEntry() == NPC_RAZORSCALE;
     }

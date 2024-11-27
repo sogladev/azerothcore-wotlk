@@ -20,31 +20,30 @@
 #include "InstanceScript.h"
 #include "blood_furnace.h"
 
-DoorData const doorData[] =
-{
-    { GO_BROGGOK_DOOR_FRONT, DATA_BROGGOK,  DOOR_TYPE_ROOM    },
-    { GO_BROGGOK_DOOR_REAR,  DATA_BROGGOK,  DOOR_TYPE_PASSAGE },
-    { 0,                                0,  DOOR_TYPE_ROOM    } // END
+DoorData const doorData[] = {
+    {GO_BROGGOK_DOOR_FRONT, DATA_BROGGOK, DOOR_TYPE_ROOM   },
+    {GO_BROGGOK_DOOR_REAR,  DATA_BROGGOK, DOOR_TYPE_PASSAGE},
+    {0,                     0,            DOOR_TYPE_ROOM   }  // END
 };
 
-ObjectData const gameobjectData[] =
-{
-    { GO_BROGGOK_DOOR_REAR, DATA_BROGGOK_REAR_DOOR },
-    { GO_BROGGOK_LEVER,     DATA_BROGGOK_LEVER     },
-    { 0,                    0,                     }
+ObjectData const gameobjectData[] = {
+    {GO_BROGGOK_DOOR_REAR, DATA_BROGGOK_REAR_DOOR},
+    {GO_BROGGOK_LEVER, DATA_BROGGOK_LEVER},
+    {
+     0, 0,
+     }
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_BROGGOK, DATA_BROGGOK },
-    { NPC_KELIDAN, DATA_KELIDAN },
-    { 0,           0            }
+ObjectData const creatureData[] = {
+    {NPC_BROGGOK, DATA_BROGGOK},
+    {NPC_KELIDAN, DATA_KELIDAN},
+    {0,           0           }
 };
 
 class instance_blood_furnace : public InstanceMapScript
 {
 public:
-    instance_blood_furnace() : InstanceMapScript("instance_blood_furnace", 542) {}
+    instance_blood_furnace() : InstanceMapScript("instance_blood_furnace", 542) { }
 
     struct instance_blood_furnace_InstanceMapScript : public InstanceScript
     {
@@ -73,9 +72,7 @@ public:
         void OnCreatureCreate(Creature* creature) override
         {
             if (creature->GetEntry() == NPC_NASCENT_FEL_ORC)
-            {
                 StorePrisoner(creature);
-            }
 
             InstanceScript::OnCreatureCreate(creature);
         }
@@ -88,27 +85,27 @@ public:
 
         void OnGameObjectCreate(GameObject* go) override
         {
-            if (go->GetEntry() == 181766)                //Final exit door
+            if (go->GetEntry() == 181766) //Final exit door
                 _doorGUIDs[0] = go->GetGUID();
-            if (go->GetEntry() == 181811)               //The Maker Front door
+            if (go->GetEntry() == 181811) //The Maker Front door
                 _doorGUIDs[1] = go->GetGUID();
-            if (go->GetEntry() == 181812)                //The Maker Rear door
+            if (go->GetEntry() == 181812) //The Maker Rear door
             {
                 _doorGUIDs[2] = go->GetGUID();
                 if (GetData(DATA_THE_MAKER) == DONE)
                     HandleGameObject(go->GetGUID(), true);
             }
 
-            if (go->GetEntry() == 181823)               //Kelidan exit door
+            if (go->GetEntry() == 181823) //Kelidan exit door
                 _doorGUIDs[5] = go->GetGUID();
 
-            if (go->GetEntry() == 181821)               //Broggok prison cell front right
+            if (go->GetEntry() == 181821) //Broggok prison cell front right
                 _prisonGUIDs[0] = go->GetGUID();
-            if (go->GetEntry() == 181818)               //Broggok prison cell back right
+            if (go->GetEntry() == 181818) //Broggok prison cell back right
                 _prisonGUIDs[1] = go->GetGUID();
-            if (go->GetEntry() == 181820)               //Broggok prison cell front left
+            if (go->GetEntry() == 181820) //Broggok prison cell front left
                 _prisonGUIDs[2] = go->GetGUID();
-            if (go->GetEntry() == 181817)               //Broggok prison cell back left
+            if (go->GetEntry() == 181817) //Broggok prison cell back left
                 _prisonGUIDs[3] = go->GetGUID();
 
             InstanceScript::OnGameObjectCreate(go);
@@ -152,9 +149,7 @@ public:
                     HandleGameObject(_doorGUIDs[4], false);
                     HandleGameObject(_doorGUIDs[3], true);
                     if (GameObject* lever = GetGameObject(DATA_BROGGOK_LEVER))
-                    {
                         lever->Respawn();
-                    }
                 }
             }
 
@@ -273,13 +268,9 @@ public:
                     break;
                 case DATA_BROGGOK_REAR_DOOR:
                     if (GameObject* go = GetGameObject(DATA_BROGGOK_REAR_DOOR))
-                    {
                         HandleGameObject(ObjectGuid::Empty, true, go);
-                    }
                     if (Creature* broggok = GetCreature(DATA_BROGGOK))
-                    {
                         broggok->AI()->DoAction(ACTION_ACTIVATE_BROGGOK);
-                    }
                     break;
             }
         }

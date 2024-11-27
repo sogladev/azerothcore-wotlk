@@ -34,7 +34,8 @@ BanMgr* BanMgr::instance()
 }
 
 /// Ban an account, duration will be parsed using TimeStringToSecs if it is positive, otherwise permban
-BanReturn BanMgr::BanAccount(std::string const& AccountName, std::string const& Duration, std::string const& Reason, std::string const& Author)
+BanReturn BanMgr::BanAccount(
+    std::string const& AccountName, std::string const& Duration, std::string const& Reason, std::string const& Author)
 {
     if (AccountName.empty() || Duration.empty())
         return BAN_SYNTAX_ERROR;
@@ -53,7 +54,9 @@ BanReturn BanMgr::BanAccount(std::string const& AccountName, std::string const& 
     stmtAccountBanned->SetData(0, AccountID);
 
     PreparedQueryResult banresult = LoginDatabase.Query(stmtAccountBanned);
-    if (banresult && ((*banresult)[0].Get<uint32>() == (*banresult)[1].Get<uint32>() || ((*banresult)[1].Get<uint32>() > GameTime::GetGameTime().count() + DurationSecs && DurationSecs)))
+    if (banresult &&
+        ((*banresult)[0].Get<uint32>() == (*banresult)[1].Get<uint32>() ||
+            ((*banresult)[1].Get<uint32>() > GameTime::GetGameTime().count() + DurationSecs && DurationSecs)))
         return BAN_LONGER_EXISTS;
 
     // make sure there is only one active ban
@@ -87,16 +90,22 @@ BanReturn BanMgr::BanAccount(std::string const& AccountName, std::string const& 
             IsPermanetly = false;
 
         if (!IsPermanetly)
-            ChatHandler(nullptr).SendWorldText(LANG_BAN_ACCOUNT_YOUBANNEDMESSAGE_WORLD, Author, AccountName, secsToTimeString(TimeStringToSecs(Duration), true), Reason);
+            ChatHandler(nullptr).SendWorldText(LANG_BAN_ACCOUNT_YOUBANNEDMESSAGE_WORLD,
+                Author,
+                AccountName,
+                secsToTimeString(TimeStringToSecs(Duration), true),
+                Reason);
         else
-            ChatHandler(nullptr).SendWorldText(LANG_BAN_ACCOUNT_YOUPERMBANNEDMESSAGE_WORLD, Author, AccountName, Reason);
+            ChatHandler(nullptr).SendWorldText(
+                LANG_BAN_ACCOUNT_YOUPERMBANNEDMESSAGE_WORLD, Author, AccountName, Reason);
     }
 
     return BAN_SUCCESS;
 }
 
 /// Ban an account by player name, duration will be parsed using TimeStringToSecs if it is positive, otherwise permban
-BanReturn BanMgr::BanAccountByPlayerName(std::string const& CharacterName, std::string const& Duration, std::string const& Reason, std::string const& Author)
+BanReturn BanMgr::BanAccountByPlayerName(
+    std::string const& CharacterName, std::string const& Duration, std::string const& Reason, std::string const& Author)
 {
     if (CharacterName.empty() || Duration.empty())
         return BAN_SYNTAX_ERROR;
@@ -115,7 +124,9 @@ BanReturn BanMgr::BanAccountByPlayerName(std::string const& CharacterName, std::
     stmtAccountBanned->SetData(0, AccountID);
 
     PreparedQueryResult banresult = LoginDatabase.Query(stmtAccountBanned);
-    if (banresult && ((*banresult)[0].Get<uint32>() == (*banresult)[1].Get<uint32>() || ((*banresult)[1].Get<uint32>() > GameTime::GetGameTime().count() + DurationSecs && DurationSecs)))
+    if (banresult &&
+        ((*banresult)[0].Get<uint32>() == (*banresult)[1].Get<uint32>() ||
+            ((*banresult)[1].Get<uint32>() > GameTime::GetGameTime().count() + DurationSecs && DurationSecs)))
         return BAN_LONGER_EXISTS;
 
     // make sure there is only one active ban
@@ -153,16 +164,22 @@ BanReturn BanMgr::BanAccountByPlayerName(std::string const& CharacterName, std::
         AccountMgr::GetName(AccountID, AccountName);
 
         if (!IsPermanetly)
-            ChatHandler(nullptr).SendWorldText(LANG_BAN_ACCOUNT_YOUBANNEDMESSAGE_WORLD, Author, AccountName, secsToTimeString(TimeStringToSecs(Duration), true), Reason);
+            ChatHandler(nullptr).SendWorldText(LANG_BAN_ACCOUNT_YOUBANNEDMESSAGE_WORLD,
+                Author,
+                AccountName,
+                secsToTimeString(TimeStringToSecs(Duration), true),
+                Reason);
         else
-            ChatHandler(nullptr).SendWorldText(LANG_BAN_ACCOUNT_YOUPERMBANNEDMESSAGE_WORLD, Author, AccountName, Reason);
+            ChatHandler(nullptr).SendWorldText(
+                LANG_BAN_ACCOUNT_YOUPERMBANNEDMESSAGE_WORLD, Author, AccountName, Reason);
     }
 
     return BAN_SUCCESS;
 }
 
 /// Ban an IP address, duration will be parsed using TimeStringToSecs if it is positive, otherwise permban
-BanReturn BanMgr::BanIP(std::string const& IP, std::string const& Duration, std::string const& Reason, std::string const& Author)
+BanReturn BanMgr::BanIP(
+    std::string const& IP, std::string const& Duration, std::string const& Reason, std::string const& Author)
 {
     if (IP.empty() || Duration.empty())
         return BAN_SYNTAX_ERROR;
@@ -191,7 +208,11 @@ BanReturn BanMgr::BanIP(std::string const& IP, std::string const& Duration, std:
         if (IsPermanetly)
             ChatHandler(nullptr).SendWorldText(LANG_BAN_IP_YOUPERMBANNEDMESSAGE_WORLD, Author, IP, Reason);
         else
-            ChatHandler(nullptr).SendWorldText(LANG_BAN_IP_YOUBANNEDMESSAGE_WORLD, Author, IP, secsToTimeString(TimeStringToSecs(Duration), true), Reason);
+            ChatHandler(nullptr).SendWorldText(LANG_BAN_IP_YOUBANNEDMESSAGE_WORLD,
+                Author,
+                IP,
+                secsToTimeString(TimeStringToSecs(Duration), true),
+                Reason);
     }
 
     if (!resultAccounts)
@@ -220,7 +241,8 @@ BanReturn BanMgr::BanIP(std::string const& IP, std::string const& Duration, std:
 }
 
 /// Ban an character, duration will be parsed using TimeStringToSecs if it is positive, otherwise permban
-BanReturn BanMgr::BanCharacter(std::string const& CharacterName, std::string const& Duration, std::string const& Reason, std::string const& Author)
+BanReturn BanMgr::BanCharacter(
+    std::string const& CharacterName, std::string const& Duration, std::string const& Reason, std::string const& Author)
 {
     Player* target = ObjectAccessor::FindPlayerByName(CharacterName, false);
     uint32 DurationSecs = TimeStringToSecs(Duration);
@@ -259,9 +281,14 @@ BanReturn BanMgr::BanCharacter(std::string const& CharacterName, std::string con
             IsPermanetly = false;
 
         if (!IsPermanetly)
-            ChatHandler(nullptr).SendWorldText(LANG_BAN_CHARACTER_YOUBANNEDMESSAGE_WORLD, Author, CharacterName, secsToTimeString(TimeStringToSecs(Duration), true), Reason);
+            ChatHandler(nullptr).SendWorldText(LANG_BAN_CHARACTER_YOUBANNEDMESSAGE_WORLD,
+                Author,
+                CharacterName,
+                secsToTimeString(TimeStringToSecs(Duration), true),
+                Reason);
         else
-            ChatHandler(nullptr).SendWorldText(LANG_BAN_CHARACTER_YOUPERMBANNEDMESSAGE_WORLD, Author, CharacterName, Reason);
+            ChatHandler(nullptr).SendWorldText(
+                LANG_BAN_CHARACTER_YOUPERMBANNEDMESSAGE_WORLD, Author, CharacterName, Reason);
     }
 
     return BAN_SUCCESS;

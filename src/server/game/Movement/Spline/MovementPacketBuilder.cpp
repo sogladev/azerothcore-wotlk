@@ -21,30 +21,30 @@
 
 namespace Movement
 {
-    inline void operator << (ByteBuffer& b, const Vector3& v)
+    inline void operator<<(ByteBuffer& b, Vector3 const& v)
     {
         b << v.x << v.y << v.z;
     }
 
-    inline void operator >> (ByteBuffer& b, Vector3& v)
+    inline void operator>>(ByteBuffer& b, Vector3& v)
     {
         b >> v.x >> v.y >> v.z;
     }
 
     enum MonsterMoveType
     {
-        MonsterMoveNormal       = 0,
-        MonsterMoveStop         = 1,
-        MonsterMoveFacingSpot   = 2,
+        MonsterMoveNormal = 0,
+        MonsterMoveStop = 1,
+        MonsterMoveFacingSpot = 2,
         MonsterMoveFacingTarget = 3,
-        MonsterMoveFacingAngle  = 4
+        MonsterMoveFacingAngle = 4
     };
 
-    void PacketBuilder::WriteCommonMonsterMovePart(const MoveSpline& move_spline, ByteBuffer& data)
+    void PacketBuilder::WriteCommonMonsterMovePart(MoveSpline const& move_spline, ByteBuffer& data)
     {
         MoveSplineFlag splineflags = move_spline.splineflags;
 
-        data << uint8(0);                                       // sets/unsets MOVEMENTFLAG2_UNK7 (0x40)
+        data << uint8(0); // sets/unsets MOVEMENTFLAG2_UNK7 (0x40)
         data << move_spline.spline.getPoint(move_spline.spline.first());
         data << move_spline.GetId();
 
@@ -90,19 +90,19 @@ namespace Movement
 
     void PacketBuilder::WriteStopMovement(Vector3 const& pos, uint32 splineId, ByteBuffer& data)
     {
-        data << uint8(0);                                       // sets/unsets MOVEMENTFLAG2_UNK7 (0x40)
+        data << uint8(0); // sets/unsets MOVEMENTFLAG2_UNK7 (0x40)
         data << pos;
         data << splineId;
         data << uint8(MonsterMoveStop);
     }
 
-    void WriteLinearPath(const Spline<int32>& spline, ByteBuffer& data)
+    void WriteLinearPath(Spline<int32> const& spline, ByteBuffer& data)
     {
         uint32 last_idx = spline.getPointCount() - 3;
-        const Vector3* real_path = &spline.getPoint(1);
+        Vector3 const* real_path = &spline.getPoint(1);
 
         data << last_idx;
-        data << real_path[last_idx];   // destination
+        data << real_path[last_idx]; // destination
         if (last_idx > 1)
         {
             Vector3 middle = (real_path[0] + real_path[last_idx]) / 2.f;
@@ -116,14 +116,14 @@ namespace Movement
         }
     }
 
-    void WriteCatmullRomPath(const Spline<int32>& spline, ByteBuffer& data)
+    void WriteCatmullRomPath(Spline<int32> const& spline, ByteBuffer& data)
     {
         uint32 count = spline.getPointCount() - 3;
         data << count;
         data.append<Vector3>(&spline.getPoint(2), count);
     }
 
-    void WriteCatmullRomCyclicPath(const Spline<int32>& spline, ByteBuffer& data, bool flying)
+    void WriteCatmullRomCyclicPath(Spline<int32> const& spline, ByteBuffer& data, bool flying)
     {
         uint32 count = spline.getPointCount() - 3;
         data << uint32(count + 1);
@@ -139,24 +139,22 @@ namespace Movement
         }
     }
 
-    void PacketBuilder::WriteMonsterMove(const MoveSpline& move_spline, ByteBuffer& data)
+    void PacketBuilder::WriteMonsterMove(MoveSpline const& move_spline, ByteBuffer& data)
     {
         WriteCommonMonsterMovePart(move_spline, data);
 
-        const Spline<int32>& spline = move_spline.spline;
+        Spline<int32> const& spline = move_spline.spline;
         MoveSplineFlag splineflags = move_spline.splineflags;
         if (splineflags & MoveSplineFlag::Mask_CatmullRom)
-        {
             if (splineflags.cyclic)
                 WriteCatmullRomCyclicPath(spline, data, splineflags & MoveSplineFlag::Flying);
             else
                 WriteCatmullRomPath(spline, data);
-        }
         else
             WriteLinearPath(spline, data);
     }
 
-    void PacketBuilder::WriteCreate(const MoveSpline& move_spline, ByteBuffer& data)
+    void PacketBuilder::WriteCreate(MoveSpline const& move_spline, ByteBuffer& data)
     {
         //WriteClientStatus(mov, data);
         //data.append<float>(&mov.m_float_values[SpeedWalk], SpeedMaxCount);
@@ -167,36 +165,28 @@ namespace Movement
             data << splineFlags.raw();
 
             if (splineFlags.final_angle)
-            {
                 data << move_spline.facing.angle;
-            }
             else if (splineFlags.final_target)
-            {
                 data << move_spline.facing.target;
-            }
             else if (splineFlags.final_point)
-            {
                 data << move_spline.facing.f.x << move_spline.facing.f.y << move_spline.facing.f.z;
-            }
 
             data << move_spline.timePassed();
             data << move_spline.Duration();
             data << move_spline.GetId();
 
-            data << float(1.f);                             // splineInfo.duration_mod; added in 3.1
-            data << float(1.f);                             // splineInfo.duration_mod_next; added in 3.1
+            data << float(1.f); // splineInfo.duration_mod; added in 3.1
+            data << float(1.f); // splineInfo.duration_mod_next; added in 3.1
 
-            data << move_spline.vertical_acceleration;      // added in 3.1
-            data << move_spline.effect_start_time;          // added in 3.1
+            data << move_spline.vertical_acceleration; // added in 3.1
+            data << move_spline.effect_start_time;     // added in 3.1
 
             uint32 nodes = move_spline.getPath().size();
             data << nodes;
             if (nodes)
-            {
                 data.append<Vector3>(&move_spline.getPath()[0], nodes);
-            }
-            data << uint8(move_spline.spline.mode());       // added in 3.1
+            data << uint8(move_spline.spline.mode()); // added in 3.1
             data << (move_spline.isCyclic() ? Vector3::zero() : move_spline.FinalDestination());
         }
     }
-}
+} // namespace Movement

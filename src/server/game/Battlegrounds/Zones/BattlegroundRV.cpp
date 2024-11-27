@@ -23,10 +23,10 @@
 #include "Player.h"
 #include "WorldPacket.h"
 
-static constexpr Milliseconds BG_RV_PILLAR_SWITCH_TIMER  = 25s;
+static constexpr Milliseconds BG_RV_PILLAR_SWITCH_TIMER = 25s;
 static constexpr Milliseconds BG_RV_FIRE_TO_PILLAR_TIMER = 20s;
-static constexpr Milliseconds BG_RV_CLOSE_FIRE_TIMER     = 5s;
-static constexpr Milliseconds BG_RV_FIRST_TIMER          = 20500ms; // elevators rise in 20133ms
+static constexpr Milliseconds BG_RV_CLOSE_FIRE_TIMER = 5s;
+static constexpr Milliseconds BG_RV_FIRST_TIMER = 20500ms; // elevators rise in 20133ms
 
 BattlegroundRV::BattlegroundRV()
 {
@@ -52,7 +52,8 @@ void BattlegroundRV::CheckPositionForUnit(Unit* unit)
     if (!unit->IsFalling() && unit->IsAlive())
     {
         float groundZ_vmap = unit->GetMap()->GetHeight(unit->GetPositionX(), unit->GetPositionY(), 37.0f, true, 50.0f);
-        float groundZ_dyntree = unit->GetMap()->GetDynamicMapTree().getHeight(unit->GetPositionX(), unit->GetPositionY(), 37.0f, 50.0f, unit->GetPhaseMask());
+        float groundZ_dyntree = unit->GetMap()->GetDynamicMapTree().getHeight(
+            unit->GetPositionX(), unit->GetPositionY(), 37.0f, 50.0f, unit->GetPhaseMask());
 
         if ((groundZ_vmap > 28.0f && groundZ_vmap < 29.0f) || (groundZ_dyntree > 28.0f && groundZ_dyntree < 37.0f))
         {
@@ -118,7 +119,7 @@ void BattlegroundRV::PostUpdateImpl(uint32 diff)
 
                 // fix ground on elevators (so aoe spells can be casted there)
                 {
-                    uint32 objects[2] = { BG_RV_OBJECT_ELEVATOR_1, BG_RV_OBJECT_ELEVATOR_2 };
+                    uint32 objects[2] = {BG_RV_OBJECT_ELEVATOR_1, BG_RV_OBJECT_ELEVATOR_2};
                     for (uint8 i = 0; i < 2; ++i)
                         if (GameObject* go = GetBGObject(objects[i]))
                             go->RemoveGameObjectFlag(GO_FLAG_TRANSPORT);
@@ -182,7 +183,8 @@ bool BattlegroundRV::HandlePlayerUnderMap(Player* player)
 
 void BattlegroundRV::HandleAreaTrigger(Player* player, uint32 trigger)
 {
-    if (GetStatus() != STATUS_IN_PROGRESS || _state == BG_RV_STATE_OPEN_FENCES /*during elevator rising it's possible to jump and cause areatrigger*/)
+    if (GetStatus() != STATUS_IN_PROGRESS ||
+        _state == BG_RV_STATE_OPEN_FENCES /*during elevator rising it's possible to jump and cause areatrigger*/)
         return;
 
     switch (trigger)
@@ -219,32 +221,195 @@ void BattlegroundRV::Init()
 bool BattlegroundRV::SetupBattleground()
 {
     // elevators
-    if (!AddObject(BG_RV_OBJECT_ELEVATOR_1, BG_RV_OBJECT_TYPE_ELEVATOR_1, 763.536377f, -294.535767f, 0.505383f, 3.141593f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_ELEVATOR_2, BG_RV_OBJECT_TYPE_ELEVATOR_2, 763.506348f, -273.873352f, 0.505383f, 0.000000f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            // buffs
-            || !AddObject(BG_RV_OBJECT_BUFF_1, BG_RV_OBJECT_TYPE_BUFF_1, 735.551819f, -284.794678f, 28.276682f, 0.034906f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_BUFF_2, BG_RV_OBJECT_TYPE_BUFF_2, 791.224487f, -284.794464f, 28.276682f, 2.600535f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            // fire
-            || !AddObject(BG_RV_OBJECT_FIRE_1, BG_RV_OBJECT_TYPE_FIRE_1, 743.543457f, -283.799469f, 28.286655f, 3.141593f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_FIRE_2, BG_RV_OBJECT_TYPE_FIRE_2, 782.971802f, -283.799469f, 28.286655f, 3.141593f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_FIREDOOR_1, BG_RV_OBJECT_TYPE_FIREDOOR_1, 743.711060f, -284.099609f, 27.542587f, 3.141593f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_FIREDOOR_2, BG_RV_OBJECT_TYPE_FIREDOOR_2, 783.221252f, -284.133362f, 27.535686f, 0.000000f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            // Gear
-            || !AddObject(BG_RV_OBJECT_GEAR_1, BG_RV_OBJECT_TYPE_GEAR_1, 763.664551f, -261.872986f, 26.686588f, 0.000000f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_GEAR_2, BG_RV_OBJECT_TYPE_GEAR_2, 763.578979f, -306.146149f, 26.665222f, 3.141593f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            // Pulley
-            || !AddObject(BG_RV_OBJECT_PULLEY_1, BG_RV_OBJECT_TYPE_PULLEY_1, 700.722290f, -283.990662f, 39.517582f, 3.141593f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_PULLEY_2, BG_RV_OBJECT_TYPE_PULLEY_2, 826.303833f, -283.996429f, 39.517582f, 0.000000f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            // Pilars
-            || !AddObject(BG_RV_OBJECT_PILAR_1, BG_RV_OBJECT_TYPE_PILAR_1, 763.632385f, -306.162384f, 25.909504f, 3.141593f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_PILAR_2, BG_RV_OBJECT_TYPE_PILAR_2, 723.644287f, -284.493256f, 24.648525f, 3.141593f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_PILAR_3, BG_RV_OBJECT_TYPE_PILAR_3, 763.611145f, -261.856750f, 25.909504f, 0.000000f, 0, 0, 0, RESPAWN_IMMEDIATELY)
-            || !AddObject(BG_RV_OBJECT_PILAR_4, BG_RV_OBJECT_TYPE_PILAR_4, 802.211609f, -284.493256f, 24.648525f, 0.000000f, 0, 0, 0, RESPAWN_IMMEDIATELY)
+    if (!AddObject(BG_RV_OBJECT_ELEVATOR_1,
+            BG_RV_OBJECT_TYPE_ELEVATOR_1,
+            763.536377f,
+            -294.535767f,
+            0.505383f,
+            3.141593f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_ELEVATOR_2,
+            BG_RV_OBJECT_TYPE_ELEVATOR_2,
+            763.506348f,
+            -273.873352f,
+            0.505383f,
+            0.000000f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY)
+        // buffs
+        || !AddObject(BG_RV_OBJECT_BUFF_1,
+               BG_RV_OBJECT_TYPE_BUFF_1,
+               735.551819f,
+               -284.794678f,
+               28.276682f,
+               0.034906f,
+               0,
+               0,
+               0,
+               RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_BUFF_2,
+            BG_RV_OBJECT_TYPE_BUFF_2,
+            791.224487f,
+            -284.794464f,
+            28.276682f,
+            2.600535f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY)
+        // fire
+        || !AddObject(BG_RV_OBJECT_FIRE_1,
+               BG_RV_OBJECT_TYPE_FIRE_1,
+               743.543457f,
+               -283.799469f,
+               28.286655f,
+               3.141593f,
+               0,
+               0,
+               0,
+               RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_FIRE_2,
+            BG_RV_OBJECT_TYPE_FIRE_2,
+            782.971802f,
+            -283.799469f,
+            28.286655f,
+            3.141593f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_FIREDOOR_1,
+            BG_RV_OBJECT_TYPE_FIREDOOR_1,
+            743.711060f,
+            -284.099609f,
+            27.542587f,
+            3.141593f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_FIREDOOR_2,
+            BG_RV_OBJECT_TYPE_FIREDOOR_2,
+            783.221252f,
+            -284.133362f,
+            27.535686f,
+            0.000000f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY)
+        // Gear
+        || !AddObject(BG_RV_OBJECT_GEAR_1,
+               BG_RV_OBJECT_TYPE_GEAR_1,
+               763.664551f,
+               -261.872986f,
+               26.686588f,
+               0.000000f,
+               0,
+               0,
+               0,
+               RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_GEAR_2,
+            BG_RV_OBJECT_TYPE_GEAR_2,
+            763.578979f,
+            -306.146149f,
+            26.665222f,
+            3.141593f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY)
+        // Pulley
+        || !AddObject(BG_RV_OBJECT_PULLEY_1,
+               BG_RV_OBJECT_TYPE_PULLEY_1,
+               700.722290f,
+               -283.990662f,
+               39.517582f,
+               3.141593f,
+               0,
+               0,
+               0,
+               RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_PULLEY_2,
+            BG_RV_OBJECT_TYPE_PULLEY_2,
+            826.303833f,
+            -283.996429f,
+            39.517582f,
+            0.000000f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY)
+        // Pilars
+        || !AddObject(BG_RV_OBJECT_PILAR_1,
+               BG_RV_OBJECT_TYPE_PILAR_1,
+               763.632385f,
+               -306.162384f,
+               25.909504f,
+               3.141593f,
+               0,
+               0,
+               0,
+               RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_PILAR_2,
+            BG_RV_OBJECT_TYPE_PILAR_2,
+            723.644287f,
+            -284.493256f,
+            24.648525f,
+            3.141593f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_PILAR_3,
+            BG_RV_OBJECT_TYPE_PILAR_3,
+            763.611145f,
+            -261.856750f,
+            25.909504f,
+            0.000000f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY) ||
+        !AddObject(BG_RV_OBJECT_PILAR_4,
+            BG_RV_OBJECT_TYPE_PILAR_4,
+            802.211609f,
+            -284.493256f,
+            24.648525f,
+            0.000000f,
+            0,
+            0,
+            0,
+            RESPAWN_IMMEDIATELY)
 
-            // Arena Ready Marker
-            || !AddObject(BG_RV_OBJECT_READY_MARKER_1, ARENA_READY_MARKER_ENTRY, 769.93f, -301.04f, 2.80f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 300)
-            || !AddObject(BG_RV_OBJECT_READY_MARKER_2, ARENA_READY_MARKER_ENTRY, 757.02f, -267.30f, 2.80f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 300)
-       )
+        // Arena Ready Marker
+        || !AddObject(BG_RV_OBJECT_READY_MARKER_1,
+               ARENA_READY_MARKER_ENTRY,
+               769.93f,
+               -301.04f,
+               2.80f,
+               0.0f,
+               0.0f,
+               0.0f,
+               0.0f,
+               0.0f,
+               300) ||
+        !AddObject(BG_RV_OBJECT_READY_MARKER_2,
+            ARENA_READY_MARKER_ENTRY,
+            757.02f,
+            -267.30f,
+            2.80f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            300))
     {
         LOG_ERROR("sql.sql", "BatteGroundRV: Failed to spawn some object!");
         return false;

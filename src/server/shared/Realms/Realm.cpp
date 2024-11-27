@@ -39,18 +39,16 @@ boost::asio::ip::tcp_endpoint Realm::GetAddressForClient(boost::asio::ip::addres
             realmIp = *LocalAddress;
         }
     }
+    else if (clientAddr.is_v4() &&
+             Acore::Net::IsInNetwork(LocalAddress->to_v4(), LocalSubnetMask->to_v4(), clientAddr.to_v4()))
+    {
+        realmIp = *LocalAddress;
+    }
     else
     {
-        if (clientAddr.is_v4() && Acore::Net::IsInNetwork(LocalAddress->to_v4(), LocalSubnetMask->to_v4(), clientAddr.to_v4()))
-        {
-            realmIp = *LocalAddress;
-        }
-        else
-        {
-            realmIp = *ExternalAddress;
-        }
+        realmIp = *ExternalAddress;
     }
 
     // Return external IP
-    return { realmIp, Port };
+    return {realmIp, Port};
 }

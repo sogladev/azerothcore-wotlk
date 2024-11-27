@@ -21,16 +21,16 @@
 
 enum Spells
 {
-    SPELL_SHADOWFLAME       = 22539,
-    SPELL_WINGBUFFET        = 23339,
-    SPELL_FLAMEBUFFET       = 23341
+    SPELL_SHADOWFLAME = 22539,
+    SPELL_WINGBUFFET = 23339,
+    SPELL_FLAMEBUFFET = 23341
 };
 
 enum Events
 {
-    EVENT_SHADOWFLAME       = 1,
-    EVENT_WINGBUFFET        = 2,
-    EVENT_FLAMEBUFFET       = 3
+    EVENT_SHADOWFLAME = 1,
+    EVENT_WINGBUFFET = 2,
+    EVENT_FLAMEBUFFET = 3
 };
 
 class boss_firemaw : public CreatureScript

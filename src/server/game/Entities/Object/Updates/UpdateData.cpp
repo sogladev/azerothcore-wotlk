@@ -33,13 +33,13 @@ void UpdateData::AddOutOfRangeGUID(ObjectGuid guid)
     m_outOfRangeGUIDs.push_back(guid);
 }
 
-void UpdateData::AddUpdateBlock(const ByteBuffer& block)
+void UpdateData::AddUpdateBlock(ByteBuffer const& block)
 {
     m_data.append(block);
     ++m_blockCount;
 }
 
-void UpdateData::AddUpdateBlock(const UpdateData& block)
+void UpdateData::AddUpdateBlock(UpdateData const& block)
 {
     m_data.append(block.m_data);
     m_blockCount += block.m_blockCount;
@@ -51,12 +51,12 @@ bool UpdateData::BuildPacket(WorldPacket& packet)
 
     packet.reserve(4 + (m_outOfRangeGUIDs.empty() ? 0 : 1 + 4 + 9 * m_outOfRangeGUIDs.size()) + m_data.wpos());
 
-    packet << (uint32) (!m_outOfRangeGUIDs.empty() ? m_blockCount + 1 : m_blockCount);
+    packet << (uint32)(!m_outOfRangeGUIDs.empty() ? m_blockCount + 1 : m_blockCount);
 
     if (!m_outOfRangeGUIDs.empty())
     {
-        packet << (uint8) UPDATETYPE_OUT_OF_RANGE_OBJECTS;
-        packet << (uint32) m_outOfRangeGUIDs.size();
+        packet << (uint8)UPDATETYPE_OUT_OF_RANGE_OBJECTS;
+        packet << (uint32)m_outOfRangeGUIDs.size();
 
         for (ObjectGuid const& guid : m_outOfRangeGUIDs)
             packet << guid.WriteAsPacked();

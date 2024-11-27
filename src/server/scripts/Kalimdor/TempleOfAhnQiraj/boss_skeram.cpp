@@ -23,33 +23,33 @@
 
 enum Yells
 {
-    SAY_AGGRO                   = 0,
-    SAY_SLAY                    = 1,
-    SAY_SPLIT                   = 2,
-    SAY_DEATH                   = 3
+    SAY_AGGRO = 0,
+    SAY_SLAY = 1,
+    SAY_SPLIT = 2,
+    SAY_DEATH = 3
 };
 
 enum Spells
 {
-    SPELL_ARCANE_EXPLOSION      = 26192,
-    SPELL_EARTH_SHOCK           = 26194,
-    SPELL_TRUE_FULFILLMENT      = 785,
-    SPELL_INITIALIZE_IMAGE      = 3730,
-    SPELL_SUMMON_IMAGES         = 747,
-    SPELL_BIRTH                 = 34115
+    SPELL_ARCANE_EXPLOSION = 26192,
+    SPELL_EARTH_SHOCK = 26194,
+    SPELL_TRUE_FULFILLMENT = 785,
+    SPELL_INITIALIZE_IMAGE = 3730,
+    SPELL_SUMMON_IMAGES = 747,
+    SPELL_BIRTH = 34115
 };
 
 enum Events
 {
-    EVENT_ARCANE_EXPLOSION      = 1,
-    EVENT_FULLFILMENT           = 2,
-    EVENT_BLINK                 = 3,
-    EVENT_EARTH_SHOCK           = 4,
-    EVENT_TELEPORT              = 5,
-    EVENT_INIT_IMAGE            = 6
+    EVENT_ARCANE_EXPLOSION = 1,
+    EVENT_FULLFILMENT = 2,
+    EVENT_BLINK = 3,
+    EVENT_EARTH_SHOCK = 4,
+    EVENT_TELEPORT = 5,
+    EVENT_INIT_IMAGE = 6
 };
 
-uint32 const BlinkSpells[3] = { 4801, 8195, 20449 };
+uint32 const BlinkSpells[3] = {4801, 8195, 20449};
 
 struct boss_skeram : public BossAI
 {
@@ -153,9 +153,7 @@ struct boss_skeram : public BossAI
         events.ScheduleEvent(EVENT_EARTH_SHOCK, 1200ms);
 
         if (!me->IsSummon())
-        {
             Talk(SAY_AGGRO);
-        }
     }
 
     void UpdateAI(uint32 diff) override
@@ -191,12 +189,8 @@ struct boss_skeram : public BossAI
                     me->SetImmuneToAll(false);
                     me->SetControlled(false, UNIT_STATE_ROOT);
                     for (ObjectGuid const& guid : _copiesGUIDs)
-                    {
                         if (Creature* image = ObjectAccessor::GetCreature(*me, guid))
-                        {
                             DoTeleport(image);
-                        }
-                    }
                     DoResetThreatList();
                     events.RescheduleEvent(EVENT_BLINK, 10s, 30s);
                     break;
@@ -227,9 +221,7 @@ struct boss_skeram : public BossAI
                 if (Unit* victimTarget = myVictim->GetVictim())
                 {
                     if (victimTarget->GetGUID() == me->GetGUID())
-                    {
                         events.RescheduleEvent(EVENT_EARTH_SHOCK, 1200ms);
-                    }
                 }
             }
         }
@@ -252,7 +244,8 @@ class spell_skeram_arcane_explosion : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_skeram_arcane_explosion::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(
+            spell_skeram_arcane_explosion::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 

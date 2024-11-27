@@ -40,7 +40,7 @@ uint16 WardenPayloadMgr::GetFreePayloadId()
     return payloadId;
 }
 
-uint16 WardenPayloadMgr::RegisterPayload(const std::string& payload)
+uint16 WardenPayloadMgr::RegisterPayload(std::string const& payload)
 {
     uint16 payloadId = GetFreePayloadId();
 
@@ -79,9 +79,7 @@ bool WardenPayloadMgr::RegisterPayload(std::string const& payload, uint16 payloa
     std::copy(idStr.begin(), idStr.end(), wCheck.IdStr.begin());
 
     if (replace)
-    {
         CachedChecks.erase(payloadId);
-    }
 
     CachedChecks.emplace(payloadId, wCheck);
 
@@ -98,9 +96,7 @@ WardenCheck* WardenPayloadMgr::GetPayloadById(uint16 payloadId)
     auto it = CachedChecks.find(payloadId);
 
     if (it != CachedChecks.end())
-    {
         return &it->second;
-    }
 
     return nullptr;
 }
@@ -117,13 +113,9 @@ void WardenPayloadMgr::QueuePayload(uint16 payloadId, bool pushToFront)
     }
 
     if (pushToFront)
-    {
         QueuedPayloads.push_front(payloadId);
-    }
     else
-    {
         QueuedPayloads.push_back(payloadId);
-    }
 }
 
 bool WardenPayloadMgr::DequeuePayload(uint16 payloadId)

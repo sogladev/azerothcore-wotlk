@@ -22,55 +22,51 @@
 #include "SpellScriptLoader.h"
 #include "sunwell_plateau.h"
 
-DoorData const doorData[] =
-{
-    { GO_FIRE_BARRIER,     DATA_FELMYST_DOORS,  DOOR_TYPE_PASSAGE },
-    { GO_MURUS_GATE_1,     DATA_MURU,     DOOR_TYPE_ROOM   },
-    { GO_MURUS_GATE_2,     DATA_MURU,     DOOR_TYPE_PASSAGE },
-    { GO_BOSS_COLLISION_1, DATA_KALECGOS, DOOR_TYPE_ROOM   },
-    { GO_BOSS_COLLISION_2, DATA_KALECGOS, DOOR_TYPE_ROOM   },
-    { GO_FORCE_FIELD,      DATA_KALECGOS, DOOR_TYPE_ROOM   },
-    { 0,                   0,             DOOR_TYPE_ROOM   } // END
+DoorData const doorData[] = {
+    {GO_FIRE_BARRIER,     DATA_FELMYST_DOORS, DOOR_TYPE_PASSAGE},
+    {GO_MURUS_GATE_1,     DATA_MURU,          DOOR_TYPE_ROOM   },
+    {GO_MURUS_GATE_2,     DATA_MURU,          DOOR_TYPE_PASSAGE},
+    {GO_BOSS_COLLISION_1, DATA_KALECGOS,      DOOR_TYPE_ROOM   },
+    {GO_BOSS_COLLISION_2, DATA_KALECGOS,      DOOR_TYPE_ROOM   },
+    {GO_FORCE_FIELD,      DATA_KALECGOS,      DOOR_TYPE_ROOM   },
+    {0,                   0,                  DOOR_TYPE_ROOM   }  // END
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_KALECGOS,               DATA_KALECGOS      },
-    { NPC_BRUTALLUS,              DATA_BRUTALLUS     },
-    { NPC_FELMYST,                DATA_FELMYST       },
-    { NPC_MURU,                   DATA_MURU          },
-    { NPC_LADY_SACROLASH,         DATA_SACROLASH     },
-    { NPC_GRAND_WARLOCK_ALYTHESS, DATA_ALYTHESS      },
-    { NPC_MADRIGOSA,              DATA_MADRIGOSA     },
-    { NPC_SATHROVARR,             DATA_SATHROVARR    },
-    { NPC_KILJAEDEN_CONTROLLER,   DATA_KJ_CONTROLLER },
-    { NPC_ANVEENA,                DATA_ANVEENA       },
-    { NPC_KALECGOS_KJ,            DATA_KALECGOS_KJ   },
-    { 0,                          0                  }
+ObjectData const creatureData[] = {
+    {NPC_KALECGOS,               DATA_KALECGOS     },
+    {NPC_BRUTALLUS,              DATA_BRUTALLUS    },
+    {NPC_FELMYST,                DATA_FELMYST      },
+    {NPC_MURU,                   DATA_MURU         },
+    {NPC_LADY_SACROLASH,         DATA_SACROLASH    },
+    {NPC_GRAND_WARLOCK_ALYTHESS, DATA_ALYTHESS     },
+    {NPC_MADRIGOSA,              DATA_MADRIGOSA    },
+    {NPC_SATHROVARR,             DATA_SATHROVARR   },
+    {NPC_KILJAEDEN_CONTROLLER,   DATA_KJ_CONTROLLER},
+    {NPC_ANVEENA,                DATA_ANVEENA      },
+    {NPC_KALECGOS_KJ,            DATA_KALECGOS_KJ  },
+    {0,                          0                 }
 };
 
-ObjectData const gameObjectData[] =
-{
-    { GO_ICE_BARRIER,                   DATA_ICEBARRIER                     },
-    { GO_ORB_OF_THE_BLUE_DRAGONFLIGHT1, DATA_ORB_OF_THE_BLUE_DRAGONFLIGHT_1 },
-    { GO_ORB_OF_THE_BLUE_DRAGONFLIGHT2, DATA_ORB_OF_THE_BLUE_DRAGONFLIGHT_2 },
-    { GO_ORB_OF_THE_BLUE_DRAGONFLIGHT3, DATA_ORB_OF_THE_BLUE_DRAGONFLIGHT_3 },
-    { GO_ORB_OF_THE_BLUE_DRAGONFLIGHT4, DATA_ORB_OF_THE_BLUE_DRAGONFLIGHT_4 },
-    { 0,                                0                                   }
+ObjectData const gameObjectData[] = {
+    {GO_ICE_BARRIER,                   DATA_ICEBARRIER                    },
+    {GO_ORB_OF_THE_BLUE_DRAGONFLIGHT1, DATA_ORB_OF_THE_BLUE_DRAGONFLIGHT_1},
+    {GO_ORB_OF_THE_BLUE_DRAGONFLIGHT2, DATA_ORB_OF_THE_BLUE_DRAGONFLIGHT_2},
+    {GO_ORB_OF_THE_BLUE_DRAGONFLIGHT3, DATA_ORB_OF_THE_BLUE_DRAGONFLIGHT_3},
+    {GO_ORB_OF_THE_BLUE_DRAGONFLIGHT4, DATA_ORB_OF_THE_BLUE_DRAGONFLIGHT_4},
+    {0,                                0                                  }
 };
 
-ObjectData const summonData[] =
-{
-    { NPC_DEMONIC_VAPOR_TRAIL,    DATA_FELMYST       },
-    { NPC_UNYIELDING_DEAD,        DATA_FELMYST       },
-    { NPC_DARKNESS,               DATA_MURU          },
-    { NPC_VOID_SENTINEL,          DATA_MURU          },
-    { NPC_VOID_SPAWN,             DATA_MURU          },
-    { NPC_FELFIRE_PORTAL,         DATA_KJ_CONTROLLER },
-    { NPC_VOLATILE_FELFIRE_FIEND, DATA_KJ_CONTROLLER },
-    { NPC_SHIELD_ORB,             DATA_KJ_CONTROLLER },
-    { NPC_SINISTER_REFLECTION,    DATA_KJ_CONTROLLER },
-    { 0,                          0                  }
+ObjectData const summonData[] = {
+    {NPC_DEMONIC_VAPOR_TRAIL,    DATA_FELMYST      },
+    {NPC_UNYIELDING_DEAD,        DATA_FELMYST      },
+    {NPC_DARKNESS,               DATA_MURU         },
+    {NPC_VOID_SENTINEL,          DATA_MURU         },
+    {NPC_VOID_SPAWN,             DATA_MURU         },
+    {NPC_FELFIRE_PORTAL,         DATA_KJ_CONTROLLER},
+    {NPC_VOLATILE_FELFIRE_FIEND, DATA_KJ_CONTROLLER},
+    {NPC_SHIELD_ORB,             DATA_KJ_CONTROLLER},
+    {NPC_SINISTER_REFLECTION,    DATA_KJ_CONTROLLER},
+    {0,                          0                 }
 };
 
 class instance_sunwell_plateau : public InstanceMapScript
@@ -114,14 +110,14 @@ public:
 
 enum cataclysmBreath
 {
-    SPELL_CORROSIVE_POISON      = 46293,
-    SPELL_FEVERED_FATIGUE       = 46294,
-    SPELL_HEX                   = 46295,
-    SPELL_NECROTIC_POISON       = 46296,
-    SPELL_PIERCING_SHADOW       = 46297,
-    SPELL_SHRINK                = 46298,
-    SPELL_WAVERING_WILL         = 46299,
-    SPELL_WITHERED_TOUCH        = 46300
+    SPELL_CORROSIVE_POISON = 46293,
+    SPELL_FEVERED_FATIGUE = 46294,
+    SPELL_HEX = 46295,
+    SPELL_NECROTIC_POISON = 46296,
+    SPELL_PIERCING_SHADOW = 46297,
+    SPELL_SHRINK = 46298,
+    SPELL_WAVERING_WILL = 46299,
+    SPELL_WITHERED_TOUCH = 46300
 };
 
 class spell_cataclysm_breath : public SpellScript
@@ -130,14 +126,30 @@ class spell_cataclysm_breath : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_CORROSIVE_POISON, SPELL_FEVERED_FATIGUE, SPELL_HEX, SPELL_NECROTIC_POISON, SPELL_PIERCING_SHADOW, SPELL_SHRINK, SPELL_WAVERING_WILL, SPELL_WITHERED_TOUCH });
+        return ValidateSpellInfo({SPELL_CORROSIVE_POISON,
+            SPELL_FEVERED_FATIGUE,
+            SPELL_HEX,
+            SPELL_NECROTIC_POISON,
+            SPELL_PIERCING_SHADOW,
+            SPELL_SHRINK,
+            SPELL_WAVERING_WILL,
+            SPELL_WITHERED_TOUCH});
     }
 
     void HandleAfterCast()
     {
         if (Unit* target = GetExplTargetUnit())
             for (uint8 i = 0; i < 4; ++i)
-                GetCaster()->CastSpell(target, RAND(SPELL_CORROSIVE_POISON, SPELL_FEVERED_FATIGUE, SPELL_HEX, SPELL_NECROTIC_POISON, SPELL_PIERCING_SHADOW, SPELL_SHRINK, SPELL_WAVERING_WILL, SPELL_WITHERED_TOUCH), true);
+                GetCaster()->CastSpell(target,
+                    RAND(SPELL_CORROSIVE_POISON,
+                        SPELL_FEVERED_FATIGUE,
+                        SPELL_HEX,
+                        SPELL_NECROTIC_POISON,
+                        SPELL_PIERCING_SHADOW,
+                        SPELL_SHRINK,
+                        SPELL_WAVERING_WILL,
+                        SPELL_WITHERED_TOUCH),
+                    true);
     }
 
     void Register() override

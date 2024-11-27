@@ -40,39 +40,36 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable learnAllMyCommandTable =
-        {
-            { "class",      HandleLearnAllMyClassCommand,      SEC_GAMEMASTER, Console::No },
-            { "pettalents", HandleLearnAllMyPetTalentsCommand, SEC_GAMEMASTER, Console::No },
-            { "spells",     HandleLearnAllMySpellsCommand,     SEC_GAMEMASTER, Console::No },
-            { "talents",    HandleLearnAllMyTalentsCommand,    SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable learnAllMyCommandTable = {
+            {"class",      HandleLearnAllMyClassCommand,      SEC_GAMEMASTER, Console::No},
+            {"pettalents", HandleLearnAllMyPetTalentsCommand, SEC_GAMEMASTER, Console::No},
+            {"spells",     HandleLearnAllMySpellsCommand,     SEC_GAMEMASTER, Console::No},
+            {"talents",    HandleLearnAllMyTalentsCommand,    SEC_GAMEMASTER, Console::No}
         };
 
-        static ChatCommandTable learnAllCommandTable =
-        {
-            { "my",        learnAllMyCommandTable },
-            { "gm",        HandleLearnAllGMCommand,            SEC_GAMEMASTER, Console::No },
-            { "crafts",    HandleLearnAllCraftsCommand,        SEC_GAMEMASTER, Console::No },
-            { "default",   HandleLearnAllDefaultCommand,       SEC_GAMEMASTER, Console::No },
-            { "lang",      HandleLearnAllLangCommand,          SEC_GAMEMASTER, Console::No },
-            { "recipes",   HandleLearnAllRecipesCommand,       SEC_GAMEMASTER, Console::No },
+        static ChatCommandTable learnAllCommandTable = {
+            {"my", learnAllMyCommandTable},
+            {"gm", HandleLearnAllGMCommand, SEC_GAMEMASTER, Console::No},
+            {"crafts", HandleLearnAllCraftsCommand, SEC_GAMEMASTER, Console::No},
+            {"default", HandleLearnAllDefaultCommand, SEC_GAMEMASTER, Console::No},
+            {"lang", HandleLearnAllLangCommand, SEC_GAMEMASTER, Console::No},
+            {"recipes", HandleLearnAllRecipesCommand, SEC_GAMEMASTER, Console::No},
         };
 
-        static ChatCommandTable learnCommandTable =
-        {
-            { "all",  learnAllCommandTable },
-            { "",     HandleLearnCommand,                      SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable learnCommandTable = {
+            {"all", learnAllCommandTable},
+            {"", HandleLearnCommand, SEC_GAMEMASTER, Console::No}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "learn",   learnCommandTable },
-            { "unlearn", HandleUnLearnCommand,             SEC_GAMEMASTER, Console::No }
+        static ChatCommandTable commandTable = {
+            {"learn", learnCommandTable},
+            {"unlearn", HandleUnLearnCommand, SEC_GAMEMASTER, Console::No}
         };
         return commandTable;
     }
 
-    static bool HandleLearnCommand(ChatHandler* handler, SpellInfo const* spell, Optional<EXACT_SEQUENCE("all")> allRanks)
+    static bool HandleLearnCommand(
+        ChatHandler* handler, SpellInfo const* spell, Optional<EXACT_SEQUENCE("all")> allRanks)
     {
         Player* targetPlayer = handler->getSelectedPlayer();
 
@@ -112,7 +109,8 @@ public:
 
     static bool HandleLearnAllMySpellsCommand(ChatHandler* handler)
     {
-        ChrClassesEntry const* classEntry = sChrClassesStore.LookupEntry(handler->GetSession()->GetPlayer()->getClass());
+        ChrClassesEntry const* classEntry =
+            sChrClassesStore.LookupEntry(handler->GetSession()->GetPlayer()->getClass());
         if (!classEntry)
             return true;
         uint32 family = classEntry->spellfamily;
@@ -229,7 +227,7 @@ public:
             return false;
         }
 
-        if (petFamily->petTalentType < 0)                       // not hunter pet
+        if (petFamily->petTalentType < 0) // not hunter pet
         {
             handler->SendErrorMessage(LANG_WRONG_PET_TYPE);
             return false;
@@ -261,7 +259,7 @@ public:
                 }
             }
 
-            if (!spellId)                                        // ??? none spells in talent
+            if (!spellId) // ??? none spells in talent
                 continue;
 
             SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellId);
@@ -315,8 +313,9 @@ public:
             if (!skillInfo)
                 continue;
 
-            if ((skillInfo->categoryId == SKILL_CATEGORY_PROFESSION || skillInfo->categoryId == SKILL_CATEGORY_SECONDARY) &&
-                    skillInfo->canLink)                             // only prof. with recipes have
+            if ((skillInfo->categoryId == SKILL_CATEGORY_PROFESSION ||
+                    skillInfo->categoryId == SKILL_CATEGORY_SECONDARY) &&
+                skillInfo->canLink) // only prof. with recipes have
             {
                 HandleLearnSkillRecipesHelper(handler->GetSession()->GetPlayer(), skillInfo->id);
             }
@@ -353,8 +352,8 @@ public:
                 continue;
 
             if ((skillInfo->categoryId != SKILL_CATEGORY_PROFESSION &&
-                 skillInfo->categoryId != SKILL_CATEGORY_SECONDARY) ||
-                !skillInfo->canLink)                            // only prof with recipes have set
+                    skillInfo->categoryId != SKILL_CATEGORY_SECONDARY) ||
+                !skillInfo->canLink) // only prof with recipes have set
                 continue;
 
             uint8 locale = 0;
@@ -412,7 +411,8 @@ public:
         }
     }
 
-    static bool HandleUnLearnCommand(ChatHandler* handler, SpellInfo const* spell, Optional<EXACT_SEQUENCE("all")> allRanks)
+    static bool HandleUnLearnCommand(
+        ChatHandler* handler, SpellInfo const* spell, Optional<EXACT_SEQUENCE("all")> allRanks)
     {
         Player* target = handler->getSelectedPlayer();
         if (!target)

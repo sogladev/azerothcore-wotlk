@@ -31,36 +31,36 @@
 enum ForestFrog
 {
     // Spells
-    SPELL_REMOVE_AMANI_CURSE          = 43732,
-    SPELL_PUSH_MOJO                   = 43923,
-    SPELL_SUMMON_AMANI_CHARM_CHEST_1  = 43835, // Amani Treasure Box (186744)
-    SPELL_SUMMON_AMANI_CHARM_CHEST_2  = 43756, // Amani Charm Box (186734)
-    SPELL_SUMMON_MONEY_BAG            = 43774, // Money Bag (186736)
-    SPELL_STEALTH_                    = 34189,
+    SPELL_REMOVE_AMANI_CURSE = 43732,
+    SPELL_PUSH_MOJO = 43923,
+    SPELL_SUMMON_AMANI_CHARM_CHEST_1 = 43835, // Amani Treasure Box (186744)
+    SPELL_SUMMON_AMANI_CHARM_CHEST_2 = 43756, // Amani Charm Box (186734)
+    SPELL_SUMMON_MONEY_BAG = 43774,           // Money Bag (186736)
+    SPELL_STEALTH_ = 34189,
 
     // Creatures
-    NPC_FOREST_FROG                   = 24396,
-    NPC_MANNUTH                       = 24397,
-    NPC_DEEZ                          = 24403,
-    NPC_GALATHRYN                     = 24404,
-    NPC_ADARRAH                       = 24405,
-    NPC_FUDGERICK                     = 24406,
-    NPC_DARWEN                        = 24407,
-    NPC_GUNTER                        = 24408,
-    NPC_KYREN                         = 24409,
-    NPC_MITZI                         = 24445,
-    NPC_CHRISTIAN                     = 24448,
-    NPC_BRENNAN                       = 24453,
-    NPC_HOLLEE                        = 24455,
+    NPC_FOREST_FROG = 24396,
+    NPC_MANNUTH = 24397,
+    NPC_DEEZ = 24403,
+    NPC_GALATHRYN = 24404,
+    NPC_ADARRAH = 24405,
+    NPC_FUDGERICK = 24406,
+    NPC_DARWEN = 24407,
+    NPC_GUNTER = 24408,
+    NPC_KYREN = 24409,
+    NPC_MITZI = 24445,
+    NPC_CHRISTIAN = 24448,
+    NPC_BRENNAN = 24453,
+    NPC_HOLLEE = 24455,
 
     // Adarrah is spawned elsewhere.
     // So her text 0 isn't used in this instance.
-    SAY_THANKS_FREED                  = 0,
-    SAY_CHEST_SPAWN                   = 1,
-    SAY_CHEST_TALK                    = 2,
-    SAY_GOODBYE                       = 3,
+    SAY_THANKS_FREED = 0,
+    SAY_CHEST_SPAWN = 1,
+    SAY_CHEST_TALK = 2,
+    SAY_GOODBYE = 3,
 
-    POINT_DESPAWN                     = 1,
+    POINT_DESPAWN = 1,
 };
 
 struct npc_forest_frog : public ScriptedAI
@@ -86,100 +86,107 @@ struct npc_forest_frog : public ScriptedAI
             Player* player = ObjectAccessor::GetPlayer(me->GetMap(), PlayerGUID);
             switch (events.ExecuteEvent())
             {
-            case 1:
+                case 1:
 
-                if (me->GetEntry() == NPC_ADARRAH)
-                    Talk(SAY_THANKS_FREED + 1, player);
-                else
-                    Talk(SAY_THANKS_FREED, player);
+                    if (me->GetEntry() == NPC_ADARRAH)
+                        Talk(SAY_THANKS_FREED + 1, player);
+                    else
+                        Talk(SAY_THANKS_FREED, player);
 
-                eventTimer = 2;
-                events.ScheduleEvent(eventTimer, urand(4000, 5000));
-                break;
-            case 2:
-                if (me->GetEntry() != NPC_GUNTER && me->GetEntry() != NPC_KYREN) // vendors don't kneel?
-                    me->SetStandState(UNIT_STAND_STATE_KNEEL);
-
-                switch (me->GetEntry())
-                {
-                case NPC_MANNUTH:
-                case NPC_DEEZ:
-                case NPC_GALATHRYN:
-                    DoCastSelf(SPELL_SUMMON_AMANI_CHARM_CHEST_2, true);
-                    Talk(SAY_CHEST_SPAWN, player);
+                    eventTimer = 2;
+                    events.ScheduleEvent(eventTimer, urand(4000, 5000));
                     break;
-                case NPC_ADARRAH:
-                    DoCastSelf(SPELL_SUMMON_AMANI_CHARM_CHEST_2, true);
-                    Talk(SAY_CHEST_SPAWN + 1, player);
+                case 2:
+                    if (me->GetEntry() != NPC_GUNTER && me->GetEntry() != NPC_KYREN) // vendors don't kneel?
+                        me->SetStandState(UNIT_STAND_STATE_KNEEL);
+
+                    switch (me->GetEntry())
+                    {
+                        case NPC_MANNUTH:
+                        case NPC_DEEZ:
+                        case NPC_GALATHRYN:
+                            DoCastSelf(SPELL_SUMMON_AMANI_CHARM_CHEST_2, true);
+                            Talk(SAY_CHEST_SPAWN, player);
+                            break;
+                        case NPC_ADARRAH:
+                            DoCastSelf(SPELL_SUMMON_AMANI_CHARM_CHEST_2, true);
+                            Talk(SAY_CHEST_SPAWN + 1, player);
+                            break;
+                        case NPC_DARWEN:
+                        case NPC_FUDGERICK:
+                            DoCastSelf(SPELL_SUMMON_MONEY_BAG, true);
+                            me->LoadEquipment(0, true);
+                            Talk(SAY_CHEST_SPAWN, player);
+                            break;
+                        case NPC_KYREN:
+                        case NPC_GUNTER:
+                            Talk(SAY_CHEST_SPAWN, player);
+                            break;
+                        case NPC_MITZI:
+                        case NPC_CHRISTIAN:
+                        case NPC_BRENNAN:
+                        case NPC_HOLLEE:
+                            DoCastSelf(SPELL_SUMMON_AMANI_CHARM_CHEST_1, true);
+                            Talk(SAY_CHEST_SPAWN, player);
+                            break;
+                    }
+                    eventTimer = 3;
+                    events.ScheduleEvent(eventTimer, urand(6000, 7000));
                     break;
-                case NPC_DARWEN:
-                case NPC_FUDGERICK:
-                    DoCastSelf(SPELL_SUMMON_MONEY_BAG, true);
-                    me->LoadEquipment(0, true);
-                    Talk(SAY_CHEST_SPAWN, player);
+                case 3:
+                    me->SetStandState(EMOTE_ONESHOT_NONE);
+
+                    if (me->GetEntry() == NPC_ADARRAH)
+                        Talk(SAY_CHEST_TALK + 1, player);
+                    else
+                        Talk(SAY_CHEST_TALK);
+
+                    eventTimer = 4;
+                    if (me->GetEntry() == NPC_GUNTER || me->GetEntry() == NPC_KYREN)
+                        events.ScheduleEvent(eventTimer,
+                            5 * MINUTE *
+                                IN_MILLISECONDS); // vendors wait for 5 minutes before running away and despawning
+                    else
+                        events.ScheduleEvent(eventTimer, 6000);
                     break;
-                case NPC_KYREN:
-                case NPC_GUNTER:
-                    Talk(SAY_CHEST_SPAWN, player);
+                case 4:
+                    me->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
+
+                    if (me->GetEntry() == NPC_ADARRAH)
+                        Talk(SAY_GOODBYE + 1, player);
+                    else
+                        Talk(SAY_GOODBYE);
+
+                    eventTimer = 5;
+                    events.ScheduleEvent(eventTimer, 2000);
                     break;
-                case NPC_MITZI:
-                case NPC_CHRISTIAN:
-                case NPC_BRENNAN:
-                case NPC_HOLLEE:
-                    DoCastSelf(SPELL_SUMMON_AMANI_CHARM_CHEST_1, true);
-                    Talk(SAY_CHEST_SPAWN, player);
+                case 5:
+
+                    if (me->GetEntry() == NPC_ADARRAH)
+                        DoCastSelf(SPELL_STEALTH_, true);
+
+                    if (me->GetPositionY() > 1290.0f)
+                        me->GetMotionMaster()->MovePoint(POINT_DESPAWN, 118.2742f, 1400.657f, -9.118711f);
+                    else
+                        me->GetMotionMaster()->MovePoint(POINT_DESPAWN, 114.3155f, 1244.244f, -20.97606f);
+                    eventTimer = 0;
                     break;
-                }
-                eventTimer = 3;
-                events.ScheduleEvent(eventTimer, urand(6000, 7000));
-                break;
-            case 3:
-                me->SetStandState(EMOTE_ONESHOT_NONE);
-
-                if (me->GetEntry() == NPC_ADARRAH)
-                    Talk(SAY_CHEST_TALK + 1, player);
-                else
-                    Talk(SAY_CHEST_TALK);
-
-                eventTimer = 4;
-                if (me->GetEntry() == NPC_GUNTER || me->GetEntry() == NPC_KYREN)
-                    events.ScheduleEvent(eventTimer, 5 * MINUTE * IN_MILLISECONDS); // vendors wait for 5 minutes before running away and despawning
-                else
-                    events.ScheduleEvent(eventTimer, 6000);
-                break;
-            case 4:
-                me->HandleEmoteCommand(EMOTE_ONESHOT_WAVE);
-
-                if (me->GetEntry() == NPC_ADARRAH)
-                    Talk(SAY_GOODBYE + 1, player);
-                else
-                    Talk(SAY_GOODBYE);
-
-                eventTimer = 5;
-                events.ScheduleEvent(eventTimer, 2000);
-                break;
-            case 5:
-
-                if (me->GetEntry() == NPC_ADARRAH)
-                    DoCastSelf(SPELL_STEALTH_, true);
-
-                if (me->GetPositionY() > 1290.0f)
-                    me->GetMotionMaster()->MovePoint(POINT_DESPAWN, 118.2742f, 1400.657f, -9.118711f);
-                else
-                    me->GetMotionMaster()->MovePoint(POINT_DESPAWN, 114.3155f, 1244.244f, -20.97606f);
-                eventTimer = 0;
-                break;
             }
         }
     }
 
     void DoSpawnRandom()
     {
-        auto const& entries =
-        {
-            NPC_MANNUTH, NPC_DEEZ, NPC_GALATHRYN, NPC_ADARRAH, NPC_FUDGERICK, NPC_DARWEN, NPC_MITZI,
-            NPC_CHRISTIAN, NPC_BRENNAN, NPC_HOLLEE
-        };
+        auto const& entries = {NPC_MANNUTH,
+            NPC_DEEZ,
+            NPC_GALATHRYN,
+            NPC_ADARRAH,
+            NPC_FUDGERICK,
+            NPC_DARWEN,
+            NPC_MITZI,
+            NPC_CHRISTIAN,
+            NPC_BRENNAN,
+            NPC_HOLLEE};
 
         uint32 cEntry = Acore::Containers::SelectRandomContainerElement(entries);
 
@@ -219,11 +226,11 @@ struct npc_forest_frog : public ScriptedAI
         }
     }
 
-    private:
-        InstanceScript* instance;
-        EventMap events;
-        uint8 eventTimer;
-        ObjectGuid PlayerGUID;
+private:
+    InstanceScript* instance;
+    EventMap events;
+    uint8 eventTimer;
+    ObjectGuid PlayerGUID;
 };
 
 /*######
@@ -310,56 +317,56 @@ public:
 
 enum Says
 {
-    SAY_HARRISON_0                    = 0,
-    SAY_HARRISON_1                    = 1,
-    SAY_HARRISON_2                    = 0,
-    SAY_HARRISON_3                    = 1
+    SAY_HARRISON_0 = 0,
+    SAY_HARRISON_1 = 1,
+    SAY_HARRISON_2 = 0,
+    SAY_HARRISON_3 = 1
 };
 
 enum Spells
 {
-    SPELL_BANGING_THE_GONG            = 45225,
-    SPELL_STEALTH                     = 34189,
-    SPELL_COSMETIC_SPEAR_THROW        = 43647
+    SPELL_BANGING_THE_GONG = 45225,
+    SPELL_STEALTH = 34189,
+    SPELL_COSMETIC_SPEAR_THROW = 43647
 };
 
 enum Phases
 {
-    PHASE_GONG                         = 0,
-    PHASE_GATE_CLOSED                  = 1,
-    PHASE_GATE_OPENED                  = 2
+    PHASE_GONG = 0,
+    PHASE_GATE_CLOSED = 1,
+    PHASE_GATE_OPENED = 2
 };
 
 enum Actions
 {
-    ACTION_COMPLETE_GONG_RITUAL        = 0
+    ACTION_COMPLETE_GONG_RITUAL = 0
 };
 
 enum Waypoints
 {
-    HARRISON_MOVE_1                     = 2435800,
-    HARRISON_MOVE_2                     = 2435801,
-    HARRISON_MOVE_3                     = 2435802
+    HARRISON_MOVE_1 = 2435800,
+    HARRISON_MOVE_2 = 2435801,
+    HARRISON_MOVE_3 = 2435802
 };
 
 enum DisplayIds
 {
-    MODEL_HARRISON_JONES_0              = 22340,
-    MODEL_HARRISON_JONES_1              = 22354,
-    MODEL_HARRISON_JONES_2              = 22347
+    MODEL_HARRISON_JONES_0 = 22340,
+    MODEL_HARRISON_JONES_1 = 22354,
+    MODEL_HARRISON_JONES_2 = 22347
 };
 
 enum EntryIds
 {
-    NPC_HARRISON_JONES_1                = 24375,
-    NPC_HARRISON_JONES_2                = 24365,
-    NPC_AMANISHI_GUARDIAN               = 23597,
+    NPC_HARRISON_JONES_1 = 24375,
+    NPC_HARRISON_JONES_2 = 24365,
+    NPC_AMANISHI_GUARDIAN = 23597,
 };
 
 enum Weapons
 {
-    WEAPON_MACE                         = 5301,
-    WEAPON_SPEAR                        = 13631
+    WEAPON_MACE = 5301,
+    WEAPON_SPEAR = 13631
 };
 
 struct npc_harrison_jones : public ScriptedAI
@@ -385,10 +392,8 @@ struct npc_harrison_jones : public ScriptedAI
             me->SetFacingToObject(player);
             me->RemoveNpcFlag(UNIT_NPC_FLAG_GOSSIP);
             Talk(SAY_HARRISON_0);
-            scheduler.Schedule(2s, [this](TaskContext /*task*/)
-            {
-                me->GetMotionMaster()->MovePath(HARRISON_MOVE_1, false);
-            });
+            scheduler.Schedule(
+                2s, [this](TaskContext /*task*/) { me->GetMotionMaster()->MovePath(HARRISON_MOVE_1, false); });
         }
     }
 
@@ -402,13 +407,10 @@ struct npc_harrison_jones : public ScriptedAI
             me->PlayDistanceSound(1332); // human male death
             me->HandleEmoteCommand(EMOTE_ONESHOT_WOUND_CRITICAL);
             me->StopMoving();
-            scheduler.Schedule(1s, [this](TaskContext /*task*/)
-            {
-                me->SetStandState(UNIT_STAND_STATE_DEAD);
-            });
+            scheduler.Schedule(1s, [this](TaskContext /*task*/) { me->SetStandState(UNIT_STAND_STATE_DEAD); });
             _instance->StorePersistentData(DATA_TIMED_RUN, 21);
             _instance->DoAction(ACTION_START_TIMED_RUN);
-            me->DespawnOrUnsummon(3min+30s, 0s);
+            me->DespawnOrUnsummon(3min + 30s, 0s);
         }
     }
 
@@ -423,10 +425,8 @@ struct npc_harrison_jones : public ScriptedAI
             if (GameObject* gong = _instance->GetGameObject(DATA_STRANGE_GONG))
                 gong->SetGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
             // Players are Now Saved to instance at SPECIAL (Player should be notified?)
-            scheduler.Schedule(500ms, [this](TaskContext /*task*/)
-            {
-                me->GetMotionMaster()->MovePath(HARRISON_MOVE_2, false);
-            });
+            scheduler.Schedule(
+                500ms, [this](TaskContext /*task*/) { me->GetMotionMaster()->MovePath(HARRISON_MOVE_2, false); });
         }
     }
 
@@ -467,10 +467,9 @@ struct npc_harrison_jones : public ScriptedAI
         {
             if (GameObject* gong = _instance->GetGameObject(DATA_STRANGE_GONG))
                 me->SetFacingToObject(gong);
-            scheduler.Schedule(2s, [this](TaskContext /*task*/)
-            {
-                Talk(SAY_HARRISON_1);
-            }).Schedule(7s, [this](TaskContext /*task*/)
+            scheduler.Schedule(2s, [this](TaskContext /*task*/) { Talk(SAY_HARRISON_1); })
+                .Schedule(7s,
+                    [this](TaskContext /*task*/)
             {
                 DoCastSelf(SPELL_BANGING_THE_GONG);
                 me->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0, uint32(WEAPON_MACE));
@@ -490,11 +489,15 @@ struct npc_harrison_jones : public ScriptedAI
         {
             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USE_STANDING);
             Talk(SAY_HARRISON_3);
-            scheduler.Schedule(8s, [this](TaskContext /*task*/)
+            scheduler
+                .Schedule(8s,
+                    [this](TaskContext /*task*/)
             {
                 OpenMassiveGateAndCallGuards();
                 _phase = PHASE_GATE_OPENED;
-            }).Schedule(10s, [this](TaskContext /*task*/)
+            })
+                .Schedule(10s,
+                    [this](TaskContext /*task*/)
             {
                 DoCastSelf(SPELL_STEALTH);
                 me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_NONE);
@@ -508,9 +511,9 @@ struct npc_harrison_jones : public ScriptedAI
         scheduler.Update(diff);
     }
 
-    private:
-        InstanceScript* _instance;
-        uint32 _phase;
+private:
+    InstanceScript* _instance;
+    uint32 _phase;
 };
 
 class spell_ritual_of_power : public SpellScript

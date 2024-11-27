@@ -37,16 +37,16 @@ EndContentData */
 
 enum Rinji
 {
-    SAY_RIN_BY_OUTRUNNER    = 0,
-    SAY_RIN_FREE            = 0, // from here
-    SAY_RIN_HELP            = 1,
-    SAY_RIN_COMPLETE        = 2,
-    SAY_RIN_PROGRESS_1      = 3,
-    SAY_RIN_PROGRESS_2      = 4,
-    QUEST_RINJI_TRAPPED     = 2742,
-    NPC_RANGER              = 2694,
-    NPC_OUTRUNNER           = 2691,
-    GO_RINJI_CAGE           = 142036
+    SAY_RIN_BY_OUTRUNNER = 0,
+    SAY_RIN_FREE = 0, // from here
+    SAY_RIN_HELP = 1,
+    SAY_RIN_COMPLETE = 2,
+    SAY_RIN_PROGRESS_1 = 3,
+    SAY_RIN_PROGRESS_2 = 4,
+    QUEST_RINJI_TRAPPED = 2742,
+    NPC_RANGER = 2694,
+    NPC_OUTRUNNER = 2691,
+    GO_RINJI_CAGE = 142036
 };
 
 struct LocationXYZ
@@ -54,16 +54,14 @@ struct LocationXYZ
     float x, y, z;
 };
 
-LocationXYZ AmbushSpawn[] =
-{
-    { 191.296204f, -2839.329346f, 107.388f },
-    { 70.972466f,  -2848.674805f, 109.459f }
+LocationXYZ AmbushSpawn[] = {
+    {191.296204f, -2839.329346f, 107.388f},
+    {70.972466f,  -2848.674805f, 109.459f}
 };
 
-LocationXYZ AmbushMoveTo[] =
-{
-    { 166.630386f, -2824.780273f, 108.153f },
-    { 70.886589f,  -2874.335449f, 116.675f }
+LocationXYZ AmbushMoveTo[] = {
+    {166.630386f, -2824.780273f, 108.153f},
+    {70.886589f,  -2874.335449f, 116.675f}
 };
 
 class npc_rinji : public CreatureScript
@@ -119,20 +117,31 @@ public:
             if (!_first)
                 spawnId = 1;
 
-            me->SummonCreature(NPC_RANGER, AmbushSpawn[spawnId].x, AmbushSpawn[spawnId].y, AmbushSpawn[spawnId].z, 0.0f,
-                               TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
+            me->SummonCreature(NPC_RANGER,
+                AmbushSpawn[spawnId].x,
+                AmbushSpawn[spawnId].y,
+                AmbushSpawn[spawnId].z,
+                0.0f,
+                TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,
+                60000);
 
             for (int i = 0; i < 2; ++i)
             {
-                me->SummonCreature(NPC_OUTRUNNER, AmbushSpawn[spawnId].x, AmbushSpawn[spawnId].y, AmbushSpawn[spawnId].z, 0.0f,
-                                   TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
+                me->SummonCreature(NPC_OUTRUNNER,
+                    AmbushSpawn[spawnId].x,
+                    AmbushSpawn[spawnId].y,
+                    AmbushSpawn[spawnId].z,
+                    0.0f,
+                    TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN,
+                    60000);
             }
         }
 
         void JustSummoned(Creature* summoned) override
         {
             summoned->SetWalk(false);
-            summoned->GetMotionMaster()->MovePoint(0, AmbushMoveTo[spawnId].x, AmbushMoveTo[spawnId].y, AmbushMoveTo[spawnId].z);
+            summoned->GetMotionMaster()->MovePoint(
+                0, AmbushMoveTo[spawnId].x, AmbushMoveTo[spawnId].y, AmbushMoveTo[spawnId].z);
         }
 
         void sQuestAccept(Player* player, Quest const* quest) override
@@ -215,8 +224,8 @@ public:
     private:
         uint32 postEventCount;
         uint32 postEventTimer;
-        int    spawnId;
-        bool   _IsByOutrunner;
+        int spawnId;
+        bool _IsByOutrunner;
     };
 
     CreatureAI* GetAI(Creature* creature) const override

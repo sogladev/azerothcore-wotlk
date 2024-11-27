@@ -25,13 +25,15 @@
 #include "ScriptMgr.h"
 
 TempSummon::TempSummon(SummonPropertiesEntry const* properties, ObjectGuid owner, bool isWorldObject) :
-    Creature(isWorldObject), m_Properties(properties), m_type(TEMPSUMMON_MANUAL_DESPAWN),
-    m_timer(0), m_lifetime(0), _visibleBySummonerOnly(false)
+    Creature(isWorldObject),
+    m_Properties(properties),
+    m_type(TEMPSUMMON_MANUAL_DESPAWN),
+    m_timer(0),
+    m_lifetime(0),
+    _visibleBySummonerOnly(false)
 {
     if (owner)
-    {
         m_summonerGUID = owner;
-    }
 
     m_unitTypeMask |= UNIT_MASK_SUMMON;
 }
@@ -44,9 +46,7 @@ WorldObject* TempSummon::GetSummoner() const
 Unit* TempSummon::GetSummonerUnit() const
 {
     if (WorldObject* summoner = GetSummoner())
-    {
         return summoner->ToUnit();
-    }
 
     return nullptr;
 }
@@ -78,6 +78,19 @@ void TempSummon::Update(uint32 diff)
         case TEMPSUMMON_DESPAWNED:
             break;
         case TEMPSUMMON_TIMED_DESPAWN:
+        {
+            if (m_timer <= diff)
+            {
+                UnSummon();
+                return;
+            }
+
+            m_timer -= diff;
+            break;
+        }
+        case TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT:
+        {
+            if (!IsInCombat())
             {
                 if (m_timer <= diff)
                 {
@@ -86,113 +99,99 @@ void TempSummon::Update(uint32 diff)
                 }
 
                 m_timer -= diff;
-                break;
             }
-        case TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT:
-            {
-                if (!IsInCombat())
-                {
-                    if (m_timer <= diff)
-                    {
-                        UnSummon();
-                        return;
-                    }
+            else if (m_timer != m_lifetime)
+                m_timer = m_lifetime;
 
-                    m_timer -= diff;
-                }
-                else if (m_timer != m_lifetime)
-                    m_timer = m_lifetime;
-
-                break;
-            }
+            break;
+        }
         case TEMPSUMMON_TIMED_DESPAWN_OOC_ALIVE:
+        {
+            if (!IsInCombat() && m_deathState != DeathState::Corpse)
             {
-                if (!IsInCombat() && m_deathState != DeathState::Corpse)
+                if (m_timer <= diff)
                 {
-                    if (m_timer <= diff)
-                    {
-                        UnSummon();
-                        return;
-                    }
-
-                    m_timer -= diff;
+                    UnSummon();
+                    return;
                 }
-                else if (m_timer != m_lifetime)
-                    m_timer = m_lifetime;
 
-                break;
+                m_timer -= diff;
             }
+            else if (m_timer != m_lifetime)
+                m_timer = m_lifetime;
+
+            break;
+        }
         case TEMPSUMMON_CORPSE_TIMED_DESPAWN:
+        {
+            if (m_deathState == DeathState::Corpse)
             {
-                if (m_deathState == DeathState::Corpse)
+                if (m_timer <= diff)
                 {
-                    if (m_timer <= diff)
-                    {
-                        UnSummon();
-                        return;
-                    }
-
-                    m_timer -= diff;
+                    UnSummon();
+                    return;
                 }
-                break;
+
+                m_timer -= diff;
             }
+            break;
+        }
         case TEMPSUMMON_CORPSE_DESPAWN:
+        {
+            // if m_deathState is DEAD, CORPSE was skipped
+            if (m_deathState == DeathState::Corpse)
             {
-                // if m_deathState is DEAD, CORPSE was skipped
-                if (m_deathState == DeathState::Corpse)
-                {
-                    UnSummon();
-                    return;
-                }
-
-                break;
+                UnSummon();
+                return;
             }
+
+            break;
+        }
         case TEMPSUMMON_DEAD_DESPAWN:
-            {
-                break;
-            }
+        {
+            break;
+        }
         case TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN:
+        {
+            // if m_deathState is DEAD, CORPSE was skipped
+            if (m_deathState == DeathState::Corpse)
             {
-                // if m_deathState is DEAD, CORPSE was skipped
-                if (m_deathState == DeathState::Corpse)
+                UnSummon();
+                return;
+            }
+
+            if (!IsInCombat())
+                if (m_timer <= diff)
                 {
                     UnSummon();
                     return;
                 }
-
-                if (!IsInCombat())
-                {
-                    if (m_timer <= diff)
-                    {
-                        UnSummon();
-                        return;
-                    }
-                    else
-                        m_timer -= diff;
-                }
-                else if (m_timer != m_lifetime)
-                    m_timer = m_lifetime;
-                break;
-            }
+                else
+                    m_timer -= diff;
+            else if (m_timer != m_lifetime)
+                m_timer = m_lifetime;
+            break;
+        }
         case TEMPSUMMON_TIMED_OR_DEAD_DESPAWN:
-            {
-                if (!IsInCombat() && IsAlive())
+        {
+            if (!IsInCombat() && IsAlive())
+                if (m_timer <= diff)
                 {
-                    if (m_timer <= diff)
-                    {
-                        UnSummon();
-                        return;
-                    }
-                    else
-                        m_timer -= diff;
+                    UnSummon();
+                    return;
                 }
-                else if (m_timer != m_lifetime)
-                    m_timer = m_lifetime;
-                break;
-            }
+                else
+                    m_timer -= diff;
+            else if (m_timer != m_lifetime)
+                m_timer = m_lifetime;
+            break;
+        }
         default:
             UnSummon();
-            LOG_ERROR("entities.unit", "Temporary summoned creature (entry: {}) have unknown type {} of ", GetEntry(), m_type);
+            LOG_ERROR("entities.unit",
+                "Temporary summoned creature (entry: {}) have unknown type {} of ",
+                GetEntry(),
+                m_type);
             break;
     }
 }
@@ -257,16 +256,12 @@ void TempSummon::InitSummon()
         if (owner->IsCreature())
         {
             if (owner->ToCreature()->IsAIEnabled)
-            {
                 owner->ToCreature()->AI()->JustSummoned(this);
-            }
         }
         else if (owner->IsGameObject())
         {
             if (owner->ToGameObject()->AI())
-            {
                 owner->ToGameObject()->AI()->JustSummoned(this);
-            }
         }
 
         if (IsAIEnabled)
@@ -305,13 +300,9 @@ void TempSummon::UnSummon(uint32 msTime)
     if (WorldObject* owner = GetSummoner())
     {
         if (owner->IsCreature() && owner->ToCreature()->IsAIEnabled)
-        {
             owner->ToCreature()->AI()->SummonedCreatureDespawn(this);
-        }
         else if (owner->IsGameObject() && owner->ToGameObject()->AI())
-        {
             owner->ToGameObject()->AI()->SummonedCreatureDespawn(this);
-        }
     }
 
     AddObjectToRemoveList();
@@ -344,13 +335,14 @@ std::string TempSummon::GetDebugInfo() const
 {
     std::stringstream sstr;
     sstr << Creature::GetDebugInfo() << "\n"
-        << std::boolalpha
-        << "TempSummonType : " << std::to_string(GetSummonType()) << " Summoner: " << GetSummonerGUID().ToString();
+         << std::boolalpha << "TempSummonType : " << std::to_string(GetSummonType())
+         << " Summoner: " << GetSummonerGUID().ToString();
     return sstr.str();
 }
 
-Minion::Minion(SummonPropertiesEntry const* properties, ObjectGuid owner, bool isWorldObject) : TempSummon(properties, owner, isWorldObject)
-    , m_owner(owner)
+Minion::Minion(SummonPropertiesEntry const* properties, ObjectGuid owner, bool isWorldObject) :
+    TempSummon(properties, owner, isWorldObject),
+    m_owner(owner)
 {
     ASSERT(m_owner);
     m_unitTypeMask |= UNIT_MASK_MINION;
@@ -398,7 +390,9 @@ void Minion::setDeathState(DeathState s, bool despawn)
     if (s == DeathState::JustDied && IsGuardianPet())
         if (Unit* owner = GetOwner())
             if (owner->IsPlayer() && owner->GetMinionGUID() == GetGUID())
-                for (Unit::ControlSet::const_iterator itr = owner->m_Controlled.begin(); itr != owner->m_Controlled.end(); ++itr)
+                for (Unit::ControlSet::const_iterator itr = owner->m_Controlled.begin();
+                     itr != owner->m_Controlled.end();
+                     ++itr)
                     if ((*itr)->IsAlive() && (*itr)->GetEntry() == GetEntry())
                     {
                         owner->SetMinionGUID((*itr)->GetGUID());
@@ -411,12 +405,12 @@ std::string Minion::GetDebugInfo() const
 {
     std::stringstream sstr;
     sstr << TempSummon::GetDebugInfo() << "\n"
-        << std::boolalpha
-        << "Owner: " << (GetOwner() ? GetOwner()->GetGUID().ToString() : "");
+         << std::boolalpha << "Owner: " << (GetOwner() ? GetOwner()->GetGUID().ToString() : "");
     return sstr.str();
 }
 
-Guardian::Guardian(SummonPropertiesEntry const* properties, ObjectGuid owner, bool isWorldObject) : Minion(properties, owner, isWorldObject)
+Guardian::Guardian(SummonPropertiesEntry const* properties, ObjectGuid owner, bool isWorldObject) :
+    Minion(properties, owner, isWorldObject)
 {
     m_unitTypeMask |= UNIT_MASK_GUARDIAN;
     if (properties && (properties->Type == SUMMON_TYPE_PET || properties->Category == SUMMON_CATEGORY_PET))
@@ -448,9 +442,7 @@ void Guardian::InitSummon()
     if (Unit* m_owner = GetOwner())
     {
         if (m_owner->IsPlayer() && m_owner->GetMinionGUID() == GetGUID() && !m_owner->GetCharmGUID())
-        {
             m_owner->ToPlayer()->CharmSpellInitialize();
-        }
     }
 }
 
@@ -461,7 +453,9 @@ std::string Guardian::GetDebugInfo() const
     return sstr.str();
 }
 
-Puppet::Puppet(SummonPropertiesEntry const* properties, ObjectGuid owner) : Minion(properties, owner, false), m_owner(owner) //maybe true?
+Puppet::Puppet(SummonPropertiesEntry const* properties, ObjectGuid owner) :
+    Minion(properties, owner, false),
+    m_owner(owner) //maybe true?
 {
     ASSERT(owner.IsPlayer());
     m_unitTypeMask |= UNIT_MASK_PUPPET;
@@ -480,7 +474,16 @@ void Puppet::InitSummon()
     if (!SetCharmedBy(GetOwner(), CHARM_TYPE_POSSESS))
     {
         if (Player* p = GetOwner())
-            LOG_INFO("misc", "Puppet::InitSummon (A1) - {}, {}, {}, {}, {}, {}, {}, {}", p->GetGUID().ToString(), p->GetMapId(), p->GetInstanceId(), p->FindMap()->GetId(), p->IsInWorld() ? 1 : 0, p->IsDuringRemoveFromWorld() ? 1 : 0, p->IsBeingTeleported() ? 1 : 0, p->isBeingLoaded() ? 1 : 0);
+            LOG_INFO("misc",
+                "Puppet::InitSummon (A1) - {}, {}, {}, {}, {}, {}, {}, {}",
+                p->GetGUID().ToString(),
+                p->GetMapId(),
+                p->GetInstanceId(),
+                p->FindMap()->GetId(),
+                p->IsInWorld() ? 1 : 0,
+                p->IsDuringRemoveFromWorld() ? 1 : 0,
+                p->IsBeingTeleported() ? 1 : 0,
+                p->isBeingLoaded() ? 1 : 0);
         else
         {
             LOG_INFO("misc", "Puppet::InitSummon (B1)");

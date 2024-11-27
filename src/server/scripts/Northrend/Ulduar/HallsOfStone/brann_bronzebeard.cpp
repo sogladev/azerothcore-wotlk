@@ -32,130 +32,163 @@
 
 enum NPCs
 {
-    NPC_DARK_RUNE_PROTECTOR         = 27983,
-    NPC_DARK_RUNE_STORMCALLER       = 27984,
-    NPC_IRON_GOLEM_CUSTODIAN        = 27985,
-    NPC_DARK_MATTER_TRIGGER         = 28237,
-    NPC_SEARING_GAZE_TRIGGER        = 28265,
+    NPC_DARK_RUNE_PROTECTOR = 27983,
+    NPC_DARK_RUNE_STORMCALLER = 27984,
+    NPC_IRON_GOLEM_CUSTODIAN = 27985,
+    NPC_DARK_MATTER_TRIGGER = 28237,
+    NPC_SEARING_GAZE_TRIGGER = 28265,
 };
 
 enum Misc
 {
     // BRANN EVENT
-    SPELL_GLARE_OF_THE_TRIBUNAL     = 50988,
-    SPELL_GLARE_OF_THE_TRIBUNAL_H   = 59870,
-    SPELL_DARK_MATTER_VISUAL        = 51001,
-    SPELL_DARK_MATTER               = 51012,
-    SPELL_DARK_MATTER_H             = 59868,
-    SPELL_SEARING_GAZE              = 51136,
-    SPELL_SEARING_GAZE_H            = 59867,
+    SPELL_GLARE_OF_THE_TRIBUNAL = 50988,
+    SPELL_GLARE_OF_THE_TRIBUNAL_H = 59870,
+    SPELL_DARK_MATTER_VISUAL = 51001,
+    SPELL_DARK_MATTER = 51012,
+    SPELL_DARK_MATTER_H = 59868,
+    SPELL_SEARING_GAZE = 51136,
+    SPELL_SEARING_GAZE_H = 59867,
 
     // DARK RUNE PROTECTOR
-    SPELL_DRP_CHARGE                = 22120,
-    SPELL_DRP_CLEAVE                = 42724,
+    SPELL_DRP_CHARGE = 22120,
+    SPELL_DRP_CLEAVE = 42724,
 
     // DARK RUNE STORMCALLER
-    SPELL_DRS_LIGHTING_BOLT         = 12167,
-    SPELL_DRS_LIGHTING_BOLT_H       = 59863,
-    SPELL_DRS_SHADOW_WORD_PAIN      = 15654,
-    SPELL_DRS_SHADOW_WORD_PAIN_H    = 59864,
+    SPELL_DRS_LIGHTING_BOLT = 12167,
+    SPELL_DRS_LIGHTING_BOLT_H = 59863,
+    SPELL_DRS_SHADOW_WORD_PAIN = 15654,
+    SPELL_DRS_SHADOW_WORD_PAIN_H = 59864,
 
     // IRON GOLEM CUSTODIAN
-    SPELL_IGC_CRUSH_ARMOR           = 33661,
-    SPELL_IGC_GROUND_SMASH          = 12734,
-    SPELL_IGC_GROUND_SMASH_H        = 59865,
+    SPELL_IGC_CRUSH_ARMOR = 33661,
+    SPELL_IGC_GROUND_SMASH = 12734,
+    SPELL_IGC_GROUND_SMASH_H = 59865,
 
     // ACTIONS
-    ACTION_START_EVENT              = 0,
-    ACTION_START_TRIBUNAL           = 1,
-    ACTION_GO_TO_SJONNIR            = 2,
-    ACTION_START_SJONNIR_FIGHT      = 3,
-    ACTION_SJONNIR_DEAD             = 4,
-    ACTION_ENTEREVADEMODE           = 5,
-    ACTION_WIPE_START               = 6,
-    ACTION_OPEN_DOOR                = 7,
+    ACTION_START_EVENT = 0,
+    ACTION_START_TRIBUNAL = 1,
+    ACTION_GO_TO_SJONNIR = 2,
+    ACTION_START_SJONNIR_FIGHT = 3,
+    ACTION_SJONNIR_DEAD = 4,
+    ACTION_ENTEREVADEMODE = 5,
+    ACTION_WIPE_START = 6,
+    ACTION_OPEN_DOOR = 7,
 
     // QUESTS
-    QUEST_HALLS_OF_STONE            = 13207,
+    QUEST_HALLS_OF_STONE = 13207,
 };
 
 enum events
 {
     // BRANN
-    EVENT_KADDRAK_HEAD          = 1,
-    EVENT_MARNAK_HEAD           = 2,
-    EVENT_ABEDNEUM_HEAD         = 3,
-    EVENT_SUMMON_MONSTERS       = 4,
-    EVENT_TRIBUNAL_END          = 5,
-    EVENT_GO_TO_SJONNIR         = 6,
-    EVENT_END                   = 7,
-    EVENT_KADDRAK_VISUAL        = 8,
-    EVENT_MARNAK_VISUAL         = 9,
-    EVENT_ABEDNEUM_VISUAL       = 10,
-    EVENT_KADDRAK_SWITCH_EYE    = 11,
+    EVENT_KADDRAK_HEAD = 1,
+    EVENT_MARNAK_HEAD = 2,
+    EVENT_ABEDNEUM_HEAD = 3,
+    EVENT_SUMMON_MONSTERS = 4,
+    EVENT_TRIBUNAL_END = 5,
+    EVENT_GO_TO_SJONNIR = 6,
+    EVENT_END = 7,
+    EVENT_KADDRAK_VISUAL = 8,
+    EVENT_MARNAK_VISUAL = 9,
+    EVENT_ABEDNEUM_VISUAL = 10,
+    EVENT_KADDRAK_SWITCH_EYE = 11,
 
     // DARK RUNE PROTECTOR
-    EVENT_DRP_CHARGE            = 15,
-    EVENT_DRP_CLEAVE            = 16,
+    EVENT_DRP_CHARGE = 15,
+    EVENT_DRP_CLEAVE = 16,
 
     // DARK RUNE STORMCALLER
-    EVENT_DRS_LIGHTNING_BOLD    = 20,
-    EVENT_DRS_SHADOW_WORD_PAIN  = 21,
+    EVENT_DRS_LIGHTNING_BOLD = 20,
+    EVENT_DRS_SHADOW_WORD_PAIN = 21,
 
     // IRON GOLEM CUSTODIAN
-    EVENT_IGC_CRUSH             = 30,
-    EVENT_IGC_GROUND_SMASH      = 31,
+    EVENT_IGC_CRUSH = 30,
+    EVENT_IGC_GROUND_SMASH = 31,
 };
 
 struct Yells
 {
     uint32 sound;
-    const char* text;
+    char const* text;
     uint32 creature, timer;
 };
 
-static Yells Conversation[] =
-{
-    {14259, "Time to get some answers! Let's get this show on the road!", NPC_BRANN, 0},
-    {14247, "Take a moment and relish this with me. Soon... all will be revealed. Okay then, let's do this!", NPC_BRANN, 5000},
-    {14248, "Now keep an eye out! I'll have this licked in two shakes of a--", NPC_BRANN, 17000},
-    {13765, "Warning: life form pattern not recognized. Archival processing terminated. Continued interference will result in targeted response.", NPC_ABEDNEUM, 20500},
-    {14249, "Oh, that doesn't sound good. We might have a complication or two...", NPC_BRANN, 32000},
-    {13756, "Security breach in progress. Analysis of historical archives transferred to lower-priority queue. Countermeasures engaged.", NPC_KADDRAK, 37000},
-    {14250, "Ah, you want to play hardball, eh? That's just my game!", NPC_BRANN, 49000},
-    {14251, "Couple more minutes and I'll--", NPC_BRANN, 100000},
-    {13761, "Threat index threshold exceeded. Celestial archive aborted. Security level heightened.", NPC_MARNAK, 105000},
-    {14252, "Heightened? What's the good news?", NPC_BRANN, 116000},
-    {14253, "So that was the problem? Now I'm makin' progress...", NPC_BRANN, 195000},
-    {13767, "Critical threat index. Void analysis diverted. Initiating sanitization protocol.", NPC_ABEDNEUM, 205000},
-    {14254, "Hang on! Nobody's gonna' be sanitized as long as I have a say in it!", NPC_BRANN, 215000},
-    {14255, "Ha! The old magic fingers finally won through! Now let's get down to--", NPC_BRANN, 295000},
-    {13768, "Alert: security fail-safes deactivated. Beginning memory purge and... ", NPC_ABEDNEUM, 303000},
+static Yells Conversation[] = {
+    {14259, "Time to get some answers! Let's get this show on the road!",                                                                                                                                                                                                                                                         NPC_BRANN,    0     },
+    {14247,
+     "Take a moment and relish this with me. Soon... all will be revealed. Okay then, let's do this!",                                                                                                                                                                                                                            NPC_BRANN,
+     5000                                                                                                                                                                                                                                                                                                                                             },
+    {14248, "Now keep an eye out! I'll have this licked in two shakes of a--",                                                                                                                                                                                                                                                    NPC_BRANN,    17000 },
+    {13765,
+     "Warning: life form pattern not recognized. Archival processing terminated. Continued interference will result in targeted response.",
+     NPC_ABEDNEUM,                                                                                                                                                                                                                                                                                                                              20500 },
+    {14249, "Oh, that doesn't sound good. We might have a complication or two...",                                                                                                                                                                                                                                                NPC_BRANN,    32000 },
+    {13756,
+     "Security breach in progress. Analysis of historical archives transferred to lower-priority queue. Countermeasures engaged.",
+     NPC_KADDRAK,                                                                                                                                                                                                                                                                                                                               37000 },
+    {14250, "Ah, you want to play hardball, eh? That's just my game!",                                                                                                                                                                                                                                                            NPC_BRANN,    49000 },
+    {14251, "Couple more minutes and I'll--",                                                                                                                                                                                                                                                                                     NPC_BRANN,    100000},
+    {13761,
+     "Threat index threshold exceeded. Celestial archive aborted. Security level heightened.",                                                                                                                                                                                                                                    NPC_MARNAK,
+     105000                                                                                                                                                                                                                                                                                                                                           },
+    {14252, "Heightened? What's the good news?",                                                                                                                                                                                                                                                                                  NPC_BRANN,    116000},
+    {14253, "So that was the problem? Now I'm makin' progress...",                                                                                                                                                                                                                                                                NPC_BRANN,    195000},
+    {13767, "Critical threat index. Void analysis diverted. Initiating sanitization protocol.",                                                                                                                                                                                                                                   NPC_ABEDNEUM, 205000},
+    {14254, "Hang on! Nobody's gonna' be sanitized as long as I have a say in it!",                                                                                                                                                                                                                                               NPC_BRANN,    215000},
+    {14255, "Ha! The old magic fingers finally won through! Now let's get down to--",                                                                                                                                                                                                                                             NPC_BRANN,    295000},
+    {13768, "Alert: security fail-safes deactivated. Beginning memory purge and... ",                                                                                                                                                                                                                                             NPC_ABEDNEUM, 303000},
     //The fight is completed at this point.
-    {14256, "Purge? No no no no no.. where did I-- Aha, this should do the trick...", NPC_BRANN, 310000},
-    {13769, "System online. Life form pattern recognized. Welcome, Branbronzan. Query?", NPC_ABEDNEUM, 321000},
-    {14263, "Query? What do you think I'm here for, tea and biscuits? Spill the beans already!", NPC_BRANN, 329000},
-    {14264, "Tell me how the dwarves came to be, and start at the beginning!", NPC_BRANN, 336000},
-    {13770, "Accessing prehistoric data... retrieved. In the beginning the earthen were created to--", NPC_ABEDNEUM, 342000},
-    {14265, "Right, right... I know the earthen were made from stone to shape the deep regions o' the world. But what about the anomalies? Matrix non-stabilizin' and what-not?", NPC_BRANN, 348000},
-    {13771, "Accessing... In the early stages of it's development cycle, Azeroth suffered infection by parasitic necrophotic symbiotes.", NPC_ABEDNEUM, 360000},
-    {14266, "Necrowhatinthe-- Speak bloody Common, will ye?", NPC_BRANN, 373500},
-    {13772, "Designation: Old Gods. Old Gods rendered all systems, including earthen, defenseless in order to facilitate assimilation. This matrix destabilization has been termed the Curse of Flesh. Effects of destabilization increased over time.", NPC_ABEDNEUM, 380000},
-    {14267, "Old Gods, huh? So they zapped the earthen with this Curse of Flesh... and then what?", NPC_BRANN, 399500},
-    {13757, "Accessing... Creators arrived to extirpate symbiotic infection. Assessment revealed that Old God infestation had grown malignant. Excising parasites would result in loss of host--", NPC_KADDRAK, 406000},
-    {14268, "If they killed the Old Gods, Azeroth would've been destroyed...", NPC_BRANN, 424000},
-    {13758, "Correct. Creators neutralized parasitic threat and contained it within the host. Forge of Wills and other systems were instituted to create new earthen. Safeguards were implemented, and protectors were appointed.", NPC_KADDRAK, 429000},
-    {14269, "What protectors?", NPC_BRANN, 449000},
-    {13759, "Designations: Aesir and Vanir. Or in the common nomenclature, storm and earth giants. Sentinel Loken designated supreme. Dragon Aspects appointed to monitor evolution on Azeroth.", NPC_KADDRAK, 452000},
-    {14270, "Aesir and Vanir... Okay, so the Forge o' Wills started makin' new earthen... but what happened to the old ones?", NPC_BRANN, 471000},
-    {13762, "Additional background is relevant to your query: following global combat between Aesir and Vanir--", NPC_MARNAK, 482000},
-    {14271, "Hold everything! The Aesir and Vanir went to war? Why?", NPC_BRANN, 489000},
-    {13763, "Unknown. Data suggests that impetus for global combat originated with prime designate Loken, who neutralized all remaining Aesir and Vanir, affecting termination of conflict. Prime designate Loken then initiated stasis of several seed races, including earthen, giants and vrykul, at designated holding facilities.", NPC_MARNAK, 494000},
-    {14272, "This Loken sounds like a nasty character. Glad we don't have to worry about the likes o' him anymore. So... if I'm understandin' ye right, the original earthen eventually woke up from this stasis, and by that time the destabili-whatever had turned 'em into proper dwarves. Or at least... dwarf ancestors.", NPC_BRANN, 519000},
-    {13764, "Essentially that is correct.", NPC_MARNAK, 543000},
-    {14273, "Well, now... that's a lot to digest. I'm gonna need some time to take all this in. Thank ye.", NPC_BRANN, 549000},
-    {13773, "Acknowledged, Branbronzan. Session terminated.", NPC_ABEDNEUM, 559000},
-    {0, "I think it's time to see what's behind the door near the entrance. I'm going to sneak over there, nice and quiet. Meet me at the door and I'll get us in.", NPC_BRANN, 574000},
+    {14256, "Purge? No no no no no.. where did I-- Aha, this should do the trick...",                                                                                                                                                                                                                                             NPC_BRANN,    310000},
+    {13769, "System online. Life form pattern recognized. Welcome, Branbronzan. Query?",                                                                                                                                                                                                                                          NPC_ABEDNEUM, 321000},
+    {14263, "Query? What do you think I'm here for, tea and biscuits? Spill the beans already!",                                                                                                                                                                                                                                  NPC_BRANN,    329000},
+    {14264, "Tell me how the dwarves came to be, and start at the beginning!",                                                                                                                                                                                                                                                    NPC_BRANN,    336000},
+    {13770,
+     "Accessing prehistoric data... retrieved. In the beginning the earthen were created to--",                                                                                                                                                                                                                                   NPC_ABEDNEUM,
+     342000                                                                                                                                                                                                                                                                                                                                           },
+    {14265,
+     "Right, right... I know the earthen were made from stone to shape the deep regions o' the world. But what about the anomalies? Matrix non-stabilizin' and what-not?",
+     NPC_BRANN,                                                                                                                                                                                                                                                                                                                                 348000},
+    {13771,
+     "Accessing... In the early stages of it's development cycle, Azeroth suffered infection by parasitic necrophotic symbiotes.",
+     NPC_ABEDNEUM,                                                                                                                                                                                                                                                                                                                              360000},
+    {14266, "Necrowhatinthe-- Speak bloody Common, will ye?",                                                                                                                                                                                                                                                                     NPC_BRANN,    373500},
+    {13772,
+     "Designation: Old Gods. Old Gods rendered all systems, including earthen, defenseless in order to facilitate assimilation. This matrix destabilization has been termed the Curse of Flesh. Effects of destabilization increased over time.",
+     NPC_ABEDNEUM,                                                                                                                                                                                                                                                                                                                              380000},
+    {14267, "Old Gods, huh? So they zapped the earthen with this Curse of Flesh... and then what?",                                                                                                                                                                                                                               NPC_BRANN,    399500},
+    {13757,
+     "Accessing... Creators arrived to extirpate symbiotic infection. Assessment revealed that Old God infestation had grown malignant. Excising parasites would result in loss of host--",
+     NPC_KADDRAK,                                                                                                                                                                                                                                                                                                                               406000},
+    {14268, "If they killed the Old Gods, Azeroth would've been destroyed...",                                                                                                                                                                                                                                                    NPC_BRANN,    424000},
+    {13758,
+     "Correct. Creators neutralized parasitic threat and contained it within the host. Forge of Wills and other systems were instituted to create new earthen. Safeguards were implemented, and protectors were appointed.",
+     NPC_KADDRAK,                                                                                                                                                                                                                                                                                                                               429000},
+    {14269, "What protectors?",                                                                                                                                                                                                                                                                                                   NPC_BRANN,    449000},
+    {13759,
+     "Designations: Aesir and Vanir. Or in the common nomenclature, storm and earth giants. Sentinel Loken designated supreme. Dragon Aspects appointed to monitor evolution on Azeroth.",
+     NPC_KADDRAK,                                                                                                                                                                                                                                                                                                                               452000},
+    {14270,
+     "Aesir and Vanir... Okay, so the Forge o' Wills started makin' new earthen... but what happened to the old ones?",                                                                                                                                                                                                           NPC_BRANN,
+     471000                                                                                                                                                                                                                                                                                                                                           },
+    {13762,
+     "Additional background is relevant to your query: following global combat between Aesir and Vanir--",                                                                                                                                                                                                                        NPC_MARNAK,
+     482000                                                                                                                                                                                                                                                                                                                                           },
+    {14271, "Hold everything! The Aesir and Vanir went to war? Why?",                                                                                                                                                                                                                                                             NPC_BRANN,    489000},
+    {13763,
+     "Unknown. Data suggests that impetus for global combat originated with prime designate Loken, who neutralized all remaining Aesir and Vanir, affecting termination of conflict. Prime designate Loken then initiated stasis of several seed races, including earthen, giants and vrykul, at designated holding facilities.",
+     NPC_MARNAK,                                                                                                                                                                                                                                                                                                                                494000},
+    {14272,
+     "This Loken sounds like a nasty character. Glad we don't have to worry about the likes o' him anymore. So... if I'm understandin' ye right, the original earthen eventually woke up from this stasis, and by that time the destabili-whatever had turned 'em into proper dwarves. Or at least... dwarf ancestors.",
+     NPC_BRANN,                                                                                                                                                                                                                                                                                                                                 519000},
+    {13764, "Essentially that is correct.",                                                                                                                                                                                                                                                                                       NPC_MARNAK,   543000},
+    {14273,
+     "Well, now... that's a lot to digest. I'm gonna need some time to take all this in. Thank ye.",                                                                                                                                                                                                                              NPC_BRANN,
+     549000                                                                                                                                                                                                                                                                                                                                           },
+    {13773, "Acknowledged, Branbronzan. Session terminated.",                                                                                                                                                                                                                                                                     NPC_ABEDNEUM, 559000},
+    {0,
+     "I think it's time to see what's behind the door near the entrance. I'm going to sneak over there, nice and quiet. Meet me at the door and I'll get us in.",
+     NPC_BRANN,                                                                                                                                                                                                                                                                                                                                 574000},
 };
 
 class brann_bronzebeard : public CreatureScript
@@ -175,19 +208,24 @@ public:
             switch (brann)
             {
                 case 1:
-                    AddGossipItemFor(player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+                    AddGossipItemFor(
+                        player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
                     break;
                 case 2:
-                    AddGossipItemFor(player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    AddGossipItemFor(
+                        player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
                     break;
                 case 3:
-                    AddGossipItemFor(player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    AddGossipItemFor(
+                        player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
                     break;
                 case 4:
-                    AddGossipItemFor(player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                    AddGossipItemFor(
+                        player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
                     break;
                 case 5:
-                    AddGossipItemFor(player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                    AddGossipItemFor(
+                        player, GOSSIP_ICON_CHAT, GOSSIP_ITEM_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
                     break;
                 default:
                     break;
@@ -197,29 +235,29 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32  /*sender*/, uint32 action) override
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
     {
         if (action)
         {
             switch (action)
             {
-                case GOSSIP_ACTION_INFO_DEF+1:
+                case GOSSIP_ACTION_INFO_DEF + 1:
                     creature->AI()->DoAction(ACTION_START_EVENT);
                     CloseGossipMenuFor(player);
                     break;
-                case GOSSIP_ACTION_INFO_DEF+2:
+                case GOSSIP_ACTION_INFO_DEF + 2:
                     creature->AI()->DoAction(ACTION_START_TRIBUNAL);
                     CloseGossipMenuFor(player);
                     break;
-                case GOSSIP_ACTION_INFO_DEF+3:
+                case GOSSIP_ACTION_INFO_DEF + 3:
                     creature->AI()->DoAction(ACTION_GO_TO_SJONNIR);
                     CloseGossipMenuFor(player);
                     break;
-                case GOSSIP_ACTION_INFO_DEF+4:
+                case GOSSIP_ACTION_INFO_DEF + 4:
                     creature->AI()->DoAction(ACTION_WIPE_START);
                     CloseGossipMenuFor(player);
                     break;
-                case GOSSIP_ACTION_INFO_DEF+5:
+                case GOSSIP_ACTION_INFO_DEF + 5:
                     creature->AI()->DoAction(ACTION_OPEN_DOOR);
                     CloseGossipMenuFor(player);
                     break;
@@ -230,7 +268,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return new brann_bronzebeardAI (creature);
+        return new brann_bronzebeardAI(creature);
     }
 
     struct brann_bronzebeardAI : public npc_escortAI
@@ -254,9 +292,12 @@ public:
         void DespawnHeads()
         {
             Creature* cr;
-            if ((cr = GetAbedneum())) cr->DespawnOrUnsummon();
-            if ((cr = GetMarnak())) cr->DespawnOrUnsummon();
-            if ((cr = GetKaddrak())) cr->DespawnOrUnsummon();
+            if ((cr = GetAbedneum()))
+                cr->DespawnOrUnsummon();
+            if ((cr = GetMarnak()))
+                cr->DespawnOrUnsummon();
+            if ((cr = GetKaddrak()))
+                cr->DespawnOrUnsummon();
             SwitchHeadVisaul(0x7, false);
         }
 
@@ -297,11 +338,23 @@ public:
         void WaypointReached(uint32 id) override;
         void InitializeEvent();
 
-        Creature* GetAbedneum() { return ObjectAccessor::GetCreature(*me, AbedneumGUID); }
-        Creature* GetMarnak() { return ObjectAccessor::GetCreature(*me, MarnakGUID); }
-        Creature* GetKaddrak() { return ObjectAccessor::GetCreature(*me, KaddrakGUID); }
+        Creature* GetAbedneum()
+        {
+            return ObjectAccessor::GetCreature(*me, AbedneumGUID);
+        }
 
-        void MoveInLineOfSight(Unit*  /*pWho*/) override { }
+        Creature* GetMarnak()
+        {
+            return ObjectAccessor::GetCreature(*me, MarnakGUID);
+        }
+
+        Creature* GetKaddrak()
+        {
+            return ObjectAccessor::GetCreature(*me, KaddrakGUID);
+        }
+
+        void MoveInLineOfSight(Unit* /*pWho*/) override { }
+
         void DamageTaken(Unit*, uint32& damage, DamageEffectType, SpellSchoolMask) override
         {
             if (damage && pInstance)
@@ -337,20 +390,20 @@ public:
                     Start(false, true, ObjectGuid::Empty, 0, true, false);
                     break;
                 case ACTION_START_TRIBUNAL:
-                    {
-                        Map::PlayerList const& PlayerList = me->GetMap()->GetPlayers();
-                        if (!PlayerList.IsEmpty())
-                            for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                            {
-                                me->SetFaction(i->GetSource()->GetFaction());
-                                break;
-                            }
+                {
+                    Map::PlayerList const& PlayerList = me->GetMap()->GetPlayers();
+                    if (!PlayerList.IsEmpty())
+                        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                        {
+                            me->SetFaction(i->GetSource()->GetFaction());
+                            break;
+                        }
 
-                        SetEscortPaused(false);
-                        InitializeEvent();
-                        me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_NONE);
-                        break;
-                    }
+                    SetEscortPaused(false);
+                    InitializeEvent();
+                    me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_NONE);
+                    break;
+                }
                 case ACTION_GO_TO_SJONNIR:
                     SetEscortPaused(false);
                     ResetEvent();
@@ -358,12 +411,16 @@ public:
                     break;
                 case ACTION_START_SJONNIR_FIGHT:
                     me->SetFaction(FACTION_FRIENDLY);
-                    me->Yell("Don't worry! Ol' Brann's got yer back! Keep that metal monstrosity busy, and I'll see if I can't sweet talk this machine into helping ye!", LANG_UNIVERSAL);
+                    me->Yell(
+                        "Don't worry! Ol' Brann's got yer back! Keep that metal monstrosity busy, and I'll see if I can't sweet talk this machine into helping ye!",
+                        LANG_UNIVERSAL);
                     me->PlayDirectSound(14274);
                     SetEscortPaused(false);
                     break;
                 case ACTION_SJONNIR_DEAD:
-                    me->Yell("Loken? That's downright bothersome... We might've neutralized the iron dwarves, but I'd lay odds there's another machine somewhere else churnin' out a whole mess o' these iron vrykul!", LANG_UNIVERSAL);
+                    me->Yell(
+                        "Loken? That's downright bothersome... We might've neutralized the iron dwarves, but I'd lay odds there's another machine somewhere else churnin' out a whole mess o' these iron vrykul!",
+                        LANG_UNIVERSAL);
                     me->PlayDirectSound(14278);
                     events.ScheduleEvent(EVENT_END, 14000);
                     break;
@@ -403,146 +460,175 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_KADDRAK_VISUAL:
-                    {
-                        SwitchHeadVisaul(0x1, true);
-                        break;
-                    }
+                {
+                    SwitchHeadVisaul(0x1, true);
+                    break;
+                }
                 case EVENT_MARNAK_VISUAL:
-                    {
-                        SwitchHeadVisaul(0x2, true);
-                        break;
-                    }
+                {
+                    SwitchHeadVisaul(0x2, true);
+                    break;
+                }
                 case EVENT_ABEDNEUM_VISUAL:
-                    {
-                        SwitchHeadVisaul(0x4, true);
-                        break;
-                    }
+                {
+                    SwitchHeadVisaul(0x4, true);
+                    break;
+                }
                 case EVENT_KADDRAK_HEAD: // First
+                {
+                    if (Creature* kaddrak = GetKaddrak())
                     {
-                        if (Creature* kaddrak = GetKaddrak())
-                        {
-                            if (Player* plr = SelectTargetFromPlayerList(100.0f))
-                                kaddrak->CastSpell(plr, DUNGEON_MODE(SPELL_GLARE_OF_THE_TRIBUNAL, SPELL_GLARE_OF_THE_TRIBUNAL_H), true);
-                        }
-
-                        events.RescheduleEvent(EVENT_KADDRAK_SWITCH_EYE, 1500ms);
-                        events.Repeat(2s, 4s);
-                        break;
+                        if (Player* plr = SelectTargetFromPlayerList(100.0f))
+                            kaddrak->CastSpell(
+                                plr, DUNGEON_MODE(SPELL_GLARE_OF_THE_TRIBUNAL, SPELL_GLARE_OF_THE_TRIBUNAL_H), true);
                     }
+
+                    events.RescheduleEvent(EVENT_KADDRAK_SWITCH_EYE, 1500ms);
+                    events.Repeat(2s, 4s);
+                    break;
+                }
                 case EVENT_KADDRAK_SWITCH_EYE:
+                {
+                    if (Creature* kaddrak = GetKaddrak())
                     {
-                        if (Creature* kaddrak = GetKaddrak())
-                        {
-                            if (urand(0, 1))
-                                kaddrak->UpdatePosition(927.9f, 330.9f, 219.4f, 2.4f, true);
-                            else
-                                kaddrak->UpdatePosition(923.7f, 326.9f, 219.5f, 2.1f, true);
+                        if (urand(0, 1))
+                            kaddrak->UpdatePosition(927.9f, 330.9f, 219.4f, 2.4f, true);
+                        else
+                            kaddrak->UpdatePosition(923.7f, 326.9f, 219.5f, 2.1f, true);
 
-                            kaddrak->StopMovingOnCurrentPos();
-                        }
-
-                        break;
+                        kaddrak->StopMovingOnCurrentPos();
                     }
+
+                    break;
+                }
                 case EVENT_MARNAK_HEAD: // Second
+                {
+                    if (Creature* marnak = GetMarnak())
                     {
-                        if (Creature* marnak = GetMarnak())
+                        if (Creature* cr = me->SummonCreature(NPC_DARK_MATTER_TRIGGER,
+                                marnak->GetPositionX(),
+                                marnak->GetPositionY(),
+                                marnak->GetPositionZ(),
+                                0,
+                                TEMPSUMMON_TIMED_DESPAWN,
+                                7000))
                         {
-                            if (Creature* cr = me->SummonCreature(NPC_DARK_MATTER_TRIGGER, marnak->GetPositionX(), marnak->GetPositionY(), marnak->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 7000))
+                            cr->CastSpell(cr, SPELL_DARK_MATTER_VISUAL, true);
+                            if (Player* plr = SelectTargetFromPlayerList(100.0f))
                             {
-                                cr->CastSpell(cr, SPELL_DARK_MATTER_VISUAL, true);
-                                if (Player* plr = SelectTargetFromPlayerList(100.0f))
-                                {
-                                    float speed = me->GetDistance(plr->GetPositionX(), plr->GetPositionY(), plr->GetPositionZ()) / (4000.0f * 0.001f);
-                                    cr->MonsterMoveWithSpeed(plr->GetPositionX(), plr->GetPositionY(), plr->GetPositionZ(), speed);
-                                }
+                                float speed =
+                                    me->GetDistance(plr->GetPositionX(), plr->GetPositionY(), plr->GetPositionZ()) /
+                                    (4000.0f * 0.001f);
+                                cr->MonsterMoveWithSpeed(
+                                    plr->GetPositionX(), plr->GetPositionY(), plr->GetPositionZ(), speed);
                             }
                         }
-                        events.Repeat(20s);
-                        break;
                     }
+                    events.Repeat(20s);
+                    break;
+                }
                 case EVENT_ABEDNEUM_HEAD: // Third
+                {
+                    if (GetAbedneum())
                     {
-                        if (GetAbedneum())
-                        {
-                            Player* plr = SelectTargetFromPlayerList(100.0f);
-                            if (!plr)
-                                break;
+                        Player* plr = SelectTargetFromPlayerList(100.0f);
+                        if (!plr)
+                            break;
 
-                            if (Creature* cr = me->SummonCreature(NPC_SEARING_GAZE_TRIGGER, plr->GetPositionX(), plr->GetPositionY(), plr->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000))
-                            {
-                                // summon another abedneum to create double beam, despawn just after trigger despawn
-                                me->SummonCreature(NPC_ABEDNEUM, 897.0f, 326.9f, 223.5f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 12000);
-                                cr->CastSpell(cr, DUNGEON_MODE(SPELL_SEARING_GAZE, SPELL_SEARING_GAZE_H), true);
-                            }
+                        if (Creature* cr = me->SummonCreature(NPC_SEARING_GAZE_TRIGGER,
+                                plr->GetPositionX(),
+                                plr->GetPositionY(),
+                                plr->GetPositionZ(),
+                                0,
+                                TEMPSUMMON_TIMED_DESPAWN,
+                                10000))
+                        {
+                            // summon another abedneum to create double beam, despawn just after trigger despawn
+                            me->SummonCreature(
+                                NPC_ABEDNEUM, 897.0f, 326.9f, 223.5f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 12000);
+                            cr->CastSpell(cr, DUNGEON_MODE(SPELL_SEARING_GAZE, SPELL_SEARING_GAZE_H), true);
                         }
-                        events.Repeat(30s);
-                        break;
                     }
+                    events.Repeat(30s);
+                    break;
+                }
                 case EVENT_SUMMON_MONSTERS:
-                    {
-                        uint32 Time = 45000 - (2500 * WaveNum);
-                        SummonCreatures(NPC_DARK_RUNE_PROTECTOR, 3);
-                        if (WaveNum > 2)
-                            SummonCreatures(NPC_DARK_RUNE_STORMCALLER, 2);
-                        if (WaveNum > 5)
-                            SummonCreatures(NPC_IRON_GOLEM_CUSTODIAN, 1);
+                {
+                    uint32 Time = 45000 - (2500 * WaveNum);
+                    SummonCreatures(NPC_DARK_RUNE_PROTECTOR, 3);
+                    if (WaveNum > 2)
+                        SummonCreatures(NPC_DARK_RUNE_STORMCALLER, 2);
+                    if (WaveNum > 5)
+                        SummonCreatures(NPC_IRON_GOLEM_CUSTODIAN, 1);
 
-                        WaveNum++;
-                        events.RepeatEvent(Time);
-                        break;
-                    }
+                    WaveNum++;
+                    events.RepeatEvent(Time);
+                    break;
+                }
                 case EVENT_TRIBUNAL_END:
+                {
+                    // Has to be here!
+                    events.Reset();
+                    //DespawnHeads();
+                    summons.DespawnAll();
+
+                    if (pInstance)
                     {
-                        // Has to be here!
-                        events.Reset();
-                        //DespawnHeads();
-                        summons.DespawnAll();
-
-                        if (pInstance)
-                        {
-                            pInstance->SetData(BOSS_TRIBUNAL_OF_AGES, DONE);
-                            pInstance->SetData(BRANN_BRONZEBEARD, 3);
-                            me->CastSpell(me, 59046, true); // credit
-                        }
-
-                        me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_QUESTGIVER);
-
-                        // Spawn Chest and quest credit
-                        if (Player* plr = SelectTargetFromPlayerList(200.0f))
-                        {
-                            if (GameObject* go = plr->SummonGameObject((IsHeroic() ? GO_TRIBUNAL_CHEST_H : GO_TRIBUNAL_CHEST), 880.406f, 345.164f, 203.706f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0))
-                            {
-                                plr->RemoveGameObject(go, false);
-                                go->SetLootMode(1);
-                                go->ReplaceAllGameObjectFlags((GameObjectFlags)0);
-                            }
-
-                            plr->GroupEventHappens(QUEST_HALLS_OF_STONE, me);
-                        }
-
-                        events.ScheduleEvent(EVENT_GO_TO_SJONNIR, 279s);
-                        break;
+                        pInstance->SetData(BOSS_TRIBUNAL_OF_AGES, DONE);
+                        pInstance->SetData(BRANN_BRONZEBEARD, 3);
+                        me->CastSpell(me, 59046, true); // credit
                     }
+
+                    me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_QUESTGIVER);
+
+                    // Spawn Chest and quest credit
+                    if (Player* plr = SelectTargetFromPlayerList(200.0f))
+                    {
+                        if (GameObject* go =
+                                plr->SummonGameObject((IsHeroic() ? GO_TRIBUNAL_CHEST_H : GO_TRIBUNAL_CHEST),
+                                    880.406f,
+                                    345.164f,
+                                    203.706f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    1.0f,
+                                    0))
+                        {
+                            plr->RemoveGameObject(go, false);
+                            go->SetLootMode(1);
+                            go->ReplaceAllGameObjectFlags((GameObjectFlags)0);
+                        }
+
+                        plr->GroupEventHappens(QUEST_HALLS_OF_STONE, me);
+                    }
+
+                    events.ScheduleEvent(EVENT_GO_TO_SJONNIR, 279s);
+                    break;
+                }
                 case EVENT_GO_TO_SJONNIR:
-                    {
-                        if (GameObject* door = ObjectAccessor::GetGameObject(*me, pInstance->GetGuidData(GO_SJONNIR_DOOR)))
-                            door->SetGoState(GO_STATE_ACTIVE);
-                        SetEscortPaused(false);
-                        ResetEvent();
-                        me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_NONE);
-                        break;
-                    }
+                {
+                    if (GameObject* door = ObjectAccessor::GetGameObject(*me, pInstance->GetGuidData(GO_SJONNIR_DOOR)))
+                        door->SetGoState(GO_STATE_ACTIVE);
+                    SetEscortPaused(false);
+                    ResetEvent();
+                    me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_NONE);
+                    break;
+                }
                 case EVENT_END:
-                    {
-                        events.Reset();
-                        if (pInstance)
-                            pInstance->SetData(BRANN_BRONZEBEARD, 6);
+                {
+                    events.Reset();
+                    if (pInstance)
+                        pInstance->SetData(BRANN_BRONZEBEARD, 6);
 
-                        me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_QUESTGIVER);
-                        me->Yell("I'll use the forge to make batches o' earthen to stand guard... But our greatest challenge still remains: find and stop Loken!", LANG_UNIVERSAL);
-                        me->PlayDirectSound(14279);
-                        break;
-                    }
+                    me->ReplaceAllNpcFlags(UNIT_NPC_FLAG_GOSSIP | UNIT_NPC_FLAG_QUESTGIVER);
+                    me->Yell(
+                        "I'll use the forge to make batches o' earthen to stand guard... But our greatest challenge still remains: find and stop Loken!",
+                        LANG_UNIVERSAL);
+                    me->PlayDirectSound(14279);
+                    break;
+                }
             }
 
             if (TalkEvent)
@@ -585,7 +671,13 @@ public:
         {
             for (int i = 0; i < count; ++i)
             {
-                Creature* cr = me->SummonCreature(entry, 946.5971f + urand(0, 6), 383.5330f + urand(0, 6), 205.9943f, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000);
+                Creature* cr = me->SummonCreature(entry,
+                    946.5971f + urand(0, 6),
+                    383.5330f + urand(0, 6),
+                    205.9943f,
+                    0,
+                    TEMPSUMMON_CORPSE_TIMED_DESPAWN,
+                    20000);
                 if (cr)
                 {
                     cr->AI()->AttackStart(me);
@@ -665,7 +757,8 @@ void brann_bronzebeard::brann_bronzebeardAI::WaypointReached(uint32 id)
             if (pInstance)
             {
                 pInstance->SetData(BOSS_TRIBUNAL_OF_AGES, IN_PROGRESS);
-                if (GameObject* tribunal = ObjectAccessor::GetGameObject(*me, pInstance->GetGuidData(GO_TRIBUNAL_CONSOLE)))
+                if (GameObject* tribunal =
+                        ObjectAccessor::GetGameObject(*me, pInstance->GetGuidData(GO_TRIBUNAL_CONSOLE)))
                     tribunal->SetGoState(GO_STATE_ACTIVE);
             }
             break;
@@ -689,7 +782,8 @@ void brann_bronzebeard::brann_bronzebeardAI::WaypointReached(uint32 id)
             SetEscortPaused(true);
             me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USE_STANDING);
             if (pInstance)
-                if (GameObject* console = ObjectAccessor::GetGameObject(*me, pInstance->GetGuidData(GO_SJONNIR_CONSOLE)))
+                if (GameObject* console =
+                        ObjectAccessor::GetGameObject(*me, pInstance->GetGuidData(GO_SJONNIR_CONSOLE)))
                     console->SetGoState(GO_STATE_ACTIVE);
 
             break;
@@ -703,7 +797,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return new dark_rune_protectorsAI (creature);
+        return new dark_rune_protectorsAI(creature);
     }
 
     struct dark_rune_protectorsAI : public ScriptedAI
@@ -711,6 +805,7 @@ public:
         dark_rune_protectorsAI(Creature* c) : ScriptedAI(c) { }
 
         EventMap events;
+
         void Reset() override
         {
             events.Reset();
@@ -734,19 +829,19 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_DRP_CHARGE:
-                    {
-                        if (Unit* tgt = SelectTarget(SelectTargetMethod::Random, 0))
-                            me->CastSpell(tgt, SPELL_DRP_CHARGE, false);
+                {
+                    if (Unit* tgt = SelectTarget(SelectTargetMethod::Random, 0))
+                        me->CastSpell(tgt, SPELL_DRP_CHARGE, false);
 
-                        events.Repeat(10s);
-                        break;
-                    }
+                    events.Repeat(10s);
+                    break;
+                }
                 case EVENT_DRP_CLEAVE:
-                    {
-                        me->CastSpell(me->GetVictim(), SPELL_DRP_CLEAVE, false);
-                        events.Repeat(7s);
-                        break;
-                    }
+                {
+                    me->CastSpell(me->GetVictim(), SPELL_DRP_CLEAVE, false);
+                    events.Repeat(7s);
+                    break;
+                }
             }
 
             DoMeleeAttackIfReady();
@@ -761,7 +856,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return new dark_rune_stormcallerAI (creature);
+        return new dark_rune_stormcallerAI(creature);
     }
 
     struct dark_rune_stormcallerAI : public ScriptedAI
@@ -769,6 +864,7 @@ public:
         dark_rune_stormcallerAI(Creature* c) : ScriptedAI(c) { }
 
         EventMap events;
+
         void Reset() override
         {
             events.Reset();
@@ -792,17 +888,19 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_DRS_LIGHTNING_BOLD:
-                    {
-                        me->CastSpell(me->GetVictim(), IsHeroic() ? SPELL_DRS_LIGHTING_BOLT_H : SPELL_DRS_LIGHTING_BOLT, false);
-                        events.Repeat(5s);
-                        break;
-                    }
+                {
+                    me->CastSpell(
+                        me->GetVictim(), IsHeroic() ? SPELL_DRS_LIGHTING_BOLT_H : SPELL_DRS_LIGHTING_BOLT, false);
+                    events.Repeat(5s);
+                    break;
+                }
                 case EVENT_DRS_SHADOW_WORD_PAIN:
-                    {
-                        me->CastSpell(me->GetVictim(), IsHeroic() ? SPELL_DRS_SHADOW_WORD_PAIN_H : SPELL_DRS_SHADOW_WORD_PAIN, false);
-                        events.Repeat(12s);
-                        break;
-                    }
+                {
+                    me->CastSpell(
+                        me->GetVictim(), IsHeroic() ? SPELL_DRS_SHADOW_WORD_PAIN_H : SPELL_DRS_SHADOW_WORD_PAIN, false);
+                    events.Repeat(12s);
+                    break;
+                }
             }
 
             DoMeleeAttackIfReady();
@@ -817,13 +915,15 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return new iron_golem_custodianAI (creature);
+        return new iron_golem_custodianAI(creature);
     }
 
     struct iron_golem_custodianAI : public ScriptedAI
     {
         iron_golem_custodianAI(Creature* c) : ScriptedAI(c) { }
+
         EventMap events;
+
         void Reset() override
         {
             events.Reset();
@@ -834,6 +934,7 @@ public:
             events.ScheduleEvent(EVENT_IGC_CRUSH, 6s);
             events.ScheduleEvent(EVENT_IGC_GROUND_SMASH, 4s);
         }
+
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
@@ -846,17 +947,18 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_IGC_CRUSH:
-                    {
-                        me->CastSpell(me->GetVictim(), SPELL_IGC_CRUSH_ARMOR, false);
-                        events.Repeat(6s);
-                        break;
-                    }
+                {
+                    me->CastSpell(me->GetVictim(), SPELL_IGC_CRUSH_ARMOR, false);
+                    events.Repeat(6s);
+                    break;
+                }
                 case EVENT_IGC_GROUND_SMASH:
-                    {
-                        me->CastSpell(me->GetVictim(), IsHeroic() ? SPELL_IGC_GROUND_SMASH_H : SPELL_IGC_GROUND_SMASH, false);
-                        events.Repeat(5s);
-                        break;
-                    }
+                {
+                    me->CastSpell(
+                        me->GetVictim(), IsHeroic() ? SPELL_IGC_GROUND_SMASH_H : SPELL_IGC_GROUND_SMASH, false);
+                    events.Repeat(5s);
+                    break;
+                }
             }
 
             DoMeleeAttackIfReady();
@@ -870,7 +972,7 @@ class spell_hos_dark_matter_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_DARK_MATTER_H, SPELL_DARK_MATTER });
+        return ValidateSpellInfo({SPELL_DARK_MATTER_H, SPELL_DARK_MATTER});
     }
 
     void HandleEffectRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -881,7 +983,8 @@ class spell_hos_dark_matter_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectRemove += AuraEffectRemoveFn(spell_hos_dark_matter_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+        OnEffectRemove += AuraEffectRemoveFn(
+            spell_hos_dark_matter_aura::HandleEffectRemove, EFFECT_0, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
     }
 };
 

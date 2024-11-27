@@ -24,16 +24,16 @@
 
 enum eAIs
 {
-    AI_MELEE    = 0,
-    AI_RANGED   = 1,
-    AI_HEALER   = 2,
-    AI_PET      = 3,
+    AI_MELEE = 0,
+    AI_RANGED = 1,
+    AI_HEALER = 2,
+    AI_PET = 3,
 };
 
 enum eSharedSpells
 {
-    SPELL_ANTI_AOE                              = 68595,
-    SPELL_PVP_TRINKET                           = 65547,
+    SPELL_ANTI_AOE = 68595,
+    SPELL_PVP_TRINKET = 65547,
 };
 
 struct boss_faction_championsAI : public ScriptedAI
@@ -71,7 +71,7 @@ struct boss_faction_championsAI : public ScriptedAI
             UnitAI::AttackStartCaster(who, 18.5f);
     }
 
-    float GetThreatMod(float dist, float  /*armor*/, uint32 health, uint32 /*maxhealth*/, Unit* target)
+    float GetThreatMod(float dist, float /*armor*/, uint32 health, uint32 /*maxhealth*/, Unit* target)
     {
         /*float mod_health = ((float)health)/maxhealth;
         if (mod_health < 0.4f) mod_health = 0.4f;
@@ -92,24 +92,32 @@ struct boss_faction_championsAI : public ScriptedAI
 
         // third try:
         float unimportant_dist = (mAIType == AI_MELEE || mAIType == AI_PET ? 5.0f : 35.0f);
-        if (dist > unimportant_dist) dist -= unimportant_dist;
-        else dist = 0.0f;
-        const float dist_factor = (mAIType == AI_MELEE || mAIType == AI_PET ? 15.0f : 25.0f);
-        float mod_dist = dist_factor / (dist_factor + dist); // 0.2 .. 1.0
+        if (dist > unimportant_dist)
+            dist -= unimportant_dist;
+        else
+            dist = 0.0f;
+        float const dist_factor = (mAIType == AI_MELEE || mAIType == AI_PET ? 15.0f : 25.0f);
+        float mod_dist = dist_factor / (dist_factor + dist);                    // 0.2 .. 1.0
         float mod_health = health > 40000 ? 2.0f : (60000 - health) / 10000.0f; // 2.0 .. 6.0
-        float mod_armor = (mAIType == AI_MELEE || mAIType == AI_PET) ? Unit::CalcArmorReducedDamage(me, target, 10000, nullptr) / 10000.0f : 1.0f;
+        float mod_armor = (mAIType == AI_MELEE || mAIType == AI_PET)
+                              ? Unit::CalcArmorReducedDamage(me, target, 10000, nullptr) / 10000.0f
+                              : 1.0f;
         return mod_dist * mod_health * mod_armor;
     }
 
     void RecalculateThreat()
     {
         ThreatContainer::StorageType const& tList = me->GetThreatMgr().GetThreatList();
-        for( ThreatContainer::StorageType::const_iterator itr = tList.begin(); itr != tList.end(); ++itr )
+        for (ThreatContainer::StorageType::const_iterator itr = tList.begin(); itr != tList.end(); ++itr)
         {
             Unit* pUnit = ObjectAccessor::GetUnit(*me, (*itr)->getUnitGuid());
             if (pUnit && pUnit->IsPlayer() && me->GetThreatMgr().GetThreat(pUnit))
             {
-                float threatMod = GetThreatMod(me->GetDistance2d(pUnit), (float)pUnit->GetArmor(), pUnit->GetHealth(), pUnit->GetMaxHealth(), pUnit);
+                float threatMod = GetThreatMod(me->GetDistance2d(pUnit),
+                    (float)pUnit->GetArmor(),
+                    pUnit->GetHealth(),
+                    pUnit->GetMaxHealth(),
+                    pUnit);
                 me->GetThreatMgr().ModifyThreatByPercent(pUnit, -100);
                 //me->getThreatMgr().DoAddThreat(pUnit, 10000000.0f * threatMod);
                 if (HostileReference* ref = me->GetThreatMgr().GetOnlineContainer().getReferenceByTarget(pUnit))
@@ -130,7 +138,7 @@ struct boss_faction_championsAI : public ScriptedAI
             pInstance->SetData(TYPE_FACTION_CHAMPIONS, DONE);
     }
 
-    void KilledUnit(Unit*  /*who*/) override
+    void KilledUnit(Unit* /*who*/) override
     {
         if (pInstance)
             pInstance->SetData(TYPE_FACTION_CHAMPIONS_PLAYER_DIED, 1);
@@ -146,7 +154,8 @@ struct boss_faction_championsAI : public ScriptedAI
     {
         // check for stun, fear, etc.
         // for casting, silence, disarm check individually in the ai
-        if (me->isFeared() || me->isFrozen() || me->HasUnitState(UNIT_STATE_STUNNED) || me->HasUnitState(UNIT_STATE_CONFUSED))
+        if (me->isFeared() || me->isFrozen() || me->HasUnitState(UNIT_STATE_STUNNED) ||
+            me->HasUnitState(UNIT_STATE_CONFUSED))
         {
             if (!IsHeroic())
                 return true;
@@ -168,8 +177,8 @@ struct boss_faction_championsAI : public ScriptedAI
             return nullptr;
         std::list<Creature*>::const_iterator iter = lst.begin();
         uint32 lowestHP = (*iter)->GetMaxHealth() - (*iter)->GetHealth();
-        for( std::list<Creature*>::const_iterator itr = lst.begin(); itr != lst.end(); ++itr )
-            if (((*itr)->GetMaxHealth() - (*itr)->GetHealth()) > lowestHP )
+        for (std::list<Creature*>::const_iterator itr = lst.begin(); itr != lst.end(); ++itr)
+            if (((*itr)->GetMaxHealth() - (*itr)->GetHealth()) > lowestHP)
             {
                 iter = itr;
                 lowestHP = (*itr)->GetMaxHealth() - (*itr)->GetHealth();
@@ -182,10 +191,10 @@ struct boss_faction_championsAI : public ScriptedAI
         ThreatContainer::StorageType const& tList = me->GetThreatMgr().GetThreatList();
         uint32 count = 0;
         Unit* target;
-        for( ThreatContainer::StorageType::const_iterator iter = tList.begin(); iter != tList.end(); ++iter )
+        for (ThreatContainer::StorageType::const_iterator iter = tList.begin(); iter != tList.end(); ++iter)
         {
             target = ObjectAccessor::GetUnit((*me), (*iter)->getUnitGuid());
-            if (target && me->GetDistance2d(target) < distance )
+            if (target && me->GetDistance2d(target) < distance)
                 ++count;
         }
         return count;
@@ -195,10 +204,11 @@ struct boss_faction_championsAI : public ScriptedAI
     {
         ThreatContainer::StorageType const& tList = me->GetThreatMgr().GetThreatList();
         Unit* target;
-        for( ThreatContainer::StorageType::const_iterator iter = tList.begin(); iter != tList.end(); ++iter )
+        for (ThreatContainer::StorageType::const_iterator iter = tList.begin(); iter != tList.end(); ++iter)
         {
             target = ObjectAccessor::GetUnit((*me), (*iter)->getUnitGuid());
-            if (target && target->getPowerType() == POWER_MANA && (!casting || target->HasUnitState(UNIT_STATE_CASTING)) && me->GetExactDist(target) <= range )
+            if (target && target->getPowerType() == POWER_MANA &&
+                (!casting || target->HasUnitState(UNIT_STATE_CASTING)) && me->GetExactDist(target) <= range)
                 return target;
         }
         return nullptr;
@@ -217,7 +227,7 @@ struct boss_faction_championsAI : public ScriptedAI
         else
             threatTimer -= diff;
 
-        if (me->getPowerType() == POWER_MANA )
+        if (me->getPowerType() == POWER_MANA)
         {
             if (powerTimer <= diff)
             {
@@ -227,7 +237,7 @@ struct boss_faction_championsAI : public ScriptedAI
             else
                 powerTimer -= diff;
         }
-        else if (me->getPowerType() == POWER_ENERGY )
+        else if (me->getPowerType() == POWER_ENERGY)
         {
             if (powerTimer <= diff)
             {
@@ -242,14 +252,14 @@ struct boss_faction_championsAI : public ScriptedAI
 
 enum eDruidSpells
 {
-    SPELL_LIFEBLOOM      = 66093,
-    SPELL_NOURISH          = 66066,
-    SPELL_REGROWTH        = 66067,
-    SPELL_REJUVENATION    = 66065,
-    SPELL_THORNS            = 66068,
-    SPELL_TRANQUILITY      = 66086,
-    SPELL_BARKSKIN        = 65860,
-    SPELL_NATURE_GRASP    = 66071,
+    SPELL_LIFEBLOOM = 66093,
+    SPELL_NOURISH = 66066,
+    SPELL_REGROWTH = 66067,
+    SPELL_REJUVENATION = 66065,
+    SPELL_THORNS = 66068,
+    SPELL_TRANQUILITY = 66086,
+    SPELL_BARKSKIN = 65860,
+    SPELL_NATURE_GRASP = 66071,
 };
 
 enum eDruidEvents
@@ -371,16 +381,16 @@ public:
 
 enum eShamanSpells
 {
-    SPELL_HEALING_WAVE        = 66055,
-    SPELL_RIPTIDE              = 66053,
-    SPELL_SPIRIT_CLEANSE        = 66056,
-    SPELL_HEROISM              = 65983,
-    SPELL_BLOODLUST          = 65980,
-    SPELL_HEX                  = 66054,
-    SPELL_EARTH_SHIELD        = 66063,
-    SPELL_EARTH_SHOCK          = 65973,
-    AURA_EXHAUSTION          = 57723,
-    AURA_SATED                = 57724,
+    SPELL_HEALING_WAVE = 66055,
+    SPELL_RIPTIDE = 66053,
+    SPELL_SPIRIT_CLEANSE = 66056,
+    SPELL_HEROISM = 65983,
+    SPELL_BLOODLUST = 65980,
+    SPELL_HEX = 66054,
+    SPELL_EARTH_SHIELD = 66063,
+    SPELL_EARTH_SHOCK = 65973,
+    AURA_EXHAUSTION = 57723,
+    AURA_SATED = 57724,
 };
 
 enum eShamanEvents
@@ -460,7 +470,7 @@ public:
                     EventMapGCD(events, 1500);
                     break;
                 case EVENT_SPELL_HEROISM_OR_BLOODLUST:
-                    if (me->GetEntry() == NPC_ALLIANCE_SHAMAN_RESTORATION )
+                    if (me->GetEntry() == NPC_ALLIANCE_SHAMAN_RESTORATION)
                         me->CastSpell((Unit*)nullptr, SPELL_HEROISM, true);
                     else
                         me->CastSpell((Unit*)nullptr, SPELL_BLOODLUST, true);
@@ -494,14 +504,14 @@ public:
 
 enum ePaladinSpells
 {
-    SPELL_HAND_OF_FREEDOM    = 68757,
-    SPELL_BUBBLE              = 66010,
-    SPELL_CLEANSE            = 66116,
-    SPELL_FLASH_OF_LIGHT      = 66113,
-    SPELL_HOLY_LIGHT          = 66112,
-    SPELL_HOLY_SHOCK          = 66114,
-    SPELL_HAND_OF_PROTECTION  = 66009,
-    SPELL_HAMMER_OF_JUSTICE   = 66613,
+    SPELL_HAND_OF_FREEDOM = 68757,
+    SPELL_BUBBLE = 66010,
+    SPELL_CLEANSE = 66116,
+    SPELL_FLASH_OF_LIGHT = 66113,
+    SPELL_HOLY_LIGHT = 66112,
+    SPELL_HOLY_SHOCK = 66114,
+    SPELL_HAND_OF_PROTECTION = 66009,
+    SPELL_HAMMER_OF_JUSTICE = 66613,
 };
 
 enum ePaladinEvents
@@ -633,12 +643,12 @@ public:
 
 enum ePriestSpells
 {
-    SPELL_RENEW          = 66177,
-    SPELL_SHIELD            = 66099,
-    SPELL_FLASH_HEAL        = 66104,
-    SPELL_DISPEL            = 65546,
-    SPELL_MANA_BURN      = 66100,
-    SPELL_PSYCHIC_SCREAM    = 65543,
+    SPELL_RENEW = 66177,
+    SPELL_SHIELD = 66099,
+    SPELL_FLASH_HEAL = 66104,
+    SPELL_DISPEL = 65546,
+    SPELL_MANA_BURN = 66100,
+    SPELL_PSYCHIC_SCREAM = 65543,
 };
 
 enum ePriestEvents
@@ -716,7 +726,8 @@ public:
                     EventMapGCD(events, 1500);
                     break;
                 case EVENT_SPELL_DISPEL:
-                    if (Unit* target = (urand(0, 1) ? SelectTarget(SelectTargetMethod::MaxThreat, 0, 30.0f, true) : SelectTarget_MostHPLostFriendlyMissingBuff(SPELL_DISPEL, 40.0f)))
+                    if (Unit* target = (urand(0, 1) ? SelectTarget(SelectTargetMethod::MaxThreat, 0, 30.0f, true)
+                                                    : SelectTarget_MostHPLostFriendlyMissingBuff(SPELL_DISPEL, 40.0f)))
                         me->CastSpell(target, SPELL_DISPEL, false);
                     events.Repeat(10s, 15s);
                     EventMapGCD(events, 1500);
@@ -732,7 +743,7 @@ public:
                         events.Repeat(6s);
                     break;
                 case EVENT_SPELL_PSYCHIC_SCREAM:
-                    if (HealthBelowPct(50) && EnemiesInRange(8.0f) >= 3 )
+                    if (HealthBelowPct(50) && EnemiesInRange(8.0f) >= 3)
                     {
                         me->CastSpell((Unit*)nullptr, SPELL_PSYCHIC_SCREAM, false);
                         events.Repeat(30s);
@@ -750,14 +761,14 @@ public:
 
 enum eShadowPriestSpells
 {
-    SPELL_SILENCE          = 65542,
-    SPELL_VAMPIRIC_TOUCH    = 65490,
-    SPELL_SW_PAIN          = 65541,
-    SPELL_MIND_FLAY      = 65488,
-    SPELL_MIND_BLAST        = 65492,
-    SPELL_HORROR            = 65545,
-    SPELL_DISPERSION        = 65544,
-    SPELL_SHADOWFORM        = 16592,
+    SPELL_SILENCE = 65542,
+    SPELL_VAMPIRIC_TOUCH = 65490,
+    SPELL_SW_PAIN = 65541,
+    SPELL_MIND_FLAY = 65488,
+    SPELL_MIND_BLAST = 65492,
+    SPELL_HORROR = 65545,
+    SPELL_DISPERSION = 65544,
+    SPELL_SHADOWFORM = 16592,
 };
 
 enum eShadowPriestEvents
@@ -774,7 +785,7 @@ enum eShadowPriestEvents
 class npc_toc_shadow_priest : public CreatureScript
 {
 public:
-    npc_toc_shadow_priest() : CreatureScript("npc_toc_shadow_priest") {}
+    npc_toc_shadow_priest() : CreatureScript("npc_toc_shadow_priest") { }
 
     CreatureAI* GetAI(Creature* pCreature) const override
     {
@@ -856,7 +867,7 @@ public:
                     EventMapGCD(events, 1500);
                     break;
                 case EVENT_SPELL_HORROR:
-                    if (me->GetVictim() && me->GetExactDist2d(me->GetVictim()) <= 30.0f )
+                    if (me->GetVictim() && me->GetExactDist2d(me->GetVictim()) <= 30.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_HORROR, false);
                         events.Repeat(2min);
@@ -876,13 +887,14 @@ public:
                         events.Repeat(6s);
                     break;
                 case EVENT_SPELL_DISPEL:
-                    if (Unit* target = (urand(0, 1) ? SelectTarget(SelectTargetMethod::MaxThreat, 0, 30.0f, true) : SelectTarget_MostHPLostFriendlyMissingBuff(SPELL_DISPEL, 40.0f)))
+                    if (Unit* target = (urand(0, 1) ? SelectTarget(SelectTargetMethod::MaxThreat, 0, 30.0f, true)
+                                                    : SelectTarget_MostHPLostFriendlyMissingBuff(SPELL_DISPEL, 40.0f)))
                         me->CastSpell(target, SPELL_DISPEL, false);
                     events.Repeat(10s, 15s);
                     EventMapGCD(events, 1500);
                     break;
                 case EVENT_SPELL_PSYCHIC_SCREAM:
-                    if (EnemiesInRange(8.0f) >= 3 )
+                    if (EnemiesInRange(8.0f) >= 3)
                     {
                         me->CastSpell((Unit*)nullptr, SPELL_PSYCHIC_SCREAM, false);
                         events.Repeat(30s);
@@ -900,16 +912,16 @@ public:
 
 enum eWarlockSpells
 {
-    SPELL_HELLFIRE            = 65816,
-    SPELL_CORRUPTION            = 65810,
-    SPELL_CURSE_OF_AGONY        = 65814,
-    SPELL_CURSE_OF_EXHAUSTION   = 65815,
-    SPELL_FEAR                = 65809,
-    SPELL_SEARING_PAIN        = 65819,
-    SPELL_SHADOW_BOLT          = 65821,
-    SPELL_UNSTABLE_AFFLICTION   = 65812,
+    SPELL_HELLFIRE = 65816,
+    SPELL_CORRUPTION = 65810,
+    SPELL_CURSE_OF_AGONY = 65814,
+    SPELL_CURSE_OF_EXHAUSTION = 65815,
+    SPELL_FEAR = 65809,
+    SPELL_SEARING_PAIN = 65819,
+    SPELL_SHADOW_BOLT = 65821,
+    SPELL_UNSTABLE_AFFLICTION = 65812,
     SPELL_UNSTABLE_AFFLICTION_DISPEL = 65813,
-    SPELL_SUMMON_FELHUNTER    = 67514,
+    SPELL_SUMMON_FELHUNTER = 67514,
 };
 
 enum eWarlockEvents
@@ -985,7 +997,7 @@ public:
 
                     break;
                 case EVENT_SPELL_HELLFIRE:
-                    if (EnemiesInRange(9.0f) >= 3 )
+                    if (EnemiesInRange(9.0f) >= 3)
                     {
                         me->CastSpell((Unit*)nullptr, SPELL_HELLFIRE, false);
                         events.Repeat(30s);
@@ -1045,15 +1057,15 @@ public:
 
 enum eMageSpells
 {
-    SPELL_ARCANE_BARRAGE    = 65799,
-    SPELL_ARCANE_BLAST    = 65791,
-    SPELL_ARCANE_EXPLOSION  = 65800,
-    SPELL_BLINK          = 65793,
-    SPELL_COUNTERSPELL    = 65790,
-    SPELL_FROST_NOVA        = 65792,
-    SPELL_FROSTBOLT      = 65807,
-    SPELL_ICE_BLOCK      = 65802,
-    SPELL_POLYMORPH      = 65801,
+    SPELL_ARCANE_BARRAGE = 65799,
+    SPELL_ARCANE_BLAST = 65791,
+    SPELL_ARCANE_EXPLOSION = 65800,
+    SPELL_BLINK = 65793,
+    SPELL_COUNTERSPELL = 65790,
+    SPELL_FROST_NOVA = 65792,
+    SPELL_FROSTBOLT = 65807,
+    SPELL_ICE_BLOCK = 65802,
+    SPELL_POLYMORPH = 65801,
 };
 
 enum eMageEvents
@@ -1130,7 +1142,7 @@ public:
                     EventMapGCD(events, 1500);
                     break;
                 case EVENT_SPELL_ARCANE_EXPLOSION:
-                    if (EnemiesInRange(9.0f) >= 3 )
+                    if (EnemiesInRange(9.0f) >= 3)
                     {
                         me->CastSpell((Unit*)nullptr, SPELL_ARCANE_EXPLOSION, false);
                         events.Repeat(6s);
@@ -1140,7 +1152,7 @@ public:
                         events.Repeat(6s);
                     break;
                 case EVENT_SPELL_BLINK:
-                    if (HealthBelowPct(50) && EnemiesInRange(10.0f) >= 3 )
+                    if (HealthBelowPct(50) && EnemiesInRange(10.0f) >= 3)
                     {
                         me->CastSpell((Unit*)nullptr, SPELL_FROST_NOVA, false);
                         events.Repeat(15s);
@@ -1191,16 +1203,16 @@ public:
 
 enum eHunterSpells
 {
-    SPELL_AIMED_SHOT        = 65883,
-    SPELL_DETERRENCE        = 65871,
-    SPELL_DISENGAGE      = 65870,
-    SPELL_EXPLOSIVE_SHOT    = 65866,
-    SPELL_FROST_TRAP        = 65880,
-    SPELL_SHOOT          = 65868,
-    SPELL_STEADY_SHOT      = 65867,
-    SPELL_WING_CLIP      = 66207,
-    SPELL_WYVERN_STING    = 65877,
-    SPELL_CALL_PET        = 67777,
+    SPELL_AIMED_SHOT = 65883,
+    SPELL_DETERRENCE = 65871,
+    SPELL_DISENGAGE = 65870,
+    SPELL_EXPLOSIVE_SHOT = 65866,
+    SPELL_FROST_TRAP = 65880,
+    SPELL_SHOOT = 65868,
+    SPELL_STEADY_SHOT = 65867,
+    SPELL_WING_CLIP = 66207,
+    SPELL_WYVERN_STING = 65877,
+    SPELL_CALL_PET = 67777,
 };
 
 enum eHunterEvents
@@ -1292,7 +1304,7 @@ public:
                         events.Repeat(6s);
                     break;
                 case EVENT_SPELL_DISENGAGE:
-                    if (EnemiesInRange(10.0f) >= 3 )
+                    if (EnemiesInRange(10.0f) >= 3)
                     {
                         me->CastSpell(me, SPELL_DISENGAGE, false);
                         events.Repeat(20s);
@@ -1319,7 +1331,7 @@ public:
                     EventMapGCD(events, 1500);
                     break;
                 case EVENT_SPELL_WING_CLIP:
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 5.0f )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 5.0f)
                         me->CastSpell(me->GetVictim(), SPELL_WING_CLIP, false);
                     events.Repeat(8s);
                     EventMapGCD(events, 1500);
@@ -1347,14 +1359,14 @@ public:
 
 enum eBoomkinSpells
 {
-    SPELL_WRATH          = 65862,
-    SPELL_MOONFIRE        = 65856,
-    SPELL_STARFIRE        = 65854,
-    SPELL_INSECT_SWARM    = 65855,
-    SPELL_ENTANGLING_ROOTS  = 65857,
-    SPELL_FAERIE_FIRE      = 65863,
-    SPELL_CYCLONE          = 65859,
-    SPELL_FORCE_OF_NATURE   = 65861,
+    SPELL_WRATH = 65862,
+    SPELL_MOONFIRE = 65856,
+    SPELL_STARFIRE = 65854,
+    SPELL_INSECT_SWARM = 65855,
+    SPELL_ENTANGLING_ROOTS = 65857,
+    SPELL_FAERIE_FIRE = 65863,
+    SPELL_CYCLONE = 65859,
+    SPELL_FORCE_OF_NATURE = 65861,
 };
 
 enum eBoomkinEvents
@@ -1490,15 +1502,15 @@ public:
 
 enum eWarriorSpells
 {
-    SPELL_BLADESTORM            = 65947,
-    SPELL_INTIMIDATING_SHOUT    = 65930,
-    SPELL_MORTAL_STRIKE      = 65926,
-    SPELL_CHARGE                = 68764,
-    SPELL_DISARM                = 65935,
-    SPELL_OVERPOWER          = 65924,
-    SPELL_SUNDER_ARMOR        = 65936,
-    SPELL_SHATTERING_THROW    = 65940,
-    SPELL_RETALIATION          = 65932,
+    SPELL_BLADESTORM = 65947,
+    SPELL_INTIMIDATING_SHOUT = 65930,
+    SPELL_MORTAL_STRIKE = 65926,
+    SPELL_CHARGE = 68764,
+    SPELL_DISARM = 65935,
+    SPELL_OVERPOWER = 65924,
+    SPELL_SUNDER_ARMOR = 65936,
+    SPELL_SHATTERING_THROW = 65940,
+    SPELL_RETALIATION = 65932,
 };
 
 enum eWarriorEvents
@@ -1569,7 +1581,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (EnemiesInRange(8.0f) >= 3 )
+                    if (EnemiesInRange(8.0f) >= 3)
                     {
                         me->CastSpell(me, SPELL_BLADESTORM, false);
                         events.Repeat(90s);
@@ -1579,7 +1591,7 @@ public:
                         events.Repeat(5s);
                     break;
                 case EVENT_SPELL_INTIMIDATING_SHOUT:
-                    if (EnemiesInRange(8.0f) >= 3 )
+                    if (EnemiesInRange(8.0f) >= 3)
                     {
                         me->CastSpell((Unit*)nullptr, SPELL_INTIMIDATING_SHOUT, false);
                         events.Repeat(2min);
@@ -1600,7 +1612,8 @@ public:
                     EventMapGCD(events, 1500);
                     break;
                 case EVENT_SPELL_CHARGE:
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) > 8.0f && me->GetDistance2d(me->GetVictim()) < 25.0f )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) > 8.0f &&
+                        me->GetDistance2d(me->GetVictim()) < 25.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_CHARGE, false);
                         events.Repeat(10s);
@@ -1610,7 +1623,7 @@ public:
                         events.Repeat(5s);
                     break;
                 case EVENT_SPELL_DISARM:
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 5.0f  )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 5.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_DISARM, false);
                         events.Repeat(1min);
@@ -1625,7 +1638,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 5.0f  )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 5.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_OVERPOWER, false);
                         events.Repeat(10s, 15s);
@@ -1640,7 +1653,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 5.0f  )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 5.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_SUNDER_ARMOR, false);
                         events.Repeat(10s, 15s);
@@ -1655,7 +1668,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 25.0f  )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 25.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_SHATTERING_THROW, false);
                         events.Repeat(5min);
@@ -1670,7 +1683,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (EnemiesInRange(8.0f) >= 3 )
+                    if (EnemiesInRange(8.0f) >= 3)
                     {
                         me->CastSpell(me, SPELL_RETALIATION, false);
                         events.Repeat(5min);
@@ -1688,13 +1701,13 @@ public:
 
 enum eDeathKnightSpells
 {
-    SPELL_CHAINS_OF_ICE    = 66020,
-    SPELL_DEATH_COIL          = 66019,
-    SPELL_DEATH_GRIP          = 66017,
-    SPELL_FROST_STRIKE      = 66047,
-    SPELL_ICEBOUND_FORTITUDE  = 66023,
-    SPELL_ICY_TOUCH        = 66021,
-    SPELL_STRANGULATE        = 66018,
+    SPELL_CHAINS_OF_ICE = 66020,
+    SPELL_DEATH_COIL = 66019,
+    SPELL_DEATH_GRIP = 66017,
+    SPELL_FROST_STRIKE = 66047,
+    SPELL_ICEBOUND_FORTITUDE = 66023,
+    SPELL_ICY_TOUCH = 66021,
+    SPELL_STRANGULATE = 66018,
 };
 
 enum eDeathKnightEvents
@@ -1756,7 +1769,7 @@ public:
                 case 0:
                     break;
                 case EVENT_SPELL_CHAINS_OF_ICE:
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 25.0f )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 25.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_CHAINS_OF_ICE, false);
                         events.Repeat(10s, 15s);
@@ -1766,7 +1779,7 @@ public:
                         events.Repeat(5s);
                     break;
                 case EVENT_SPELL_DEATH_COIL:
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 30.0f )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 30.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_DEATH_COIL, false);
                         events.Repeat(5s, 8s);
@@ -1776,14 +1789,16 @@ public:
                         events.Repeat(5s);
                     break;
                 case EVENT_SPELL_DEATH_GRIP:
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 30.0f && me->GetDistance2d(me->GetVictim()) >= 12.0f )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 30.0f &&
+                        me->GetDistance2d(me->GetVictim()) >= 12.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_DEATH_GRIP, false);
                         Position pos;
                         float x, y, z;
                         me->GetClosePoint(x, y, z, 3.0f);
                         pos.Relocate(x, y, z);
-                        me->GetVictim()->CastSpell(pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), 49575, true);
+                        me->GetVictim()->CastSpell(
+                            pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), 49575, true);
                         events.Repeat(35s);
                         EventMapGCD(events, 2000);
                     }
@@ -1796,7 +1811,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 5.0f  )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 5.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_FROST_STRIKE, false);
                         events.Repeat(6s, 10s);
@@ -1816,7 +1831,7 @@ public:
                         events.Repeat(6s);
                     break;
                 case EVENT_SPELL_ICY_TOUCH:
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 20.0f  )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 20.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_ICY_TOUCH, false);
                         events.Repeat(10s, 15s);
@@ -1844,13 +1859,13 @@ public:
 
 enum eRogueSpells
 {
-    SPELL_FAN_OF_KNIVES      = 65955,
-    SPELL_BLIND              = 65960,
-    SPELL_CLOAK              = 65961,
-    SPELL_BLADE_FLURRY        = 65956,
-    SPELL_SHADOWSTEP            = 66178,
-    SPELL_HEMORRHAGE            = 65954,
-    SPELL_EVISCERATE            = 65957,
+    SPELL_FAN_OF_KNIVES = 65955,
+    SPELL_BLIND = 65960,
+    SPELL_CLOAK = 65961,
+    SPELL_BLADE_FLURRY = 65956,
+    SPELL_SHADOWSTEP = 66178,
+    SPELL_HEMORRHAGE = 65954,
+    SPELL_EVISCERATE = 65957,
 };
 
 enum eRogueEvents
@@ -1918,7 +1933,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (EnemiesInRange(10.0f) >= 3 )
+                    if (EnemiesInRange(10.0f) >= 3)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_FAN_OF_KNIVES, false);
                         events.Repeat(6s, 10s);
@@ -1958,7 +1973,8 @@ public:
                     }
                     break;
                 case EVENT_SPELL_SHADOWSTEP:
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 40.0f && me->GetDistance2d(me->GetVictim()) > 10.0f )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) < 40.0f &&
+                        me->GetDistance2d(me->GetVictim()) > 10.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_SHADOWSTEP, false);
                         events.Repeat(30s);
@@ -1973,7 +1989,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 5.0f )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 5.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_HEMORRHAGE, false);
                         events.Repeat(5s);
@@ -1988,7 +2004,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 5.0f )
+                    if (me->GetVictim() && me->GetDistance2d(me->GetVictim()) <= 5.0f)
                     {
                         me->CastSpell(me->GetVictim(), SPELL_EVISCERATE, false);
                         events.Repeat(15s, 25s);
@@ -2006,12 +2022,12 @@ public:
 
 enum eEnhShamanSpells
 {
-    SPELL_EARTH_SHOCK_ENH   = 65973,
-    SPELL_LAVA_LASH      = 65974,
-    SPELL_STORMSTRIKE      = 65970,
-    SPELL_GROUNDING_TOTEM   = 65989,
-    SPELL_WINDFURY_TOTEM    = 65990,
-    SPELL_TREMOR_TOTEM      = 65992,
+    SPELL_EARTH_SHOCK_ENH = 65973,
+    SPELL_LAVA_LASH = 65974,
+    SPELL_STORMSTRIKE = 65970,
+    SPELL_GROUNDING_TOTEM = 65989,
+    SPELL_WINDFURY_TOTEM = 65990,
+    SPELL_TREMOR_TOTEM = 65992,
 };
 
 enum eEnhShamanEvents
@@ -2116,7 +2132,7 @@ public:
                         events.Repeat(5s);
                     break;
                 case EVENT_SPELL_HEROISM_OR_BLOODLUST:
-                    if (me->GetEntry() == NPC_ALLIANCE_SHAMAN_RESTORATION )
+                    if (me->GetEntry() == NPC_ALLIANCE_SHAMAN_RESTORATION)
                         me->CastSpell((Unit*)nullptr, SPELL_HEROISM, true);
                     else
                         me->CastSpell((Unit*)nullptr, SPELL_BLOODLUST, true);
@@ -2124,7 +2140,8 @@ public:
                     EventMapGCD(events, 1500);
                     break;
                 case EVENT_SUMMON_TOTEM:
-                    me->CastSpell((Unit*)nullptr, RAND(SPELL_GROUNDING_TOTEM, SPELL_WINDFURY_TOTEM, SPELL_TREMOR_TOTEM), false);
+                    me->CastSpell(
+                        (Unit*)nullptr, RAND(SPELL_GROUNDING_TOTEM, SPELL_WINDFURY_TOTEM, SPELL_TREMOR_TOTEM), false);
                     events.Repeat(30s);
                     EventMapGCD(events, 1500);
                     break;
@@ -2137,15 +2154,15 @@ public:
 
 enum eRetroPaladinSpells
 {
-    SPELL_AVENGING_WRATH        = 66011,
-    SPELL_CRUSADER_STRIKE      = 66003,
-    SPELL_DIVINE_SHIELD      = 66010,
-    SPELL_DIVINE_STORM        = 66006,
+    SPELL_AVENGING_WRATH = 66011,
+    SPELL_CRUSADER_STRIKE = 66003,
+    SPELL_DIVINE_SHIELD = 66010,
+    SPELL_DIVINE_STORM = 66006,
     SPELL_HAMMER_OF_JUSTICE_RET = 66007,
     SPELL_HAND_OF_PROTECTION_RET = 66009,
-    SPELL_JUDGEMENT_OF_COMMAND  = 66005,
-    SPELL_REPENTANCE            = 66008,
-    SPELL_SEAL_OF_COMMAND      = 66004,
+    SPELL_JUDGEMENT_OF_COMMAND = 66005,
+    SPELL_REPENTANCE = 66008,
+    SPELL_SEAL_OF_COMMAND = 66004,
 };
 
 enum eRetroPaladinEvents
@@ -2244,7 +2261,7 @@ public:
                         events.Repeat(5s);
                         break;
                     }
-                    if (EnemiesInRange(5.0f) >= 3 )
+                    if (EnemiesInRange(5.0f) >= 3)
                     {
                         me->CastSpell((Unit*)nullptr, SPELL_DIVINE_STORM, false);
                         events.Repeat(10s, 15s);
@@ -2264,7 +2281,8 @@ public:
                         events.Repeat(5s);
                     break;
                 case EVENT_SPELL_HAND_OF_PROTECTION_RET:
-                    if (Creature* target = SelectTarget_MostHPLostFriendlyMissingBuff(SPELL_HAND_OF_PROTECTION_RET, 30.0f))
+                    if (Creature* target =
+                            SelectTarget_MostHPLostFriendlyMissingBuff(SPELL_HAND_OF_PROTECTION_RET, 30.0f))
                     {
                         me->CastSpell(target, SPELL_HAND_OF_PROTECTION_RET, false);
                         events.Repeat(5min);
@@ -2302,8 +2320,8 @@ public:
 
 enum eWarlockPetSpells
 {
-    SPELL_DEVOUR_MAGIC  = 67518,
-    SPELL_SPELL_LOCK  = 67519,
+    SPELL_DEVOUR_MAGIC = 67518,
+    SPELL_SPELL_LOCK = 67519,
 };
 
 enum eWarlockPetEvents
@@ -2379,7 +2397,7 @@ public:
 
 enum eHunterPetSpells
 {
-    SPELL_CLAW  = 67793,
+    SPELL_CLAW = 67793,
 };
 
 enum eHunterPetEvents
@@ -2450,13 +2468,14 @@ class spell_faction_champion_warl_unstable_affliction_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_UNSTABLE_AFFLICTION_DISPEL });
+        return ValidateSpellInfo({SPELL_UNSTABLE_AFFLICTION_DISPEL});
     }
 
     void HandleDispel(DispelInfo* dispelInfo)
     {
         if (Unit* caster = GetCaster())
-            caster->CastSpell(dispelInfo->GetDispeller(), SPELL_UNSTABLE_AFFLICTION_DISPEL, true, nullptr, GetEffect(EFFECT_0));
+            caster->CastSpell(
+                dispelInfo->GetDispeller(), SPELL_UNSTABLE_AFFLICTION_DISPEL, true, nullptr, GetEffect(EFFECT_0));
     }
 
     void Register() override

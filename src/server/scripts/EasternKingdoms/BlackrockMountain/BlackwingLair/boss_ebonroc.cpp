@@ -21,16 +21,16 @@
 
 enum Spells
 {
-    SPELL_SHADOWFLAME           = 22539,
-    SPELL_WINGBUFFET            = 23339,
-    SPELL_SHADOWOFEBONROC       = 23340
+    SPELL_SHADOWFLAME = 22539,
+    SPELL_WINGBUFFET = 23339,
+    SPELL_SHADOWOFEBONROC = 23340
 };
 
 enum Events
 {
-    EVENT_SHADOWFLAME           = 1,
-    EVENT_WINGBUFFET            = 2,
-    EVENT_SHADOWOFEBONROC       = 3
+    EVENT_SHADOWFLAME = 1,
+    EVENT_WINGBUFFET = 2,
+    EVENT_SHADOWOFEBONROC = 3
 };
 
 class boss_ebonroc : public CreatureScript
@@ -45,16 +45,11 @@ public:
         void MovementInform(uint32 type, uint32 id) override
         {
             if (type != WAYPOINT_MOTION_TYPE || id != 12)
-            {
                 return;
-            }
 
             me->GetMotionMaster()->MoveRandom(10.f);
 
-            me->m_Events.AddEventAtOffset([this]()
-            {
-                me->GetMotionMaster()->Initialize();
-            }, 15s);
+            me->m_Events.AddEventAtOffset([this]() { me->GetMotionMaster()->Initialize(); }, 15s);
         }
 
         void JustEngagedWith(Unit* who) override

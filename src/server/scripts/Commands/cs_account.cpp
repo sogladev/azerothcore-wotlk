@@ -50,49 +50,43 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable accountSetCommandTable =
-        {
-            { "addon",      HandleAccountSetAddonCommand,     SEC_GAMEMASTER, Console::Yes },
-            { "gmlevel",    HandleAccountSetGmLevelCommand,   SEC_ADMINISTRATOR, Console::Yes },
-            { "password",   HandleAccountSetPasswordCommand,  SEC_ADMINISTRATOR, Console::Yes },
-            { "2fa",        HandleAccountSet2FACommand,       SEC_PLAYER,    Console::Yes  },
-            { "email",      HandleAccountSetEmailCommand,     SEC_ADMINISTRATOR, Console::Yes }
+        static ChatCommandTable accountSetCommandTable = {
+            {"addon",    HandleAccountSetAddonCommand,    SEC_GAMEMASTER,    Console::Yes},
+            {"gmlevel",  HandleAccountSetGmLevelCommand,  SEC_ADMINISTRATOR, Console::Yes},
+            {"password", HandleAccountSetPasswordCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"2fa",      HandleAccountSet2FACommand,      SEC_PLAYER,        Console::Yes},
+            {"email",    HandleAccountSetEmailCommand,    SEC_ADMINISTRATOR, Console::Yes}
         };
 
-        static ChatCommandTable accountLockCommandTable
-        {
-            { "country",    HandleAccountLockCountryCommand,  SEC_PLAYER,    Console::Yes  },
-            { "ip",         HandleAccountLockIpCommand,       SEC_PLAYER,    Console::Yes  }
+        static ChatCommandTable accountLockCommandTable {
+            {"country", HandleAccountLockCountryCommand, SEC_PLAYER, Console::Yes},
+            {"ip",      HandleAccountLockIpCommand,      SEC_PLAYER, Console::Yes}
         };
 
-        static ChatCommandTable account2faCommandTable
-        {
-            { "setup",      HandleAccount2FASetupCommand,   SEC_PLAYER,    Console::No  },
-            { "remove",     HandleAccount2FARemoveCommand,  SEC_PLAYER,    Console::No  }
+        static ChatCommandTable account2faCommandTable {
+            {"setup",  HandleAccount2FASetupCommand,  SEC_PLAYER, Console::No},
+            {"remove", HandleAccount2FARemoveCommand, SEC_PLAYER, Console::No}
         };
 
-        static ChatCommandTable accountRemoveCommandTable
-        {
-            { "country",    HandleAccountRemoveLockCountryCommand,  SEC_ADMINISTRATOR, Console::Yes },
+        static ChatCommandTable accountRemoveCommandTable {
+            {"country", HandleAccountRemoveLockCountryCommand, SEC_ADMINISTRATOR, Console::Yes},
         };
 
-        static ChatCommandTable accountCommandTable =
-        {
-            { "2fa",        account2faCommandTable                                       },
-            { "addon",      HandleAccountAddonCommand,       SEC_MODERATOR, Console::No  },
-            { "create",     HandleAccountCreateCommand,      SEC_CONSOLE,   Console::Yes },
-            { "delete",     HandleAccountDeleteCommand,      SEC_CONSOLE,   Console::Yes },
-            { "onlinelist", HandleAccountOnlineListCommand,  SEC_CONSOLE,   Console::Yes },
-            { "lock",       accountLockCommandTable                                      },
-            { "set",        accountSetCommandTable                                       },
-            { "password",   HandleAccountPasswordCommand,    SEC_PLAYER,    Console::No  },
-            { "remove",     accountRemoveCommandTable                                    },
-            { "",           HandleAccountCommand,            SEC_PLAYER,    Console::No  }
+        static ChatCommandTable accountCommandTable = {
+            {"2fa", account2faCommandTable},
+            {"addon", HandleAccountAddonCommand, SEC_MODERATOR, Console::No},
+            {"create", HandleAccountCreateCommand, SEC_CONSOLE, Console::Yes},
+            {"delete", HandleAccountDeleteCommand, SEC_CONSOLE, Console::Yes},
+            {"onlinelist", HandleAccountOnlineListCommand, SEC_CONSOLE, Console::Yes},
+            {"lock", accountLockCommandTable},
+            {"set", accountSetCommandTable},
+            {"password", HandleAccountPasswordCommand, SEC_PLAYER, Console::No},
+            {"remove", accountRemoveCommandTable},
+            {"", HandleAccountCommand, SEC_PLAYER, Console::No}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "account", accountCommandTable }
+        static ChatCommandTable commandTable = {
+            {"account", accountCommandTable}
         };
 
         return commandTable;
@@ -124,7 +118,9 @@ public:
 
             if (!result)
             {
-                LOG_ERROR("misc", "Account {} not found in login database when processing .account 2fa setup command.", accountId);
+                LOG_ERROR("misc",
+                    "Account {} not found in login database when processing .account 2fa setup command.",
+                    accountId);
                 handler->SendErrorMessage(LANG_UNKNOWN_ERROR);
                 return false;
             }
@@ -138,7 +134,10 @@ public:
 
         // store random suggested secrets
         static std::unordered_map<uint32, Acore::Crypto::TOTP::Secret> suggestions;
-        auto pair = suggestions.emplace(std::piecewise_construct, std::make_tuple(accountId), std::make_tuple(Acore::Crypto::TOTP::RECOMMENDED_SECRET_LENGTH)); // std::vector 1-argument std::size_t constructor invokes resize
+        auto pair = suggestions.emplace(std::piecewise_construct,
+            std::make_tuple(accountId),
+            std::make_tuple(Acore::Crypto::TOTP::
+                    RECOMMENDED_SECRET_LENGTH)); // std::vector 1-argument std::size_t constructor invokes resize
 
         if (pair.second) // no suggestion yet, generate random secret
             Acore::Crypto::GetRandomBytes(pair.first->second);
@@ -164,7 +163,8 @@ public:
         }
 
         // new suggestion, or no token specified, output TOTP parameters
-        handler->SendErrorMessage(LANG_2FA_SECRET_SUGGESTION, Acore::Encoding::Base32::Encode(pair.first->second).c_str());
+        handler->SendErrorMessage(
+            LANG_2FA_SECRET_SUGGESTION, Acore::Encoding::Base32::Encode(pair.first->second).c_str());
         return false;
     }
 
@@ -194,7 +194,9 @@ public:
 
             if (!result)
             {
-                LOG_ERROR("misc", "Account {} not found in login database when processing .account 2fa setup command.", accountId);
+                LOG_ERROR("misc",
+                    "Account {} not found in login database when processing .account 2fa setup command.",
+                    accountId);
                 handler->SendErrorMessage(LANG_UNKNOWN_ERROR);
                 return false;
             }
@@ -288,9 +290,12 @@ public:
                 handler->PSendSysMessage(LANG_ACCOUNT_CREATED, accountName);
                 if (handler->GetSession())
                 {
-                    LOG_DEBUG("warden", "Account: {} (IP: {}) Character:[{}] ({}) Change Password.",
-                                   handler->GetSession()->GetAccountId(), handler->GetSession()->GetRemoteAddress(),
-                                   handler->GetSession()->GetPlayer()->GetName(), handler->GetSession()->GetPlayer()->GetGUID().ToString());
+                    LOG_DEBUG("warden",
+                        "Account: {} (IP: {}) Character:[{}] ({}) Change Password.",
+                        handler->GetSession()->GetAccountId(),
+                        handler->GetSession()->GetRemoteAddress(),
+                        handler->GetSession()->GetPlayer()->GetName(),
+                        handler->GetSession()->GetPlayer()->GetGUID().ToString());
                 }
                 break;
             case AOR_NAME_TOO_LONG:
@@ -401,9 +406,13 @@ public:
             {
                 Field* fieldsLogin = resultLogin->Fetch();
                 handler->PSendSysMessage(LANG_ACCOUNT_LIST_LINE,
-                                         fieldsLogin[0].Get<std::string>(), name, fieldsLogin[1].Get<std::string>(),
-                                         fieldsDB[2].Get<uint16>(), fieldsDB[3].Get<uint16>(), fieldsLogin[3].Get<uint8>(),
-                                         fieldsLogin[2].Get<uint8>());
+                    fieldsLogin[0].Get<std::string>(),
+                    name,
+                    fieldsLogin[1].Get<std::string>(),
+                    fieldsDB[2].Get<uint16>(),
+                    fieldsDB[3].Get<uint16>(),
+                    fieldsLogin[3].Get<uint8>(),
+                    fieldsLogin[2].Get<uint8>());
             }
             else
                 handler->PSendSysMessage(LANG_ACCOUNT_LIST_ERROR, name);
@@ -463,7 +472,8 @@ public:
         {
             if (param == "on")
             {
-                if (IpLocationRecord const* location = sIPLocation->GetLocationRecord(handler->GetSession()->GetRemoteAddress()))
+                if (IpLocationRecord const* location =
+                        sIPLocation->GetLocationRecord(handler->GetSession()->GetRemoteAddress()))
                 {
                     auto* stmt = LoginDatabase.GetPreparedStatement(LOGIN_UPD_ACCOUNT_LOCK_COUNTRY);
                     stmt->SetData(0, location->CountryCode);
@@ -508,12 +518,12 @@ public:
 
             if (param == "on")
             {
-                stmt->SetData(0, true);                                     // locked
+                stmt->SetData(0, true); // locked
                 handler->PSendSysMessage(LANG_COMMAND_ACCLOCKLOCKED);
             }
             else if (param == "off")
             {
-                stmt->SetData(0, false);                                    // unlocked
+                stmt->SetData(0, false); // unlocked
                 handler->PSendSysMessage(LANG_COMMAND_ACCLOCKUNLOCKED);
             }
 
@@ -559,7 +569,8 @@ public:
             return false;
         }
 
-        AccountOpResult result = AccountMgr::ChangePassword(handler->GetSession()->GetAccountId(), std::string(newPassword));
+        AccountOpResult result =
+            AccountMgr::ChangePassword(handler->GetSession()->GetAccountId(), std::string(newPassword));
         switch (result)
         {
             case AOR_OK:
@@ -707,7 +718,7 @@ public:
         // Let set addon state only for lesser (strong) security level
         // or to self account
         if (handler->GetSession() && handler->GetSession()->GetAccountId() != accountId &&
-                handler->HasLowerSecurityAccount(nullptr, accountId, true))
+            handler->HasLowerSecurityAccount(nullptr, accountId, true))
             return false;
 
         auto expansion = Acore::StringTo<uint8>(exp); //get int anyway (0 if error)
@@ -770,8 +781,10 @@ public:
         }
 
         // handler->getSession() == nullptr only for console
-        targetAccountId = (isAccountNameGiven) ? AccountMgr::GetId(targetAccountName) : handler->getSelectedPlayer()->GetSession()->GetAccountId();
-        int32 gmRealmID = (isAccountNameGiven) ? Acore::StringTo<int32>(arg3).value_or(0) : Acore::StringTo<int32>(arg2).value_or(0);
+        targetAccountId = (isAccountNameGiven) ? AccountMgr::GetId(targetAccountName)
+                                               : handler->getSelectedPlayer()->GetSession()->GetAccountId();
+        int32 gmRealmID =
+            (isAccountNameGiven) ? Acore::StringTo<int32>(arg3).value_or(0) : Acore::StringTo<int32>(arg2).value_or(0);
         uint32 playerSecurity;
         if (handler->GetSession())
             playerSecurity = AccountMgr::GetSecurity(handler->GetSession()->GetAccountId(), gmRealmID);
@@ -790,7 +803,8 @@ public:
         // Check and abort if the target gm has a higher rank on one of the realms and the new realm is -1
         if (gmRealmID == -1 && !AccountMgr::IsConsoleAccount(playerSecurity))
         {
-            LoginDatabasePreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ACCESS_GMLEVEL_TEST);
+            LoginDatabasePreparedStatement* stmt =
+                LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ACCESS_GMLEVEL_TEST);
 
             stmt->SetData(0, targetAccountId);
             stmt->SetData(1, uint8(gm));
@@ -903,7 +917,8 @@ public:
     }
 
     /// Set email for account
-    static bool HandleAccountSetEmailCommand(ChatHandler* handler, AccountIdentifier account, std::string email, std::string emailConfirmation)
+    static bool HandleAccountSetEmailCommand(
+        ChatHandler* handler, AccountIdentifier account, std::string email, std::string emailConfirmation)
 
     {
         if (!account || !email.data() || !emailConfirmation.data())

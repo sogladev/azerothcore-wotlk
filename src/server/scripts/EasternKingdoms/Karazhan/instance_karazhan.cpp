@@ -26,42 +26,38 @@
 #include "SpellScriptLoader.h"
 #include "karazhan.h"
 
-const Position OptionalSpawn[] =
-{
-    { -10960.981445f, -1940.138428f, 46.178097f, 4.12f }, // Hyakiss the Lurker
-    { -10945.769531f, -2040.153320f, 49.474438f, 0.077f }, // Shadikith the Glider
-    { -10899.903320f, -2085.573730f, 49.474449f, 1.38f }  // Rokad the Ravager
+Position const OptionalSpawn[] = {
+    {-10960.981445f, -1940.138428f, 46.178097f, 4.12f }, // Hyakiss the Lurker
+    {-10945.769531f, -2040.153320f, 49.474438f, 0.077f}, // Shadikith the Glider
+    {-10899.903320f, -2085.573730f, 49.474449f, 1.38f }  // Rokad the Ravager
 };
 
-ObjectData const creatureData[] =
-{
-    { NPC_ATTUMEN_THE_HUNTSMAN, DATA_ATTUMEN   },
-    { NPC_SHADE_OF_ARAN,        DATA_ARAN      },
-    { NPC_MIDNIGHT,             DATA_MIDNIGHT  },
-    { NPC_DOROTHEE,             DATA_DOROTHEE  },
-    { NPC_TITO,                 DATA_TITO      },
-    { NPC_ROAR,                 DATA_ROAR      },
-    { NPC_STRAWMAN,             DATA_STRAWMAN  },
-    { NPC_TINHEAD,              DATA_TINHEAD   },
-    { NPC_ROMULO,               DATA_ROMULO    },
-    { NPC_JULIANNE,             DATA_JULIANNE  },
-    { NPC_NIGHTBANE,            DATA_NIGHTBANE },
-    { NPC_TERESTIAN_ILLHOOF,    DATA_TERESTIAN },
-    { 0,                        0              }
+ObjectData const creatureData[] = {
+    {NPC_ATTUMEN_THE_HUNTSMAN, DATA_ATTUMEN  },
+    {NPC_SHADE_OF_ARAN,        DATA_ARAN     },
+    {NPC_MIDNIGHT,             DATA_MIDNIGHT },
+    {NPC_DOROTHEE,             DATA_DOROTHEE },
+    {NPC_TITO,                 DATA_TITO     },
+    {NPC_ROAR,                 DATA_ROAR     },
+    {NPC_STRAWMAN,             DATA_STRAWMAN },
+    {NPC_TINHEAD,              DATA_TINHEAD  },
+    {NPC_ROMULO,               DATA_ROMULO   },
+    {NPC_JULIANNE,             DATA_JULIANNE },
+    {NPC_NIGHTBANE,            DATA_NIGHTBANE},
+    {NPC_TERESTIAN_ILLHOOF,    DATA_TERESTIAN},
+    {0,                        0             }
 };
 
-ObjectData const gameObjectData[] =
-{
-    { GO_SIDE_ENTRANCE_DOOR, DATA_GO_SIDE_ENTRANCE_DOOR },
-    { 0,                     0                          }
+ObjectData const gameObjectData[] = {
+    {GO_SIDE_ENTRANCE_DOOR, DATA_GO_SIDE_ENTRANCE_DOOR},
+    {0,                     0                         }
 };
 
-DoorData const doorData[] =
-{
-    { GO_MASTERS_TERRACE_DOOR,  DATA_NIGHTBANE, DOOR_TYPE_ROOM  },
-    { GO_MASTERS_TERRACE_DOOR2, DATA_NIGHTBANE, DOOR_TYPE_ROOM  },
-    { GO_NETHERSPACE_DOOR,      DATA_MALCHEZAAR, DOOR_TYPE_ROOM },
-    { 0,                        0,              DOOR_TYPE_ROOM  }
+DoorData const doorData[] = {
+    {GO_MASTERS_TERRACE_DOOR,  DATA_NIGHTBANE,  DOOR_TYPE_ROOM},
+    {GO_MASTERS_TERRACE_DOOR2, DATA_NIGHTBANE,  DOOR_TYPE_ROOM},
+    {GO_NETHERSPACE_DOOR,      DATA_MALCHEZAAR, DOOR_TYPE_ROOM},
+    {0,                        0,               DOOR_TYPE_ROOM}
 };
 
 class instance_karazhan : public InstanceMapScript
@@ -115,9 +111,7 @@ public:
                 case NPC_BARNES:
                     _barnesGUID = creature->GetGUID();
                     if (GetBossState(DATA_OPERA_PERFORMANCE) != DONE && !creature->IsAlive())
-                    {
                         creature->Respawn(true);
-                    }
                     break;
                 case NPC_PAWN_H:
                 case NPC_KNIGHT_H:
@@ -217,9 +211,7 @@ public:
                 case DATA_SPAWN_OPERA_DECORATIONS:
                 {
                     for (ObjectGuid const& guid : _operaDecorations[data - 1])
-                    {
                         DoRespawnGameObject(guid, DAY);
-                    }
 
                     break;
                 }
@@ -240,16 +232,12 @@ public:
                                     if (_chessTeam == TEAM_ALLIANCE)
                                     {
                                         if (piece->GetFaction() == CHESS_FACTION_ALLIANCE)
-                                        {
                                             piece->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
-                                        }
                                     }
                                     else if (_chessTeam == TEAM_HORDE)
                                     {
                                         if (piece->GetFaction() == CHESS_FACTION_HORDE)
-                                        {
                                             piece->SetNpcFlag(UNIT_NPC_FLAG_GOSSIP);
-                                        }
                                     }
                                     else
                                     {
@@ -258,10 +246,10 @@ public:
                                 }
                             }
                             break;
-                        case DONE:
-                            HandleGameObject(m_uiGamesmansExitDoor, true);
-                            instance->ToInstanceMap()->PermBindAllPlayers();
-                            break;
+                            case DONE:
+                                HandleGameObject(m_uiGamesmansExitDoor, true);
+                                instance->ToInstanceMap()->PermBindAllPlayers();
+                                break;
                         }
                         default:
                             DoRemoveAurasDueToSpellOnPlayers(SPELL_GAME_IN_SESSION);
@@ -290,12 +278,8 @@ public:
                     }
 
                     for (ObjectGuid const& medivhCheatFireGUID : _medivhCheatFiresGUID)
-                    {
                         if (Creature* fire = instance->GetCreature(medivhCheatFireGUID))
-                        {
                             fire->DespawnOrUnsummon();
-                        }
-                    }
 
                     _medivhCheatFiresGUID.clear();
                     break;
@@ -428,15 +412,16 @@ public:
         {
             if (actionId == ACTION_SCHEDULE_RAJ_CHECK)
             {
-                scheduler.Schedule(10s, [this](TaskContext)
+                scheduler.Schedule(10s,
+                    [this](TaskContext)
                 {
                     Creature* julliane = GetCreature(DATA_JULIANNE);
                     Creature* romulo = GetCreature(DATA_ROMULO);
 
                     if (julliane && romulo)
                     {
-                        if (julliane->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE)
-                            && romulo->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE))
+                        if (julliane->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE) &&
+                            romulo->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE))
                         {
                             julliane->KillSelf();
                             julliane->RemoveUnitFlag(UNIT_FLAG_NOT_SELECTABLE);
@@ -446,14 +431,10 @@ public:
                         else
                         {
                             if (romulo->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE))
-                            {
                                 julliane->AI()->DoAction(ACTION_RESS_ROMULO);
-                            }
 
                             if (julliane->HasUnitFlag(UNIT_FLAG_NOT_SELECTABLE))
-                            {
                                 julliane->AI()->DoAction(ACTION_DO_RESURRECT);
-                            }
                         }
                     }
                 });
@@ -512,10 +493,10 @@ public:
         ObjectGuid m_uiTerestianGUID;
         ObjectGuid m_uiMoroesGUID;
         ObjectGuid m_uiNightBaneGUID;
-        ObjectGuid m_uiLibraryDoor;                                 // Door at Shade of Aran
-        ObjectGuid m_uiMassiveDoor;                                 // Door at Netherspite
-        ObjectGuid m_uiGamesmansDoor;                               // Door before Chess
-        ObjectGuid m_uiGamesmansExitDoor;                           // Door after Chess
+        ObjectGuid m_uiLibraryDoor;       // Door at Shade of Aran
+        ObjectGuid m_uiMassiveDoor;       // Door at Netherspite
+        ObjectGuid m_uiGamesmansDoor;     // Door before Chess
+        ObjectGuid m_uiGamesmansExitDoor; // Door after Chess
         ObjectGuid ImageGUID;
         ObjectGuid DustCoveredChest;
         ObjectGuid m_uiRelayGUID;
@@ -534,7 +515,7 @@ class spell_karazhan_brittle_bones_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_RATTLED });
+        return ValidateSpellInfo({SPELL_RATTLED});
     }
 
     void CalcPeriodic(AuraEffect const* /*effect*/, bool& isPeriodic, int32& amplitude)
@@ -543,7 +524,7 @@ class spell_karazhan_brittle_bones_aura : public AuraScript
         amplitude = 5000;
     }
 
-    void Update(AuraEffect const*  /*effect*/)
+    void Update(AuraEffect const* /*effect*/)
     {
         PreventDefaultAction();
         if (roll_chance_i(35))
@@ -552,7 +533,8 @@ class spell_karazhan_brittle_bones_aura : public AuraScript
 
     void Register() override
     {
-        DoEffectCalcPeriodic += AuraEffectCalcPeriodicFn(spell_karazhan_brittle_bones_aura::CalcPeriodic, EFFECT_0, SPELL_AURA_DUMMY);
+        DoEffectCalcPeriodic +=
+            AuraEffectCalcPeriodicFn(spell_karazhan_brittle_bones_aura::CalcPeriodic, EFFECT_0, SPELL_AURA_DUMMY);
         OnEffectPeriodic += AuraEffectPeriodicFn(spell_karazhan_brittle_bones_aura::Update, EFFECT_0, SPELL_AURA_DUMMY);
     }
 };
@@ -563,19 +545,24 @@ class spell_karazhan_overload_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_OVERLOAD });
+        return ValidateSpellInfo({SPELL_OVERLOAD});
     }
 
     void PeriodicTick(AuraEffect const* auraEffect)
     {
         PreventDefaultAction();
         //Should stop at 3200 damage, maybe check needed(?)
-        GetUnitOwner()->CastCustomSpell(SPELL_OVERLOAD, SPELLVALUE_BASE_POINT0, int32(auraEffect->GetAmount() * pow(2.0, auraEffect->GetTickNumber())), GetUnitOwner(), true);
+        GetUnitOwner()->CastCustomSpell(SPELL_OVERLOAD,
+            SPELLVALUE_BASE_POINT0,
+            int32(auraEffect->GetAmount() * pow(2.0, auraEffect->GetTickNumber())),
+            GetUnitOwner(),
+            true);
     }
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_karazhan_overload_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+        OnEffectPeriodic += AuraEffectPeriodicFn(
+            spell_karazhan_overload_aura::PeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
     }
 };
 
@@ -585,7 +572,7 @@ class spell_karazhan_blink : public SpellScript
 
     bool Validate(SpellInfo const* /*spellInfo*/) override
     {
-        return ValidateSpellInfo({ SPELL_BLINK });
+        return ValidateSpellInfo({SPELL_BLINK});
     }
 
     void HandleDummy(SpellEffIndex effIndex)

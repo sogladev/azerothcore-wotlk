@@ -23,42 +23,42 @@
 
 enum Spells
 {
-    SPELL_FLAMEBREAK                = 16785,
-    SPELL_IMMOLATE                  = 15570,
-    SPELL_TERRIFYINGROAR            = 14100,
-    SPELL_BERSERKER_CHARGE          = 16636,
-    SPELL_FIREBALL                  = 16788,
-    SPELL_FIREBLAST                 = 16144,
-    SPELL_SUICIDE                   = 8329
+    SPELL_FLAMEBREAK = 16785,
+    SPELL_IMMOLATE = 15570,
+    SPELL_TERRIFYINGROAR = 14100,
+    SPELL_BERSERKER_CHARGE = 16636,
+    SPELL_FIREBALL = 16788,
+    SPELL_FIREBLAST = 16144,
+    SPELL_SUICIDE = 8329
 };
 
 enum Events
 {
-    EVENT_FLAME_BREAK               = 1,
-    EVENT_IMMOLATE                  = 2,
-    EVENT_TERRIFYING_ROAR           = 3,
-    EVENT_BERSERKER_CHARGE          = 4,
-    EVENT_FIREBALL                  = 5,
-    EVENT_FIREBLAST                 = 6
+    EVENT_FLAME_BREAK = 1,
+    EVENT_IMMOLATE = 2,
+    EVENT_TERRIFYING_ROAR = 3,
+    EVENT_BERSERKER_CHARGE = 4,
+    EVENT_FIREBALL = 5,
+    EVENT_FIREBLAST = 6
 };
 
 enum BeastMisc
 {
-    DATA_BEAST_REACHED              = 1,
-    DATA_BEAST_ROOM                 = 2,
-    BEAST_MOVEMENT_ID               = 1379690,
+    DATA_BEAST_REACHED = 1,
+    DATA_BEAST_ROOM = 2,
+    BEAST_MOVEMENT_ID = 1379690,
 
-    NPC_BLACKHAND_ELITE             = 10317,
+    NPC_BLACKHAND_ELITE = 10317,
 
-    SAY_BLACKHAND_DOOMED            = 0
+    SAY_BLACKHAND_DOOMED = 0
 };
 
-Position const OrcsRunawayPosition = { 34.163567f, -536.852356f, 110.935196f, 6.056306f };
+Position const OrcsRunawayPosition = {34.163567f, -536.852356f, 110.935196f, 6.056306f};
 
 class OrcMoveEvent : public BasicEvent
 {
 public:
-    OrcMoveEvent(Creature* me) : _me(me) {}
+    OrcMoveEvent(Creature* me) : _me(me) { }
 
     bool Execute(uint64 /*time*/, uint32 /*diff*/) override
     {
@@ -102,16 +102,15 @@ public:
 
     struct boss_thebeastAI : public BossAI
     {
-        boss_thebeastAI(Creature* creature) : BossAI(creature, DATA_THE_BEAST), _beastReached(false), _orcYelled(false) {}
+        boss_thebeastAI(Creature* creature) : BossAI(creature, DATA_THE_BEAST), _beastReached(false), _orcYelled(false)
+        { }
 
         void Reset() override
         {
             _Reset();
 
             if (_beastReached)
-            {
                 me->GetMotionMaster()->MovePath(BEAST_MOVEMENT_ID, true);
-            }
         }
 
         void JustEngagedWith(Unit* /*who*/) override
@@ -134,15 +133,11 @@ public:
                     if (!_orcYelled)
                     {
                         if (_nearbyOrcsGUIDs.empty())
-                        {
                             FindNearbyOrcs();
-                        }
 
                         //! vector still empty, creatures are missing
                         if (_nearbyOrcsGUIDs.empty())
-                        {
                             return;
-                        }
 
                         _orcYelled = true;
 
@@ -157,8 +152,10 @@ public:
                                     orc->AI()->Talk(SAY_BLACKHAND_DOOMED);
                                 }
 
-                                orc->m_Events.AddEvent(new OrcMoveEvent(orc), me->m_Events.CalculateTime(3 * IN_MILLISECONDS));
-                                orc->m_Events.AddEvent(new OrcDeathEvent(orc), me->m_Events.CalculateTime(9 * IN_MILLISECONDS));
+                                orc->m_Events.AddEvent(
+                                    new OrcMoveEvent(orc), me->m_Events.CalculateTime(3 * IN_MILLISECONDS));
+                                orc->m_Events.AddEvent(
+                                    new OrcDeathEvent(orc), me->m_Events.CalculateTime(9 * IN_MILLISECONDS));
                             }
                         }
                     }
@@ -184,9 +181,7 @@ public:
         void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
-            {
                 return;
-            }
 
             if (me->GetPositionY() > FirewalPositionY)
             {
@@ -197,9 +192,7 @@ public:
             events.Update(diff);
 
             if (me->HasUnitState(UNIT_STATE_CASTING))
-            {
                 return;
-            }
 
             while (uint32 eventId = events.ExecuteEvent())
             {
@@ -219,33 +212,25 @@ public:
                         break;
                     case EVENT_BERSERKER_CHARGE:
                         if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, 38.f, true))
-                        {
                             DoCast(target, SPELL_BERSERKER_CHARGE);
-                        }
                         events.ScheduleEvent(EVENT_BERSERKER_CHARGE, 15s, 23s);
                         break;
                     case EVENT_FIREBALL:
                         DoCastVictim(SPELL_FIREBALL);
                         events.ScheduleEvent(EVENT_FIREBALL, 8s, 21s);
                         if (events.GetNextEventTime(EVENT_FIREBLAST) < 3 * IN_MILLISECONDS)
-                        {
                             events.RescheduleEvent(EVENT_FIREBLAST, 3s);
-                        }
                         break;
                     case EVENT_FIREBLAST:
                         DoCastVictim(SPELL_FIREBLAST);
                         events.ScheduleEvent(EVENT_FIREBLAST, 5s, 8s);
                         if (events.GetNextEventTime(EVENT_FIREBALL) < 3 * IN_MILLISECONDS)
-                        {
                             events.RescheduleEvent(EVENT_FIREBALL, 3s);
-                        }
                         break;
                 }
 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
-                {
                     return;
-                }
             }
 
             DoMeleeAttackIfReady();
@@ -256,12 +241,8 @@ public:
             std::list<Creature*> temp;
             me->GetCreatureListWithEntryInGrid(temp, NPC_BLACKHAND_ELITE, 50.0f);
             for (Creature* creature : temp)
-            {
                 if (creature->IsAlive())
-                {
                     _nearbyOrcsGUIDs.push_back(creature->GetGUID());
-                }
-            }
         }
 
     private:
@@ -280,16 +261,12 @@ public:
     bool OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (player->IsGameMaster())
-        {
             return false;
-        }
 
         if (InstanceScript* instance = player->GetInstanceScript())
         {
             if (Creature* beast = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_THE_BEAST)))
-            {
                 beast->AI()->SetData(DATA_BEAST_REACHED, DATA_BEAST_REACHED);
-            }
 
             return true;
         }
@@ -306,16 +283,12 @@ public:
     bool OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
         if (player->IsGameMaster())
-        {
             return false;
-        }
 
         if (InstanceScript* instance = player->GetInstanceScript())
         {
             if (Creature* beast = ObjectAccessor::GetCreature(*player, instance->GetGuidData(DATA_THE_BEAST)))
-            {
                 beast->AI()->SetData(DATA_BEAST_ROOM, DATA_BEAST_ROOM);
-            }
 
             return true;
         }

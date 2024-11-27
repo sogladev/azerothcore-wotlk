@@ -46,47 +46,42 @@ public:
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable pdumpCommandTable =
-        {
-            { "load",           HandlePDumpLoadCommand,  SEC_ADMINISTRATOR, Console::Yes },
-            { "write",          HandlePDumpWriteCommand, SEC_ADMINISTRATOR, Console::Yes }
+        static ChatCommandTable pdumpCommandTable = {
+            {"load",  HandlePDumpLoadCommand,  SEC_ADMINISTRATOR, Console::Yes},
+            {"write", HandlePDumpWriteCommand, SEC_ADMINISTRATOR, Console::Yes}
         };
 
-        static ChatCommandTable characterDeletedCommandTable =
-        {
-            { "delete",         HandleCharacterDeletedDeleteCommand,   SEC_CONSOLE,       Console::Yes },
-            { "list",           HandleCharacterDeletedListCommand,     SEC_ADMINISTRATOR, Console::Yes },
-            { "restore",        HandleCharacterDeletedRestoreCommand,  SEC_ADMINISTRATOR, Console::Yes },
-            { "purge",          HandleCharacterDeletedPurgeCommand,    SEC_CONSOLE,       Console::Yes }
+        static ChatCommandTable characterDeletedCommandTable = {
+            {"delete",  HandleCharacterDeletedDeleteCommand,  SEC_CONSOLE,       Console::Yes},
+            {"list",    HandleCharacterDeletedListCommand,    SEC_ADMINISTRATOR, Console::Yes},
+            {"restore", HandleCharacterDeletedRestoreCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"purge",   HandleCharacterDeletedPurgeCommand,   SEC_CONSOLE,       Console::Yes}
         };
 
-        static ChatCommandTable characterCheckCommandTable =
-        {
-            { "bank",          HandleCharacterCheckBankCommand,          SEC_GAMEMASTER, Console::Yes },
-            { "bag",           HandleCharacterCheckBagCommand,           SEC_GAMEMASTER, Console::Yes },
-            { "profession",    HandleCharacterCheckProfessionCommand,    SEC_GAMEMASTER, Console::Yes }
+        static ChatCommandTable characterCheckCommandTable = {
+            {"bank",       HandleCharacterCheckBankCommand,       SEC_GAMEMASTER, Console::Yes},
+            {"bag",        HandleCharacterCheckBagCommand,        SEC_GAMEMASTER, Console::Yes},
+            {"profession", HandleCharacterCheckProfessionCommand, SEC_GAMEMASTER, Console::Yes}
         };
 
-        static ChatCommandTable characterCommandTable =
-        {
-            { "customize",      HandleCharacterCustomizeCommand,        SEC_GAMEMASTER, Console::Yes },
-            { "changefaction",  HandleCharacterChangeFactionCommand,    SEC_GAMEMASTER, Console::Yes },
-            { "changerace",     HandleCharacterChangeRaceCommand,       SEC_GAMEMASTER, Console::Yes },
-            { "changeaccount",  HandleCharacterChangeAccountCommand,    SEC_ADMINISTRATOR, Console::Yes },
-            { "check",          characterCheckCommandTable },
-            { "erase",          HandleCharacterEraseCommand,            SEC_CONSOLE,    Console::Yes },
-            { "deleted",        characterDeletedCommandTable },
-            { "level",          HandleCharacterLevelCommand,            SEC_GAMEMASTER, Console::Yes },
-            { "rename",         HandleCharacterRenameCommand,           SEC_GAMEMASTER, Console::Yes },
-            { "reputation",     HandleCharacterReputationCommand,       SEC_GAMEMASTER, Console::Yes },
-            { "titles",         HandleCharacterTitlesCommand,           SEC_GAMEMASTER, Console::Yes }
+        static ChatCommandTable characterCommandTable = {
+            {"customize", HandleCharacterCustomizeCommand, SEC_GAMEMASTER, Console::Yes},
+            {"changefaction", HandleCharacterChangeFactionCommand, SEC_GAMEMASTER, Console::Yes},
+            {"changerace", HandleCharacterChangeRaceCommand, SEC_GAMEMASTER, Console::Yes},
+            {"changeaccount", HandleCharacterChangeAccountCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"check", characterCheckCommandTable},
+            {"erase", HandleCharacterEraseCommand, SEC_CONSOLE, Console::Yes},
+            {"deleted", characterDeletedCommandTable},
+            {"level", HandleCharacterLevelCommand, SEC_GAMEMASTER, Console::Yes},
+            {"rename", HandleCharacterRenameCommand, SEC_GAMEMASTER, Console::Yes},
+            {"reputation", HandleCharacterReputationCommand, SEC_GAMEMASTER, Console::Yes},
+            {"titles", HandleCharacterTitlesCommand, SEC_GAMEMASTER, Console::Yes}
         };
 
-        static ChatCommandTable commandTable =
-        {
-            { "character",      characterCommandTable },
-            { "levelup",        HandleLevelUpCommand, SEC_GAMEMASTER, Console::No },
-            { "pdump",          pdumpCommandTable }
+        static ChatCommandTable commandTable = {
+            {"character", characterCommandTable},
+            {"levelup", HandleLevelUpCommand, SEC_GAMEMASTER, Console::No},
+            {"pdump", pdumpCommandTable}
         };
 
         return commandTable;
@@ -95,11 +90,11 @@ public:
     // Stores informations about a deleted character
     struct DeletedInfo
     {
-        ObjectGuid::LowType lowGuid;                    ///< the low GUID from the character
-        std::string name;                               ///< the character name
-        uint32      accountId;                          ///< the account id
-        std::string accountName;                        ///< the account name
-        time_t      deleteDate;                         ///< the date at which the character has been deleted
+        ObjectGuid::LowType lowGuid; ///< the low GUID from the character
+        std::string name;            ///< the character name
+        uint32 accountId;            ///< the account id
+        std::string accountName;     ///< the account name
+        time_t deleteDate;           ///< the date at which the character has been deleted
     };
 
     typedef std::list<DeletedInfo> DeletedInfoList;
@@ -149,9 +144,9 @@ public:
 
                 DeletedInfo info;
 
-                info.lowGuid    = fields[0].Get<uint32>();
-                info.name       = fields[1].Get<std::string>();
-                info.accountId  = fields[2].Get<uint32>();
+                info.lowGuid = fields[0].Get<uint32>();
+                info.name = fields[1].Get<std::string>();
+                info.accountId = fields[2].Get<uint32>();
 
                 // account name will be empty for nonexisting account
                 AccountMgr::GetName(info.accountId, info.accountName);
@@ -188,12 +183,18 @@ public:
 
             if (!handler->GetSession())
                 handler->PSendSysMessage(LANG_CHARACTER_DELETED_LIST_LINE_CONSOLE,
-                                         itr->lowGuid, itr->name, itr->accountName.empty() ? "<Not existing>" : itr->accountName,
-                                         itr->accountId, dateStr);
+                    itr->lowGuid,
+                    itr->name,
+                    itr->accountName.empty() ? "<Not existing>" : itr->accountName,
+                    itr->accountId,
+                    dateStr);
             else
                 handler->PSendSysMessage(LANG_CHARACTER_DELETED_LIST_LINE_CHAT,
-                                         itr->lowGuid, itr->name, itr->accountName.empty() ? "<Not existing>" : itr->accountName,
-                                         itr->accountId, dateStr);
+                    itr->lowGuid,
+                    itr->name,
+                    itr->accountName.empty() ? "<Not existing>" : itr->accountName,
+                    itr->accountId,
+                    dateStr);
         }
 
         if (!handler->GetSession())
@@ -212,9 +213,10 @@ public:
     */
     static void HandleCharacterDeletedRestoreHelper(DeletedInfo const& delInfo, ChatHandler* handler)
     {
-        if (delInfo.accountName.empty())                    // account does not exist
+        if (delInfo.accountName.empty()) // account does not exist
         {
-            handler->PSendSysMessage(LANG_CHARACTER_DELETED_SKIP_ACCOUNT, delInfo.name, delInfo.lowGuid, delInfo.accountId);
+            handler->PSendSysMessage(
+                LANG_CHARACTER_DELETED_SKIP_ACCOUNT, delInfo.name, delInfo.lowGuid, delInfo.accountId);
             return;
         }
 
@@ -222,13 +224,15 @@ public:
         uint32 charcount = AccountMgr::GetCharactersCount(delInfo.accountId);
         if (charcount >= 10)
         {
-            handler->PSendSysMessage(LANG_CHARACTER_DELETED_SKIP_FULL, delInfo.name, delInfo.lowGuid, delInfo.accountId);
+            handler->PSendSysMessage(
+                LANG_CHARACTER_DELETED_SKIP_FULL, delInfo.name, delInfo.lowGuid, delInfo.accountId);
             return;
         }
 
         if (sCharacterCache->GetCharacterGuidByName(delInfo.name))
         {
-            handler->PSendSysMessage(LANG_CHARACTER_DELETED_SKIP_NAME, delInfo.name, delInfo.lowGuid, delInfo.accountId);
+            handler->PSendSysMessage(
+                LANG_CHARACTER_DELETED_SKIP_NAME, delInfo.name, delInfo.lowGuid, delInfo.accountId);
             return;
         }
 
@@ -242,11 +246,18 @@ public:
         stmt->SetData(0, delInfo.lowGuid);
         if (PreparedQueryResult result = CharacterDatabase.Query(stmt))
         {
-            sCharacterCache->AddCharacterCacheEntry(ObjectGuid(HighGuid::Player, delInfo.lowGuid), delInfo.accountId, delInfo.name, (*result)[2].Get<uint8>(), (*result)[0].Get<uint8>(), (*result)[1].Get<uint8>(), (*result)[3].Get<uint8>());
+            sCharacterCache->AddCharacterCacheEntry(ObjectGuid(HighGuid::Player, delInfo.lowGuid),
+                delInfo.accountId,
+                delInfo.name,
+                (*result)[2].Get<uint8>(),
+                (*result)[0].Get<uint8>(),
+                (*result)[1].Get<uint8>(),
+                (*result)[3].Get<uint8>());
         }
     }
 
-    static void HandleCharacterLevel(Player* player, ObjectGuid playerGuid, uint32 oldLevel, uint32 newLevel, ChatHandler* handler)
+    static void HandleCharacterLevel(
+        Player* player, ObjectGuid playerGuid, uint32 oldLevel, uint32 newLevel, ChatHandler* handler)
     {
         if (player)
         {
@@ -257,11 +268,14 @@ public:
             if (handler->needReportToTarget(player))
             {
                 if (oldLevel == newLevel)
-                    ChatHandler(player->GetSession()).PSendSysMessage(LANG_YOURS_LEVEL_PROGRESS_RESET, handler->GetNameLink());
+                    ChatHandler(player->GetSession())
+                        .PSendSysMessage(LANG_YOURS_LEVEL_PROGRESS_RESET, handler->GetNameLink());
                 else if (oldLevel < newLevel)
-                    ChatHandler(player->GetSession()).PSendSysMessage(LANG_YOURS_LEVEL_UP, handler->GetNameLink(), newLevel);
-                else                                                // if (oldlevel > newlevel)
-                    ChatHandler(player->GetSession()).PSendSysMessage(LANG_YOURS_LEVEL_DOWN, handler->GetNameLink(), newLevel);
+                    ChatHandler(player->GetSession())
+                        .PSendSysMessage(LANG_YOURS_LEVEL_UP, handler->GetNameLink(), newLevel);
+                else // if (oldlevel > newlevel)
+                    ChatHandler(player->GetSession())
+                        .PSendSysMessage(LANG_YOURS_LEVEL_DOWN, handler->GetNameLink(), newLevel);
             }
         }
         else
@@ -272,7 +286,8 @@ public:
             stmt->SetData(1, playerGuid.GetCounter());
             CharacterDatabase.Execute(stmt);
 
-            sAchievementMgr->UpdateAchievementCriteriaForOfflinePlayer(playerGuid.GetCounter(), ACHIEVEMENT_CRITERIA_TYPE_REACH_LEVEL);
+            sAchievementMgr->UpdateAchievementCriteriaForOfflinePlayer(
+                playerGuid.GetCounter(), ACHIEVEMENT_CRITERIA_TYPE_REACH_LEVEL);
 
             sCharacterCache->UpdateCharacterLevel(playerGuid, newLevel);
         }
@@ -301,9 +316,11 @@ public:
 
             if (titleInfo && target->HasTitle(titleInfo))
             {
-                char const* name = target->getGender() == GENDER_MALE ? titleInfo->nameMale[loc] : titleInfo->nameFemale[loc];
+                char const* name =
+                    target->getGender() == GENDER_MALE ? titleInfo->nameMale[loc] : titleInfo->nameFemale[loc];
                 if (!*name)
-                    name = (target->getGender() == GENDER_MALE ? titleInfo->nameMale[sWorld->GetDefaultDbcLocale()] : titleInfo->nameFemale[sWorld->GetDefaultDbcLocale()]);
+                    name = (target->getGender() == GENDER_MALE ? titleInfo->nameMale[sWorld->GetDefaultDbcLocale()]
+                                                               : titleInfo->nameFemale[sWorld->GetDefaultDbcLocale()]);
 
                 if (!*name)
                     continue;
@@ -316,9 +333,17 @@ public:
 
                 // send title in "id (idx:idx) - [namedlink locale]" format
                 if (handler->GetSession())
-                    handler->PSendSysMessage(LANG_TITLE_LIST_CHAT, id, titleInfo->bit_index, id, titleName, localeNames[loc], knownStr, activeStr);
+                    handler->PSendSysMessage(LANG_TITLE_LIST_CHAT,
+                        id,
+                        titleInfo->bit_index,
+                        id,
+                        titleName,
+                        localeNames[loc],
+                        knownStr,
+                        activeStr);
                 else
-                    handler->PSendSysMessage(LANG_TITLE_LIST_CONSOLE, id, titleInfo->bit_index, name, localeNames[loc], knownStr, activeStr);
+                    handler->PSendSysMessage(
+                        LANG_TITLE_LIST_CONSOLE, id, titleInfo->bit_index, name, localeNames[loc], knownStr, activeStr);
             }
         }
 
@@ -326,7 +351,8 @@ public:
     }
 
     //rename characters
-    static bool HandleCharacterRenameCommand(ChatHandler* handler, Optional<PlayerIdentifier> player, Optional<bool> reserveName, Optional<std::string_view> newNameV)
+    static bool HandleCharacterRenameCommand(ChatHandler* handler, Optional<PlayerIdentifier> player,
+        Optional<bool> reserveName, Optional<std::string_view> newNameV)
     {
         if (!player && newNameV)
             return false;
@@ -342,7 +368,7 @@ public:
 
         if (newNameV)
         {
-            std::string newName{ *newNameV };
+            std::string newName {*newNameV};
             if (!normalizePlayerName(newName))
             {
                 handler->SendErrorMessage(LANG_BAD_VALUE);
@@ -403,32 +429,29 @@ public:
 
             handler->PSendSysMessage(LANG_RENAME_PLAYER_WITH_NEW_NAME, player->GetName(), newName);
         }
+        else if (Player* target = player->GetConnectedPlayer())
+        {
+            handler->PSendSysMessage(LANG_RENAME_PLAYER, handler->GetNameLink(target));
+            target->SetAtLoginFlag(AT_LOGIN_RENAME);
+        }
         else
         {
-            if (Player* target = player->GetConnectedPlayer())
-            {
-                handler->PSendSysMessage(LANG_RENAME_PLAYER, handler->GetNameLink(target));
-                target->SetAtLoginFlag(AT_LOGIN_RENAME);
-            }
-            else
-            {
-                // check offline security
-                if (handler->HasLowerSecurity(nullptr, player->GetGUID()))
-                    return false;
+            // check offline security
+            if (handler->HasLowerSecurity(nullptr, player->GetGUID()))
+                return false;
 
-                handler->PSendSysMessage(LANG_RENAME_PLAYER_GUID, handler->playerLink(*player), player->GetGUID().ToString());
+            handler->PSendSysMessage(
+                LANG_RENAME_PLAYER_GUID, handler->playerLink(*player), player->GetGUID().ToString());
 
-                CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
-                stmt->SetData(0, uint16(AT_LOGIN_RENAME));
-                stmt->SetData(1, player->GetGUID().GetCounter());
-                CharacterDatabase.Execute(stmt);
-            }
+            CharacterDatabasePreparedStatement* stmt =
+                CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
+            stmt->SetData(0, uint16(AT_LOGIN_RENAME));
+            stmt->SetData(1, player->GetGUID().GetCounter());
+            CharacterDatabase.Execute(stmt);
         }
 
         if (reserveName)
-        {
             sObjectMgr->AddReservedPlayerName(player->GetName());
-        }
 
         return true;
     }
@@ -441,17 +464,19 @@ public:
         if (!player)
             return false;
 
-        uint8 oldlevel = player->IsConnected() ? player->GetConnectedPlayer()->GetLevel() : sCharacterCache->GetCharacterLevelByGuid(player->GetGUID());
+        uint8 oldlevel = player->IsConnected() ? player->GetConnectedPlayer()->GetLevel()
+                                               : sCharacterCache->GetCharacterLevelByGuid(player->GetGUID());
 
         if (newlevel < 1)
-            return false;                                       // invalid level
+            return false; // invalid level
 
-        if (newlevel > DEFAULT_MAX_LEVEL)                         // hardcoded maximum level
+        if (newlevel > DEFAULT_MAX_LEVEL) // hardcoded maximum level
             newlevel = DEFAULT_MAX_LEVEL;
 
         HandleCharacterLevel(player->GetConnectedPlayer(), player->GetGUID(), oldlevel, newlevel, handler);
 
-        if (!handler->GetSession() || (handler->GetSession()->GetPlayer() != player->GetConnectedPlayer()))      // including chr == NULL
+        if (!handler->GetSession() ||
+            (handler->GetSession()->GetPlayer() != player->GetConnectedPlayer())) // including chr == NULL
             handler->PSendSysMessage(LANG_YOU_CHANGE_LVL, handler->playerLink(*player), newlevel);
 
         return true;
@@ -472,8 +497,10 @@ public:
         }
         else
         {
-            handler->PSendSysMessage(LANG_CUSTOMIZE_PLAYER_GUID, handler->playerLink(*player), player->GetGUID().ToString());
-            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
+            handler->PSendSysMessage(
+                LANG_CUSTOMIZE_PLAYER_GUID, handler->playerLink(*player), player->GetGUID().ToString());
+            CharacterDatabasePreparedStatement* stmt =
+                CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
             stmt->SetData(0, static_cast<uint16>(AT_LOGIN_CUSTOMIZE));
             stmt->SetData(1, player->GetGUID().GetCounter());
             CharacterDatabase.Execute(stmt);
@@ -496,8 +523,10 @@ public:
         }
         else
         {
-            handler->PSendSysMessage(LANG_CUSTOMIZE_PLAYER_GUID, handler->playerLink(*player), player->GetGUID().ToString());
-            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
+            handler->PSendSysMessage(
+                LANG_CUSTOMIZE_PLAYER_GUID, handler->playerLink(*player), player->GetGUID().ToString());
+            CharacterDatabasePreparedStatement* stmt =
+                CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
             stmt->SetData(0, uint16(AT_LOGIN_CHANGE_FACTION));
             stmt->SetData(1, player->GetGUID().GetCounter());
             CharacterDatabase.Execute(stmt);
@@ -520,8 +549,10 @@ public:
         }
         else
         {
-            handler->PSendSysMessage(LANG_CUSTOMIZE_PLAYER_GUID, handler->playerLink(*player), player->GetGUID().ToString());
-            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
+            handler->PSendSysMessage(
+                LANG_CUSTOMIZE_PLAYER_GUID, handler->playerLink(*player), player->GetGUID().ToString());
+            CharacterDatabasePreparedStatement* stmt =
+                CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
             stmt->SetData(0, uint16(AT_LOGIN_CHANGE_RACE));
             stmt->SetData(1, player->GetGUID().GetCounter());
             CharacterDatabase.Execute(stmt);
@@ -553,7 +584,8 @@ public:
             std::string rankName = handler->GetAcoreString(ReputationRankStrIndex[rank]);
             std::ostringstream ss;
             if (handler->GetSession())
-                ss << faction.ID << " - |cffffffff|Hfaction:" << faction.ID << "|h[" << factionName << ' ' << localeNames[loc] << "]|h|r";
+                ss << faction.ID << " - |cffffffff|Hfaction:" << faction.ID << "|h[" << factionName << ' '
+                   << localeNames[loc] << "]|h|r";
             else
                 ss << faction.ID << " - " << factionName << ' ' << localeNames[loc];
 
@@ -621,7 +653,8 @@ public:
      *
      * @param args the search string which either contains a player GUID or a part of the character-name
      */
-    static bool HandleCharacterDeletedRestoreCommand(ChatHandler* handler, std::string needle, Optional<std::string_view> newCharName, Optional<AccountIdentifier> newAccount)
+    static bool HandleCharacterDeletedRestoreCommand(ChatHandler* handler, std::string needle,
+        Optional<std::string_view> newCharName, Optional<AccountIdentifier> newAccount)
     {
         DeletedInfoList foundList;
         if (!GetDeletedCharacterInfoList(foundList, needle))
@@ -646,7 +679,7 @@ public:
 
         if (foundList.size() == 1)
         {
-            std::string newName{ *newCharName };
+            std::string newName {*newCharName};
             DeletedInfo delInfo = foundList.front();
 
             // update name
@@ -748,7 +781,8 @@ public:
         AccountMgr::GetName(accountId, accountName);
 
         Player::DeleteFromDB(player.GetGUID().GetCounter(), accountId, true, true);
-        handler->PSendSysMessage(LANG_CHARACTER_DELETED, player.GetName(), player.GetGUID().ToString(), accountName, accountId);
+        handler->PSendSysMessage(
+            LANG_CHARACTER_DELETED, player.GetName(), player.GetGUID().ToString(), accountName, accountId);
 
         return true;
     }
@@ -761,24 +795,27 @@ public:
         if (!player)
             return false;
 
-        uint8 oldlevel = player->IsConnected() ? player->GetConnectedPlayer()->GetLevel() : sCharacterCache->GetCharacterLevelByGuid(player->GetGUID());
+        uint8 oldlevel = player->IsConnected() ? player->GetConnectedPlayer()->GetLevel()
+                                               : sCharacterCache->GetCharacterLevelByGuid(player->GetGUID());
         int16 newlevel = static_cast<int16>(oldlevel) + level;
 
         if (newlevel < 1)
             newlevel = 1;
 
-        if (newlevel > STRONG_MAX_LEVEL)                         // hardcoded maximum level
+        if (newlevel > STRONG_MAX_LEVEL) // hardcoded maximum level
             newlevel = STRONG_MAX_LEVEL;
 
         HandleCharacterLevel(player->GetConnectedPlayer(), player->GetGUID(), oldlevel, newlevel, handler);
 
-        if (!handler->GetSession() || (handler->GetSession()->GetPlayer() != player->GetConnectedPlayer()))      // including chr == NULL
+        if (!handler->GetSession() ||
+            (handler->GetSession()->GetPlayer() != player->GetConnectedPlayer())) // including chr == NULL
             handler->PSendSysMessage(LANG_YOU_CHANGE_LVL, handler->playerLink(*player), newlevel);
 
         return true;
     }
 
-    static bool ValidatePDumpTarget(ChatHandler* handler, std::string& name, Optional<std::string_view> characterName, Optional<ObjectGuid::LowType> characterGUID)
+    static bool ValidatePDumpTarget(ChatHandler* handler, std::string& name, Optional<std::string_view> characterName,
+        Optional<ObjectGuid::LowType> characterGUID)
     {
         if (characterName)
         {
@@ -809,7 +846,8 @@ public:
         return true;
     }
 
-    static bool HandlePDumpLoadCommand(ChatHandler* handler, std::string fileName, AccountIdentifier account, Optional<std::string_view> characterName, Optional<ObjectGuid::LowType> characterGUID)
+    static bool HandlePDumpLoadCommand(ChatHandler* handler, std::string fileName, AccountIdentifier account,
+        Optional<std::string_view> characterName, Optional<ObjectGuid::LowType> characterGUID)
     {
         std::string name;
         if (!ValidatePDumpTarget(handler, name, characterName, characterGUID))
@@ -817,27 +855,28 @@ public:
 
         switch (PlayerDumpReader().LoadDumpFromFile(fileName, account, name, characterGUID.value_or(0)))
         {
-        case DUMP_SUCCESS:
-            handler->PSendSysMessage(LANG_COMMAND_IMPORT_SUCCESS);
-            break;
-        case DUMP_FILE_OPEN_ERROR:
-            handler->SendErrorMessage(LANG_FILE_OPEN_FAIL, fileName);
-            return false;
-        case DUMP_FILE_BROKEN:
-            handler->SendErrorMessage(LANG_DUMP_BROKEN, fileName);
-            return false;
-        case DUMP_TOO_MANY_CHARS:
-            handler->SendErrorMessage(LANG_ACCOUNT_CHARACTER_LIST_FULL, account.GetName(), account.GetID());
-            return false;
-        default:
-            handler->SendErrorMessage(LANG_COMMAND_IMPORT_FAILED);
-            return false;
+            case DUMP_SUCCESS:
+                handler->PSendSysMessage(LANG_COMMAND_IMPORT_SUCCESS);
+                break;
+            case DUMP_FILE_OPEN_ERROR:
+                handler->SendErrorMessage(LANG_FILE_OPEN_FAIL, fileName);
+                return false;
+            case DUMP_FILE_BROKEN:
+                handler->SendErrorMessage(LANG_DUMP_BROKEN, fileName);
+                return false;
+            case DUMP_TOO_MANY_CHARS:
+                handler->SendErrorMessage(LANG_ACCOUNT_CHARACTER_LIST_FULL, account.GetName(), account.GetID());
+                return false;
+            default:
+                handler->SendErrorMessage(LANG_COMMAND_IMPORT_FAILED);
+                return false;
         }
 
         return true;
     }
 
-    static bool HandlePDumpCopyCommand(ChatHandler* handler, PlayerIdentifier player, AccountIdentifier account, Optional<std::string_view> characterName, Optional<ObjectGuid::LowType> characterGUID)
+    static bool HandlePDumpCopyCommand(ChatHandler* handler, PlayerIdentifier player, AccountIdentifier account,
+        Optional<std::string_view> characterName, Optional<ObjectGuid::LowType> characterGUID)
     {
         std::string name;
         if (!ValidatePDumpTarget(handler, name, characterName, characterGUID))
@@ -846,29 +885,29 @@ public:
         std::string dump;
         switch (PlayerDumpWriter().WriteDumpToString(dump, player.GetGUID().GetCounter()))
         {
-        case DUMP_SUCCESS:
-            break;
-        case DUMP_CHARACTER_DELETED:
-            handler->SendErrorMessage(LANG_COMMAND_EXPORT_DELETED_CHAR);
-            return false;
-        case DUMP_FILE_OPEN_ERROR: // this error code should not happen
-        default:
-            handler->SendErrorMessage(LANG_COMMAND_EXPORT_FAILED);
-            return false;
+            case DUMP_SUCCESS:
+                break;
+            case DUMP_CHARACTER_DELETED:
+                handler->SendErrorMessage(LANG_COMMAND_EXPORT_DELETED_CHAR);
+                return false;
+            case DUMP_FILE_OPEN_ERROR: // this error code should not happen
+            default:
+                handler->SendErrorMessage(LANG_COMMAND_EXPORT_FAILED);
+                return false;
         }
 
         switch (PlayerDumpReader().LoadDumpFromString(dump, account, name, characterGUID.value_or(0)))
         {
-        case DUMP_SUCCESS:
-            break;
-        case DUMP_TOO_MANY_CHARS:
-            handler->SendErrorMessage(LANG_ACCOUNT_CHARACTER_LIST_FULL, account.GetName(), account.GetID());
-            return false;
-        case DUMP_FILE_OPEN_ERROR: // this error code should not happen
-        case DUMP_FILE_BROKEN: // this error code should not happen
-        default:
-            handler->SendErrorMessage(LANG_COMMAND_IMPORT_FAILED);
-            return false;
+            case DUMP_SUCCESS:
+                break;
+            case DUMP_TOO_MANY_CHARS:
+                handler->SendErrorMessage(LANG_ACCOUNT_CHARACTER_LIST_FULL, account.GetName(), account.GetID());
+                return false;
+            case DUMP_FILE_OPEN_ERROR: // this error code should not happen
+            case DUMP_FILE_BROKEN:     // this error code should not happen
+            default:
+                handler->SendErrorMessage(LANG_COMMAND_IMPORT_FAILED);
+                return false;
         }
 
         // Original TC Notes from Refactor vvv
@@ -882,18 +921,18 @@ public:
     {
         switch (PlayerDumpWriter().WriteDumpToFile(fileName, player.GetGUID().GetCounter()))
         {
-        case DUMP_SUCCESS:
-            handler->PSendSysMessage(LANG_COMMAND_EXPORT_SUCCESS);
-            break;
-        case DUMP_FILE_OPEN_ERROR:
-            handler->SendErrorMessage(LANG_FILE_OPEN_FAIL, fileName);
-            return false;
-        case DUMP_CHARACTER_DELETED:
-            handler->SendErrorMessage(LANG_COMMAND_EXPORT_DELETED_CHAR);
-            return false;
-        default:
-            handler->SendErrorMessage(LANG_COMMAND_EXPORT_FAILED);
-            return false;
+            case DUMP_SUCCESS:
+                handler->PSendSysMessage(LANG_COMMAND_EXPORT_SUCCESS);
+                break;
+            case DUMP_FILE_OPEN_ERROR:
+                handler->SendErrorMessage(LANG_FILE_OPEN_FAIL, fileName);
+                return false;
+            case DUMP_CHARACTER_DELETED:
+                handler->SendErrorMessage(LANG_COMMAND_EXPORT_DELETED_CHAR);
+                return false;
+            default:
+                handler->SendErrorMessage(LANG_COMMAND_EXPORT_FAILED);
+                return false;
         }
 
         return true;
@@ -944,24 +983,31 @@ public:
                     std::ostringstream ItemString;
                     ItemString << std::hex << ItemQualityColors[item->GetTemplate()->Quality];
 
-                    handler->PSendSysMessage("{} - |c{}|Hitem:{}:0:0:0:0:0:0:0:0:0|h[{}]|h|r - {}", Counter, ItemString.str(), item->GetEntry(), item->GetTemplate()->Name1, item->GetCount());
+                    handler->PSendSysMessage("{} - |c{}|Hitem:{}:0:0:0:0:0:0:0:0:0|h[{}]|h|r - {}",
+                        Counter,
+                        ItemString.str(),
+                        item->GetEntry(),
+                        item->GetTemplate()->Name1,
+                        item->GetCount());
                 }
             }
         }
-        else
+        else if (Bag* bag = target->GetBagByPos(BagSlot))
         {
-            if (Bag* bag = target->GetBagByPos(BagSlot))
+            for (uint32 i = 0; i < bag->GetBagSize(); i++)
             {
-                for (uint32 i = 0; i < bag->GetBagSize(); i++)
+                if (Item* item = target->GetItemByPos(BagSlot, i))
                 {
-                    if (Item* item = target->GetItemByPos(BagSlot, i))
-                    {
-                        Counter++;
-                        std::ostringstream ItemString;
-                        ItemString << std::hex << ItemQualityColors[item->GetTemplate()->Quality];
+                    Counter++;
+                    std::ostringstream ItemString;
+                    ItemString << std::hex << ItemQualityColors[item->GetTemplate()->Quality];
 
-                        handler->PSendSysMessage("{} - |c{}|Hitem:{}:0:0:0:0:0:0:0:0:0|h[{}]|h|r - {}", Counter, ItemString.str(), item->GetEntry(), item->GetTemplate()->Name1, item->GetCount());
-                    }
+                    handler->PSendSysMessage("{} - |c{}|Hitem:{}:0:0:0:0:0:0:0:0:0|h[{}]|h|r - {}",
+                        Counter,
+                        ItemString.str(),
+                        item->GetEntry(),
+                        item->GetTemplate()->Name1,
+                        item->GetCount());
                 }
             }
         }
@@ -1048,12 +1094,11 @@ public:
         return true;
     }
 
-    static bool HandleCharacterChangeAccountCommand(ChatHandler* handler, std::string accountName, Optional<PlayerIdentifier> player)
+    static bool HandleCharacterChangeAccountCommand(
+        ChatHandler* handler, std::string accountName, Optional<PlayerIdentifier> player)
     {
         if (!player)
-        {
             player = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!player)
         {
@@ -1073,17 +1118,21 @@ public:
             {
                 std::string accName;
                 AccountMgr::GetName(cache->AccountId, accName);
-                handler->PSendSysMessage(LANG_CMD_CHAR_CHANGE_ACC_SUCCESS, player->GetName(), player->GetGUID().ToString(), accName, cache->AccountId, accountName, accountId);
+                handler->PSendSysMessage(LANG_CMD_CHAR_CHANGE_ACC_SUCCESS,
+                    player->GetName(),
+                    player->GetGUID().ToString(),
+                    accName,
+                    cache->AccountId,
+                    accountName,
+                    accountId);
             }
 
             if (player->IsConnected())
-            {
                 player->GetConnectedPlayer()->GetSession()->KickPlayer("CMD char changeaccount");
-            }
 
-            CharacterDatabase.Query("UPDATE characters SET account = {} WHERE guid = {}", accountId, player->GetGUID().GetCounter());
+            CharacterDatabase.Query(
+                "UPDATE characters SET account = {} WHERE guid = {}", accountId, player->GetGUID().GetCounter());
             sCharacterCache->UpdateCharacterAccountId(player->GetGUID(), accountId);
-
         }
         else
         {

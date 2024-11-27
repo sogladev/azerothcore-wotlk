@@ -21,31 +21,31 @@
 
 enum Says
 {
-    SAY_INTRO                   = 0,
-    SAY_AGGRO                   = 1,
-    SAY_KILL                    = 2,
-    SAY_MIND                    = 3,
-    SAY_FEAR                    = 4,
-    SAY_IMAGE                   = 5,
-    SAY_DEATH                   = 6
+    SAY_INTRO = 0,
+    SAY_AGGRO = 1,
+    SAY_KILL = 2,
+    SAY_MIND = 3,
+    SAY_FEAR = 4,
+    SAY_IMAGE = 5,
+    SAY_DEATH = 6
 };
 
 enum Spells
 {
-    SPELL_FEAR                  = 39415,
-    SPELL_MIND_REND             = 36924,
-    SPELL_DOMINATION            = 37162,
-    SPELL_MANA_BURN             = 39020,
-    SPELL_66_ILLUSION           = 36931,
-    SPELL_33_ILLUSION           = 36932,
+    SPELL_FEAR = 39415,
+    SPELL_MIND_REND = 36924,
+    SPELL_DOMINATION = 37162,
+    SPELL_MANA_BURN = 39020,
+    SPELL_66_ILLUSION = 36931,
+    SPELL_33_ILLUSION = 36932,
 
-    SPELL_MIND_REND_IMAGE   = 36929,
+    SPELL_MIND_REND_IMAGE = 36929,
     H_SPELL_MIND_REND_IMAGE = 39021
 };
 
 enum Misc
 {
-    NPC_HARBINGER_SKYRISS_66    = 21466
+    NPC_HARBINGER_SKYRISS_66 = 21466
 };
 
 struct boss_harbinger_skyriss : public BossAI
@@ -56,12 +56,16 @@ struct boss_harbinger_skyriss : public BossAI
     {
         _Reset();
 
-        ScheduleHealthCheckEvent(66, [&] {
+        ScheduleHealthCheckEvent(66,
+            [&]
+        {
             Talk(SAY_IMAGE);
             DoCastSelf(SPELL_66_ILLUSION, true);
         });
 
-        ScheduleHealthCheckEvent(33, [&] {
+        ScheduleHealthCheckEvent(33,
+            [&]
+        {
             Talk(SAY_IMAGE);
             DoCastSelf(SPELL_33_ILLUSION, true);
         });
@@ -79,31 +83,35 @@ struct boss_harbinger_skyriss : public BossAI
         Talk(SAY_AGGRO);
         me->SetInCombatWithZone();
 
-        scheduler.Schedule(10s, [this](TaskContext context)
+        scheduler
+            .Schedule(10s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_MIND_REND, 0, 50.0f);
             context.Repeat(10s);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             if (DoCastRandomTarget(SPELL_FEAR, 1, 20.0f) == SPELL_CAST_OK)
-            {
                 Talk(SAY_FEAR);
-            }
             context.Repeat(25s);
-        }).Schedule(30s, [this](TaskContext context)
+        })
+            .Schedule(30s,
+                [this](TaskContext context)
         {
             if (DoCastRandomTarget(SPELL_DOMINATION, 1, 30.0f) == SPELL_CAST_OK)
-            {
                 Talk(SAY_MIND);
-            }
             context.Repeat();
         });
 
         if (IsHeroic())
         {
-            scheduler.Schedule(25s, [this](TaskContext context)
+            scheduler.Schedule(25s,
+                [this](TaskContext context)
             {
-                if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0, PowerUsersSelector(me, POWER_MANA, 40.0f, false)))
+                if (Unit* target =
+                        SelectTarget(SelectTargetMethod::Random, 0, PowerUsersSelector(me, POWER_MANA, 40.0f, false)))
                 {
                     DoCast(target, SPELL_MANA_BURN);
                 }
@@ -130,9 +138,7 @@ struct boss_harbinger_skyriss : public BossAI
     void KilledUnit(Unit* victim) override
     {
         if (victim->IsPlayer())
-        {
             Talk(SAY_KILL);
-        }
     }
 };
 

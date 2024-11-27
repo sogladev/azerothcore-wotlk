@@ -21,17 +21,17 @@
 
 enum Spells
 {
-    SPELL_FLAMESTRIKE               = 16419,
-    SPELL_CLEAVE                    = 15284,
-    SPELL_CONFLAGRATION             = 16805,
-    SPELL_THUNDERCLAP               = 15548, //Not sure if right ID. 23931 would be a harder possibility.
-    SPELL_RAGE                      = 16789,
-    SPELL_PIERCE_ARMOR              = 12097
+    SPELL_FLAMESTRIKE = 16419,
+    SPELL_CLEAVE = 15284,
+    SPELL_CONFLAGRATION = 16805,
+    SPELL_THUNDERCLAP = 15548, //Not sure if right ID. 23931 would be a harder possibility.
+    SPELL_RAGE = 16789,
+    SPELL_PIERCE_ARMOR = 12097
 };
 
 enum Events
 {
-    EVENT_FLAMESTRIKE               = 1,
+    EVENT_FLAMESTRIKE = 1,
     EVENT_CLEAVE,
     EVENT_CONFLAGRATION,
     EVENT_THUNDERCLAP,
@@ -111,18 +111,16 @@ public:
                         break;
                     case EVENT_CHECK_CONFLAGRATION_TARGET:
                         if (Unit* target = ObjectAccessor::GetUnit(*me, _conflagrateTarget))
-                        {
                             me->GetThreatMgr().AddThreat(target, _conflagrateThreat);
-                        }
                         break;
                 }
             }
             DoMeleeAttackIfReady();
         }
 
-        private:
-            float _conflagrateThreat;
-            ObjectGuid _conflagrateTarget;
+    private:
+        float _conflagrateThreat;
+        ObjectGuid _conflagrateTarget;
     };
 
     CreatureAI* GetAI(Creature* creature) const override

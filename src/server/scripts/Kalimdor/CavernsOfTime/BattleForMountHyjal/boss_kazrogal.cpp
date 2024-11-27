@@ -26,22 +26,22 @@
 enum Spells
 {
     SPELL_MALEVOLENT_CLEAVE = 31436,
-    SPELL_WAR_STOMP         = 31480,
-    SPELL_CRIPPLE           = 31477,
-    SPELL_MARK              = 31447,
-    SPELL_MARK_DAMAGE       = 31463
+    SPELL_WAR_STOMP = 31480,
+    SPELL_CRIPPLE = 31477,
+    SPELL_MARK = 31447,
+    SPELL_MARK_DAMAGE = 31463
 };
 
 enum Texts
 {
-    SAY_ONSLAY          = 0,
-    SAY_MARK            = 1,
-    SAY_ONSPAWN         = 2,
+    SAY_ONSLAY = 0,
+    SAY_MARK = 1,
+    SAY_ONSPAWN = 2,
 };
 
 enum Sounds
 {
-    SOUND_ONDEATH       = 11018,
+    SOUND_ONDEATH = 11018,
 };
 
 struct boss_kazrogal : public BossAI
@@ -49,10 +49,7 @@ struct boss_kazrogal : public BossAI
 public:
     boss_kazrogal(Creature* creature) : BossAI(creature, DATA_KAZROGAL)
     {
-        scheduler.SetValidator([this]
-            {
-                return !me->HasUnitState(UNIT_STATE_CASTING);
-            });
+        scheduler.SetValidator([this] { return !me->HasUnitState(UNIT_STATE_CASTING); });
     }
 
     void Reset() override
@@ -62,15 +59,21 @@ public:
         BossAI::Reset();
     }
 
-    void JustEngagedWith(Unit * who) override
+    void JustEngagedWith(Unit* who) override
     {
         BossAI::JustEngagedWith(who);
 
-        scheduler.Schedule(6s, 21s, [this](TaskContext context)
+        scheduler
+            .Schedule(6s,
+                21s,
+                [this](TaskContext context)
         {
             DoCastVictim(SPELL_MALEVOLENT_CLEAVE);
             context.Repeat();
-        }).Schedule(12s, 18s, [this](TaskContext context)
+        })
+            .Schedule(12s,
+                18s,
+                [this](TaskContext context)
         {
             if (SelectTarget(SelectTargetMethod::Random, 0, 12.f))
             {
@@ -79,11 +82,15 @@ public:
             }
             else
                 context.Repeat(1200ms);
-        }).Schedule(15s, [this](TaskContext context)
+        })
+            .Schedule(15s,
+                [this](TaskContext context)
         {
             DoCastRandomTarget(SPELL_CRIPPLE, 0, 20.f);
             context.Repeat(12s, 20s);
-        }).Schedule(45s, [this](TaskContext context)
+        })
+            .Schedule(45s,
+                [this](TaskContext context)
         {
             DoCastSelf(SPELL_MARK);
             Talk(SAY_MARK);
@@ -109,21 +116,18 @@ public:
             me->GetMotionMaster()->MovePath(HORDE_BOSS_PATH, false);
     }
 
-    void KilledUnit(Unit * victim) override
+    void KilledUnit(Unit* victim) override
     {
         if (!_recentlySpoken && victim->IsPlayer())
         {
             Talk(SAY_ONSLAY);
             _recentlySpoken = true;
 
-            scheduler.Schedule(6s, [this](TaskContext)
-                {
-                    _recentlySpoken = false;
-                });
+            scheduler.Schedule(6s, [this](TaskContext) { _recentlySpoken = false; });
         }
     }
 
-    void JustDied(Unit * killer) override
+    void JustDied(Unit* killer) override
     {
         me->PlayDirectSound(SOUND_ONDEATH);
         BossAI::JustDied(killer);
@@ -145,7 +149,8 @@ class spell_mark_of_kazrogal : public SpellScript
 
     void Register() override
     {
-        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_mark_of_kazrogal::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+        OnObjectAreaTargetSelect +=
+            SpellObjectAreaTargetSelectFn(spell_mark_of_kazrogal::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
     }
 };
 
@@ -155,7 +160,7 @@ class spell_mark_of_kazrogal_aura : public AuraScript
 
     bool Validate(SpellInfo const* /*spell*/) override
     {
-        return ValidateSpellInfo({ SPELL_MARK_DAMAGE });
+        return ValidateSpellInfo({SPELL_MARK_DAMAGE});
     }
 
     void OnPeriodic(AuraEffect const* aurEff)
@@ -172,7 +177,8 @@ class spell_mark_of_kazrogal_aura : public AuraScript
 
     void Register() override
     {
-        OnEffectPeriodic += AuraEffectPeriodicFn(spell_mark_of_kazrogal_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_MANA_LEECH);
+        OnEffectPeriodic +=
+            AuraEffectPeriodicFn(spell_mark_of_kazrogal_aura::OnPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_MANA_LEECH);
     }
 };
 

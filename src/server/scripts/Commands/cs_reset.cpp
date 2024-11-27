@@ -35,36 +35,32 @@ using namespace Acore::ChatCommands;
 class reset_commandscript : public CommandScript
 {
 public:
-
     reset_commandscript() : CommandScript("reset_commandscript") { }
 
     ChatCommandTable GetCommands() const override
     {
-        static ChatCommandTable resetItemsCommandTable =
-        {
-            { "equipped",       HandleResetItemsEquippedCommand,             SEC_ADMINISTRATOR, Console::Yes },
-            { "bags",           HandleResetItemsInBagsCommand,              SEC_ADMINISTRATOR, Console::Yes },
-            { "bank",           HandleResetItemsInBankCommand,              SEC_ADMINISTRATOR, Console::Yes },
-            { "keyring",        HandleResetItemsKeyringCommand,             SEC_ADMINISTRATOR, Console::Yes },
-            { "currency",       HandleResetItemsInCurrenciesListCommand,    SEC_ADMINISTRATOR, Console::Yes },
-            { "vendor_buyback", HandleResetItemsInVendorBuyBackTabCommand,  SEC_ADMINISTRATOR, Console::Yes },
-            { "all",            HandleResetItemsAllCommand,                 SEC_ADMINISTRATOR, Console::Yes },
-            { "allbags",        HandleResetItemsAllAndDeleteBagsCommand,    SEC_ADMINISTRATOR, Console::Yes },
+        static ChatCommandTable resetItemsCommandTable = {
+            {"equipped",       HandleResetItemsEquippedCommand,           SEC_ADMINISTRATOR, Console::Yes},
+            {"bags",           HandleResetItemsInBagsCommand,             SEC_ADMINISTRATOR, Console::Yes},
+            {"bank",           HandleResetItemsInBankCommand,             SEC_ADMINISTRATOR, Console::Yes},
+            {"keyring",        HandleResetItemsKeyringCommand,            SEC_ADMINISTRATOR, Console::Yes},
+            {"currency",       HandleResetItemsInCurrenciesListCommand,   SEC_ADMINISTRATOR, Console::Yes},
+            {"vendor_buyback", HandleResetItemsInVendorBuyBackTabCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"all",            HandleResetItemsAllCommand,                SEC_ADMINISTRATOR, Console::Yes},
+            {"allbags",        HandleResetItemsAllAndDeleteBagsCommand,   SEC_ADMINISTRATOR, Console::Yes},
         };
-        static ChatCommandTable resetCommandTable =
-        {
-            { "achievements",   HandleResetAchievementsCommand, SEC_CONSOLE,       Console::Yes },
-            { "honor",          HandleResetHonorCommand,        SEC_ADMINISTRATOR, Console::Yes },
-            { "level",          HandleResetLevelCommand,        SEC_ADMINISTRATOR, Console::Yes },
-            { "spells",         HandleResetSpellsCommand,       SEC_ADMINISTRATOR, Console::Yes },
-            { "stats",          HandleResetStatsCommand,        SEC_ADMINISTRATOR, Console::Yes },
-            { "talents",        HandleResetTalentsCommand,      SEC_ADMINISTRATOR, Console::Yes },
-            { "items",          resetItemsCommandTable                                          },
-            { "all",            HandleResetAllCommand,          SEC_CONSOLE,       Console::Yes }
+        static ChatCommandTable resetCommandTable = {
+            {"achievements", HandleResetAchievementsCommand, SEC_CONSOLE, Console::Yes},
+            {"honor", HandleResetHonorCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"level", HandleResetLevelCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"spells", HandleResetSpellsCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"stats", HandleResetStatsCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"talents", HandleResetTalentsCommand, SEC_ADMINISTRATOR, Console::Yes},
+            {"items", resetItemsCommandTable},
+            {"all", HandleResetAllCommand, SEC_CONSOLE, Console::Yes}
         };
-        static ChatCommandTable commandTable =
-        {
-            { "reset", resetCommandTable }
+        static ChatCommandTable commandTable = {
+            {"reset", resetCommandTable}
         };
         return commandTable;
     }
@@ -72,9 +68,7 @@ public:
     static bool HandleResetAchievementsCommand(ChatHandler*, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             return false;
-        }
 
         Player* playerTarget = target->GetConnectedPlayer();
 
@@ -89,9 +83,7 @@ public:
     static bool HandleResetHonorCommand(ChatHandler*, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             return false;
-        }
 
         Player* playerTarget = target->GetConnectedPlayer();
 
@@ -122,7 +114,8 @@ public:
 
         player->SetFactionForRace(player->getRace());
 
-        player->SetUInt32Value(UNIT_FIELD_BYTES_0, ((player->getRace()) | (player->getClass() << 8) | (player->getGender() << 16) | (powerType << 24)));
+        player->SetUInt32Value(UNIT_FIELD_BYTES_0,
+            ((player->getRace()) | (player->getClass() << 8) | (player->getGender() << 16) | (powerType << 24)));
 
         // reset only if player not in some form;
         if (player->GetShapeshiftForm() == FORM_NONE)
@@ -140,9 +133,7 @@ public:
     static bool HandleResetLevelCommand(ChatHandler*, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             return false;
-        }
 
         Player* playerTarget = target->GetConnectedPlayer();
 
@@ -153,8 +144,8 @@ public:
 
         // set starting level
         uint32 startLevel = !playerTarget->IsClass(CLASS_DEATH_KNIGHT, CLASS_CONTEXT_INIT)
-                            ? sWorld->getIntConfig(CONFIG_START_PLAYER_LEVEL)
-                            : sWorld->getIntConfig(CONFIG_START_HEROIC_PLAYER_LEVEL);
+                                ? sWorld->getIntConfig(CONFIG_START_PLAYER_LEVEL)
+                                : sWorld->getIntConfig(CONFIG_START_HEROIC_PLAYER_LEVEL);
 
         playerTarget->_ApplyAllLevelScaleItemMods(false);
         playerTarget->SetLevel(startLevel);
@@ -179,14 +170,10 @@ public:
     static bool HandleResetSpellsCommand(ChatHandler* handler, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             target = PlayerIdentifier::FromTargetOrSelf(handler);
-        }
 
         if (!target)
-        {
             return false;
-        }
 
         Player* playerTarget = target->GetConnectedPlayer();
 
@@ -200,7 +187,8 @@ public:
         }
         else
         {
-            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
+            CharacterDatabasePreparedStatement* stmt =
+                CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
             stmt->SetData(0, uint16(AT_LOGIN_RESET_SPELLS));
             stmt->SetData(1, playerTarget->GetGUID().GetCounter());
             CharacterDatabase.Execute(stmt);
@@ -214,9 +202,7 @@ public:
     static bool HandleResetStatsCommand(ChatHandler*, Optional<PlayerIdentifier> target)
     {
         if (!target)
-        {
             return false;
-        }
 
         Player* playerTarget = target->GetConnectedPlayer();
 
@@ -262,7 +248,8 @@ public:
         }
         else
         {
-            CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
+            CharacterDatabasePreparedStatement* stmt =
+                CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
             stmt->SetData(0, uint16(AT_LOGIN_RESET_TALENTS | AT_LOGIN_RESET_PET_TALENTS));
             stmt->SetData(1, target->GetGUID().GetCounter());
             CharacterDatabase.Execute(stmt);
@@ -302,9 +289,7 @@ public:
         stmt->SetData(0, uint16(atLogin));
         CharacterDatabase.Execute(stmt);
 
-        sWorld->DoForAllOnlinePlayers([&] (Player* player){
-            player->SetAtLoginFlag(atLogin);
-        });
+        sWorld->DoForAllOnlinePlayers([&](Player* player) { player->SetAtLoginFlag(atLogin); });
 
         return true;
     }
@@ -320,7 +305,8 @@ public:
         else
         {
             int16 deletedItemsCount = ResetItemsEquipped(targetPlayer);
-            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_EQUIPPED, deletedItemsCount, handler->GetNameLink(targetPlayer));
+            handler->PSendSysMessage(
+                LANG_COMMAND_RESET_ITEMS_EQUIPPED, deletedItemsCount, handler->GetNameLink(targetPlayer));
         }
 
         return true;
@@ -337,7 +323,8 @@ public:
         else
         {
             int16 deletedItemsCount = ResetItemsInBags(targetPlayer);
-            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_BAGS, deletedItemsCount, handler->GetNameLink(targetPlayer));
+            handler->PSendSysMessage(
+                LANG_COMMAND_RESET_ITEMS_BAGS, deletedItemsCount, handler->GetNameLink(targetPlayer));
         }
 
         return true;
@@ -354,7 +341,8 @@ public:
         else
         {
             int16 deletedItemsCount = ResetItemsInKeyring(targetPlayer);
-            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_KEYRING, deletedItemsCount, handler->GetNameLink(targetPlayer));
+            handler->PSendSysMessage(
+                LANG_COMMAND_RESET_ITEMS_KEYRING, deletedItemsCount, handler->GetNameLink(targetPlayer));
         }
 
         return true;
@@ -371,7 +359,8 @@ public:
         else
         {
             int16 deletedItemsCount = ResetItemsInCurrenciesList(targetPlayer);
-            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_CURRENCY, deletedItemsCount, handler->GetNameLink(targetPlayer));
+            handler->PSendSysMessage(
+                LANG_COMMAND_RESET_ITEMS_CURRENCY, deletedItemsCount, handler->GetNameLink(targetPlayer));
         }
 
         return true;
@@ -388,7 +377,8 @@ public:
         else
         {
             int16 deletedItemsCount = ResetItemsInBank(targetPlayer);
-            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_BANK, deletedItemsCount, handler->GetNameLink(targetPlayer));
+            handler->PSendSysMessage(
+                LANG_COMMAND_RESET_ITEMS_BANK, deletedItemsCount, handler->GetNameLink(targetPlayer));
         }
 
         return true;
@@ -405,7 +395,8 @@ public:
         else
         {
             int16 deletedItemsCount = ResetItemsInVendorBuyBackTab(targetPlayer);
-            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_BUYBACK, deletedItemsCount, handler->GetNameLink(targetPlayer));
+            handler->PSendSysMessage(
+                LANG_COMMAND_RESET_ITEMS_BUYBACK, deletedItemsCount, handler->GetNameLink(targetPlayer));
         }
 
         return true;
@@ -423,14 +414,15 @@ public:
         {
 
             // Delete all items destinations
-            int16 deletedItemsEquippedCount            = ResetItemsEquipped(targetPlayer);
-            int16 deletedItemsInBagsCount             = ResetItemsInBags(targetPlayer);
-            int16 deletedItemsInBankCount             = ResetItemsInBank(targetPlayer);
-            int16 deletedItemsInKeyringCount          = ResetItemsInKeyring(targetPlayer);
-            int16 deletedItemsInCurrenciesListCount   = ResetItemsInCurrenciesList(targetPlayer);
+            int16 deletedItemsEquippedCount = ResetItemsEquipped(targetPlayer);
+            int16 deletedItemsInBagsCount = ResetItemsInBags(targetPlayer);
+            int16 deletedItemsInBankCount = ResetItemsInBank(targetPlayer);
+            int16 deletedItemsInKeyringCount = ResetItemsInKeyring(targetPlayer);
+            int16 deletedItemsInCurrenciesListCount = ResetItemsInCurrenciesList(targetPlayer);
             int16 deletedItemsInVendorBuyBackTabCount = ResetItemsInVendorBuyBackTab(targetPlayer);
 
-            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_ALL, handler->GetNameLink(targetPlayer),
+            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_ALL,
+                handler->GetNameLink(targetPlayer),
                 deletedItemsEquippedCount,
                 deletedItemsInBagsCount,
                 deletedItemsInBankCount,
@@ -448,7 +440,7 @@ public:
 
         if (!targetPlayer)
         {
-           return false;
+            return false;
         }
         else
         {
@@ -463,7 +455,8 @@ public:
             int16 deletedItemsStandardBagsCount = ResetItemsDeleteStandardBags(targetPlayer);
             int16 deletedItemsBankBagsCount = ResetItemsDeleteBankBags(targetPlayer);
 
-            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_ALL_BAGS, handler->GetNameLink(targetPlayer),
+            handler->PSendSysMessage(LANG_COMMAND_RESET_ITEMS_ALL_BAGS,
+                handler->GetNameLink(targetPlayer),
                 deletedItemsEquippedCount,
                 deletedItemsInBagsCount,
                 deletedItemsInBankCount,
@@ -515,9 +508,7 @@ private:
     static int16 ResetItemsEquipped(Player* playerTarget)
     {
         if (!playerTarget)
-        {
             return -1;
-        }
 
         int16 count = 0;
         for (uint8 i = EQUIPMENT_SLOT_START; i < EQUIPMENT_SLOT_END; ++i)
@@ -536,9 +527,7 @@ private:
     static int16 ResetItemsInBags(Player* playerTarget)
     {
         if (!playerTarget)
-        {
             return -1;
-        }
 
         int16 count = 0;
         // Default bagpack :
@@ -576,9 +565,7 @@ private:
     static int16 ResetItemsInBank(Player* playerTarget)
     {
         if (!playerTarget)
-        {
             return -1;
-        }
 
         int16 count = 0;
         // Normal bank slot
@@ -616,9 +603,7 @@ private:
     static int16 ResetItemsInKeyring(Player* playerTarget)
     {
         if (!playerTarget)
-        {
             return -1;
-        }
 
         int16 count = 0;
         for (uint8 i = KEYRING_SLOT_START; i < KEYRING_SLOT_END; ++i)
@@ -637,9 +622,7 @@ private:
     static int16 ResetItemsInCurrenciesList(Player* playerTarget)
     {
         if (!playerTarget)
-        {
             return -1;
-        }
 
         int16 count = 0;
         for (uint8 i = CURRENCYTOKEN_SLOT_START; i < CURRENCYTOKEN_SLOT_END; ++i)
@@ -658,9 +641,7 @@ private:
     static int16 ResetItemsInVendorBuyBackTab(Player* playerTarget)
     {
         if (!playerTarget)
-        {
             return -1;
-        }
 
         int16 count = 0;
         for (uint8 i = BUYBACK_SLOT_START; i < BUYBACK_SLOT_END; ++i)
@@ -679,9 +660,7 @@ private:
     static int16 ResetItemsDeleteStandardBags(Player* playerTarget)
     {
         if (!playerTarget)
-        {
             return -1;
-        }
 
         int16 count = 0;
         // Standard bag slots
@@ -701,9 +680,7 @@ private:
     static int16 ResetItemsDeleteBankBags(Player* playerTarget)
     {
         if (!playerTarget)
-        {
             return -1;
-        }
 
         int16 count = 0;
         // Bank bags

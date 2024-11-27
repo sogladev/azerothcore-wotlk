@@ -36,16 +36,16 @@ void WorldSession::SendNameQueryOpcode(ObjectGuid guid)
     data << guid.WriteAsPacked();
     if (!playerData)
     {
-        data << uint8(1);                           // name unknown
+        data << uint8(1); // name unknown
         SendPacket(&data);
         return;
     }
 
     Player* player = ObjectAccessor::FindConnectedPlayer(guid);
 
-    data << uint8(0);                               // name known
-    data << playerData->Name;                       // played name
-    data << uint8(0);                               // realm name - only set for cross realm interaction (such as Battlegrounds)
+    data << uint8(0);         // name known
+    data << playerData->Name; // played name
+    data << uint8(0);         // realm name - only set for cross realm interaction (such as Battlegrounds)
     data << uint8(player ? player->getRace() : playerData->Race);
     data << uint8(playerData->Sex);
     data << uint8(playerData->Class);
@@ -59,7 +59,7 @@ void WorldSession::SendNameQueryOpcode(ObjectGuid guid)
             data << names->name[i];
     }
     else*/
-    data << uint8(0);                           // Name is not declined
+    data << uint8(0); // Name is not declined
 
     SendPacket(&data);
 }
@@ -116,35 +116,35 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket& recvData)
         }
         // guess size
         WorldPacket data(SMSG_CREATURE_QUERY_RESPONSE, 100);
-        data << uint32(entry);                                       // creature entry
+        data << uint32(entry); // creature entry
         data << Name;
-        data << uint8(0) << uint8(0) << uint8(0);                    // name2, name3, name4, always empty
+        data << uint8(0) << uint8(0) << uint8(0); // name2, name3, name4, always empty
         data << Title;
-        data << ci->IconName;                                        // "Directions" for guard, string for Icons 2.3.0
-        data << uint32(ci->type_flags);                              // flags
-        data << uint32(ci->type);                                    // CreatureType.dbc
-        data << uint32(ci->family);                                  // CreatureFamily.dbc
-        data << uint32(ci->rank);                                    // Creature Rank (elite, boss, etc)
-        data << uint32(ci->KillCredit[0]);                           // new in 3.1, kill credit
-        data << uint32(ci->KillCredit[1]);                           // new in 3.1, kill credit
+        data << ci->IconName;              // "Directions" for guard, string for Icons 2.3.0
+        data << uint32(ci->type_flags);    // flags
+        data << uint32(ci->type);          // CreatureType.dbc
+        data << uint32(ci->family);        // CreatureFamily.dbc
+        data << uint32(ci->rank);          // Creature Rank (elite, boss, etc)
+        data << uint32(ci->KillCredit[0]); // new in 3.1, kill credit
+        data << uint32(ci->KillCredit[1]); // new in 3.1, kill credit
         if (ci->GetModelByIdx(0))
             data << uint32(ci->GetModelByIdx(0)->CreatureDisplayID); // Modelid1
         else
-            data << uint32(0);                                       // Modelid1
+            data << uint32(0); // Modelid1
         if (ci->GetModelByIdx(1))
             data << uint32(ci->GetModelByIdx(1)->CreatureDisplayID); // Modelid2
         else
-            data << uint32(0);                                       // Modelid2
+            data << uint32(0); // Modelid2
         if (ci->GetModelByIdx(2))
             data << uint32(ci->GetModelByIdx(2)->CreatureDisplayID); // Modelid3
         else
-            data << uint32(0);                                       // Modelid3
+            data << uint32(0); // Modelid3
         if (ci->GetModelByIdx(3))
             data << uint32(ci->GetModelByIdx(3)->CreatureDisplayID); // Modelid4
         else
-            data << uint32(0);                                       // Modelid4
-        data << float(ci->ModHealth);                                // dmg/hp modifier
-        data << float(ci->ModMana);                                  // dmg/mana modifier
+            data << uint32(0);        // Modelid4
+        data << float(ci->ModHealth); // dmg/hp modifier
+        data << float(ci->ModMana);   // dmg/mana modifier
         data << uint8(ci->RacialLeader);
 
         CreatureQuestItemList const* items = sObjectMgr->GetCreatureQuestItemList(entry);
@@ -155,7 +155,7 @@ void WorldSession::HandleCreatureQueryOpcode(WorldPacket& recvData)
             for (std::size_t i = 0; i < MAX_CREATURE_QUEST_ITEMS; ++i)
                 data << uint32(0);
 
-        data << uint32(ci->movementId);                              // CreatureMovementInfo.dbc
+        data << uint32(ci->movementId); // CreatureMovementInfo.dbc
         SendPacket(&data);
     }
     else
@@ -176,7 +176,7 @@ void WorldSession::HandleGameObjectQueryOpcode(WorldPacket& recvData)
     ObjectGuid guid;
     recvData >> guid;
 
-    const GameObjectTemplate* info = sObjectMgr->GetGameObjectTemplate(entry);
+    GameObjectTemplate const* info = sObjectMgr->GetGameObjectTemplate(entry);
     if (info)
     {
         std::string Name;
@@ -196,17 +196,17 @@ void WorldSession::HandleGameObjectQueryOpcode(WorldPacket& recvData)
             }
 
         LOG_DEBUG("network", "WORLD: CMSG_GAMEOBJECT_QUERY '{}' - Entry: {}. ", info->name, entry);
-        WorldPacket data (SMSG_GAMEOBJECT_QUERY_RESPONSE, 150);
+        WorldPacket data(SMSG_GAMEOBJECT_QUERY_RESPONSE, 150);
         data << uint32(entry);
         data << uint32(info->type);
         data << uint32(info->displayId);
         data << Name;
-        data << uint8(0) << uint8(0) << uint8(0);           // name2, name3, name4
-        data << IconName;                                   // 2.0.3, string. Icon name to use instead of default icon for go's (ex: "Attack" makes sword)
-        data << CastBarCaption;                             // 2.0.3, string. Text will appear in Cast Bar when using GO (ex: "Collecting")
-        data << info->unk1;                                 // 2.0.3, string
+        data << uint8(0) << uint8(0) << uint8(0); // name2, name3, name4
+        data << IconName; // 2.0.3, string. Icon name to use instead of default icon for go's (ex: "Attack" makes sword)
+        data << CastBarCaption; // 2.0.3, string. Text will appear in Cast Bar when using GO (ex: "Collecting")
+        data << info->unk1;     // 2.0.3, string
         data.append(info->raw.data, MAX_GAMEOBJECT_DATA);
-        data << float(info->size);                          // go size
+        data << float(info->size); // go size
 
         GameObjectQuestItemList const* items = sObjectMgr->GetGameObjectQuestItemList(entry);
         if (items)
@@ -222,7 +222,7 @@ void WorldSession::HandleGameObjectQueryOpcode(WorldPacket& recvData)
     else
     {
         LOG_DEBUG("network", "WORLD: CMSG_GAMEOBJECT_QUERY - Missing gameobject info for ({})", guid.ToString());
-        WorldPacket data (SMSG_GAMEOBJECT_QUERY_RESPONSE, 4);
+        WorldPacket data(SMSG_GAMEOBJECT_QUERY_RESPONSE, 4);
         data << uint32(entry | 0x80000000);
         SendPacket(&data);
         LOG_DEBUG("network", "WORLD: Sent SMSG_GAMEOBJECT_QUERY_RESPONSE");
@@ -234,7 +234,7 @@ void WorldSession::HandleCorpseQueryOpcode(WorldPacket& /*recvData*/)
     if (!_player->HasCorpse())
     {
         WorldPacket data(MSG_CORPSE_QUERY, 1);
-        data << uint8(0);                                   // corpse not found
+        data << uint8(0); // corpse not found
         SendPacket(&data);
         return;
     }
@@ -267,13 +267,13 @@ void WorldSession::HandleCorpseQueryOpcode(WorldPacket& /*recvData*/)
     }
 
     WorldPacket data(MSG_CORPSE_QUERY, 1 + (6 * 4));
-    data << uint8(1);                                       // corpse found
+    data << uint8(1); // corpse found
     data << int32(mapID);
     data << float(x);
     data << float(y);
     data << float(z);
     data << int32(corpseMapID);
-    data << uint32(0);                                      // unknown
+    data << uint32(0); // unknown
     SendPacket(&data);
 }
 
@@ -289,7 +289,7 @@ void WorldSession::HandleNpcTextQueryOpcode(WorldPacket& recvData)
 
     GossipText const* gossip = sObjectMgr->GetGossipText(textID);
 
-    WorldPacket data(SMSG_NPC_TEXT_UPDATE, 100);          // guess size
+    WorldPacket data(SMSG_NPC_TEXT_UPDATE, 100); // guess size
     data << textID;
 
     if (!gossip)
@@ -368,7 +368,7 @@ void WorldSession::HandlePageTextQueryOpcode(WorldPacket& recvData)
 {
     uint32 pageID;
     recvData >> pageID;
-    recvData.read_skip<uint64>();                          // guid
+    recvData.read_skip<uint64>(); // guid
 
     while (pageID)
     {
@@ -433,7 +433,7 @@ void WorldSession::HandleQuestPOIQuery(WorldPacket& recvData)
     for (uint32 i = 0; i < count; ++i)
         questIds.insert(recvData.read<uint32>()); // quest id
 
-    WorldPacket data(SMSG_QUEST_POI_QUERY_RESPONSE, 4 + (4 + 4)*questIds.size());
+    WorldPacket data(SMSG_QUEST_POI_QUERY_RESPONSE, 4 + (4 + 4) * questIds.size());
     data << uint32(questIds.size()); // count
 
     for (std::unordered_set<uint32>::const_iterator itr = questIds.begin(); itr != questIds.end(); ++itr)
@@ -452,21 +452,23 @@ void WorldSession::HandleQuestPOIQuery(WorldPacket& recvData)
 
             if (POI)
             {
-                data << uint32(questId); // quest ID
+                data << uint32(questId);     // quest ID
                 data << uint32(POI->size()); // POI count
 
                 for (QuestPOIVector::const_iterator itr = POI->begin(); itr != POI->end(); ++itr)
                 {
-                    data << uint32(itr->Id);                // POI index
-                    data << int32(itr->ObjectiveIndex);     // objective index
-                    data << uint32(itr->MapId);             // mapid
-                    data << uint32(itr->AreaId);            // areaid
-                    data << uint32(itr->FloorId);           // floorid
-                    data << uint32(itr->Unk3);              // unknown
-                    data << uint32(itr->Unk4);              // unknown
-                    data << uint32(itr->points.size());     // POI points count
+                    data << uint32(itr->Id);            // POI index
+                    data << int32(itr->ObjectiveIndex); // objective index
+                    data << uint32(itr->MapId);         // mapid
+                    data << uint32(itr->AreaId);        // areaid
+                    data << uint32(itr->FloorId);       // floorid
+                    data << uint32(itr->Unk3);          // unknown
+                    data << uint32(itr->Unk4);          // unknown
+                    data << uint32(itr->points.size()); // POI points count
 
-                    for (std::vector<QuestPOIPoint>::const_iterator itr2 = itr->points.begin(); itr2 != itr->points.end(); ++itr2)
+                    for (std::vector<QuestPOIPoint>::const_iterator itr2 = itr->points.begin();
+                         itr2 != itr->points.end();
+                         ++itr2)
                     {
                         data << int32(itr2->x); // POI point x
                         data << int32(itr2->y); // POI point y
@@ -476,13 +478,13 @@ void WorldSession::HandleQuestPOIQuery(WorldPacket& recvData)
             else
             {
                 data << uint32(questId); // quest ID
-                data << uint32(0); // POI count
+                data << uint32(0);       // POI count
             }
         }
         else
         {
             data << uint32(questId); // quest ID
-            data << uint32(0); // POI count
+            data << uint32(0);       // POI count
         }
     }
 

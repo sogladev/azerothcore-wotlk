@@ -29,47 +29,45 @@ EndScriptData */
 
 enum Muglash
 {
-    SAY_MUG_START1          = 0,
-    SAY_MUG_START2          = 1,
-    SAY_MUG_BRAZIER         = 2,
-    SAY_MUG_BRAZIER_WAIT    = 3,
-    SAY_MUG_ON_GUARD        = 4,
-    SAY_MUG_REST            = 5,
-    SAY_MUG_DONE            = 6,
-    SAY_MUG_GRATITUDE       = 7,
-    SAY_MUG_PATROL          = 8,
-    SAY_MUG_RETURN          = 9,
+    SAY_MUG_START1 = 0,
+    SAY_MUG_START2 = 1,
+    SAY_MUG_BRAZIER = 2,
+    SAY_MUG_BRAZIER_WAIT = 3,
+    SAY_MUG_ON_GUARD = 4,
+    SAY_MUG_REST = 5,
+    SAY_MUG_DONE = 6,
+    SAY_MUG_GRATITUDE = 7,
+    SAY_MUG_PATROL = 8,
+    SAY_MUG_RETURN = 9,
 
-    QUEST_VORSHA            = 6641,
+    QUEST_VORSHA = 6641,
 
-    GO_NAGA_BRAZIER         = 178247,
+    GO_NAGA_BRAZIER = 178247,
 
-    NPC_WRATH_RIDER         = 3713,
-    NPC_WRATH_SORCERESS     = 3717,
-    NPC_WRATH_RAZORTAIL     = 3712,
+    NPC_WRATH_RIDER = 3713,
+    NPC_WRATH_SORCERESS = 3717,
+    NPC_WRATH_RAZORTAIL = 3712,
 
-    NPC_WRATH_PRIESTESS     = 3944,
-    NPC_WRATH_MYRMIDON      = 3711,
-    NPC_WRATH_SEAWITCH      = 3715,
+    NPC_WRATH_PRIESTESS = 3944,
+    NPC_WRATH_MYRMIDON = 3711,
+    NPC_WRATH_SEAWITCH = 3715,
 
-    NPC_VORSHA              = 12940,
-    NPC_MUGLASH             = 12717,
+    NPC_VORSHA = 12940,
+    NPC_MUGLASH = 12717,
 
     ACTION_EXTINGUISH_BLAZIER = 0
 };
 
-Position const FirstNagaCoord[3] =
-{
-    { 3603.504150f, 1122.631104f,  1.635f, 0.0f },        // rider
-    { 3589.293945f, 1148.664063f,  5.565f, 0.0f },        // sorceress
-    { 3609.925537f, 1168.759521f, -1.168f, 0.0f }         // razortail
+Position const FirstNagaCoord[3] = {
+    {3603.504150f, 1122.631104f, 1.635f,  0.0f}, // rider
+    {3589.293945f, 1148.664063f, 5.565f,  0.0f}, // sorceress
+    {3609.925537f, 1168.759521f, -1.168f, 0.0f}  // razortail
 };
 
-Position const SecondNagaCoord[3] =
-{
-    { 3609.925537f, 1168.759521f, -1.168f, 0.0f },        // witch
-    { 3645.652100f, 1139.425415f, 1.322f,  0.0f },        // priest
-    { 3583.602051f, 1128.405762f, 2.347f,  0.0f }         // myrmidon
+Position const SecondNagaCoord[3] = {
+    {3609.925537f, 1168.759521f, -1.168f, 0.0f}, // witch
+    {3645.652100f, 1139.425415f, 1.322f,  0.0f}, // priest
+    {3583.602051f, 1128.405762f, 2.347f,  0.0f}  // myrmidon
 };
 
 Position const VorshaCoord = {3633.056885f, 1172.924072f, -5.388f, 0.0f};
@@ -144,7 +142,8 @@ public:
                     case 24:
                         Talk(SAY_MUG_BRAZIER, player);
 
-                        if (GameObject* go = GetClosestGameObjectWithEntry(me, GO_NAGA_BRAZIER, INTERACTION_DISTANCE * 2))
+                        if (GameObject* go =
+                                GetClosestGameObjectWithEntry(me, GO_NAGA_BRAZIER, INTERACTION_DISTANCE * 2))
                         {
                             go->RemoveGameObjectFlag(GO_FLAG_NOT_SELECTABLE);
                             SetEscortPaused(true);
@@ -169,14 +168,20 @@ public:
             switch (waveId)
             {
                 case 1:
-                    me->SummonCreature(NPC_WRATH_RIDER,     FirstNagaCoord[0], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_WRATH_SORCERESS, FirstNagaCoord[1], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_WRATH_RAZORTAIL, FirstNagaCoord[2], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    me->SummonCreature(
+                        NPC_WRATH_RIDER, FirstNagaCoord[0], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    me->SummonCreature(
+                        NPC_WRATH_SORCERESS, FirstNagaCoord[1], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    me->SummonCreature(
+                        NPC_WRATH_RAZORTAIL, FirstNagaCoord[2], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
                     break;
                 case 2:
-                    me->SummonCreature(NPC_WRATH_PRIESTESS, SecondNagaCoord[0], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_WRATH_MYRMIDON,  SecondNagaCoord[1], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
-                    me->SummonCreature(NPC_WRATH_SEAWITCH,  SecondNagaCoord[2], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    me->SummonCreature(
+                        NPC_WRATH_PRIESTESS, SecondNagaCoord[0], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    me->SummonCreature(
+                        NPC_WRATH_MYRMIDON, SecondNagaCoord[1], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
+                    me->SummonCreature(
+                        NPC_WRATH_SEAWITCH, SecondNagaCoord[2], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
                     break;
                 case 3:
                     me->SummonCreature(NPC_VORSHA, VorshaCoord, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 60000);
@@ -212,8 +217,8 @@ public:
 
     private:
         uint32 eventTimer;
-        uint8  waveId;
-        bool   _isBrazierExtinguished;
+        uint8 waveId;
+        bool _isBrazierExtinguished;
     };
 
     CreatureAI* GetAI(Creature* creature) const override
