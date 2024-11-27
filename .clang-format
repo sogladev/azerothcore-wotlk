@@ -1,0 +1,55 @@
+# .clang-format for clang-format 18
+BasedOnStyle: LLVM
+AccessModifierOffset: -4
+AlignAfterOpenBracket: DontAlign
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments:
+  Enabled: false
+  # AlignFunctionPointers: false
+  # AcrossEmptyLines: true
+  # AcrossComments: true
+  # PadOperators: false
+AlignEscapedNewlines: DontAlign
+AllowShortBlocksOnASingleLine: Always
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AlwaysBreakBeforeMultilineStrings: true
+AlwaysBreakTemplateDeclarations: No
+BinPackArguments: false
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: true
+  BeforeWhile: false
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+BreakBeforeBraces: Custom
+BreakConstructorInitializers: AfterColon
+BreakStringLiterals: false
+ColumnLimit: 120
+IndentCaseLabels: true
+IndentWidth: 4
+LambdaBodyIndentation: OuterScope
+NamespaceIndentation: All
+PackConstructorInitializers: CurrentLine
+PointerAlignment: Left
+QualifierAlignment: Right
+ReferenceAlignment: Left
+ReflowComments: false
+RemoveBracesLLVM: true
+SeparateDefinitionBlocks: Always
+SkipMacroDefinitionBody: true
+SpaceBeforeCpp11BracedList: true
+SpaceInEmptyBlock: true
