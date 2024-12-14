@@ -110,6 +110,9 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
     if (!_player->CanExecutePendingSpellCastRequest(spellInfo))
         if (_player->CanRequestSpellCast(spellInfo))
         {
+            // Check for existing cast request with the same category
+            if (_player->GetCastRequest(spellInfo->StartRecoveryCategory))
+                _player->SpellQueue.clear();
             recvPacket.rpos(0); // Reset read position to the start of the buffer.
             _player->SpellQueue.emplace_back(
                 spellId,
@@ -424,6 +427,9 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
     {
         if (_player->CanRequestSpellCast(spellInfo))
         {
+            // Check for existing cast request with the same category
+            if (_player->GetCastRequest(spellInfo->StartRecoveryCategory))
+                _player->SpellQueue.clear();
             recvPacket.rpos(0); // Reset read position to the start of the buffer.
             _player->SpellQueue.emplace_back(
                 spellId,

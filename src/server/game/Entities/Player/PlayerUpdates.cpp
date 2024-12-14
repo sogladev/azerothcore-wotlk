@@ -2293,10 +2293,6 @@ bool Player::CanRequestSpellCast(SpellInfo const* spellInfo)
     if (!sWorld->getBoolConfig(CONFIG_SPELL_QUEUE_ENABLED))
         return false;
 
-    // Check for existing cast request with the same category
-    if (GetCastRequest(spellInfo->StartRecoveryCategory))
-        return false;
-
     if (GetGlobalCooldownMgr().GetGlobalCooldown(spellInfo) > GetSpellQueueWindow())
         return false;
 
