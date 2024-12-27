@@ -1,0 +1,58 @@
+--
+-- move SPELL_SPECIFIC_SCROLL to db
+SET @GROUP_ID=1035;
+-- set SPELL_GROUP_STACK_FLAG_NEVER_STACK
+DELETE FROM `spell_group_stack_rules` WHERE `group_id` = @GROUP_ID;
+INSERT INTO `spell_group_stack_rules` (`group_id`, `stack_rule`, `description`) VALUES
+(@GROUP_ID, 8, 'Group of Scrolls');
+
+DELETE FROM `spell_group` WHERE `id` = @GROUP_ID;
+INSERT INTO `spell_group` (`id`, `spell_id`, `special_flag`) VALUES
+(@GROUP_ID, 8091, 0),
+(@GROUP_ID, 8094, 0),
+(@GROUP_ID, 8095, 0),
+(@GROUP_ID, 12175, 0),
+(@GROUP_ID, 33079, 0),
+(@GROUP_ID, 43196, 0),
+(@GROUP_ID, 58452, 0),
+(@GROUP_ID, 58453, 0),
+(@GROUP_ID, 8096, 0),
+(@GROUP_ID, 8097, 0),
+(@GROUP_ID, 8098, 0),
+(@GROUP_ID, 12176, 0),
+(@GROUP_ID, 33078, 0),
+(@GROUP_ID, 43195, 0),
+(@GROUP_ID, 48099, 0),
+(@GROUP_ID, 48100, 0),
+(@GROUP_ID, 8099, 0),
+(@GROUP_ID, 8100, 0),
+(@GROUP_ID, 8101, 0),
+(@GROUP_ID, 12178, 0),
+(@GROUP_ID, 33081, 0),
+(@GROUP_ID, 43198, 0),
+(@GROUP_ID, 48101, 0),
+(@GROUP_ID, 48102, 0),
+(@GROUP_ID, 8112, 0),
+(@GROUP_ID, 8113, 0),
+(@GROUP_ID, 8114, 0),
+(@GROUP_ID, 12177, 0),
+(@GROUP_ID, 33080, 0),
+(@GROUP_ID, 43197, 0),
+(@GROUP_ID, 48103, 0),
+(@GROUP_ID, 48104, 0),
+(@GROUP_ID, 8115, 0),
+(@GROUP_ID, 8116, 0),
+(@GROUP_ID, 8117, 0),
+(@GROUP_ID, 12174, 0),
+(@GROUP_ID, 33077, 0),
+(@GROUP_ID, 43194, 0),
+(@GROUP_ID, 58450, 0),
+(@GROUP_ID, 58451, 0),
+(@GROUP_ID, 8118, 0),
+(@GROUP_ID, 8119, 0),
+(@GROUP_ID, 8120, 0),
+(@GROUP_ID, 12179, 0),
+(@GROUP_ID, 33082, 0),
+(@GROUP_ID, 43199, 0),
+(@GROUP_ID, 58448, 0),
+(@GROUP_ID, 58449, 0);

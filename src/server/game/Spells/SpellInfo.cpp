@@ -1393,7 +1393,6 @@ bool SpellInfo::IsAuraExclusiveBySpecificWith(SpellInfo const* spellInfo) const
         case SPELL_SPECIFIC_MAGE_POLYMORPH:
         case SPELL_SPECIFIC_PRESENCE:
         case SPELL_SPECIFIC_CHARM:
-        case SPELL_SPECIFIC_SCROLL:
         case SPELL_SPECIFIC_MAGE_ARCANE_BRILLANCE:
         case SPELL_SPECIFIC_PRIEST_DIVINE_SPIRIT:
             return spellSpec1 == spellSpec2;
@@ -2177,21 +2176,6 @@ SpellSpecificType SpellInfo::LoadSpellSpecific() const
                         return SPELL_SPECIFIC_FOOD;
                     else if (drink)
                         return SPELL_SPECIFIC_DRINK;
-                }
-                // scrolls effects
-                else
-                {
-                    SpellInfo const* firstRankSpellInfo = GetFirstRankSpell();
-                    switch (firstRankSpellInfo->Id)
-                    {
-                        case 8118: // Strength
-                        case 8099: // Stamina
-                        case 8112: // Spirit
-                        case 8096: // Intellect
-                        case 8115: // Agility
-                        case 8091: // Armor
-                            return SPELL_SPECIFIC_SCROLL;
-                    }
                 }
                 break;
             }
