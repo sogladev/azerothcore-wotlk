@@ -831,5 +831,5 @@ void AddSC_boss_gothik()
     new npc_boss_gothik_minion();
     new npc_gothik_trigger();
     RegisterSpellScript(spell_gothik_shadow_bolt_volley);
-    new at_gothik_entrance();
+    RegisterAreaTriggerScript(at_gothik_entrance);
 }

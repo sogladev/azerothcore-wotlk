@@ -32,6 +32,24 @@ public:
     [[nodiscard]] virtual bool OnTrigger(Player* /*player*/, AreaTrigger const* /*trigger*/) { return false; }
 };
 
+template <typename T>
+class GenericAreaTriggerScript : public AreaTriggerScript
+{
+public:
+    GenericAreaTriggerScript(const char* name) : AreaTriggerScript(name), script(name) { }
+
+    bool OnTrigger(Player* player, AreaTrigger const* at) override
+    {
+        return script.OnTrigger(player, at);
+    }
+
+private:
+    T script;
+};
+
+#define RegisterAreaTriggerScript(at_name) new GenericAreaTriggerScript<at_name>(#at_name)
+#define PrepareAreaTriggerScript(CLASSNAME) CLASSNAME(const char* name) : AreaTriggerScript(name) {}
+
 class OnlyOnceAreaTriggerScript : public AreaTriggerScript
 {
     using AreaTriggerScript::AreaTriggerScript;
@@ -44,5 +62,23 @@ protected:
     void ResetAreaTriggerDone(InstanceScript* /*instance*/, uint32 /*triggerId*/);
     void ResetAreaTriggerDone(Player const* /*player*/, AreaTrigger const* /*trigger*/);
 };
+
+template <typename T>
+class GenericOnlyOnceAreaTriggerScript : public OnlyOnceAreaTriggerScript
+{
+public:
+    GenericOnlyOnceAreaTriggerScript(const char* name) : OnlyOnceAreaTriggerScript(name), script(name) { }
+
+    bool _OnTrigger(Player* player, AreaTrigger const* at) override
+    {
+        return script._OnTrigger(player, at);
+    }
+
+private:
+    T script;
+};
+
+#define RegisterOnlyOnceAreaTriggerScript(at_name) new GenericOnlyOnceAreaTriggerScript<at_name>(#at_name)
+#define PrepareOnlyOnceAreaTriggerScript(CLASSNAME) CLASSNAME(const char* name) : OnlyOnceAreaTriggerScript(name) {}
 
 #endif

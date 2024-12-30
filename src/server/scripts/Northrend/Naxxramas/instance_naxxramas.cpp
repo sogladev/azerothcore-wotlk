@@ -1253,10 +1253,9 @@ public:
 
 const Position sapphironEntryTP = { 3498.300049f, -5349.490234f, 144.968002f, 1.3698910f };
 
-class at_naxxramas_hub_portal : public AreaTriggerScript
+struct at_naxxramas_hub_portal : public AreaTriggerScript
 {
-public:
-    at_naxxramas_hub_portal() : AreaTriggerScript("at_naxxramas_hub_portal") { }
+    PrepareAreaTriggerScript(at_naxxramas_hub_portal);
 
     bool OnTrigger(Player* player, AreaTrigger const* /*trigger*/) override
     {
@@ -1280,26 +1279,13 @@ public:
     }
 };
 
-class at_deathknight_wing_entrance : public OnlyOnceAreaTriggerScript
+struct at_deathknight_wing_entrance : OnlyOnceAreaTriggerScript
 {
-public:
-    at_deathknight_wing_entrance() : OnlyOnceAreaTriggerScript("at_deathknight_wing_entrance") { }
+    PrepareOnlyOnceAreaTriggerScript(at_deathknight_wing_entrance);
 
     bool _OnTrigger(Player* player, AreaTrigger const* /*at*/) override
     {
-        if (InstanceScript* instance = player->GetInstanceScript())
-        {
-            player->GetMap()->LoadGrid(2528.79f, -2948.58f); // Zeliek grid
-            if (instance->GetBossState(BOSS_HORSEMAN) == DONE)
-                return false;
-
-            // Flee, before it's too late!
-            if (Creature* zeliek = instance->GetCreature(DATA_SIR_ZELIEK))
-                zeliek->AI()->Talk(SAY_ZELIEK_INTRO_1);
-
-            return true;
-        }
-        return false;
+        return true;
     }
 };
 
@@ -1307,6 +1293,6 @@ void AddSC_instance_naxxramas()
 {
     new instance_naxxramas();
     new boss_naxxramas_misc();
-    new at_naxxramas_hub_portal();
-    new at_deathknight_wing_entrance();
+    RegisterAreaTriggerScript(at_naxxramas_hub_portal);
+    RegisterOnlyOnceAreaTriggerScript(at_deathknight_wing_entrance);
 }
