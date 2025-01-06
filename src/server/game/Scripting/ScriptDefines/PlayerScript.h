@@ -204,6 +204,7 @@ enum PlayerHook
     PLAYERHOOK_CAN_SEND_ERROR_ALREADY_LOOTED,
     PLAYERHOOK_ON_AFTER_CREATURE_LOOT,
     PLAYERHOOK_ON_AFTER_CREATURE_LOOT_MONEY,
+    PLAYERHOOK_ON_GET_SPELLQUEUE_WINDOW,
     PLAYERHOOK_END
 };
 
@@ -765,6 +766,8 @@ public:
      * @param player Contains information about the Player
      */
     virtual void OnAfterCreatureLootMoney(Player* /*player*/) { }
+
+    virtual void OnGetSpellQueueWindow(const Player* /*player*/, uint32& /*window*/) { }
 };
 
 #endif

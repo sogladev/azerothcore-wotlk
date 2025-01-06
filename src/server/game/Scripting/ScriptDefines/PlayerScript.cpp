@@ -895,6 +895,11 @@ bool ScriptMgr::AnticheatCheckMovementInfo(Player* player, MovementInfo const& m
     CALL_ENABLED_BOOLEAN_HOOKS(PlayerScript, PLAYERHOOK_ANTICHEAT_CHECK_MOVEMENT_INFO, !script->AnticheatCheckMovementInfo(player, movementInfo, mover, jump));
 }
 
+void ScriptMgr::OnGetSpellQueueWindow(const Player* player, uint32& window)
+{
+    CALL_ENABLED_HOOKS(PlayerScript, PLAYERHOOK_ON_GET_SPELLQUEUE_WINDOW, script->OnGetSpellQueueWindow(player, window));
+}
+
 PlayerScript::PlayerScript(const char* name, std::vector<uint16> enabledHooks)
     : ScriptObject(name, PLAYERHOOK_END)
 {

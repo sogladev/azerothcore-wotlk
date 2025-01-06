@@ -2259,7 +2259,9 @@ void Player::ProcessTerrainStatusUpdate()
 
 uint32 Player::GetSpellQueueWindow() const
 {
-    return sWorld->getIntConfig(CONFIG_SPELL_QUEUE_WINDOW);
+    uint32 window = sWorld->getIntConfig(CONFIG_SPELL_QUEUE_WINDOW);
+    sScriptMgr->OnGetSpellQueueWindow(this, window);
+    return window;
 }
 
 bool Player::CanExecutePendingSpellCastRequest(SpellInfo const* spellInfo)
