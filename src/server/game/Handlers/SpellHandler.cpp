@@ -404,18 +404,21 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
         return;
     }
 
-    // fail if we are cancelling pending request
-    if (!_player->SpellQueue.empty())
     {
-        PendingSpellCastRequest& request = _player->SpellQueue.front(); // Peek at the first spell
-        if (request.cancelInProgress)
+        // fail if we are cancelling pending request
+        std::lock_guard<std::mutex> lock(_player->spellQueueMutex); // Lock the mutex
+        if (!_player->SpellQueue.empty())
         {
-            Spell* spell = new Spell(_player, spellInfo, TRIGGERED_NONE);
-            spell->m_cast_count = castCount;
-            spell->SendCastResult(SPELL_FAILED_DONT_REPORT);
-            spell->finish(false);
-            recvPacket.rfinish(); // prevent spam at ignore packet
-            return;
+            PendingSpellCastRequest& request = _player->SpellQueue.front(); // Peek at the first spell
+            if (request.cancelInProgress)
+            {
+                Spell* spell = new Spell(_player, spellInfo, TRIGGERED_NONE);
+                spell->m_cast_count = castCount;
+                spell->SendCastResult(SPELL_FAILED_DONT_REPORT);
+                spell->finish(false);
+                recvPacket.rfinish(); // prevent spam at ignore packet
+                return;
+            }
         }
     }
 
@@ -425,6 +428,7 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
         if (_player->CanRequestSpellCast(spellInfo))
         {
             recvPacket.rpos(0); // Reset read position to the start of the buffer.
+            std::lock_guard<std::mutex> lock(_player->spellQueueMutex); // Lock the mutex
             _player->SpellQueue.emplace_back(
                 spellId,
                 spellInfo->GetCategory(),

@@ -2329,6 +2329,7 @@ void Player::ExecuteOrCancelSpellCastRequest(PendingSpellCastRequest* request, b
 
 void Player::ProcessSpellQueue()
 {
+    std::lock_guard<std::mutex> lock(spellQueueMutex); // Lock the mutex
     while (!SpellQueue.empty())
     {
         PendingSpellCastRequest& request = SpellQueue.front(); // Peek at the first spell

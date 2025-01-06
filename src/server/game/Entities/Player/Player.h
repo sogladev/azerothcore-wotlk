@@ -2644,6 +2644,7 @@ protected:
 
 public:
     std::deque<PendingSpellCastRequest> SpellQueue;
+    std::mutex spellQueueMutex;
     const PendingSpellCastRequest* GetCastRequest(uint32 category) const;
     bool CanExecutePendingSpellCastRequest(SpellInfo const* spellInfo);
     void ExecuteOrCancelSpellCastRequest(PendingSpellCastRequest* castRequest, bool isCancel = false);
