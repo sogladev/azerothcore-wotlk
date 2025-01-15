@@ -121,10 +121,6 @@ struct boss_akilzon : public BossAI
             if (DynamicObject* dynObj = target->GetDynObject(SPELL_ELECTRICAL_STORM_AREA))
                 dynObj->SetDuration(8500);
 
-            float x, y, z;
-            target->GetPosition(x, y, z);
-            target->GetMotionMaster()->MoveJump(x, y, target->GetPositionZ() + 16.0f, 1.0f, 1.0f);
-
             me->m_Events.AddEventAtOffset([&] {
                 HandleStormSequence();
             }, 3s);
@@ -306,9 +302,38 @@ struct npc_akilzon_eagle : public ScriptedAI
 };
 
 // 43648 - Electrical Storm
-class spell_electrial_storm : public AuraScript
+enum ElectricalStorm
 {
-    PrepareAuraScript(spell_electrial_storm);
+    SPELL_CAST_TELEPORT_SELF = 44006
+};
+
+class spell_electrical_storm : public SpellScript
+{
+    PrepareSpellScript(spell_electrical_storm);
+
+    bool Validate(SpellInfo const* /*spellInfo*/) override
+    {
+        return ValidateSpellInfo({ SPELL_CAST_TELEPORT_SELF });
+    }
+
+    void HandleScriptEffect(SpellEffIndex /*effIndex*/)
+    {
+        if (Unit* target = GetHitUnit())
+        {
+            target->m_positionZ = GetCaster()->GetPositionZ() + 8.0f;
+            target->CastSpell((Unit*)nullptr, SPELL_CAST_TELEPORT_SELF, true);
+        }
+    }
+
+    void Register() override
+    {
+        OnEffectHitTarget += SpellEffectFn(spell_electrical_storm::HandleScriptEffect, EFFECT_2, SPELL_EFFECT_SCRIPT_EFFECT);
+    }
+};
+
+class spell_electrical_storm_aura : public AuraScript
+{
+    PrepareAuraScript(spell_electrical_storm_aura);
 
     bool Load() override
     {
@@ -323,7 +348,7 @@ class spell_electrial_storm : public AuraScript
 
     void Register() override
     {
-        AfterEffectRemove += AuraEffectRemoveFn(spell_electrial_storm::OnRemove, EFFECT_0, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
+        AfterEffectRemove += AuraEffectRemoveFn(spell_electrical_storm_aura::OnRemove, EFFECT_0, SPELL_AURA_MOD_STUN, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
@@ -357,6 +382,6 @@ void AddSC_boss_akilzon()
 {
     RegisterZulAmanCreatureAI(boss_akilzon);
     RegisterZulAmanCreatureAI(npc_akilzon_eagle);
-    RegisterSpellScript(spell_electrial_storm);
+    RegisterSpellAndAuraScriptPair(spell_electrical_storm, spell_electrical_storm_aura);
     RegisterSpellScript(spell_electrical_storm_proc);
 }
