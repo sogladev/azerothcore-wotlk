@@ -107,10 +107,18 @@ bool StartDB()
     std::string modules = sConfigMgr->GetOption<std::string>("Updates.AllowedModules", "all");
     LOG_INFO("dbimport", "Loading modules: {}", modules.empty() ? "none" : modules);
 
-    DatabaseLoader loader =
-        modules.empty() ? DatabaseLoader("dbimport") :
-        (modules == "all") ? DatabaseLoader("dbimport", DatabaseLoader::DATABASE_NONE, AC_MODULES_LIST) :
-        DatabaseLoader("dbimport", DatabaseLoader::DATABASE_NONE, modules);
+    DatabaseLoader loader{
+        modules.empty()
+            ? DatabaseLoader("dbimport")
+            : (modules == "all")
+                ?
+#ifdef AC_MODULES_LIST
+                    DatabaseLoader("dbimport", DatabaseLoader::DATABASE_NONE, AC_MODULES_LIST)
+#else
+                    DatabaseLoader("dbimport")
+#endif
+                : DatabaseLoader("dbimport", DatabaseLoader::DATABASE_NONE, modules)
+    };
 
     loader
         .AddDatabase(LoginDatabase, "Login")
