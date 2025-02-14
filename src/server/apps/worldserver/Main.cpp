@@ -60,7 +60,7 @@
 #include <openssl/crypto.h>
 #include <openssl/opensslv.h>
 
-#include "VoiceChatMgr.h"
+#include "VoiceChatSocketMgr.h"
 
 #if AC_PLATFORM == AC_PLATFORM_WINDOWS
 #include "ServiceWin32.h"
@@ -405,8 +405,29 @@ int main(int argc, char** argv)
 
     sLog->SetSynchronous();
 
-    if (sVoiceChatMgr.CanUseVoiceChat())
-        sVoiceChatMgr.SocketDisconnected();          // close voice socket and remove channels
+    // if (sVoiceChatMgr.CanUseVoiceChat())
+    //     sVoiceChatMgr.SocketDisconnected();          // close voice socket and remove channels
+    // VoiceChat.Enabled = 0
+    // VoiceChat.ServerPort = 3725
+    // VoiceChat.ServerAddress = 127.0.0.1
+    // VoiceChat.VoicePort = 3724
+    // VoiceChat.VoiceAddress = 127.0.0.1
+    // VoiceChat.MaxConnectAttempts = -1
+
+    if (!sVoiceChatSocketMgr.StartNetwork(*ioContext, "127.0.0.1", 3724, 1))
+    {
+        LOG_ERROR("server.worldserver", "Failed to initialize network");
+        World::StopNow(ERROR_EXIT_CODE);
+        return 1;
+    }
+
+    std::shared_ptr<void> sVoiceChatSocketMgrHandle(nullptr, [](void*)
+    {
+        // if (sVoiceChatMgr.CanUseVoiceChat())
+        // sVoiceChatSocketMgr.SocketDisconnected();          // close voice socket and remove channels
+
+        sVoiceChatSocketMgr.StopNetwork();
+    });
 
     sScriptMgr->OnShutdown();
 

@@ -19,120 +19,149 @@
 #ifndef _VOICECHATMGR_H
 #define _VOICECHATMGR_H
 
-#include "VoiceChatServerSocket.h"
+#include "SharedDefines.h"
+// #include "VoiceChatServerSocket.h"
+#include "VoiceChatSocketMgr.h"
 #include "VoiceChatDefines.h"
-#include "Server/Opcodes.h"
+#include "Opcodes.h"
+#include "VoiceChatSession.h"
+
 class VoiceChatChannel;
 
 class VoiceChatMgr
 {
 public:
+    static VoiceChatMgr& Instance()
+    {
+        static VoiceChatMgr instance;
+        return instance;
+    }
 
-    VoiceChatMgr();
+    VoiceChatMgr()
+      : m_socket(nullptr),
+        m_requestSocket(nullptr),
+        new_request_id(1),
+        new_session_id(time(nullptr)),
+        server_address(0),
+        server_port(0),
+        voice_port(0),
+        next_connect(time(nullptr)),
+        next_ping(time(nullptr) + 5),
+        last_pong(time(nullptr)),
+        enabled(false),
+        maxConnectAttempts(0),
+        curReconnectAttempts(0),
+        state(VOICECHAT_DISCONNECTED),
+        lastUpdate(time(nullptr))
+    {
+    }
+
+
+    // VoiceChatMgr();
     void Init();
-    void LoadConfigs();
+    // void LoadConfigs();
     void Update();
     void SocketDisconnected();
-    bool RequestNewSocket(VoiceChatServerSocket* socket);
-    void QueuePacket(std::unique_ptr<VoiceChatServerPacket> new_packet);
+    // bool RequestNewSocket(VoiceChatServerSocket* socket);
+    // void QueuePacket(std::unique_ptr<VoiceChatServerPacket> new_packet);
 
-    void VoiceSocketThread();
+    // void VoiceSocketThread();
 
-    bool NeedConnect();
-    bool NeedReconnect();
-    int32 GetReconnectAttempts() const;
+    // bool NeedConnect();
+    // bool NeedReconnect();
+    // int32 GetReconnectAttempts() const;
 
-    bool IsEnabled() const { return enabled; }
-    bool CanUseVoiceChat();
-    bool CanSeeVoiceChat();
+    // bool IsEnabled() const { return enabled; }
+    // bool CanUseVoiceChat();
+    // bool CanSeeVoiceChat();
 
-    // configs
-    uint32 GetVoiceServerConnectAddress() const { return server_address; }
-    uint16 GetVoiceServerConnectPort() const { return server_port; }
-    uint32 GetVoiceServerVoiceAddress() const { return voice_address; }
-    uint16 GetVoiceServerVoicePort() const { return voice_port; }
-    std::string GetVoiceServerConnectAddressString() { return server_address_string; }
+    // // configs
+    // uint32 GetVoiceServerConnectAddress() const { return server_address; }
+    // uint16 GetVoiceServerConnectPort() const { return server_port; }
+    // uint32 GetVoiceServerVoiceAddress() const { return voice_address; }
+    // uint16 GetVoiceServerVoicePort() const { return voice_port; }
+    // std::string GetVoiceServerConnectAddressString() { return server_address_string; }
 
-    // manage voice channels
-    void CreateVoiceChatChannel(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", Team team = TEAM_BOTH_ALLOWED);
-    void DeleteVoiceChatChannel(VoiceChatChannel* channel);
-    bool IsVoiceChatChannelBeingCreated(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", Team team = TEAM_BOTH_ALLOWED);
+    // // manage voice channels
+    // void CreateVoiceChatChannel(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", TeamId team = TEAM_NEUTRAL);
+    // void DeleteVoiceChatChannel(VoiceChatChannel* channel);
+    // bool IsVoiceChatChannelBeingCreated(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", TeamId team = TEAM_NEUTRAL);
 
-    void CreateGroupVoiceChatChannel(uint32 groupId);
-    void CreateRaidVoiceChatChannel(uint32 groupId);
-    void CreateBattlegroundVoiceChatChannel(uint32 instanceId, Team team);
-    void CreateCustomVoiceChatChannel(const std::string& name, Team team);
+    // void CreateGroupVoiceChatChannel(uint32 groupId);
+    // void CreateRaidVoiceChatChannel(uint32 groupId);
+    // void CreateBattlegroundVoiceChatChannel(uint32 instanceId, TeamId team);
+    // void CreateCustomVoiceChatChannel(const std::string& name, TeamId team);
 
-    void DeleteGroupVoiceChatChannel(uint32 groupId);
-    void DeleteRaidVoiceChatChannel(uint32 groupId);
-    void DeleteBattlegroundVoiceChatChannel(uint32 instanceId, Team team);
-    void DeleteCustomVoiceChatChannel(const std::string& name, Team team);
+    // void DeleteGroupVoiceChatChannel(uint32 groupId);
+    // void DeleteRaidVoiceChatChannel(uint32 groupId);
+    // void DeleteBattlegroundVoiceChatChannel(uint32 instanceId, TeamId team);
+    // void DeleteCustomVoiceChatChannel(const std::string& name, TeamId team);
 
-    void ConvertToRaidChannel(uint32 groupId);
+    // void ConvertToRaidChannel(uint32 groupId);
 
-    VoiceChatChannel* GetVoiceChatChannel(uint16 channel_id);
-    VoiceChatChannel* GetGroupVoiceChatChannel(uint32 group_id);
-    VoiceChatChannel* GetRaidVoiceChatChannel(uint32 group_id);
-    VoiceChatChannel* GetBattlegroundVoiceChatChannel(uint32 instanceId, Team team);
-    VoiceChatChannel* GetCustomVoiceChatChannel(const std::string& name, Team team);
-    std::vector<VoiceChatChannel*> GetPossibleVoiceChatChannels(ObjectGuid guid);
+    // VoiceChatChannel* GetVoiceChatChannel(uint16 channel_id);
+    // VoiceChatChannel* GetGroupVoiceChatChannel(uint32 group_id);
+    // VoiceChatChannel* GetRaidVoiceChatChannel(uint32 group_id);
+    // VoiceChatChannel* GetBattlegroundVoiceChatChannel(uint32 instanceId, TeamId team);
+    // VoiceChatChannel* GetCustomVoiceChatChannel(const std::string& name, TeamId team);
+    // std::vector<VoiceChatChannel*> GetPossibleVoiceChatChannels(ObjectGuid guid);
 
-    // restore after reconnect
-    static void RestoreVoiceChatChannels();
-    // delete after disconnect
-    void DeleteAllChannels();
+    // // restore after reconnect
+    // static void RestoreVoiceChatChannels();
+    // // delete after disconnect
+    // void DeleteAllChannels();
 
-    // get proper team if cross faction channels enabled
-    static Team GetCustomChannelTeam(Team team);
+    // // get proper team if cross faction channels enabled
+    // static TeamId GetCustomChannelTeam(TeamId team);
 
-    // manage users
-    void AddToGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
-    void AddToRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
-    void AddToBattlegroundVoiceChatChannel(ObjectGuid guid);
-    void AddToCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, Team team);
+    // // manage users
+    // void AddToGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
+    // void AddToRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
+    // void AddToBattlegroundVoiceChatChannel(ObjectGuid guid);
+    // void AddToCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, TeamId team);
 
-    void RemoveFromGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
-    void RemoveFromRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
-    void RemoveFromBattlegroundVoiceChatChannel(ObjectGuid guid);
-    void RemoveFromCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, Team team);
+    // void RemoveFromGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
+    // void RemoveFromRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
+    // void RemoveFromBattlegroundVoiceChatChannel(ObjectGuid guid);
+    // void RemoveFromCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, TeamId team);
 
-    // change user state on voice server
-    void EnableChannelSlot(uint16 channel_id, uint8 slot_id);
-    void DisableChannelSlot(uint16 channel_id, uint8 slot_id);
-    void VoiceChannelSlot(uint16 channel_id, uint8 slot_id);
-    void DevoiceChannelSlot(uint16 channel_id, uint8 slot_id);
-    void MuteChannelSlot(uint16 channel_id, uint8 slot_id);
-    void UnmuteChannelSlot(uint16 channel_id, uint8 slot_id);
+    // // change user state on voice server
+    // void EnableChannelSlot(uint16 channel_id, uint8 slot_id);
+    // void DisableChannelSlot(uint16 channel_id, uint8 slot_id);
+    // void VoiceChannelSlot(uint16 channel_id, uint8 slot_id);
+    // void DevoiceChannelSlot(uint16 channel_id, uint8 slot_id);
+    // void MuteChannelSlot(uint16 channel_id, uint8 slot_id);
+    // void UnmuteChannelSlot(uint16 channel_id, uint8 slot_id);
 
-    void JoinAvailableVoiceChatChannels(WorldSession* session);
-    void SendAvailableVoiceChatChannels(WorldSession* session); // Not used currently
+    // void JoinAvailableVoiceChatChannels(WorldSession* session);
+    // void SendAvailableVoiceChatChannels(WorldSession* session); // Not used currently
 
-    // remove from all channels
-    void RemoveFromVoiceChatChannels(ObjectGuid guid);
+    // // remove from all channels
+    // void RemoveFromVoiceChatChannels(ObjectGuid guid);
 
-    uint64 GetNewSessionId() { return new_session_id++; }
+    // uint64 GetNewSessionId() { return new_session_id++; }
 
-    Messager<VoiceChatMgr>& GetMessager() { return m_messager; }
+    // // Messager<VoiceChatMgr>& GetMessager() { return m_messager; }
 
-    // Command Handlers
-    void DisableVoiceChat();
-    void EnableVoiceChat();
-    VoiceChatStatistics GetStatistics();
+    // // Command Handlers
+    // void DisableVoiceChat();
+    // void EnableVoiceChat();
+    // VoiceChatStatistics GetStatistics();
 
 private:
 
-    static void SendVoiceChatStatus(bool status);
-    static void SendVoiceChatServiceMessage(Opcodes opcode);
-    static void SendVoiceChatServiceDisconnect() { SendVoiceChatServiceMessage(SMSG_COMSAT_DISCONNECT); }
-    static void SendVoiceChatServiceConnectFail() { SendVoiceChatServiceMessage(SMSG_COMSAT_CONNECT_FAIL); }
-    static void SendVoiceChatServiceReconnected() { SendVoiceChatServiceMessage(SMSG_COMSAT_RECONNECT_TRY); }
+    // static void SendVoiceChatStatus(bool status);
+    // static void SendVoiceChatServiceMessage(Opcodes opcode);
+    // static void SendVoiceChatServiceDisconnect() { SendVoiceChatServiceMessage(SMSG_COMSAT_DISCONNECT); }
+    // static void SendVoiceChatServiceConnectFail() { SendVoiceChatServiceMessage(SMSG_COMSAT_CONNECT_FAIL); }
+    // static void SendVoiceChatServiceReconnected() { SendVoiceChatServiceMessage(SMSG_COMSAT_RECONNECT_TRY); }
 
-    void HandleVoiceChatServerPacket(VoiceChatServerPacket& pck);
-    void ProcessByteBufferException(VoiceChatServerPacket const& packet);
+    // void HandleVoiceChatServerPacket(VoiceChatServerPacket& pck);
+    // void ProcessByteBufferException(VoiceChatServerPacket const& packet);
 
     // socket to voice server
-    std::shared_ptr<VoiceChatServerSocket> m_socket;
-    std::shared_ptr<VoiceChatServerSocket> m_requestSocket;
+    std::shared_ptr<VoiceChatSocket> m_socket;
+    std::shared_ptr<VoiceChatSocket> m_requestSocket;
     std::vector<VoiceChatChannelRequest> m_requests;
     uint32 new_request_id;
     uint64 new_session_id;
@@ -171,11 +200,12 @@ private:
     std::mutex m_recvQueueLock;
     std::deque<std::unique_ptr<VoiceChatServerPacket>> m_recvQueue;
 
-    Messager<VoiceChatMgr> m_messager;
+    // Messager<VoiceChatMgr> m_messager;
 
-    boost::asio::io_service m_voiceService;
+    // boost::asio::io_service m_voiceService;
 };
 
-#define sVoiceChatMgr MaNGOS::Singleton<VoiceChatMgr>::Instance()
+// #define sVoiceChatMgr MaNGOS::Singleton<VoiceChatMgr>::Instance()
+#define sVoiceChatMgr VoiceChatMgr::Instance()
 
 #endif

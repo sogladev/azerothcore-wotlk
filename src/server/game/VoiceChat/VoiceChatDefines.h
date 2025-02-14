@@ -19,9 +19,8 @@
 #ifndef _VOICECHATDEFINES_H
 #define _VOICECHATDEFINES_H
 
-#include "Common.h"
-#include "Globals/SharedDefines.h"
-#include "Entities/ObjectGuid.h"
+#include "SharedDefines.h"
+#include "ObjectGuid.h"
 
 enum VoiceChatServerOpcodes
 {
@@ -123,7 +122,7 @@ public:
 
     VoiceChatServerOpcodes GetOpcode() const { return m_opcode; }
     void SetOpcode(VoiceChatServerOpcodes opcode) { m_opcode = opcode; }
-    
+
 protected:
     VoiceChatServerOpcodes m_opcode;
 };
