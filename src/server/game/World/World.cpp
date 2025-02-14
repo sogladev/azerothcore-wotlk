@@ -97,6 +97,8 @@
 #include <boost/asio/ip/address.hpp>
 #include <cmath>
 
+#include "VoiceChatMgr.h"
+
 std::atomic_long World::_stopEvent = false;
 uint8 World::_exitCode = SHUTDOWN_EXIT_CODE;
 uint32 World::m_worldLoopCounter = 0;
@@ -1983,6 +1985,8 @@ void World::SetInitialWorldSettings()
 
     METRIC_EVENT("events", "World initialized", "World Initialized In " + std::to_string(startupDuration / 60000) + " Minutes " + std::to_string((startupDuration % 60000) / 1000) + " Seconds");
 
+    sVoiceChatMgr.Init();
+
     if (sConfigMgr->isDryRun())
     {
         sMapMgr->UnloadAll();
@@ -2207,6 +2211,11 @@ void World::Update(uint32 diff)
         METRIC_TIMER("world_update_time", METRIC_TAG("type", "Process query callbacks"));
         // execute callbacks from sql queries that were queued recently
         ProcessQueryCallbacks();
+    }
+
+    {
+        METRIC_TIMER("world_update_time", METRIC_TAG("type", "Voice chat update"));
+        sVoiceChatMgr.Update();
     }
 
     /// <li> Update uptime table

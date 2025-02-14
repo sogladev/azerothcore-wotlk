@@ -60,6 +60,8 @@
 #include <openssl/crypto.h>
 #include <openssl/opensslv.h>
 
+#include "VoiceChatMgr.h"
+
 #if AC_PLATFORM == AC_PLATFORM_WINDOWS
 #include "ServiceWin32.h"
 char serviceName[] = "worldserver";
@@ -402,6 +404,9 @@ int main(int argc, char** argv)
     threadPool.reset();
 
     sLog->SetSynchronous();
+
+    if (sVoiceChatMgr.CanUseVoiceChat())
+        sVoiceChatMgr.SocketDisconnected();          // close voice socket and remove channels
 
     sScriptMgr->OnShutdown();
 
