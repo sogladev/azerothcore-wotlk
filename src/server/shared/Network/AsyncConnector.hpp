@@ -21,8 +21,15 @@
 
 #include "Platform/Define.h"
 #include <boost/asio.hpp>
+#include <boost/asio/io_context.hpp>
 #include <boost/bind.hpp>
 #include "AsyncSocket.hpp"
+
+#if BOOST_VERSION >= 106600
+    using io_context = boost::asio::io_context;
+#else
+    using io_context = boost::asio::io_service;
+#endif
 
 namespace MaNGOS
 {
@@ -30,7 +37,7 @@ namespace MaNGOS
     class AsyncConnector
     {
         public:
-            AsyncConnector(boost::asio::io_service& io_service, std::string const& connectIp, unsigned short connectPort, bool silent = false) : m_service(io_service), m_endpoint(boost::asio::ip::address::from_string(connectIp), connectPort), m_silent(silent)
+            AsyncConnector(boost::asio::io_context& io_service, std::string const& connectIp, unsigned short connectPort, bool silent = false) : m_service(io_service), m_endpoint(boost::asio::ip::address::from_string(connectIp), connectPort), m_silent(silent)
             {
                 Connect();
             }
@@ -40,7 +47,7 @@ namespace MaNGOS
                     connection->Start();
             }
         private:
-            boost::asio::io_service& m_service;
+            boost::asio::io_context& m_service;
             boost::asio::ip::tcp::endpoint m_endpoint;
             bool m_silent;
             void Connect()
