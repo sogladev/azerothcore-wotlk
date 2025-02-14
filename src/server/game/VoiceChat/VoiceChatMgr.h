@@ -27,6 +27,7 @@
 #include "VoiceChatSession.h"
 #include <boost/asio/io_context.hpp>
 #include "EventEmitter.h"
+#include <chrono>
 
 class VoiceChatChannel;
 
@@ -43,18 +44,18 @@ public:
       : m_socket(nullptr),
         m_requestSocket(nullptr),
         new_request_id(1),
-        new_session_id(time(nullptr)),
+        new_session_id(std::chrono::system_clock::now().time_since_epoch().count()),
         server_address(0),
         server_port(0),
         voice_port(0),
-        next_connect(time(nullptr)),
-        next_ping(time(nullptr) + 5),
-        last_pong(time(nullptr)),
+        next_connect(std::chrono::system_clock::now()),
+        next_ping(std::chrono::system_clock::now() + std::chrono::seconds(5)),
+        last_pong(std::chrono::system_clock::now()),
         enabled(false),
         maxConnectAttempts(0),
         curReconnectAttempts(0),
         state(VOICECHAT_DISCONNECTED),
-        lastUpdate(time(nullptr))
+        lastUpdate(std::chrono::system_clock::now())
     {
     }
 
@@ -178,9 +179,9 @@ private:
     uint16 voice_port;
 
     // next connect attempt
-    time_t next_connect;
-    time_t next_ping;
-    time_t last_pong;
+    std::chrono::system_clock::time_point next_connect;
+    std::chrono::system_clock::time_point next_ping;
+    std::chrono::system_clock::time_point last_pong;
 
     // enabled in config
     bool enabled;
@@ -196,7 +197,7 @@ private:
     // state of connection
     VoiceChatState state;
 
-    uint32 lastUpdate;
+    std::chrono::system_clock::time_point lastUpdate;
 
     // Thread safety mechanisms
     std::mutex m_recvQueueLock;

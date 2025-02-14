@@ -134,21 +134,19 @@ void VoiceChatMgr::Init()
 {
     LoadConfigs();
 
-    next_ping = time(nullptr) + 5;
-    last_pong = time(nullptr);
-    lastUpdate = time(nullptr);
+    next_ping = std::chrono::system_clock::now() + std::chrono::seconds(5);
+    last_pong = std::chrono::system_clock::now();
+    lastUpdate = std::chrono::system_clock::now();
     curReconnectAttempts = 0;
 
     state = enabled ? VOICECHAT_NOT_CONNECTED : VOICECHAT_DISCONNECTED;
 }
-// 
 
 void VoiceChatMgr::Update()
 {
     if (!enabled)
         return;
 
-    // Replace Messager with EventEmitter
     m_eventEmitter(this);
 
     std::deque<std::unique_ptr<VoiceChatServerPacket>> recvQueueCopy;
@@ -175,10 +173,11 @@ void VoiceChatMgr::Update()
     if (state == VOICECHAT_DISCONNECTED)
         return;
 
-    if (time(nullptr) - lastUpdate < 1)
+    auto now = std::chrono::system_clock::now();
+    if (now - lastUpdate < std::chrono::seconds(1))
         return;
 
-    lastUpdate = time(nullptr);
+    lastUpdate = now;
 
     if (m_requestSocket)
     {
@@ -190,21 +189,18 @@ void VoiceChatMgr::Update()
     // connecting / reconnecting
     if (!m_socket)
     {
-        // lost connection
         if (state == VOICECHAT_CONNECTED)
         {
             LOG_ERROR("sql.sql", "VoiceChatMgr: Socket disconnected");
             SocketDisconnected();
             SendVoiceChatServiceDisconnect();
             state = VOICECHAT_RECONNECTING;
-            next_connect = time(nullptr) + 10;
+            next_connect = std::chrono::system_clock::now() + std::chrono::seconds(10);
             return;
         }
 
-        // reconnecting
         if (state == VOICECHAT_RECONNECTING)
         {
-            // max attempts reached or disabled
             if (maxConnectAttempts >= 0 && curReconnectAttempts >= maxConnectAttempts)
             {
                 if (maxConnectAttempts > 0)
@@ -221,8 +217,7 @@ void VoiceChatMgr::Update()
             }
         }
 
-        // try to connect
-        if (time(nullptr) > next_connect)
+        if (now > next_connect)
         {
             if (NeedConnect() || NeedReconnect())
             {
@@ -237,18 +232,16 @@ void VoiceChatMgr::Update()
                     LOG_ERROR("sql.sql", "VoiceChatMgr: Reconnect failed, will try again later");
             }
 
-            // count attempts
             if (state == VOICECHAT_NOT_CONNECTED || state == VOICECHAT_RECONNECTING)
                 curReconnectAttempts++;
 
-            // wait for socket to open
-            next_connect = time(nullptr) + 10;
+            next_connect = now + std::chrono::seconds(10);
             return;
         }
     }
     else
     {
-        if (!m_socket->IsOpen()) // lost connection
+        if (!m_socket->IsOpen())
         {
             if (state == VOICECHAT_CONNECTED)
             {
@@ -258,19 +251,17 @@ void VoiceChatMgr::Update()
                 return;
             }
 
-            // try to connect
-            if (time(nullptr) > next_connect)
+            if (now > next_connect)
             {
                 if (!m_requestSocket && (state == VOICECHAT_NOT_CONNECTED || state == VOICECHAT_RECONNECTING))
                 {
                     ActivateVoiceSocketThread();
-                    next_connect = time(nullptr) + 5;
+                    next_connect = now + std::chrono::seconds(5);
                 }
             }
             return;
         }
 
-        // connecting / reconnecting
         if (state == VOICECHAT_NOT_CONNECTED || state == VOICECHAT_RECONNECTING)
         {
             if (state == VOICECHAT_NOT_CONNECTED)
@@ -287,32 +278,31 @@ void VoiceChatMgr::Update()
 
             state = VOICECHAT_CONNECTED;
             curReconnectAttempts = 0;
-            last_pong = time(nullptr);
+            last_pong = now;
         }
-        else // connected
+        else
         {
-            if (time(nullptr) >= next_ping)
+            if (now >= next_ping)
             {
                 LOG_INFO("sql.sql", "VoiceChatMgr: Sending ping");
-                next_ping = time(nullptr) + 5;
+                next_ping = now + std::chrono::seconds(5);
                 VoiceChatServerPacket data(VOICECHAT_CMSG_PING, 4);
                 data << uint32(0);
                 m_socket->SendPacket(data);
             }
-            // because the above might kill m_socket
-            if (m_socket && (time(nullptr) - last_pong) > 10)
+
+            if (m_socket && (now - last_pong) > std::chrono::seconds(10))
             {
-                // ping timeout
                 LOG_ERROR("sql.sql", "VoiceChatMgr: Ping timeout!");
                 SocketDisconnected();
                 SendVoiceChatServiceDisconnect();
                 state = VOICECHAT_RECONNECTING;
-                next_connect = time(nullptr) + 10;
+                next_connect = now + std::chrono::seconds(10);
             }
         }
     }
 }
-// 
+
 void VoiceChatMgr::HandleVoiceChatServerPacket(VoiceChatServerPacket& pck)
 {
     uint32 request_id;
@@ -324,7 +314,7 @@ void VoiceChatMgr::HandleVoiceChatServerPacket(VoiceChatServerPacket& pck)
         case VOICECHAT_SMSG_PONG:
         {
             LOG_INFO("sql.sql", "VoiceChatMgr: Received pong");
-            last_pong = time(nullptr);
+            last_pong = std::chrono::system_clock::now();
             break;
         }
         case VOICECHAT_SMSG_CHANNEL_CREATED:
@@ -423,12 +413,12 @@ void VoiceChatMgr::SocketDisconnected()
 
 bool VoiceChatMgr::NeedConnect()
 {
-    return enabled && !m_socket && !m_requestSocket && state == VOICECHAT_NOT_CONNECTED && time(nullptr) > next_connect;
+    return enabled && !m_socket && !m_requestSocket && state == VOICECHAT_NOT_CONNECTED && std::chrono::system_clock::now() > next_connect;
 }
 
 bool VoiceChatMgr::NeedReconnect()
 {
-    return enabled && !m_socket && !m_requestSocket && state == VOICECHAT_RECONNECTING && time(nullptr) > next_connect;
+    return enabled && !m_socket && !m_requestSocket && state == VOICECHAT_RECONNECTING && std::chrono::system_clock::now() > next_connect;
 }
 
 int32 VoiceChatMgr::GetReconnectAttempts() const
