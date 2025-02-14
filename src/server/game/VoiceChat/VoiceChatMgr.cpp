@@ -1,4 +1,8 @@
 #include "VoiceChatMgr.h"
+#include "Log.h"
+#include "WorldSession.h"
+#include "WorldSessionMgr.h"
+#include "Player.h"
 // #include "VoiceChatChannel.h"
 // #include "Chat/ChannelMgr.h"
 // #include "BattleGround/BattleGroundMgr.h"
@@ -8,21 +12,109 @@
 // #include "Network/AsyncConnector.hpp"
 // #include <boost/thread/thread.hpp>
 // #include <memory>
+#include <boost/asio.hpp>
+#include <thread>
 
-// void VoiceSocketThread()
-// {
-//     sVoiceChatMgr.VoiceSocketThread();
-// }
-// 
-// void ActivateVoiceSocketThread()
-// {
-//     boost::thread t(VoiceSocketThread);
-//     t.detach();
-// }
+using boost::asio::ip::tcp;
+
+namespace {
+    // Helper function moved to anonymous namespace to avoid global scope pollution
+    void VoiceSocketThreadHelper()
+    {
+        sVoiceChatMgr.VoiceSocketThread();
+    }
+}
+
+void VoiceChatMgr::ActivateVoiceSocketThread()
+{
+    std::thread t(VoiceSocketThreadHelper);
+    t.detach();
+}
+
+void VoiceChatMgr::VoiceSocketThread()
+{
+    try
+    {
+        // Create IO context and resolver
+        boost::asio::io_context ioContext;
+        tcp::resolver resolver(ioContext);
+
+        // Get connection details
+        std::string address = GetVoiceServerConnectAddressString();
+        std::string port = std::to_string(GetVoiceServerConnectPort());
+
+        LOG_INFO("voice.chat", "Attempting to connect to voice server at {}:{}", address, port);
+
+        // Resolve endpoint
+        boost::system::error_code resolveError;
+        auto endpoints = resolver.resolve(address, port, resolveError);
+
+        if (resolveError)
+        {
+            LOG_ERROR("voice.chat", "Failed to resolve voice server address: {}", resolveError.message());
+            return;
+        }
+
+        // Create and connect socket
+        tcp::socket socket(ioContext);
+        boost::system::error_code connectError;
+        boost::asio::connect(socket, endpoints, connectError);
+
+        if (connectError)
+        {
+            LOG_ERROR("voice.chat", "Failed to connect to voice server: {}", connectError.message());
+            return;
+        }
+
+        LOG_INFO("voice.chat", "Successfully connected to voice server");
+
+        // Create voice chat session
+        m_socket = std::make_shared<VoiceChatSession>(std::move(socket));
+
+        // Start processing
+        if (m_socket)
+        {
+            m_socket->Start();
+            ioContext.run();
+        }
+        else
+        {
+            LOG_ERROR("voice.chat", "Failed to create voice chat session");
+        }
+    }
+    catch (const boost::system::system_error& e)
+    {
+        LOG_ERROR("voice.chat", "Boost system error in voice chat thread: {}", e.what());
+    }
+    catch (const std::exception& e)
+    {
+        LOG_ERROR("voice.chat", "Exception in voice chat thread: {}", e.what());
+    }
+    catch (...)
+    {
+        LOG_ERROR("voice.chat", "Unknown exception in voice chat thread");
+    }
+}
+
 // 
 // INSTANTIATE_SINGLETON_1(VoiceChatMgr);
 // 
 // 
+
+void VoiceChatMgr::LoadConfigs()
+{
+    enabled = true;
+
+    server_address_string = "127.0.0.1";
+    server_address = inet_addr(server_address_string.c_str());
+    server_port = 3725;
+
+    std::string voice_address_string = "127.0.0.1";
+    voice_address = inet_addr(voice_address_string.c_str());
+    voice_port = 3724;
+
+    maxConnectAttempts = -1;
+}
 // void VoiceChatMgr::LoadConfigs()
 // {
 //     enabled = sConfig.GetBoolDefault("VoiceChat.Enabled", false);
@@ -38,315 +130,317 @@
 //     maxConnectAttempts = sConfig.GetIntDefault("VoiceChat.MaxConnectAttempts", -1);
 // }
 // 
-// void VoiceChatMgr::Init()
-// {
-//     LoadConfigs();
-// 
-//     next_ping = time(nullptr) + 5;
-//     last_pong = time(nullptr);
-//     lastUpdate = time(nullptr);
-//     curReconnectAttempts = 0;
-// 
-//     state = enabled ? VOICECHAT_NOT_CONNECTED : VOICECHAT_DISCONNECTED;
-// }
+void VoiceChatMgr::Init()
+{
+    LoadConfigs();
+
+    next_ping = time(nullptr) + 5;
+    last_pong = time(nullptr);
+    lastUpdate = time(nullptr);
+    curReconnectAttempts = 0;
+
+    state = enabled ? VOICECHAT_NOT_CONNECTED : VOICECHAT_DISCONNECTED;
+}
 // 
 
 void VoiceChatMgr::Update()
 {
+    if (!enabled)
+        return;
 
+    // Replace Messager with EventEmitter
+    m_eventEmitter(this);
+
+    std::deque<std::unique_ptr<VoiceChatServerPacket>> recvQueueCopy;
+    {
+        std::lock_guard<std::mutex> guard(m_recvQueueLock);
+        std::swap(recvQueueCopy, m_recvQueue);
+    }
+
+    while (m_socket && m_socket->IsOpen() && !recvQueueCopy.empty())
+    {
+        auto const packet = std::move(recvQueueCopy.front());
+        recvQueueCopy.pop_front();
+
+        try
+        {
+            HandleVoiceChatServerPacket(*packet);
+        }
+        catch (const ByteBufferException&)
+        {
+            ProcessByteBufferException(*packet);
+        }
+    }
+
+    if (state == VOICECHAT_DISCONNECTED)
+        return;
+
+    if (time(nullptr) - lastUpdate < 1)
+        return;
+
+    lastUpdate = time(nullptr);
+
+    if (m_requestSocket)
+    {
+        m_socket = m_requestSocket;
+        m_requestSocket = nullptr;
+        return;
+    }
+
+    // connecting / reconnecting
+    if (!m_socket)
+    {
+        // lost connection
+        if (state == VOICECHAT_CONNECTED)
+        {
+            LOG_ERROR("sql.sql", "VoiceChatMgr: Socket disconnected");
+            SocketDisconnected();
+            SendVoiceChatServiceDisconnect();
+            state = VOICECHAT_RECONNECTING;
+            next_connect = time(nullptr) + 10;
+            return;
+        }
+
+        // reconnecting
+        if (state == VOICECHAT_RECONNECTING)
+        {
+            // max attempts reached or disabled
+            if (maxConnectAttempts >= 0 && curReconnectAttempts >= maxConnectAttempts)
+            {
+                if (maxConnectAttempts > 0)
+                    LOG_ERROR("sql.sql", "VoiceChatMgr: Disconnected! Max reconnect attempts reached");
+                else
+                    LOG_ERROR("sql.sql", "VoiceChatMgr: Disconnected! Reconnecting disabled");
+
+                DeleteAllChannels();
+                SendVoiceChatStatus(false);
+                SendVoiceChatServiceConnectFail();
+                curReconnectAttempts = 0;
+                state = VOICECHAT_DISCONNECTED;
+                return;
+            }
+        }
+
+        // try to connect
+        if (time(nullptr) > next_connect)
+        {
+            if (NeedConnect() || NeedReconnect())
+            {
+                ActivateVoiceSocketThread();
+            }
+
+            if (curReconnectAttempts > 0)
+            {
+                if (state == VOICECHAT_NOT_CONNECTED)
+                    LOG_ERROR("sql.sql", "VoiceChatMgr: Connect failed, will try again later");
+                if (state == VOICECHAT_RECONNECTING)
+                    LOG_ERROR("sql.sql", "VoiceChatMgr: Reconnect failed, will try again later");
+            }
+
+            // count attempts
+            if (state == VOICECHAT_NOT_CONNECTED || state == VOICECHAT_RECONNECTING)
+                curReconnectAttempts++;
+
+            // wait for socket to open
+            next_connect = time(nullptr) + 10;
+            return;
+        }
+    }
+    else
+    {
+        if (!m_socket->IsOpen()) // lost connection
+        {
+            if (state == VOICECHAT_CONNECTED)
+            {
+                SocketDisconnected();
+                SendVoiceChatServiceDisconnect();
+                state = VOICECHAT_RECONNECTING;
+                return;
+            }
+
+            // try to connect
+            if (time(nullptr) > next_connect)
+            {
+                if (!m_requestSocket && (state == VOICECHAT_NOT_CONNECTED || state == VOICECHAT_RECONNECTING))
+                {
+                    ActivateVoiceSocketThread();
+                    next_connect = time(nullptr) + 5;
+                }
+            }
+            return;
+        }
+
+        // connecting / reconnecting
+        if (state == VOICECHAT_NOT_CONNECTED || state == VOICECHAT_RECONNECTING)
+        {
+            if (state == VOICECHAT_NOT_CONNECTED)
+                LOG_INFO("sql.sql", "VoiceChatMgr: Connected to {}:{}.", m_socket->GetRemoteIpAddress().to_string(), m_socket->GetRemotePort());
+            if (state == VOICECHAT_RECONNECTING)
+                LOG_INFO("sql.sql", "VoiceChatMgr: Reconnected to {}:{}", m_socket->GetRemoteIpAddress().to_string(), m_socket->GetRemotePort());
+
+            SendVoiceChatStatus(true);
+            RestoreVoiceChatChannels();
+            if (state == VOICECHAT_RECONNECTING)
+            {
+                SendVoiceChatServiceReconnected();
+            }
+
+            state = VOICECHAT_CONNECTED;
+            curReconnectAttempts = 0;
+            last_pong = time(nullptr);
+        }
+        else // connected
+        {
+            if (time(nullptr) >= next_ping)
+            {
+                LOG_INFO("sql.sql", "VoiceChatMgr: Sending ping");
+                next_ping = time(nullptr) + 5;
+                VoiceChatServerPacket data(VOICECHAT_CMSG_PING, 4);
+                data << uint32(0);
+                m_socket->SendPacket(data);
+            }
+            // because the above might kill m_socket
+            if (m_socket && (time(nullptr) - last_pong) > 10)
+            {
+                // ping timeout
+                LOG_ERROR("sql.sql", "VoiceChatMgr: Ping timeout!");
+                SocketDisconnected();
+                SendVoiceChatServiceDisconnect();
+                state = VOICECHAT_RECONNECTING;
+                next_connect = time(nullptr) + 10;
+            }
+        }
+    }
 }
-// void VoiceChatMgr::Update()
-// {
-//     if (!enabled)
-//         return;
 // 
-//     GetMessager().Execute(this);
+void VoiceChatMgr::HandleVoiceChatServerPacket(VoiceChatServerPacket& pck)
+{
+    uint32 request_id;
+    uint8 error;
+    uint16 channel_id;
+
+    switch(pck.GetOpcode())
+    {
+        case VOICECHAT_SMSG_PONG:
+        {
+            LOG_INFO("sql.sql", "VoiceChatMgr: Received pong");
+            last_pong = time(nullptr);
+            break;
+        }
+        case VOICECHAT_SMSG_CHANNEL_CREATED:
+        {
+            pck >> request_id;
+            pck >> error;
+
+            for(auto request = m_requests.begin(); request != m_requests.end();)
+            {
+                if (request->id == request_id)
+                {
+                    if (error == 0)
+                    {
+                        pck >> channel_id;
+                    }
+                    else
+                    {
+                        LOG_ERROR("sql.sql", "VoiceChatMgr: Error creating voice channel");
+                        request = m_requests.erase(request);
+                        return;
+                    }
+
+                    if (request->groupid)
+                    {
+                        // if (request->type == VOICECHAT_CHANNEL_GROUP || request->type == VOICECHAT_CHANNEL_RAID)
+                        // {
+                        //     Group* grp = sObjectMgr->GetGroupById(request->groupid);
+                        //     if (grp)
+                        //     {
+                        //         auto* v_channel = new VoiceChatChannel(VoiceChatChannelTypes(request->type), channel_id, grp->GetId());
+                        //         m_VoiceChatChannels.insert(std::make_pair((uint32)channel_id, v_channel));
+                        //         v_channel->AddMembersAfterCreate();
+                        //     }
+                        // }
+                        // else if (request->type == VOICECHAT_CHANNEL_BG)
+                        // {
+                        //     BattleGround* bg = sBattleGroundMgr.GetBattleGround(request->groupid, BATTLEGROUND_TYPE_NONE);
+                        //     if (bg)
+                        //     {
+                        //         // for BG use bg's instanceID as groupID
+                        //         auto* v_channel = new VoiceChatChannel(VoiceChatChannelTypes(request->type), channel_id, request->groupid, "", request->team);
+                        //         m_VoiceChatChannels.insert(std::make_pair((uint32)channel_id, v_channel));
+                        //         v_channel->AddMembersAfterCreate();
+                        //     }
+                        // }
+                    }
+                    else if (request->type == VOICECHAT_CHANNEL_CUSTOM)
+                    {
+                        // if (ChannelMgr* cMgr = channelMgr(request->team))
+                        // {
+                        //     Channel* chan = cMgr->GetChannel(request->channel_name, nullptr, false);
+                        //     if (chan)
+                        //     {
+                        //         auto* v_channel = new VoiceChatChannel(VoiceChatChannelTypes(request->type), channel_id, 0, request->channel_name, request->team);
+                        //         m_VoiceChatChannels.insert(std::make_pair((uint32)channel_id, v_channel));
+                        //         v_channel->AddMembersAfterCreate();
+                        //     }
+                        // }
+                    }
+
+                    request = m_requests.erase(request);
+                }
+                else
+                    request++;
+            }
+            break;
+        }
+        default:
+        {
+            LOG_ERROR("sql.sql", "VoiceChatMgr: received unknown opcode {}!\n", pck.GetOpcode());
+            break;
+        }
+    }
+}
 // 
-//     std::deque<std::unique_ptr<VoiceChatServerPacket>> recvQueueCopy;
-//     {
-//         std::lock_guard<std::mutex> guard(m_recvQueueLock);
-//         std::swap(recvQueueCopy, m_recvQueue);
-//     }
-// 
-//     while (m_socket && !m_socket->IsClosed() && !recvQueueCopy.empty())
-//     {
-//         auto const packet = std::move(recvQueueCopy.front());
-//         recvQueueCopy.pop_front();
-// 
-//         try
-//         {
-//             HandleVoiceChatServerPacket(*packet);
-//         }
-//         catch (const ByteBufferException&)
-//         {
-//             ProcessByteBufferException(*packet);
-//         }
-//     }
-// 
-//     if (state == VOICECHAT_DISCONNECTED)
-//         return;
-// 
-//     if (time(nullptr) - lastUpdate < 1)
-//         return;
-// 
-//     lastUpdate = time(nullptr);
-// 
-//     if (m_requestSocket)
-//     {
-//         m_socket = m_requestSocket;
-//         m_requestSocket = nullptr;
-//         return;
-//     }
-// 
-//     // connecting / reconnecting
-//     if (!m_socket)
-//     {
-//         // lost connection
-//         if (state == VOICECHAT_CONNECTED)
-//         {
-//             sLog.outError("VoiceChatMgr: Socket disconnected");
-//             SocketDisconnected();
-//             SendVoiceChatServiceDisconnect();
-//             state = VOICECHAT_RECONNECTING;
-//             next_connect = time(nullptr) + 10;
-//             return;
-//         }
-// 
-//         // reconnecting
-//         if (state == VOICECHAT_RECONNECTING)
-//         {
-//             // max attempts reached or disabled
-//             if (maxConnectAttempts >= 0 && curReconnectAttempts >= maxConnectAttempts)
-//             {
-//                 if (maxConnectAttempts > 0)
-//                     sLog.outError("VoiceChatMgr: Disconnected! Max reconnect attempts reached");
-//                 else
-//                     sLog.outError("VoiceChatMgr: Disconnected! Reconnecting disabled");
-// 
-//                 DeleteAllChannels();
-//                 SendVoiceChatStatus(false);
-//                 SendVoiceChatServiceConnectFail();
-//                 curReconnectAttempts = 0;
-//                 state = VOICECHAT_DISCONNECTED;
-//                 return;
-//             }
-//         }
-// 
-//         // try to connect
-//         if (time(nullptr) > next_connect)
-//         {
-//             if (NeedConnect() || NeedReconnect())
-//             {
-//                 ActivateVoiceSocketThread();
-//             }
-// 
-//             if (curReconnectAttempts > 0)
-//             {
-//                 if (state == VOICECHAT_NOT_CONNECTED)
-//                     sLog.outError("VoiceChatMgr: Connect failed, will try again later");
-//                 if (state == VOICECHAT_RECONNECTING)
-//                     sLog.outError("VoiceChatMgr: Reconnect failed, will try again later");
-//             }
-// 
-//             // count attempts
-//             if (state == VOICECHAT_NOT_CONNECTED || state == VOICECHAT_RECONNECTING)
-//                 curReconnectAttempts++;
-// 
-//             // wait for socket to open
-//             next_connect = time(nullptr) + 10;
-//             return;
-//         }
-//     }
-//     else
-//     {
-//         if (m_socket->IsClosed()) // lost connection
-//         {
-//             if (state == VOICECHAT_CONNECTED)
-//             {
-//                 SocketDisconnected();
-//                 SendVoiceChatServiceDisconnect();
-//                 state = VOICECHAT_RECONNECTING;
-//                 return;
-//             }
-// 
-//             // try to connect
-//             if (time(nullptr) > next_connect)
-//             {
-//                 if (!m_requestSocket && (state == VOICECHAT_NOT_CONNECTED || state == VOICECHAT_RECONNECTING))
-//                 {
-//                     ActivateVoiceSocketThread();
-//                     next_connect = time(nullptr) + 5;
-//                 }
-//             }
-//             return;
-//         }
-// 
-//         // connecting / reconnecting
-//         if (state == VOICECHAT_NOT_CONNECTED || state == VOICECHAT_RECONNECTING)
-//         {
-//             if (state == VOICECHAT_NOT_CONNECTED)
-//                 sLog.outBasic("VoiceChatMgr: Connected to %s:%u.", m_socket->GetRemoteAddress().c_str(), m_socket->GetRemotePort());
-//             if (state == VOICECHAT_RECONNECTING)
-//                 sLog.outBasic("VoiceChatMgr: Reconnected to %s:%u", m_socket->GetRemoteAddress().c_str(), m_socket->GetRemotePort());
-// 
-//             SendVoiceChatStatus(true);
-//             RestoreVoiceChatChannels();
-//             if (state == VOICECHAT_RECONNECTING)
-//             {
-//                 SendVoiceChatServiceReconnected();
-//             }
-// 
-//             state = VOICECHAT_CONNECTED;
-//             curReconnectAttempts = 0;
-//             last_pong = time(nullptr);
-//         }
-//         else // connected
-//         {
-//             if (time(nullptr) >= next_ping)
-//             {
-//                 next_ping = time(nullptr) + 5;
-//                 VoiceChatServerPacket data(VOICECHAT_CMSG_PING, 4);
-//                 data << uint32(0);
-//                 m_socket->SendPacket(data);
-//             }
-//             // because the above might kill m_socket
-//             if (m_socket && (time(nullptr) - last_pong) > 10)
-//             {
-//                 // ping timeout
-//                 sLog.outError("VoiceChatMgr: Ping timeout!");
-//                 SocketDisconnected();
-//                 SendVoiceChatServiceDisconnect();
-//                 state = VOICECHAT_RECONNECTING;
-//                 next_connect = time(nullptr) + 10;
-//             }
-//         }
-//     }
-// }
-// 
-// void VoiceChatMgr::HandleVoiceChatServerPacket(VoiceChatServerPacket& pck)
-// {
-//     uint32 request_id;
-//     uint8 error;
-//     uint16 channel_id;
-// 
-//     switch(pck.GetOpcode())
-//     {
-//         case VOICECHAT_SMSG_PONG:
-//         {
-//             last_pong = time(nullptr);
-//             break;
-//         }
-//         case VOICECHAT_SMSG_CHANNEL_CREATED:
-//         {
-//             pck >> request_id;
-//             pck >> error;
-// 
-//             for(auto request = m_requests.begin(); request != m_requests.end();)
-//             {
-//                 if (request->id == request_id)
-//                 {
-//                     if (error == 0)
-//                     {
-//                         pck >> channel_id;
-//                     }
-//                     else
-//                     {
-//                         sLog.outError("VoiceChatMgr: Error creating voice channel");
-//                         request = m_requests.erase(request);
-//                         return;
-//                     }
-// 
-//                     if (request->groupid)
-//                     {
-//                         if (request->type == VOICECHAT_CHANNEL_GROUP || request->type == VOICECHAT_CHANNEL_RAID)
-//                         {
-//                             Group* grp = sObjectMgr.GetGroupById(request->groupid);
-//                             if (grp)
-//                             {
-//                                 auto* v_channel = new VoiceChatChannel(VoiceChatChannelTypes(request->type), channel_id, grp->GetId());
-//                                 m_VoiceChatChannels.insert(std::make_pair((uint32)channel_id, v_channel));
-//                                 v_channel->AddMembersAfterCreate();
-//                             }
-//                         }
-//                         else if (request->type == VOICECHAT_CHANNEL_BG)
-//                         {
-//                             BattleGround* bg = sBattleGroundMgr.GetBattleGround(request->groupid, BATTLEGROUND_TYPE_NONE);
-//                             if (bg)
-//                             {
-//                                 // for BG use bg's instanceID as groupID
-//                                 auto* v_channel = new VoiceChatChannel(VoiceChatChannelTypes(request->type), channel_id, request->groupid, "", request->team);
-//                                 m_VoiceChatChannels.insert(std::make_pair((uint32)channel_id, v_channel));
-//                                 v_channel->AddMembersAfterCreate();
-//                             }
-//                         }
-//                     }
-//                     else if (request->type == VOICECHAT_CHANNEL_CUSTOM)
-//                     {
-//                         if (ChannelMgr* cMgr = channelMgr(request->team))
-//                         {
-//                             Channel* chan = cMgr->GetChannel(request->channel_name, nullptr, false);
-//                             if (chan)
-//                             {
-//                                 auto* v_channel = new VoiceChatChannel(VoiceChatChannelTypes(request->type), channel_id, 0, request->channel_name, request->team);
-//                                 m_VoiceChatChannels.insert(std::make_pair((uint32)channel_id, v_channel));
-//                                 v_channel->AddMembersAfterCreate();
-//                             }
-//                         }
-//                     }
-// 
-//                     request = m_requests.erase(request);
-//                 }
-//                 else
-//                     request++;
-//             }
-//             break;
-//         }
-//         default:
-//         {
-//             sLog.outError("VoiceChatMgr: received unknown opcode %u!\n", pck.GetOpcode());
-//             break;
-//         }
-//     }
-// }
-// 
-// void VoiceChatMgr::SocketDisconnected()
-// {
-//     sLog.outBasic("VoiceChatMgr: VoiceChatServerSocket disconnected");
-// 
-//     if (m_socket)
-//     {
-//         if (!m_socket->IsClosed())
-//             m_socket->Close();
-//     }
-//     m_voiceService.stop();
-//     m_socket = nullptr;
-//     m_requests.clear();
-// 
-//     DeleteAllChannels();
-// 
-//     curReconnectAttempts = 0;
-// }
-// 
-// bool VoiceChatMgr::NeedConnect()
-// {
-//     return enabled && !m_socket && !m_requestSocket && state == VOICECHAT_NOT_CONNECTED && time(nullptr) > next_connect;
-// }
-// 
-// bool VoiceChatMgr::NeedReconnect()
-// {
-//     return enabled && !m_socket && !m_requestSocket && state == VOICECHAT_RECONNECTING && time(nullptr) > next_connect;
-// }
-// 
-// int32 VoiceChatMgr::GetReconnectAttempts() const
-// {
-//     if (maxConnectAttempts < 0 || (maxConnectAttempts > 0 && curReconnectAttempts < maxConnectAttempts))
-//     {
-//         return maxConnectAttempts;
-//     }
-// 
-//     return 0;
-// }
-// 
+void VoiceChatMgr::SocketDisconnected()
+{
+    // sLog->outBasic("VoiceChatMgr: VoiceChatServerSocket disconnected");
+    LOG_INFO("sql.sql", "VoiceChatMgr: VoiceChatServerSocket disconnected");
+
+    if (m_socket)
+    {
+        if (m_socket->IsOpen())
+            m_socket->CloseSocket();
+    }
+
+    m_socket.reset();
+    // m_voiceService.stop();
+    m_socket = nullptr;
+    m_requests.clear();
+
+    DeleteAllChannels();
+
+    curReconnectAttempts = 0;
+}
+
+bool VoiceChatMgr::NeedConnect()
+{
+    return enabled && !m_socket && !m_requestSocket && state == VOICECHAT_NOT_CONNECTED && time(nullptr) > next_connect;
+}
+
+bool VoiceChatMgr::NeedReconnect()
+{
+    return enabled && !m_socket && !m_requestSocket && state == VOICECHAT_RECONNECTING && time(nullptr) > next_connect;
+}
+
+int32 VoiceChatMgr::GetReconnectAttempts() const
+{
+    if (maxConnectAttempts < 0 || (maxConnectAttempts > 0 && curReconnectAttempts < maxConnectAttempts))
+    {
+        return maxConnectAttempts;
+    }
+
+    return 0;
+}
+
 // bool VoiceChatMgr::RequestNewSocket(VoiceChatServerSocket* socket)
 // {
 //     if (m_requestSocket)
@@ -357,31 +451,33 @@ void VoiceChatMgr::Update()
 // }
 // 
 // // Add an incoming packet to the queue
-// void VoiceChatMgr::QueuePacket(std::unique_ptr<VoiceChatServerPacket> new_packet)
-// {
-//     std::lock_guard<std::mutex> guard(m_recvQueueLock);
-//     m_recvQueue.push_back(std::move(new_packet));
-// }
+void VoiceChatMgr::QueuePacket(std::unique_ptr<VoiceChatServerPacket> new_packet)
+{
+    std::lock_guard<std::mutex> guard(m_recvQueueLock);
+    m_recvQueue.push_back(std::move(new_packet));
+}
 // 
-// void VoiceChatMgr::ProcessByteBufferException(VoiceChatServerPacket const& packet)
-// {
-//     sLog.outError("VoiceChatMgr::Update ByteBufferException occured while parsing a packet (opcode: %u).",
-//                   packet.GetOpcode());
-// 
-//     if (sLog.HasLogLevelOrHigher(LOG_LVL_DEBUG))
-//     {
-//         DEBUG_LOG("Dumping error-causing voice server packet:");
-//         packet.hexlike();
-//     }
-// 
-//     DETAIL_LOG("Disconnecting voice server [address %s] for badly formatted packet.",
-//                GetVoiceServerConnectAddressString().c_str());
-// 
-//     GetMessager().AddMessage([](VoiceChatMgr* mgr)
-//                              {
-//                                  mgr->SocketDisconnected();
-//                              });
-// }
+void VoiceChatMgr::ProcessByteBufferException(VoiceChatServerPacket const& packet)
+{
+    LOG_ERROR("sql.sql", "VoiceChatMgr::Update ByteBufferException occured while parsing a packet (opcode: %{}).", packet.GetOpcode());
+
+    // if (sLog->HasLogLevelOrHigher(LOG_LVL_DEBUG))
+    {
+        // DEBUG_LOG("Dumping error-causing voice server packet:");
+        LOG_INFO("sql.sql", "Dumping error-causing voice server packet:");
+        packet.hexlike();
+    }
+
+    LOG_INFO("sql.sql", "Disconnecting voice server [address %s] for badly formatted packet.", GetVoiceServerConnectAddressString());
+    // DETAIL_LOG("Disconnecting voice server [address %s] for badly formatted packet.",
+            //    );
+
+    // Replace Messager with EventEmitter callback
+    m_eventEmitter += [](VoiceChatMgr* mgr)
+    {
+        mgr->SocketDisconnected();
+    };
+}
 // 
 // void VoiceChatMgr::VoiceSocketThread()
 // {
@@ -420,7 +516,7 @@ void VoiceChatMgr::Update()
 //     if (IsVoiceChatChannelBeingCreated(type, groupId, name, newTeam))
 //         return;
 // 
-//     sLog.outDebug("VoiceChatMgr: CreateVoiceChannel type: %u, name: %s, team: %u, group: %u", type, name.c_str(), newTeam, groupId);
+//     sLog->outDebug("VoiceChatMgr: CreateVoiceChannel type: %u, name: %s, team: %u, group: %u", type, name.c_str(), newTeam, groupId);
 //     VoiceChatChannelRequest req;
 //     req.id = new_request_id++;
 //     req.type = type;
@@ -435,40 +531,41 @@ void VoiceChatMgr::Update()
 //     m_socket->SendPacket(data);
 // }
 // 
-// void VoiceChatMgr::DeleteVoiceChatChannel(VoiceChatChannel* channel)
-// {
-//     if (!channel)
-//         return;
-// 
-//     sLog.outDebug("VoiceChatMgr: DeleteVoiceChannel id: %u type: %u", channel->GetChannelId(), channel->GetType());
-// 
-//     uint8 type = channel->GetType();
-//     uint16 id = channel->GetChannelId();
-// 
-//     // disable voice in custom channel
-//     if (type == VOICECHAT_CHANNEL_CUSTOM)
-//     {
-//         if (ChannelMgr* cMgr = channelMgr(channel->GetTeam()))
-//         {
-//             if (Channel* chn = cMgr->GetChannel(channel->GetChannelName(), nullptr, false))
-//             {
-//                 if (chn->IsVoiceEnabled())
-//                     chn->ToggleVoice();
-//             }
-//         }
-//     }
-// 
-//     m_VoiceChatChannels.erase(channel->GetChannelId());
-//     delete channel;
-// 
-//     if (m_socket)
-//     {
-//         VoiceChatServerPacket data(VOICECHAT_CMSG_DELETE_CHANNEL, 5);
-//         data << type;
-//         data << id;
-//         m_socket->SendPacket(data);
-//     }
-// }
+void VoiceChatMgr::DeleteVoiceChatChannel(VoiceChatChannel* channel)
+{
+    // if (!channel)
+    //     return;
+
+    // // sLog->outDebug("VoiceChatMgr: DeleteVoiceChannel id: %u type: %u", channel->GetChannelId(), channel->GetType());
+    // LOG_INFO("sql.sql", "VoiceChatMgr: DeleteVoiceChannel id: {} type: {}", channel->GetChannelId(), channel->GetType());
+
+    // uint8 type = channel->GetType();
+    // uint16 id = channel->GetChannelId();
+
+    // // disable voice in custom channel
+    // if (type == VOICECHAT_CHANNEL_CUSTOM)
+    // {
+    //     if (ChannelMgr* cMgr = channelMgr(channel->GetTeam()))
+    //     {
+    //         if (Channel* chn = cMgr->GetChannel(channel->GetChannelName(), nullptr, false))
+    //         {
+    //             if (chn->IsVoiceEnabled())
+    //                 chn->ToggleVoice();
+    //         }
+    //     }
+    // }
+
+    // m_VoiceChatChannels.erase(channel->GetChannelId());
+    // delete channel;
+
+    // if (m_socket)
+    // {
+    //     VoiceChatServerPacket data(VOICECHAT_CMSG_DELETE_CHANNEL, 5);
+    //     data << type;
+    //     data << id;
+    //     m_socket->SendPacket(data);
+    // }
+}
 // 
 // // check if channel request has already been created
 // bool VoiceChatMgr::IsVoiceChatChannelBeingCreated(VoiceChatChannelTypes type, uint32 groupId, const std::string& name, Team team)
@@ -661,60 +758,61 @@ void VoiceChatMgr::Update()
 //     return channel_list;
 // }
 // 
-// // create group/raid/bg channels after (re)connect to voice server
-// void VoiceChatMgr::RestoreVoiceChatChannels()
-// {
-//     sWorld.GetMessager().AddMessage([](World* world)
-//     {
-//         world->ExecuteForAllSessions([](auto& data)
-//         {
-//             const WorldSession& sess = data;
-//             if (sess.IsVoiceChatEnabled())
-//             {
-//                 if (Player* plr = sess.GetPlayer())
-//                 {
-//                     if (Group* grp = plr->GetGroup())
-//                     {
-//                         if (!grp->IsBattleGroup())
-//                         {
-//                             if (grp->IsRaidGroup())
-//                                 sVoiceChatMgr.AddToRaidVoiceChatChannel(plr->GetObjectGuid(), grp->GetId());
-//                             else
-//                                 sVoiceChatMgr.AddToGroupVoiceChatChannel(plr->GetObjectGuid(), grp->GetId());
-//                         }
-//                         else
-//                         {
-//                             sVoiceChatMgr.AddToBattlegroundVoiceChatChannel(plr->GetObjectGuid());
-//                         }
-//                     }
-//                     if (Group* grp = plr->GetOriginalGroup())
-//                     {
-//                         if (!grp->IsBattleGroup())
-//                         {
-//                             if (grp->IsRaidGroup())
-//                                 sVoiceChatMgr.AddToRaidVoiceChatChannel(plr->GetObjectGuid(), grp->GetId());
-//                             else
-//                                 sVoiceChatMgr.AddToGroupVoiceChatChannel(plr->GetObjectGuid(), grp->GetId());
-//                         }
-//                         else
-//                         {
-//                             sVoiceChatMgr.AddToBattlegroundVoiceChatChannel(plr->GetObjectGuid());
-//                         }
-//                     }
-//                 }
-//             }
-//         });
-//     });
-// }
-// 
-// void VoiceChatMgr::DeleteAllChannels()
-// {
-//     for (auto& channel : m_VoiceChatChannels)
-//     {
-//         DeleteVoiceChatChannel(channel.second);
-//     }
-//     m_VoiceChatChannels.clear();
-// }
+// create group/raid/bg channels after (re)connect to voice server
+void VoiceChatMgr::RestoreVoiceChatChannels()
+{
+    // Replace Messager with EventEmitter
+    // sWorld.GetEventEmitter() += [](World* world)
+    // {
+        // world->ExecuteForAllSessions([](auto& data)
+        // {
+            // const WorldSession& sess = data;
+            // if (sess.IsVoiceChatEnabled())
+            // {
+                // if (Player* plr = sess.GetPlayer())
+                // {
+                    // if (Group* grp = plr->GetGroup())
+                    // {
+                        // if (!grp->IsBattleGroup())
+                        // {
+                            // if (grp->IsRaidGroup())
+                                // sVoiceChatMgr.AddToRaidVoiceChatChannel(plr->GetObjectGuid(), grp->GetId());
+                            // else
+                                // sVoiceChatMgr.AddToGroupVoiceChatChannel(plr->GetObjectGuid(), grp->GetId());
+                        // }
+                        // else
+                        // {
+                            // sVoiceChatMgr.AddToBattlegroundVoiceChatChannel(plr->GetObjectGuid());
+                        // }
+                    // }
+                    // if (Group* grp = plr->GetOriginalGroup())
+                    // {
+                        // if (!grp->IsBattleGroup())
+                        // {
+                            // if (grp->IsRaidGroup())
+                                // sVoiceChatMgr.AddToRaidVoiceChatChannel(plr->GetObjectGuid(), grp->GetId());
+                            // else
+                                // sVoiceChatMgr.AddToGroupVoiceChatChannel(plr->GetObjectGuid(), grp->GetId());
+                        // }
+                        // else
+                        // {
+                            // sVoiceChatMgr.AddToBattlegroundVoiceChatChannel(plr->GetObjectGuid());
+                        // }
+                    // }
+                // }
+            // }
+        // });
+    // };
+}
+
+void VoiceChatMgr::DeleteAllChannels()
+{
+    for (auto& channel : m_VoiceChatChannels)
+    {
+        DeleteVoiceChatChannel(channel.second);
+    }
+    m_VoiceChatChannels.clear();
+}
 // 
 // // if cross faction channels are enabled, team is always ALLIANCE
 // Team VoiceChatMgr::GetCustomChannelTeam(Team team)
@@ -843,7 +941,7 @@ void VoiceChatMgr::Update()
 //     if(!m_socket)
 //         return;
 // 
-//     sLog.outDebug("VoiceChatMgr: Channel %u activate slot %u", (int)channel_id, (int)slot_id);
+//     sLog->outDebug("VoiceChatMgr: Channel %u activate slot %u", (int)channel_id, (int)slot_id);
 // 
 //     VoiceChatServerPacket data(VOICECHAT_CMSG_ADD_MEMBER, 5);
 //     data << channel_id;
@@ -856,7 +954,7 @@ void VoiceChatMgr::Update()
 //     if(!m_socket)
 //         return;
 // 
-//     sLog.outDebug("VoiceChatMgr: Channel %u deactivate slot %u", (int)channel_id, (int)slot_id);
+//     sLog->outDebug("VoiceChatMgr: Channel %u deactivate slot %u", (int)channel_id, (int)slot_id);
 // 
 //     VoiceChatServerPacket data(VOICECHAT_CMSG_REMOVE_MEMBER, 5);
 //     data << channel_id;
@@ -869,7 +967,7 @@ void VoiceChatMgr::Update()
 //     if (!m_socket)
 //         return;
 // 
-//     sLog.outDebug("VoiceChatMgr: Channel %u voice slot %u", (int)channel_id, (int)slot_id);
+//     sLog->outDebug("VoiceChatMgr: Channel %u voice slot %u", (int)channel_id, (int)slot_id);
 // 
 //     VoiceChatServerPacket data(VOICECHAT_CMSG_VOICE_MEMBER, 5);
 //     data << channel_id;
@@ -882,7 +980,7 @@ void VoiceChatMgr::Update()
 //     if (!m_socket)
 //         return;
 // 
-//     sLog.outDebug("VoiceChatMgr: Channel %u devoice slot %u", (int)channel_id, (int)slot_id);
+//     sLog->outDebug("VoiceChatMgr: Channel %u devoice slot %u", (int)channel_id, (int)slot_id);
 // 
 //     VoiceChatServerPacket data(VOICECHAT_CMSG_DEVOICE_MEMBER, 5);
 //     data << channel_id;
@@ -895,7 +993,7 @@ void VoiceChatMgr::Update()
 //     if (!m_socket)
 //         return;
 // 
-//     sLog.outDebug("VoiceChatMgr: Channel %u mute slot %u", (int)channel_id, (int)slot_id);
+//     sLog->outDebug("VoiceChatMgr: Channel %u mute slot %u", (int)channel_id, (int)slot_id);
 // 
 //     VoiceChatServerPacket data(VOICECHAT_CMSG_MUTE_MEMBER, 5);
 //     data << channel_id;
@@ -908,7 +1006,7 @@ void VoiceChatMgr::Update()
 //     if (!m_socket)
 //         return;
 // 
-//     sLog.outDebug("VoiceChatMgr: Channel %u unmute slot %u", (int)channel_id, (int)slot_id);
+//     sLog->outDebug("VoiceChatMgr: Channel %u unmute slot %u", (int)channel_id, (int)slot_id);
 // 
 //     VoiceChatServerPacket data(VOICECHAT_CMSG_UNMUTE_MEMBER, 5);
 //     data << channel_id;
@@ -1025,23 +1123,19 @@ void VoiceChatMgr::Update()
 //     }
 // }
 // 
-// void VoiceChatMgr::SendVoiceChatStatus(bool status)
-// {
-//     WorldPacket data(SMSG_VOICE_CHAT_STATUS, 1);
-//     data << uint8(status);
-//     sWorld.SendGlobalMessage(data);
-// }
+void VoiceChatMgr::SendVoiceChatStatus(bool status)
+{
+    WorldPacket data(SMSG_VOICE_CHAT_STATUS, 1);
+    data << uint8(status);
+    sWorldSessionMgr->SendGlobalMessage(&data);
+}
 // 
-// void VoiceChatMgr::SendVoiceChatServiceMessage(Opcodes opcode)
-// {
-//     WorldPacket data(opcode);
-//     sWorld.ExecuteForAllSessions([data](WorldSession& worldSession)
-//     {
-//         if (worldSession.IsVoiceChatEnabled())
-//             worldSession.SendPacket(data);
-//     });
-// }
-// 
+void VoiceChatMgr::SendVoiceChatServiceMessage(Opcodes opcode)
+{
+    WorldPacket data(opcode);
+    sWorldSessionMgr->SendGlobalMessage(&data);
+}
+
 // // command handlers
 // 
 // void VoiceChatMgr::DisableVoiceChat()
@@ -1093,4 +1187,4 @@ void VoiceChatMgr::Update()
 // 
 //     return stats;
 // }
-// 
+//

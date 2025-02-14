@@ -25,6 +25,8 @@
 #include "VoiceChatDefines.h"
 #include "Opcodes.h"
 #include "VoiceChatSession.h"
+#include <boost/asio/io_context.hpp>
+#include "EventEmitter.h"
 
 class VoiceChatChannel;
 
@@ -56,35 +58,35 @@ public:
     {
     }
 
-
     // VoiceChatMgr();
     void Init();
-    // void LoadConfigs();
+    void LoadConfigs();
     void Update();
     void SocketDisconnected();
     // bool RequestNewSocket(VoiceChatServerSocket* socket);
-    // void QueuePacket(std::unique_ptr<VoiceChatServerPacket> new_packet);
+    void QueuePacket(std::unique_ptr<VoiceChatServerPacket> new_packet);
 
-    // void VoiceSocketThread();
+    void ActivateVoiceSocketThread();
+    void VoiceSocketThread();
 
-    // bool NeedConnect();
-    // bool NeedReconnect();
-    // int32 GetReconnectAttempts() const;
+    bool NeedConnect();
+    bool NeedReconnect();
+    int32 GetReconnectAttempts() const;
 
-    // bool IsEnabled() const { return enabled; }
+    bool IsEnabled() const { return enabled; }
     // bool CanUseVoiceChat();
     // bool CanSeeVoiceChat();
 
     // // configs
-    // uint32 GetVoiceServerConnectAddress() const { return server_address; }
-    // uint16 GetVoiceServerConnectPort() const { return server_port; }
-    // uint32 GetVoiceServerVoiceAddress() const { return voice_address; }
-    // uint16 GetVoiceServerVoicePort() const { return voice_port; }
-    // std::string GetVoiceServerConnectAddressString() { return server_address_string; }
+    uint32 GetVoiceServerConnectAddress() const { return server_address; }
+    uint16 GetVoiceServerConnectPort() const { return server_port; }
+    uint32 GetVoiceServerVoiceAddress() const { return voice_address; }
+    uint16 GetVoiceServerVoicePort() const { return voice_port; }
+    std::string GetVoiceServerConnectAddressString() { return server_address_string; }
 
     // // manage voice channels
     // void CreateVoiceChatChannel(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", TeamId team = TEAM_NEUTRAL);
-    // void DeleteVoiceChatChannel(VoiceChatChannel* channel);
+    void DeleteVoiceChatChannel(VoiceChatChannel* channel);
     // bool IsVoiceChatChannelBeingCreated(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", TeamId team = TEAM_NEUTRAL);
 
     // void CreateGroupVoiceChatChannel(uint32 groupId);
@@ -107,9 +109,9 @@ public:
     // std::vector<VoiceChatChannel*> GetPossibleVoiceChatChannels(ObjectGuid guid);
 
     // // restore after reconnect
-    // static void RestoreVoiceChatChannels();
+    static void RestoreVoiceChatChannels();
     // // delete after disconnect
-    // void DeleteAllChannels();
+    void DeleteAllChannels();
 
     // // get proper team if cross faction channels enabled
     // static TeamId GetCustomChannelTeam(TeamId team);
@@ -139,29 +141,29 @@ public:
     // // remove from all channels
     // void RemoveFromVoiceChatChannels(ObjectGuid guid);
 
-    // uint64 GetNewSessionId() { return new_session_id++; }
+    uint64 GetNewSessionId() { return new_session_id++; }
 
-    // // Messager<VoiceChatMgr>& GetMessager() { return m_messager; }
+    EventEmitter<void(VoiceChatMgr*)>& GetEventEmitter() { return m_eventEmitter; }
 
-    // // Command Handlers
-    // void DisableVoiceChat();
-    // void EnableVoiceChat();
-    // VoiceChatStatistics GetStatistics();
+    // Command Handlers
+    void DisableVoiceChat();
+    void EnableVoiceChat();
+    VoiceChatStatistics GetStatistics();
 
 private:
 
-    // static void SendVoiceChatStatus(bool status);
-    // static void SendVoiceChatServiceMessage(Opcodes opcode);
-    // static void SendVoiceChatServiceDisconnect() { SendVoiceChatServiceMessage(SMSG_COMSAT_DISCONNECT); }
-    // static void SendVoiceChatServiceConnectFail() { SendVoiceChatServiceMessage(SMSG_COMSAT_CONNECT_FAIL); }
-    // static void SendVoiceChatServiceReconnected() { SendVoiceChatServiceMessage(SMSG_COMSAT_RECONNECT_TRY); }
+    static void SendVoiceChatStatus(bool status);
+    static void SendVoiceChatServiceMessage(Opcodes opcode);
+    static void SendVoiceChatServiceDisconnect() { SendVoiceChatServiceMessage(SMSG_COMSAT_DISCONNECT); }
+    static void SendVoiceChatServiceConnectFail() { SendVoiceChatServiceMessage(SMSG_COMSAT_CONNECT_FAIL); }
+    static void SendVoiceChatServiceReconnected() { SendVoiceChatServiceMessage(SMSG_COMSAT_RECONNECT_TRY); }
 
-    // void HandleVoiceChatServerPacket(VoiceChatServerPacket& pck);
-    // void ProcessByteBufferException(VoiceChatServerPacket const& packet);
+    void HandleVoiceChatServerPacket(VoiceChatServerPacket& pck);
+    void ProcessByteBufferException(VoiceChatServerPacket const& packet);
 
     // socket to voice server
-    std::shared_ptr<VoiceChatSocket> m_socket;
-    std::shared_ptr<VoiceChatSocket> m_requestSocket;
+    std::shared_ptr<VoiceChatSession> m_socket;
+    std::shared_ptr<VoiceChatSession> m_requestSocket;
     std::vector<VoiceChatChannelRequest> m_requests;
     uint32 new_request_id;
     uint64 new_session_id;
@@ -200,9 +202,8 @@ private:
     std::mutex m_recvQueueLock;
     std::deque<std::unique_ptr<VoiceChatServerPacket>> m_recvQueue;
 
-    // Messager<VoiceChatMgr> m_messager;
-
-    // boost::asio::io_service m_voiceService;
+    EventEmitter<void(VoiceChatMgr*)> m_eventEmitter;
+    // boost::asio::io_context m_voiceService;
 };
 
 // #define sVoiceChatMgr MaNGOS::Singleton<VoiceChatMgr>::Instance()

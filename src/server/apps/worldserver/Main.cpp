@@ -60,7 +60,7 @@
 #include <openssl/crypto.h>
 #include <openssl/opensslv.h>
 
-#include "VoiceChatSocketMgr.h"
+#include "VoiceChatMgr.h"
 
 #if AC_PLATFORM == AC_PLATFORM_WINDOWS
 #include "ServiceWin32.h"
@@ -369,6 +369,31 @@ int main(int argc, char** argv)
         ClearOnlineAccounts();
     });
 
+    // if (sVoiceChatMgr.CanUseVoiceChat())
+    //     sVoiceChatMgr.SocketDisconnected();          // close voice socket and remove channels
+    // VoiceChat.Enabled = 0
+    // VoiceChat.ServerPort = 3725
+    // VoiceChat.ServerAddress = 127.0.0.1
+    // VoiceChat.VoicePort = 3724
+    // VoiceChat.VoiceAddress = 127.0.0.1
+    // VoiceChat.MaxConnectAttempts = -1
+
+    sVoiceChatMgr.Init();
+
+    // if (!sVoiceChatSocketMgr.StartNetwork(*ioContext, "127.0.0.1", 3725, 1))
+    // {
+    //     LOG_ERROR("server.worldserver", "Failed to initialize network");
+    //     World::StopNow(ERROR_EXIT_CODE);
+    //     return 1;
+    // }
+    // else
+    // {
+    //     for (int i = 0; i < 50; ++i)
+    //     {
+    //         LOG_INFO("sql.sql", "Started voice server network!");
+    //     }
+    // }
+
     // Set server online (allow connecting now)
     LoginDatabase.DirectExecute("UPDATE realmlist SET flag = flag & ~{}, population = 0 WHERE id = '{}'", REALM_FLAG_VERSION_MISMATCH, realm.Id.Realm);
     realm.PopulationLevel = 0.0f;
@@ -404,22 +429,6 @@ int main(int argc, char** argv)
     threadPool.reset();
 
     sLog->SetSynchronous();
-
-    // if (sVoiceChatMgr.CanUseVoiceChat())
-    //     sVoiceChatMgr.SocketDisconnected();          // close voice socket and remove channels
-    // VoiceChat.Enabled = 0
-    // VoiceChat.ServerPort = 3725
-    // VoiceChat.ServerAddress = 127.0.0.1
-    // VoiceChat.VoicePort = 3724
-    // VoiceChat.VoiceAddress = 127.0.0.1
-    // VoiceChat.MaxConnectAttempts = -1
-
-    if (!sVoiceChatSocketMgr.StartNetwork(*ioContext, "127.0.0.1", 3724, 1))
-    {
-        LOG_ERROR("server.worldserver", "Failed to initialize network");
-        World::StopNow(ERROR_EXIT_CODE);
-        return 1;
-    }
 
     std::shared_ptr<void> sVoiceChatSocketMgrHandle(nullptr, [](void*)
     {
