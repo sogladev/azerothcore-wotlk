@@ -1,14 +1,14 @@
 #ifndef VoiceChatSocketMgr_h__
 #define VoiceChatSocketMgr_h__
 
-// #include "VoiceChatSession.h"
+// #include "VoiceChatSocket.h"
 #include "Config.h"
 #include "SocketMgr.h"
-#include "VoiceChatSession.h"
+#include "VoiceChatSocket.h"
 
-class VoiceChatSocketMgr : public SocketMgr<VoiceChatSession>
+class VoiceChatSocketMgr : public SocketMgr<VoiceChatSocket>
 {
-    typedef SocketMgr<VoiceChatSession> BaseSocketMgr;
+    typedef SocketMgr<VoiceChatSocket> BaseSocketMgr;
 
 public:
     static VoiceChatSocketMgr& Instance()
@@ -27,9 +27,9 @@ public:
     }
 
 protected:
-    NetworkThread<VoiceChatSession>* CreateThreads() const override
+    NetworkThread<VoiceChatSocket>* CreateThreads() const override
     {
-        NetworkThread<VoiceChatSession>* threads = new NetworkThread<VoiceChatSession>[1];
+        NetworkThread<VoiceChatSocket>* threads = new NetworkThread<VoiceChatSocket>[1];
         return threads;
     }
 

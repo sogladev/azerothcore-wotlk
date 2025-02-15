@@ -1,4 +1,4 @@
-#include "VoiceChatSession.h"
+#include "VoiceChatSocket.h"
 #include "Log.h"
 #include "VoiceChatDefines.h"
 #include "VoiceChatMgr.h"
@@ -17,12 +17,12 @@ struct VoiceChatServerPktHeader
     }
 };
 
-VoiceChatSession::VoiceChatSession(tcp::socket&& socket) :
-    Socket<VoiceChatSession>(std::move(socket))
+VoiceChatSocket::VoiceChatSocket(tcp::socket&& socket) :
+    Socket<VoiceChatSocket>(std::move(socket))
 {
 }
 
-void VoiceChatSession::Start()
+void VoiceChatSocket::Start()
 {
     // Initialize connection
     std::string ip_address = GetRemoteIpAddress().to_string();
@@ -32,9 +32,9 @@ void VoiceChatSession::Start()
     // AsyncRead();
 }
 
-bool VoiceChatSession::Update()
+bool VoiceChatSocket::Update()
 {
-    if (!Socket<VoiceChatSession>::Update())
+    if (!Socket<VoiceChatSocket>::Update())
         return false;
 
     // _queryProcessor.ProcessReadyCallbacks();
@@ -43,7 +43,7 @@ bool VoiceChatSession::Update()
     return true;
 }
 
-void VoiceChatSession::SendPacket(VoiceChatServerPacket packet)
+void VoiceChatSocket::SendPacket(VoiceChatServerPacket packet)
 {
     if (!IsOpen())
         return;
@@ -53,13 +53,13 @@ void VoiceChatSession::SendPacket(VoiceChatServerPacket packet)
     QueuePacket(std::move(buffer));
 }
 
-bool VoiceChatSession::HandlePing()
+bool VoiceChatSocket::HandlePing()
 {
     // Handle ping packet
     return true;
 }
 
-bool VoiceChatSession::ProcessIncomingData()
+bool VoiceChatSocket::ProcessIncomingData()
 {
     // Structured similar to VoiceChatServerSocket
     if (!IsOpen())
@@ -96,7 +96,7 @@ bool VoiceChatSession::ProcessIncomingData()
     return true;
 }
 
-void VoiceChatSession::ReadHandler()
+void VoiceChatSocket::ReadHandler()
 {
     MessageBuffer& packet = GetReadBuffer();
     while (packet.GetActiveSize() > 0)  // Loop while there's data in the buffer

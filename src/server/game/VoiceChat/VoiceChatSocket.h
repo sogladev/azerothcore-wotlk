@@ -1,5 +1,5 @@
-#ifndef __VOICECHATSESSION_H__
-#define __VOICECHATSESSION_H__
+#ifndef __VoiceChatSocket_H__
+#define __VoiceChatSocket_H__
 
 #include "Socket.h"
 #include "VoiceChatDefines.h"
@@ -7,10 +7,10 @@
 
 using boost::asio::ip::tcp;
 
-class VoiceChatSession : public Socket<VoiceChatSession> {
+class VoiceChatSocket : public Socket<VoiceChatSocket> {
 
 public:
-  explicit VoiceChatSession(tcp::socket &&socket);
+  explicit VoiceChatSocket(tcp::socket &&socket);
 
   void Start() override;
   bool Update() override;
@@ -26,7 +26,5 @@ private:
   // bool HandleChannelCreated();
   // Add other handlers as needed
 };
-
-typedef Socket<VoiceChatSession> VoiceChatSocket;
 
 #endif

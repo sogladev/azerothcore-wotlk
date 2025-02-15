@@ -24,7 +24,7 @@
 #include "VoiceChatSocketMgr.h"
 #include "VoiceChatDefines.h"
 #include "Opcodes.h"
-#include "VoiceChatSession.h"
+#include "VoiceChatSocket.h"
 #include <boost/asio/io_context.hpp>
 #include "EventEmitter.h"
 #include <chrono>
@@ -60,7 +60,7 @@ public:
     }
 
     // VoiceChatMgr();
-    void Init();
+    void Init(Acore::Asio::IoContext& ioContext);
     void LoadConfigs();
     void Update();
     void SocketDisconnected();
@@ -163,8 +163,8 @@ private:
     void ProcessByteBufferException(VoiceChatServerPacket const& packet);
 
     // socket to voice server
-    std::shared_ptr<VoiceChatSession> m_socket;
-    std::shared_ptr<VoiceChatSession> m_requestSocket;
+    std::shared_ptr<VoiceChatSocket> m_socket;
+    std::shared_ptr<VoiceChatSocket> m_requestSocket;
     std::vector<VoiceChatChannelRequest> m_requests;
     uint32 new_request_id;
     uint64 new_session_id;
@@ -205,6 +205,7 @@ private:
 
     EventEmitter<void(VoiceChatMgr*)> m_eventEmitter;
     // boost::asio::io_context m_voiceService;
+    boost::asio::io_context m_voiceService;
 };
 
 // #define sVoiceChatMgr MaNGOS::Singleton<VoiceChatMgr>::Instance()

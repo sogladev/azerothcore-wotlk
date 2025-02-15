@@ -48,6 +48,7 @@
 #include "SecretMgr.h"
 #include "SharedDefines.h"
 #include "SteadyTimer.h"
+#include "VoiceChat/VoiceChatMgr.h"
 #include "World.h"
 #include "WorldSessionMgr.h"
 #include "WorldSocket.h"
@@ -60,7 +61,7 @@
 #include <openssl/crypto.h>
 #include <openssl/opensslv.h>
 
-#include "VoiceChatMgr.h"
+// #include "VoiceChatMgr.h"
 
 #if AC_PLATFORM == AC_PLATFORM_WINDOWS
 #include "ServiceWin32.h"
@@ -191,6 +192,9 @@ int main(int argc, char** argv)
     sLog->RegisterAppender<AppenderDB>();
     // If logs are supposed to be handled async then we need to pass the IoContext into the Log singleton
     sLog->Initialize(sConfigMgr->GetOption<bool>("Log.Async.Enable", false) ? ioContext.get() : nullptr);
+
+    // initialize VoiceChatMgr with the same ioContext
+    sVoiceChatMgr.Init(*ioContext);
 
     Acore::Banner::Show("worldserver-daemon",
         [](std::string_view text)
@@ -368,17 +372,6 @@ int main(int argc, char** argv)
         ///- Clean database before leaving
         ClearOnlineAccounts();
     });
-
-    // if (sVoiceChatMgr.CanUseVoiceChat())
-    //     sVoiceChatMgr.SocketDisconnected();          // close voice socket and remove channels
-    // VoiceChat.Enabled = 0
-    // VoiceChat.ServerPort = 3725
-    // VoiceChat.ServerAddress = 127.0.0.1
-    // VoiceChat.VoicePort = 3724
-    // VoiceChat.VoiceAddress = 127.0.0.1
-    // VoiceChat.MaxConnectAttempts = -1
-
-    sVoiceChatMgr.Init();
 
     // if (!sVoiceChatSocketMgr.StartNetwork(*ioContext, "127.0.0.1", 3725, 1))
     // {

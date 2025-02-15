@@ -1,4 +1,5 @@
 #include "VoiceChatMgr.h"
+#include "AsyncConnector.h"
 #include "Log.h"
 #include "WorldSession.h"
 #include "WorldSessionMgr.h"
@@ -69,7 +70,7 @@ void VoiceChatMgr::VoiceSocketThread()
         LOG_INFO("voice.chat", "Successfully connected to voice server");
 
         // Create voice chat session
-        m_socket = std::make_shared<VoiceChatSession>(std::move(socket));
+        m_socket = std::make_shared<VoiceChatSocket>(std::move(socket));
 
         // Start processing
         if (m_socket)
@@ -96,11 +97,6 @@ void VoiceChatMgr::VoiceSocketThread()
     }
 }
 
-// 
-// INSTANTIATE_SINGLETON_1(VoiceChatMgr);
-// 
-// 
-
 void VoiceChatMgr::LoadConfigs()
 {
     enabled = true;
@@ -118,19 +114,20 @@ void VoiceChatMgr::LoadConfigs()
 // void VoiceChatMgr::LoadConfigs()
 // {
 //     enabled = sConfig.GetBoolDefault("VoiceChat.Enabled", false);
-// 
+//
 //     server_address_string = sConfig.GetStringDefault("VoiceChat.ServerAddress", "127.0.0.1");
 //     server_address = inet_addr(server_address_string.c_str());
 //     server_port = sConfig.GetIntDefault("VoiceChat.ServerPort", 3725);
-// 
+//
 //     std::string voice_address_string = sConfig.GetStringDefault("VoiceChat.VoiceAddress", "127.0.0.1");
 //     voice_address = inet_addr(voice_address_string.c_str());
 //     voice_port = sConfig.GetIntDefault("VoiceChat.VoicePort", 3724);
-// 
+//
 //     maxConnectAttempts = sConfig.GetIntDefault("VoiceChat.MaxConnectAttempts", -1);
 // }
 // 
-void VoiceChatMgr::Init()
+
+void VoiceChatMgr::Init(Acore::Asio::IoContext& ioContext)
 {
     LoadConfigs();
 
@@ -140,6 +137,13 @@ void VoiceChatMgr::Init()
     curReconnectAttempts = 0;
 
     state = enabled ? VOICECHAT_NOT_CONNECTED : VOICECHAT_DISCONNECTED;
+
+    // Attempt an asynchronous connection to the voice server
+    LOG_INFO("voice.chat", "Connecting to voice server at {}:{}", server_address_string, server_port);
+    new AsyncConnector<VoiceChatSocket>(ioContext, server_address_string, server_port, false);
+
+    // Optionally store a reference to ioContext in VoiceChatMgr if needed
+    // m_ioContext = &ioContext;
 }
 
 void VoiceChatMgr::Update()
@@ -401,9 +405,9 @@ void VoiceChatMgr::SocketDisconnected()
             m_socket->CloseSocket();
     }
 
-    m_socket.reset();
+    // m_socket.reset();
     // m_voiceService.stop();
-    m_socket = nullptr;
+    // m_socket = nullptr;
     m_requests.clear();
 
     DeleteAllChannels();
