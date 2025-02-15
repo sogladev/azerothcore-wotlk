@@ -63,6 +63,9 @@ public:
         _closed = true;
         boost::system::error_code error;
         _socket.close(error);
+
+
+
     }
 
     virtual void Start() = 0;

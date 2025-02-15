@@ -19,6 +19,7 @@
 #ifndef _VOICECHATMGR_H
 #define _VOICECHATMGR_H
 
+#include "AsyncConnector.h"
 #include "SharedDefines.h"
 // #include "VoiceChatServerSocket.h"
 #include "VoiceChatSocketMgr.h"
@@ -202,6 +203,8 @@ private:
     // Thread safety mechanisms
     std::mutex m_recvQueueLock;
     std::deque<std::unique_ptr<VoiceChatServerPacket>> m_recvQueue;
+
+    std::unique_ptr<AsyncConnector<VoiceChatSocket>> _connector;
 
     EventEmitter<void(VoiceChatMgr*)> m_eventEmitter;
     // boost::asio::io_context m_voiceService;

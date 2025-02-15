@@ -373,6 +373,15 @@ int main(int argc, char** argv)
         ClearOnlineAccounts();
     });
 
+    // std::shared_ptr<void> sVoiceChatSocketMgrHandle(nullptr, [](void*)
+    // {
+        // if (sVoiceChatMgr.CanUseVoiceChat())
+        // sVoiceChatMgr.SocketDisconnected();          // close voice socket and remove channels
+        // LOG_ERROR("server.worldserver", "VOICE CHAT SOCKET STOPNETWORK MAIN.CPP");
+        // sVoiceChatSocketMgr.StopNetwork();
+    // });
+
+
     // if (!sVoiceChatSocketMgr.StartNetwork(*ioContext, "127.0.0.1", 3725, 1))
     // {
     //     LOG_ERROR("server.worldserver", "Failed to initialize network");
@@ -422,14 +431,6 @@ int main(int argc, char** argv)
     threadPool.reset();
 
     sLog->SetSynchronous();
-
-    std::shared_ptr<void> sVoiceChatSocketMgrHandle(nullptr, [](void*)
-    {
-        // if (sVoiceChatMgr.CanUseVoiceChat())
-        // sVoiceChatSocketMgr.SocketDisconnected();          // close voice socket and remove channels
-
-        sVoiceChatSocketMgr.StopNetwork();
-    });
 
     sScriptMgr->OnShutdown();
 

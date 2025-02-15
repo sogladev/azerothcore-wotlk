@@ -52,9 +52,11 @@ public:
    * @brief Attempts to connect to the remote address asynchronously.
    */
   void Connect() {
+    // below fails as we need access to raw socket later...
     // Create a shared pointer to your SocketType object (derived from
     // AsyncSocket).
     // auto connection = std::make_shared<SocketType>(_ioContext);
+
     // Create a shared pointer to a *plain* tcp::socket, not SocketType
     auto rawSocket = std::make_shared<tcp::socket>(_ioContext);
 
@@ -72,51 +74,12 @@ public:
             LOG_ERROR("network", "AsyncConnector::Connect() - Exception in async_connect: {}", error.what());
         }
     }
-
-    // // Retrieve the boost::asio::ip::tcp::socket& for the async_connect call.
-    // tcp::socket &rawSocket = connection->GetAsioSocket();
-
-    // try {
-    //   // Use a modern lambda rather than boost::bind for the completion handler.
-    //   rawSocket.async_connect(
-    //       _endpoint, [this, connection](boost::system::error_code const &ec) {
-    //         HandleConnect(connection, ec);
-    //       });
-    // } catch (boost::system::system_error const &error) {
-    //   if (!_silent) {
-    //     LOG_ERROR("network",
-    //               "AsyncConnector::Connect() - Exception in async_connect: {}",
-    //               error.what());
-    //   }
-    // }
   }
 
   /**
    * @brief The completion handler for the async_connect call.
    *
-   * @param connection The SocketType shared pointer used in Connect().
-   * @param ec         The boost::system::error_code returned by async_connect.
-   */
-  // void HandleConnect(std::shared_ptr<SocketType> connection,
-  //                    const boost::system::error_code &ec) {
-  //   if (!ec) {
-  //     // If the connection succeeded, call Start() on the SocketType.
-  //     connection->Start();
-  //   } else {
-  //     // If there was an error, optionally log it.
-  //     if (!_silent) {
-  //       LOG_ERROR("network",
-  //                 "AsyncConnector::HandleConnect - Failed to connect to remote "
-  //                 "address: {}",
-  //                 ec.message());
-  //     }
-  //   }
-  // }
-
-  /**
-   * @brief The completion handler for the async_connect call.
-   *
-   * @param connection
+   * @param connection rawSocket
    * @param ec         The boost::system::error_code returned by async_connect.
    */
   void HandleConnect(std::shared_ptr<tcp::socket> rawSocket, const boost::system::error_code& ec)

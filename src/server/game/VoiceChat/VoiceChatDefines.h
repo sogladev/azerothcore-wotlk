@@ -83,6 +83,7 @@ struct VoiceChatMember
         flags_unk = 0x80;
     }
 
+    // TODO: Check proper names from client - MemberGUID, NetworkId, Flags and for unk it's Priority
     ObjectGuid m_guid;
     uint8 user_id;
     uint8 flags;
