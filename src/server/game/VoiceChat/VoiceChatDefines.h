@@ -45,7 +45,7 @@ struct VoiceChatChannelRequest
     uint8 type;
     uint32 groupid;
     std::string channel_name;
-    Team team;
+    TeamId team;
 };
 
 enum VoiceChatMemberFlags

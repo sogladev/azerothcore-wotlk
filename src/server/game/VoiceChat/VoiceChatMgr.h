@@ -28,9 +28,8 @@
 #include "VoiceChatSocket.h"
 #include <boost/asio/io_context.hpp>
 #include "EventEmitter.h"
+#include "VoiceChatChannel.h"
 #include <chrono>
-
-class VoiceChatChannel;
 
 class VoiceChatMgr
 {
@@ -77,7 +76,7 @@ public:
 
     bool IsEnabled() const { return enabled; }
     bool CanUseVoiceChat();
-    // bool CanSeeVoiceChat();
+    bool CanSeeVoiceChat();
 
     // // configs
     uint32 GetVoiceServerConnectAddress() const { return server_address; }
@@ -87,28 +86,28 @@ public:
     std::string GetVoiceServerConnectAddressString() { return server_address_string; }
 
     // // manage voice channels
-    // void CreateVoiceChatChannel(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", TeamId team = TEAM_NEUTRAL);
+    void CreateVoiceChatChannel(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", TeamId team = TEAM_NEUTRAL);
     void DeleteVoiceChatChannel(VoiceChatChannel* channel);
-    // bool IsVoiceChatChannelBeingCreated(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", TeamId team = TEAM_NEUTRAL);
+    bool IsVoiceChatChannelBeingCreated(VoiceChatChannelTypes type, uint32 groupId = 0, const std::string& name = "", TeamId team = TEAM_NEUTRAL);
 
-    // void CreateGroupVoiceChatChannel(uint32 groupId);
-    // void CreateRaidVoiceChatChannel(uint32 groupId);
+    void CreateGroupVoiceChatChannel(uint32 groupId);
+    void CreateRaidVoiceChatChannel(uint32 groupId);
     // void CreateBattlegroundVoiceChatChannel(uint32 instanceId, TeamId team);
-    // void CreateCustomVoiceChatChannel(const std::string& name, TeamId team);
+    void CreateCustomVoiceChatChannel(const std::string& name, TeamId team);
 
-    // void DeleteGroupVoiceChatChannel(uint32 groupId);
-    // void DeleteRaidVoiceChatChannel(uint32 groupId);
+    void DeleteGroupVoiceChatChannel(uint32 groupId);
+    void DeleteRaidVoiceChatChannel(uint32 groupId);
     // void DeleteBattlegroundVoiceChatChannel(uint32 instanceId, TeamId team);
     // void DeleteCustomVoiceChatChannel(const std::string& name, TeamId team);
 
-    // void ConvertToRaidChannel(uint32 groupId);
+    void ConvertToRaidChannel(uint32 groupId);
 
-    // VoiceChatChannel* GetVoiceChatChannel(uint16 channel_id);
-    // VoiceChatChannel* GetGroupVoiceChatChannel(uint32 group_id);
-    // VoiceChatChannel* GetRaidVoiceChatChannel(uint32 group_id);
+    VoiceChatChannel* GetVoiceChatChannel(uint16 channel_id);
+    VoiceChatChannel* GetGroupVoiceChatChannel(uint32 group_id);
+    VoiceChatChannel* GetRaidVoiceChatChannel(uint32 group_id);
     // VoiceChatChannel* GetBattlegroundVoiceChatChannel(uint32 instanceId, TeamId team);
-    // VoiceChatChannel* GetCustomVoiceChatChannel(const std::string& name, TeamId team);
-    // std::vector<VoiceChatChannel*> GetPossibleVoiceChatChannels(ObjectGuid guid);
+    VoiceChatChannel* GetCustomVoiceChatChannel(const std::string& name, TeamId team);
+    std::vector<VoiceChatChannel*> GetPossibleVoiceChatChannels(ObjectGuid guid);
 
     // // restore after reconnect
     static void RestoreVoiceChatChannels();
@@ -116,32 +115,32 @@ public:
     void DeleteAllChannels();
 
     // // get proper team if cross faction channels enabled
-    // static TeamId GetCustomChannelTeam(TeamId team);
+    static TeamId GetCustomChannelTeam(TeamId team);
 
     // // manage users
-    // void AddToGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
-    // void AddToRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
+    void AddToGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
+    void AddToRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
     // void AddToBattlegroundVoiceChatChannel(ObjectGuid guid);
     void AddToCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, TeamId team);
 
-    // void RemoveFromGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
-    // void RemoveFromRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
+    void RemoveFromGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
+    void RemoveFromRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
     // void RemoveFromBattlegroundVoiceChatChannel(ObjectGuid guid);
     void RemoveFromCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, TeamId team);
 
     // // change user state on voice server
-    // void EnableChannelSlot(uint16 channel_id, uint8 slot_id);
-    // void DisableChannelSlot(uint16 channel_id, uint8 slot_id);
-    // void VoiceChannelSlot(uint16 channel_id, uint8 slot_id);
-    // void DevoiceChannelSlot(uint16 channel_id, uint8 slot_id);
-    // void MuteChannelSlot(uint16 channel_id, uint8 slot_id);
-    // void UnmuteChannelSlot(uint16 channel_id, uint8 slot_id);
+    void EnableChannelSlot(uint16 channel_id, uint8 slot_id);
+    void DisableChannelSlot(uint16 channel_id, uint8 slot_id);
+    void VoiceChannelSlot(uint16 channel_id, uint8 slot_id);
+    void DevoiceChannelSlot(uint16 channel_id, uint8 slot_id);
+    void MuteChannelSlot(uint16 channel_id, uint8 slot_id);
+    void UnmuteChannelSlot(uint16 channel_id, uint8 slot_id);
 
-    // void JoinAvailableVoiceChatChannels(WorldSession* session);
+    void JoinAvailableVoiceChatChannels(WorldSession* session);
     // void SendAvailableVoiceChatChannels(WorldSession* session); // Not used currently
 
-    // // remove from all channels
-    // void RemoveFromVoiceChatChannels(ObjectGuid guid);
+    // remove from all channels
+    void RemoveFromVoiceChatChannels(ObjectGuid guid);
 
     uint64 GetNewSessionId() { return new_session_id++; }
 

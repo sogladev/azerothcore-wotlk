@@ -236,10 +236,10 @@ public:
     void AddWatching(Player* p);
     void RemoveWatching(Player* p);
 
-private:
-    void AddVoiceChatMembersAfterCreate();
-    void ToggleVoice(Player* player = nullptr);
     bool IsVoiceEnabled() const { return HasFlag(CHANNEL_FLAG_VOICE); }
+    void ToggleVoice(Player* player = nullptr);
+    void AddVoiceChatMembersAfterCreate();
+private:
     // initial packet data (notify type and channel name)
     void MakeNotifyPacket(WorldPacket* data, uint8 notify_type);
     // type specific packet data

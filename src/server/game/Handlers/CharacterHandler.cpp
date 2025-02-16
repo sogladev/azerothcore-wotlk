@@ -54,6 +54,7 @@
 #include "Tokenize.h"
 #include "Transport.h"
 #include "Util.h"
+#include "VoiceChatMgr.h"
 #include "World.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
@@ -1248,6 +1249,12 @@ void WorldSession::HandlePlayerLoginToCharInWorld(Player* pCurrChar)
 
     if (pCurrChar->IsGameMaster())
         ChatHandler(pCurrChar->GetSession()).SendNotification(LANG_GM_ON);
+
+    // join available voice channels
+    // if (IsVoiceChatEnabled())
+    {
+        sVoiceChatMgr.JoinAvailableVoiceChatChannels(this);
+    }
 
     m_playerLoading = false;
 }

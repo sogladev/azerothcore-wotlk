@@ -23,6 +23,7 @@ Category: commandscripts
 EndScriptData */
 
 #include "VoiceChatMgr.h"
+#include "VoiceChatChannel.h"
 #include "Chat.h"
 #include "CommandScript.h"
 
