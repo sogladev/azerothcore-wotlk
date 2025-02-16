@@ -70,7 +70,7 @@ void VoiceChatMgr::VoiceSocketThread() {
     // Start processing
     if (m_socket) {
       m_socket->Start();
-    //   ioContext.run();
+      ioContext.run();
     } else {
       LOG_ERROR("sql.sql", "Failed to create voice chat session");
     }
@@ -97,24 +97,6 @@ void VoiceChatMgr::LoadConfigs() {
 
   maxConnectAttempts = -1;
 }
-// void VoiceChatMgr::LoadConfigs()
-// {
-//     enabled = sConfig.GetBoolDefault("VoiceChat.Enabled", false);
-//
-//     server_address_string =
-//     sConfig.GetStringDefault("VoiceChat.ServerAddress", "127.0.0.1");
-//     server_address = inet_addr(server_address_string.c_str());
-//     server_port = sConfig.GetIntDefault("VoiceChat.ServerPort", 3725);
-//
-//     std::string voice_address_string =
-//     sConfig.GetStringDefault("VoiceChat.VoiceAddress", "127.0.0.1");
-//     voice_address = inet_addr(voice_address_string.c_str());
-//     voice_port = sConfig.GetIntDefault("VoiceChat.VoicePort", 3724);
-//
-//     maxConnectAttempts =
-//     sConfig.GetIntDefault("VoiceChat.MaxConnectAttempts", -1);
-// }
-//
 
 void VoiceChatMgr::Init(Acore::Asio::IoContext &ioContext) {
   LoadConfigs();
@@ -148,6 +130,9 @@ void VoiceChatMgr::Update() {
 //   LOG_ERROR("sql.sql", "VoiceChatMgr::Update state: {}", state);
 
   m_eventEmitter(this);
+
+  if (m_socket)
+    m_socket->Update(); // yep, that's it
 
   std::deque<std::unique_ptr<VoiceChatServerPacket>> recvQueueCopy;
   {
@@ -302,15 +287,14 @@ void VoiceChatMgr::Update() {
 
 void VoiceChatMgr::HandleVoiceChatServerPacket(VoiceChatServerPacket &pck) {
 
-  LOG_ERROR("sql.sql", "VoiceChatMgr::HandleVoiceChatServerPacket Read Pong "
-                       "packet sent from server"); // Log info for pong packets
   uint32 request_id;
   uint8 error;
   uint16 channel_id;
 
+  LOG_ERROR("sql.sql", "VoiceChatMgr::HandleVoiceChatServerPacket Received {}", pck.GetOpcode());
+
   switch (pck.GetOpcode()) {
   case VOICECHAT_SMSG_PONG: {
-    LOG_ERROR("sql.sql", "VoiceChatMgr: Received pong");
     last_pong = std::chrono::system_clock::now();
     break;
   }

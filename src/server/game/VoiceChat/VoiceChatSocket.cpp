@@ -38,6 +38,7 @@ bool VoiceChatSocket::Update() {
     return false;
 
   // _queryProcessor.ProcessReadyCallbacks();
+    // Process any queued packets in parent class
 
   // Add session-specific update logic
   return true;
@@ -52,32 +53,27 @@ void VoiceChatSocket::SendPacket(VoiceChatServerPacket pct)
     header.cmd = pct.GetOpcode();
     header.size = static_cast<uint8>(pct.size());
 
+    // Create MessageBuffer with total size (header + payload)
+    MessageBuffer buffer(header.headerSize() + pct.size());
+
+    // Write header
+    buffer.Write(header.data(), header.headerSize());
+
+    // Write payload if any
     if (pct.size() > 0)
-    {
-        std::shared_ptr<std::vector<char>> fullMessage =
-            std::make_shared<std::vector<char>>(header.headerSize() + pct.size());
+        buffer.Write(pct.contents(), pct.size());
 
-        std::memcpy(fullMessage->data(), header.data(), header.headerSize());
-        std::memcpy(fullMessage->data() + header.headerSize(),
-                    reinterpret_cast<const char*>(pct.contents()), pct.size());
+    LOG_ERROR("sql.sql", "Sending packet: opcode={}, size={}", header.cmd, header.size);
 
-        LOG_ERROR("sql.sq", "Sending packet: %s", fullMessage->data());
+    // Log the raw packet data
+    std::stringstream ss;
+    const uint8* data = (const uint8*)buffer.GetReadPointer();
+    for (size_t i = 0; i < buffer.GetActiveSize(); ++i)
+        ss << std::hex << std::setw(2) << std::setfill('0') << (int)data[i] << " ";
+    LOG_ERROR("sql.sql", "Packet data: {}", ss.str());
 
-        auto self = shared_from_this();
-        Write(fullMessage->data(), fullMessage->size(),
-              [self, fullMessage](auto, auto) {});
-    }
-    else
-    {
-        std::shared_ptr<VoiceChatServerPktHeader> sharedHeader =
-            std::make_shared<VoiceChatServerPktHeader>(header);
-
-        LOG_ERROR("sql.sq", "Sending packet: %s", sharedHeader->data());
-
-        auto self = shared_from_this();
-        Write(sharedHeader->data(), sharedHeader->headerSize(),
-              [self, sharedHeader](auto, auto) {});
-    }
+    // Queue the packet using Socket's QueuePacket method
+    QueuePacket(std::move(buffer));
 }
 
 bool VoiceChatSocket::HandlePing() {
