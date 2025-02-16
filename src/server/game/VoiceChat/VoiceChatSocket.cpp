@@ -48,49 +48,37 @@ void VoiceChatSocket::SendPacket(VoiceChatServerPacket pct)
     if (!IsOpen())
         return;
 
-    // Create a properly formatted header
-    MessageBuffer buffer;
+    VoiceChatServerPktHeader header;
+    header.cmd = pct.GetOpcode();
+    header.size = static_cast<uint8>(pct.size());
 
-    // Write header - assuming header is 4 bytes (2 bytes opcode + 2 bytes size)
-    uint16 opcode = pct.GetOpcode();
-    uint16 size = pct.size();
-
-    buffer.Write(&opcode, sizeof(uint16));  // Write 2-byte opcode
-    buffer.Write(&size, sizeof(uint16));    // Write 2-byte size
-
-    // Write payload if any
     if (pct.size() > 0)
-        buffer.Write(pct.contents(), pct.size());
+    {
+        std::shared_ptr<std::vector<char>> fullMessage =
+            std::make_shared<std::vector<char>>(header.headerSize() + pct.size());
 
-    LOG_DEBUG("voice.chat", "Sending packet opcode={}, size={}", opcode, size);
+        std::memcpy(fullMessage->data(), header.data(), header.headerSize());
+        std::memcpy(fullMessage->data() + header.headerSize(),
+                    reinterpret_cast<const char*>(pct.contents()), pct.size());
 
-    QueuePacket(std::move(buffer));
+        LOG_ERROR("sql.sq", "Sending packet: %s", fullMessage->data());
+
+        auto self = shared_from_this();
+        Write(fullMessage->data(), fullMessage->size(),
+              [self, fullMessage](auto, auto) {});
+    }
+    else
+    {
+        std::shared_ptr<VoiceChatServerPktHeader> sharedHeader =
+            std::make_shared<VoiceChatServerPktHeader>(header);
+
+        LOG_ERROR("sql.sq", "Sending packet: %s", sharedHeader->data());
+
+        auto self = shared_from_this();
+        Write(sharedHeader->data(), sharedHeader->headerSize(),
+              [self, sharedHeader](auto, auto) {});
+    }
 }
-
-// void VoiceChatSocket::SendPacket(VoiceChatServerPacket packet) {
-//   if (!IsOpen())
-//     return;
-//
-//   // Create properly formatted packet
-//   MessageBuffer buffer(sizeof(VoiceChatServerPktHeader) + packet.size());
-//
-//   // Write header
-//   VoiceChatServerPktHeader header;
-//   header.cmd = packet.GetOpcode();
-//   header.size = packet.size();
-//
-//   buffer.Write(&header, sizeof(header));
-//
-//   // Write payload if any
-//   if (packet.size() > 0)
-//     buffer.Write(packet.contents(), packet.size());
-//
-//   QueuePacket(std::move(buffer));
-//
-//   // MessageBuffer buffer(packet.size());
-//   // buffer.Write(packet.contents(), packet.size());
-//   // QueuePacket(std::move(buffer));
-// }
 
 bool VoiceChatSocket::HandlePing() {
   // Handle ping packet
