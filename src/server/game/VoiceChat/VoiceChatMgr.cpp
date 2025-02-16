@@ -464,11 +464,11 @@ void VoiceChatMgr::ProcessByteBufferException(
 //     m_voiceService.run();
 // }
 //
-// // enabled and connected to voice server
-// bool VoiceChatMgr::CanUseVoiceChat()
-// {
-//     return (enabled && m_socket);
-// }
+// enabled and connected to voice server
+bool VoiceChatMgr::CanUseVoiceChat()
+{
+    return (enabled && m_socket);
+}
 //
 // // enabled and is connected or trying to connect to voice server
 // bool VoiceChatMgr::CanSeeVoiceChat()
@@ -871,21 +871,21 @@ void VoiceChatMgr::DeleteAllChannels() {
 //     v_channel->AddVoiceChatMember(guid);
 // }
 //
-// void VoiceChatMgr::AddToCustomVoiceChatChannel(ObjectGuid guid, const
-// std::string& name, Team team)
-// {
-//     if (name.empty())
-//         return;
-//
-//     VoiceChatChannel* v_channel = GetCustomVoiceChatChannel(name, team);
-//     if (!v_channel)
-//     {
-//         CreateCustomVoiceChatChannel(name, team);
-//         return;
-//     }
-//
-//     v_channel->AddVoiceChatMember(guid);
-// }
+void VoiceChatMgr::AddToCustomVoiceChatChannel(ObjectGuid guid, const
+std::string& name, Team team)
+{
+    if (name.empty())
+        return;
+
+    VoiceChatChannel* v_channel = GetCustomVoiceChatChannel(name, team);
+    if (!v_channel)
+    {
+        CreateCustomVoiceChatChannel(name, team);
+        return;
+    }
+
+    v_channel->AddVoiceChatMember(guid);
+}
 //
 // void VoiceChatMgr::RemoveFromGroupVoiceChatChannel(ObjectGuid guid, uint32
 // groupId)
@@ -928,17 +928,17 @@ void VoiceChatMgr::DeleteAllChannels() {
 //     }
 // }
 //
-// void VoiceChatMgr::RemoveFromCustomVoiceChatChannel(ObjectGuid guid, const
-// std::string& name, Team team)
-// {
-//     if (name.empty())
-//         return;
-//
-//     if (VoiceChatChannel* v_channel = GetCustomVoiceChatChannel(name, team))
-//     {
-//         v_channel->RemoveVoiceChatMember(guid);
-//     }
-// }
+
+void VoiceChatMgr::RemoveFromCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, Team team)
+{
+    if (name.empty())
+        return;
+
+    if (VoiceChatChannel* v_channel = GetCustomVoiceChatChannel(name, team))
+    {
+        v_channel->RemoveVoiceChatMember(guid);
+    }
+}
 //
 // void VoiceChatMgr::EnableChannelSlot(uint16 channel_id, uint8 slot_id)
 // {

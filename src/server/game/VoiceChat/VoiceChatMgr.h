@@ -76,7 +76,7 @@ public:
     int32 GetReconnectAttempts() const;
 
     bool IsEnabled() const { return enabled; }
-    // bool CanUseVoiceChat();
+    bool CanUseVoiceChat();
     // bool CanSeeVoiceChat();
 
     // // configs
@@ -122,12 +122,12 @@ public:
     // void AddToGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
     // void AddToRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
     // void AddToBattlegroundVoiceChatChannel(ObjectGuid guid);
-    // void AddToCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, TeamId team);
+    void AddToCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, TeamId team);
 
     // void RemoveFromGroupVoiceChatChannel(ObjectGuid guid, uint32 groupId);
     // void RemoveFromRaidVoiceChatChannel(ObjectGuid guid, uint32 groupId);
     // void RemoveFromBattlegroundVoiceChatChannel(ObjectGuid guid);
-    // void RemoveFromCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, TeamId team);
+    void RemoveFromCustomVoiceChatChannel(ObjectGuid guid, const std::string& name, TeamId team);
 
     // // change user state on voice server
     // void EnableChannelSlot(uint16 channel_id, uint8 slot_id);
