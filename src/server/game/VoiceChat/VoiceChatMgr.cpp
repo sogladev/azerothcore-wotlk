@@ -89,11 +89,11 @@ void VoiceChatMgr::VoiceSocketThread() {
 void VoiceChatMgr::LoadConfigs() {
   enabled = true;
 
-  server_address_string = "127.0.0.1";
+  server_address_string = "192.168.122.224";
   server_address = inet_addr(server_address_string.c_str());
   server_port = 3728;
 
-  std::string voice_address_string = "127.0.0.1";
+  std::string voice_address_string = "192.168.122.224";
   voice_address = inet_addr(voice_address_string.c_str());
   voice_port = 3723;
 
