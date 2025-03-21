@@ -114,13 +114,24 @@ public:
         _caster->GetCreaturesWithEntryInRange(creatureList, 70.0f, NPC_FOG_TRIGGER);
         for (auto const& creature : creatureList)
         {
-            if (_caster->GetExactDist2d(creature) <= 11.0f)
+            float posX = creature->GetPositionX();
+            bool valid = false;
+            if (posX < 1460.0f)
             {
-                creature->CastSpell(creature, SPELL_FOG_OF_CORRUPTION, true);
-                continue;
+                if (_currentLane == 2) // bottom
+                    valid = true;
             }
-
-            if (!_currentLane && creature->GetPositionX() > 1510.0f)
+            else if (posX < 1485.0f)
+            {
+                if (_currentLane == 1) // middle
+                    valid = true;
+            }
+            else
+            {
+                if (_currentLane == 0) // top
+                    valid = true;
+            }
+            if (valid)
                 creature->CastSpell(creature, SPELL_FOG_OF_CORRUPTION, true);
         }
         return true;
