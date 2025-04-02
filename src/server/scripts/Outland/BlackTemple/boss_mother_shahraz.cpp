@@ -235,6 +235,9 @@ class spell_mother_shahraz_fatal_attraction : public SpellScript
     void SetDest(SpellDestination& dest)
     {
         Position finalDest;
+        finalDest = validTeleportStairsPos[urand(0, 8)];
+        dest.Relocate(finalDest);
+        return;
 
         // Check if the boss is near stairs to avoid players falling through the platform with random teleports.
         if (GetCaster()->GetPositionY() < 194.f)
