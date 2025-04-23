@@ -46,9 +46,18 @@ public:
             { "gatecounter", HandleSunwellGateCounterCommand,           SEC_ADMINISTRATOR, Console::Yes },
         };
 
+        static ChatCommandTable scourgeInvasionCommandTable =
+        {
+            { "show",       HandleScourgeInvasionCommand,           SEC_ADMINISTRATOR, Console::Yes },
+            { "state",      HandleScourgeInvasionStateCommand,      SEC_ADMINISTRATOR, Console::Yes },
+            { "battleswon", HandleScourgeInvasionBattlesWonCommand, SEC_ADMINISTRATOR, Console::Yes },
+            { "startzone",  HandleScourgeInvasionStartZone,         SEC_ADMINISTRATOR, Console::Yes },
+        };
+
         static ChatCommandTable worldStateCommandTable =
         {
             { "sunsreach", sunsreachCommandTable }
+            { "scourgeinvasion", scourgeInvasionCommandTable }
         };
 
         static ChatCommandTable commandTable =
@@ -123,6 +132,40 @@ public:
         }
         sWorldState->SetSunwellGateCounter(SunwellGateCounters(index.value()), value.value());
         handler->PSendSysMessage(sWorldState->GetSunsReachPrintout());
+        return true;
+    }
+
+    static bool HandleScourgeInvasionCommand(ChatHandler* handler)
+    {
+        return true;
+    }
+
+    static bool HandleScourgeInvasionStateCommand(ChatHandler* handler, uint32 value)
+    {
+        if (value >= SI_STATE_MAX)
+        {
+            handler->PSendSysMessage("Syntax: .worldstate scourgeinvasion state <value>.");
+            return true;
+        }
+        sWorldState->SetScourgeInvasionState(value.value());
+        return true;
+    }
+
+    static bool HandleScourgeInvasionBattlesWonCommand(ChatHandler* handler, uint32 value)
+    {
+        sWorldState->AddBattlesWon(value);
+        return true;
+    }
+
+    static bool HandleScourgeInvasionStartZone(ChatHandler* handler, uint32 value)
+    {
+
+        if (value > 7)
+        {
+            handler->PSendSysMessage("Syntax: .worldstate scourgeinvasion start <value>.\nvalid values: 0-7");
+            return true;
+        }
+        sWorldState.StartZoneEvent(SIZoneIds(value));
         return true;
     }
 };
