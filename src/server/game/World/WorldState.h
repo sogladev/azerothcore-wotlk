@@ -273,7 +273,6 @@ class WorldState
         void HandlePlayerEnterZone(Player* player, AreaTableIDs zoneId);
         void HandlePlayerLeaveZone(Player* player, AreaTableIDs zoneId);
         bool IsConditionFulfilled(WorldStateCondition conditionId, WorldStateConditionState state = WORLD_STATE_CONDITION_STATE_NONE) const;
-        bool IsConditionFulfilled(WorldStateWorldStates conditionId, WorldStateConditionState state) const;
         void HandleConditionStateChange(WorldStateCondition conditionId, WorldStateConditionState state);
         void HandleExternalEvent(WorldStateEvent eventId, uint32 param);
         void Update(uint32 diff);
