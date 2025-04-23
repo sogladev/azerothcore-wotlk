@@ -21,6 +21,7 @@
 #include "SharedDefines.h"
 #include "Weather.h"
 #include <chrono>
+#include "scourge_invasion.h"
 #include "WorldState.h"
 
 WorldState* WorldState::instance()
@@ -1379,50 +1380,58 @@ void WorldState::BroadcastSIWorldstates()
     uint32 remainingTanaris = GetSIRemaining(SI_REMAINING_TANARIS);
     uint32 remainingWinterspring = GetSIRemaining(SI_REMAINING_WINTERSPRING);
 
-    HashMapHolder<Player>::MapType& m = sObjectAccessor.GetPlayers();
-    for (const auto& itr : m)
+    sMapMgr->DoForAllMaps([&](Map* map) -> void
     {
-        Player* pl = itr.second;
-        // do not process players which are not in world
-        if (!pl->IsInWorld())
-            continue;
+        switch (map->GetId())
+        {
+            case 0: // Eastern Kingdoms
+            case 1: // Kalimdor
+                map->DoForAllPlayers([&](Player* pl)
+                {
+                    // do not process players which are not in world
+                    if (!pl->IsInWorld())
+                        return;
 
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_AZSHARA, remainingAzshara > 0 ? 1 : 0);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_BLASTED_LANDS, remainingBlastedLands > 0 ? 1 : 0);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_BURNING_STEPPES, remainingBurningSteppes > 0 ? 1 : 0);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_EASTERN_PLAGUELANDS, remainingEasternPlaguelands > 0 ? 1 : 0);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_TANARIS, remainingTanaris > 0 ? 1 : 0);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_WINTERSPRING, remainingWinterspring > 0 ? 1 : 0);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_AZSHARA, remainingAzshara > 0 ? 1 : 0);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_BLASTED_LANDS, remainingBlastedLands > 0 ? 1 : 0);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_BURNING_STEPPES, remainingBurningSteppes > 0 ? 1 : 0);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_EASTERN_PLAGUELANDS, remainingEasternPlaguelands > 0 ? 1 : 0);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_TANARIS, remainingTanaris > 0 ? 1 : 0);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_WINTERSPRING, remainingWinterspring > 0 ? 1 : 0);
 
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_BATTLES_WON, victories);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_AZSHARA, remainingAzshara);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_BLASTED_LANDS, remainingBlastedLands);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_BURNING_STEPPES, remainingBurningSteppes);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_EASTERN_PLAGUELANDS, remainingEasternPlaguelands);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_TANARIS, remainingTanaris);
-        pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_WINTERSPRING, remainingWinterspring);
-    }
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_BATTLES_WON, victories);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_AZSHARA, remainingAzshara);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_BLASTED_LANDS, remainingBlastedLands);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_BURNING_STEPPES, remainingBurningSteppes);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_EASTERN_PLAGUELANDS, remainingEasternPlaguelands);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_TANARIS, remainingTanaris);
+                    pl->SendUpdateWorldState(WORLD_STATE_SCOURGE_NECROPOLIS_WINTERSPRING, remainingWinterspring);
+                });
+            default:
+                break;
+        }
+    });
 }
 
 void WorldState::HandleDefendedZones()
 {
     if (m_siData.m_battlesWon < 50) {
-        sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_50_INVASIONS);
-        sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_100_INVASIONS);
-        sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_150_INVASIONS);
+        sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_50_INVASIONS);
+        sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_100_INVASIONS);
+        sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_150_INVASIONS);
     }
     else if (m_siData.m_battlesWon >= 50 && m_siData.m_battlesWon < 100)
-        sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_50_INVASIONS);
+        sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_50_INVASIONS);
     else if (m_siData.m_battlesWon >= 100 && m_siData.m_battlesWon < 150) {
-        sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_50_INVASIONS);
-        sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_100_INVASIONS);
+        sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_50_INVASIONS);
+        sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_100_INVASIONS);
     }
     else if (m_siData.m_battlesWon >= 150) {
-        sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION);
-        sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_50_INVASIONS);
-        sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_100_INVASIONS);
-        sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_INVASIONS_DONE);
-        sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_150_INVASIONS);
+        sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION);
+        sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_50_INVASIONS);
+        sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_100_INVASIONS);
+        sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_INVASIONS_DONE);
+        sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_150_INVASIONS);
     }
 }
 
@@ -1444,10 +1453,10 @@ void WorldState::StartZoneEvent(SIZoneIds eventId)
 
 void WorldState::StartNewInvasionIfTime(uint32 attackTimeVar, uint32 zoneId)
 {
-    TimePoint now = sWorld.GetCurrentClockTime();
+    TimePoint now = TimePoint();
 
     // Not yet time
-    if (now < sWorldState.GetSITimer(SITimers(attackTimeVar)))
+    if (now < sWorldState->GetSITimer(SITimers(attackTimeVar)))
         return;
 
     StartNewInvasion(zoneId);
@@ -1455,16 +1464,16 @@ void WorldState::StartNewInvasionIfTime(uint32 attackTimeVar, uint32 zoneId)
 
 void WorldState::StartNewCityAttackIfTime(uint32 attackTimeVar, uint32 zoneId)
 {
-    TimePoint now = sWorld.GetCurrentClockTime();
+    TimePoint now = TimePoint();
 
     // Not yet time
-    if (now < sWorldState.GetSITimer(SITimers(attackTimeVar)))
+    if (now < sWorldState->GetSITimer(SITimers(attackTimeVar)))
         return;
 
     StartNewCityAttack(zoneId);
     uint32 cityAttackTimer = urand(CITY_ATTACK_TIMER_MIN, CITY_ATTACK_TIMER_MAX);
     TimePoint next_attack = now + std::chrono::seconds(cityAttackTimer);
-    sWorldState.SetSITimer(SITimers(attackTimeVar), next_attack);
+    sWorldState->SetSITimer(SITimers(attackTimeVar), next_attack);
 }
 
 void WorldState::StartNewInvasion(uint32 zoneId)
