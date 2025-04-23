@@ -56,7 +56,7 @@ public:
 
         static ChatCommandTable worldStateCommandTable =
         {
-            { "sunsreach", sunsreachCommandTable }
+            { "sunsreach", sunsreachCommandTable },
             { "scourgeinvasion", scourgeInvasionCommandTable }
         };
 
@@ -135,7 +135,7 @@ public:
         return true;
     }
 
-    static bool HandleScourgeInvasionCommand(ChatHandler* handler)
+    static bool HandleScourgeInvasionCommand(ChatHandler* /* handler */)
     {
         return true;
     }
@@ -147,11 +147,11 @@ public:
             handler->PSendSysMessage("Syntax: .worldstate scourgeinvasion state <value>.");
             return true;
         }
-        sWorldState->SetScourgeInvasionState(value.value());
+        sWorldState->SetScourgeInvasionState(SIState(value));
         return true;
     }
 
-    static bool HandleScourgeInvasionBattlesWonCommand(ChatHandler* handler, uint32 value)
+    static bool HandleScourgeInvasionBattlesWonCommand(ChatHandler* /* handler */, uint32 value)
     {
         sWorldState->AddBattlesWon(value);
         return true;
@@ -160,12 +160,12 @@ public:
     static bool HandleScourgeInvasionStartZone(ChatHandler* handler, uint32 value)
     {
 
-        if (value > 7)
+        if (value >= SI_TIMER_MAX)
         {
             handler->PSendSysMessage("Syntax: .worldstate scourgeinvasion start <value>.\nvalid values: 0-7");
             return true;
         }
-        sWorldState.StartZoneEvent(SIZoneIds(value));
+        sWorldState->StartZoneEvent(SIZoneIds(value));
         return true;
     }
 };

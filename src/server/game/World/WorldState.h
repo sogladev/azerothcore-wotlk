@@ -37,6 +37,23 @@ enum WorldStateWorldStates
     WORLD_STATE_AGAMATH_THE_FIRST_GATE_HEALTH       = 3253, // guessed, potentially wrong
     WORLD_STATE_ROHENDOR_THE_SECOND_GATE_HEALTH     = 3255,
     WORLD_STATE_ARCHONISUS_THE_FINAL_GATE_HEALTH    = 3257,
+
+    // Scourge Invasion
+    WORLD_STATE_SCOURGE_BATTLES_WON                     = 2219,
+    // Zone icons
+    WORLD_STATE_SCOURGE_WINTERSPRING                    = 2259,
+    WORLD_STATE_SCOURGE_AZSHARA                         = 2260,
+    WORLD_STATE_SCOURGE_BLASTED_LANDS                   = 2261,
+    WORLD_STATE_SCOURGE_BURNING_STEPPES                 = 2262,
+    WORLD_STATE_SCOURGE_TANARIS                         = 2263,
+    WORLD_STATE_SCOURGE_EASTERN_PLAGUELANDS             = 2264,
+    // Remaining
+    WORLD_STATE_SCOURGE_NECROPOLIS_AZSHARA              = 2279,
+    WORLD_STATE_SCOURGE_NECROPOLIS_BLASTED_LANDS        = 2280,
+    WORLD_STATE_SCOURGE_NECROPOLIS_BURNING_STEPPES      = 2281,
+    WORLD_STATE_SCOURGE_NECROPOLIS_EASTERN_PLAGUELANDS  = 2282,
+    WORLD_STATE_SCOURGE_NECROPOLIS_TANARIS              = 2283,
+    WORLD_STATE_SCOURGE_NECROPOLIS_WINTERSPRING         = 2284,
 };
 
 enum WorldStateCondition
@@ -78,6 +95,21 @@ enum WorldStateZoneId
     ZONEID_ISLE_OF_QUEL_DANAS   = 4080,
     ZONEID_MAGISTERS_TERRACE    = 4131,
     ZONEID_SUNWELL_PLATEAU      = 4075,
+
+    ZONEID_WINTERSPRING         = 618,
+    ZONEID_AZSHARA              = 16,
+    ZONEID_EASTERN_PLAGUELANDS  = 139,
+    ZONEID_BLASTED_LANDS        = 4,
+    ZONEID_BURNING_STEPPES      = 46,
+    ZONEID_TANARIS              = 440,
+    ZONEID_UNDERCITY_A          = 1497,
+
+    ZONEID_STORMWIND_CITY       = 1519,
+    ZONEID_DARNASSUS            = 1657,
+    ZONEID_IRONFORGE            = 1537,
+    ZONEID_ORGRIMMAR            = 1637,
+    ZONEID_THUNDER_BLUFF        = 1638,
+    ZONEID_UNDERCITY            = 1497,
 };
 
 enum WorldStateSpells
@@ -92,11 +124,33 @@ enum WorldStateSpells
 
 enum WorldStateSaveIds
 {
+    SAVE_ID_SCOURGE_INVASION = 3,
     SAVE_ID_QUEL_DANAS = 20,
 };
 
 enum WorldStateGameEvents
 {
+    // Scourge Invasion
+    GAME_EVENT_SCOURGE_INVASION                         = 17,
+    GAME_EVENT_SCOURGE_INVASION_WINTERSPRING            = 90,
+    GAME_EVENT_SCOURGE_INVASION_TANARIS                 = 91,
+    GAME_EVENT_SCOURGE_INVASION_AZSHARA                 = 92,
+    GAME_EVENT_SCOURGE_INVASION_BLASTED_LANDS           = 93,
+    GAME_EVENT_SCOURGE_INVASION_EASTERN_PLAGUELANDS     = 94,
+    GAME_EVENT_SCOURGE_INVASION_BURNING_STEPPES         = 95,
+    GAME_EVENT_SCOURGE_INVASION_50_INVASIONS            = 96,
+    GAME_EVENT_SCOURGE_INVASION_100_INVASIONS           = 97,
+    GAME_EVENT_SCOURGE_INVASION_150_INVASIONS           = 98,
+    GAME_EVENT_SCOURGE_INVASION_INVASIONS_DONE          = 99,
+
+    // Zombie infestation
+    GAME_EVENT_ZOMBIE_INFESTATION_PHASE_1               = 110,
+    GAME_EVENT_ZOMBIE_INFESTATION_PHASE_2               = 111,
+    GAME_EVENT_ZOMBIE_INFESTATION_PHASE_3               = 112,
+    GAME_EVENT_ZOMBIE_INFESTATION_PHASE_4               = 113,
+    GAME_EVENT_ZOMBIE_INFESTATION_PHASE_5               = 114,
+    GAME_EVENT_ZOMBIE_INFESTATION_PHASE_6               = 115,
+
    // Isle phases
     GAME_EVENT_QUEL_DANAS_PHASE_1               = 101,
     GAME_EVENT_QUEL_DANAS_PHASE_2_ONLY          = 102,
@@ -118,6 +172,90 @@ enum WorldStateGameEvents
     GAME_EVENT_SWP_GATES_PHASE_1                = 117, // First Gate Open
     GAME_EVENT_SWP_GATES_PHASE_2                = 118, // Second Gate Open
     GAME_EVENT_SWP_GATES_PHASE_3                = 119, // All Gates Open
+};
+
+enum SIState : uint32
+{
+    STATE_0_DISABLED,
+    STATE_1_ENABLED,
+    STATE_2_DEBUG,
+    SI_STATE_MAX,
+};
+
+enum SIZoneIds
+{
+    SI_ZONE_AZSHARA,
+    SI_ZONE_BLASTED_LANDS,
+    SI_ZONE_BURNING_STEPPES,
+    SI_ZONE_EASTERN_PLAGUELANDS,
+    SI_ZONE_TANARIS,
+    SI_ZONE_WINTERSPRING,
+    SI_ZONE_STORMWIND,
+    SI_ZONE_UNDERCITY
+};
+
+enum SITimers
+{
+    SI_TIMER_AZSHARA,
+    SI_TIMER_BLASTED_LANDS,
+    SI_TIMER_BURNING_STEPPES,
+    SI_TIMER_EASTERN_PLAGUELANDS,
+    SI_TIMER_TANARIS,
+    SI_TIMER_WINTERSPRING,
+    SI_TIMER_STORMWIND,
+    SI_TIMER_UNDERCITY,
+    SI_TIMER_MAX,
+};
+
+enum SIRemaining
+{
+    SI_REMAINING_AZSHARA,
+    SI_REMAINING_BLASTED_LANDS,
+    SI_REMAINING_BURNING_STEPPES,
+    SI_REMAINING_EASTERN_PLAGUELANDS,
+    SI_REMAINING_TANARIS,
+    SI_REMAINING_WINTERSPRING,
+    SI_REMAINING_MAX,
+};
+
+struct ScourgeInvasionData
+{
+    struct InvasionZone
+    {
+        uint32 map;
+        uint32 zoneId;
+        uint32 remainingVar;
+        uint32 necroAmount;
+        ObjectGuid mouthGuid;
+        std::vector<Position> mouth;
+    };
+
+    struct CityAttack
+    {
+        uint32 map;
+        uint32 zoneId;
+        ObjectGuid pallidGuid;
+        std::vector<Position> pallid;
+    };
+
+    SIState m_state;
+
+    TimePoint m_timers[SI_TIMER_MAX];
+    uint32 m_battlesWon;
+    uint32 m_lastAttackZone;
+    uint32 m_remaining[SI_REMAINING_MAX];
+    uint64 m_broadcastTimer;
+    std::mutex m_siMutex;
+
+    std::set<uint32> m_pendingInvasions;
+    std::set<uint32> m_pendingPallids;
+    std::map<uint32, InvasionZone> m_invasionPoints;
+    std::map<uint32, CityAttack> m_attackPoints;
+
+    ScourgeInvasionData();
+
+    void Reset();
+    std::string GetData();
 };
 
 enum SunsReachPhases
@@ -200,6 +338,7 @@ class WorldState
         void HandlePlayerEnterZone(Player* player, WorldStateZoneId zoneId);
         void HandlePlayerLeaveZone(Player* player, WorldStateZoneId zoneId);
         bool IsConditionFulfilled(WorldStateCondition conditionId, WorldStateConditionState state = WORLD_STATE_CONDITION_STATE_NONE) const;
+        bool IsConditionFulfilled(WorldStateWorldStates conditionId, WorldStateConditionState state) const;
         void HandleConditionStateChange(WorldStateCondition conditionId, WorldStateConditionState state);
         void HandleExternalEvent(WorldStateEvent eventId, uint32 param);
         void Update(uint32 diff);
@@ -228,6 +367,52 @@ class WorldState
         SunsReachReclamationData m_sunsReachData;
         std::map<WorldStateCondition, std::atomic<WorldStateConditionState>> _transportStates; // atomic to avoid having to lock
         std::mutex _mutex; // all World State operations are threat unsafe
+
+        // Scourge Invasion
+    public:
+        void SetScourgeInvasionState(SIState state);
+        void StartScourgeInvasion(bool sendMail);
+        void StopScourgeInvasion();
+        uint32 GetSIRemaining(SIRemaining remaining) const;
+        uint32 GetSIRemainingByZone(uint32 zoneId) const;
+        void SetSIRemaining(SIRemaining remaining, uint32 value);
+        TimePoint GetSITimer(SITimers timer);
+        void SetSITimer(SITimers timer, TimePoint timePoint);
+        uint32 GetBattlesWon();
+        void AddBattlesWon(int32 count);
+        uint32 GetLastAttackZone();
+        void SetLastAttackZone(uint32 zoneId);
+        void BroadcastSIWorldstates();
+        void HandleDefendedZones();
+
+        void StartZoneEvent(SIZoneIds eventId);
+        void StartNewInvasionIfTime(uint32 attackTimeVar, uint32 zoneId);
+        void StartNewCityAttackIfTime(uint32 attackTimeVar, uint32 zoneId);
+        void StartNewInvasion(uint32 zoneId);
+        void StartNewCityAttack(uint32 zoneId);
+        bool ResumeInvasion(ScourgeInvasionData::InvasionZone& zone);
+        bool SummonMouth(Map* map, ScourgeInvasionData::InvasionZone& zone, Position position, bool newInvasion);
+        bool SummonPallid(Map* map, ScourgeInvasionData::CityAttack& zone, Position position, uint32 spawnLoc);
+        void HandleActiveZone(uint32 attackTimeVar, uint32 zoneId, uint32 remainingVar, TimePoint now);
+
+        Map* GetMap(uint32 mapId, Position const& invZone);
+        bool IsActiveZone(uint32 zoneId);
+        uint32 GetActiveZones();
+        uint32 GetTimerIdForZone(uint32 zoneId);
+
+        void SetPallidGuid(uint32 zoneId, ObjectGuid guid);
+        void SetMouthGuid(uint32 zoneId, ObjectGuid guid);
+        void AddPendingInvasion(uint32 zoneId);
+        void RemovePendingInvasion(uint32 zoneId);
+        void AddPendingPallid(uint32 zoneId);
+        void RemovePendingPallid(uint32 zoneId);
+
+        void OnEnable(ScourgeInvasionData::InvasionZone& zone);
+        void OnDisable(ScourgeInvasionData::InvasionZone& zone);
+        void OnDisable(ScourgeInvasionData::CityAttack& zone);
+    private:
+        ScourgeInvasionData m_siData;
+
 };
 
 #define sWorldState WorldState::instance()
