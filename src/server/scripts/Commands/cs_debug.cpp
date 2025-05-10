@@ -1401,7 +1401,7 @@ public:
             return false;
 
         uint32 duration = durationArg.value_or(60);
-        if ((duration <= 0 || duration >= 1800)) // arbitrary upper limit
+        if ((duration <= 0 || duration > 180)) // arbitrary upper limit
             duration = 180;
 
         int32 errMsg = target->AI()->VisualizeBoundary(duration, player, fill.has_value());
