@@ -20,6 +20,7 @@
 
 #include "AreaDefines.h"
 #include "Player.h"
+#include "WorldStateDefines.h"
 #include <atomic>
 
 enum WorldStateCondition
@@ -272,7 +273,7 @@ class WorldState
         void SaveHelper(std::string& stringToSave, WorldStateSaveIds saveId);
         void HandlePlayerEnterZone(Player* player, AreaTableIDs zoneId);
         void HandlePlayerLeaveZone(Player* player, AreaTableIDs zoneId);
-        bool IsConditionFulfilled(WorldStateCondition conditionId, WorldStateConditionState state = WORLD_STATE_CONDITION_STATE_NONE) const;
+        bool IsConditionFulfilled(uint32 conditionId, uint32 state = WORLD_STATE_CONDITION_STATE_NONE) const;
         void HandleConditionStateChange(WorldStateCondition conditionId, WorldStateConditionState state);
         void HandleExternalEvent(WorldStateEvent eventId, uint32 param);
         void Update(uint32 diff);

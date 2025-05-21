@@ -206,30 +206,7 @@ void WorldState::SaveHelper(std::string& stringToSave, WorldStateSaveIds saveId)
     CharacterDatabase.Execute("INSERT INTO world_state(Id,Data) VALUES('{}','{}')", saveId, stringToSave.data());
 }
 
-bool WorldState::IsConditionFulfilled(WorldStateWorldStates conditionId, WorldStateConditionState /*state*/) const
-{
-    switch (conditionId)
-    {
-        // Scourge Invasion
-        case WORLD_STATE_SCOURGE_WINTERSPRING:
-            return GetSIRemaining(SI_REMAINING_WINTERSPRING) > 0;
-        case WORLD_STATE_SCOURGE_AZSHARA:
-            return GetSIRemaining(SI_REMAINING_AZSHARA) > 0;
-        case WORLD_STATE_SCOURGE_BLASTED_LANDS:
-            return GetSIRemaining(SI_REMAINING_BLASTED_LANDS) > 0;
-        case WORLD_STATE_SCOURGE_BURNING_STEPPES:
-            return GetSIRemaining(SI_REMAINING_BURNING_STEPPES) > 0;
-        case WORLD_STATE_SCOURGE_TANARIS:
-            return GetSIRemaining(SI_REMAINING_TANARIS) > 0;
-        case WORLD_STATE_SCOURGE_EASTERN_PLAGUELANDS:
-            return GetSIRemaining(SI_REMAINING_EASTERN_PLAGUELANDS) > 0;
-        default:
-            LOG_ERROR("scripts", "WorldState::IsConditionFulfilled: Unhandled WorldStateCondition {}", conditionId);
-            return false;
-    }
-}
-
-bool WorldState::IsConditionFulfilled(WorldStateCondition conditionId, WorldStateConditionState state) const
+bool WorldState::IsConditionFulfilled(uint32 conditionId, uint32 state) const
 {
     switch (conditionId)
     {
@@ -241,6 +218,18 @@ bool WorldState::IsConditionFulfilled(WorldStateCondition conditionId, WorldStat
         case WORLD_STATE_CONDITION_THE_PURPLE_PRINCESS:
         case WORLD_STATE_CONDITION_THE_THUNDERCALLER:
             return _transportStates.at(conditionId) == state;
+        case WORLD_STATE_SCOURGE_INVASION_WINTERSPRING:
+            return GetSIRemaining(SI_REMAINING_WINTERSPRING) > 0;
+        case WORLD_STATE_SCOURGE_INVASION_AZSHARA:
+            return GetSIRemaining(SI_REMAINING_AZSHARA) > 0;
+        case WORLD_STATE_SCOURGE_INVASION_BLASTED_LANDS:
+            return GetSIRemaining(SI_REMAINING_BLASTED_LANDS) > 0;
+        case WORLD_STATE_SCOURGE_INVASION_BURNING_STEPPES:
+            return GetSIRemaining(SI_REMAINING_BURNING_STEPPES) > 0;
+        case WORLD_STATE_SCOURGE_INVASION_TANARIS:
+            return GetSIRemaining(SI_REMAINING_TANARIS) > 0;
+        case WORLD_STATE_SCOURGE_INVASION_EASTERN_PLAGUELANDS:
+            return GetSIRemaining(SI_REMAINING_EASTERN_PLAGUELANDS) > 0;
         default:
             LOG_ERROR("scripts", "WorldState::IsConditionFulfilled: Unhandled WorldStateCondition {}", conditionId);
             return false;
