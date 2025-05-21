@@ -320,9 +320,9 @@ void WorldState::Update(uint32 diff)
             {
                 for (auto& zone : m_siData.m_attackPoints)
                 {
-                    if (zone.second.zoneId == ZONEID_UNDERCITY)
+                    if (zone.second.zoneId == AREA_UNDERCITY)
                         StartNewCityAttackIfTime(SI_TIMER_UNDERCITY, zone.second.zoneId);
-                    else if (zone.second.zoneId == ZONEID_STORMWIND_CITY)
+                    else if (zone.second.zoneId == AREA_STORMWIND_CITY)
                         StartNewCityAttackIfTime(SI_TIMER_STORMWIND, zone.second.zoneId);
                 }
 
@@ -1544,12 +1544,12 @@ void WorldState::StartNewInvasion(uint32 zoneId)
 
     switch (zoneId)
     {
-        case ZONEID_AZSHARA: sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_AZSHARA); break;
-        case ZONEID_BLASTED_LANDS: sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_BLASTED_LANDS); break;
-        case ZONEID_BURNING_STEPPES: sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_BURNING_STEPPES); break;
-        case ZONEID_EASTERN_PLAGUELANDS: sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_EASTERN_PLAGUELANDS); break;
-        case ZONEID_TANARIS: sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_TANARIS); break;
-        case ZONEID_WINTERSPRING: sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_WINTERSPRING); break;
+        case ZONEID_AZSHARA: sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_AZSHARA); break;
+        case ZONEID_BLASTED_LANDS: sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_BLASTED_LANDS); break;
+        case ZONEID_BURNING_STEPPES: sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_BURNING_STEPPES); break;
+        case ZONEID_EASTERN_PLAGUELANDS: sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_EASTERN_PLAGUELANDS); break;
+        case ZONEID_TANARIS: sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_TANARIS); break;
+        case ZONEID_WINTERSPRING: sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_WINTERSPRING); break;
     }
 
     if (mapPtr)

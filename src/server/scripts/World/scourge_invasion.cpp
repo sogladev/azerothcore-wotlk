@@ -18,9 +18,8 @@
 #include "scourge_invasion.h"
 
 //#include "CreatureGroups.h"
-#include "AI/ScriptDevAI/include/sc_common.h"
-#include "AI/ScriptDevAI/base/CombatAI.h"
-#include "World/WorldStateDefines.h"
+#include "AreaDefines.h"
+#include "WorldStateDefines.h"
 #include "Grids/CellImpl.h"
 #include "GameEvents/GameEventMgr.h"
 #include "Grids/GridNotifiers.h"
@@ -79,59 +78,59 @@ void ChangeZoneEventStatus(Creature* mouth, bool on)
 
     switch (mouth->GetZoneId())
     {
-        case ZONEID_WINTERSPRING:
+        case AREA_WINTERSPRING:
             if (on)
             {
-                if (!sGameEventMgr.IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_WINTERSPRING))
-                    sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_WINTERSPRING, true);
+                if (!sGameEventMgr->IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_WINTERSPRING))
+                    sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_WINTERSPRING, true);
             }
             else
-                sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_WINTERSPRING, true);
+                sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_WINTERSPRING, true);
             break;
-        case ZONEID_TANARIS:
+        case AREA_TANARIS:
             if (on)
             {
-                if (!sGameEventMgr.IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_TANARIS))
-                    sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_TANARIS, true);
+                if (!sGameEventMgr->IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_TANARIS))
+                    sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_TANARIS, true);
             }
             else
-                sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_TANARIS, true);
+                sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_TANARIS, true);
             break;
-        case ZONEID_AZSHARA:
+        case AREA_AZSHARA:
             if (on)
             {
-                if (!sGameEventMgr.IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_AZSHARA))
-                    sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_AZSHARA, true);
+                if (!sGameEventMgr->IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_AZSHARA))
+                    sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_AZSHARA, true);
             }
             else
-                sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_AZSHARA, true);
+                sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_AZSHARA, true);
             break;
-        case ZONEID_BLASTED_LANDS:
+        case AREA_BLASTED_LANDS:
             if (on)
             {
-                if (!sGameEventMgr.IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_BLASTED_LANDS))
-                    sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_BLASTED_LANDS, true);
+                if (!sGameEventMgr->IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_BLASTED_LANDS))
+                    sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_BLASTED_LANDS, true);
             }
             else
-                sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_BLASTED_LANDS, true);
+                sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_BLASTED_LANDS, true);
             break;
-        case ZONEID_EASTERN_PLAGUELANDS:
+        case AREA_EASTERN_PLAGUELANDS:
             if (on)
             {
-                if (!sGameEventMgr.IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_EASTERN_PLAGUELANDS))
-                    sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_EASTERN_PLAGUELANDS, true);
+                if (!sGameEventMgr->IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_EASTERN_PLAGUELANDS))
+                    sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_EASTERN_PLAGUELANDS, true);
             }
             else
-                sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_EASTERN_PLAGUELANDS, true);
+                sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_EASTERN_PLAGUELANDS, true);
             break;
-        case ZONEID_BURNING_STEPPES:
+        case AREA_BURNING_STEPPES:
             if (on)
             {
-                if (!sGameEventMgr.IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_BURNING_STEPPES))
-                    sGameEventMgr.StartEvent(GAME_EVENT_SCOURGE_INVASION_BURNING_STEPPES, true);
+                if (!sGameEventMgr->IsActiveEvent(GAME_EVENT_SCOURGE_INVASION_BURNING_STEPPES))
+                    sGameEventMgr->StartEvent(GAME_EVENT_SCOURGE_INVASION_BURNING_STEPPES, true);
             }
             else
-                sGameEventMgr.StopEvent(GAME_EVENT_SCOURGE_INVASION_BURNING_STEPPES, true);
+                sGameEventMgr->StopEvent(GAME_EVENT_SCOURGE_INVASION_BURNING_STEPPES, true);
             break;
     }
 
