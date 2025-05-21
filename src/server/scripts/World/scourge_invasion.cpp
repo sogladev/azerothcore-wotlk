@@ -19,6 +19,7 @@
 
 //#include "CreatureGroups.h"
 #include "AreaDefines.h"
+#include "CombatAI.h"
 #include "GameObjectAI.h"
 #include "GridNotifiers.h"
 #include "Object.h"
@@ -888,7 +889,7 @@ struct NecroticShard : public ScriptedAI
             return;
 
         // On a fresh camp, first the minions are spawned close to the shard and then further and further out.
-        finderList.sort(ObjectDistanceOrder(me));
+        finderList.sort(Acore::ObjectDistanceOrderPred(me));
 
         for (const auto& pFinder : finderList)
         {
@@ -908,14 +909,14 @@ struct NecroticShard : public ScriptedAI
             A finder disappears after summoning the spawner NPC (which summons the minion).
             after 160-185 seconds a finder respawns on the same position as before.
             */
-            if (pFinder->AI()->DoCastSpellIfCan(m_creature, SPELL_FIND_CAMP_TYPE, CAST_TRIGGERED) == CAST_OK)
-            {
-                pFinder->SetRespawnDelay(urand(150, 200)); // Values are from Sniffs (rounded). Shortest and Longest respawn time from a finder on the same spot.
-                pFinder->ForcedDespawn();
-                finderCounter++;
-            }
+            // if (pFinder->AI()->DoCastSpellIfCan(m_creature, SPELL_FIND_CAMP_TYPE, CAST_TRIGGERED) == CAST_OK)
+            // {
+            //     pFinder->SetRespawnDelay(urand(150, 200)); // Values are from Sniffs (rounded). Shortest and Longest respawn time from a finder on the same spot.
+            //     pFinder->ForcedDespawn();
+            //     finderCounter++;
+            // }
         }
-        ResetTimer(EVENT_SHARD_MINION_SPAWNER_SMALL, 5000);
+        // ResetTimer(EVENT_SHARD_MINION_SPAWNER_SMALL, 5000);
     }
 };
 
@@ -926,29 +927,29 @@ struct MinionspawnerAI : public ScriptedAI
 {
     MinionspawnerAI(Creature* creature) : ScriptedAI(creature)
     {
-        AddCustomAction(EVENT_SPAWNER_SUMMON_MINION, 2000, 5000, [&]() // Spawn Minions every 5 seconds.
-        {
-            uint32 Entry = NPC_GHOUL_BERSERKER; // just in case.
+        // AddCustomAction(EVENT_SPAWNER_SUMMON_MINION, 2000, 5000, [&]() // Spawn Minions every 5 seconds.
+        // {
+        //     uint32 Entry = NPC_GHOUL_BERSERKER; // just in case.
 
-            switch (m_creature->GetEntry())
-            {
-                case NPC_SCOURGE_INVASION_MINION_SPAWNER_GHOST_GHOUL:
-                    Entry = UncommonMinionspawner(m_creature) ? PickRandomValue(NPC_SPIRIT_OF_THE_DAMNED, NPC_LUMBERING_HORROR) : PickRandomValue(NPC_SPECTRAL_SOLDIER, NPC_GHOUL_BERSERKER);
-                    break;
-                case NPC_SCOURGE_INVASION_MINION_SPAWNER_GHOST_SKELETON:
-                    Entry = UncommonMinionspawner(m_creature) ? PickRandomValue(NPC_SPIRIT_OF_THE_DAMNED, NPC_BONE_WITCH) : PickRandomValue(NPC_SPECTRAL_SOLDIER, NPC_SKELETAL_SHOCKTROOPER);
-                    break;
-                case NPC_SCOURGE_INVASION_MINION_SPAWNER_GHOUL_SKELETON:
-                    Entry = UncommonMinionspawner(m_creature) ? PickRandomValue(NPC_LUMBERING_HORROR, NPC_BONE_WITCH) : PickRandomValue(NPC_GHOUL_BERSERKER, NPC_SKELETAL_SHOCKTROOPER);
-                    break;
-            }
-            if (Creature* pMinion = m_creature->SummonCreature(Entry, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), m_creature->GetOrientation(), TEMPSPAWN_TIMED_OR_DEAD_DESPAWN, IN_MILLISECONDS * HOUR, true))
-            {
-                pMinion->GetMotionMaster()->MoveRandomAroundPoint(pMinion->GetPositionX(), pMinion->GetPositionY(), pMinion->GetPositionZ(), 1.0f); // pMinion->SetWanderDistance(1.0f); // Seems to be very low.
-                m_creature->CastSpell(nullptr, SPELL_MINION_SPAWN_IN, TRIGGERED_NONE);
-            }
-        });
-        SetReactState(REACT_PASSIVE);
+        //     switch (me->GetEntry())
+        //     {
+        //         case NPC_SCOURGE_INVASION_MINION_SPAWNER_GHOST_GHOUL:
+        //             Entry = UncommonMinionspawner(me) ? PickRandomValue(NPC_SPIRIT_OF_THE_DAMNED, NPC_LUMBERING_HORROR) : PickRandomValue(NPC_SPECTRAL_SOLDIER, NPC_GHOUL_BERSERKER);
+        //             break;
+        //         case NPC_SCOURGE_INVASION_MINION_SPAWNER_GHOST_SKELETON:
+        //             Entry = UncommonMinionspawner(me) ? PickRandomValue(NPC_SPIRIT_OF_THE_DAMNED, NPC_BONE_WITCH) : PickRandomValue(NPC_SPECTRAL_SOLDIER, NPC_SKELETAL_SHOCKTROOPER);
+        //             break;
+        //         case NPC_SCOURGE_INVASION_MINION_SPAWNER_GHOUL_SKELETON:
+        //             Entry = UncommonMinionspawner(me) ? PickRandomValue(NPC_LUMBERING_HORROR, NPC_BONE_WITCH) : PickRandomValue(NPC_GHOUL_BERSERKER, NPC_SKELETAL_SHOCKTROOPER);
+        //             break;
+        //     }
+        //     if (Creature* pMinion = me->SummonCreature(Entry, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), me->GetOrientation(), TEMPSPAWN_TIMED_OR_DEAD_DESPAWN, IN_MILLISECONDS * HOUR, true))
+        //     {
+        //         pMinion->GetMotionMaster()->MoveRandomAroundPoint(pMinion->GetPositionX(), pMinion->GetPositionY(), pMinion->GetPositionZ(), 1.0f); // pMinion->SetWanderDistance(1.0f); // Seems to be very low.
+        //         me->CastSpell(nullptr, SPELL_MINION_SPAWN_IN, TRIGGERED_NONE);
+        //     }
+        // });
+        me->SetReactState(REACT_PASSIVE);
     }
 
     void Reset() override {}
@@ -961,58 +962,58 @@ struct npc_cultist_engineer : public ScriptedAI
 {
     npc_cultist_engineer(Creature* creature) : ScriptedAI(creature)
     {
-        AddCustomAction(EVENT_CULTIST_CHANNELING, false, [&]()
-        {
-            m_creature->CastSpell(nullptr, SPELL_BUTTRESS_CHANNEL, TRIGGERED_OLD_TRIGGERED);
-        });
-        SetReactState(REACT_PASSIVE);
+        // AddCustomAction(EVENT_CULTIST_CHANNELING, false, [&]()
+        // {
+        //     me->CastSpell(nullptr, SPELL_BUTTRESS_CHANNEL, TRIGGERED_OLD_TRIGGERED);
+        // });
+        me->SetReactState(REACT_PASSIVE);
     }
 
     void Reset() override {}
 
     void JustDied(Unit*) override
     {
-        if (Creature* shard = GetClosestCreatureWithEntry(m_creature, NPC_DAMAGED_NECROTIC_SHARD, 15.0f))
-            shard->CastSpell(shard, SPELL_DAMAGE_CRYSTAL, TRIGGERED_OLD_TRIGGERED);
+        if (Creature* shard = GetClosestCreatureWithEntry(me, NPC_DAMAGED_NECROTIC_SHARD, 15.0f))
+            shard->CastSpell(shard, SPELL_DAMAGE_CRYSTAL, true);
 
-        if (GameObject* gameObject = GetClosestGameObjectWithEntry(m_creature, GO_SUMMONER_SHIELD, CONTACT_DISTANCE))
+        if (GameObject* gameObject = GetClosestGameObjectWithEntry(me, GO_SUMMONER_SHIELD, CONTACT_DISTANCE))
             gameObject->Delete();
     }
 
-    void ReceiveAIEvent(AIEventType eventType, Unit* /*sender*/, Unit* invoker, uint32 miscValue) override
-    {
-        int32 eT = eventType;
-        if (eT == 7166 && miscValue == 0)
-        {
-            if (Player* player = dynamic_cast<Player*>(invoker))
-            {
-                // Player summons a Shadow of Doom for 1 hour.
-                player->CastSpell(nullptr, SPELL_SUMMON_BOSS, TRIGGERED_OLD_TRIGGERED);
-                m_creature->CastSpell(nullptr, SPELL_QUIET_SUICIDE, TRIGGERED_OLD_TRIGGERED);
-            }
-        }
-        if (eventType == AI_EVENT_CUSTOM_A && miscValue == NPC_CULTIST_ENGINEER)
-        {
-            m_creature->SetCorpseDelay(10); // Corpse despawns 10 seconds after a Shadow of Doom spawns.
-            m_creature->CastSpell(m_creature, SPELL_CREATE_SUMMONER_SHIELD, TRIGGERED_OLD_TRIGGERED);
-            m_creature->CastSpell(m_creature, SPELL_MINION_SPAWN_IN, TRIGGERED_OLD_TRIGGERED);
-            ResetTimer(EVENT_CULTIST_CHANNELING, 1000);
-        }
-    }
+    // void ReceiveAIEvent(AIEventType eventType, Unit* /*sender*/, Unit* invoker, uint32 miscValue) override
+    // {
+    //     int32 eT = eventType;
+    //     if (eT == 7166 && miscValue == 0)
+    //     {
+    //         if (Player* player = dynamic_cast<Player*>(invoker))
+    //         {
+    //             // Player summons a Shadow of Doom for 1 hour.
+    //             player->CastSpell(nullptr, SPELL_SUMMON_BOSS, TRIGGERED_OLD_TRIGGERED);
+    //             m_creature->CastSpell(nullptr, SPELL_QUIET_SUICIDE, TRIGGERED_OLD_TRIGGERED);
+    //         }
+    //     }
+    //     if (eventType == AI_EVENT_CUSTOM_A && miscValue == NPC_CULTIST_ENGINEER)
+    //     {
+    //         m_creature->SetCorpseDelay(10); // Corpse despawns 10 seconds after a Shadow of Doom spawns.
+    //         m_creature->CastSpell(m_creature, SPELL_CREATE_SUMMONER_SHIELD, TRIGGERED_OLD_TRIGGERED);
+    //         m_creature->CastSpell(m_creature, SPELL_MINION_SPAWN_IN, TRIGGERED_OLD_TRIGGERED);
+    //         ResetTimer(EVENT_CULTIST_CHANNELING, 1000);
+    //     }
+    // }
 };
 
-struct SummonBoss : public SpellScript
-{
-    void OnSummon(Spell* spell, Creature* summon) const override
-    {
-        Unit* caster = spell->GetCaster();
-        summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PLAYER);
-        summon->SetFacingToObject(caster);
-        summon->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, caster, summon, NPC_SHADOW_OF_DOOM);
-        if (caster->IsPlayer())
-            static_cast<Player*>(caster)->DestroyItemCount(ITEM_NECROTIC_RUNE, 8, true);
-    }
-};
+// struct SummonBoss : public SpellScript
+// {
+//     void OnSummon(Spell* spell, Creature* summon) const override
+//     {
+//         Unit* caster = spell->GetCaster();
+//         summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PLAYER);
+//         summon->SetFacingToObject(caster);
+//         summon->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, caster, summon, NPC_SHADOW_OF_DOOM);
+//         if (caster->IsPlayer())
+//             static_cast<Player*>(caster)->DestroyItemCount(ITEM_NECROTIC_RUNE, 8, true);
+//     }
+// };
 
 /*
 npc_minion
@@ -1020,124 +1021,124 @@ Notes: Shard Minions, Rares and Shadow of Doom.
 */
 struct ScourgeMinion : public CombatAI
 {
-    ScourgeMinion(Creature* creature) : CombatAI(creature, 999)
+    ScourgeMinion(Creature* creature) : CombatAI(creature) // (creature, 999)
     {
-        switch (m_creature->GetEntry())
+        switch (me->GetEntry())
         {
             case NPC_SHADOW_OF_DOOM:
-                AddCombatAction(EVENT_DOOM_MINDFLAY, 2000u);
-                AddCombatAction(EVENT_DOOM_FEAR, 2000u);
-                AddCustomAction(EVENT_DOOM_START_ATTACK, 5000u, [&]()
-                {
-                    m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PLAYER);
-                    // Shadow of Doom seems to attack the Summoner here.
-                    if (Player* player = m_creature->GetMap()->GetPlayer(m_summonerGuid))
-                    {
-                        if (player->IsWithinLOSInMap(m_creature))
-                        {
-                            m_creature->SetInCombatWith(player);
-                            m_creature->SetDetectionRange(2.f);
-                            m_creature->AI()->AttackStart(player);
-                            ResetCombatAction(EVENT_DOOM_MINDFLAY, 2000u);
-                            ResetCombatAction(EVENT_DOOM_FEAR, 2000u);
-                        }
-                    }
-                });
+                // AddCombatAction(EVENT_DOOM_MINDFLAY, 2000u);
+                // AddCombatAction(EVENT_DOOM_FEAR, 2000u);
+                // AddCustomAction(EVENT_DOOM_START_ATTACK, 5000u, [&]()
+                // {
+                //     m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PLAYER);
+                //     // Shadow of Doom seems to attack the Summoner here.
+                //     if (Player* player = m_creature->GetMap()->GetPlayer(m_summonerGuid))
+                //     {
+                //         if (player->IsWithinLOSInMap(m_creature))
+                //         {
+                //             m_creature->SetInCombatWith(player);
+                //             m_creature->SetDetectionRange(2.f);
+                //             m_creature->AI()->AttackStart(player);
+                //             ResetCombatAction(EVENT_DOOM_MINDFLAY, 2000u);
+                //             ResetCombatAction(EVENT_DOOM_FEAR, 2000u);
+                //         }
+                //     }
+                // });
                 break;
             case NPC_FLAMESHOCKER:
-                AddCombatAction(EVENT_MINION_FLAMESHOCKERS_TOUCH, 2000u);
-                AddCustomAction(EVENT_MINION_FLAMESHOCKERS_DESPAWN, true, [&]()
-                {
-                    if (!m_creature->IsInCombat())
-                        m_creature->CastSpell(m_creature, SPELL_DESPAWNER_SELF, TRIGGERED_OLD_TRIGGERED);
-                    else
-                        ResetCombatAction(EVENT_MINION_FLAMESHOCKERS_DESPAWN, 60000);
-                });
-                m_creature->CastSpell(m_creature, SPELL_FLAMESHOCKER_IMMOLATE_VISUAL, TRIGGERED_OLD_TRIGGERED);
+                // AddCombatAction(EVENT_MINION_FLAMESHOCKERS_TOUCH, 2000u);
+                // AddCustomAction(EVENT_MINION_FLAMESHOCKERS_DESPAWN, true, [&]()
+                // {
+                //     if (!m_creature->IsInCombat())
+                //         m_creature->CastSpell(m_creature, SPELL_DESPAWNER_SELF, TRIGGERED_OLD_TRIGGERED);
+                //     else
+                //         ResetCombatAction(EVENT_MINION_FLAMESHOCKERS_DESPAWN, 60000);
+                // });
+                // m_creature->CastSpell(m_creature, SPELL_FLAMESHOCKER_IMMOLATE_VISUAL, TRIGGERED_OLD_TRIGGERED);
                 break;
         }
     }
 
     ObjectGuid m_summonerGuid;
 
-    void ReceiveAIEvent(AIEventType eventType, Unit* /*sender*/, Unit* invoker, uint32 miscValue) override
-    {
-        if (!invoker)
-            return;
+    // void ReceiveAIEvent(AIEventType eventType, Unit* /*sender*/, Unit* invoker, uint32 miscValue) override
+    // {
+    //     if (!invoker)
+    //         return;
 
-        if (eventType == AI_EVENT_CUSTOM_A)
-        {
-            if (miscValue == NPC_SHADOW_OF_DOOM)
-            {
-                m_summonerGuid = invoker->GetObjectGuid();
-                // Pickup random emote like here: https://youtu.be/evOs9aJa2Jw?t=229
-                DoBroadcastText(PickRandomValue(BCT_SHADOW_OF_DOOM_TEXT_0, BCT_SHADOW_OF_DOOM_TEXT_1, BCT_SHADOW_OF_DOOM_TEXT_2, BCT_SHADOW_OF_DOOM_TEXT_3), m_creature, invoker);
-                m_creature->CastSpell(m_creature, SPELL_SPAWN_SMOKE, TRIGGERED_OLD_TRIGGERED);
-            }
-            if (miscValue == NPC_FLAMESHOCKER)
-                ResetCombatAction(EVENT_MINION_FLAMESHOCKERS_DESPAWN, 60000);
-        }
-    }
+    //     if (eventType == AI_EVENT_CUSTOM_A)
+    //     {
+    //         if (miscValue == NPC_SHADOW_OF_DOOM)
+    //         {
+    //             m_summonerGuid = invoker->GetObjectGuid();
+    //             // Pickup random emote like here: https://youtu.be/evOs9aJa2Jw?t=229
+    //             DoBroadcastText(PickRandomValue(BCT_SHADOW_OF_DOOM_TEXT_0, BCT_SHADOW_OF_DOOM_TEXT_1, BCT_SHADOW_OF_DOOM_TEXT_2, BCT_SHADOW_OF_DOOM_TEXT_3), m_creature, invoker);
+    //             m_creature->CastSpell(m_creature, SPELL_SPAWN_SMOKE, TRIGGERED_OLD_TRIGGERED);
+    //         }
+    //         if (miscValue == NPC_FLAMESHOCKER)
+    //             ResetCombatAction(EVENT_MINION_FLAMESHOCKERS_DESPAWN, 60000);
+    //     }
+    // }
 
     void JustDied(Unit* /*pKiller*/) override
     {
-        switch (m_creature->GetEntry())
+        switch (me->GetEntry())
         {
             case NPC_SHADOW_OF_DOOM:
-                m_creature->CastSpell(m_creature, SPELL_ZAP_CRYSTAL_CORPSE, TRIGGERED_OLD_TRIGGERED);
+                me->CastSpell(me, SPELL_ZAP_CRYSTAL_CORPSE, true);
                 break;
             case NPC_FLAMESHOCKER:
-                m_creature->CastSpell(m_creature, SPELL_FLAMESHOCKERS_REVENGE, TRIGGERED_OLD_TRIGGERED);
+                me->CastSpell(me, SPELL_FLAMESHOCKERS_REVENGE, true);
                 break;
         }
     }
 
-    void SpellHit(Unit* /*unit*/, SpellEntry const* spell) override
+    void SpellHit(Unit* /* caster */, SpellInfo const* spell) override
     {
         switch (spell->Id)
         {
             case SPELL_SPIRIT_SPAWN_OUT:
-                m_creature->ForcedDespawn(3000);
+                me->DespawnOrUnsummon(3000);
                 break;
         }
     }
 
     void MoveInLineOfSight(Unit* pWho) override
     {
-        if (m_creature->GetEntry() == NPC_FLAMESHOCKER)
-            if (pWho->IsCreature() && m_creature->IsWithinDistInMap(pWho, VISIBILITY_DISTANCE_TINY) && m_creature->IsWithinLOSInMap(pWho) && !pWho->GetVictim())
-                if (IsGuardOrBoss(pWho) && pWho->AI())
-                    pWho->AI()->AttackStart(m_creature);
+        if (me->GetEntry() == NPC_FLAMESHOCKER)
+            if (pWho->IsCreature() && me->IsWithinDistInMap(pWho, VISIBILITY_DISTANCE_TINY) && me->IsWithinLOSInMap(pWho) && !pWho->GetVictim())
+                if (IsGuardOrBoss(pWho) && pWho->GetAI())
+                    pWho->GetAI()->AttackStart(me);
 
-        ScriptedAI::MoveInLineOfSight(pWho);
+        CombatAI::MoveInLineOfSight(pWho);
     }
 
-    void ExecuteAction(uint32 action) override
-    {
-        switch (action)
-        {
-            case EVENT_DOOM_MINDFLAY:
-            {
-                DoCastSpellIfCan(m_creature->GetVictim(), SPELL_MINDFLAY);
-                ResetCombatAction(EVENT_DOOM_MINDFLAY, urand(6500, 13000));
-                break;
-            }
-            case EVENT_DOOM_FEAR:
-            {
-                DoCastSpellIfCan(m_creature->GetVictim(), SPELL_FEAR);
-                ResetCombatAction(EVENT_DOOM_FEAR, 14500);
-                break;
-            }
-            case EVENT_MINION_FLAMESHOCKERS_TOUCH:
-            {
-                DoCastSpellIfCan(m_creature->GetVictim(), PickRandomValue(SPELL_FLAMESHOCKERS_TOUCH, SPELL_FLAMESHOCKERS_TOUCH2), CAST_TRIGGERED);
-                ResetCombatAction(EVENT_MINION_FLAMESHOCKERS_TOUCH, urand(30000, 45000));
-                break;
-            }
-            default:
-                break;
-        }
-    }
+    // void ExecuteAction(uint32 action) override
+    // {
+    //     switch (action)
+    //     {
+    //         case EVENT_DOOM_MINDFLAY:
+    //         {
+    //             DoCastSpellIfCan(m_creature->GetVictim(), SPELL_MINDFLAY);
+    //             ResetCombatAction(EVENT_DOOM_MINDFLAY, urand(6500, 13000));
+    //             break;
+    //         }
+    //         case EVENT_DOOM_FEAR:
+    //         {
+    //             DoCastSpellIfCan(m_creature->GetVictim(), SPELL_FEAR);
+    //             ResetCombatAction(EVENT_DOOM_FEAR, 14500);
+    //             break;
+    //         }
+    //         case EVENT_MINION_FLAMESHOCKERS_TOUCH:
+    //         {
+    //             DoCastSpellIfCan(m_creature->GetVictim(), PickRandomValue(SPELL_FLAMESHOCKERS_TOUCH, SPELL_FLAMESHOCKERS_TOUCH2), CAST_TRIGGERED);
+    //             ResetCombatAction(EVENT_MINION_FLAMESHOCKERS_TOUCH, urand(30000, 45000));
+    //             break;
+    //         }
+    //         default:
+    //             break;
+    //     }
+    // }
 
     void UpdateAI(uint32 const diff) override
     {
@@ -1146,8 +1147,8 @@ struct ScourgeMinion : public CombatAI
 
         // Instakill every mob nearby, except Players, Pets or NPCs with the same faction.
         // m_creature->IsValidAttackTarget(m_creature->GetVictim(), true)
-        if (m_creature->GetEntry() != NPC_FLAMESHOCKER && m_creature->IsWithinDistInMap(m_creature->GetVictim(), 30.0f) && !m_creature->GetVictim()->IsControlledByPlayer() && m_creature->CanAttack(m_creature->GetVictim()))
-            DoCastSpellIfCan(m_creature->GetVictim(), SPELL_SCOURGE_STRIKE, CAST_TRIGGERED);
+        if (me->GetEntry() != NPC_FLAMESHOCKER && me->IsWithinDistInMap(me->GetVictim(), 30.0f) && !me->GetVictim()->IsControlledByPlayer() && m_creature->CanAttack(m_creature->GetVictim()))
+            me->CastSpell(me->GetVictim(), SPELL_SCOURGE_STRIKE, true);
 
         DoMeleeAttackIfReady();
     }
