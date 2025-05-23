@@ -17,7 +17,7 @@
 #ifndef SCOURGE_INVASION_H
 #define SCOURGE_INVASION_H
 
-#include "World/WorldState.h"
+#include "WorldState.h"
 
 enum ScourgeInvasionSpells
 {
@@ -276,12 +276,6 @@ enum ScourgeInvasionMisc
     GO_NECROPOLIS_BIG                                   = 181215, // Necropolis (scale 2.5).
     GO_NECROPOLIS_HUGE                                  = 181223, // Necropolis (scale 3.5).
     GO_NECROPOLIS_CITY                                  = 181172, // Necropolis at the Citys (scale 2.5).
-
-    // These timers may fail if you set it under 1 minute.
-    ZONE_ATTACK_TIMER_MIN                               = 60 * 45, // 45 min.
-    ZONE_ATTACK_TIMER_MAX                               = 60 * 60, // 60 min.
-    CITY_ATTACK_TIMER_MIN                               = 60 * 45, // 45 min.
-    CITY_ATTACK_TIMER_MAX                               = 60 * 60, // 60 min.
 };
 
 enum ScourgeInvasionNPCEvents

@@ -18,6 +18,8 @@
 #include "scourge_invasion.h"
 
 //#include "CreatureGroups.h"
+#include "Weather.h"
+#include "WeatherMgr.h"
 #include "AreaDefines.h"
 #include "CombatAI.h"
 #include "GameObjectAI.h"
@@ -25,11 +27,14 @@
 #include "Object.h"
 #include "SpellInfo.h"
 #include "Unit.h"
+#include "ScriptedAI/ScriptedCreature.h"
 #include "WorldStateDefines.h"
 // #include "Grids/CellImpl.h"
-#include "GameEvents/GameEventMgr.h"
-#include "Grids/GridNotifiers.h"
-#include "Grids/GridNotifiersImpl.h"
+#include "GameEventMgr.h"
+// #include "Grids/GridNotifiers.h"
+// #include "Grids/GridNotifiersImpl.h"
+#include "../../game/Scripting/ScriptDefines/CreatureScript.h"
+#include "../../game/Scripting/ScriptDefines/GameObjectScript.h"
 #include "World/World.h"
 
 #include <cmath>
@@ -300,10 +305,10 @@ uint32 GetFindersAmount(Creature* shard)
 Circle
 */
 
-class GoCircle : public GameObjectAI
+class scourge_invasion_go_circle : public GameObjectAI
 {
     public:
-        GoCircle(GameObject* gameobject) : GameObjectAI(gameobject)
+        scourge_invasion_go_circle(GameObject* gameobject) : GameObjectAI(gameobject)
         {
             me->CastSpell(nullptr, SPELL_CREATE_CRYSTAL);
         }
@@ -312,10 +317,10 @@ class GoCircle : public GameObjectAI
 /*
 Necropolis
 */
-class GoNecropolis : public GameObjectAI
+class scourge_invasion_go_necropolis : public GameObjectAI
 {
     public:
-        GoNecropolis(GameObject* gameobject) : GameObjectAI(gameobject)
+        scourge_invasion_go_necropolis(GameObject* gameobject) : GameObjectAI(gameobject)
         {
             // m_go->SetActiveObjectState(true);
             me->setActive(true); // @todo check if correct active
@@ -326,9 +331,9 @@ class GoNecropolis : public GameObjectAI
 /*
 Mouth of Kel'Thuzad
 */
-struct MouthAI : public ScriptedAI
+struct scourge_invasion_mouth : public ScriptedAI
 {
-    MouthAI(Creature* creature) : ScriptedAI(creature)
+    scourge_invasion_mouth(Creature* creature) : ScriptedAI(creature)
     {
         me->SetReactState(REACT_PASSIVE);
         // AddCustomAction(EVENT_MOUTH_OF_KELTHUZAD_YELL, urand((IN_MILLISECONDS * 150), (IN_MILLISECONDS * HOUR)), [&]()
@@ -370,9 +375,9 @@ struct MouthAI : public ScriptedAI
 /*
 Necropolis
 */
-struct NecropolisAI : public ScriptedAI
+struct scourge_invasion_necropolis : public ScriptedAI
 {
-    NecropolisAI(Creature* creature) : ScriptedAI(creature)
+    scourge_invasion_necropolis(Creature* creature) : ScriptedAI(creature)
     {
         me->setActive(true);
         //m_creature->SetVisibilityModifier(3000.0f);
@@ -381,14 +386,14 @@ struct NecropolisAI : public ScriptedAI
     void Reset() override {}
 
     void SpellHit(Unit* /* caster */, SpellInfo const* spell) override
-     {
+    {
         if (me->HasAura(SPELL_COMMUNIQUE_TIMER_NECROPOLIS))
             return;
 
         if (spell->Id == SPELL_COMMUNIQUE_PROXY_TO_NECROPOLIS)
             me->CastSpell(me, SPELL_COMMUNIQUE_TIMER_NECROPOLIS, true);
              // m_creature->AddAura(SPELL_COMMUNIQUE_TIMER_NECROPOLIS);
-     }
+    }
 
     void UpdateAI(uint32 const /*diff*/) override
     {
@@ -403,11 +408,11 @@ struct NecropolisAI : public ScriptedAI
 /*
 Necropolis Health
 */
-struct NecropolisHealthAI : public ScriptedAI
+struct scourge_invasion_necropolis_health : public ScriptedAI
 {
     std::set<ObjectGuid> ownedCircles;
     bool m_firstSpawn = true;
-    NecropolisHealthAI(Creature* creature) : ScriptedAI(creature)
+    scourge_invasion_necropolis_health(Creature* creature) : ScriptedAI(creature)
     {
         // AddCustomAction(0, 5000u, [&]()
         // {
@@ -566,9 +571,9 @@ struct NecropolisHealthAI : public ScriptedAI
 /*
 Necropolis Proxy
 */
-struct NecropolisProxyAI : public ScriptedAI
+struct scourge_invasion_necropolis_proxy : public ScriptedAI
 {
-    NecropolisProxyAI(Creature* creature) : ScriptedAI(creature)
+    scourge_invasion_necropolis_proxy(Creature* creature) : ScriptedAI(creature)
     {
         me->setActive(true);
         //m_creature->SetVisibilityModifier(3000.0f);
@@ -614,9 +619,9 @@ struct NecropolisProxyAI : public ScriptedAI
 /*
 Necropolis Relay
 */
-struct NecropolisRelayAI : public ScriptedAI
+struct scourge_invasion_necropolis_relay : public ScriptedAI
 {
-    NecropolisRelayAI(Creature* creature) : ScriptedAI(creature)
+    scourge_invasion_necropolis_relay(Creature* creature) : ScriptedAI(creature)
     {
         me->setActive(true);
         //m_creature->SetVisibilityModifier(3000.0f);
@@ -662,9 +667,9 @@ struct NecropolisRelayAI : public ScriptedAI
 /*
 Necrotic Shard
 */
-struct NecroticShard : public ScriptedAI
+struct scourge_invasion_necrotic_shard : public ScriptedAI
 {
-    NecroticShard(Creature* creature) : ScriptedAI(creature)
+    scourge_invasion_necrotic_shard(Creature* creature) : ScriptedAI(creature)
     {
         me->setActive(true);
         // AddCustomAction(EVENT_SHARD_MINION_SPAWNER_SMALL, true, [&]() // Spawn Minions every 5 seconds.
@@ -923,9 +928,9 @@ struct NecroticShard : public ScriptedAI
 /*
 Minion Spawner
 */
-struct MinionspawnerAI : public ScriptedAI
+struct scourge_invasion_minion_spawner : public ScriptedAI
 {
-    MinionspawnerAI(Creature* creature) : ScriptedAI(creature)
+    scourge_invasion_minion_spawner(Creature* creature) : ScriptedAI(creature)
     {
         // AddCustomAction(EVENT_SPAWNER_SUMMON_MINION, 2000, 5000, [&]() // Spawn Minions every 5 seconds.
         // {
@@ -1019,9 +1024,9 @@ struct npc_cultist_engineer : public ScriptedAI
 npc_minion
 Notes: Shard Minions, Rares and Shadow of Doom.
 */
-struct ScourgeMinion : public CombatAI
+struct scourge_invasion_minion : public CombatAI
 {
-    ScourgeMinion(Creature* creature) : CombatAI(creature) // (creature, 999)
+    scourge_invasion_minion(Creature* creature) : CombatAI(creature) // (creature, 999)
     {
         switch (me->GetEntry())
         {
@@ -1147,170 +1152,175 @@ struct ScourgeMinion : public CombatAI
 
         // Instakill every mob nearby, except Players, Pets or NPCs with the same faction.
         // m_creature->IsValidAttackTarget(m_creature->GetVictim(), true)
-        if (me->GetEntry() != NPC_FLAMESHOCKER && me->IsWithinDistInMap(me->GetVictim(), 30.0f) && !me->GetVictim()->IsControlledByPlayer() && m_creature->CanAttack(m_creature->GetVictim()))
+        if (me->GetEntry() != NPC_FLAMESHOCKER && me->IsWithinDistInMap(me->GetVictim(), 30.0f) && !me->GetVictim()->IsControlledByPlayer() && me->CanCreatureAttack(me->GetVictim()), true)
             me->CastSpell(me->GetVictim(), SPELL_SCOURGE_STRIKE, true);
 
         DoMeleeAttackIfReady();
     }
 };
 
-struct PallidHorrorAI : public CombatAI
+struct npc_pallid_horror : public CombatAI
 {
     std::set<ObjectGuid> m_flameshockers;
     std::unordered_map<ObjectGuid, uint32> m_flameshockFollowers;
 
-    PallidHorrorAI(Creature* creature) : CombatAI(creature, 999)
+    npc_pallid_horror(Creature* creature) : CombatAI(creature) // 999
     {
-        AddCustomAction(25, 2500u, [&]() // Hacky solution for flameshockers to remain in formation
-        {
-            for (std::pair<ObjectGuid, uint32> follower : m_flameshockFollowers)
-            {
-                if (Unit* f = m_creature->GetMap()->GetUnit(follower.first))
-                {
-                    if (!f->IsInCombat() && f->GetMotionMaster()->GetCurrentMovementGeneratorType() != FOLLOW_MOTION_TYPE)
-                    {
-                        float angle = (float(follower.second) * (M_PI_F / (float(m_flameshockFollowers.size()) / 2.f))) + m_creature->GetOrientation();
-                        f->GetMotionMaster()->Clear(true, true);
-                        f->GetMotionMaster()->MoveFollow(m_creature, 2.5f, angle);
-                    }
-                }
-            }
-            ResetTimer(25, 2500u);
-        });
+        // AddCustomAction(25, 2500u, [&]() // Hacky solution for flameshockers to remain in formation
+        // {
+        //     for (std::pair<ObjectGuid, uint32> follower : m_flameshockFollowers)
+        //     {
+        //         if (Unit* f = m_creature->GetMap()->GetUnit(follower.first))
+        //         {
+        //             if (!f->IsInCombat() && f->GetMotionMaster()->GetCurrentMovementGeneratorType() != FOLLOW_MOTION_TYPE)
+        //             {
+        //                 float angle = (float(follower.second) * (M_PI_F / (float(m_flameshockFollowers.size()) / 2.f))) + m_creature->GetOrientation();
+        //                 f->GetMotionMaster()->Clear(true, true);
+        //                 f->GetMotionMaster()->MoveFollow(m_creature, 2.5f, angle);
+        //             }
+        //         }
+        //     }
+        //     ResetTimer(25, 2500u);
+        // });
         uint32 amount = urand(5, 9); // sniffed are group sizes of 5-9 shockers on spawn.
 
-        if (m_creature->GetHealthPercent() == 100.0f)
+        if (me->GetHealthPct() == 100.0f)
         {
             for (uint32 i = 0; i < amount; ++i)
             {
-                if (Creature* pFlameshocker = m_creature->SummonCreature(NPC_FLAMESHOCKER, m_creature->GetPositionX(), m_creature->GetPositionY(), m_creature->GetPositionZ(), 0.0f, TEMPSPAWN_TIMED_OOC_OR_CORPSE_DESPAWN, HOUR * IN_MILLISECONDS, true))
+                if (Creature* _flameshocker = me->SummonCreature(NPC_FLAMESHOCKER, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, HOUR * IN_MILLISECONDS))
                 {
-                    float angle = (float(i) * (M_PI_F / (float(amount) / 2.f))) + m_creature->GetOrientation();
+                    float angle = (float(i) * (M_PIf / (static_cast<float>(amount) / 2.f))) + me->GetOrientation();
                     //pFlameshocker->JoinCreatureGroup(m_creature, 5.0f, angle - M_PI, OPTION_FORMATION_MOVE); // Perfect Circle around the Pallid.
-                    pFlameshocker->GetMotionMaster()->Clear(true, true);
-                    pFlameshocker->GetMotionMaster()->MoveFollow(m_creature, 2.5f, angle);
-                    pFlameshocker->CastSpell(pFlameshocker, SPELL_MINION_SPAWN_IN, TRIGGERED_OLD_TRIGGERED);
-                    pFlameshocker->SetWalk(false);
-                    m_flameshockers.insert(pFlameshocker->GetObjectGuid());
-                    m_flameshockFollowers.insert(std::pair<ObjectGuid, uint32>(pFlameshocker->GetObjectGuid(), i));
+                    _flameshocker->GetMotionMaster()->Clear(true);
+                    _flameshocker->GetMotionMaster()->MoveFollow(me, 2.5f, angle);
+                    _flameshocker->CastSpell(_flameshocker, SPELL_MINION_SPAWN_IN, true);
+                    _flameshocker->SetWalk(false);
+                    m_flameshockers.insert(_flameshocker->GetGUID());
+                    m_flameshockFollowers.insert(std::pair<ObjectGuid, uint32>(_flameshocker->GetGUID(), i));
                 }
             }
         }
-        m_creature->SetCorpseDelay(10); // Corpse despawns 10 seconds after a crystal spawns.
-        AddCombatAction(EVENT_PALLID_RANDOM_YELL, 5000u);
-        AddCombatAction(EVENT_PALLID_SPELL_DAMAGE_VS_GUARDS, 5000u);
-        AddCombatAction(EVENT_PALLID_SUMMON_FLAMESHOCKER, 5000u);
-        AddCombatAction(25, 5000u);
-        m_creature->GetMap()->SetWeather(m_creature->GetZoneId(), WEATHER_TYPE_STORM, 0.25f, true);
+        me->SetCorpseDelay(10); // Corpse despawns 10 seconds after a crystal spawns.
+        // AddCombatAction(EVENT_PALLID_RANDOM_YELL, 5000u);
+        // AddCombatAction(EVENT_PALLID_SPELL_DAMAGE_VS_GUARDS, 5000u);
+        // AddCombatAction(EVENT_PALLID_SUMMON_FLAMESHOCKER, 5000u);
+        // AddCombatAction(25, 5000u);
+        // WEATHER_TYPE_STORM
+        Weather* weather = WeatherMgr::FindWeather(me->GetZoneId());
+        weather->SetWeather(WEATHER_TYPE_STORM, 0.25f);
     }
 
     void Reset() override
     {
         CombatAI::Reset();
         //m_creature->AddAura(SPELL_AURA_OF_FEAR);
-        DoCastSpellIfCan(nullptr, SPELL_AURA_OF_FEAR, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
-        ResetTimer(25, 0);
-        m_creature->SetWalk(false);
+
+        // DoCastSpellIfCan(nullptr, SPELL_AURA_OF_FEAR, CAST_TRIGGERED | CAST_AURA_NOT_PRESENT);
+        // ResetTimer(25, 0);
+        me->SetWalk(false);
     }
 
     void MoveInLineOfSight(Unit* pWho) override
     {
-        if (pWho->IsCreature() && m_creature->IsWithinDistInMap(pWho, VISIBILITY_DISTANCE_TINY) && m_creature->IsWithinLOSInMap(pWho) && !pWho->GetVictim())
-            if (IsGuardOrBoss(pWho) && pWho->AI())
-                pWho->AI()->AttackStart(m_creature);
+        if (pWho->IsCreature() && me->IsWithinDistInMap(pWho, VISIBILITY_DISTANCE_TINY) && me->IsWithinLOSInMap(pWho) && !pWho->GetVictim())
+            if (IsGuardOrBoss(pWho) && pWho->GetAI())
+                pWho->GetAI()->AttackStart(me);
 
-        ScriptedAI::MoveInLineOfSight(pWho);
+        CombatAI::MoveInLineOfSight(pWho);
     }
 
     void JustDied(Unit* /*unit*/) override
     {
-        if (Creature* creature = GetClosestCreatureWithEntry(m_creature, NPC_HIGHLORD_BOLVAR_FORDRAGON, VISIBILITY_DISTANCE_NORMAL))
-            DoBroadcastText(BCT_STORMWIND_BOLVAR_2, creature, m_creature, CHAT_TYPE_ZONE_YELL);
+        //if (Creature* creature = GetClosestCreatureWithEntry(me, NPC_HIGHLORD_BOLVAR_FORDRAGON, VISIBILITY_DISTANCE_NORMAL))
+        //    DoBroadcastText(BCT_STORMWIND_BOLVAR_2, creature, me, CHAT_TYPE_ZONE_YELL);
 
-        if (Creature* creature = GetClosestCreatureWithEntry(m_creature, NPC_LADY_SYLVANAS_WINDRUNNER, VISIBILITY_DISTANCE_NORMAL))
-            DoBroadcastText(BCT_UNDERCITY_SYLVANAS_1, creature, m_creature, CHAT_TYPE_ZONE_YELL);
+        //if (Creature* creature = GetClosestCreatureWithEntry(me, NPC_LADY_SYLVANAS_WINDRUNNER, VISIBILITY_DISTANCE_NORMAL))
+        //    DoBroadcastText(BCT_UNDERCITY_SYLVANAS_1, creature, me, CHAT_TYPE_ZONE_YELL);
 
         // Remove all custom summoned Flameshockers.
-        auto flameshockers = m_flameshockers;
-        for (const auto& guid : flameshockers)
-            if (Creature* pFlameshocker = m_creature->GetMap()->GetCreature(guid))
-                pFlameshocker->Suicide(); //pFlameshocker->DoKillUnit(pFlameshocker);
+        for (auto const& guid : m_flameshockers)
+            if (Creature* flameshocker = me->GetMap()->GetCreature(guid))
+                flameshocker->KillSelf(); //pFlameshocker->DoKillUnit(pFlameshocker);
 
-        m_creature->CastSpell(m_creature, (m_creature->GetZoneId() == ZONEID_UNDERCITY_A ? SPELL_SUMMON_FAINT_NECROTIC_CRYSTAL : SPELL_SUMMON_CRACKED_NECROTIC_CRYSTAL), TRIGGERED_OLD_TRIGGERED);
-        m_creature->RemoveAurasDueToSpell(SPELL_AURA_OF_FEAR);
+        me->CastSpell(me, (me->GetZoneId() == AREA_UNDERCITY ? SPELL_SUMMON_FAINT_NECROTIC_CRYSTAL : SPELL_SUMMON_CRACKED_NECROTIC_CRYSTAL), true);
+        me->RemoveAurasDueToSpell(SPELL_AURA_OF_FEAR);
 
-        TimePoint now = m_creature->GetMap()->GetCurrentClockTime();
+        // TimePoint now = me->GetMap()->GetCurrentClockTime();
+        TimePoint now = TimePoint();
         uint32 cityAttackTimer = urand(CITY_ATTACK_TIMER_MIN, CITY_ATTACK_TIMER_MAX);
         TimePoint nextAttack = now + std::chrono::seconds(cityAttackTimer);
         uint64 timeToNextAttack = std::chrono::duration_cast<std::chrono::minutes>(nextAttack - now).count();
-        SITimers index = m_creature->GetZoneId() == ZONEID_UNDERCITY_A ? SI_TIMER_UNDERCITY : SI_TIMER_STORMWIND;
-        sWorldState.SetSITimer(index, nextAttack);
-        sWorldState.SetPallidGuid(index, ObjectGuid());
-        m_creature->GetMap()->SetWeather(m_creature->GetZoneId(), WEATHER_TYPE_RAIN, 0.0f, false);
-        sLog.outBasic("[Scourge Invasion Event] The Scourge has been defeated in %s, next attack starting in %ld minutes", m_creature->GetZoneId() == ZONEID_UNDERCITY_A ? "Undercity" : "Stormwind", timeToNextAttack);
+        SITimers index = me->GetZoneId() == AREA_UNDERCITY ? SI_TIMER_UNDERCITY : SI_TIMER_STORMWIND;
+        sWorldState->SetSITimer(index, nextAttack);
+        sWorldState->SetPallidGuid(index, ObjectGuid());
+
+        Weather* weather = WeatherMgr::FindWeather(me->GetZoneId());
+        weather->SetWeather(WEATHER_TYPE_RAIN, 0.0f);
+        LOG_INFO("sql.sql", "[Scourge Invasion Event] The Scourge has been defeated in {}, next attack starting in {} minutes", me->GetZoneId() == AREA_UNDERCITY ? "Undercity" : "Stormwind", timeToNextAttack);
     }
 
-    void SummonedCreatureJustDied(Creature* unit) override
+    void SummonedCreatureDies(Creature* unit, Unit* /*killer*/) override
     {
         // Remove dead Flameshockers here to respawn them if needed.
-        if (m_flameshockers.find(unit->GetObjectGuid()) != m_flameshockers.end())
-            m_flameshockers.erase(unit->GetObjectGuid());
-        if (m_flameshockFollowers.find(unit->GetObjectGuid()) != m_flameshockFollowers.end())
-            m_flameshockFollowers.erase(unit->GetObjectGuid());
+        if (m_flameshockers.contains(unit->GetGUID()))
+            m_flameshockers.erase(unit->GetGUID());
+        if (m_flameshockFollowers.contains(unit->GetGUID()))
+            m_flameshockFollowers.erase(unit->GetGUID());
     }
 
     void SummonedCreatureDespawn(Creature* unit) override
     {
         // Remove despawned Flameshockers here to respawn them if needed.
-        if (m_flameshockers.find(unit->GetObjectGuid()) != m_flameshockers.end())
-            m_flameshockers.erase(unit->GetObjectGuid());
-        if (m_flameshockFollowers.find(unit->GetObjectGuid()) != m_flameshockFollowers.end())
-            m_flameshockFollowers.erase(unit->GetObjectGuid());
+        if (m_flameshockers.contains(unit->GetGUID()))
+            m_flameshockers.erase(unit->GetGUID());
+        if (m_flameshockFollowers.contains(unit->GetGUID()))
+            m_flameshockFollowers.erase(unit->GetGUID());
     }
 
-    void OnRemoveFromWorld() override
+    void CorpseRemoved(uint32& /*respawnDelay*/) override
     {
         // Remove all custom summoned Flameshockers.
-        auto flameshockers = m_flameshockers;
-        for (const auto& guid : flameshockers)
-            if (Creature* pFlameshocker = m_creature->GetMap()->GetCreature(guid))
-                pFlameshocker->AddObjectToRemoveList();
+        for (const auto& guid : m_flameshockers)
+            if (Creature* flameshocker = me->GetMap()->GetCreature(guid))
+                // flameshocker->AddObjectToRemoveList();
+                flameshocker->DespawnOrUnsummon();
     }
 
-    void ExecuteAction(uint32 action) override
+    void DoAction(int32 action) override
     {
         switch (action)
         {
             case EVENT_PALLID_RANDOM_YELL:
             {
-                DoBroadcastText(PickRandomValue(BCT_PALLID_HORROR_YELL1, BCT_PALLID_HORROR_YELL2, BCT_PALLID_HORROR_YELL3, BCT_PALLID_HORROR_YELL4,
-                    BCT_PALLID_HORROR_YELL5, BCT_PALLID_HORROR_YELL6, BCT_PALLID_HORROR_YELL7, BCT_PALLID_HORROR_YELL8), m_creature, nullptr, CHAT_TYPE_ZONE_YELL);
-                ResetCombatAction(EVENT_PALLID_RANDOM_YELL, urand(IN_MILLISECONDS * 65, IN_MILLISECONDS * 300));
+                // DoBroadcastText(PickRandomValue(BCT_PALLID_HORROR_YELL1, BCT_PALLID_HORROR_YELL2, BCT_PALLID_HORROR_YELL3, BCT_PALLID_HORROR_YELL4,
+                //     BCT_PALLID_HORROR_YELL5, BCT_PALLID_HORROR_YELL6, BCT_PALLID_HORROR_YELL7, BCT_PALLID_HORROR_YELL8), me, nullptr, CHAT_TYPE_ZONE_YELL);
+                // ResetCombatAction(EVENT_PALLID_RANDOM_YELL, urand(IN_MILLISECONDS * 65, IN_MILLISECONDS * 300));
                 break;
             }
             case EVENT_PALLID_SPELL_DAMAGE_VS_GUARDS:
             {
-                DoCastSpellIfCan(m_creature->GetVictim(), SPELL_DAMAGE_VS_GUARDS, CAST_TRIGGERED);
-                ResetCombatAction(EVENT_PALLID_SPELL_DAMAGE_VS_GUARDS, urand(11000, 81000));
+                // DoCastSpellIfCan(me->GetVictim(), SPELL_DAMAGE_VS_GUARDS, CAST_TRIGGERED);
+                // ResetCombatAction(EVENT_PALLID_SPELL_DAMAGE_VS_GUARDS, urand(11000, 81000));
                 break;
             }
             case EVENT_PALLID_SUMMON_FLAMESHOCKER:
             {
                 if (m_flameshockers.size() < 30)
                 {
-                    if (Unit* target = SelectRandomFlameshockerSpawnTarget(m_creature, nullptr, DEFAULT_VISIBILITY_BGARENAS))
+                    if (Unit* target = SelectRandomFlameshockerSpawnTarget(me, nullptr, DEFAULT_VISIBILITY_BGARENAS))
                     {
                         float x, y, z;
                         target->GetNearPoint(target, x, y, z, 5.0f, 5.0f, 0.0f);
-                        if (Creature* pFlameshocker = m_creature->SummonCreature(NPC_FLAMESHOCKER, x, y, z, target->GetOrientation(), TEMPSPAWN_TIMED_OR_DEAD_DESPAWN, IN_MILLISECONDS * HOUR, true))
+                        if (Creature* flameshocker = me->SummonCreature(NPC_FLAMESHOCKER, x, y, z, target->GetOrientation(), TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, IN_MILLISECONDS * HOUR))
                         {
-                            m_flameshockers.insert(pFlameshocker->GetObjectGuid());
-                            pFlameshocker->CastSpell(pFlameshocker, SPELL_MINION_SPAWN_IN, TRIGGERED_OLD_TRIGGERED);
-                            pFlameshocker->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, pFlameshocker, pFlameshocker, NPC_FLAMESHOCKER);
+                            m_flameshockers.insert(flameshocker->GetGUID());
+                            flameshocker->CastSpell(flameshocker, SPELL_MINION_SPAWN_IN, true);
+                            // flameshocker->AI()->SendAIEvent(AI_EVENT_CUSTOM_A, flameshocker, flameshocker, NPC_FLAMESHOCKER);
                         }
                     }
                 }
-                ResetCombatAction(EVENT_PALLID_SUMMON_FLAMESHOCKER, 2000);
+                // ResetCombatAction(EVENT_PALLID_SUMMON_FLAMESHOCKER, 2000);
                 break;
             }
             default:
@@ -1319,90 +1329,41 @@ struct PallidHorrorAI : public CombatAI
     }
 };
 
-struct DespawnerSelf : public SpellScript
-{
-    void OnEffectExecute(Spell* spell, SpellEffectIndex /*effIdx*/) const override
-    {
-        Unit* caster = spell->GetCaster();
-        if (!caster->IsInCombat())
-            caster->CastSpell(nullptr, SPELL_SPIRIT_SPAWN_OUT, TRIGGERED_OLD_TRIGGERED);
-    }
-};
-
-struct CommuniqueTrigger : public SpellScript
-{
-    void OnEffectExecute(Spell* spell, SpellEffectIndex /*effIdx*/) const override
-    {
-        if (Unit* target = spell->GetUnitTarget())
-            target->CastSpell(nullptr, SPELL_COMMUNIQUE_CAMP_TO_RELAY, TRIGGERED_OLD_TRIGGERED);
-    }
-};
+// struct DespawnerSelf : public SpellScript
+// {
+//     void OnEffectExecute(Spell* spell, SpellEffectIndex /*effIdx*/) const override
+//     {
+//         Unit* caster = spell->GetCaster();
+//         if (!caster->IsInCombat())
+//             caster->CastSpell(nullptr, SPELL_SPIRIT_SPAWN_OUT, true);
+//     }
+// };
+//
+// struct CommuniqueTrigger : public SpellScript
+// {
+//     void OnEffectExecute(Spell* spell, SpellEffectIndex /*effIdx*/) const override
+//     {
+//         if (Unit* target = spell->GetUnitTarget())
+//             target->CastSpell(nullptr, SPELL_COMMUNIQUE_CAMP_TO_RELAY, true);
+//     }
+// };
 
 void AddSC_scourge_invasion()
 {
-    Script* newscript;
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_necropolis";
-    newscript->GetAI = &GetNewAIInstance<NecropolisAI>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_mouth";
-    newscript->GetAI = &GetNewAIInstance<MouthAI>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_necropolis_health";
-    newscript->GetAI = &GetNewAIInstance<NecropolisHealthAI>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_necropolis_relay";
-    newscript->GetAI = &GetNewAIInstance<NecropolisRelayAI>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_necropolis_proxy";
-    newscript->GetAI = &GetNewAIInstance<NecropolisProxyAI>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_necrotic_shard";
-    newscript->GetAI = &GetNewAIInstance<NecroticShard>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_minion_spawner";
-    newscript->GetAI = &GetNewAIInstance<MinionspawnerAI>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_cultist_engineer";
-    newscript->GetAI = &GetNewAIInstance<npc_cultist_engineer>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_minion";
-    newscript->GetAI = &GetNewAIInstance<ScourgeMinion>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_go_circle";
-    newscript->GetGameObjectAI = &GetNewAIInstance<GoCircle>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "scourge_invasion_go_necropolis";
-    newscript->GetGameObjectAI = &GetNewAIInstance<GoNecropolis>;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_pallid_horror";
-    newscript->GetAI = &GetNewAIInstance<PallidHorrorAI>;
-    newscript->RegisterSelf();
-
-    RegisterSpellScript<SummonBoss>("spell_summon_boss");
-    RegisterSpellScript<DespawnerSelf>("spell_despawner_self");
-    RegisterSpellScript<CommuniqueTrigger>("spell_communique_trigger");
+    RegisterGameObjectAI(scourge_invasion_go_circle);
+    RegisterGameObjectAI(scourge_invasion_go_necropolis);
+    RegisterCreatureAI(scourge_invasion_mouth);
+    RegisterCreatureAI(scourge_invasion_necropolis);
+    RegisterCreatureAI(scourge_invasion_necropolis_health);
+    RegisterCreatureAI(scourge_invasion_necropolis_proxy);
+    RegisterCreatureAI(scourge_invasion_necropolis_relay);
+    RegisterCreatureAI(scourge_invasion_necrotic_shard);
+    RegisterCreatureAI(scourge_invasion_minion_spawner);
+    RegisterCreatureAI(scourge_invasion_minion);
+    RegisterCreatureAI(npc_pallid_horror);
+    RegisterCreatureAI(npc_cultist_engineer);
+    RegisterCreatureAI(scourge_invasion_minion);
+    // RegisterSpellScript<SummonBoss>("spell_summon_boss");
+    // RegisterSpellScript<DespawnerSelf>("spell_despawner_self");
+    // RegisterSpellScript<CommuniqueTrigger>("spell_communique_trigger");
 }

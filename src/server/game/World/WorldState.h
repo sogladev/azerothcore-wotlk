@@ -151,6 +151,15 @@ enum SIRemaining
     SI_REMAINING_MAX,
 };
 
+enum SICityTimers
+{
+    // These timers may fail if you set it under 1 minute.
+    ZONE_ATTACK_TIMER_MIN                               = 60 * 45, // 45 min.
+    ZONE_ATTACK_TIMER_MAX                               = 60 * 60, // 60 min.
+    CITY_ATTACK_TIMER_MIN                               = 60 * 45, // 45 min.
+    CITY_ATTACK_TIMER_MAX                               = 60 * 60, // 60 min.
+};
+
 struct ScourgeInvasionData
 {
     struct InvasionZone
@@ -302,7 +311,7 @@ class WorldState
         bool _isMagtheridonHeadSpawnedHorde;
         bool _isMagtheridonHeadSpawnedAlliance;
         SunsReachReclamationData m_sunsReachData;
-        std::map<WorldStateCondition, std::atomic<WorldStateConditionState>> _transportStates; // atomic to avoid having to lock
+        std::map<uint32, std::atomic<WorldStateConditionState>> _transportStates; // atomic to avoid having to lock
         std::mutex _mutex; // all World State operations are threat unsafe
 
         // Scourge Invasion
