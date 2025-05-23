@@ -882,7 +882,7 @@ void GetGameObjectListWithEntryInGrid(std::list<GameObject*>& list, WorldObject*
     source->GetGameObjectListWithEntryInGrid(list, entry, maxSearchRange);
 }
 
- void GetDeadCreatureListInGrid(std::list<Creature*>& list, WorldObject* source, float maxSearchRange, bool alive /*= false*/)
+void GetDeadCreatureListInGrid(std::list<Creature*>& list, WorldObject* source, float maxSearchRange, bool alive /*= false*/)
 {
     source->GetDeadCreatureListInGrid(list, maxSearchRange, alive);
 }

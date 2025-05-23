@@ -125,7 +125,7 @@ enum ScourgeInvasionSpells
     SPELL_BUTTRESS_CHANNEL                      = 28078, // Channeled by Cultist Engineer on Damaged Necrotic Shard shortly after spawning.
     SPELL_BUTTRESS_TRAP                         = 28054, // Unknown.
     SPELL_KILL_SUMMONER_SUMMON_BOSS             = 28250, // Reagents, 1 Necrotic Rune
-                                                         
+
     // Probably used to spawn Shadow of Doom.   Casting sequence (All these [x] spells are being casted the following order within 1-2 seconds):
     SPELL_PH_KILL_SUMMONER_BUFF                 = 27852, // [1] Casted by Cultist on Player.
     SPELL_KILL_SUMMONER_WHO_WILL_SUMMON_BOSS    = 27894, // [2] Casted by Player on Cultist.
@@ -150,7 +150,7 @@ enum ScourgeInvasionSpells
 
     // Flameshocker (also uses: 28234, 17680)
     SPELL_FLAMESHOCKERS_TOUCH                   = 28314, // [shortest sniff CD: 30 seconds]
-    SPELL_FLAMESHOCKERS_REVENGE                 = 28323, // On death. 
+    SPELL_FLAMESHOCKERS_REVENGE                 = 28323, // On death.
     SPELL_FLAMESHOCKERS_TOUCH2                  = 28329, // [shortest sniff CD: 30 seconds]
     SPELL_FLAMESHOCKER_IMMOLATE_VISUAL          = 28330
 
@@ -295,7 +295,7 @@ enum ScourgeInvasionNPCEvents
     EVENT_DOOM_FEAR                         = 21,
     EVENT_DOOM_START_ATTACK                 = 22,
 
-    // Rare Events 
+    // Rare Events
     EVENT_RARE_KNOCKDOWN                    = 31,
     EVENT_RARE_TRAMPLE                      = 32,
     EVENT_RARE_RIBBON_OF_SOULS              = 33,
@@ -314,7 +314,7 @@ enum ScourgeInvasionNPCEvents
     EVENT_MINION_FLAMESHOCKERS_TOUCH        = 50,
     EVENT_MINION_FLAMESHOCKERS_DESPAWN      = 51,
 
-    // Pallid Horror Events 
+    // Pallid Horror Events
     EVENT_PALLID_RANDOM_YELL                = 52,
     EVENT_PALLID_SPELL_DAMAGE_VS_GUARDS     = 53,
     EVENT_SYLVANAS_ANSWER_YELL              = 54,
