@@ -13,7 +13,7 @@
         "problemMatcher": []
       },
       {
-        "label": "AzerothCore: download client-data",
+        "label": "AzerothCore: Download client-data",
         "type": "shell",
         "command": "./acore.sh client-data",
         "group": "none",
