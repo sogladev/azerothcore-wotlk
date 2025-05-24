@@ -49,6 +49,28 @@
         "problemMatcher": []
       },
       {
+        "label": "AzerothCore: Check codestyle cpp",
+        "type": "shell",
+        "command": "python apps/codestyle/codestyle-cpp.py",
+        "group": "none",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "AzerothCore: Check codestyle sql",
+        "type": "shell",
+        "command": "python apps/codestyle/codestyle-sql.py",
+        "group": "none",
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": []
+      },
+      {
         "label": "AzerothCore: Run authserver (restarter)",
         "type": "shell",
         "command": "./acore.sh run-authserver",
