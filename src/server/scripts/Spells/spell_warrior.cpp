@@ -104,16 +104,15 @@ class spell_warr_victory_rush : public SpellScript
 
     void VictoryRushHit()
     {
-        if (Unit* player = GetCaster())
-        {
-            if (Unit* victim = GetHitUnit())
-            {
-                if (victim->isDead())
+        if (Unit* caster = GetCaster())
+            if (Unit* target = GetHitUnit())
+                if (Aura* aura = caster->GetAura(SPELL_VICTORIOUS))
                 {
-                    player->CastSpell(player, SPELL_VICTORIOUS, true);
+                    if (target->isDead())
+                        aura->RefreshDuration();
+                    else
+                        caster->RemoveAura(aura);
                 }
-            }
-        }
     }
 
     void Register() override
