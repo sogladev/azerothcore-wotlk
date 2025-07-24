@@ -698,7 +698,8 @@ public:
                     events.Repeat(16s);
                     break;
                 case EVENT_THORIM_CHARGE_ORB:
-                    me->CastCustomSpell(SPELL_CHARGE_ORB, SPELLVALUE_MAX_TARGETS, 1, me, false);
+                    // 62184 Activate Lightning Orb Periodic (periodic = 16000) to trigger 62183 server-side that probably casts below spell
+                    DoCastSelf(SPELL_CHARGE_ORB);
                     events.Repeat(16s);
                     break;
                 case EVENT_THORIM_LIGHTNING_ORB:
@@ -733,7 +734,7 @@ public:
                     events.Repeat(20s);
                     break;
                 case EVENT_THORIM_LIGHTNING_CHARGE:
-                    me->CastSpell(me, SPELL_LIGHTNING_PILLAR_P2, true);
+                    // me->CastSpell(me, SPELL_LIGHTNING_PILLAR_P2, true);
                     break;
                 case EVENT_THORIM_CHAIN_LIGHTNING:
                     if (Unit* target = SelectTarget(SelectTargetMethod::Random, 0))
@@ -1064,11 +1065,11 @@ public:
         void SpellHit(Unit*, SpellInfo const* spellInfo) override
         {
             if (spellInfo->Id == SPELL_CHARGE_ORB)
-                me->CastSpell(me, SPELL_LIGHTNING_PILLAR_P1, true);
-            else if (spellInfo->Id == SPELL_LIGHTNING_PILLAR_P2)
             {
                 if (Creature* cr = me->FindNearestCreature(NPC_THUNDER_ORB, 100))
                     cr->CastSpell(cr, SPELL_LIGHTNING_ORB_VISUAL, true);
+                me->CastSpell(me, SPELL_LIGHTNING_PILLAR_P1, true);
+                me->CastSpell(me, SPELL_LIGHTNING_PILLAR_P2, true);
             }
         }
 
@@ -1763,6 +1764,21 @@ class spell_thorim_trash_impale_aura : public AuraScript
     }
 };
 
+class spell_thorim_charge_orb : public SpellScript
+{
+    PrepareSpellScript(spell_thorim_charge_orb);
+
+    void FilterTargets(std::list<WorldObject*>& targets)
+    {
+        Acore::Containers::RandomResize(targets, 1);
+    }
+
+    void Register() override
+    {
+        OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_thorim_charge_orb::FilterTargets, EFFECT_0, TARGET_UNIT_SRC_AREA_ENTRY);
+    }
+};
+
 class achievement_thorim_stand_in_the_lightning : public AchievementCriteriaScript
 {
 public:
@@ -1818,6 +1834,7 @@ void AddSC_boss_thorim()
     // Spells
     RegisterSpellScript(spell_thorim_lightning_pillar_P2_aura);
     RegisterSpellScript(spell_thorim_trash_impale_aura);
+    RegisterSpellScript(spell_thorim_charge_orb);
 
     // Achievements
     new achievement_thorim_stand_in_the_lightning();

@@ -2026,14 +2026,14 @@ void SpellMgr::LoadSpellInfoCorrections()
     // Lightning Orb Charged
     ApplySpellFix({ 62186 }, [](SpellInfo* spellInfo)
     {
-        spellInfo->Effects[EFFECT_0].Amplitude = 5000; // Duration 5 secs, amplitude 8 secs...
+        // spellInfo->Effects[EFFECT_0].Amplitude = 5000; // Duration 5 secs, amplitude 8 secs...
     });
 
     // Lightning Pillar
     ApplySpellFix({ 62976 }, [](SpellInfo* spellInfo)
     {
         spellInfo->RangeEntry = sSpellRangeStore.LookupEntry(6);
-        spellInfo->DurationEntry = sSpellDurationStore.LookupEntry(28); // 5 seconds, wrong DBC data?
+        // spellInfo->DurationEntry = sSpellDurationStore.LookupEntry(28); // 5 seconds, wrong DBC data?
     });
 
     // Sif's Blizzard
