@@ -325,14 +325,6 @@ void WorldState::Update(uint32 diff)
 
             if (m_siData.m_state == STATE_1_ENABLED)
             {
-                for (auto& zone : m_siData.m_cityAttacks)
-                {
-                    if (zone.second.zoneId == AREA_UNDERCITY)
-                        StartNewCityAttackIfTime(SI_TIMER_UNDERCITY, zone.second.zoneId);
-                    else if (zone.second.zoneId == AREA_STORMWIND_CITY)
-                        StartNewCityAttackIfTime(SI_TIMER_STORMWIND, zone.second.zoneId);
-                }
-
                 TimePoint now = std::chrono::steady_clock::now();
                 for (auto& zone : m_siData.m_activeInvasions)
                     HandleActiveZone(GetTimerIdForZone(zone.second.zoneId), zone.second.zoneId, zone.second.remainingNecropoli, now);
@@ -1634,9 +1626,9 @@ void WorldState::StartNewInvasion(uint32 zoneId)
     if (IsActiveZone(zoneId))
         return;
 
-    // Don't attack same zone as before.
-    if (zoneId == sWorldState->GetLastAttackZone())
-        return;
+    // // Don't attack same zone as before.
+    // if (zoneId == sWorldState->GetLastAttackZone())
+    //     return;
 
     // If we have at least one victory and more than 1 active zones stop here.
     if (GetActiveZones() > 1 && sWorldState->GetBattlesWon() > 0)
@@ -1795,8 +1787,8 @@ void WorldState::HandleActiveZone(uint32 attackTimeVar, uint32 zoneId, uint32 re
     uint32 remaining = GetSIRemaining(SIRemaining(remainingVar));
 
     // Calculate the next possible attack between ZONE_ATTACK_TIMER_MIN and ZONE_ATTACK_TIMER_MAX.
-    uint32 zoneAttackTimer = urand(ZONE_ATTACK_TIMER_MIN, ZONE_ATTACK_TIMER_MAX);
-    TimePoint next_attack = now + std::chrono::seconds(zoneAttackTimer);
+    uint32 zoneAttackTimer = 1;
+    TimePoint next_attack = now + std::chrono::milliseconds(zoneAttackTimer);
     uint64 timeToNextAttack = std::chrono::duration_cast<std::chrono::minutes>(next_attack-now).count();
 
     if (zone.mouthGuid)
@@ -1907,6 +1899,7 @@ bool WorldState::IsActiveZone(uint32 /*zoneId*/)
 // returns the amount of pending zones and active zones with a mouth creature on the map
 uint32 WorldState::GetActiveZones()
 {
+    return 0;
     size_t i = m_siData.m_pendingInvasions.size();
     for (auto const& [zoneId, invasionData] : m_siData.m_activeInvasions)
     {
