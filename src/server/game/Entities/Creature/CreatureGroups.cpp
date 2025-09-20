@@ -366,7 +366,7 @@ void CreatureGroup::LeaderMoveTo(float x, float y, float z, uint32 move_type)
         if (member->HasUnitState(UNIT_STATE_NOT_MOVE) || member->isPossessed() || member->HasUnitFlag(UNIT_FLAG_PLAYER_CONTROLLED))
             continue;
 
-        // Xinef: this should be automatized, if turn angle is greater than PI/2 (90�) we should swap formation angle
+        // Xinef: this should be automatized, if turn angle is greater than PI/2 (90 degrees) we should swap formation angle
         float followAngle = pFormationInfo.follow_angle;
         if (static_cast<float>(M_PI) - std::fabs(std::fabs(m_leader->GetOrientation() - pathAngle) - static_cast<float>(M_PI)) > static_cast<float>(M_PI)* 0.5f)
         {
