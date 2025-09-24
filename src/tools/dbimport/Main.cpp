@@ -39,8 +39,8 @@
 using namespace boost::program_options;
 namespace fs = std::filesystem;
 
-bool StartDB();
-void StopDB();
+bool StartDB(int enableDatabases);
+void StopDB(int enableDatabases);
 variables_map GetConsoleArguments(int argc, char** argv, fs::path& configFile);
 
 /// Launch the db import server
@@ -88,10 +88,11 @@ int main(int argc, char** argv)
     std::shared_ptr<void> opensslHandle(nullptr, [](void*) { OpenSSLCrypto::threadsCleanup(); });
 
     // Initialize the database connection
-    if (!StartDB())
+    int enableDatabases = sConfigMgr->GetOption<int>("Updates.EnableDatabases", DatabaseLoader::DATABASE_MASK_ALL);
+    if (!StartDB(enableDatabases))
         return 1;
 
-    std::shared_ptr<void> dbHandle(nullptr, [](void*) { StopDB(); });
+    std::shared_ptr<void> dbHandle(nullptr, [enableDatabases](void*) { StopDB(enableDatabases); });
 
     LOG_INFO("dbimport", "Halting process...");
 
@@ -99,7 +100,7 @@ int main(int argc, char** argv)
 }
 
 /// Initialize connection to the database
-bool StartDB()
+bool StartDB(int enableDatabases)
 {
     MySQL::Library_Init();
 
@@ -112,10 +113,14 @@ bool StartDB()
         (modules == "all") ? DatabaseLoader("dbimport", DatabaseLoader::DATABASE_NONE, AC_MODULES_LIST) :
         DatabaseLoader("dbimport", DatabaseLoader::DATABASE_NONE, modules);
 
-    loader
-        .AddDatabase(LoginDatabase, "Login")
-        .AddDatabase(CharacterDatabase, "Character")
-        .AddDatabase(WorldDatabase, "World");
+    // Only load databases that are enabled in the config
+    // This avoids trying to create/connect to databases the caller did not request
+    if (enableDatabases & DatabaseLoader::DATABASE_LOGIN)
+        loader.AddDatabase(LoginDatabase, "Login");
+    if (enableDatabases & DatabaseLoader::DATABASE_CHARACTER)
+        loader.AddDatabase(CharacterDatabase, "Character");
+    if (enableDatabases & DatabaseLoader::DATABASE_WORLD)
+        loader.AddDatabase(WorldDatabase, "World");
 
     if (!loader.Load())
         return false;
@@ -125,11 +130,14 @@ bool StartDB()
 }
 
 /// Close the connection to the database
-void StopDB()
+void StopDB(int enableDatabases)
 {
-    CharacterDatabase.Close();
-    WorldDatabase.Close();
-    LoginDatabase.Close();
+    if (enableDatabases & DatabaseLoader::DATABASE_CHARACTER)
+        CharacterDatabase.Close();
+    if (enableDatabases & DatabaseLoader::DATABASE_WORLD)
+        WorldDatabase.Close();
+    if (enableDatabases & DatabaseLoader::DATABASE_LOGIN)
+        LoginDatabase.Close();
     MySQL::Library_End();
 }
 
