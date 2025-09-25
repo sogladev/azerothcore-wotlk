@@ -68,6 +68,10 @@ variables_map GetConsoleArguments(int argc, char** argv, fs::path& configFile);
 /// Launch the auth server
 int main(int argc, char** argv)
 {
+    // @tswow-begin
+    setbuf(stdout,0);
+    setbuf(stderr,0);
+    // @tswow-end
     Acore::Impl::CurrentServerProcessHolder::_type = SERVER_PROCESS_AUTHSERVER;
     signal(SIGABRT, &Acore::AbortHandler);
 
