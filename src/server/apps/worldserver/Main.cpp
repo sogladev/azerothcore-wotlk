@@ -118,6 +118,10 @@ variables_map GetConsoleArguments(int argc, char** argv, fs::path& configFile, [
 /// Launch the Azeroth server
 int main(int argc, char** argv)
 {
+    // @tswow-begin
+    setbuf(stdout,0);
+    setbuf(stderr,0);
+    // @tswow-end
     Acore::Impl::CurrentServerProcessHolder::_type = SERVER_PROCESS_WORLDSERVER;
     signal(SIGABRT, &Acore::AbortHandler);
 
