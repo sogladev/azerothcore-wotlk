@@ -2867,11 +2867,33 @@ void Player::SendUnlearnSpells()
 
     for (auto const& itr : m_spells)
     {
-        if (itr.second->State == PLAYERSPELL_REMOVED || itr.second->Active)
+        if (itr.second->State == PLAYERSPELL_REMOVED)
+            continue;
+
+        if (itr.second->Active)
+            continue;
+
+        if (itr.second->IsInSpec(m_activeSpec))
+            continue;
+
+        if (itr.second->State == PLAYERSPELL_CHANGED)
             continue;
 
         auto skillLineAbilities = sSpellMgr->GetSkillLineAbilityMapBounds(itr.first);
         if (skillLineAbilities.first == skillLineAbilities.second)
+            continue;
+
+        bool hasSupercededSpellInfoInClient = false;
+        for (auto boundsItr = skillLineAbilities.first; boundsItr != skillLineAbilities.second; ++boundsItr)
+        {
+            if (boundsItr->second->SupercededBySpell)
+            {
+                hasSupercededSpellInfoInClient = true;
+                break;
+            }
+        }
+
+        if (hasSupercededSpellInfoInClient)
             continue;
 
         uint32 nextRank = sSpellMgr->GetNextSpellInChain(itr.first);
@@ -2884,20 +2906,6 @@ void Player::SendUnlearnSpells()
 
     data.put<uint32>(countPos, spellCount);
     SendDirectMessage(&data);
-}
-
-bool Player::IsUnlearnNeededForSpell(uint32 spellId)
-{
-    SpellInfo const* spellInfo = sSpellMgr->AssertSpellInfo(spellId);
-    if (spellInfo->IsRanked() && !spellInfo->IsStackableWithRanks())
-    {
-        auto skillLineAbilities = sSpellMgr->GetSkillLineAbilityMapBounds(spellId);
-        if (skillLineAbilities.first != skillLineAbilities.second)
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 void Player::RemoveMail(uint32 id)
@@ -3102,6 +3110,30 @@ void Player::SendLearnPacket(uint32 spellId, bool learn)
     }
 }
 
+static bool IsUnlearnSpellsPacketNeededForSpell(uint32 spellId)
+{
+    SpellInfo const* spellInfo = sSpellMgr->AssertSpellInfo(spellId);
+    if (spellInfo->IsRanked() && !spellInfo->IsStackableWithRanks())
+    {
+        auto skillLineAbilities = sSpellMgr->GetSkillLineAbilityMapBounds(spellId);
+        if (skillLineAbilities.first != skillLineAbilities.second)
+        {
+            bool hasSupercededSpellInfoInClient = false;
+            for (auto boundsItr = skillLineAbilities.first; boundsItr != skillLineAbilities.second; ++boundsItr)
+            {
+                if (boundsItr->second->SupercededBySpell)
+                {
+                    hasSupercededSpellInfoInClient = true;
+                    break;
+                }
+            }
+
+            return !hasSupercededSpellInfoInClient;
+        }
+    }
+    return false;
+}
+
 bool Player::addSpell(uint32 spellId, uint8 addSpecMask, bool updateActive, bool temporary /*= false*/, bool learnFromSkill /*= false*/)
 {
     if (!_addSpell(spellId, addSpecMask, temporary, learnFromSkill))
@@ -3114,6 +3146,8 @@ bool Player::addSpell(uint32 spellId, uint8 addSpecMask, bool updateActive, bool
 
     // pussywizard: now update active state for all ranks of this spell! and send packet to swap on action bar
     // pussywizard: assumption - it's in all specs, can't be a talent
+    bool needsUnlearnSpellsPacket = false;
+
     if (!spellInfo->IsStackableWithRanks() && spellInfo->IsRanked())
     {
         SpellInfo const* nextSpellInfo = sSpellMgr->GetSpellInfo(sSpellMgr->GetFirstSpellInChain(spellInfo->Id));
@@ -3131,20 +3165,33 @@ bool Player::addSpell(uint32 spellId, uint8 addSpecMask, bool updateActive, bool
                         data << uint32(nextSpellInfo->Id);
                         data << uint32(spellInfo->Id);
                         GetSession()->SendPacket(&data);
+                        needsUnlearnSpellsPacket = needsUnlearnSpellsPacket || IsUnlearnSpellsPacketNeededForSpell(nextSpellInfo->Id);
                     }
-                    return false;
                 }
                 else if (nextSpellInfo->GetRank() > spellInfo->GetRank())
                 {
                     PlayerSpellMap::iterator itr2 = m_spells.find(spellInfo->Id);
                     if (itr2 != m_spells.end())
+                    {
                         itr2->second->Active = false;
+                        if (IsInWorld())
+                        {
+                            WorldPacket data(SMSG_SUPERCEDED_SPELL, 4 + 4);
+                            data << uint32(spellInfo->Id);
+                            data << uint32(nextSpellInfo->Id);
+                            GetSession()->SendPacket(&data);
+                            needsUnlearnSpellsPacket = needsUnlearnSpellsPacket || IsUnlearnSpellsPacketNeededForSpell(spellInfo->Id);
+                        }
+                    }
                     return false;
                 }
             }
             nextSpellInfo = nextSpellInfo->GetNextRankSpell();
         }
     }
+
+    if (needsUnlearnSpellsPacket)
+        SendUnlearnSpells();
 
     return true;
 }
@@ -11615,10 +11662,7 @@ void Player::SendInitialPacketsBeforeAddToMap()
     GetSession()->SendPacket(&data);
 
     SendInitialSpells();
-
-    data.Initialize(SMSG_SEND_UNLEARN_SPELLS, 4);
-    data << uint32(0);                                      // count, for (count) uint32;
-    GetSession()->SendPacket(&data);
+    SendUnlearnSpells();
 
     SendInitialActionButtons();
     m_reputationMgr->SendInitialReputations();
