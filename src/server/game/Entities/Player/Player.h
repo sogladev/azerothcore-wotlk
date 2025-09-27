@@ -1677,7 +1677,6 @@ public:
     }
 
     void PetSpellInitialize();
-    TrainerSpellState GetTrainerSpellState(TrainerSpell const* trainer_spell) const;
     void CharmSpellInitialize();
     void PossessSpellInitialize();
     void VehicleSpellInitialize();
