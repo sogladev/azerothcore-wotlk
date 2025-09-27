@@ -1364,7 +1364,7 @@ public:
     bool AddGameTele(GameTele& data);
     bool DeleteGameTele(std::string_view name);
 
-    Trainer::Trainer const* GetTrainer(uint32 creatureId) const;
+    Trainer::Trainer* GetTrainer(uint32 creatureId);
 
     [[nodiscard]] VendorItemData const* GetNpcVendorItemList(uint32 entry) const
     {

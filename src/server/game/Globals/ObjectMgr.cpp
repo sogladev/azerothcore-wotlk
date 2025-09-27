@@ -521,19 +521,19 @@ void ObjectMgr::LoadCreatureTemplates()
 {
     uint32 oldMSTime = getMSTime();
 
-//                                                   0      1                   2                   3                   4            5            6     7        8
+//                                                        0      1                   2                   3                   4            5            6     7        8
     QueryResult result = WorldDatabase.Query("SELECT entry, difficulty_entry_1, difficulty_entry_2, difficulty_entry_3, KillCredit1, KillCredit2, name, subname, IconName, "
 //                        9               10        11        12   13       14       15          16         17          18            19               20     21      22
                          "gossip_menu_id, minlevel, maxlevel, exp, faction, npcflag, speed_walk, speed_run, speed_swim, speed_flight, detection_range, scale, `rank`, dmgschool, "
 //                        23              24              25               26            27             28          29          30           31            32
                          "DamageModifier, BaseAttackTime, RangeAttackTime, BaseVariance, RangeVariance, unit_class, unit_flags, unit_flags2, dynamicflags, family, "
-//                       33    34          35      36              37
+//                        33    34          35      36              37
                          "type, type_flags, lootid, pickpocketloot, skinloot, "
 //                        38              39         40       41       42      43            44          45        46          47
                          "PetSpellDataId, VehicleId, mingold, maxgold, AIName, MovementType, ctm.Ground, ctm.Swim, ctm.Flight, ctm.Rooted, "
 //                        48         49          50                         51           52              53            54             55                  56            57          58           59
                          "ctm.Chase, ctm.Random, ctm.InteractionPauseTimer, HoverHeight, HealthModifier, ManaModifier, ArmorModifier, ExperienceModifier, RacialLeader, movementId, RegenHealth, mechanic_immune_mask, "
-//                        60                        64           65
+//                        60                        61           62
                          "spell_school_immune_mask, flags_extra, ScriptName "
                          "FROM creature_template ct LEFT JOIN creature_template_movement ctm ON ct.entry = ctm.CreatureId ORDER BY entry DESC;");
 
@@ -653,7 +653,7 @@ void ObjectMgr::LoadCreatureTemplate(Field* fields, bool triggerHook)
     creatureTemplate.VehicleId      = fields[39].Get<uint32>();
     creatureTemplate.mingold        = fields[40].Get<uint32>();
     creatureTemplate.maxgold        = fields[41].Get<uint32>();
-    creatureTemplate.AIName         = fields[42].Get<std::string>(); // stopped here, fix it
+    creatureTemplate.AIName         = fields[42].Get<std::string>();
     creatureTemplate.MovementType   = uint32(fields[43].Get<uint8>());
     if (!fields[44].IsNull())
     {
@@ -673,11 +673,11 @@ void ObjectMgr::LoadCreatureTemplate(Field* fields, bool triggerHook)
     }
     if (!fields[49].IsNull())
     {
-        creatureTemplate.Movement.Random = static_cast<CreatureRandomMovementType>(fields[53].Get<uint8>());
+        creatureTemplate.Movement.Random = static_cast<CreatureRandomMovementType>(fields[49].Get<uint8>());
     }
     if (!fields[50].IsNull())
     {
-        creatureTemplate.Movement.InteractionPauseTimer = fields[54].Get<uint32>();
+        creatureTemplate.Movement.InteractionPauseTimer = fields[50].Get<uint32>();
     }
 
     creatureTemplate.HoverHeight           = fields[51].Get<float>();
@@ -9391,8 +9391,8 @@ void ObjectMgr::LoadCreatureDefaultTrainers()
         do
         {
             Field* fields = result->Fetch();
-            uint32 creatureId = fields[0].GetUInt32();
-            uint32 trainerId = fields[1].GetUInt32();
+            uint32 creatureId = fields[0].Get<uint32>();
+            uint32 trainerId = fields[1].Get<uint32>();
 
             if (!GetCreatureTemplate(creatureId))
             {
