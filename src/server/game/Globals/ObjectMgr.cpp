@@ -752,7 +752,7 @@ void ObjectMgr::LoadCreatureTemplateModels()
     LOG_INFO("server.loading", ">> Loaded {} creature template models in {} ms", count, GetMSTimeDiffToNow(oldMSTime));
 }
 
-vid ObjectMgr::LoadCreatureTemplateResistances()
+void ObjectMgr::LoadCreatureTemplateResistances()
 {
     uint32 oldMSTime = getMSTime();
 

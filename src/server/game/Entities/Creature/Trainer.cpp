@@ -21,7 +21,7 @@ namespace Trainer
         _greeting[DEFAULT_LOCALE] = std::move(greeting);
     }
 
-    void Trainer::SendSpells(Creature const* npc, Player const* player, LocaleConstant locale) const
+    void Trainer::SendSpells(Creature* npc, Player* player, LocaleConstant locale) const
     {
         float reputationDiscount = player->GetReputationPriceDiscount(npc);
 
@@ -35,10 +35,15 @@ namespace Trainer
             if (!player->IsSpellFitByClassAndRace(trainerSpell.SpellId))
                 continue;
 
+            SpellInfo const* trainerSpellInfo = sSpellMgr->AssertSpellInfo(trainerSpell.SpellId);
+
             bool primaryProfessionFirstRank = false;
-            for (int32 reqAbility : trainerSpell.ReqAbility)
+            for (SpellEffectInfo const& spellEffectInfo : trainerSpellInfo->GetEffects())
             {
-                SpellInfo const* learnedSpellInfo = sSpellMgr->GetSpellInfo(reqAbility);
+                if (!spellEffectInfo.IsEffect(SPELL_EFFECT_LEARN_SPELL))
+                    continue;
+
+                SpellInfo const* learnedSpellInfo = sSpellMgr->GetSpellInfo(spellEffectInfo.TriggerSpell);
                 if (learnedSpellInfo && learnedSpellInfo->IsPrimaryProfessionFirstRank())
                     primaryProfessionFirstRank = true;
             }
@@ -48,8 +53,8 @@ namespace Trainer
             trainerListSpell.SpellID = trainerSpell.SpellId;
             trainerListSpell.Usable = AsUnderlyingType(GetSpellState(player, &trainerSpell));
             trainerListSpell.MoneyCost = int32(trainerSpell.MoneyCost * reputationDiscount);
-            trainerListSpell.ProfessionDialog = (primaryProfessionFirstRank && (player->GetFreePrimaryProfessionPoints() > 0) ? 1 : 0);
-            trainerListSpell.ProfessionButton = (primaryProfessionFirstRank ? 1 : 0);
+            trainerListSpell.PointCost[0] = 0; // spells don't cost talent points
+            trainerListSpell.PointCost[1] = (primaryProfessionFirstRank ? 1 : 0);
             trainerListSpell.ReqLevel = trainerSpell.ReqLevel;
             trainerListSpell.ReqSkillLine = trainerSpell.ReqSkillLine;
             trainerListSpell.ReqSkillRank = trainerSpell.ReqSkillRank;
@@ -59,7 +64,7 @@ namespace Trainer
         player->SendDirectMessage(trainerList.Write());
     }
 
-    void Trainer::TeachSpell(Creature const* npc, Player* player, uint32 spellId) const
+    void Trainer::TeachSpell(Creature* npc, Player* player, uint32 spellId)
     {
         if (!IsTrainerValidForPlayer(player))
             return;
@@ -87,14 +92,14 @@ namespace Trainer
 
         player->ModifyMoney(-moneyCost);
 
-        npc->SendPlaySpellVisual(179);
-        npc->SendPlaySpellImpact(player->GetGUID(), 362);
+        npc->SendPlaySpellVisual(179); // 53 SpellCastDirected
+        npc->SendPlaySpellImpact(player->GetGUID(), 362); // 113 EmoteSalute
 
         // learn explicitly or cast explicitly
         if (trainerSpell->IsCastable())
             player->CastSpell(player, trainerSpell->SpellId, true);
         else
-            player->learnSpell(trainerSpell->SpellId);
+            player->learnSpell(trainerSpell->SpellId, false);
 
         SendTeachSucceeded(npc, player, spellId);
     }
@@ -112,15 +117,23 @@ namespace Trainer
         return nullptr;
     }
 
-    bool Trainer::CanTeachSpell(Player const* player, Spell const* trainerSpell) const
+    bool Trainer::CanTeachSpell(Player const* player, Spell const* trainerSpell)
     {
         SpellState state = GetSpellState(player, trainerSpell);
         if (state != SpellState::Available)
             return false;
 
         SpellInfo const* trainerSpellInfo = sSpellMgr->AssertSpellInfo(trainerSpell->SpellId);
-        if (trainerSpellInfo->IsPrimaryProfessionFirstRank() && !player->GetFreePrimaryProfessionPoints())
-            return false;
+
+        for (SpellEffectInfo const& spellEffectInfo : trainerSpellInfo->GetEffects())
+        {
+            if (!spellEffectInfo.IsEffect(SPELL_EFFECT_LEARN_SPELL))
+                continue;
+
+            SpellInfo const* learnedSpellInfo = sSpellMgr->GetSpellInfo(spellEffectInfo.TriggerSpell);
+            if (learnedSpellInfo && learnedSpellInfo->IsPrimaryProfessionFirstRank() && !player->GetFreePrimaryProfessionPoints())
+                return false;
+        }
 
         return true;
     }
@@ -143,23 +156,22 @@ namespace Trainer
                 return SpellState::Unavailable;
 
         // check level requirement
-        if (player->getLevel() < trainerSpell->ReqLevel)
+        if (player->GetLevel() < trainerSpell->ReqLevel)
             return SpellState::Unavailable;
 
         // check ranks
         bool hasLearnSpellEffect = false;
         bool knowsAllLearnedSpells = true;
-        for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
+        for (SpellEffectInfo const& spellEffectInfo : sSpellMgr->AssertSpellInfo(trainerSpell->SpellId)->GetEffects())
         {
-            SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(trainerSpell->SpellId);
-            if (!spellInfo || spellInfo->Effects[i].Effect != SPELL_EFFECT_LEARN_SPELL)
+            if (!spellEffectInfo.IsEffect(SPELL_EFFECT_LEARN_SPELL))
                 continue;
 
             hasLearnSpellEffect = true;
-            if (!player->HasSpell(spellInfo->Effects[i].TriggerSpell))
+            if (!player->HasSpell(spellEffectInfo.TriggerSpell))
                 knowsAllLearnedSpells = false;
 
-            if (uint32 previousRankSpellId = sSpellMgr->GetPrevSpellInChain(spellInfo->Effects[i].TriggerSpell))
+            if (uint32 previousRankSpellId = sSpellMgr->GetPrevSpellInChain(spellEffectInfo.TriggerSpell))
                 if (!player->HasSpell(previousRankSpellId))
                     return SpellState::Unavailable;
         }
@@ -183,17 +195,24 @@ namespace Trainer
 
     bool Trainer::IsTrainerValidForPlayer(Player const* player) const
     {
-        // check class for class trainers
-        if (player->getClass() != GetTrainerRequirement() && (GetTrainerType() == Type::Class || GetTrainerType() == Type::Pet))
-            return false;
+        if (!GetTrainerRequirement())
+            return true;
 
-        // check race for mount trainers
-        if (player->getRace() != GetTrainerRequirement() && GetTrainerType() == Type::Mount)
-            return false;
-
-        // check spell for profession trainers
-        if (!player->HasSpell(GetTrainerRequirement()) && GetTrainerRequirement() != 0 && GetTrainerType() == Type::Tradeskill)
-            return false;
+        switch (GetTrainerType())
+        {
+            case Type::Class:
+            case Type::Pet:
+                // check class for class trainers
+                return player->getClass() == GetTrainerRequirement();
+            case Type::Mount:
+                // check race for mount trainers
+                return player->getRace() == GetTrainerRequirement();
+            case Type::Tradeskill:
+                // check spell for profession trainers
+                return player->HasSpell(GetTrainerRequirement());
+            default:
+                break;
+        }
 
         return true;
     }
