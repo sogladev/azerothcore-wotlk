@@ -127,7 +127,7 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPackets::NPC::TrainerBuySpel
     if (GetPlayer()->HasUnitState(UNIT_STATE_DIED))
         GetPlayer()->RemoveAurasByType(SPELL_AURA_FEIGN_DEATH);
 
-    Trainer::Trainer const* trainer = sObjectMgr->GetTrainer(npc->GetEntry());
+    Trainer::Trainer* trainer = sObjectMgr->GetTrainer(npc->GetEntry());
     if (!trainer)
         return;
 

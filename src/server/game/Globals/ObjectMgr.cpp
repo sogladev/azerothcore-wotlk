@@ -9278,15 +9278,15 @@ void ObjectMgr::LoadTrainers()
             Field* fields = trainerSpellsResult->Fetch();
 
             Trainer::Spell spell;
-            uint32 trainerId = fields[0].GetUInt32();
-            spell.SpellId = fields[1].GetUInt32();
-            spell.MoneyCost = fields[2].GetUInt32();
-            spell.ReqSkillLine = fields[3].GetUInt32();
-            spell.ReqSkillRank = fields[4].GetUInt32();
-            spell.ReqAbility[0] = fields[5].GetUInt32();
-            spell.ReqAbility[1] = fields[6].GetUInt32();
-            spell.ReqAbility[2] = fields[7].GetUInt32();
-            spell.ReqLevel = fields[8].GetUInt8();
+            uint32 trainerId = fields[0].Get<uint32>();
+            spell.SpellId = fields[1].Get<uint32>();
+            spell.MoneyCost = fields[2].Get<uint32>();
+            spell.ReqSkillLine = fields[3].Get<uint32>();
+            spell.ReqSkillRank = fields[4].Get<uint32>();
+            spell.ReqAbility[0] = fields[5].Get<uint32>();
+            spell.ReqAbility[1] = fields[6].Get<uint32>();
+            spell.ReqAbility[2] = fields[7].Get<uint32>();
+            spell.ReqLevel = fields[8].Get<uint8>();
 
             SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell.SpellId);
             if (!spellInfo)
@@ -9333,10 +9333,10 @@ void ObjectMgr::LoadTrainers()
         {
             Field* fields = trainersResult->Fetch();
 
-            uint32 trainerId = fields[0].GetUInt32();
-            Trainer::Type trainerType = Trainer::Type(fields[1].GetUInt8());
-            uint32 requirement = fields[2].GetUInt32();
-            std::string greeting = fields[3].GetString();
+            uint32 trainerId = fields[0].Get<uint32>();
+            Trainer::Type trainerType = Trainer::Type(fields[1].Get<uint8>());
+            uint32 requirement = fields[2].Get<uint32>();
+            std::string greeting = fields[3].Get<std::string>();
             std::vector<Trainer::Spell> spells;
             auto spellsItr = spellsByTrainer.find(trainerId);
             if (spellsItr != spellsByTrainer.end())
@@ -9362,15 +9362,15 @@ void ObjectMgr::LoadTrainers()
         do
         {
             Field* fields = trainerLocalesResult->Fetch();
-            uint32 trainerId = fields[0].GetUInt32();
-            std::string localeName = fields[1].GetString();
+            uint32 trainerId = fields[0].Get<uint32>();
+            std::string localeName = fields[1].Get<std::string>();
 
             LocaleConstant locale = GetLocaleByName(localeName);
             if (locale == LOCALE_enUS)
                 continue;
 
             if (Trainer::Trainer* trainer = Acore::Containers::MapGetValuePtr(_trainers, trainerId))
-                trainer->AddGreetingLocale(locale, fields[2].GetString());
+                trainer->AddGreetingLocale(locale, fields[2].Get<std::string>());
             else
                 LOG_ERROR("sql.sql", "Table `trainer_locale` references non-existing trainer (TrainerId: {}) for locale %s, ignoring",
                     trainerId, localeName.c_str());
@@ -9408,7 +9408,7 @@ void ObjectMgr::LoadCreatureDefaultTrainers()
     LOG_INFO("server.loading", ">> Loaded {} default trainers in {} ms", _creatureDefaultTrainers.size(), GetMSTimeDiffToNow(oldMSTime));
 }
 
-Trainer::Trainer const* ObjectMgr::GetTrainer(uint32 creatureId) const
+Trainer::Trainer* ObjectMgr::GetTrainer(uint32 creatureId)
 {
     auto itr = _creatureDefaultTrainers.find(creatureId);
     if (itr != _creatureDefaultTrainers.end())
