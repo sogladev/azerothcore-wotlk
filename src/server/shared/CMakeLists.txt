@@ -40,3 +40,15 @@ set_target_properties(shared
   PROPERTIES
     FOLDER
       "server")
+
+if(BUILD_SHARED_LIBS)
+  if(UNIX)
+    install(TARGETS shared
+      LIBRARY
+        DESTINATION lib)
+  elseif(WIN32)
+    install(TARGETS shared
+      RUNTIME
+        DESTINATION "${CMAKE_INSTALL_PREFIX}")
+  endif()
+endif()
