@@ -445,6 +445,31 @@ void WorldSession::HandleMoverRelocation(MovementInfo& movementInfo, Unit* mover
             }
         }
 
+        // vehicles controlled by player should be handled too
+        if (Creature* ctrMover = mover->ToCreature())
+        {
+            if (ctrMover->GetTransport())
+            {
+                if (ctrMover->GetTransport()->GetGUID() != movementInfo.transport.guid)
+                {
+                    bool foundNewTransport = false;
+                    ctrMover->GetTransport()->RemovePassenger(ctrMover);
+                    if (Transport* transport = ctrMover->GetMap()->GetTransport(movementInfo.transport.guid))
+                    {
+                        foundNewTransport = true;
+                        ctrMover->SetTransport(transport);
+                        transport->AddPassenger(ctrMover);
+                    }
+
+                    if (!foundNewTransport)
+                    {
+                        ctrMover->SetTransport(nullptr);
+                        movementInfo.transport.Reset();
+                    }
+                }
+            }
+        }
+
         if (!mover->GetTransport() && !mover->GetVehicle())
         {
             GameObject* go = mover->GetMap()->GetGameObject(movementInfo.transport.guid);
