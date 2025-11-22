@@ -1,14 +1,14 @@
 /*
  * This file is part of the AzerothCore Project. See AUTHORS file for Copyright information
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for
  * more details.
  *
  * You should have received a copy of the GNU General Public License along
@@ -179,17 +179,17 @@ public:
             me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
             me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
             summons.DespawnAll();
-            for( uint8 i = 0; i < 10; ++i )
-            {
-                float angle = rand_norm() * 2 * M_PI;
-                float dist = rand_norm() * 40.0f;
-                if (Creature* c = me->SummonCreature(NPC_SCARAB, AnubLocs[0].GetPositionX() + cos(angle) * dist, AnubLocs[0].GetPositionY() + std::sin(angle) * dist, AnubLocs[0].GetPositionZ(), 0.0f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
-                {
-                    c->SetFaction(FACTION_PREY);
-                    c->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
-                    c->GetMotionMaster()->MoveRandom(15.0f);
-                }
-            }
+            // for( uint8 i = 0; i < 10; ++i )
+            // {
+            //     float angle = rand_norm() * 2 * M_PI;
+            //     float dist = rand_norm() * 40.0f;
+            //     if (Creature* c = me->SummonCreature(NPC_SCARAB, AnubLocs[0].GetPositionX() + cos(angle) * dist, AnubLocs[0].GetPositionY() + std::sin(angle) * dist, AnubLocs[0].GetPositionZ(), 0.0f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 5000))
+            //     {
+            //         c->SetFaction(FACTION_PREY);
+            //         c->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
+            //         c->GetMotionMaster()->MoveRandom(15.0f);
+            //     }
+            // }
         }
 
         void DoAction(int32 param) override
@@ -210,7 +210,7 @@ public:
             events.RescheduleEvent(EVENT_SPELL_FREEZING_SLASH, 7s, 15s);
             events.RescheduleEvent(EVENT_SPELL_PENETRATING_COLD, 15s, 20s);
             events.RescheduleEvent(EVENT_SUMMON_NERUBIAN, 5s, 8s);
-            events.RescheduleEvent(EVENT_SUBMERGE, 80s);
+            events.RescheduleEvent(EVENT_SUBMERGE, 5s);
             if (!IsHeroic())
                 events.RescheduleEvent(EVENT_RESPAWN_SPHERE, 4s);
 
@@ -224,12 +224,12 @@ public:
                         c->AI()->DoAction(1);
                     }
             summons.clear();
-            for( uint8 i = 0; i < 4; ++i )
-                if (Creature* c = me->SummonCreature(NPC_BURROW, AnubLocs[i + 1]))
-                    BurrowGUID[i] = c->GetGUID();
-            for( uint8 i = 0; i < 6; ++i )
-                if (Creature* c = me->SummonCreature(NPC_FROST_SPHERE, AnubLocs[i + 5]))
-                    SphereGUID[i] = c->GetGUID();
+            // for( uint8 i = 0; i < 4; ++i )
+                // if (Creature* c = me->SummonCreature(NPC_BURROW, AnubLocs[i + 1]))
+                    // BurrowGUID[i] = c->GetGUID();
+            // for( uint8 i = 0; i < 6; ++i )
+                // if (Creature* c = me->SummonCreature(NPC_FROST_SPHERE, AnubLocs[i + 5]))
+                    // SphereGUID[i] = c->GetGUID();
 
             Talk(SAY_AGGRO);
             DoZoneInCombat();
@@ -325,16 +325,16 @@ public:
                         events.CancelEvent(EVENT_SUMMON_NERUBIAN);
                         events.CancelEvent(EVENT_SPELL_FREEZING_SLASH);
                         events.CancelEvent(EVENT_SPELL_PENETRATING_COLD);
-                        events.RescheduleEvent(EVENT_EMERGE, 1min);
+                        events.RescheduleEvent(EVENT_EMERGE, 6h);
                         events.RescheduleEvent(EVENT_SPELL_SUMMON_SPIKE, 2500ms);
-                        events.RescheduleEvent(EVENT_SUMMON_SCARAB, 3s);
+                        // events.RescheduleEvent(EVENT_SUMMON_SCARAB, 3s);
                     }
                     break;
                 case EVENT_SUMMON_SCARAB:
                     {
                         uint8 i = urand(0, 3);
-                        if (Creature* c = ObjectAccessor::GetCreature(*me, BurrowGUID[i]))
-                            me->CastSpell(c, SPELL_SUMMON_SCARAB, true);
+                        // if (Creature* c = ObjectAccessor::GetCreature(*me, BurrowGUID[i]))
+                            // me->CastSpell(c, SPELL_SUMMON_SCARAB, true);
                         events.Repeat(4s);
                     }
                     break;
@@ -781,6 +781,7 @@ public:
                 me->CastSpell(target, SPELL_MARK, true);
                 Talk(EMOTE_SPIKE, target);
                 AttackStart(target);
+                me->AddThreat(target, 1000000.f);
                 me->GetMotionMaster()->MoveChase(target);
             }
         }
