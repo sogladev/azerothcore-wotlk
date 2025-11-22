@@ -781,7 +781,7 @@ public:
                 me->CastSpell(target, SPELL_MARK, true);
                 Talk(EMOTE_SPIKE, target);
                 AttackStart(target);
-                me->AddThreat(target, 1000000.f);
+                me->AddThreat(target, 1000000.f); // !Fix number one
                 me->GetMotionMaster()->MoveChase(target);
             }
         }
@@ -796,7 +796,7 @@ public:
             if (TargetGUID)
             {
                 Unit* target = ObjectAccessor::GetPlayer(*me, TargetGUID);
-                if (!target || !target->HasAura(SPELL_MARK) || !me->IsValidAttackTarget(target) || me->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE || !me->HasUnitState(UNIT_STATE_CHASE_MOVE))
+                if (!target || !target->HasAura(SPELL_MARK) || target->IsImmunedToSchool(SPELL_SCHOOL_MASK_NATURE) || !me->IsValidAttackTarget(target) || me->GetMotionMaster()->GetCurrentMovementGeneratorType() != CHASE_MOTION_TYPE) //!Fix number two
                 {
                     SelectNewTarget(true);
                     return;
