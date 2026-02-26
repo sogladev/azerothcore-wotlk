@@ -1,4 +1,11 @@
+
 --
+-- Update Lady Sinestra's `path_id` to GUID*10 for Lady Sinestras spawn (previously: 23283)
+UPDATE `creature_addon` SET `path_id` = 287960 WHERE `guid` = 28796;
+-- Assign lady Sinestra's waypoints `waypoint_data` to proper id
+UPDATE `waypoint_data` SET `id` = 287960 WHERE `id` = 232830;
+
+-- Add  O'Reily waypoint data
 DELETE FROM `waypoint_data` WHERE `id` = 232830;
 INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `orientation`, `delay`, `move_type`, `action`, `action_chance`, `wpguid`) VALUES
 (232830,  1, -6750.71, -4729.29, 18.162, NULL, 0, 0, 0, 100, 5300507),
