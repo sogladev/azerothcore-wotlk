@@ -211,7 +211,7 @@ void RandomMovementGenerator<Creature>::_setRandomLocation(Creature* creature)
     }
 
     _currentPoint = newPoint;
-    assert(!finalPath.empty());
+    ASSERT(!finalPath.empty());
     G3D::Vector3 finalPoint = finalPath.back();
     _currDestPosition.Relocate(finalPoint.x, finalPoint.y, finalPoint.z);
 
