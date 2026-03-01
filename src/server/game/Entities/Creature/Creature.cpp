@@ -265,7 +265,7 @@ Creature::Creature(): Unit(), MovableMapObject(), m_groupLootTimer(0), lootingGr
     m_corpseRemoveTime(0), m_respawnTime(0), m_respawnDelay(300), m_corpseDelay(60), m_wanderDistance(0.0f), m_boundaryCheckTime(2500),
     m_transportCheckTimer(1000), lootPickPocketRestoreTime(0), m_combatPulseTime(0), m_combatPulseDelay(0), m_reactState(REACT_AGGRESSIVE), m_defaultMovementType(IDLE_MOTION_TYPE),
     m_spawnId(0), m_equipmentId(0), m_originalEquipmentId(0), m_alreadyCallForHelp(false), m_AlreadyCallAssistance(false),
-    m_AlreadySearchedAssistance(false), m_regenHealth(true), m_regenPower(true), m_AI_locked(false), m_meleeDamageSchoolMask(SPELL_SCHOOL_MASK_NORMAL), m_originalEntry(0), _gossipMenuId(0), m_moveInLineOfSightDisabled(false), m_moveInLineOfSightStrictlyDisabled(false),
+    m_AlreadySearchedAssistance(false), m_regenHealth(true), m_regenPower(true), m_AI_locked(false), m_meleeDamageSchoolMask(SPELL_SCHOOL_MASK_NORMAL), m_originalEntry(0), _creatureImmunitiesId(0), _gossipMenuId(0), m_moveInLineOfSightDisabled(false), m_moveInLineOfSightStrictlyDisabled(false),
     m_homePosition(), m_transportHomePosition(), m_creatureInfo(nullptr), m_creatureData(nullptr), m_detectionDistance(20.0f),_sparringPct(0.0f), m_waypointID(0), m_path_id(0), m_formation(nullptr), m_lastLeashExtensionTime(nullptr), m_cannotReachTimer(0),
     _isMissingSwimmingFlagOutOfCombat(false), m_assistanceTimer(0), _playerDamageReq(0), _damagedByPlayer(false), _isCombatMovementAllowed(true)
 {
@@ -644,7 +644,7 @@ bool Creature::UpdateEntry(uint32 Entry, const CreatureData* data, bool changele
         SetControlled(true, UNIT_STATE_ROOT);
     UpdateMovementFlags();
 
-    LoadSpellTemplateImmunity();
+    LoadTemplateImmunities(cInfo->CreatureImmunitiesId);
 
     if (updateAI)
     {
@@ -2163,39 +2163,55 @@ void Creature::InitializeReactState()
         SetReactState(REACT_AGGRESSIVE);
 }
 
-bool Creature::HasMechanicTemplateImmunity(uint32 mask) const
+bool Creature::HasMechanicTemplateImmunity(uint64 mask) const
 {
-    return !GetOwnerGUID().IsPlayer() && (GetCreatureTemplate()->MechanicImmuneMask & mask);
+    if (GetOwnerGUID().IsPlayer())
+        return false;
+
+    if (CreatureImmunities const* immunities = sSpellMgr->GetCreatureImmunities(_creatureImmunitiesId))
+        return (immunities->Mechanic.to_ullong() & mask) != 0;
+
+    // no custom immunity entry => no mechanic immunity
+    return false;
 }
 
-void Creature::LoadSpellTemplateImmunity()
+void Creature::LoadTemplateImmunities(int32 creatureImmunitiesId)
 {
     // uint32 max used for "spell id", the immunity system will not perform SpellInfo checks against invalid spells
     // used so we know which immunities were loaded from template
-    static uint32 const placeholderSpellId = std::numeric_limits<uint32>::max();
+    static uint32 constexpr placeholderSpellId = std::numeric_limits<uint32>::max();
 
-    // unapply template immunities (in case we're updating entry)
-    for (uint8 i = SPELL_SCHOOL_NORMAL; i <= SPELL_SCHOOL_ARCANE; ++i)
+    auto applyCreatureImmunities = [this](CreatureImmunities const* immunities, bool apply)
     {
-        ApplySpellImmune(placeholderSpellId, IMMUNITY_SCHOOL, i, false);
-    }
+        if (!immunities)
+            return;
+        for (std::size_t i = 0; i < immunities->School.size(); ++i)
+            if (immunities->School[i])
+                ApplySpellImmune(placeholderSpellId, IMMUNITY_SCHOOL, 1 << i, apply);
+        for (std::size_t i = 0; i < immunities->DispelType.size(); ++i)
+            if (immunities->DispelType[i])
+                ApplySpellImmune(placeholderSpellId, IMMUNITY_DISPEL, i, apply);
+        for (std::size_t i = 0; i < immunities->Mechanic.size(); ++i)
+            if (immunities->Mechanic[i])
+                ApplySpellImmune(placeholderSpellId, IMMUNITY_MECHANIC, i, apply);
+        for (SpellEffects effect : immunities->Effect)
+            ApplySpellImmune(placeholderSpellId, IMMUNITY_EFFECT, effect, apply);
+        for (AuraType aura : immunities->Aura)
+            ApplySpellImmune(placeholderSpellId, IMMUNITY_STATE, aura, apply);
+    };
 
-    // don't inherit immunities for hunter pets
-    if (GetOwnerGUID().IsPlayer() && IsHunterPet())
-    {
-        return;
-    }
+    // unapply old template if any
+    if (CreatureImmunities const* oldImmunities = sSpellMgr->GetCreatureImmunities(_creatureImmunitiesId))
+        applyCreatureImmunities(oldImmunities, false);
 
-    if (uint8 mask = GetCreatureTemplate()->SpellSchoolImmuneMask)
+    // apply requested immunities
+    if (CreatureImmunities const* newImmunities = sSpellMgr->GetCreatureImmunities(creatureImmunitiesId))
     {
-        for (uint8 i = SPELL_SCHOOL_NORMAL; i <= SPELL_SCHOOL_ARCANE; ++i)
-        {
-            if (mask & (1 << i))
-            {
-                ApplySpellImmune(placeholderSpellId, IMMUNITY_SCHOOL, 1 << i, true);
-            }
-        }
+        _creatureImmunitiesId = creatureImmunitiesId;
+        applyCreatureImmunities(newImmunities, true);
     }
+    else
+        _creatureImmunitiesId = 0;
 }
 
 bool Creature::IsImmunedToSpell(SpellInfo const* spellInfo, Spell const* spell)
@@ -2210,11 +2226,13 @@ bool Creature::IsImmunedToSpell(SpellInfo const* spellInfo, Spell const* spell)
 
     // Xinef: this should exclude self casts...
     // Spells that don't have effectMechanics.
-    if (spellInfo->Mechanic > MECHANIC_NONE && HasMechanicTemplateImmunity(1 << (spellInfo->Mechanic - 1)))
+    if (spellInfo->Mechanic > MECHANIC_NONE && HasMechanicTemplateImmunity(UI64LIT(1) << spellInfo->Mechanic))
         return true;
 
-    // This check must be done instead of 'if (GetCreatureTemplate()->MechanicImmuneMask & (1 << (spellInfo->Mechanic - 1)))' for not break
-    // the check of mechanic immunity on DB (tested) because GetCreatureTemplate()->MechanicImmuneMask and m_spellImmune[IMMUNITY_MECHANIC] don't have same data.
+    // The above helper uses the creature_immunities table rather than a
+    // simple mask on creature_template.  We can't rely on the old mask field
+    // (which has been removed) because it no longer exists and did not always
+    // match the runtime immunity set stored in m_spellImmune.
     bool immunedToAllEffects = true;
     for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
         if (spellInfo->Effects[i].IsEffect() && !IsImmunedToSpellEffect(spellInfo, i))
@@ -2228,16 +2246,16 @@ bool Creature::IsImmunedToSpell(SpellInfo const* spellInfo, Spell const* spell)
     return Unit::IsImmunedToSpell(spellInfo, spell);
 }
 
-bool Creature::IsImmunedToSpellEffect(SpellInfo const* spellInfo, uint32 index) const
+bool Creature::IsImmunedToSpellEffect(SpellInfo const* spellInfo, uint32 index, Unit const* caster /*= nullptr*/) const
 {
     // Xinef: this should exclude self casts...
-    if (spellInfo->Effects[index].Mechanic > MECHANIC_NONE && HasMechanicTemplateImmunity(1 << (spellInfo->Effects[index].Mechanic - 1)))
+    if (spellInfo->Effects[index].Mechanic > MECHANIC_NONE && HasMechanicTemplateImmunity(UI64LIT(1) << spellInfo->Effects[index].Mechanic))
         return true;
 
     if (GetCreatureTemplate()->type == CREATURE_TYPE_MECHANICAL && spellInfo->Effects[index].Effect == SPELL_EFFECT_HEAL)
         return true;
 
-    return Unit::IsImmunedToSpellEffect(spellInfo, index);
+    return Unit::IsImmunedToSpellEffect(spellInfo, index, caster);
 }
 
 SpellInfo const* Creature::reachWithSpellAttack(Unit* victim)
