@@ -1,5 +1,5 @@
 --
-DELETE FROM `creature_immunities` WHERE `Entry` < 0;
+DELETE FROM `creature_immunities` WHERE `ID` < 0;
 INSERT INTO `creature_immunities` (`ID`, `SchoolMask`, `DispelTypeMask`, `MechanicsMask`, `Effects`, `Auras`, `ImmuneAoE`, `ImmuneChain`, `Comment`) VALUES
 (-1, 0, 0, 0, '', '', 0, 0, ''),
 (-2, 0, 0, 2, '', '', 0, 0, ''),
