@@ -27,6 +27,7 @@ enum Data
 {
     DATA_ARTHAS_EVENT,
     DATA_GUARDIANTIME_EVENT,
+    DATA_INTRO_EVENT_FINISHED,
 
     // Communication
     DATA_SHOW_CRATES,
