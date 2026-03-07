@@ -392,8 +392,6 @@ INSERT INTO `creature_immunities` (`ID`, `SchoolMask`, `DispelTypeMask`, `Mechan
 (-389, 127, 0, 16777248, '', '', 0, 0, ''),
 (-390, 127, 0, 1301741246, '', '', 0, 0, '');
 
-UPDATE `creature_template` SET `CreatureImmunitiesId`=COALESCE((SELECT ci.`ID` FROM `creature_immunities` ci WHERE ci.`SchoolMask`=`spell_school_immune_mask` AND ci.`MechanicsMask`=`mechanic_immune_mask`*2),0);
-
 UPDATE `acore_string` SET
   `content_default`=REPLACE(`content_default`,'%u','%s'),
   `locale_koKR`=REPLACE(`locale_koKR`,'%u','%s'),
