@@ -261,28 +261,28 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellInfo const* spellproto,
 
     // Lastly - Set diminishing depending on mechanic
     uint64 mechanic = spellproto->GetAllEffectsMechanicMask();
-    if (mechanic & (1 << MECHANIC_CHARM))
+    if (mechanic & (1ULL << MECHANIC_CHARM))
         return DIMINISHING_MIND_CONTROL;
-    if (mechanic & (1 << MECHANIC_SILENCE))
+    if (mechanic & (1ULL << MECHANIC_SILENCE))
         return DIMINISHING_SILENCE;
-    if (mechanic & (1 << MECHANIC_SLEEP))
+    if (mechanic & (1ULL << MECHANIC_SLEEP))
         return DIMINISHING_SLEEP;
-    if (mechanic & ((1 << MECHANIC_SAPPED) | (1 << MECHANIC_POLYMORPH) | (1 << MECHANIC_SHACKLE)))
+    if (mechanic & ((1ULL << MECHANIC_SAPPED) | (1ULL << MECHANIC_POLYMORPH) | (1ULL << MECHANIC_SHACKLE)))
         return DIMINISHING_DISORIENT;
     // Mechanic Knockout, except Blast Wave
-    if (mechanic & (1 << MECHANIC_KNOCKOUT) && spellproto->SpellIconID != 292)
+    if (mechanic & (1ULL << MECHANIC_KNOCKOUT) && spellproto->SpellIconID != 292)
         return DIMINISHING_DISORIENT;
-    if (mechanic & (1 << MECHANIC_DISARM))
+    if (mechanic & (1ULL << MECHANIC_DISARM))
         return DIMINISHING_DISARM;
-    if (mechanic & (1 << MECHANIC_FEAR))
+    if (mechanic & (1ULL << MECHANIC_FEAR))
         return DIMINISHING_FEAR;
-    if (mechanic & (1 << MECHANIC_STUN))
+    if (mechanic & (1ULL << MECHANIC_STUN))
         return triggered ? DIMINISHING_STUN : DIMINISHING_CONTROLLED_STUN;
-    if (mechanic & (1 << MECHANIC_BANISH))
+    if (mechanic & (1ULL << MECHANIC_BANISH))
         return DIMINISHING_BANISH;
-    if (mechanic & (1 << MECHANIC_ROOT))
+    if (mechanic & (1ULL << MECHANIC_ROOT))
         return triggered ? DIMINISHING_ROOT : DIMINISHING_CONTROLLED_ROOT;
-    if (mechanic & (1 << MECHANIC_HORROR))
+    if (mechanic & (1ULL << MECHANIC_HORROR))
         return DIMINISHING_HORROR;
 
     return DIMINISHING_NONE;
