@@ -605,6 +605,14 @@ SpellTargetObjectTypes SpellEffectInfo::GetUsedTargetObjectType() const
     return _data[Effect].UsedTargetObjectType;
 }
 
+ImmunityInfo const* SpellEffectInfo::GetImmunityInfo() const
+{
+    if (!_spellInfo)
+        return nullptr;
+
+    return _spellInfo->GetImmunityInfo(EffectIndex);
+}
+
 std::array<SpellEffectInfo::StaticData, TOTAL_SPELL_EFFECTS> SpellEffectInfo::_data =
 { {
     // implicit target type           used target object type
@@ -2569,6 +2577,8 @@ bool SpellInfo::CanSpellProvideImmunityAgainstAura(SpellInfo const* auraSpellInf
             continue;
 
         ImmunityInfo const* immuneInfo = effectInfo.GetImmunityInfo();
+        if (!immuneInfo)
+            continue;
 
         if (!auraSpellInfo->HasAttribute(SPELL_ATTR2_NO_SCHOOL_IMMUNITIES))
         {

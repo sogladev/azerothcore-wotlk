@@ -323,7 +323,7 @@ public:
     SpellEffectImplicitTargetTypes GetImplicitTargetType() const;
     SpellTargetObjectTypes GetUsedTargetObjectType() const;
 
-    [[nodiscard]] ImmunityInfo const* GetImmunityInfo() const { return &_immunityInfo; }
+    [[nodiscard]] ImmunityInfo const* GetImmunityInfo() const;
 
 private:
     struct StaticData
@@ -334,7 +334,6 @@ private:
 
     static std::array<StaticData, TOTAL_SPELL_EFFECTS> _data;
 
-    ImmunityInfo _immunityInfo;
 };
 
 class AC_GAME_API SpellInfo
@@ -521,6 +520,7 @@ public:
     uint64 GetSpellMechanicMaskByEffectMask(uint32 effectMask) const;
     Mechanics GetEffectMechanic(uint8 effIndex) const;
     bool HasAnyEffectMechanic() const;
+    [[nodiscard]] ImmunityInfo const* GetImmunityInfo(uint8 effIndex) const { return effIndex < MAX_SPELL_EFFECTS ? &_immunityInfo[effIndex] : nullptr; }
     uint32 GetDispelMask() const;
     static uint32 GetDispelMask(DispelType type);
     uint32 GetExplicitTargetMask() const;
