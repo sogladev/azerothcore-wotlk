@@ -5530,7 +5530,11 @@ void Unit::RemoveAreaAurasDueToLeaveWorld()
 void Unit::RemoveAllFollowers()
 {
     while (auto* ref = m_FollowingRefMgr.getFirst())
-        ref->GetSource()->SetTarget(nullptr);
+    {
+        auto* source = ref->GetSource();
+        ref->delink();
+        source->SetTarget(nullptr);
+    }
 }
 
 void Unit::RemoveAllAuras()
