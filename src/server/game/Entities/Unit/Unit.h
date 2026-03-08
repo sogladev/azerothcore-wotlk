@@ -1884,6 +1884,7 @@ public:
     void addFollower(FollowerReference* pRef) { m_FollowingRefMgr.insertFirst(pRef); }
     void removeFollower(FollowerReference* /*pRef*/) { /* nothing to do yet */ }
     [[nodiscard]] virtual float GetFollowAngle() const { return static_cast<float>(M_PI / 2); }
+    void RemoveAllFollowers();
 
     // Pets, guardians, minions...
     [[nodiscard]] Guardian* GetGuardianPet() const;
