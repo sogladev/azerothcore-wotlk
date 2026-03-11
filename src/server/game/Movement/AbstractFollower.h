@@ -24,7 +24,7 @@ class AbstractFollower
 {
 public:
     explicit AbstractFollower(Unit* target = nullptr) { SetTarget(target); }
-    ~AbstractFollower() { SetTarget(nullptr); }
+    virtual ~AbstractFollower() { SetTarget(nullptr); }
 
     void SetTarget(Unit* unit);
     [[nodiscard]] Unit* GetTarget() const { return _target; }
