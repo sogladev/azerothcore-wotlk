@@ -23,11 +23,11 @@ class Unit;
 class AbstractFollower
 {
 public:
-    AbstractFollower(Unit* target = nullptr) { SetTarget(target); }
+    explicit AbstractFollower(Unit* target = nullptr) { SetTarget(target); }
     ~AbstractFollower() { SetTarget(nullptr); }
 
     void SetTarget(Unit* unit);
-    Unit* GetTarget() const { return _target; }
+    [[nodiscard]] Unit* GetTarget() const { return _target; }
 
 private:
     Unit* _target = nullptr;
