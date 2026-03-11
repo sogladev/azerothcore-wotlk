@@ -16,6 +16,7 @@
  */
 
 #include "Unit.h"
+#include "AbstractFollower.h"
 #include "AreaDefines.h"
 #include "ArenaSpectator.h"
 #include "Battlefield.h"
@@ -5530,12 +5531,8 @@ void Unit::RemoveAreaAurasDueToLeaveWorld()
 
 void Unit::RemoveAllFollowers()
 {
-    while (auto* ref = m_FollowingRefMgr.getFirst())
-    {
-        auto* source = ref->GetSource();
-        ref->delink();
-        source->SetTarget(nullptr);
-    }
+    while (!m_followingMe.empty())
+        (*m_followingMe.begin())->SetTarget(nullptr);
 }
 
 void Unit::RemoveAllAuras()
