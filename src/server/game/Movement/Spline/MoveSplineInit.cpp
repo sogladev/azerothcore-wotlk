@@ -99,10 +99,6 @@ namespace Movement
             else
                 moveFlagsForSpeed &= ~MOVEMENTFLAG_WALKING;
 
-            // Ignore swim speed and flight speed because its not used in generic scripting
-            // - always possible to override with SetVelocity
-            moveFlagsForSpeed &= ~(MOVEMENTFLAG_FLYING | MOVEMENTFLAG_SWIMMING);
-
             args.velocity = unit->GetSpeed(SelectSpeedType(moveFlagsForSpeed));
         }
 
