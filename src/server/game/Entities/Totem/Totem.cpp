@@ -42,12 +42,11 @@ void Totem::Update(uint32 time)
     }
 
     // If owner is dead and this is not a lightwell, despawn
-    if (!owner->IsAlive()
-        && !(m_Properties && m_Properties->Type == SUMMON_TYPE_LIGHTWELL))
-        {
-            UnSummon();
-            return;
-        }
+    if (!owner->IsAlive() && !(m_Properties && m_Properties->Type == SUMMON_TYPE_LIGHTWELL))
+    {
+        UnSummon();
+        return;
+    }
 
     m_duration -= time;
     Creature::Update(time);
