@@ -14849,8 +14849,6 @@ void Unit::RemoveCharmedBy(Unit* charmer)
     CastStop();
     AttackStop();
 
-    // xinef: update speed after charming
-    UpdateSpeed(MOVE_RUN, false);
 
     // xinef: do not break any controlled motion slot
     if (GetMotionMaster()->GetMotionSlotType(MOTION_SLOT_CONTROLLED) == NULL_MOTION_TYPE)
@@ -14954,7 +14952,17 @@ void Unit::RemoveCharmedBy(Unit* charmer)
         RemoveUnitMovementFlag(MOVEMENTFLAG_FLYING);
     }
     else
+    {
         ToPlayer()->SetClientControl(this, true); // verified
+
+        UpdateSpeed(MOVE_WALK, true);
+        UpdateSpeed(MOVE_RUN, true);
+        UpdateSpeed(MOVE_SWIM, true);
+        UpdateSpeed(MOVE_FLIGHT, true);
+        UpdateSpeed(MOVE_RUN_BACK, true);
+        UpdateSpeed(MOVE_SWIM_BACK, true);
+        UpdateSpeed(MOVE_FLIGHT_BACK, true);
+    }
 
     // a guardian should always have charminfo
     if (playerCharmer && this != charmer->GetFirstControlled())
