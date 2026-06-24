@@ -6078,6 +6078,41 @@ class spell_gen_black_bow_of_the_betrayer : public AuraScript
     }
 };
 
+// 37751 - Submerged
+// Ported from TrinityCore (commit 9153ad621e7578f472460b9a98e21a6ed94f85c0)
+class spell_gen_submerged : public SpellScript
+{
+    PrepareSpellScript(spell_gen_submerged);
+
+    void HandleScript(SpellEffIndex /*eff*/)
+    {
+        if (Creature* target = GetHitCreature())
+            target->SetStandState(UNIT_STAND_STATE_SUBMERGED);
+    }
+
+    void Register() override
+    {
+        OnEffectHitTarget += SpellEffectFn(spell_gen_submerged::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+    }
+};
+
+// 37752 - Stand
+class spell_gen_stand : public SpellScript
+{
+    PrepareSpellScript(spell_gen_stand);
+
+    void HandleScript(SpellEffIndex /*eff*/)
+    {
+        if (Creature* target = GetHitCreature())
+            target->SetStandState(UNIT_STAND_STATE_STAND);
+    }
+
+    void Register() override
+    {
+        OnEffectHitTarget += SpellEffectFn(spell_gen_stand::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+    }
+};
+
 // 35475 Drums of War
 // 35476 Drums of Battle
 // 35478 Drums of Restoration
@@ -6287,4 +6322,6 @@ void AddSC_generic_spell_scripts()
     RegisterSpellScript(spell_gen_mirrored_soul);
     RegisterSpellScript(spell_gen_black_bow_of_the_betrayer);
     RegisterSpellScript(spell_gen_filter_party_level_80);
+    RegisterSpellScript(spell_gen_submerged);
+    RegisterSpellScript(spell_gen_stand);
 }
