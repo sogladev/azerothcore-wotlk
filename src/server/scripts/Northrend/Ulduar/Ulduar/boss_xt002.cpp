@@ -303,12 +303,14 @@ struct boss_xt002 : public BossAI
 
         switch (point)
         {
-            case 1360543: // point 3
-            case 1360549: // point 9
-                me->HandleEmoteCommand(EMOTE_ONESHOT_WORK);
+            case 3:
+            case 9:
+                me->HandleEmoteCommand(EMOTE_STATE_SPELL_CHANNEL_OMNI);
                 break;
-            case 1360513: // point 13
+            case 13:
                 me->HandleEmoteCommand(EMOTE_STATE_WORK);
+                break;
+            default:
                 break;
         }
     }
