@@ -66,6 +66,7 @@ SmartAI::SmartAI(Creature* c) : CreatureAI(c)
     mFollowCreditType = 0;
     mFollowArrivedAlive = 0;
     mFollowArrivedTimer = 0;
+    _followFlags = 0;
     mInvincibilityHpLevel = 0;
 
     mJustReset = false;
@@ -750,7 +751,7 @@ void SmartAI::EnterEvadeMode(EvadeReason why)
     else if (mFollowGuid)
     {
         if (Unit* target = ObjectAccessor::GetUnit(*me, mFollowGuid))
-            me->GetMotionMaster()->MoveFollow(target, mFollowDist, mFollowAngle);
+            me->GetMotionMaster()->MoveFollow(target, mFollowDist, mFollowAngle, MOTION_SLOT_ACTIVE, _followFlags & 0x1, _followFlags & 0x2);
         me->ClearUnitState(UNIT_STATE_EVADE);
 
         // xinef: do not forget to reset scripts as we wont call reached home
@@ -1223,7 +1224,7 @@ void SmartAI::DistanceYourself(float range)
     _pendingDistancing = distance;
 }
 
-void SmartAI::SetFollow(Unit* target, float dist, float angle, uint32 credit, uint32 end, uint32 creditType, bool aliveState)
+void SmartAI::SetFollow(Unit* target, float dist, float angle, uint32 credit, uint32 end, uint32 creditType, bool aliveState, uint32 followFlags)
 {
     if (!target)
     {
@@ -1239,7 +1240,11 @@ void SmartAI::SetFollow(Unit* target, float dist, float angle, uint32 credit, ui
     mFollowArrivedEntry = end;
     mFollowArrivedAlive = !aliveState; // negate - 0 is alive
     mFollowCreditType = creditType;
-    me->GetMotionMaster()->MoveFollow(target, mFollowDist, mFollowAngle, MOTION_SLOT_ACTIVE, true, false);
+    _followFlags = followFlags;
+
+    bool inheritWalkState = followFlags & 0x1;
+    bool inheritSpeed = followFlags & 0x2;
+    me->GetMotionMaster()->MoveFollow(target, mFollowDist, mFollowAngle, MOTION_SLOT_ACTIVE, inheritWalkState, inheritSpeed);
 }
 
 void SmartAI::StopFollow(bool complete)
@@ -1268,6 +1273,7 @@ void SmartAI::StopFollow(bool complete)
     mFollowArrivedTimer = 1000;
     mFollowArrivedEntry = 0;
     mFollowCreditType = 0;
+    _followFlags = 0;
 
     me->GetMotionMaster()->Clear(false);
     me->StopMoving();

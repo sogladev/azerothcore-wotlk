@@ -1123,7 +1123,7 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                 if (IsUnit(target))
                 {
                     float angle = e.action.follow.angle > 6 ? (e.action.follow.angle * M_PI / 180.0f) : e.action.follow.angle;
-                    CAST_AI(SmartAI, me->AI())->SetFollow(target->ToUnit(), float(e.action.follow.dist) + 0.1f, angle, e.action.follow.credit, e.action.follow.entry, e.action.follow.creditType, e.action.follow.aliveState);
+                    CAST_AI(SmartAI, me->AI())->SetFollow(target->ToUnit(), float(e.action.follow.dist) + 0.1f, angle, e.action.follow.credit, e.action.follow.entry, e.action.follow.creditType, e.action.follow.aliveState, e.action.follow.followFlags);
                     LOG_DEBUG("scripts.ai", "SmartScript::ProcessAction: SMART_ACTION_FOLLOW: Creature {} following target {}",
                               me->GetGUID().ToString(), target->GetGUID().ToString());
                     break;
@@ -3169,6 +3169,10 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                 break;
             }
 
+            uint32 inheritFlags = e.action.followGroup.inheritFollowState;
+            bool inheritWalkState = inheritFlags & 0x1;
+            bool inheritSpeed = inheritFlags & 0x2;
+
             uint8 membCount = targets.size();
             uint8 itr = 1;
             float dist = float(e.action.followGroup.dist / 100);
@@ -3181,7 +3185,7 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                     {
                         if (IsCreature(target))
                         {
-                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist, angle * itr);
+                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist, angle * itr, MOTION_SLOT_ACTIVE, inheritWalkState, inheritSpeed);
                             itr++;
                         }
                     }
@@ -3193,7 +3197,7 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                     {
                         if (IsCreature(target))
                         {
-                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist, (M_PI / 2.0f) + (M_PI / membCount) * (itr - 1));
+                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist, (M_PI / 2.0f) + (M_PI / membCount) * (itr - 1), MOTION_SLOT_ACTIVE, inheritWalkState, inheritSpeed);
                             itr++;
                         }
                     }
@@ -3205,7 +3209,7 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                     {
                         if (IsCreature(target))
                         {
-                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist, (M_PI + (M_PI / 2.0f) + (M_PI / membCount) * (itr - 1)));
+                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist, (M_PI + (M_PI / 2.0f) + (M_PI / membCount) * (itr - 1)), MOTION_SLOT_ACTIVE, inheritWalkState, inheritSpeed);
                             itr++;
                         }
                     }
@@ -3217,7 +3221,7 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                     {
                         if (IsCreature(target))
                         {
-                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist * (((itr - 1) / 2) + 1), itr % 2 ? 0.f : M_PI);
+                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist * (((itr - 1) / 2) + 1), itr % 2 ? 0.f : M_PI, MOTION_SLOT_ACTIVE, inheritWalkState, inheritSpeed);
                             itr++;
                         }
                     }
@@ -3229,7 +3233,7 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                     {
                         if (IsCreature(target))
                         {
-                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist * (((itr - 1) / 2) + 1), itr % 2 ? (M_PI / 2) : (M_PI * 1.5f));
+                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist * (((itr - 1) / 2) + 1), itr % 2 ? (M_PI / 2) : (M_PI * 1.5f), MOTION_SLOT_ACTIVE, inheritWalkState, inheritSpeed);
                             itr++;
                         }
                     }
@@ -3241,7 +3245,7 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                     {
                         if (IsCreature(target))
                         {
-                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist * (((itr - 1) / 2) + 1), itr % 2 ? M_PI - (M_PI / 4) : M_PI + (M_PI / 4));
+                            target->ToCreature()->GetMotionMaster()->MoveFollow(me, dist * (((itr - 1) / 2) + 1), itr % 2 ? M_PI - (M_PI / 4) : M_PI + (M_PI / 4), MOTION_SLOT_ACTIVE, inheritWalkState, inheritSpeed);
                             itr++;
                         }
                     }

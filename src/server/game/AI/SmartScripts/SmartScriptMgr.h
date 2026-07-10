@@ -568,7 +568,7 @@ enum SMART_ACTION
     SMART_ACTION_CALL_GROUPEVENTHAPPENS             = 26,     // QuestID
     SMART_ACTION_COMBAT_STOP                        = 27,     // No Params
     SMART_ACTION_REMOVEAURASFROMSPELL               = 28,     // Spellid (0 removes all auras), charges (0 removes aura)
-    SMART_ACTION_FOLLOW                             = 29,     // Distance (0 = default), Angle (0 = default), EndCreatureEntry, credit, creditType (0monsterkill, 1event)
+    SMART_ACTION_FOLLOW                             = 29,     // Distance (0 = default), Angle (0 = default), EndCreatureEntry, credit, aliveState, followFlags (bitmask: 0x1=inheritWalkState, 0x2=inheritSpeed)
     SMART_ACTION_RANDOM_PHASE                       = 30,     // PhaseId1, PhaseId2, PhaseId3...
     SMART_ACTION_RANDOM_PHASE_RANGE                 = 31,     // PhaseMin, PhaseMax
     SMART_ACTION_RESET_GOBJECT                      = 32,     //
@@ -714,7 +714,7 @@ enum SMART_ACTION
     SMART_ACTION_SET_SCALE                          = 227,    // scale
     SMART_ACTION_SUMMON_RADIAL                      = 228,    // summonEntry, summonDuration, repetitions, startAngle, stepAngle, dist
     SMART_ACTION_PLAY_SPELL_VISUAL                  = 229,    // visualId, visualIdImpact
-    SMART_ACTION_FOLLOW_GROUP                       = 230,    // followState, followType, dist
+    SMART_ACTION_FOLLOW_GROUP                       = 230,    // followState, followType, dist, inheritFollowState (bitmask: 0x1=inheritWalkState, 0x2=inheritSpeed)
     SMART_ACTION_SET_ORIENTATION_TARGET             = 231,    // type, target_type, target_param1, target_param2, target_param3, target_param4
     SMART_ACTION_WAYPOINT_START                     = 232,    // pathId, repeat, pathSource
     SMART_ACTION_WAYPOINT_DATA_RANDOM               = 233,    // pathId1, pathId2, repeat
@@ -921,8 +921,8 @@ struct SmartAction
             uint32 angle;
             uint32 entry;
             uint32 credit;
-            uint32 creditType;
             uint32 aliveState;
+            uint32 followFlags; // Bitmask: 0x1=inheritWalkState, 0x2=inheritSpeed
         } follow;
 
         struct
@@ -1455,6 +1455,7 @@ struct SmartAction
             uint32 followState;
             uint32 followType;
             uint32 dist;
+            uint32 inheritFollowState; // Bitmask: 0x1=inheritWalkState, 0x2=inheritSpeed
         } followGroup;
 
         struct
