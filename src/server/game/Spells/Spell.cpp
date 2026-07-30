@@ -9113,7 +9113,7 @@ namespace Acore
 
     bool WorldObjectSpellNearbyTargetCheck::operator()(WorldObject* target)
     {
-        float dist = target->GetDistance(*_position);
+        float dist = target->GetDistance2d(_position->GetPositionX(), _position->GetPositionY());
         if (dist < _range && WorldObjectSpellTargetCheck::operator ()(target))
         {
             _range = dist;
