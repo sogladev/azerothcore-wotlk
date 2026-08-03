@@ -1156,11 +1156,7 @@ void Spell::SelectImplicitNearbyTargets(SpellEffIndex effIndex, SpellImplicitTar
                 if (m_spellInfo->RequiresSpellFocus)
                 {
                     if (focusObject)
-                    {
-                        SpellDestination dest(*focusObject);
-                        CallScriptDestinationTargetSelectHandlers(dest, effIndex, targetType);
-                        m_targets.SetDst(dest);
-                    }
+                        m_targets.SetDst(*focusObject);
                     return;
                 }
                 break;
@@ -1215,12 +1211,8 @@ void Spell::SelectImplicitNearbyTargets(SpellEffIndex effIndex, SpellImplicitTar
             }
             break;
         case TARGET_OBJECT_TYPE_DEST:
-            {
-                SpellDestination dest(*target);
-                CallScriptDestinationTargetSelectHandlers(dest, effIndex, targetType);
-                m_targets.SetDst(dest);
-                break;
-            }
+            m_targets.SetDst(*target);
+            break;
         default:
             ASSERT(false && "Spell::SelectImplicitNearbyTargets: received not implemented target object type");
             break;
