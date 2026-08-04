@@ -4192,9 +4192,7 @@ void Unit::SetCurrentCastedSpell(Spell* pSpell)
                 if (m_currentSpells[CURRENT_AUTOREPEAT_SPELL] &&
                         m_currentSpells[CURRENT_AUTOREPEAT_SPELL]->m_spellInfo->Id != 75)
                     InterruptSpell(CURRENT_AUTOREPEAT_SPELL);
-
-                if (!pSpell->GetSpellInfo()->IsActionAllowedChannel())
-                    AddUnitState(UNIT_STATE_CASTING);
+                AddUnitState(UNIT_STATE_CASTING);
 
                 break;
             }
