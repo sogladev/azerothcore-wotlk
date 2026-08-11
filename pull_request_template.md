@@ -1,10 +1,10 @@
 <!-- First of all, THANK YOU for your contribution. -->
 
-<!-- How to title your Pull Request, Description, Co-Authors (Cherry Pick) and others, please see the link below -->
+<!-- How to title your Pull Request, Description, Co-Authors (Cherry Pick), and others, please see the link below -->
 <!-- https://www.azerothcore.org/wiki/commit-message-guidelines -->
 
 ## Changes Proposed:
-<!-- If your pull request promotes complex changes that require a detailed explanation, please describe them in detail specifying what your solution is and what is it meant to address. -->
+<!-- If your pull request promotes complex changes that require a detailed explanation, please describe them in detail specifying what your solution is and what it is meant to address. -->
 This PR proposes changes to:
 -  [ ] Core (units, players, creatures, game systems).
 -  [ ] Scripts (bosses, spell scripts, creature scripts).
@@ -13,7 +13,7 @@ This PR proposes changes to:
 ### AI-assisted Pull Requests
 
 > [!IMPORTANT]
-> Using AI tools to prepare pull requests is allowed, but it must be disclosed and it must follow our AC guidelines for AI Agentic Engineering (link below).
+> Using AI tools to prepare pull requests is allowed, but it must be disclosed, and it must follow our AC guidelines for AI Agentic Engineering (link below).
 >
 > You are expected to fully understand the changes you submit and to be able to explain and justify them when maintainers ask.
 
@@ -22,7 +22,7 @@ This PR proposes changes to:
 - [ ] I have read and understood the [AC guidelines for AI Agentic Engineering](https://www.azerothcore.org/wiki/agentic-engineering)
 
 ## Issues Addressed:
-<!-- If your fix has a relating issue, link it below -->
+<!-- If your fix has a related issue, link it below -->
 - Closes 
 
 ## SOURCE:
@@ -45,7 +45,7 @@ This PR has been:
 <!-- Describe in a detailed step-by-step order how to test the changes -->
 
 - [ ] This pull request can be tested by following the reproduction steps provided in the linked issue
-- [ ] This pull request requires further testing. Provide steps to test your changes. If it requires any specific setup e.g multiple players please specify it as well.
+- [ ] This pull request requires further testing. Provide steps to test your changes. If it requires any specific setup, e.g multiple players, please specify it as well.
 
 1.
 2.
@@ -57,8 +57,8 @@ This PR has been:
 - [ ]
 - [ ]
 
-<!-- If you intend to contribute repeatedly to our project, it is a good idea to join our discord channel. We set ranks for our contributors and give them access to special resources or knowledge: https://discord.com/invite/GyFvXpk7)
-     Do not remove the instructions below about testing, they will help users to test your PR -->
+<!-- If you intend to contribute repeatedly to our project, it is a good idea to join our Discord channel. We set ranks for our contributors and give them access to special resources or knowledge: https://discord.com/invite/GyFvXpk7)
+     Do not remove the instructions below about testing; they will help users to test your PR -->
 ## How to Test AzerothCore PRs
  
 When a PR is ready to be tested, it will be marked as **[WAITING TO BE TESTED]**.
