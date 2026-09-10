@@ -3016,18 +3016,33 @@ void Creature::AddSpellCooldown(uint32 spell_id, uint32 /*itemid*/, uint32 end_t
             _AddCreatureSpellCooldown(i_scset->second, categoryId, categorycooldown);
         }
     }
-    else if (spellcooldown)
-    {
-        _AddCreatureSpellCooldown(spellInfo->Id, 0, spellcooldown);
-    }
 
-    if (sSpellMgr->HasSpellCooldownOverride(spellInfo->Id))
+    if (spellcooldown > categorycooldown)
+        _AddCreatureSpellCooldown(spellInfo->Id, 0, spellcooldown);
+
+    uint32 castCooldown = std::max(spellcooldown, categorycooldown);
+    if (castCooldown > 0)
     {
-        if (IsCharmed() && GetCharmer()->IsPlayer())
+        if (Player* player = GetCharmerOrOwnerPlayerOrPlayerItself())
         {
-            WorldPacket data;
-            BuildCooldownPacket(data, SPELL_COOLDOWN_FLAG_NONE, spellInfo->Id, spellcooldown);
-            GetCharmer()->ToPlayer()->SendDirectMessage(&data);
+            if (categorycooldown && i_scstore != sSpellsByCategoryStore.end())
+            {
+                PacketCooldowns cooldowns;
+                for (auto const& i_scset : i_scstore->second)
+                    cooldowns[i_scset.second] = categorycooldown;
+
+                cooldowns[spellInfo->Id] = castCooldown;
+
+                WorldPacket data;
+                BuildCooldownPacket(data, SPELL_COOLDOWN_FLAG_NONE, cooldowns);
+                player->SendDirectMessage(&data);
+            }
+            else
+            {
+                WorldPacket data;
+                BuildCooldownPacket(data, SPELL_COOLDOWN_FLAG_NONE, spellInfo->Id, castCooldown);
+                player->SendDirectMessage(&data);
+            }
         }
     }
 }
