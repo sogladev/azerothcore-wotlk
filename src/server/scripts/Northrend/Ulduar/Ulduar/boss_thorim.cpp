@@ -315,12 +315,7 @@ const Position Middle = {2134.68f, -263.13f, 419.44f, M_PI * 1.5f};
 
 struct boss_thorim : public BossAI
 {
-    boss_thorim(Creature* creature) : BossAI(creature, BOSS_THORIM)
-    {
-        _encounterFinished = !me->IsAlive();
-        if (_encounterFinished)
-            instance->SetBossState(BOSS_THORIM, DONE);
-    }
+    boss_thorim(Creature* creature) : BossAI(creature, BOSS_THORIM) { }
 
     bool _isArenaEmpty;
     bool _encounterFinished;
@@ -555,9 +550,8 @@ struct boss_thorim : public BossAI
         if (damage >= me->GetHealth()|| me->GetHealth()<2)
         {
             damage = 0;
-            if (!_encounterFinished)
+            if (instance->GetBossState(BOSS_THORIM) != DONE)
             {
-                _encounterFinished = true;
                 me->SetUnitFlag(UNIT_FLAG_NON_ATTACKABLE);
                 me->SetFaction(FACTION_FRIENDLY);
                 me->SetHealth(me->GetMaxHealth());
