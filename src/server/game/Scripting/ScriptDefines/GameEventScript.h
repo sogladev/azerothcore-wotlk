@@ -29,7 +29,7 @@ enum GameEventHook
     GAMEEVENTHOOK_END
 };
 
-class GameEventScript : public ScriptObject
+class AC_GAME_API GameEventScript : public ScriptObject
 {
 protected:
     GameEventScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

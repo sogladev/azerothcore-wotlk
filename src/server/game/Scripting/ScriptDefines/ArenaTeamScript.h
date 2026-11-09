@@ -32,7 +32,7 @@ enum ArenaTeamHook
     ARENATEAMHOOK_END
 };
 
-class ArenaTeamScript : public ScriptObject
+class AC_GAME_API ArenaTeamScript : public ScriptObject
 {
 protected:
     ArenaTeamScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

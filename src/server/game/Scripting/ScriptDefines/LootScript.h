@@ -27,7 +27,7 @@ enum LootHook
     LOOTHOOK_END
 };
 
-class LootScript : public ScriptObject
+class AC_GAME_API LootScript : public ScriptObject
 {
 protected:
     LootScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

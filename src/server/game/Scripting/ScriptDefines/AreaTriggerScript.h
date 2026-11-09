@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class AreaTriggerScript : public ScriptObject
+class AC_GAME_API AreaTriggerScript : public ScriptObject
 {
 protected:
     AreaTriggerScript(char const* name);
@@ -32,7 +32,7 @@ public:
     [[nodiscard]] virtual bool OnTrigger(Player* /*player*/, AreaTrigger const* /*trigger*/) { return false; }
 };
 
-class OnlyOnceAreaTriggerScript : public AreaTriggerScript
+class AC_GAME_API OnlyOnceAreaTriggerScript : public AreaTriggerScript
 {
     using AreaTriggerScript::AreaTriggerScript;
 

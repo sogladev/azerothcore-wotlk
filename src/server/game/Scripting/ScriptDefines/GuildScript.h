@@ -39,7 +39,7 @@ enum GuildHook
     GUILDHOOK_END
 };
 
-class GuildScript : public ScriptObject
+class AC_GAME_API GuildScript : public ScriptObject
 {
 protected:
     GuildScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

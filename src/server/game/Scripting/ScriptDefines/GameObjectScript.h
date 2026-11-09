@@ -21,7 +21,7 @@
 #include "QuestDef.h"
 #include "ScriptObject.h"
 
-class GameObjectScript : public ScriptObject, public UpdatableScript<GameObject>
+class AC_GAME_API GameObjectScript : public ScriptObject, public UpdatableScript<GameObject>
 {
 protected:
     GameObjectScript(char const* name);

@@ -28,7 +28,7 @@ enum MovementHook
     MOVEMENTHOOK_END
 };
 
-class MovementHandlerScript : public ScriptObject
+class AC_GAME_API MovementHandlerScript : public ScriptObject
 {
 protected:
     MovementHandlerScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

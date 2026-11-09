@@ -36,7 +36,7 @@ enum GroupHook
 
 enum RemoveMethod : uint8;
 
-class GroupScript : public ScriptObject
+class AC_GAME_API GroupScript : public ScriptObject
 {
 protected:
     GroupScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class OutdoorPvPScript : public ScriptObject
+class AC_GAME_API OutdoorPvPScript : public ScriptObject
 {
 protected:
     OutdoorPvPScript(char const* name);

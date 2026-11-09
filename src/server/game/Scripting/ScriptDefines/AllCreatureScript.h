@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class AllCreatureScript : public ScriptObject
+class AC_GAME_API AllCreatureScript : public ScriptObject
 {
 protected:
     AllCreatureScript(char const* name);

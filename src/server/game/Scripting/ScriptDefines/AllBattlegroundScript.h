@@ -54,7 +54,7 @@ enum TeamId : uint8;
 class BattlegroundQueue;
 struct GroupQueueInfo;
 
-class AllBattlegroundScript : public ScriptObject
+class AC_GAME_API AllBattlegroundScript : public ScriptObject
 {
 protected:
     AllBattlegroundScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

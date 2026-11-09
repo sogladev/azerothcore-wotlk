@@ -32,7 +32,7 @@ enum PetHook
     PETHOOK_END
 };
 
-class PetScript : public ScriptObject
+class AC_GAME_API PetScript : public ScriptObject
 {
 protected:
     PetScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

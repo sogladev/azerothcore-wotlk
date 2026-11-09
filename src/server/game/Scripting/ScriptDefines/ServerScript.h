@@ -35,7 +35,7 @@ enum ServerHook
     SERVERHOOK_END
 };
 
-class ServerScript : public ScriptObject
+class AC_GAME_API ServerScript : public ScriptObject
 {
 protected:
     ServerScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

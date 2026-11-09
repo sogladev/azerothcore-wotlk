@@ -36,3 +36,5 @@ LootScript::LootScript(char const* name, std::vector<uint16> enabledHooks)
 
     ScriptRegistry<LootScript>::AddScript(this, std::move(enabledHooks));
 }
+
+template class AC_GAME_API ScriptRegistry<LootScript>;

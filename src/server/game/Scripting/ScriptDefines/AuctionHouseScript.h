@@ -37,7 +37,7 @@ enum AuctionHouseHook
     AUCTIONHOUSEHOOK_END
 };
 
-class AuctionHouseScript : public ScriptObject
+class AC_GAME_API AuctionHouseScript : public ScriptObject
 {
 protected:
     AuctionHouseScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

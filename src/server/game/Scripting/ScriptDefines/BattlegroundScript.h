@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class BattlegroundScript : public ScriptObject
+class AC_GAME_API BattlegroundScript : public ScriptObject
 {
 protected:
     BattlegroundScript(char const* name);

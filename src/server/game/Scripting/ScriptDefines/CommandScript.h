@@ -21,7 +21,7 @@
 #include "ScriptObject.h"
 #include <vector>
 
-class CommandScript : public ScriptObject
+class AC_GAME_API CommandScript : public ScriptObject
 {
 protected:
     CommandScript(char const* name);

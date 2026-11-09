@@ -22,7 +22,7 @@
 #include "Tuples.h"
 #include "Types.h"
 
-class SpellScriptLoader : public ScriptObject
+class AC_GAME_API SpellScriptLoader : public ScriptObject
 {
 protected:
     SpellScriptLoader(char const* name);

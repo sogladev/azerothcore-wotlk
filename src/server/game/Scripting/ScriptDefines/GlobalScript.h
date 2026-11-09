@@ -54,7 +54,7 @@ enum GlobalHook
 };
 
 // following hooks can be used anywhere and are not db bounded
-class GlobalScript : public ScriptObject
+class AC_GAME_API GlobalScript : public ScriptObject
 {
 protected:
     GlobalScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

@@ -35,7 +35,7 @@ enum AccountHook
     ACCOUNTHOOK_END
 };
 
-class AccountScript : public ScriptObject
+class AC_GAME_API AccountScript : public ScriptObject
 {
 protected:
     AccountScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

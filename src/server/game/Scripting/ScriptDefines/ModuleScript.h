@@ -22,7 +22,7 @@
 
 // this class can be used to be extended by Modules
 // creating their own custom hooks inside the module itself
-class ModuleScript : public ScriptObject
+class AC_GAME_API ModuleScript : public ScriptObject
 {
 protected:
     ModuleScript(char const* name);

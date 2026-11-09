@@ -45,3 +45,5 @@ AllCommandScript::AllCommandScript(char const* name, std::vector<uint16> enabled
 
     ScriptRegistry<AllCommandScript>::AddScript(this, std::move(enabledHooks));
 }
+
+template class AC_GAME_API ScriptRegistry<AllCommandScript>;

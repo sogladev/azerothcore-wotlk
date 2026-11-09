@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class DynamicObjectScript : public ScriptObject, public UpdatableScript<DynamicObject>
+class AC_GAME_API DynamicObjectScript : public ScriptObject, public UpdatableScript<DynamicObject>
 {
 protected:
     DynamicObjectScript(char const* name);

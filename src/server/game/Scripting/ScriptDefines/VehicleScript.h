@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class VehicleScript : public ScriptObject
+class AC_GAME_API VehicleScript : public ScriptObject
 {
 protected:
     VehicleScript(char const* name);

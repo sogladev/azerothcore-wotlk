@@ -38,7 +38,7 @@
 
 constexpr auto VISIBLE_RANGE = 166.0f; //MAX visible range (size of grid)
 
-class ScriptObject
+class AC_GAME_API ScriptObject
 {
     friend class ScriptMgr;
 
@@ -66,7 +66,7 @@ private:
 };
 
 template<class TObject>
-class UpdatableScript
+class AC_GAME_API UpdatableScript
 {
 protected:
     UpdatableScript() = default;
@@ -76,7 +76,7 @@ public:
 };
 
 template<class TMap>
-class MapScript : public UpdatableScript<TMap>
+class AC_GAME_API MapScript : public UpdatableScript<TMap>
 {
     MapEntry const* _mapEntry;
     uint32 _mapId;

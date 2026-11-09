@@ -27,7 +27,7 @@ enum MailHook
     MAILHOOK_END
 };
 
-class MailScript : public ScriptObject
+class AC_GAME_API MailScript : public ScriptObject
 {
 protected:
     MailScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

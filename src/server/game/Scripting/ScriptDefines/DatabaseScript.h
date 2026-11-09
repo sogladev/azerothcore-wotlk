@@ -35,7 +35,7 @@ enum DatabaseHook
     DATABASEHOOK_END
 };
 
-class DatabaseScript : public ScriptObject
+class AC_GAME_API DatabaseScript : public ScriptObject
 {
 protected:
 

@@ -37,7 +37,7 @@ enum FormulaHook
 
 enum XPColorChar : uint8;
 
-class FormulaScript : public ScriptObject
+class AC_GAME_API FormulaScript : public ScriptObject
 {
 protected:
     FormulaScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class AchievementCriteriaScript : public ScriptObject
+class AC_GAME_API AchievementCriteriaScript : public ScriptObject
 {
 protected:
     AchievementCriteriaScript(char const* name);

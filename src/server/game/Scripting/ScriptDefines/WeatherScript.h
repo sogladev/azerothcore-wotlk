@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class WeatherScript : public ScriptObject, public UpdatableScript<Weather>
+class AC_GAME_API WeatherScript : public ScriptObject, public UpdatableScript<Weather>
 {
 protected:
     WeatherScript(char const* name);

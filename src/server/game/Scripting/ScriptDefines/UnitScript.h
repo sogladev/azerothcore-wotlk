@@ -51,7 +51,7 @@ enum ReputationRank : uint8;
 class ByteBuffer;
 struct BuildValuesCachePosPointers;
 
-class UnitScript : public ScriptObject
+class AC_GAME_API UnitScript : public ScriptObject
 {
 protected:
     UnitScript(char const* name, bool addToScripts = true, std::vector<uint16> enabledHooks = std::vector<uint16>());

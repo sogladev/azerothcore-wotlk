@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class ConditionScript : public ScriptObject
+class AC_GAME_API ConditionScript : public ScriptObject
 {
 protected:
     ConditionScript(char const* name);

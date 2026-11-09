@@ -30,7 +30,7 @@ enum AllCommandHook
     ALLCOMMANDHOOK_END
 };
 
-class AllCommandScript : public ScriptObject
+class AC_GAME_API AllCommandScript : public ScriptObject
 {
 protected:
     AllCommandScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

@@ -21,7 +21,7 @@
 #include "QuestDef.h"
 #include "ScriptObject.h"
 
-class CreatureScript : public ScriptObject, public UpdatableScript<Creature>
+class AC_GAME_API CreatureScript : public ScriptObject, public UpdatableScript<Creature>
 {
 protected:
     CreatureScript(char const* name);

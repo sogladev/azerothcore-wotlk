@@ -34,7 +34,7 @@ enum AllMapHook
     ALLMAPHOOK_END
 };
 
-class AllMapScript : public ScriptObject
+class AC_GAME_API AllMapScript : public ScriptObject
 {
 protected:
     AllMapScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

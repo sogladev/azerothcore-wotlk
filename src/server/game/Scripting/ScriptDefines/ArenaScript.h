@@ -37,7 +37,7 @@ enum ArenaHook
     ARENAHOOK_END
 };
 
-class ArenaScript : public ScriptObject
+class AC_GAME_API ArenaScript : public ScriptObject
 {
 protected:
 

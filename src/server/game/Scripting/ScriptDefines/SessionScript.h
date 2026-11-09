@@ -28,7 +28,7 @@ enum SessionHook
     SESSIONHOOK_END
 };
 
-class SessionScript : public ScriptObject
+class AC_GAME_API SessionScript : public ScriptObject
 {
 protected:
     SessionScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

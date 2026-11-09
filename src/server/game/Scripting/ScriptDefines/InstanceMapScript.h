@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class InstanceMapScript : public ScriptObject, public MapScript<InstanceMap>
+class AC_GAME_API InstanceMapScript : public ScriptObject, public MapScript<InstanceMap>
 {
 protected:
     InstanceMapScript(char const* name, uint32 mapId);

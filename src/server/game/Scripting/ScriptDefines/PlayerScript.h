@@ -239,7 +239,7 @@ enum PlayerHook
     PLAYERHOOK_END
 };
 
-class PlayerScript : public ScriptObject
+class AC_GAME_API PlayerScript : public ScriptObject
 {
 protected:
     PlayerScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

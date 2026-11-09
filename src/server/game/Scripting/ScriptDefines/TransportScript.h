@@ -20,7 +20,7 @@
 
 #include "ScriptObject.h"
 
-class TransportScript : public ScriptObject, public UpdatableScript<Transport>
+class AC_GAME_API TransportScript : public ScriptObject, public UpdatableScript<Transport>
 {
 protected:
     TransportScript(char const* name);

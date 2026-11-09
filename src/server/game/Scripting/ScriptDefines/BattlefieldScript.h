@@ -36,7 +36,7 @@ enum BattlefieldHook
 class Battlefield;
 class Player;
 
-class BattlefieldScript : public ScriptObject
+class AC_GAME_API BattlefieldScript : public ScriptObject
 {
 protected:
     BattlefieldScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

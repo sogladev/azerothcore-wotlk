@@ -33,7 +33,7 @@ enum AchievementHook
     ACHIEVEMENTHOOK_END
 };
 
-class AchievementScript : public ScriptObject
+class AC_GAME_API AchievementScript : public ScriptObject
 {
 protected:
     AchievementScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

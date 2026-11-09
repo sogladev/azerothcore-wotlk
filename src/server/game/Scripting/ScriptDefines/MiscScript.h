@@ -45,7 +45,7 @@ enum MiscHook
     MISCHOOK_END
 };
 
-class MiscScript : public ScriptObject
+class AC_GAME_API MiscScript : public ScriptObject
 {
 protected:
     MiscScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());

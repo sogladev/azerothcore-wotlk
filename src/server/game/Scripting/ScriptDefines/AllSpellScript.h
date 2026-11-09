@@ -44,7 +44,7 @@ enum AllSpellHook
 enum SpellCastResult : uint8;
 enum SpellEffIndex : uint8;
 
-class AllSpellScript : public ScriptObject
+class AC_GAME_API AllSpellScript : public ScriptObject
 {
 protected:
     AllSpellScript(char const* name, std::vector<uint16> enabledHooks = std::vector<uint16>());
