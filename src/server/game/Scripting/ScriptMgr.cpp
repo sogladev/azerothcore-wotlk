@@ -17,8 +17,11 @@
 
 #include "ScriptMgr.h"
 #include "AllScriptsObjects.h"
+#include "ChatCommand.h"
 #include "InstanceScript.h"
 #include "LFGScripts.h"
+#include "OutdoorPvPMgr.h"
+#include "ScriptRegistrySwapHooks.h"
 #include "ScriptSystem.h"
 #include "SmartAI.h"
 #include "SpellMgr.h"
@@ -30,7 +33,10 @@ namespace
     // Metadata for the script-registry operations derived in this file.
     // EnabledHooks is the legacy *_HOOK_END count for enabled-hook dispatch.
     // LegacyDbValidationCandidate preserves the old database-validation search set.
-    template<typename Script, uint16 EnabledHookCountValue = 0, bool PromotedAfterDbLoadValue = false, bool LegacyDbValidationValue = false>
+    // SwapPolicy says what a release or a commit has to do to the live objects of
+    // the type, and therefore which swap hooks it has.
+    template<typename Script, uint16 EnabledHookCountValue = 0, bool PromotedAfterDbLoadValue = false, bool LegacyDbValidationValue = false,
+        ScriptSwapPolicy SwapPolicyValue = ScriptSwapPolicy::Immediate>
     struct ScriptTypeInfo
     {
         using type = Script;
@@ -38,9 +44,16 @@ namespace
         static constexpr bool HasEnabledHooks = EnabledHookCountValue > 0;
         static constexpr bool PromotedAfterDbLoad = PromotedAfterDbLoadValue;
         static constexpr bool LegacyDbValidationCandidate = LegacyDbValidationValue;
+        static constexpr ScriptSwapPolicy SwapPolicy = SwapPolicyValue;
     };
 
     //                 script type                hooks                    afterLoad  dbCheck
+    // A type whose live objects need more than an immediate swap names its
+    // ScriptSwapPolicy in the last column and implements the matching hooks below.
+    // Battleground and battlefield scripts are the pair a release refuses. Their
+    // aliases stay Immediate: BGScript is only the hook-only AllBattlegroundScript,
+    // and BattlegroundMapScript maps a parallel map type whose scripts own no live
+    // per-instance object, so nothing of theirs has to be rebuilt across a swap.
     using ScriptRegistryTypes = Acore::type_list<
         ScriptTypeInfo<AccountScript,             ACCOUNTHOOK_END>,
         ScriptTypeInfo<AchievementCriteriaScript, 0,                       true,      true>,
@@ -53,36 +66,37 @@ namespace
         ScriptTypeInfo<ArenaScript,               ARENAHOOK_END,           false,     true>,
         ScriptTypeInfo<ArenaTeamScript,           ARENATEAMHOOK_END,       false,     true>,
         ScriptTypeInfo<AuctionHouseScript,        AUCTIONHOUSEHOOK_END,    false,     true>,
-        ScriptTypeInfo<BattlefieldScript,         BATTLEFIELDHOOK_END>,
+        ScriptTypeInfo<BattlefieldScript, BATTLEFIELDHOOK_END, false, false, ScriptSwapPolicy::Unsupported>,
         ScriptTypeInfo<BGScript,                  ALLBATTLEGROUNDHOOK_END, false,     true>,
         ScriptTypeInfo<BattlegroundMapScript,     0,                       true,      true>,
-        ScriptTypeInfo<BattlegroundScript,        0,                       true,      true>,
+        ScriptTypeInfo<BattlegroundScript, 0, true, true, ScriptSwapPolicy::Unsupported>,
         ScriptTypeInfo<CommandSC,                 ALLCOMMANDHOOK_END,      false,     true>,
-        ScriptTypeInfo<CommandScript,             0,                       false,     true>,
+        ScriptTypeInfo<CommandScript, 0, false, true, ScriptSwapPolicy::CommandCache>,
         ScriptTypeInfo<ConditionScript,           0,                       true,      true>,
-        ScriptTypeInfo<CreatureScript,            0,                       true,      true>,
+        ScriptTypeInfo<CreatureScript, 0, true, true, ScriptSwapPolicy::CreatureAI>,
         ScriptTypeInfo<DatabaseScript,            DATABASEHOOK_END,        false,     true>,
         ScriptTypeInfo<DynamicObjectScript,       0,                       false,     true>,
         ScriptTypeInfo<ALEScript>,
         ScriptTypeInfo<FormulaScript,             FORMULAHOOK_END,         false,     true>,
         ScriptTypeInfo<GameEventScript,           GAMEEVENTHOOK_END>,
-        ScriptTypeInfo<GameObjectScript,          0,                       true,      true>,
+        ScriptTypeInfo<GameObjectScript, 0, true, true, ScriptSwapPolicy::GameObjectAI>,
         ScriptTypeInfo<GlobalScript,              GLOBALHOOK_END>,
         ScriptTypeInfo<GroupScript,               GROUPHOOK_END,           false,     true>,
         ScriptTypeInfo<GuildScript,               GUILDHOOK_END,           false,     true>,
-        ScriptTypeInfo<InstanceMapScript,         0,                       true,      true>,
+        ScriptTypeInfo<InstanceMapScript, 0, true, true, ScriptSwapPolicy::Lazy>,
         ScriptTypeInfo<ItemScript,                0,                       true,      true>,
         ScriptTypeInfo<LootScript,                LOOTHOOK_END>,
         ScriptTypeInfo<MailScript,                MAILHOOK_END>,
         ScriptTypeInfo<MiscScript,                MISCHOOK_END,            false,     true>,
+        ScriptTypeInfo<ModuleScript>,
         ScriptTypeInfo<MovementHandlerScript,     MOVEMENTHOOK_END>,
-        ScriptTypeInfo<OutdoorPvPScript,          0,                       true,      true>,
+        ScriptTypeInfo<OutdoorPvPScript, 0, true, true, ScriptSwapPolicy::OutdoorPvP>,
         ScriptTypeInfo<PetScript,                 PETHOOK_END,             false,     true>,
         ScriptTypeInfo<PlayerScript,              PLAYERHOOK_END,          false,     true>,
         ScriptTypeInfo<ServerScript,              SERVERHOOK_END,          false,     true>,
         ScriptTypeInfo<SessionScript,             SESSIONHOOK_END>,
         ScriptTypeInfo<SpellSC,                   ALLSPELLHOOK_END,        false,     true>,
-        ScriptTypeInfo<SpellScriptLoader,         0,                       true,      true>,
+        ScriptTypeInfo<SpellScriptLoader, 0, true, true, ScriptSwapPolicy::Lazy>,
         ScriptTypeInfo<TicketScript,              TICKETHOOK_END,          false,     true>,
         ScriptTypeInfo<TransportScript,           0,                       true,      true>,
         ScriptTypeInfo<UnitScript,                UNITHOOK_END>,
@@ -95,7 +109,7 @@ namespace
     // These counts mirror the four hand-maintained lists this consolidation
     // replaced. If a flag is mistyped or a type is added without its metadata,
     // the build fails here instead of silently drifting.
-    static_assert(Acore::size_v<ScriptRegistryTypes> == 49, "Update count when adding a script registry type");
+    static_assert(Acore::size_v<ScriptRegistryTypes> == 50, "Update count when adding a script registry type");
     static_assert(Acore::count_if<ScriptRegistryTypes>([]<typename Info>() { return Info::HasEnabledHooks; }) == 28, "Enabled-hook script type count changed");
     static_assert(Acore::count_if<ScriptRegistryTypes>([]<typename Info>() { return Info::PromotedAfterDbLoad; }) == 14, "After-load script type count changed");
     static_assert(Acore::count_if<ScriptRegistryTypes>([]<typename Info>() { return Info::LegacyDbValidationCandidate; }) == 34, "Database-check script type count changed");
@@ -246,6 +260,126 @@ DEFINE_SCRIPT_REGISTRY_STORAGE(WorldScript)
 
 #undef DEFINE_SCRIPT_REGISTRY_STORAGE
 
+// The swap hooks of the types whose policy is not Immediate. They live here
+// because the type list that names the policies is private to this file; a policy
+// that resolves to the primary template of ScriptRegistrySwapHooks.h does nothing
+// before the change set is applied.
+
+/// The chat command map is built from the command scripts, so it is rebuilt from
+/// the registries after them rather than carried across a swap.
+template<>
+struct ScriptSwapHooks<CommandScript>
+{
+    static void BeforeReleaseContext(std::string const& /*context*/)
+    {
+        Acore::ChatCommands::InvalidateCommandMap();
+    }
+
+    static void BeforeSwapContext(bool /*initialize*/)
+    {
+        Acore::ChatCommands::InvalidateCommandMap();
+    }
+
+    static void BeforeUnload()
+    {
+        Acore::ChatCommands::InvalidateCommandMap();
+    }
+};
+
+/// Outdoor PvP content is rebuilt rather than swapped: the systems are shut down
+/// before their scripts disappear and initialized again once the change set is
+/// committed.
+template<>
+struct ScriptSwapHooks<OutdoorPvPScript>
+{
+    static void BeforeReleaseContext(std::string const& context)
+    {
+        if (!_swapped && ScriptRegistry<OutdoorPvPScript>::ContextScriptIds.count(context))
+        {
+            _swapped = true;
+            sOutdoorPvPMgr->Die();
+        }
+    }
+
+    static void BeforeSwapContext(bool initialize)
+    {
+        // The initial set of scripts is registered, not swapped: the world
+        // initializes the systems itself at start-up.
+        if (!initialize && _swapped)
+        {
+            sOutdoorPvPMgr->InitOutdoorPvP();
+            _swapped = false;
+        }
+    }
+
+    static void BeforeUnload()
+    {
+        ASSERT(!_swapped, "The outdoor pvp systems should have been initialized by now.");
+    }
+
+private:
+    static inline bool _swapped = false;
+};
+
+/// Battleground and battlefield scripts cannot change owners: their live objects
+/// carry the library's code for as long as they exist, so releasing a context
+/// that still owns them would leave those objects dispatching into an unmapped
+/// library.
+namespace
+{
+    template<typename ScriptType>
+    struct UnsupportedScriptSwapHooks
+    {
+        static void BeforeReleaseContext(std::string const& context)
+        {
+            ASSERT(!ScriptRegistry<ScriptType>::ContextScriptIds.count(context),
+                   "A library that owns battleground or battlefield scripts cannot be unloaded.");
+        }
+
+        static void BeforeSwapContext(bool /*initialize*/) { }
+        static void BeforeUnload() { }
+    };
+}
+
+template<>
+struct ScriptSwapHooks<BattlefieldScript> : UnsupportedScriptSwapHooks<BattlefieldScript> { };
+
+template<>
+struct ScriptSwapHooks<BattlegroundScript> : UnsupportedScriptSwapHooks<BattlegroundScript> { };
+
+namespace
+{
+    /// Runs one swap hook of every registry type whose policy needs it. The whole
+    /// type list is walked, so the hooks run in the same order as the registries
+    /// are unloaded in.
+    void RunBeforeReleaseContextHooks(std::string const& context)
+    {
+        Acore::for_each<ScriptRegistryTypes>([&context]<typename Info>()
+        {
+            if constexpr (Info::SwapPolicy != ScriptSwapPolicy::Immediate)
+                ScriptSwapHooks<typename Info::type>::BeforeReleaseContext(context);
+        });
+    }
+
+    void RunBeforeSwapContextHooks(bool initialize)
+    {
+        Acore::for_each<ScriptRegistryTypes>([initialize]<typename Info>()
+        {
+            if constexpr (Info::SwapPolicy != ScriptSwapPolicy::Immediate)
+                ScriptSwapHooks<typename Info::type>::BeforeSwapContext(initialize);
+        });
+    }
+
+    void RunBeforeUnloadHooks()
+    {
+        Acore::for_each<ScriptRegistryTypes>([]<typename Info>()
+        {
+            if constexpr (Info::SwapPolicy != ScriptSwapPolicy::Immediate)
+                ScriptSwapHooks<typename Info::type>::BeforeUnload();
+        });
+    }
+}
+
 struct TSpellSummary
 {
     uint8 Targets; // set of enum SelectTarget
@@ -299,6 +433,8 @@ void ScriptMgr::Initialize()
 
 void ScriptMgr::Unload()
 {
+    RunBeforeUnloadHooks();
+
     Acore::for_each<ScriptRegistryTypes>([]<typename Info>()
     {
         ScriptRegistry<typename Info::type>::Unload();
@@ -327,11 +463,19 @@ std::string const& ScriptMgr::GetNameOfStaticContext()
 
 void ScriptMgr::ReleaseScriptContext(std::string const& context)
 {
+    // The released ids are still known to their registries here, so a policy can
+    // tell whether the context owned anything of its type before it disappears.
+    RunBeforeReleaseContextHooks(context);
+
     sScriptRegistryCompositum->ReleaseContext(context);
 }
 
 void ScriptMgr::SwapScriptContext(bool initialize)
 {
+    // Called before the registries clear their change set, so a policy still sees
+    // which scripts were added since the last commit.
+    RunBeforeSwapContextHooks(initialize);
+
     sScriptRegistryCompositum->SwapContext(initialize);
 
     // Everything registered from here on belongs to the statically linked set
