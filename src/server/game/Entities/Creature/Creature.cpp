@@ -1124,14 +1124,40 @@ bool Creature::AIM_Initialize(CreatureAI* ai)
         return false;
     }
 
-    UnitAI* oldAI = i_AI;
+    // The previous AI has to stay alive while the new one is created: the motion
+    // generators Motion_Initialize finalizes dispatch into the current AI.
+    CreatureAI* oldAI = AI();
 
-    Motion_Initialize();
+    if (!AIM_Create(ai))
+        return false;
 
-    i_AI = ai ? ai : FactorySelector::SelectAI(this);
     delete oldAI;
     IsAIEnabled = true;
     i_AI->InitializeAI();
+
+    return true;
+}
+
+bool Creature::AIM_Create(CreatureAI* ai)
+{
+    // make sure nothing can change the AI during AI update
+    if (m_AI_locked)
+    {
+        LOG_DEBUG("scripts.ai", "AIM_Create: failed to init, locked.");
+        return false;
+    }
+
+    Motion_Initialize();
+
+    SetAI(ai ? ai : FactorySelector::SelectAI(this));
+
+    return true;
+}
+
+bool Creature::AIM_Destroy()
+{
+    delete i_AI;
+    i_AI = nullptr;
 
     return true;
 }

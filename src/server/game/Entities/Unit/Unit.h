@@ -698,6 +698,9 @@ public:
 
     UnitAI* GetAI() { return i_AI; }
     void SetAI(UnitAI* newAI) { i_AI = newAI; }
+    /// True while the AI this unit ran before being charmed still waits for the
+    /// charm to end, which is when it becomes the current AI again.
+    [[nodiscard]] bool HasDisabledAI() const { return i_disabledAI != nullptr; }
 
     void AddToWorld() override;
     void RemoveFromWorld() override;

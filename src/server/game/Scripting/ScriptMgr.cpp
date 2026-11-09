@@ -18,8 +18,10 @@
 #include "ScriptMgr.h"
 #include "AllScriptsObjects.h"
 #include "ChatCommand.h"
+#include "GameObject.h"
 #include "InstanceScript.h"
 #include "LFGScripts.h"
+#include "MapMgr.h"
 #include "OutdoorPvPMgr.h"
 #include "ScriptRegistrySwapHooks.h"
 #include "ScriptSystem.h"
@@ -27,9 +29,15 @@
 #include "SpellMgr.h"
 #include "Utilities/TypeList.h"
 #include "UnitAI.h"
+#include "Vehicle.h"
 
 namespace
 {
+    enum Spells
+    {
+        SPELL_HOTSWAP_VISUAL_SPELL_EFFECT = 40162 // 59084
+    };
+
     // Metadata for the script-registry operations derived in this file.
     // EnabledHooks is the legacy *_HOOK_END count for enabled-hook dispatch.
     // LegacyDbValidationCandidate preserves the old database-validation search set.
@@ -346,6 +354,307 @@ struct ScriptSwapHooks<BattlefieldScript> : UnsupportedScriptSwapHooks<Battlefie
 
 template<>
 struct ScriptSwapHooks<BattlegroundScript> : UnsupportedScriptSwapHooks<BattlegroundScript> { };
+
+namespace
+{
+    /// Shows the players of a swapped creature that its behaviour changed, instead
+    /// of resetting it silently.
+    class AsyncCastHotswapEffectEvent : public BasicEvent
+    {
+    public:
+        explicit AsyncCastHotswapEffectEvent(Unit* owner) : _owner(owner) { }
+
+        bool Execute(uint64 /*e_time*/, uint32 /*p_time*/) override
+        {
+            _owner->CastSpell(_owner, SPELL_HOTSWAP_VISUAL_SPELL_EFFECT, true);
+            return true;
+        }
+
+    private:
+        Unit* _owner;
+    };
+
+    /// Fails the first swap that needs the visual effect when the client data has
+    /// no such spell. The check cannot run at start-up: AC registers its scripts
+    /// before it loads the DBC stores.
+    void ValidateHotswapVisualSpell()
+    {
+        static bool validated = false;
+        if (validated)
+            return;
+
+        validated = true;
+        ASSERT(sSpellMgr->GetSpellInfo(SPELL_HOTSWAP_VISUAL_SPELL_EFFECT),
+               "The hotswap visual effect spell is missing from the client data.");
+    }
+
+    /// The ids of the scripts the given context registered for one script type.
+    template<typename ScriptType>
+    std::unordered_set<uint32> GetScriptIdsOfContext(std::string const& context)
+    {
+        std::unordered_set<uint32> ids;
+
+        auto const bounds = ScriptRegistry<ScriptType>::ContextScriptIds.equal_range(context);
+        for (auto itr = bounds.first; itr != bounds.second; ++itr)
+            ids.insert(itr->second);
+
+        return ids;
+    }
+
+    /// Resolves a stored object of the given type on a map. The object is looked
+    /// up again at every use because a reset may have removed the previous one.
+    template<typename ObjectType>
+    ObjectType* GetEntityFromMap(Map* map, ObjectGuid const& guid)
+    {
+        if constexpr (std::is_same_v<ObjectType, Creature>)
+            return map->GetCreature(guid);
+        else
+            return map->GetGameObject(guid);
+    }
+
+    /// Passes every stored object of the type that uses one of the given script
+    /// ids to the visitor; other object types of the map store are ignored.
+    template<typename ObjectType, typename Visitor>
+    class SwapObjectsWorker
+    {
+    public:
+        SwapObjectsWorker(std::unordered_set<uint32> const& idsToSwap, Visitor const& visitor)
+            : _idsToSwap(idsToSwap), _visitor(visitor) { }
+
+        void Visit(std::unordered_map<ObjectGuid, ObjectType*>& objects)
+        {
+            for (auto const& objectEntry : objects)
+            {
+                ObjectType* object = objectEntry.second;
+                if (_idsToSwap.count(object->GetScriptId()) != 0)
+                    _visitor(object);
+            }
+        }
+
+        template<typename OtherType>
+        void Visit(std::unordered_map<ObjectGuid, OtherType*>&) { }
+
+    private:
+        std::unordered_set<uint32> const& _idsToSwap;
+        Visitor const& _visitor;
+    };
+
+    template<typename ObjectType, typename Visitor>
+    void VisitObjectsToSwapOnMap(Map* map, std::unordered_set<uint32> const& idsToSwap, Visitor const& visitor)
+    {
+        SwapObjectsWorker<ObjectType, Visitor> worker(idsToSwap, visitor);
+        TypeContainerVisitor<SwapObjectsWorker<ObjectType, Visitor>, MapStoredObjectTypesContainer> containerVisitor(worker);
+        containerVisitor.Visit(map->GetObjectsStore());
+    }
+
+    /// A creature keeps its own state, so a swap has to put it back in the state a
+    /// freshly loaded creature is in, both when its AI is taken away and when the
+    /// new one arrives.
+    void UnloadResetScript(Creature* creature)
+    {
+        // Remove deletable events only, otherwise non-deletable spell events die
+        // in the middle of a cast.
+        creature->m_Events.KillAllEvents(false);
+
+        if (creature->IsCharmed())
+        {
+            creature->RemoveCharmedBy(nullptr);
+
+            // AC restores the disabled AI on the next update only, and the AI the
+            // charm left in place is the charm one. Restore it here, or the AI of
+            // the released library stays reachable in i_disabledAI.
+            creature->UpdateCharmAI();
+        }
+
+        ASSERT(!creature->IsCharmed(), "A charmed creature must not be swapped.");
+        ASSERT(!creature->HasDisabledAI(), "The disabled AI of a creature must be restored before it is swapped.");
+
+        if (creature->IsAlive())
+            creature->AI()->EnterEvadeMode();
+    }
+
+    void UnloadDestroyScript(Creature* creature)
+    {
+        bool const destroyed = creature->AIM_Destroy();
+        ASSERT(destroyed, "Destroying the AI of a creature must not fail here.");
+        (void)destroyed;
+
+        ASSERT(!creature->AI(), "The AI of a creature must be null here.");
+    }
+
+    void LoadInitializeScript(Creature* creature)
+    {
+        ASSERT(!creature->AI(), "The AI of a creature must be null here.");
+
+        if (creature->IsAlive())
+            creature->ClearUnitState(UNIT_STATE_EVADE);
+
+        bool const created = creature->AIM_Create();
+        ASSERT(created, "Creating the AI of a creature must not fail here.");
+        (void)created;
+    }
+
+    void LoadResetScript(Creature* creature)
+    {
+        if (!creature->IsAlive())
+            return;
+
+        creature->AI()->InitializeAI();
+
+        if (creature->GetVehicleKit())
+            creature->GetVehicleKit()->Reset();
+
+        creature->AI()->EnterEvadeMode();
+
+        // Signal the swap to the players instead of resetting the creature silently.
+        creature->m_Events.AddEvent(new AsyncCastHotswapEffectEvent(creature), creature->m_Events.CalculateTime(0));
+    }
+
+    void UnloadResetScript(GameObject* gameObject)
+    {
+        // Remove deletable events only, otherwise non-deletable spell events die
+        // in the middle of a cast.
+        gameObject->m_Events.KillAllEvents(false);
+
+        gameObject->AI()->Reset();
+    }
+
+    void UnloadDestroyScript(GameObject* gameObject)
+    {
+        gameObject->AIM_Destroy();
+
+        ASSERT(!gameObject->AI(), "The AI of a game object must be null here.");
+    }
+
+    void LoadInitializeScript(GameObject* gameObject)
+    {
+        ASSERT(!gameObject->AI(), "The AI of a game object must be null here.");
+
+        gameObject->AIM_Initialize();
+    }
+
+    void LoadResetScript(GameObject* gameObject)
+    {
+        gameObject->AI()->Reset();
+    }
+
+    /// Unload pass shared by creature and gameobject scripts: let the objects put
+    /// themselves back in order, then drop the AIs of the released scripts.
+    template<typename ObjectType>
+    void UnloadAIsOfScriptIds(std::unordered_set<uint32> const& idsToRelease)
+    {
+        if (idsToRelease.empty())
+            return;
+
+        sMapMgr->DoForAllMaps([&idsToRelease](Map* map)
+        {
+            std::vector<ObjectGuid> guidsToReset;
+
+            // An object that is not in the world yet has no AI to reset; it gets
+            // one when it is added.
+            VisitObjectsToSwapOnMap<ObjectType>(map, idsToRelease, [&guidsToReset](ObjectType* object)
+            {
+                if (object->AI() && !object->GetGUID().IsEmpty())
+                    guidsToReset.push_back(object->GetGUID());
+            });
+
+            for (ObjectGuid const& guid : guidsToReset)
+                if (ObjectType* object = GetEntityFromMap<ObjectType>(map, guid))
+                    UnloadResetScript(object);
+
+            VisitObjectsToSwapOnMap<ObjectType>(map, idsToRelease, [](ObjectType* object)
+            {
+                UnloadDestroyScript(object);
+            });
+        });
+    }
+
+    /// Load pass shared by creature and gameobject scripts: give every object that
+    /// lost its AI one of the newest code, then initialize it like a fresh load.
+    template<typename ObjectType>
+    void CreateAIsOfScriptIds(std::unordered_set<uint32> const& idsToCreate)
+    {
+        if (idsToCreate.empty())
+            return;
+
+        sMapMgr->DoForAllMaps([&idsToCreate](Map* map)
+        {
+            std::vector<ObjectGuid> guidsToReset;
+
+            VisitObjectsToSwapOnMap<ObjectType>(map, idsToCreate, [&guidsToReset](ObjectType* object)
+            {
+                if (!object->AI() && !object->GetGUID().IsEmpty())
+                {
+                    LoadInitializeScript(object);
+                    guidsToReset.push_back(object->GetGUID());
+                }
+            });
+
+            for (ObjectGuid const& guid : guidsToReset)
+            {
+                ObjectType* object = GetEntityFromMap<ObjectType>(map, guid);
+                if (!object)
+                    continue;
+
+                if (!object->AI())
+                    LoadInitializeScript(object);
+
+                LoadResetScript(object);
+            }
+        });
+    }
+
+    /// Recreates the AI of a creature or game object when the script that selects
+    /// it changes owner. The release takes every live object of the type through an
+    /// unload pass, the commit gives the ones that lost their AI a new one, so a
+    /// released library's vtable never survives in a live object.
+    template<typename ObjectType, typename ScriptType>
+    struct AIObjectScriptSwapHooks
+    {
+        static void BeforeReleaseContext(std::string const& context)
+        {
+            std::unordered_set<uint32> const idsToRelease = GetScriptIdsOfContext<ScriptType>(context);
+            UnloadAIsOfScriptIds<ObjectType>(idsToRelease);
+            _idsToRelease.insert(idsToRelease.begin(), idsToRelease.end());
+        }
+
+        static void BeforeSwapContext(bool initialize)
+        {
+            // The scripts registered at start-up are not swapped: every object
+            // already runs the AI its script selects.
+            if (initialize)
+                return;
+
+            ValidateHotswapVisualSpell();
+
+            // A script registered since the last commit takes over the objects it
+            // is assigned to, so their default AI is replaced as well.
+            _idsToRelease.insert(ScriptRegistry<ScriptType>::RecentlyAddedScriptIds.begin(),
+                                 ScriptRegistry<ScriptType>::RecentlyAddedScriptIds.end());
+
+            UnloadAIsOfScriptIds<ObjectType>(_idsToRelease);
+            CreateAIsOfScriptIds<ObjectType>(_idsToRelease);
+
+            _idsToRelease.clear();
+        }
+
+        static void BeforeUnload()
+        {
+            ASSERT(_idsToRelease.empty(), "The AI of a released script should have been recreated by now.");
+        }
+
+    private:
+        /// Script ids released since the last commit, whose objects wait for the
+        /// AI the newest code selects.
+        static inline std::unordered_set<uint32> _idsToRelease;
+    };
+}
+
+template<>
+struct ScriptSwapHooks<CreatureScript> : AIObjectScriptSwapHooks<Creature, CreatureScript> { };
+
+template<>
+struct ScriptSwapHooks<GameObjectScript> : AIObjectScriptSwapHooks<GameObject, GameObjectScript> { };
 
 namespace
 {

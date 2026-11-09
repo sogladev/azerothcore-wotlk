@@ -325,6 +325,10 @@ public:
     [[nodiscard]] virtual uint32 GetScriptId() const;
     [[nodiscard]] GameObjectAI* AI() const { return m_AI; }
 
+    /// Drops the AI without replacing it; AIM_Initialize gives it back.
+    void AIM_Destroy();
+    bool AIM_Initialize();
+
     [[nodiscard]] std::string const& GetAIName() const;
     void SetDisplayId(uint32 displayid);
     [[nodiscard]] uint32 GetDisplayId() const { return GetUInt32Value(GAMEOBJECT_DISPLAYID); }
@@ -386,7 +390,6 @@ public:
 
     bool IsUpdateNeeded() override;
 protected:
-    bool AIM_Initialize();
     GameObjectModel* CreateModel();
     void UpdateModel();                                 // updates model in case displayId were changed
     bool        _respawnCompatibilityMode{true};

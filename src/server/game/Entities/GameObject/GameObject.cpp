@@ -153,8 +153,7 @@ GameObject::~GameObject()
 
 bool GameObject::AIM_Initialize()
 {
-    if (m_AI)
-        delete m_AI;
+    AIM_Destroy();
 
     m_AI = FactorySelector::SelectGameObjectAI(this);
 
@@ -163,6 +162,12 @@ bool GameObject::AIM_Initialize()
 
     m_AI->InitializeAI();
     return true;
+}
+
+void GameObject::AIM_Destroy()
+{
+    delete m_AI;
+    m_AI = nullptr;
 }
 
 std::string const& GameObject::GetAIName() const
