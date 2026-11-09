@@ -101,6 +101,151 @@ namespace
     static_assert(Acore::count_if<ScriptRegistryTypes>([]<typename Info>() { return Info::LegacyDbValidationCandidate; }) == 34, "Database-check script type count changed");
 }
 
+ScriptRegistryCompositum* ScriptRegistryCompositum::Instance()
+{
+    static ScriptRegistryCompositum instance;
+    return &instance;
+}
+
+void ScriptRegistryCompositum::Register(ScriptRegistryInterface* registry)
+{
+    ASSERT(registry);
+    _registries.insert(registry);
+}
+
+void ScriptRegistryCompositum::SetScriptNameInContext(std::string const& scriptname, std::string const& context)
+{
+    _scriptnames_to_context[scriptname] = context;
+}
+
+std::string const& ScriptRegistryCompositum::GetScriptContextOfScriptName(std::string const& scriptname) const
+{
+    auto const itr = _scriptnames_to_context.find(scriptname);
+    if (itr == _scriptnames_to_context.end())
+    {
+        // A name no script registered, typically one the database knows only.
+        // It belongs to no context and is never released.
+        static std::string const noContext;
+        return noContext;
+    }
+
+    return itr->second;
+}
+
+void ScriptRegistryCompositum::ReleaseContext(std::string const& context)
+{
+    for (ScriptRegistryInterface* registry : _registries)
+        registry->ReleaseContext(context);
+
+    // The names leave the map after the registries ran their release hooks, which
+    // may still resolve a name, and after every transfer into another context.
+    std::size_t releasedNames = 0;
+    for (auto itr = _scriptnames_to_context.begin(); itr != _scriptnames_to_context.end();)
+    {
+        if (itr->second != context)
+        {
+            ++itr;
+            continue;
+        }
+
+        itr = _scriptnames_to_context.erase(itr);
+        ++releasedNames;
+    }
+
+    LOG_DEBUG("scripts", "Released {} script name(s) of the '{}' script context", releasedNames, context);
+}
+
+void ScriptRegistryCompositum::SwapContext(bool initialize)
+{
+    for (ScriptRegistryInterface* registry : _registries)
+        registry->SwapContext(initialize);
+
+    DoDelayedDelete();
+}
+
+void ScriptRegistryCompositum::RemoveUsedScriptsFromContainer(std::unordered_set<std::string>& scripts)
+{
+    for (ScriptRegistryInterface* registry : _registries)
+        registry->RemoveUsedScriptsFromContainer(scripts);
+}
+
+void ScriptRegistryCompositum::Unload()
+{
+    DoDelayedDelete();
+    _scriptnames_to_context.clear();
+}
+
+void ScriptRegistryCompositum::DoDelayedDelete()
+{
+    _delayed_delete_queue.clear();
+}
+
+// The script registry containers belong to the worldserver, so they are defined
+// once here and not in the header: a script module that instantiated them from the
+// header would get a private copy of the hook dispatch and of the registries, and
+// the scripts it adds would never be visible to the core.
+#define DEFINE_SCRIPT_REGISTRY_STORAGE(ScriptType)                                                  \
+    template<> ScriptRegistry<ScriptType>::ScriptMap ScriptRegistry<ScriptType>::ScriptPointerList{}; \
+    template<> ScriptRegistry<ScriptType>::ScriptVector ScriptRegistry<ScriptType>::ALScripts{};     \
+    template<> ScriptRegistry<ScriptType>::EnabledHooksVector                                        \
+    ScriptRegistry<ScriptType>::EnabledHooks{};                                                      \
+    template<> std::unordered_multimap<std::string, uint32> ScriptRegistry<ScriptType>::ContextScriptIds{}; \
+    template<> std::unordered_set<uint32> ScriptRegistry<ScriptType>::RecentlyAddedScriptIds{};      \
+    template<> uint32 ScriptRegistry<ScriptType>::_scriptIdCounter = 0;
+
+DEFINE_SCRIPT_REGISTRY_STORAGE(AccountScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AchievementCriteriaScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AchievementScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(ALEScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AllBattlegroundScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AllCommandScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AllCreatureScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AllGameObjectScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AllItemScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AllMapScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AllSpellScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AreaTriggerScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(ArenaScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(ArenaTeamScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(AuctionHouseScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(BattlefieldScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(BattlegroundMapScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(BattlegroundScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(CommandScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(ConditionScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(CreatureScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(DatabaseScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(DynamicObjectScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(FormulaScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(GameEventScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(GameObjectScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(GlobalScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(GroupScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(GuildScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(InstanceMapScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(ItemScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(LootScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(MailScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(MiscScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(ModuleScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(MovementHandlerScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(OutdoorPvPScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(PetScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(PlayerScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(ServerScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(SessionScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(SpellScriptLoader)
+DEFINE_SCRIPT_REGISTRY_STORAGE(TicketScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(TransportScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(UnitScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(VehicleScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(WeatherScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(WorldMapScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(WorldObjectScript)
+DEFINE_SCRIPT_REGISTRY_STORAGE(WorldScript)
+
+#undef DEFINE_SCRIPT_REGISTRY_STORAGE
+
 struct TSpellSummary
 {
     uint8 Targets; // set of enum SelectTarget
@@ -111,7 +256,8 @@ ScriptMgr::ScriptMgr()
     : _scriptCount(0),
     _scheduledScripts(0),
     _script_loader_callback(nullptr),
-    _modules_loader_callback(nullptr) { }
+    _modules_loader_callback(nullptr),
+    _currentContext(GetNameOfStaticContext()) { }
 
 ScriptMgr::~ScriptMgr() { }
 
@@ -142,6 +288,10 @@ void ScriptMgr::Initialize()
 
     Acore::for_each<ScriptRegistryTypes>([]<typename Info>()
     {
+        // Touch every registry, so the compositum knows all of them before the
+        // first change set, including the types no script registered yet.
+        ScriptRegistry<typename Info::type>::Instance();
+
         if constexpr (Info::HasEnabledHooks)
             ScriptRegistry<typename Info::type>::InitEnabledHooksIfNeeded(Info::EnabledHooks);
     });
@@ -154,7 +304,46 @@ void ScriptMgr::Unload()
         ScriptRegistry<typename Info::type>::Unload();
     });
 
+    sScriptRegistryCompositum->Unload();
+
     delete[] SpellSummary;
+}
+
+void ScriptMgr::SetScriptContext(std::string const& context)
+{
+    _currentContext = context;
+}
+
+std::string const& ScriptMgr::GetCurrentScriptContext() const
+{
+    return _currentContext;
+}
+
+std::string const& ScriptMgr::GetNameOfStaticContext()
+{
+    static std::string const name = "___static___";
+    return name;
+}
+
+void ScriptMgr::ReleaseScriptContext(std::string const& context)
+{
+    sScriptRegistryCompositum->ReleaseContext(context);
+}
+
+void ScriptMgr::SwapScriptContext(bool initialize)
+{
+    sScriptRegistryCompositum->SwapContext(initialize);
+
+    // Everything registered from here on belongs to the statically linked set
+    // again, so a script whose library forgot to set a context is never orphaned.
+    _currentContext = GetNameOfStaticContext();
+}
+
+std::shared_ptr<ModuleReference> ScriptMgr::AcquireModuleReferenceOfScriptName(std::string const& /*scriptname*/) const
+{
+    // Handing out a module reference needs the reload manager that owns the loaded
+    // libraries; until it can, no script outlives the library it came from.
+    return nullptr;
 }
 
 void ScriptMgr::LoadDatabase()

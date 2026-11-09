@@ -36,7 +36,11 @@
 #include "Tuples.h"
 #include "Weather.h"
 #include "World.h"
+#include <algorithm>
 #include <atomic>
+#include <memory>
+#include <unordered_map>
+#include <unordered_set>
 
 // Add support old api modules
 #include "AllScriptsObjects.h"
@@ -61,6 +65,7 @@ class InstanceMap;
 class InstanceScript;
 class Item;
 class Map;
+class ModuleReference;
 class MotionTransport;
 class OutdoorPvP;
 class Player;
@@ -106,7 +111,7 @@ namespace Acore::ChatCommands
 */
 
 // Manages registration, loading, and execution of scripts.
-class ScriptMgr
+class AC_GAME_API ScriptMgr
 {
     friend class ScriptObject;
 
@@ -146,6 +151,26 @@ public: /* Initialization */
 
 public: /* Unloading */
     void Unload();
+
+public: /* Script contexts */
+    /// Name of the context the statically linked scripts belong to.
+    static std::string const& GetNameOfStaticContext();
+
+    /// Selects the context the next registered scripts belong to. Scripts are
+    /// added to it until the next commit, so a library is registered in one go.
+    void SetScriptContext(std::string const& context);
+    std::string const& GetCurrentScriptContext() const;
+
+    /// Removes every script the given context registered; the objects themselves
+    /// are destroyed when the change set is committed by SwapScriptContext.
+    void ReleaseScriptContext(std::string const& context);
+
+    /// Commits the change set collected since the last call.
+    void SwapScriptContext(bool initialize = false);
+
+    /// Returns a strong reference to the module that registered the script with
+    /// the given database name, so a live object keeps its module mapped.
+    std::shared_ptr<ModuleReference> AcquireModuleReferenceOfScriptName(std::string const& scriptname) const;
 
 public: /* SpellScriptLoader */
     void CreateSpellScripts(uint32 spellId, std::list<SpellScript*>& scriptVector);
@@ -764,12 +789,144 @@ private:
 
     ScriptLoaderCallbackType _script_loader_callback;
     ModulesLoaderCallbackType _modules_loader_callback;
+
+    // Context the scripts registered right now belong to.
+    std::string _currentContext;
 };
 
 #define sScriptMgr ScriptMgr::instance()
 
+/// The operations a script change set applies to a script type as a whole. The
+/// ScriptRegistryCompositum reaches every registry through it, so all types are
+/// released and committed together.
+class AC_GAME_API ScriptRegistryInterface
+{
+public:
+    ScriptRegistryInterface() = default;
+    virtual ~ScriptRegistryInterface() = default;
+
+    ScriptRegistryInterface(ScriptRegistryInterface const&) = delete;
+    ScriptRegistryInterface(ScriptRegistryInterface&&) = delete;
+    ScriptRegistryInterface& operator= (ScriptRegistryInterface const&) = delete;
+    ScriptRegistryInterface& operator= (ScriptRegistryInterface&&) = delete;
+
+    /// Removes every script registered by the given script context.
+    /// Requires SwapContext to be called after all transfers have finished.
+    virtual void ReleaseContext(std::string const& context) = 0;
+
+    /// Applies and clears the change set collected since the last call.
+    virtual void SwapContext(bool initialize) = 0;
+
+    /// Removes the names of the scripts held by this registry from the container.
+    /// Used to find the script names nothing registered.
+    virtual void RemoveUsedScriptsFromContainer(std::unordered_set<std::string>& scripts) = 0;
+};
+
+/// Owns the state shared by all script registries: which context registered a
+/// script name, and the script objects that must die when the change set is
+/// committed rather than when it was assembled.
+class AC_GAME_API ScriptRegistryCompositum
+{
+private:
+    /// Type erasure wrapper for an object destroyed with the change set.
+    class DeleteableObjectBase
+    {
+    public:
+        DeleteableObjectBase() = default;
+        virtual ~DeleteableObjectBase() = default;
+
+        DeleteableObjectBase(DeleteableObjectBase const&) = delete;
+        DeleteableObjectBase& operator= (DeleteableObjectBase const&) = delete;
+    };
+
+    template<typename T>
+    class DeleteableObject : public DeleteableObjectBase
+    {
+    public:
+        explicit DeleteableObject(T&& object)
+            : _object(std::move(object)) { }
+
+    private:
+        T _object;
+    };
+
+public:
+    static ScriptRegistryCompositum* Instance();
+
+    /// Makes a registry take part in the context operations.
+    void Register(ScriptRegistryInterface* registry);
+
+    /// Remembers the context that registered a script name. A name registered
+    /// again by another library is taken over: replacing a core script with a
+    /// module one is a supported flow, so the newest registration wins.
+    void SetScriptNameInContext(std::string const& scriptname, std::string const& context);
+
+    /// Returns the context that registered the given script name, or an empty
+    /// string when no registry holds that name.
+    std::string const& GetScriptContextOfScriptName(std::string const& scriptname) const;
+
+    /// Queues an object for deletion at the next commit.
+    template<typename T>
+    void QueueForDelayedDelete(T&& object)
+    {
+        _delayed_delete_queue.push_back(std::make_unique<DeleteableObject<std::decay_t<T>>>(std::forward<T>(object)));
+    }
+
+    void ReleaseContext(std::string const& context);
+    void SwapContext(bool initialize);
+    void RemoveUsedScriptsFromContainer(std::unordered_set<std::string>& scripts);
+
+    /// Destroys every queued object and forgets the script names of all contexts.
+    void Unload();
+
+private:
+    ScriptRegistryCompositum() = default;
+
+    void DoDelayedDelete();
+
+    std::unordered_set<ScriptRegistryInterface*> _registries;
+
+    std::unordered_map<
+        std::string /*script name*/,
+        std::string /*context*/
+    > _scriptnames_to_context;
+
+    std::vector<std::unique_ptr<DeleteableObjectBase>> _delayed_delete_queue;
+};
+
+#define sScriptRegistryCompositum ScriptRegistryCompositum::Instance()
+
+/// Deletes a script of a released context once the change set is committed, and
+/// keeps the script counter honest: the object already left its registry, but it
+/// must not die while a hook can still reach it.
 template<class TScript>
-class ScriptRegistry
+class DeferredScriptDelete
+{
+public:
+    explicit DeferredScriptDelete(TScript* script)
+        : _script(script) { }
+
+    DeferredScriptDelete(DeferredScriptDelete&& other) noexcept
+        : _script(other._script) { other._script = nullptr; }
+    DeferredScriptDelete(DeferredScriptDelete const&) = delete;
+    DeferredScriptDelete& operator= (DeferredScriptDelete const&) = delete;
+    DeferredScriptDelete& operator= (DeferredScriptDelete&&) = delete;
+
+    ~DeferredScriptDelete()
+    {
+        if (!_script)
+            return;
+
+        delete _script;
+        sScriptMgr->DecreaseScriptCount();
+    }
+
+private:
+    TScript* _script;
+};
+
+template<class TScript>
+class AC_GAME_API ScriptRegistry final : public ScriptRegistryInterface
 {
 public:
     typedef std::map<uint32, TScript*> ScriptMap;
@@ -789,6 +946,19 @@ public:
     // The list of hook types with the list of enabled scripts for this specific hook.
     // With this approach, we wouldn't call all available hooks in case if we override just one hook.
     static EnabledHooksVector EnabledHooks;
+    // Ids of the scripts each script context (library) registered.
+    static std::unordered_multimap<std::string /*context*/, uint32 /*script id*/> ContextScriptIds;
+    // Ids registered since the last commit, used by the swap policy of the type.
+    static std::unordered_set<uint32> RecentlyAddedScriptIds;
+
+    /// Returns the registry of this script type and joins it to the compositum on
+    /// first use, so a registry reached only after start-up still takes part in
+    /// the context operations.
+    static ScriptRegistry* Instance()
+    {
+        static ScriptRegistry instance;
+        return &instance;
+    }
 
     static void InitEnabledHooksIfNeeded(uint16 totalAvailableHooks)
     {
@@ -799,11 +969,17 @@ public:
     {
         ASSERT(script);
 
+        // A registry that is created after start-up still has to join the
+        // compositum before anything can be released from it.
+        Instance();
+
         if (!_checkMemory(script))
             return;
 
         if (EnabledHooks.empty())
             InitEnabledHooksIfNeeded(script->GetTotalAvailableHooks());
+
+        sScriptRegistryCompositum->SetScriptNameInContext(script->GetName(), sScriptMgr->GetCurrentScriptContext());
 
         if (script->isAfterLoadScript())
         {
@@ -817,7 +993,7 @@ public:
                 EnabledHooks[v].emplace_back(script);
 
             // We're dealing with a code-only script; just add it.
-            ScriptPointerList[_scriptIdCounter++] = script;
+            RegisterScript(script, _scriptIdCounter++);
             sScriptMgr->IncreaseScriptCount();
         }
     }
@@ -858,25 +1034,20 @@ public:
                     // If the script is already assigned -> delete it!
                     if (oldScript)
                     {
-                        for (auto& vIt : EnabledHooks)
-                            for (std::size_t i = 0; i < vIt.size(); ++i)
-                                if (vIt[i] == oldScript)
-                                {
-                                    vIt.erase(vIt.begin() + i);
-                                    break;
-                                }
+                        RemoveFromEnabledHooks(oldScript);
+                        ForgetScript(oldScript);
+                        RemoveFromALScripts(oldScript);
 
                         delete oldScript;
                     }
-
-                    // Assign new script!
-                    ScriptPointerList[id] = script;
-
-                    // Increment script count only with new scripts
-                    if (!oldScript)
+                    else
                     {
+                        // Increment script count only with new scripts
                         sScriptMgr->IncreaseScriptCount();
                     }
+
+                    // Assign new script!
+                    RegisterScript(script, id);
                 }
                 else
                 {
@@ -892,10 +1063,74 @@ public:
                     EnabledHooks[v].emplace_back(script);
 
                 // We're dealing with a code-only script; just add it.
-                ScriptPointerList[_scriptIdCounter++] = script;
+                RegisterScript(script, _scriptIdCounter++);
                 sScriptMgr->IncreaseScriptCount();
             }
         }
+    }
+
+    /// Removes every script of the given context from this registry. The objects
+    /// themselves are queued for deletion: they must stay alive until the change
+    /// set is committed, so no hook can reach a destroyed script.
+    void ReleaseContext(std::string const& context) final override
+    {
+        std::unordered_set<TScript*> scriptsToDelete;
+
+        auto const bounds = ContextScriptIds.equal_range(context);
+        for (auto itr = bounds.first; itr != bounds.second; ++itr)
+        {
+            RecentlyAddedScriptIds.erase(itr->second);
+
+            auto const scriptItr = ScriptPointerList.find(itr->second);
+            if (scriptItr == ScriptPointerList.end())
+                continue;
+
+            scriptsToDelete.insert(scriptItr->second);
+            ScriptPointerList.erase(scriptItr);
+        }
+
+        ContextScriptIds.erase(bounds.first, bounds.second);
+
+        // Scripts still waiting for the database promotion are owned by the
+        // registry but not registered yet; the name mapping finds them.
+        for (ScriptVectorIterator itr = ALScripts.begin(); itr != ALScripts.end();)
+        {
+            if (sScriptRegistryCompositum->GetScriptContextOfScriptName(itr->first->GetName()) != context)
+            {
+                ++itr;
+                continue;
+            }
+
+            scriptsToDelete.insert(itr->first);
+            itr = ALScripts.erase(itr);
+        }
+
+        // A released script must not be dispatched any more, so it leaves every
+        // enabled-hook bucket before the change set is committed.
+        if (!scriptsToDelete.empty())
+        {
+            for (auto& hookScripts : EnabledHooks)
+                hookScripts.erase(std::remove_if(hookScripts.begin(), hookScripts.end(),
+                    [&scriptsToDelete](TScript* script) { return scriptsToDelete.count(script) != 0; }),
+                    hookScripts.end());
+        }
+
+        for (TScript* script : scriptsToDelete)
+            sScriptRegistryCompositum->QueueForDelayedDelete(DeferredScriptDelete<TScript>(script));
+    }
+
+    void SwapContext(bool /*initialize*/) final override
+    {
+        RecentlyAddedScriptIds.clear();
+    }
+
+    void RemoveUsedScriptsFromContainer(std::unordered_set<std::string>& scripts) final override
+    {
+        for (auto const& entry : ScriptPointerList)
+            scripts.erase(entry.second->GetName());
+
+        for (auto const& entry : ALScripts)
+            scripts.erase(entry.first->GetName());
     }
 
     // Deletes every script. Hooks still fire after this (the static destructors of
@@ -907,6 +1142,8 @@ public:
             delete script;
 
         ScriptPointerList.clear();
+        ContextScriptIds.clear();
+        RecentlyAddedScriptIds.clear();
 
         for (auto& hookScripts : EnabledHooks)
             hookScripts.clear();
@@ -923,6 +1160,75 @@ public:
     }
 
 private:
+    /// Registers the registry with the compositum on first use, which is what
+    /// makes a context release reach the scripts of this type.
+    ScriptRegistry()
+    {
+        sScriptRegistryCompositum->Register(this);
+    }
+
+    /// Files a script under the given id and records the context that owns it.
+    static void RegisterScript(TScript* script, uint32 id)
+    {
+        ScriptPointerList[id] = script;
+        ContextScriptIds.emplace(sScriptRegistryCompositum->GetScriptContextOfScriptName(script->GetName()), id);
+        RecentlyAddedScriptIds.insert(id);
+    }
+
+    /// Removes a script from the hook dispatch; a script is listed at most once
+    /// per bucket.
+    static void RemoveFromEnabledHooks(TScript const* script)
+    {
+        for (auto& hookScripts : EnabledHooks)
+        {
+            auto const itr = std::find(hookScripts.begin(), hookScripts.end(), script);
+            if (itr != hookScripts.end())
+                hookScripts.erase(itr);
+        }
+    }
+
+    /// Removes a script from the registry list and drops the context it was
+    /// registered by; the caller owns the object as of that point.
+    static void ForgetScript(TScript const* script)
+    {
+        for (auto itr = ScriptPointerList.begin(); itr != ScriptPointerList.end(); ++itr)
+        {
+            if (itr->second != script)
+                continue;
+
+            ForgetScriptId(itr->first);
+            ScriptPointerList.erase(itr);
+            return;
+        }
+    }
+
+    /// Drops the context bookkeeping of a script id.
+    static void ForgetScriptId(uint32 id)
+    {
+        RecentlyAddedScriptIds.erase(id);
+
+        for (auto itr = ContextScriptIds.begin(); itr != ContextScriptIds.end();)
+        {
+            if (itr->second == id)
+                itr = ContextScriptIds.erase(itr);
+            else
+                ++itr;
+        }
+    }
+
+    /// Drops the deferred entry of a script that was never promoted.
+    static void RemoveFromALScripts(TScript const* script)
+    {
+        for (ScriptVectorIterator itr = ALScripts.begin(); itr != ALScripts.end(); ++itr)
+        {
+            if (itr->first != script)
+                continue;
+
+            ALScripts.erase(itr);
+            return;
+        }
+    }
+
     // See if the script is using the same memory as another script. If this happens, it means that
     // someone forgot to allocate new memory for a script.
     static bool _checkMemory(TScript* const script)
@@ -947,10 +1253,8 @@ private:
     static uint32 _scriptIdCounter;
 };
 
-// Instantiate static members of ScriptRegistry.
-template<class TScript> std::map<uint32, TScript*> ScriptRegistry<TScript>::ScriptPointerList;
-template<class TScript> std::vector<std::pair<TScript*,std::vector<uint16>>> ScriptRegistry<TScript>::ALScripts;
-template<class TScript> std::vector<std::vector<TScript*>> ScriptRegistry<TScript>::EnabledHooks;
-template<class TScript> uint32 ScriptRegistry<TScript>::_scriptIdCounter = 0;
+// The static containers are defined once, in ScriptMgr.cpp, and not in this
+// header: a script module that instantiated them would get a private copy of the
+// hook dispatch and of the registries, which must belong to the worldserver.
 
 #endif
