@@ -41,7 +41,7 @@ target_link_libraries(game-interface
   INTERFACE
     shared)
 
-add_library(game STATIC
+add_library(game
   ${PRIVATE_SOURCES})
 
 add_dependencies(game revision.h)
@@ -59,8 +59,22 @@ target_link_libraries(game
 
 set_target_properties(game
   PROPERTIES
+    DEFINE_SYMBOL
+      ACORE_API_EXPORT_GAME
     FOLDER
       "server")
+
+if (BUILD_SHARED_LIBS)
+  if (UNIX)
+    install(TARGETS game
+      LIBRARY
+        DESTINATION lib)
+  elseif (WIN32)
+    install(TARGETS game
+      RUNTIME
+        DESTINATION "${CMAKE_INSTALL_PREFIX}")
+  endif ()
+endif ()
 
 # Generate precompiled header
 if (USE_COREPCH)

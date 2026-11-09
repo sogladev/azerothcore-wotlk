@@ -24,6 +24,18 @@ if (NOT USE_REAL_LIBSIDECAR)
         INTERFACE_INCLUDE_DIRECTORIES
           ${CMAKE_CURRENT_SOURCE_DIR}/stub)
 
+    # The stub is linked into the cores, which are shared objects
+    # under dynamic linking. Deliberately not done through
+    # acore-dependency-interface: the stub must keep default visibility,
+    # because worldserver carries its own copy of it and both copies must
+    # resolve to a single set of handler pointers.
+    if (BUILD_SHARED_LIBS)
+        set_target_properties(libsidecar
+          PROPERTIES
+            POSITION_INDEPENDENT_CODE
+              ON)
+    endif ()
+
 else()
     add_library(libsidecar SHARED IMPORTED GLOBAL)
 

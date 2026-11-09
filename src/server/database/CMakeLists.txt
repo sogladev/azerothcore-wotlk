@@ -56,8 +56,22 @@ target_link_libraries(database
 
 set_target_properties(database
   PROPERTIES
+    DEFINE_SYMBOL
+      ACORE_API_EXPORT_DATABASE
     FOLDER
       "server")
+
+if (BUILD_SHARED_LIBS)
+  if (UNIX)
+    install(TARGETS database
+      LIBRARY
+        DESTINATION lib)
+  elseif (WIN32)
+    install(TARGETS database
+      RUNTIME
+        DESTINATION "${CMAKE_INSTALL_PREFIX}")
+  endif ()
+endif ()
 
 # Generate precompiled header
 if(USE_COREPCH)
