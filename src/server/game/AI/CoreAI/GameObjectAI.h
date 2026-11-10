@@ -76,7 +76,7 @@ public:
     virtual void SummonedCreatureEvade(Creature* /*summon*/) {}
 };
 
-class NullGameObjectAI : public GameObjectAI
+class AC_GAME_API NullGameObjectAI : public GameObjectAI
 {
 public:
     explicit NullGameObjectAI(GameObject* go);

@@ -25,7 +25,7 @@
 
 class Creature;
 
-class AggressorAI : public CreatureAI
+class AC_GAME_API AggressorAI : public CreatureAI
 {
 public:
     explicit AggressorAI(Creature* c) : CreatureAI(c) {}
@@ -36,7 +36,7 @@ public:
 
 typedef std::vector<uint32> SpellVct;
 
-class CombatAI : public CreatureAI
+class AC_GAME_API CombatAI : public CreatureAI
 {
 public:
     explicit CombatAI(Creature* c) : CreatureAI(c) {}
@@ -54,7 +54,7 @@ protected:
     SpellVct spells;
 };
 
-class CasterAI : public CombatAI
+class AC_GAME_API CasterAI : public CombatAI
 {
 public:
     explicit CasterAI(Creature* c) : CombatAI(c) { m_attackDist = MELEE_RANGE; }
@@ -66,7 +66,7 @@ private:
     float m_attackDist;
 };
 
-struct ArcherAI : public CreatureAI
+struct AC_GAME_API ArcherAI : public CreatureAI
 {
 public:
     explicit ArcherAI(Creature* c);
@@ -79,7 +79,7 @@ protected:
     float m_minRange;
 };
 
-struct TurretAI : public CreatureAI
+struct AC_GAME_API TurretAI : public CreatureAI
 {
 public:
     explicit TurretAI(Creature* c);
@@ -95,7 +95,7 @@ protected:
 
 #define VEHICLE_CONDITION_CHECK_TIME 1000
 #define VEHICLE_DISMISS_TIME 5000
-struct VehicleAI : public CreatureAI
+struct AC_GAME_API VehicleAI : public CreatureAI
 {
 public:
     explicit VehicleAI(Creature* creature);

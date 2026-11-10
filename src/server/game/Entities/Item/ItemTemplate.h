@@ -615,7 +615,7 @@ struct _Socket
 #define MAX_ITEM_PROTO_SPELLS  5
 #define MAX_ITEM_PROTO_STATS  10
 
-struct ItemTemplate
+struct AC_GAME_API ItemTemplate
 {
     uint32 ItemId;
     uint32 Class;                                           // id from ItemClass.dbc

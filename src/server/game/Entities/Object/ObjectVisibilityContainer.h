@@ -30,7 +30,7 @@ typedef std::unordered_map<ObjectGuid, WorldObject*> VisibleWorldObjectsMap;
 typedef std::unordered_map<ObjectGuid, Player*> VisiblePlayersMap;
 
 // Class that manages the visibility containers of a worldobject
-class ObjectVisibilityContainer
+class AC_GAME_API ObjectVisibilityContainer
 {
 public:
     ObjectVisibilityContainer(WorldObject* selfObject);

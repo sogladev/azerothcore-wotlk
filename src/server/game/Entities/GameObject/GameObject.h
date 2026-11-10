@@ -121,7 +121,8 @@ enum LootState
 // 5 sec for bobber catch
 #define FISHING_BOBBER_READY_TIME 5
 
-class GameObject : public WorldObject, public GridObject<GameObject>, public MovableMapObject, public UpdatableMapObject
+class AC_GAME_API GameObject : public WorldObject, public GridObject<GameObject>, public MovableMapObject,
+    public UpdatableMapObject
 {
 public:
     explicit GameObject();

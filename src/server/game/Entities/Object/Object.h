@@ -107,7 +107,7 @@ typedef std::unordered_map<Player*, UpdateData> UpdateDataMapType;
 
 static constexpr Milliseconds HEARTBEAT_INTERVAL = 5s + 200ms;
 
-class Object
+class AC_GAME_API Object
 {
 public:
     virtual ~Object();
@@ -291,7 +291,7 @@ private:
     Object& operator=(Object const&);                   // prevent generation assigment operator
 };
 
-struct MovementInfo
+struct AC_GAME_API MovementInfo
 {
     // common
     ObjectGuid guid;
@@ -435,7 +435,7 @@ private:
     MapObjectCellMoveState _moveState{MAP_OBJECT_CELL_MOVE_NONE};
 };
 
-class UpdatableMapObject
+class AC_GAME_API UpdatableMapObject
 {
     friend class Map;
 
@@ -478,7 +478,7 @@ private:
     UpdateState _mapUpdateState;
 };
 
-class WorldObject : public Object, public WorldLocation
+class AC_GAME_API WorldObject : public Object, public WorldLocation
 {
 protected:
     explicit WorldObject();

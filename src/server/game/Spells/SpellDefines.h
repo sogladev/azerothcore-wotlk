@@ -170,7 +170,7 @@ enum SpellImmuneBlockType
 };
 
 typedef std::pair<SpellValueMod, int32> CustomSpellValueMod;
-class CustomSpellValues : public std::vector<CustomSpellValueMod>
+class AC_GAME_API CustomSpellValues : public std::vector<CustomSpellValueMod>
 {
 public:
     void AddSpellMod(SpellValueMod mod, int32 value)

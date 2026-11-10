@@ -43,7 +43,8 @@ class CreatureGroup;
 typedef std::vector<uint8> CreatureTextRepeatIds;
 typedef std::unordered_map<uint8, CreatureTextRepeatIds> CreatureTextRepeatGroup;
 
-class Creature : public Unit, public GridObject<Creature>, public MovableMapObject, public UpdatableMapObject
+class AC_GAME_API Creature : public Unit, public GridObject<Creature>, public MovableMapObject,
+    public UpdatableMapObject
 {
 public:
     explicit Creature();
@@ -569,7 +570,7 @@ private:
     float _nativeObjectScale = 1.0f; ///< DisplayScale of the native model, set in InitEntry
 };
 
-class AssistDelayEvent : public BasicEvent
+class AC_GAME_API AssistDelayEvent : public BasicEvent
 {
 public:
     AssistDelayEvent(ObjectGuid victim, Creature* owner) : BasicEvent(), m_victim(victim), m_owner(owner) { }
@@ -585,7 +586,7 @@ private:
     Creature*         m_owner;
 };
 
-class ForcedDespawnDelayEvent : public BasicEvent
+class AC_GAME_API ForcedDespawnDelayEvent : public BasicEvent
 {
 public:
     ForcedDespawnDelayEvent(Creature& owner, Seconds respawnTimer) : BasicEvent(), m_owner(owner), m_respawnTimer(respawnTimer) { }
@@ -596,7 +597,7 @@ private:
     Seconds const m_respawnTimer;
 };
 
-class TemporaryThreatModifierEvent : public BasicEvent
+class AC_GAME_API TemporaryThreatModifierEvent : public BasicEvent
 {
 public:
     TemporaryThreatModifierEvent(Creature& owner, ObjectGuid threatVictimGUID, float threatValue) : BasicEvent(), m_owner(owner), m_threatVictimGUID(threatVictimGUID), m_threatValue(threatValue) { }

@@ -76,7 +76,7 @@ struct GlobalCooldown
 
 typedef std::unordered_map<uint32 /*category*/, GlobalCooldown> GlobalCooldownList;
 
-class GlobalCooldownMgr                                     // Shared by Player and CharmInfo
+class AC_GAME_API GlobalCooldownMgr                                     // Shared by Player and CharmInfo
 {
 public:
     GlobalCooldownMgr() = default;
@@ -123,7 +123,7 @@ struct UnitActionBarEntry
 };
 typedef UnitActionBarEntry CharmSpellInfo;
 
-struct CharmInfo
+struct AC_GAME_API CharmInfo
 {
 public:
     explicit CharmInfo(Unit* unit);

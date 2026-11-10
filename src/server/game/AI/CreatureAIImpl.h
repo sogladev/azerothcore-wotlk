@@ -58,9 +58,9 @@ struct AISpellInfoType
     float maxRange;
 };
 
-AISpellInfoType* GetAISpellInfo(uint32 i);
+AC_GAME_API AISpellInfoType* GetAISpellInfo(uint32 i);
 
-bool InstanceHasScript(WorldObject const* obj, char const* scriptName);
+AC_GAME_API bool InstanceHasScript(WorldObject const* obj, char const* scriptName);
 
 template<class AI, class T>
 inline AI* GetInstanceAI(T* obj, char const* scriptName)

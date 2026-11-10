@@ -116,7 +116,7 @@ enum class CreatureRandomMovementType : uint8
     Max
 };
 
-struct CreatureMovementData
+struct AC_GAME_API CreatureMovementData
 {
     CreatureMovementData();
 
@@ -166,7 +166,7 @@ struct CreatureMovementData
     std::string ToString() const;
 };
 
-struct CreatureModel
+struct AC_GAME_API CreatureModel
 {
     static CreatureModel const DefaultInvisibleModel;
     static CreatureModel const DefaultVisibleModel;
@@ -183,7 +183,7 @@ struct CreatureModel
 };
 
 // from `creature_template` table
-struct CreatureTemplate
+struct AC_GAME_API CreatureTemplate
 {
     uint32  Entry;
     uint32  DifficultyEntry[MAX_DIFFICULTY - 1];
@@ -294,7 +294,7 @@ typedef std::unordered_map<uint32, CreatureTemplate> CreatureTemplateContainer;
 #endif
 
 // Defines base stats for creatures (used to calculate HP/mana/armor/attackpower/rangedattackpower/all damage).
-struct CreatureBaseStats
+struct AC_GAME_API CreatureBaseStats
 {
     uint32 BaseHealth[MAX_EXPANSIONS];
     uint32 BaseMana;
@@ -456,7 +456,7 @@ struct VendorItem
 };
 typedef std::vector<VendorItem*> VendorItemList;
 
-struct VendorItemData
+struct AC_GAME_API VendorItemData
 {
     VendorItemList m_items;
 
@@ -483,7 +483,7 @@ struct VendorItemData
     }
 };
 
-struct VendorItemCount
+struct AC_GAME_API VendorItemCount
 {
     explicit VendorItemCount(uint32 _item, uint32 _count);
 

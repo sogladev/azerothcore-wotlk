@@ -43,7 +43,7 @@ public:
     Position _posTarget;
 };
 
-class SafeUnitPointer
+class AC_GAME_API SafeUnitPointer
 {
 public:
     explicit SafeUnitPointer(Unit* defVal) : ptr(defVal), defaultValue(defVal) {}

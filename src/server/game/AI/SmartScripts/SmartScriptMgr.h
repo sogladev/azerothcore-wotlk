@@ -2079,7 +2079,7 @@ private:
 };
 typedef std::unordered_map<uint32, ObjectGuidVector> ObjectVectorMap;
 
-class SmartWaypointMgr
+class AC_GAME_API SmartWaypointMgr
 {
     SmartWaypointMgr() {}
 public:
@@ -2108,7 +2108,7 @@ typedef std::list<SmartScriptHolder> SmartAIEventStoredList;
 // all events for all entries / guids
 typedef std::unordered_map<int32, SmartAIEventList> SmartAIEventMap;
 
-class SmartAIMgr
+class AC_GAME_API SmartAIMgr
 {
     SmartAIMgr() {};
 public:

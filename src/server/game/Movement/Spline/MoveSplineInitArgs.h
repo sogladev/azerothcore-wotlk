@@ -41,7 +41,7 @@ namespace Movement
         FacingInfo() = default;
     };
 
-    struct MoveSplineInitArgs
+    struct AC_GAME_API MoveSplineInitArgs
     {
         MoveSplineInitArgs(std::size_t path_capacity = 16)
         {

@@ -748,7 +748,7 @@ struct EquipmentSet
 
 typedef std::map<uint32, EquipmentSet> EquipmentSets;
 
-struct ItemPosCount
+struct AC_GAME_API ItemPosCount
 {
     ItemPosCount(uint16 _pos, uint32 _count) : pos(_pos), count(_count) {}
     [[nodiscard]] bool isContainedIn(std::vector<ItemPosCount> const& vec) const;
@@ -1082,7 +1082,7 @@ struct PendingSpellCastRequest
         : spellId(spellId), category(category), requestPacket(std::move(packet)), isItem(item) , cancelInProgress(cancel) {}
 };
 
-class Player : public Unit, public GridObject<Player>
+class AC_GAME_API Player : public Unit, public GridObject<Player>
 {
     friend class WorldSession;
     friend class CinematicMgr;
@@ -3090,7 +3090,7 @@ private:
     uint32 _mapChangeOrderCounter;
 };
 
-void AddItemsSetItem(Player* player, Item* item);
-void RemoveItemsSetItem(Player* player, ItemTemplate const* proto);
+AC_GAME_API void AddItemsSetItem(Player* player, Item* item);
+AC_GAME_API void RemoveItemsSetItem(Player* player, ItemTemplate const* proto);
 
 #endif

@@ -76,7 +76,7 @@ typedef std::unordered_map<ObjectGuid::LowType/*memberDBGUID*/, FormationInfo /*
 typedef std::unordered_map<ObjectGuid::LowType/*leaderDBGUID*/, std::vector<ObjectGuid::LowType>/*memberDBGUIDs*/>
     CreatureGroupMembersType;
 
-class FormationMgr
+class AC_GAME_API FormationMgr
 {
 public:
     FormationMgr() { }
@@ -91,7 +91,7 @@ public:
     CreatureGroupMembersType CreatureGroupMembers;
 };
 
-class CreatureGroup
+class AC_GAME_API CreatureGroup
 {
 public:
     // pussywizard: moved public to the top so it compiles and typedef is public

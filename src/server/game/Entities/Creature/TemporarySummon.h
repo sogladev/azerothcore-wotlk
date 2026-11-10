@@ -46,7 +46,7 @@ struct GameObjectSummonData
     uint32 respawnTime;  ///< Duration in seconds; passed to SummonGameObject's respawnTime parameter
 };
 
-class TempSummon : public Creature
+class AC_GAME_API TempSummon : public Creature
 {
 public:
     explicit TempSummon(SummonPropertiesEntry const* properties, ObjectGuid owner);
@@ -83,7 +83,7 @@ private:
     bool _visibleBySummonerOnly;
 };
 
-class Minion : public TempSummon
+class AC_GAME_API Minion : public TempSummon
 {
 public:
     Minion(SummonPropertiesEntry const* properties, ObjectGuid owner);
@@ -102,7 +102,7 @@ protected:
     float m_followAngle;
 };
 
-class Guardian : public Minion
+class AC_GAME_API Guardian : public Minion
 {
 public:
     Guardian(SummonPropertiesEntry const* properties, ObjectGuid owner);
@@ -121,7 +121,7 @@ public:
     std::string GetDebugInfo() const override;
 };
 
-class Puppet : public Minion
+class AC_GAME_API Puppet : public Minion
 {
 public:
     Puppet(SummonPropertiesEntry const* properties, ObjectGuid owner);
@@ -134,7 +134,7 @@ protected:
     const ObjectGuid m_owner;
 };
 
-class ForcedUnsummonDelayEvent : public BasicEvent
+class AC_GAME_API ForcedUnsummonDelayEvent : public BasicEvent
 {
 public:
     ForcedUnsummonDelayEvent(TempSummon& owner) : BasicEvent(), m_owner(owner) { }

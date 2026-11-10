@@ -30,7 +30,7 @@ namespace Movement
     UnitMoveType SelectSpeedType(uint32 moveFlags);
 
     // Transforms coordinates from global to transport offsets
-    class TransportPathTransform
+    class AC_GAME_API TransportPathTransform
     {
     public:
         TransportPathTransform(Unit* owner, bool transformForTransport)
@@ -59,7 +59,7 @@ namespace Movement
 
     /*  Initializes and launches spline movement
      */
-    class MoveSplineInit
+    class AC_GAME_API MoveSplineInit
     {
     public:
         explicit MoveSplineInit(Unit* m);

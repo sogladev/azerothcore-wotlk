@@ -26,7 +26,7 @@
 
 struct CreatureData;
 
-class Transport : public GameObject, public TransportBase
+class AC_GAME_API Transport : public GameObject, public TransportBase
 {
 public:
     Transport() : GameObject() {}
@@ -47,7 +47,7 @@ protected:
     PassengerSet _passengers;
 };
 
-class MotionTransport : public Transport
+class AC_GAME_API MotionTransport : public Transport
 {
     friend MotionTransport* TransportMgr::CreateTransport(uint32, ObjectGuid::LowType, Map*);
     MotionTransport();
@@ -116,7 +116,7 @@ private:
     std::chrono::system_clock::time_point _firstDepartureTime;
 };
 
-class StaticTransport : public Transport
+class AC_GAME_API StaticTransport : public Transport
 {
 public:
     StaticTransport();

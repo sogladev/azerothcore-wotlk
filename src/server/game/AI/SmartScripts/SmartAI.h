@@ -42,7 +42,7 @@ enum SmartEscortVars
 
 #define DISTANCING_CONSTANT 1.f // buffer for better functionality of distancing
 
-class SmartAI : public CreatureAI
+class AC_GAME_API SmartAI : public CreatureAI
 {
 public:
     ~SmartAI() override {};
@@ -285,7 +285,7 @@ private:
     uint32 _mainSpellId;
 };
 
-class SmartGameObjectAI : public GameObjectAI
+class AC_GAME_API SmartGameObjectAI : public GameObjectAI
 {
 public:
     SmartGameObjectAI(GameObject* g) : GameObjectAI(g) {}

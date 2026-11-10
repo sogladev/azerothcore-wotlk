@@ -47,7 +47,7 @@ enum TotemImmunitySpells
     SPELL_INTERVENE  = 3411
 };
 
-class Totem : public Minion
+class AC_GAME_API Totem : public Minion
 {
 public:
     explicit Totem(SummonPropertiesEntry const* properties, ObjectGuid owner);

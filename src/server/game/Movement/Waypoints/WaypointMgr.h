@@ -21,7 +21,7 @@
 #include "WaypointDefines.h"
 #include <unordered_map>
 
-class WaypointMgr
+class AC_GAME_API WaypointMgr
 {
 public:
     static WaypointMgr* instance();

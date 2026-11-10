@@ -522,7 +522,7 @@ enum ICCBuff
     ICC_RACEMASK_ALLIANCE = 1101
 };
 
-struct SpellArea
+struct AC_GAME_API SpellArea
 {
     uint32 spellId;
     uint32 areaId;                                          // zone/subzone/or 0 is not limited to zone
@@ -647,7 +647,7 @@ bool IsDiminishingReturnsGroupDurationLimited(DiminishingGroup group);
 
 typedef std::set<uint32> TalentAdditionalSet;
 
-class SpellMgr
+class AC_GAME_API SpellMgr
 {
     // Constructors
 private:

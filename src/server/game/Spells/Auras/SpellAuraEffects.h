@@ -35,7 +35,7 @@ enum BrewfestEntries
     FRESH_BREWFEST_HOPS = 66052
 };
 
-class AuraEffect
+class AC_GAME_API AuraEffect
 {
     friend void Aura::_InitEffects(uint8 effMask, Unit* caster, int32* baseAmount);
     friend Aura* Unit::_TryStackingOrRefreshingExistingAura(SpellInfo const* newAura, uint8 effMask, Unit* caster, int32* baseAmount, Item* castItem, ObjectGuid casterGUID, bool noPeriodicReset);

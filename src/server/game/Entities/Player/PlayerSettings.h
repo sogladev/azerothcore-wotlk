@@ -40,7 +40,7 @@ enum AnnouncerFlags : uint8
                                          | ANNOUNCER_FLAG_DISABLE_PVP_START
 };
 
-struct PlayerSetting
+struct AC_GAME_API PlayerSetting
 {
     PlayerSetting() = default;
     explicit PlayerSetting(uint32 val) : value(val) { }

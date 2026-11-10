@@ -23,7 +23,7 @@
 class Creature;
 class Totem;
 
-class TotemAI : public CreatureAI
+class AC_GAME_API TotemAI : public CreatureAI
 {
 public:
     explicit TotemAI(Creature* c);

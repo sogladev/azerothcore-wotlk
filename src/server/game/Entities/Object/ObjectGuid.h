@@ -117,7 +117,7 @@ struct PackedGuidReader
     ObjectGuid& Guid;
 };
 
-class ObjectGuid
+class AC_GAME_API ObjectGuid
 {
     public:
         static ObjectGuid const Empty;
@@ -265,7 +265,7 @@ typedef std::unordered_set<ObjectGuid> GuidUnorderedSet;
 
 class PackedGuid
 {
-    friend ByteBuffer& operator<<(ByteBuffer& buf, PackedGuid const& guid);
+    friend AC_GAME_API ByteBuffer& operator<<(ByteBuffer& buf, PackedGuid const& guid);
 
     public:
         explicit PackedGuid() : _packedGuid(PACKED_GUID_MIN_BUFFER_SIZE) { _packedGuid.appendPackGUID(0); }
@@ -281,7 +281,7 @@ class PackedGuid
         ByteBuffer _packedGuid;
 };
 
-class ObjectGuidGeneratorBase
+class AC_GAME_API ObjectGuidGeneratorBase
 {
 public:
     ObjectGuidGeneratorBase(ObjectGuid::LowType start = 1) : _nextGuid(start) { }
@@ -316,11 +316,11 @@ public:
     }
 };
 
-ByteBuffer& operator<<(ByteBuffer& buf, ObjectGuid const& guid);
-ByteBuffer& operator>>(ByteBuffer& buf, ObjectGuid&       guid);
+AC_GAME_API ByteBuffer& operator<<(ByteBuffer& buf, ObjectGuid const& guid);
+AC_GAME_API ByteBuffer& operator>>(ByteBuffer& buf, ObjectGuid&       guid);
 
-ByteBuffer& operator<<(ByteBuffer& buf, PackedGuid const& guid);
-ByteBuffer& operator>>(ByteBuffer& buf, PackedGuidReader const& guid);
+AC_GAME_API ByteBuffer& operator<<(ByteBuffer& buf, PackedGuid const& guid);
+AC_GAME_API ByteBuffer& operator>>(ByteBuffer& buf, PackedGuidReader const& guid);
 
 inline PackedGuid ObjectGuid::WriteAsPacked() const { return PackedGuid(*this); }
 

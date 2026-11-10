@@ -33,7 +33,7 @@ class Aura;
 class DynamicObject;
 class AuraScript;
 
-class AuraApplication
+class AC_GAME_API AuraApplication
 {
     friend class Aura; // Aura::UpdateTargetMap manages paladin aura effect suppression
     friend void Unit::_ApplyAura(AuraApplication* aurApp, uint8 effMask);
@@ -84,7 +84,7 @@ public:
     void RemoveDisableMask(uint8 effIdx) { _disableMask &= ~(1 << effIdx); }
 };
 
-class Aura
+class AC_GAME_API Aura
 {
     friend Aura* Unit::_TryStackingOrRefreshingExistingAura(SpellInfo const* newAura, uint8 effMask, Unit* caster, int32* baseAmount, Item* castItem, ObjectGuid casterGUID, bool noPeriodicReset);
 public:
@@ -287,7 +287,7 @@ private:
     SpellInfo const* m_triggeredByAuraSpellInfo;
 };
 
-class UnitAura : public Aura
+class AC_GAME_API UnitAura : public Aura
 {
     friend Aura* Aura::Create(SpellInfo const* spellproto, uint8 effMask, WorldObject* owner, Unit* caster, int32* baseAmount, Item* castItem, ObjectGuid casterGUID, ObjectGuid itemGUID);
 
@@ -310,7 +310,7 @@ private:
     DiminishingGroup m_AuraDRGroup: 8;              // Diminishing
 };
 
-class DynObjAura : public Aura
+class AC_GAME_API DynObjAura : public Aura
 {
     friend Aura* Aura::Create(SpellInfo const* spellproto, uint8 effMask, WorldObject* owner, Unit* caster, int32* baseAmount, Item* castItem, ObjectGuid casterGUID, ObjectGuid itemGUID);
 

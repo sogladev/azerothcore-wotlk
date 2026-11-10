@@ -105,7 +105,7 @@ struct DefaultTargetSelector : public Acore::unary_function<Unit*, bool>
 
 // Target selector for spell casts checking range, auras and attributes
 /// @todo: Add more checks from Spell::CheckCast
-struct SpellTargetSelector : public Acore::unary_function<Unit*, bool>
+struct AC_GAME_API SpellTargetSelector : public Acore::unary_function<Unit*, bool>
 {
 public:
     SpellTargetSelector(Unit* caster, uint32 spellId);
@@ -119,7 +119,7 @@ private:
 // Very simple target selector, will just skip main target
 // NOTE: When passing to UnitAI::SelectTarget remember to use 0 as position for random selection
 //       because tank will not be in the temporary list
-struct NonTankTargetSelector : public Acore::unary_function<Unit*, bool>
+struct AC_GAME_API NonTankTargetSelector : public Acore::unary_function<Unit*, bool>
 {
 public:
     NonTankTargetSelector(Creature* source, bool playerOnly = true) : _source(source), _playerOnly(playerOnly) { }
@@ -194,7 +194,7 @@ private:
     bool _inLos;
 };
 
-class UnitAI
+class AC_GAME_API UnitAI
 {
 protected:
     Unit* const me;
@@ -434,7 +434,7 @@ private:
     void SortByDistance(std::list<Unit*>& list, bool ascending = true);
 };
 
-class PlayerAI : public UnitAI
+class AC_GAME_API PlayerAI : public UnitAI
 {
 protected:
     Player* const me;
@@ -444,7 +444,7 @@ public:
     void OnCharmed(bool apply) override;
 };
 
-class SimpleCharmedAI : public PlayerAI
+class AC_GAME_API SimpleCharmedAI : public PlayerAI
 {
 public:
     void UpdateAI(uint32 diff) override;

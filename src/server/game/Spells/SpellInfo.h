@@ -234,7 +234,7 @@ struct AC_GAME_API ImmunityInfo
     boost::container::flat_set<SpellEffects> SpellEffectImmune;
 };
 
-class SpellImplicitTargetInfo
+class AC_GAME_API SpellImplicitTargetInfo
 {
 private:
     Targets _target;
@@ -266,7 +266,7 @@ private:
     static std::array<StaticData, TOTAL_SPELL_TARGETS> _data;
 };
 
-class SpellEffectInfo
+class AC_GAME_API SpellEffectInfo
 {
     SpellInfo const* _spellInfo;
 public:

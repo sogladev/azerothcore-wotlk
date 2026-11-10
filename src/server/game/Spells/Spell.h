@@ -102,7 +102,7 @@ enum SpellRangeFlag
     SPELL_RANGE_RANGED              = 2,     //hunter range and ranged weapon
 };
 
-struct SpellDestination
+struct AC_GAME_API SpellDestination
 {
     SpellDestination();
     SpellDestination(float x, float y, float z, float orientation = 0.0f, uint32 mapId = MAPID_INVALID);
@@ -117,7 +117,7 @@ struct SpellDestination
     Position _transportOffset;
 };
 
-class SpellCastTargets
+class AC_GAME_API SpellCastTargets
 {
 public:
     SpellCastTargets();
@@ -219,7 +219,7 @@ private:
     ObjectGuid m_objectTargetGUIDChannel;
 };
 
-struct SpellValue
+struct AC_GAME_API SpellValue
 {
     explicit  SpellValue(SpellInfo const* proto);
     int32     EffectBasePoints[MAX_SPELL_EFFECTS];
@@ -263,7 +263,7 @@ struct ChannelTargetData
 };
 
  // Targets store structures and data
-struct TargetInfo
+struct AC_GAME_API TargetInfo
 {
     ObjectGuid targetGUID;
     uint64 timeDelay;
@@ -280,7 +280,7 @@ struct TargetInfo
 
 static const uint32 SPELL_INTERRUPT_NONPLAYER = 32747;
 
-struct TriggeredByAuraSpellData
+struct AC_GAME_API TriggeredByAuraSpellData
 {
     TriggeredByAuraSpellData() : spellInfo(nullptr), effectIndex(-1), tickNumber(0) {}
 
@@ -294,7 +294,7 @@ struct TriggeredByAuraSpellData
     uint32 tickNumber;
 };
 
-class Spell
+class AC_GAME_API Spell
 {
     friend void Unit::SetCurrentCastedSpell(Spell* pSpell);
     friend class SpellScript;
@@ -817,7 +817,7 @@ public:
 
 namespace Acore
 {
-    struct WorldObjectSpellTargetCheck
+    struct AC_GAME_API WorldObjectSpellTargetCheck
     {
         WorldObject* _caster;
         WorldObject* _referer;
@@ -832,7 +832,7 @@ namespace Acore
         bool operator()(WorldObject* target);
     };
 
-    struct WorldObjectSpellNearbyTargetCheck : public WorldObjectSpellTargetCheck
+    struct AC_GAME_API WorldObjectSpellNearbyTargetCheck : public WorldObjectSpellTargetCheck
     {
         float _range;
         Position const* _position;
@@ -841,7 +841,7 @@ namespace Acore
         bool operator()(WorldObject* target);
     };
 
-    struct WorldObjectSpellAreaTargetCheck : public WorldObjectSpellTargetCheck
+    struct AC_GAME_API WorldObjectSpellAreaTargetCheck : public WorldObjectSpellTargetCheck
     {
         float _range;
         Position const* _position;
@@ -852,7 +852,7 @@ namespace Acore
         bool operator()(WorldObject* target);
     };
 
-    struct WorldObjectSpellConeTargetCheck : public WorldObjectSpellAreaTargetCheck
+    struct AC_GAME_API WorldObjectSpellConeTargetCheck : public WorldObjectSpellAreaTargetCheck
     {
         float _coneAngle;
         WorldObjectSpellConeTargetCheck(float coneAngle, float range, WorldObject* caster,
@@ -860,7 +860,7 @@ namespace Acore
         bool operator()(WorldObject* target);
     };
 
-    struct WorldObjectSpellTrajTargetCheck : public WorldObjectSpellAreaTargetCheck
+    struct AC_GAME_API WorldObjectSpellTrajTargetCheck : public WorldObjectSpellAreaTargetCheck
     {
         WorldObjectSpellTrajTargetCheck(float range, Position const* position, WorldObject* caster,
                                         SpellInfo const* spellInfo, SpellTargetCheckTypes selectionType, ConditionList* condList);
@@ -870,7 +870,7 @@ namespace Acore
 
 typedef void(Spell::*pEffect)(SpellEffIndex effIndex);
 
-class ReflectEvent : public BasicEvent
+class AC_GAME_API ReflectEvent : public BasicEvent
 {
     public:
         ReflectEvent(Unit* caster, ObjectGuid targetGUID, SpellInfo const* spellInfo) : _caster(caster), _targetGUID(targetGUID), _spellInfo(spellInfo) { }

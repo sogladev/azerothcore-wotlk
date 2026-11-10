@@ -24,7 +24,7 @@
 
 class Unit;
 
-class MovementGenerator
+class AC_GAME_API MovementGenerator
 {
 public:
     virtual ~MovementGenerator();
@@ -93,7 +93,7 @@ struct MovementGeneratorFactory : public MovementGeneratorCreator
     }
 };
 
-struct IdleMovementFactory : public MovementGeneratorCreator
+struct AC_GAME_API IdleMovementFactory : public MovementGeneratorCreator
 {
     IdleMovementFactory() : MovementGeneratorCreator(IDLE_MOTION_TYPE) { }
 

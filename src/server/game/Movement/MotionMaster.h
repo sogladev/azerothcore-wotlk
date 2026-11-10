@@ -107,7 +107,7 @@ enum class AnimTier : uint8
     Max
 };
 
-struct ChaseRange
+struct AC_GAME_API ChaseRange
 {
     ChaseRange(float range);
     ChaseRange(float _minRange, float _maxRange);
@@ -120,7 +120,7 @@ struct ChaseRange
     float MaxTolerance; // ...and if we are, we will move into this range
 };
 
-struct ChaseAngle
+struct AC_GAME_API ChaseAngle
 {
     ChaseAngle(float angle, float _tolerance = M_PI_4);
 
@@ -135,7 +135,7 @@ struct ChaseAngle
 // assume it is 25 yard per 0.6 second
 #define SPEED_CHARGE    42.0f
 
-class MotionMaster //: private std::stack<MovementGenerator *>
+class AC_GAME_API MotionMaster //: private std::stack<MovementGenerator *>
 {
 private:
     //typedef std::stack<MovementGenerator *> Impl;

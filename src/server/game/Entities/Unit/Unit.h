@@ -211,8 +211,8 @@ enum class DeathState : uint8
     JustRespawned = 4,
 };
 
-extern std::array<float, MAX_MOVE_TYPE> baseMoveSpeed;
-extern std::array<float, MAX_MOVE_TYPE> playerBaseMoveSpeed;
+AC_GAME_API extern std::array<float, MAX_MOVE_TYPE> baseMoveSpeed;
+AC_GAME_API extern std::array<float, MAX_MOVE_TYPE> playerBaseMoveSpeed;
 
 // Sets baseMoveSpeed (NPCs) and playerBaseMoveSpeed to the default speeds times
 // the given rates. Recomputed from the defaults, so a config reload doesn't compound.
@@ -340,7 +340,7 @@ struct CleanDamage
 struct CalcDamageInfo;
 struct SpellNonMeleeDamage;
 
-class DamageInfo
+class AC_GAME_API DamageInfo
 {
 private:
     Unit* const m_attacker;
@@ -446,7 +446,7 @@ public:
     void AddHitMask(uint32 hitMask) { m_hitMask |= hitMask; }
 };
 
-class ProcEventInfo
+class AC_GAME_API ProcEventInfo
 {
 private:
     Unit* const _actor;
@@ -666,7 +666,7 @@ SpeedOpcodePair SetSpeed2Opc_table[MAX_MOVE_TYPE] =
     {SMSG_FORCE_PITCH_RATE_CHANGE,        SMSG_SPLINE_SET_PITCH_RATE,           MSG_MOVE_SET_PITCH_RATE},
 };
 
-class Unit : public WorldObject
+class AC_GAME_API Unit : public WorldObject
 {
 public:
     typedef std::unordered_set<Unit*> AttackerSet;
@@ -2367,7 +2367,7 @@ namespace Acore
     };
 }
 
-class RedirectSpellEvent : public BasicEvent
+class AC_GAME_API RedirectSpellEvent : public BasicEvent
 {
 public:
     RedirectSpellEvent(Unit& self, ObjectGuid auraOwnerGUID, AuraEffect* auraEffect) : _self(self), _auraOwnerGUID(auraOwnerGUID), _auraEffect(auraEffect) { }

@@ -20,7 +20,7 @@
 
 class Unit;
 
-class AbstractFollower
+class AC_GAME_API AbstractFollower
 {
 public:
     explicit AbstractFollower(Unit* target = nullptr) { SetTarget(target); }

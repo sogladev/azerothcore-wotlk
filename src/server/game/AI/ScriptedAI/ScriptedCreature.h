@@ -29,7 +29,7 @@ typedef std::list<WorldObject*> ObjectList;
 
 class InstanceScript;
 
-class SummonList
+class AC_GAME_API SummonList
 {
 public:
     typedef GuidList StorageType;
@@ -198,7 +198,7 @@ public:
     }
 };
 
-struct ScriptedAI : public CreatureAI
+struct AC_GAME_API ScriptedAI : public CreatureAI
 {
     explicit ScriptedAI(Creature* creature);
     ~ScriptedAI() override {}
@@ -492,7 +492,7 @@ struct HealthCheckEventData
     void UpdateStatus(uint8 status) { _status = status; };
 };
 
-class BossAI : public ScriptedAI
+class AC_GAME_API BossAI : public ScriptedAI
 {
 public:
     BossAI(Creature* creature, uint32 bossId);
@@ -556,7 +556,7 @@ private:
     HealthCheckEventData _nextHealthCheck;
 };
 
-class WorldBossAI : public ScriptedAI
+class AC_GAME_API WorldBossAI : public ScriptedAI
 {
 public:
     WorldBossAI(Creature* creature);
@@ -589,8 +589,8 @@ protected:
 // SD2 grid searchers.
 Creature* GetClosestCreatureWithEntry(WorldObject* source, uint32 entry, float maxSearchRange, bool alive = true);
 GameObject* GetClosestGameObjectWithEntry(WorldObject* source, uint32 entry, float maxSearchRange, bool onlySpawned = false);
-void GetCreatureListWithEntryInGrid(std::list<Creature*>& list, WorldObject* source, uint32 entry, float maxSearchRange);
-void GetGameObjectListWithEntryInGrid(std::list<GameObject*>& list, WorldObject* source, uint32 entry, float maxSearchRange);
-void GetDeadCreatureListInGrid(std::list<Creature*>& list, WorldObject* source, float maxSearchRange, bool alive = false);
+AC_GAME_API void GetCreatureListWithEntryInGrid(std::list<Creature*>& list, WorldObject* source, uint32 entry, float maxSearchRange);
+AC_GAME_API void GetGameObjectListWithEntryInGrid(std::list<GameObject*>& list, WorldObject* source, uint32 entry, float maxSearchRange);
+AC_GAME_API void GetDeadCreatureListInGrid(std::list<Creature*>& list, WorldObject* source, float maxSearchRange, bool alive = false);
 
 #endif // SCRIPTEDCREATURE_H_

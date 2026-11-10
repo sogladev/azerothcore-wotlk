@@ -25,7 +25,7 @@
 #include "Unit.h"
 #include <deque>
 
-class SmartScript
+class AC_GAME_API SmartScript
 {
     struct SmartScriptFrame
     {
@@ -41,6 +41,8 @@ class SmartScript
 public:
     SmartScript();
     ~SmartScript();
+    SmartScript(SmartScript const&) = delete;
+    SmartScript& operator=(SmartScript const&) = delete;
 
     void OnInitialize(WorldObject* obj, AreaTrigger const* at = nullptr);
     void GetScript();

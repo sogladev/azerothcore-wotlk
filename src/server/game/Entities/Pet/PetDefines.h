@@ -208,7 +208,7 @@ constexpr float PET_FOLLOW_ANGLE = std::numbers::pi_v<float> / 2;
 constexpr float MINI_PET_SUMMON_ANGLE = std::numbers::pi_v<float> / 4;
 constexpr float MINI_PET_FOLLOW_ANGLE = std::numbers::pi_v<float>;
 
-class PetStable
+class AC_GAME_API PetStable
 {
 public:
     struct PetInfo

@@ -159,7 +159,7 @@ struct QuestMenuItem
 
 typedef std::vector<QuestMenuItem> QuestMenuItemList;
 
-class GossipMenu
+class AC_GAME_API GossipMenu
 {
 public:
     GossipMenu();
@@ -225,7 +225,7 @@ private:
     ObjectGuid _senderGUID;
 };
 
-class QuestMenu
+class AC_GAME_API QuestMenu
 {
 public:
     QuestMenu();
@@ -255,7 +255,7 @@ private:
     QuestMenuItemList _questMenuItems;
 };
 
-class PlayerMenu
+class AC_GAME_API PlayerMenu
 {
 public:
     explicit PlayerMenu(WorldSession* session);
