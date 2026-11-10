@@ -18,6 +18,8 @@ Read the matching doc(s) BEFORE starting the task:
 - Compiling, configuring, or running tests → `.agents/docs/build.md`
 - Writing or modifying C++ → `.agents/docs/cpp-guidelines.md`
   - Script work (under `src/server/scripts/`) → also `.agents/docs/cpp-scripts.md`
+- Script hotswapping, dynamic script libraries or the script recompiler →
+  `.agents/docs/systems/script-hotswapping.md`
 - Creating or modifying SQL → `.agents/docs/sql-guidelines.md`
   - SmartAI work (`smart_scripts` data) → also `.agents/docs/cpp-scripts.md`
 - Reviewing a changeset or PR → `.agents/docs/code-review.md`
