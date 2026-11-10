@@ -73,8 +73,10 @@ ScriptReloadMgr* ScriptReloadMgr::instance()
 #include "Util.h"
 #include <efsw/efsw.hpp>
 #include <algorithm>
+#include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <future>
 #include <memory>
 #include <optional>
 #include <regex>
@@ -384,6 +386,17 @@ static bool HasValidScriptModuleName(std::string const& name)
     return std::regex_match(name, regex);
 }
 
+/// Returns false when this platform or this configuration must not rebuild script
+/// modules, which is the case on macOS and when the recompiler is disabled by config.
+static bool IsRecompilerEnabled()
+{
+#if AC_PLATFORM == AC_PLATFORM_APPLE
+    return false;
+#else
+    return sWorld->getBoolConfig(CONFIG_HOTSWAP_RECOMPILER_ENABLED);
+#endif
+}
+
 /// File watcher responsible for watching shared libraries
 class LibraryUpdateListener : public efsw::FileWatchListener
 {
@@ -427,6 +440,27 @@ void ScriptReloadMgr::Update()
 {
 }
 
+#if AC_PLATFORM != AC_PLATFORM_APPLE
+/// Invokes an asynchronous CMake process with the given arguments. The output of
+/// the process is routed into the hotswap log, so nothing blocks the world tick.
+static std::shared_ptr<Acore::AsyncProcessResult> InvokeAsyncCMakeCommand(std::vector<std::string> args)
+{
+    return Acore::StartAsyncProcess(BuiltInConfig::GetCMakeCommand(), std::move(args), "scripts.hotswap");
+}
+
+/// Returns true when an attached debugger blocks the rebuild of a script library,
+/// which is the case on Windows, where a loaded library cannot be replaced while
+/// the process is being debugged.
+static bool IsDebuggerBlockingRebuild()
+{
+#if AC_PLATFORM == AC_PLATFORM_WINDOWS
+    return IsDebuggerPresent() != 0;
+#else
+    return false;
+#endif
+}
+#endif
+
 /// ScriptReloadMgr which is used when dynamic linking is enabled
 ///
 /// This class manages shared library loading/unloading through watching
@@ -452,6 +486,73 @@ class HotSwapScriptReloadMgr final
         CHANGE_REQUEST_MODIFIED,
         CHANGE_REQUEST_REMOVED
     };
+
+#if AC_PLATFORM != AC_PLATFORM_APPLE
+    /// Reflects a running job of an invoked asynchronous external process
+    enum class BuildJobType : uint8
+    {
+        BUILD_JOB_NONE,
+        BUILD_JOB_RERUN_CMAKE,
+        BUILD_JOB_COMPILE,
+        BUILD_JOB_INSTALL
+    };
+
+    /// Represents a job which was invoked through a source change of a module
+    class BuildJob
+    {
+    public:
+        BuildJob(std::string moduleName, std::string projectName, std::string buildDirective)
+            : _moduleName(std::move(moduleName)), _projectName(std::move(projectName)),
+              _buildDirective(std::move(buildDirective)), _startTime(getMSTime()),
+              _type(BuildJobType::BUILD_JOB_NONE) { }
+
+        bool IsValid() const
+        {
+            return _type != BuildJobType::BUILD_JOB_NONE;
+        }
+
+        std::string const& GetModuleName() const { return _moduleName; }
+
+        std::string const& GetProjectName() const { return _projectName; }
+
+        std::string const& GetBuildDirective() const { return _buildDirective; }
+
+        uint32 GetTimeFromStart() const { return GetMSTimeDiffToNow(_startTime); }
+
+        BuildJobType GetType() const { return _type; }
+
+        std::shared_ptr<Acore::AsyncProcessResult> const& GetProcess() const
+        {
+            ASSERT(_asyncResult, "Tried to access an empty process handle!");
+            return _asyncResult;
+        }
+
+        /// Updates the current running job with the given type and async result
+        void UpdateCurrentJob(BuildJobType type, std::shared_ptr<Acore::AsyncProcessResult> asyncResult)
+        {
+            ASSERT(type != BuildJobType::BUILD_JOB_NONE, "None isn't allowed here!");
+            ASSERT(asyncResult, "The async result must not be empty!");
+
+            _type = type;
+            _asyncResult = std::move(asyncResult);
+        }
+
+    private:
+        // The script module which is processed
+        std::string _moduleName;
+        // The CMake project name of the module which is processed
+        std::string _projectName;
+        // The build directive the module is built with, like "Release" or "Debug"
+        std::string _buildDirective;
+        // The time the job started
+        uint32 _startTime;
+
+        // The type of the current running job
+        BuildJobType _type;
+        // The async process result of the current running job
+        std::shared_ptr<Acore::AsyncProcessResult> _asyncResult;
+    };
+#endif
 
     /// Base class for lockfree asynchronous messages to the script reloader
     class ScriptReloaderMessage
@@ -585,7 +686,19 @@ public:
         LOG_INFO("scripts.hotswap", "Script hotswapping is enabled: script directory \"{}\", "
             "cache directory \"{}\", recompiler {}.",
             libraryDirectory.generic_string(), _temporaryCachePath.generic_string(),
-            sWorld->getBoolConfig(CONFIG_HOTSWAP_RECOMPILER_ENABLED) ? "enabled" : "disabled");
+            IsRecompilerEnabled() ? "enabled" : "disabled");
+
+        // Say why a source change is ignored instead of leaving the operator guessing
+        if (!IsRecompilerEnabled())
+        {
+#if AC_PLATFORM == AC_PLATFORM_APPLE
+            LOG_INFO("scripts.hotswap", ">> The script recompiler is not supported on macOS, so source "
+                "changes are ignored. Prebuilt script libraries are still loaded and reloaded.");
+#else
+            LOG_INFO("scripts.hotswap", ">> The script recompiler is disabled by HotSwap.EnableReCompiler, "
+                "so source changes are ignored. Prebuilt script libraries are still loaded and reloaded.");
+#endif
+        }
 
         // Point the build at the tree this server runs from, so a rebuild
         // installs next to it instead of into a prefix that is gone.
@@ -626,6 +739,9 @@ public:
         if (sScriptMgr->IsSwapPending())
             sScriptMgr->SwapScriptContext();
 
+#if AC_PLATFORM != AC_PLATFORM_APPLE
+        DispatchRunningBuildJobs();
+#endif
         DispatchModuleChanges();
     }
 
@@ -637,6 +753,20 @@ public:
             _fileWatcher.removeWatch(_libraryWatcher);
             _libraryWatcher = -1;
         }
+
+#if AC_PLATFORM != AC_PLATFORM_APPLE
+        // A running build is cancelled, so no library is installed while the
+        // server tears down
+        if (_buildJob)
+        {
+            LOG_INFO("scripts.hotswap", "Cancelling the build of module \"{}\" (project \"{}\", build "
+                "directive \"{}\") because the server shuts down.",
+                _buildJob->GetModuleName(), _buildJob->GetProjectName(), _buildJob->GetBuildDirective());
+
+            _buildJob->GetProcess()->Terminate();
+            _buildJob.reset();
+        }
+#endif
 
         // Release all strong references to script modules
         // to trigger unload actions as early as possible,
@@ -1091,6 +1221,284 @@ private:
         _runningScriptModuleNames.erase(itr);
     }
 
+#if AC_PLATFORM != AC_PLATFORM_APPLE
+    /// Returns the name of the CMake project which builds the library of the given
+    /// module: scripts_<module> for a module of the source tree and mod_<module> for
+    /// an out-of-tree module, both lowercased to match the CMake helpers
+    /// GetProjectNameOfScriptModule and GetProjectNameOfModuleName.
+    std::string CalculateProjectNameOfModule(std::string const& moduleName) const
+    {
+        // The kind is taken from the file name of the library, never from the name
+        // the library reports, since that one is the plain directory name.
+        bool isOutOfTreeModule = false;
+        for (auto const& entry : _runningScriptModuleNames)
+        {
+            if (entry.second != moduleName)
+                continue;
+
+            std::string const fileName = entry.first.filename().generic_string();
+            std::string const prefix(GetSharedLibraryPrefix());
+            isOutOfTreeModule = fileName.compare(prefix.size(), 4, "mod_") == 0;
+            break;
+        }
+
+        std::string projectName = (isOutOfTreeModule ? "mod_" : "scripts_") + moduleName;
+        std::transform(projectName.begin(), projectName.end(), projectName.begin(), charToLower);
+
+        return projectName;
+    }
+
+    /// Returns the build directive the given module is built with: the one which is
+    /// configured for all modules when it is set, the one the module was built with
+    /// otherwise and the one of the core as the last resort.
+    std::string CalculateBuildDirectiveOfModule(std::string const& moduleName) const
+    {
+        std::string directive = sConfigMgr->GetOption<std::string>("HotSwap.ReCompilerBuildType", "");
+        if (!directive.empty())
+            return directive;
+
+        auto const itr = _knownModulesBuildDirectives.find(moduleName);
+        if (itr != _knownModulesBuildDirectives.end())
+            return itr->second;
+
+        // Fall back to the directive the core itself was built with
+        return AC_BUILD_TYPE;
+    }
+
+    /// Called periodically on the worldserver tick to process all recompile
+    /// requests. This method invokes one build or install job at the time.
+    void DispatchRunningBuildJobs()
+    {
+        if (_buildJob)
+        {
+            // A source of the module which is being built changed, so the result of
+            // the running job is outdated: mark it and let the job be discarded when
+            // it finishes, terminating its process from a file event thread crashes.
+            if (sWorld->getBoolConfig(CONFIG_HOTSWAP_EARLY_TERMINATION_ENABLED) && !_terminateEarly &&
+                _sourcesChanged.find(_buildJob->GetModuleName()) != _sourcesChanged.end())
+            {
+                LOG_INFO("scripts.hotswap", "The sources of module \"{}\" (project \"{}\") changed while "
+                    "it was built, the result of the running build is discarded when it finishes.",
+                    _buildJob->GetModuleName(), _buildJob->GetProjectName());
+
+                _terminateEarly = true;
+                return;
+            }
+
+            // Wait for the running job to finish, evaluate it as soon as it did
+            if (_buildJob->GetProcess()->GetFutureResult().wait_for(std::chrono::seconds(0)) ==
+                std::future_status::ready)
+                ProcessReadyBuildJob();
+            else
+                return; // The running job hasn't finished yet
+
+            // The finished job started the next one of the same module
+            if (_buildJob)
+                return;
+        }
+
+        // Avoid burst updates through waiting some time after the last change
+        if (_lastTimeSourcesChanged != 0 && GetMSTimeDiffToNow(_lastTimeSourcesChanged) < 500)
+            return;
+
+        // Nothing to rebuild
+        if (_sourcesChanged.empty())
+            return;
+
+        // Wait until an attached debugger is detached, it blocks the rebuild
+        if (IsDebuggerBlockingRebuild())
+        {
+            if (_lastTimeUserInformed == 0 || GetMSTimeDiffToNow(_lastTimeUserInformed) > 7500)
+            {
+                _lastTimeUserInformed = getMSTime();
+
+                LOG_INFO("scripts.hotswap", "Your attached debugger is blocking the automatic script "
+                    "rebuild, please detach it!");
+            }
+
+            return;
+        }
+
+        // Take the next changed module out of the list
+        auto const itr = _sourcesChanged.begin();
+
+        std::string const moduleName = itr->first;
+        bool const rebuildBuildFiles = !itr->second.empty();
+
+        for (auto const& entry : itr->second)
+        {
+            LOG_TRACE("scripts.hotswap", "Source file \"{}\" of module \"{}\" was {}.",
+                entry.first.generic_string(), moduleName,
+                (entry.second == ChangeStateRequest::CHANGE_REQUEST_ADDED ? "added" : "removed"));
+        }
+
+        _sourcesChanged.erase(itr);
+
+        // A re-run of CMake picks up the added and removed files of every module,
+        // so the records of the other modules are consumed by it as well.
+        if (rebuildBuildFiles)
+            for (auto& entry : _sourcesChanged)
+                entry.second.clear();
+
+        ASSERT(!moduleName.empty(), "The current module name is invalid!");
+
+        std::string const projectName = CalculateProjectNameOfModule(moduleName);
+        std::string const buildDirective = CalculateBuildDirectiveOfModule(moduleName);
+
+        LOG_INFO("scripts.hotswap", "Recompiling script module \"{}\" (project \"{}\", build directive \"{}\")...",
+            moduleName, projectName, buildDirective);
+
+        _buildJob.emplace(moduleName, projectName, buildDirective);
+
+        // Rerun CMake when the build files have to be recreated for added or
+        // removed sources
+        if (rebuildBuildFiles && sWorld->getBoolConfig(CONFIG_HOTSWAP_BUILD_FILE_RECREATION_ENABLED))
+            DoRerunCMake();
+        else
+            DoCompileCurrentProcessedModule();
+    }
+
+    /// Evaluates the result of the finished build job and continues with the next
+    /// step of it, which is the installation of a successfully built module.
+    void ProcessReadyBuildJob()
+    {
+        ASSERT(_buildJob->IsValid(), "Invalid build job!");
+
+        // Consume the result of the finished process
+        int const exitStatus = _buildJob->GetProcess()->GetFutureResult().get();
+
+        if (_terminateEarly)
+        {
+            LOG_INFO("scripts.hotswap", "Discarded the build of module \"{}\" (project \"{}\", build "
+                "directive \"{}\", exit status {}) because its sources changed while it ran.",
+                _buildJob->GetModuleName(), _buildJob->GetProjectName(), _buildJob->GetBuildDirective(),
+                exitStatus);
+
+            _buildJob.reset();
+            _terminateEarly = false;
+            return;
+        }
+
+        switch (_buildJob->GetType())
+        {
+            case BuildJobType::BUILD_JOB_RERUN_CMAKE:
+            {
+                if (!exitStatus)
+                {
+                    LOG_INFO("scripts.hotswap", ">> Successfully updated the build files of module \"{}\" "
+                        "(project \"{}\").", _buildJob->GetModuleName(), _buildJob->GetProjectName());
+                }
+                else
+                {
+                    LOG_ERROR("scripts.hotswap", ">> Updating the build files of module \"{}\" (project "
+                        "\"{}\", build directive \"{}\") failed with exit status {}! Recently added sources "
+                        "may be missing from the next build, rerun CMake manually.",
+                        _buildJob->GetModuleName(), _buildJob->GetProjectName(),
+                        _buildJob->GetBuildDirective(), exitStatus);
+                }
+
+                // Continue with building the changed sources
+                DoCompileCurrentProcessedModule();
+                return;
+            }
+            case BuildJobType::BUILD_JOB_COMPILE:
+            {
+                if (!exitStatus)
+                {
+                    if (sWorld->getBoolConfig(CONFIG_HOTSWAP_INSTALL_ENABLED))
+                    {
+                        LOG_INFO("scripts.hotswap", ">> Successfully built module \"{}\" (project \"{}\", "
+                            "build directive \"{}\"), continue with installing...",
+                            _buildJob->GetModuleName(), _buildJob->GetProjectName(),
+                            _buildJob->GetBuildDirective());
+
+                        DoInstallCurrentProcessedModule();
+                        return;
+                    }
+
+                    LOG_INFO("scripts.hotswap", ">> Successfully built module \"{}\" (project \"{}\", "
+                        "build directive \"{}\"), skipped the installation because it is disabled by "
+                        "HotSwap.EnableInstall.", _buildJob->GetModuleName(), _buildJob->GetProjectName(),
+                        _buildJob->GetBuildDirective());
+                }
+                else
+                {
+                    LOG_ERROR("scripts.hotswap", ">> The build of module \"{}\" (project \"{}\", build "
+                        "directive \"{}\") failed with exit status {}! See the log for details.",
+                        _buildJob->GetModuleName(), _buildJob->GetProjectName(),
+                        _buildJob->GetBuildDirective(), exitStatus);
+                }
+                break;
+            }
+            case BuildJobType::BUILD_JOB_INSTALL:
+            {
+                if (!exitStatus)
+                {
+                    LOG_INFO("scripts.hotswap", ">> Successfully installed module \"{}\" (project \"{}\", "
+                        "build directive \"{}\") in {}s.", _buildJob->GetModuleName(),
+                        _buildJob->GetProjectName(), _buildJob->GetBuildDirective(),
+                        _buildJob->GetTimeFromStart() / IN_MILLISECONDS);
+                }
+                else
+                {
+                    LOG_ERROR("scripts.hotswap", ">> The installation of module \"{}\" (project \"{}\", "
+                        "build directive \"{}\") failed with exit status {}! See the log for details.",
+                        _buildJob->GetModuleName(), _buildJob->GetProjectName(),
+                        _buildJob->GetBuildDirective(), exitStatus);
+                }
+                break;
+            }
+            default:
+                break;
+        }
+
+        _buildJob.reset();
+    }
+
+    /// Reruns CMake over the build directory to recreate the build files
+    void DoRerunCMake()
+    {
+        ASSERT(_buildJob, "There isn't any active build job!");
+
+        LOG_INFO("scripts.hotswap", "Rerunning CMake for module \"{}\" (project \"{}\") because sources "
+            "were added or removed...", _buildJob->GetModuleName(), _buildJob->GetProjectName());
+
+        _buildJob->UpdateCurrentJob(BuildJobType::BUILD_JOB_RERUN_CMAKE,
+            InvokeAsyncCMakeCommand({ BuiltInConfig::GetBuildDirectory() }));
+    }
+
+    /// Invokes a build of the module of the current job
+    void DoCompileCurrentProcessedModule()
+    {
+        ASSERT(_buildJob, "There isn't any active build job!");
+
+        LOG_INFO("scripts.hotswap", "Starting the build of module \"{}\" (project \"{}\", build directive "
+            "\"{}\")...", _buildJob->GetModuleName(), _buildJob->GetProjectName(),
+            _buildJob->GetBuildDirective());
+
+        _buildJob->UpdateCurrentJob(BuildJobType::BUILD_JOB_COMPILE,
+            InvokeAsyncCMakeCommand({ "--build", BuiltInConfig::GetBuildDirectory(),
+                "--target", _buildJob->GetProjectName(),
+                "--config", _buildJob->GetBuildDirective() }));
+    }
+
+    /// Invokes an installation of the module of the current job
+    void DoInstallCurrentProcessedModule()
+    {
+        ASSERT(_buildJob, "There isn't any active build job!");
+
+        LOG_INFO("scripts.hotswap", "Starting the installation of module \"{}\" (project \"{}\", build "
+            "directive \"{}\")...", _buildJob->GetModuleName(), _buildJob->GetProjectName(),
+            _buildJob->GetBuildDirective());
+
+        _buildJob->UpdateCurrentJob(BuildJobType::BUILD_JOB_INSTALL,
+            InvokeAsyncCMakeCommand({ "-DCOMPONENT=" + _buildJob->GetProjectName(),
+                "-DBUILD_TYPE=" + _buildJob->GetBuildDirective(),
+                "-P", AbsolutePath("cmake_install.cmake",
+                    BuiltInConfig::GetBuildDirectory()).generic_string() }));
+    }
+#endif
+
     // File watcher instance and watcher ID's
     efsw::FileWatcher _fileWatcher;
     efsw::WatchID _libraryWatcher;
@@ -1126,6 +1534,16 @@ private:
         std::unordered_map<fs::path /*path*/, ChangeStateRequest /*state*/>> _sourcesChanged;
     // Tracks the time since the last module has changed to avoid burst updates
     uint32 _lastTimeSourcesChanged;
+
+#if AC_PLATFORM != AC_PLATFORM_APPLE
+    // Represents the build job which is in progress, there is only one at a time
+    std::optional<BuildJob> _buildJob;
+    // Tracks the last timestamp the user was informed about a repeating event
+    uint32 _lastTimeUserInformed{ 0 };
+    // Is true when the result of the running build job is discarded as soon as it
+    // finishes, because a source of its module changed while it was built
+    bool _terminateEarly{ false };
+#endif
 
     // The path to the ac_script_cache temporary cache
     fs::path _temporaryCachePath;
@@ -1248,7 +1666,7 @@ void SourceUpdateListener::handleFileAction(efsw::WatchID watchid, std::string c
     std::string const& filename, efsw::Action action, std::string oldFilename)
 {
     // Skip the file change notification if the recompiler is disabled
-    if (!sWorld->getBoolConfig(CONFIG_HOTSWAP_RECOMPILER_ENABLED))
+    if (!IsRecompilerEnabled())
         return;
 
     // Split moved actions into a delete and an add action
