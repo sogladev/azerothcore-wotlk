@@ -57,6 +57,12 @@ target_link_libraries(game
     game-interface
     libsidecar)
 
+if (TARGET efsw)
+  target_link_libraries(game
+    PRIVATE
+      efsw)
+endif()
+
 set_target_properties(game
   PROPERTIES
     DEFINE_SYMBOL
