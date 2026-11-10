@@ -67,6 +67,7 @@ ScriptReloadMgr* ScriptReloadMgr::instance()
 #include "GitRevision.h"
 #include "Log.h"
 #include "MPSCQueue.h"
+#include "StartProcess.h"
 #include "StringFormat.h"
 #include "Timer.h"
 #include "Util.h"
@@ -77,6 +78,7 @@ ScriptReloadMgr* ScriptReloadMgr::instance()
 #include <memory>
 #include <optional>
 #include <regex>
+#include <sstream>
 #include <string>
 #include <thread>
 #include <type_traits>
@@ -154,6 +156,25 @@ static fs::path AbsolutePath(fs::path const& path, fs::path const& base)
     std::error_code code;
     fs::path const absolute = fs::absolute(base / path, code);
     return code ? base / path : absolute;
+}
+
+/// Returns true when the given path is the base directory itself or lies below it.
+static bool IsPathWithin(fs::path const& path, fs::path const& base)
+{
+    fs::path branch = path;
+    while (!branch.empty())
+    {
+        if (branch == base)
+            return true;
+
+        fs::path const parent = branch.parent_path();
+        if (parent == branch)
+            break;
+
+        branch = parent;
+    }
+
+    return false;
 }
 
 /// Unloads the shared library of the given handle as soon as the last reference
@@ -566,6 +587,11 @@ public:
             libraryDirectory.generic_string(), _temporaryCachePath.generic_string(),
             sWorld->getBoolConfig(CONFIG_HOTSWAP_RECOMPILER_ENABLED) ? "enabled" : "disabled");
 
+        // Point the build at the tree this server runs from, so a rebuild
+        // installs next to it instead of into a prefix that is gone.
+        if (sWorld->getBoolConfig(CONFIG_HOTSWAP_PREFIX_CORRECTION_ENABLED))
+            DoCMakePrefixCorrectionIfNeeded();
+
         _settingsLoaded = true;
 
         InitializeDefaultLibraries();
@@ -656,6 +682,108 @@ public:
     }
 
 private:
+    /// Points the CMAKE_INSTALL_PREFIX of the build this server was linked
+    /// against at the tree the server currently runs from, since that is where
+    /// a rebuild has to install to become visible to the next reload.
+    void DoCMakePrefixCorrectionIfNeeded()
+    {
+        std::string const buildDirectory = BuiltInConfig::GetBuildDirectory();
+
+        LOG_INFO("scripts.hotswap", "Checking the CMAKE_INSTALL_PREFIX of the build in \"{}\"...",
+            buildDirectory);
+
+        auto const cmakeCachePath = AbsolutePath("CMakeCache.txt", buildDirectory);
+
+        {
+            std::error_code code;
+            if (!fs::exists(cmakeCachePath, code))
+            {
+                LOG_ERROR("scripts.hotswap", ">> CMake cache \"{}\" doesn't exist, set the "
+                    "\"BuildDirectory\" option in your worldserver.conf to point to your build directory!",
+                    cmakeCachePath.generic_string());
+
+                return;
+            }
+        }
+
+        std::string cmakeCacheContent;
+        {
+            std::ifstream in(cmakeCachePath.generic_string());
+            if (!in.is_open())
+            {
+                LOG_ERROR("scripts.hotswap", ">> Failed to read the CMake cache at \"{}\"!",
+                    cmakeCachePath.generic_string());
+
+                return;
+            }
+
+            std::ostringstream ss;
+            ss << in.rdbuf();
+            cmakeCacheContent = ss.str();
+        }
+
+        // The worldserver is installed into ${CMAKE_INSTALL_PREFIX}/bin everywhere
+        // but on Windows, where it is installed directly into the prefix.
+        fs::path installPrefix = fs::current_path();
+#if AC_PLATFORM != AC_PLATFORM_WINDOWS
+        installPrefix = installPrefix.parent_path();
+#endif
+
+        static std::string const prefixKey = "CMAKE_INSTALL_PREFIX:PATH=";
+
+        // Extract the value of CMAKE_INSTALL_PREFIX
+        auto begin = cmakeCacheContent.find(prefixKey);
+        if (begin != std::string::npos)
+        {
+            begin += prefixKey.length();
+            auto const end = cmakeCacheContent.find('\n', begin);
+            if (end != std::string::npos)
+            {
+                fs::path const value = cmakeCacheContent.substr(begin, end - begin);
+
+                if (value == installPrefix)
+                {
+                    LOG_INFO("scripts.hotswap", ">> CMAKE_INSTALL_PREFIX is equal to the current "
+                        "path of execution.");
+
+                    return;
+                }
+
+                // A server started from inside its own build tree must not rewrite
+                // the prefix that tree was configured with.
+                if (IsPathWithin(value, buildDirectory) || IsPathWithin(installPrefix, buildDirectory))
+                {
+                    LOG_DEBUG("scripts.hotswap", ">> CMAKE_INSTALL_PREFIX is not corrected, the server "
+                        "runs from inside the build directory \"{}\".", buildDirectory);
+
+                    return;
+                }
+
+                LOG_INFO("scripts.hotswap", ">> Found outdated CMAKE_INSTALL_PREFIX (\"{}\"), "
+                    "worldserver is currently installed at \"{}\".",
+                    value.generic_string(), installPrefix.generic_string());
+            }
+        }
+
+        LOG_INFO("scripts.hotswap", "Invoking the CMake cache correction...");
+
+        int const result = Acore::StartProcess(BuiltInConfig::GetCMakeCommand(), {
+            "-DCMAKE_INSTALL_PREFIX:PATH=" + installPrefix.generic_string(),
+            buildDirectory
+        }, "scripts.hotswap");
+
+        if (result)
+        {
+            LOG_ERROR("scripts.hotswap", ">> Failed to update the CMAKE_INSTALL_PREFIX, the build "
+                "command exited with {}! This could lead to unexpected behaviour!", result);
+        }
+        else
+        {
+            LOG_INFO("scripts.hotswap", ">> Successfully corrected the CMAKE_INSTALL_PREFIX to point "
+                "at \"{}\".", installPrefix.generic_string());
+        }
+    }
+
     // Loads all shared libraries which are contained in the
     // scripts directory on startup.
     void InitializeDefaultLibraries()
