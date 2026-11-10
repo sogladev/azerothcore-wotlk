@@ -354,10 +354,15 @@ std::optional<std::shared_ptr<ScriptModule>>
     GetScriptModuleType getScriptModule;
     GetBuildDirectiveType getBuildDirective;
 
+    // The library of an out-of-tree module exposes the same functions under the
+    // names of the module loader, so the loading and the build directive are
+    // looked up under both names.
     if (GetFunctionFromSharedLibrary(handle, "GetScriptModuleRevisionHash", getScriptModuleRevisionHash) &&
-        GetFunctionFromSharedLibrary(handle, "AddScripts", addScripts) &&
+        (GetFunctionFromSharedLibrary(handle, "AddScripts", addScripts) ||
+            GetFunctionFromSharedLibrary(handle, "AddModulesScripts", addScripts)) &&
         GetFunctionFromSharedLibrary(handle, "GetScriptModule", getScriptModule) &&
-        GetFunctionFromSharedLibrary(handle, "GetBuildDirective", getBuildDirective))
+        (GetFunctionFromSharedLibrary(handle, "GetBuildDirective", getBuildDirective) ||
+            GetFunctionFromSharedLibrary(handle, "GetModulesBuildDirective", getBuildDirective)))
     {
         auto module = new ScriptModule(std::move(holder), getScriptModuleRevisionHash,
             addScripts, getScriptModule, getBuildDirective, path);
@@ -384,6 +389,16 @@ static bool HasValidScriptModuleName(std::string const& name)
         GetSharedLibraryExtension()));
 
     return std::regex_match(name, regex);
+}
+
+// Returns true when the given library is the one of an out-of-tree module
+// (mod_NAME) instead of one of the script modules of the source tree
+// (scripts_NAME). The kind is decided by the file name alone, the name the
+// library reports is the plain name of its directory.
+static bool IsOutOfTreeModuleLibrary(fs::path const& path)
+{
+    std::string const modulePrefix = Acore::StringFormat("{}mod_", GetSharedLibraryPrefix());
+    return path.filename().generic_string().compare(0, modulePrefix.size(), modulePrefix) == 0;
 }
 
 /// Returns false when this platform or this configuration must not rebuild script
@@ -623,13 +638,26 @@ public:
         return AbsolutePath(path, GetDirectoryOfExecutable());
     }
 
-    /// Returns the absolute path to the scripts directory in the source tree.
-    static fs::path GetSourceDirectory()
+    /// Returns the absolute path to the source directory of the given module in the
+    /// source tree: the scripts directory for a script module of the source tree and
+    /// the src directory of the module for an out-of-tree module, matching
+    /// GetPathToModuleSource of ConfigureModules.cmake.
+    static fs::path GetSourceDirectoryOfModule(std::string const& moduleName, bool isOutOfTreeModule)
     {
         fs::path dir = BuiltInConfig::GetSourceDirectory();
+
+        if (isOutOfTreeModule)
+        {
+            dir /= "modules";
+            dir /= moduleName;
+            dir /= "src";
+            return dir;
+        }
+
         dir /= "src";
         dir /= "server";
         dir /= "scripts";
+        dir /= moduleName;
         return dir;
     }
 
@@ -1183,7 +1211,8 @@ private:
         }
 
         // Create the source listener
-        auto listener = std::make_unique<SourceUpdateListener>(GetSourceDirectory() / moduleName, moduleName);
+        auto listener = std::make_unique<SourceUpdateListener>(
+            GetSourceDirectoryOfModule(moduleName, IsOutOfTreeModuleLibrary(path)), moduleName);
 
         // Store the module
         _knownModulesBuildDirectives.insert(std::make_pair(moduleName, (*module)->GetBuildDirective()));
@@ -1266,9 +1295,7 @@ private:
             if (entry.second != moduleName)
                 continue;
 
-            std::string const fileName = entry.first.filename().generic_string();
-            std::string const prefix(GetSharedLibraryPrefix());
-            isOutOfTreeModule = fileName.compare(prefix.size(), 4, "mod_") == 0;
+            isOutOfTreeModule = IsOutOfTreeModuleLibrary(entry.first);
             break;
         }
 

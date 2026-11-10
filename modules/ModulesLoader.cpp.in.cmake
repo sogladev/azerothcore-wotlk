@@ -33,6 +33,12 @@
 #  define AC_MODULES_API AC_API_EXPORT
 extern "C" {
 
+/// Exposed in script modules to return the script module revision hash.
+AC_MODULES_API char const* GetScriptModuleRevisionHash()
+{
+    return _HASH;
+}
+
 /// Exposed in script module to return the name of the script module
 /// contained in this shared library.
 AC_MODULES_API char const* GetScriptModule()

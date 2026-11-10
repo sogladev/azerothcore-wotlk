@@ -23,7 +23,7 @@ endfunction()
 
 # Stores the project name of the given module in the variable
 function(GetProjectNameOfModuleName module variable)
-  string(TOLOWER "mod_${SOURCE_MODULE}" GENERATED_NAME)
+  string(TOLOWER "mod_${module}" GENERATED_NAME)
   set(${variable} "${GENERATED_NAME}" PARENT_SCOPE)
 endfunction()
 
