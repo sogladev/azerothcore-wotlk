@@ -626,12 +626,18 @@ namespace
             if (initialize)
                 return;
 
-            ValidateHotswapVisualSpell();
-
             // A script registered since the last commit takes over the objects it
             // is assigned to, so their default AI is replaced as well.
             _idsToRelease.insert(ScriptRegistry<ScriptType>::RecentlyAddedScriptIds.begin(),
                                  ScriptRegistry<ScriptType>::RecentlyAddedScriptIds.end());
+
+            // No object is reset, so the swap shows nothing to the players either:
+            // the visual effect is the only consumer of that client data, and only
+            // a process that actually swaps objects has it.
+            if (_idsToRelease.empty())
+                return;
+
+            ValidateHotswapVisualSpell();
 
             UnloadAIsOfScriptIds<ObjectType>(_idsToRelease);
             CreateAIsOfScriptIds<ObjectType>(_idsToRelease);
