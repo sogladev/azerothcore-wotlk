@@ -18,6 +18,7 @@
 #ifndef _TASK_SCHEDULER_H_
 #define _TASK_SCHEDULER_H_
 
+#include "Define.h"
 #include "Util.h"
 #include <chrono>
 #include <functional>
@@ -42,7 +43,7 @@ class TaskContext;
 /// with the same duration or a new one.
 /// It also provides access to the repeat counter which is useful for task that repeat itself often
 /// but behave different every time (spoken event dialogs for example).
-class TaskScheduler
+class AC_COMMON_API TaskScheduler
 {
     friend class TaskContext;
 
@@ -127,7 +128,7 @@ class TaskScheduler
         };
     };
 
-    class TaskQueue
+    class AC_COMMON_API TaskQueue
     {
         std::multiset<TaskContainer, Compare> container;
 
@@ -418,7 +419,7 @@ private:
     void Dispatch(success_t const& callback);
 };
 
-class TaskContext
+class AC_COMMON_API TaskContext
 {
     friend class TaskScheduler;
 

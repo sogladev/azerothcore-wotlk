@@ -35,7 +35,7 @@ enum DbcFieldFormat
     FT_LOGIC = 'l'                                           //Logical (boolean)
 };
 
-class DBCFileLoader
+class AC_COMMON_API DBCFileLoader
 {
 public:
     DBCFileLoader();

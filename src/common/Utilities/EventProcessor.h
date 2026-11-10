@@ -26,7 +26,7 @@
 class EventProcessor;
 
 // Note. All times are in milliseconds here.
-class BasicEvent
+class AC_COMMON_API BasicEvent
 {
 
     friend class EventProcessor;
@@ -92,7 +92,7 @@ using is_lambda_event = std::enable_if_t<!std::is_base_of_v<BasicEvent, std::rem
 
 typedef std::multimap<uint64, BasicEvent*> EventList;
 
-class EventProcessor
+class AC_COMMON_API EventProcessor
 {
     public:
         EventProcessor()  = default;

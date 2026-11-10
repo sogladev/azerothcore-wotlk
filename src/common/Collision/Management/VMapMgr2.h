@@ -18,6 +18,7 @@
 #ifndef _VMAPMANAGER2_H
 #define _VMAPMANAGER2_H
 
+#include "Define.h"
 #include "IVMapMgr.h"
 
 //===========================================================
@@ -51,7 +52,7 @@ namespace VMAP
         VMAP_DISABLE_LIQUIDSTATUS   = 0x8
     };
 
-    class VMapMgr2 : public IVMapMgr
+    class AC_COMMON_API VMapMgr2 : public IVMapMgr
     {
     protected:
         static uint32 GetLiquidFlagsDummy(uint32) { return 0; }

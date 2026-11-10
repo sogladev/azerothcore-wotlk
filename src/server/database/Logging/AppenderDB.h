@@ -19,9 +19,10 @@
 #define APPENDERDB_H
 
 #include "Appender.h"
+#include "Define.h"
 #include <vector>
 
-class AppenderDB : public Appender
+class AC_DATABASE_API AppenderDB : public Appender
 {
 public:
     static constexpr AppenderType type = APPENDER_DB;

@@ -19,9 +19,10 @@
 #define DBCDatabaseLoader_h__
 
 #include "DBCFileLoader.h"
+#include "Define.h"
 #include <vector>
 
-struct DBCDatabaseLoader
+struct AC_SHARED_API DBCDatabaseLoader
 {
     DBCDatabaseLoader(char const* dbTable, char const* dbcFormatString, std::vector<char*>& stringPool);
 

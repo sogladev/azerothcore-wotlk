@@ -36,7 +36,7 @@ namespace VMAP
 class GameObject;
 struct GameObjectDisplayInfoEntry;
 
-class GameObjectModelOwnerBase
+class AC_COMMON_API GameObjectModelOwnerBase
 {
 public:
     virtual ~GameObjectModelOwnerBase() = default;
@@ -51,7 +51,7 @@ public:
     virtual void DebugVisualizeCorner(G3D::Vector3 const& /*corner*/) const = 0;
 };
 
-class GameObjectModel
+class AC_COMMON_API GameObjectModel
 {
     GameObjectModel()  = default;
 
@@ -93,6 +93,6 @@ private:
     bool isWmo{false};
 };
 
-void LoadGameObjectModelList(std::string const& dataPath);
+AC_COMMON_API void LoadGameObjectModelList(std::string const& dataPath);
 
 #endif // _GAMEOBJECT_MODEL_H

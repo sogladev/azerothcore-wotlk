@@ -18,6 +18,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "Define.h"
 #include <cstdint>
 #include <stdexcept>
 #include <string_view>
@@ -41,7 +42,7 @@ struct ConfigPolicy
     ConfigSeverity valueErrorSeverity = ConfigSeverity::Error;
 };
 
-class ConfigMgr
+class AC_COMMON_API ConfigMgr
 {
     ConfigMgr() = default;
     ConfigMgr(ConfigMgr const&) = delete;
@@ -84,7 +85,7 @@ private:
     std::vector<std::string /*config variant*/> _moduleConfigFiles;
 };
 
-class ConfigException : public std::length_error
+class AC_COMMON_API ConfigException : public std::length_error
 {
 public:
     explicit ConfigException(std::string const& message) : std::length_error(message) { }

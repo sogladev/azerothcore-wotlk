@@ -36,7 +36,7 @@ namespace VMAP
         int32 rootId = -1;
     };
 
-    struct LocationInfo
+    struct AC_COMMON_API LocationInfo
     {
         LocationInfo():  ground_Z(-G3D::inf()) { }
         ModelInstance const* hitInstance{nullptr};
@@ -45,7 +45,7 @@ namespace VMAP
         int32 rootId = -1;
     };
 
-    class StaticMapTree
+    class AC_COMMON_API StaticMapTree
     {
         typedef std::unordered_map<uint32, bool> loadedTileMap;
         typedef std::unordered_map<uint32, uint32> loadedSpawnMap;
@@ -88,7 +88,7 @@ namespace VMAP
         void GetModelInstances(ModelInstance*& models, uint32& count);
     };
 
-    struct AreaInfo
+    struct AC_COMMON_API AreaInfo
     {
         AreaInfo():  ground_Z(-G3D::inf()) { }
         bool result{false};

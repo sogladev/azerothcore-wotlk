@@ -20,12 +20,13 @@
 
 #include "Common.h"
 #include "DBCStorageIterator.h"
+#include "Define.h"
 #include "Errors.h"
 #include <cstring>
 #include <vector>
 
 /// Interface class for common access
-class DBCStorageBase
+class AC_SHARED_API DBCStorageBase
 {
 public:
     DBCStorageBase(char const* fmt);

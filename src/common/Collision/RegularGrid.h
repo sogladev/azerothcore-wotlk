@@ -5,6 +5,7 @@
 #include <G3D/Ray.h>
 #include <G3D/Table.h>
 
+#include "Define.h"
 #include "Errors.h"
 
 template <class Node>
@@ -40,7 +41,7 @@ template<class T,
          /*class BoundsFunc = BoundsTrait<T>,*/
          class PositionFunc = PositionTrait<T>
          >
-class RegularGrid2D
+class AC_COMMON_API RegularGrid2D
 {
 public:
     enum

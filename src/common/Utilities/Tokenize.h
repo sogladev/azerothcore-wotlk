@@ -18,12 +18,13 @@
 #ifndef _ACORE_TOKENIZE_H_
 #define _ACORE_TOKENIZE_H_
 
+#include "Define.h"
 #include <string_view>
 #include <vector>
 
 namespace Acore
 {
-    std::vector<std::string_view> Tokenize(std::string_view str, char sep, bool keepEmpty);
+    AC_COMMON_API std::vector<std::string_view> Tokenize(std::string_view str, char sep, bool keepEmpty);
 
     /* this would return string_view into temporary otherwise */
     std::vector<std::string_view> Tokenize(std::string&&, char, bool) = delete;

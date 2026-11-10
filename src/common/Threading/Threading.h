@@ -18,6 +18,7 @@
 #ifndef THREADING_H
 #define THREADING_H
 
+#include "Define.h"
 #include <atomic>
 #include <thread>
 
@@ -52,7 +53,7 @@ namespace Acore
         Priority_Realtime,
     };
 
-    class Thread
+    class AC_COMMON_API Thread
     {
     public:
         Thread();

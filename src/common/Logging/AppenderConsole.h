@@ -19,6 +19,7 @@
 #define APPENDERCONSOLE_H
 
 #include "Appender.h"
+#include "Define.h"
 #include <vector>
 
 // EnumUtils: DESCRIBE THIS
@@ -42,7 +43,7 @@ enum ColorTypes
     NUM_COLOR_TYPES // SKIP
 };
 
-class AppenderConsole : public Appender
+class AC_COMMON_API AppenderConsole : public Appender
 {
 public:
     static constexpr AppenderType type = APPENDER_CONSOLE;

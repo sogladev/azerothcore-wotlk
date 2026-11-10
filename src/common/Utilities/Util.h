@@ -40,12 +40,12 @@ template<typename T, class S> struct Finder
     bool operator()(std::pair<int, S> const& obj) { return obj.second.*idMember_ == val_; }
 };
 
-void stripLineInvisibleChars(std::string& src);
+AC_COMMON_API void stripLineInvisibleChars(std::string& src);
 
 AC_COMMON_API Optional<int32> MoneyStringToMoney(std::string_view moneyString);
 
-std::string secsToTimeString(uint64 timeInSecs, bool shortText = false);
-uint32 TimeStringToSecs(std::string const& timestring);
+AC_COMMON_API std::string secsToTimeString(uint64 timeInSecs, bool shortText = false);
+AC_COMMON_API uint32 TimeStringToSecs(std::string const& timestring);
 
 // Percentage calculation
 template <class T, class U>
@@ -89,8 +89,8 @@ AC_COMMON_API bool WStrToUtf8(std::wstring_view wstr, std::string& utf8str);
 AC_COMMON_API bool WStrToUtf8(wchar_t const* wstr, std::size_t size, std::string& utf8str);
 
 // set string to "" if invalid utf8 sequence
-std::size_t utf8length(std::string& utf8str);
-void utf8truncate(std::string& utf8str, std::size_t len);
+AC_COMMON_API std::size_t utf8length(std::string& utf8str);
+AC_COMMON_API void utf8truncate(std::string& utf8str, std::size_t len);
 
 inline bool isBasicLatinCharacter(wchar_t wchar)
 {
@@ -345,10 +345,10 @@ inline wchar_t wcharToLower(wchar_t wchar)
     return wchar;
 }
 
-void wstrToUpper(std::wstring& str);
-void wstrToLower(std::wstring& str);
+AC_COMMON_API void wstrToUpper(std::wstring& str);
+AC_COMMON_API void wstrToLower(std::wstring& str);
 
-std::wstring GetMainPartOfName(std::wstring const& wname, uint32 declension);
+AC_COMMON_API std::wstring GetMainPartOfName(std::wstring const& wname, uint32 declension);
 
 AC_COMMON_API bool utf8ToConsole(std::string_view utf8str, std::string& conStr);
 AC_COMMON_API bool consoleToUtf8(std::string_view conStr, std::string& utf8str);
@@ -357,10 +357,10 @@ AC_COMMON_API void utf8printf(FILE* out, char const* str, ...);
 AC_COMMON_API void vutf8printf(FILE* out, char const* str, va_list* ap);
 AC_COMMON_API bool Utf8ToUpperOnlyLatin(std::string& utf8String);
 
-bool IsIPAddress(char const* ipaddress);
+AC_COMMON_API bool IsIPAddress(char const* ipaddress);
 
-uint32 CreatePIDFile(std::string const& filename);
-uint32 GetPID();
+AC_COMMON_API uint32 CreatePIDFile(std::string const& filename);
+AC_COMMON_API uint32 GetPID();
 
 namespace Acore::Impl
 {

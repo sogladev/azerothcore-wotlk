@@ -18,12 +18,14 @@
 #ifndef _VMAPFACTORY_H
 #define _VMAPFACTORY_H
 
+#include "Define.h"
+
 // This is the access point to the VMapMgr.
 namespace VMAP
 {
     class VMapMgr2;
 
-    class VMapFactory
+    class AC_COMMON_API VMapFactory
     {
     public:
         static VMapMgr2* createOrGetVMapMgr();

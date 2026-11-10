@@ -25,7 +25,7 @@
 /*
  * C++ Wrapper for SFMT
  */
-class SFMTRand
+class AC_COMMON_API SFMTRand
 {
 public:
     SFMTRand();

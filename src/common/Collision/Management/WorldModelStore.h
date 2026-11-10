@@ -18,12 +18,13 @@
 #ifndef _WORLDMODELSTORE_H
 #define _WORLDMODELSTORE_H
 
+#include "Define.h"
 #include "WorldModel.h"
 #include <memory>
 #include <mutex>
 #include <unordered_map>
 
-class WorldModelStore
+class AC_COMMON_API WorldModelStore
 {
 public:
     static WorldModelStore* instance()

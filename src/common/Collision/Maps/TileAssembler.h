@@ -23,6 +23,7 @@
 #include <map>
 #include <set>
 
+#include "Define.h"
 #include "ModelInstance.h"
 #include "WorldModel.h"
 
@@ -34,7 +35,7 @@ namespace VMAP
     */
     //===============================================
 
-    class ModelPosition
+    class AC_COMMON_API ModelPosition
     {
     private:
         G3D::Matrix3 iRotation;
@@ -54,7 +55,7 @@ namespace VMAP
     typedef std::map<uint32, ModelSpawn> UniqueEntryMap;
     typedef std::multimap<uint32, uint32> TileMap;
 
-    struct MapSpawns
+    struct AC_COMMON_API MapSpawns
     {
         UniqueEntryMap UniqueEntries;
         TileMap TileEntries;
@@ -63,7 +64,7 @@ namespace VMAP
     typedef std::map<uint32, MapSpawns*> MapData;
     //===============================================
 
-    struct GroupModel_Raw
+    struct AC_COMMON_API GroupModel_Raw
     {
         uint32 mogpflags{0};
         uint32 GroupWMOID{0};
@@ -81,7 +82,7 @@ namespace VMAP
         bool Read(FILE* f);
     };
 
-    struct WorldModel_Raw
+    struct AC_COMMON_API WorldModel_Raw
     {
         uint32 RootWMOID;
         std::vector<GroupModel_Raw> groupsArray;
@@ -89,7 +90,7 @@ namespace VMAP
         bool Read(char const* path);
     };
 
-    class TileAssembler
+    class AC_COMMON_API TileAssembler
     {
     private:
         std::string iDestDir;

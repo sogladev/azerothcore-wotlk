@@ -19,10 +19,11 @@
 #define APPENDERFILE_H
 
 #include "Appender.h"
+#include "Define.h"
 #include <atomic> // NOTE: this import is NEEDED (even though some IDEs report it as unused)
 #include <vector>
 
-class AppenderFile : public Appender
+class AC_COMMON_API AppenderFile : public Appender
 {
 public:
     static constexpr AppenderType type = APPENDER_FILE;

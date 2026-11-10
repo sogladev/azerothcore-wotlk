@@ -19,6 +19,7 @@
 #define _MMAP_MANAGER_H
 
 #include "Common.h"
+#include "Define.h"
 #include "DetourAlloc.h"
 #include "DetourExtended.h"
 #include "DetourNavMesh.h"
@@ -60,7 +61,7 @@ namespace MMAP
 
     using ManagedNavMeshQuery = std::unique_ptr<dtNavMeshQuery, NavMeshQueryDeleter>;
 
-    class MMapMgr
+    class AC_COMMON_API MMapMgr
     {
     public:
         MMapMgr() = default;

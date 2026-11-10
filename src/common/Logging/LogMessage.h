@@ -23,7 +23,7 @@
 #include "LogCommon.h"
 #include <string>
 
-struct LogMessage
+struct AC_COMMON_API LogMessage
 {
     LogMessage(LogLevel _level, std::string const& _type, std::string_view _text);
     LogMessage(LogLevel _level, std::string const& _type, std::string_view _text, std::string_view _param1);

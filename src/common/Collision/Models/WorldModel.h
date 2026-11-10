@@ -32,7 +32,7 @@ namespace VMAP
     struct GroupLocationInfo;
     enum class ModelIgnoreFlags : uint32;
 
-    class MeshTriangle
+    class AC_COMMON_API MeshTriangle
     {
     public:
         MeshTriangle()  { }
@@ -43,7 +43,7 @@ namespace VMAP
         uint32 idx2{0};
     };
 
-    class WmoLiquid
+    class AC_COMMON_API WmoLiquid
     {
     public:
         WmoLiquid(uint32 width, uint32 height, G3D::Vector3 const& corner, uint32 type);
@@ -69,7 +69,7 @@ namespace VMAP
     };
 
     /*! holding additional info for WMO group files */
-    class GroupModel
+    class AC_COMMON_API GroupModel
     {
     public:
         GroupModel() { }
@@ -103,7 +103,7 @@ namespace VMAP
         WmoLiquid* iLiquid{nullptr};
     };
     /*! Holds a model (converted M2 or WMO) in its original coordinate space */
-    class WorldModel
+    class AC_COMMON_API WorldModel
     {
     public:
         WorldModel() { }

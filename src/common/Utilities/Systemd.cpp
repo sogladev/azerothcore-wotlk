@@ -23,6 +23,8 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "Systemd.h"
+
 #if defined(__linux__)
 #include "Log.h"
 #include "StringConvert.h"

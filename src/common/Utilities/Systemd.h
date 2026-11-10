@@ -26,6 +26,8 @@
 #ifndef _SYSTEMD_H_
 #define _SYSTEMD_H_
 
-int get_listen_fd();
+#include "Define.h"
+
+AC_COMMON_API int get_listen_fd();
 
 #endif

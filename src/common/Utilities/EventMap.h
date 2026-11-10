@@ -22,7 +22,7 @@
 #include "Duration.h"
 #include <map>
 
-class EventMap
+class AC_COMMON_API EventMap
 {
     using EventId = uint16;
     using GroupIndex = uint8;
