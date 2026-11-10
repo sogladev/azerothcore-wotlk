@@ -46,8 +46,19 @@ jobs:
             compiler:
               CC: clang-18
               CXX: clang++-18
+          # Module libraries are only ever installed as libmod_*.so in the
+          # dynamic configuration, so this cell is what proves a module can be
+          # hot-loaded at runtime.
+          - os: ubuntu-24.04
+            name: ubuntu-24.04-clang-18-nopch-modules-dynamic
+            compiler:
+              CC: clang-18
+              CXX: clang++-18
+            scripts: dynamic
+            modules_mode: dynamic
+            dynamic_linkage: true
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }}-${{ matrix.compiler.CC }}-nopch-modules
+    name: ${{ matrix.name || format('{0}-{1}-nopch-modules', matrix.os, matrix.compiler.CC) }}
     if: github.repository == 'azerothcore/azerothcore-wotlk' && !github.event.pull_request.draft
     steps:
       - uses: actions/checkout@v7
@@ -64,3 +75,6 @@ jobs:
           pch: false
           maxerrors: 0
           keepgoing: true
+          scripts: ${{ matrix.scripts || 'static' }}
+          modules_mode: ${{ matrix.modules_mode || 'static' }}
+          dynamic_linkage: ${{ matrix.dynamic_linkage || false }}

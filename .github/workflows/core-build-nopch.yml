@@ -71,8 +71,20 @@ jobs:
             compiler:
               CC: clang-21
               CXX: clang++-21
+          # The dynamic configuration: the core libraries are built as shared
+          # objects and the script modules are loaded from libscripts_*.so at
+          # runtime, so this is the only cell that compiles or links that path.
+          # modules_mode stays static because no module is checked out here.
+          - os: ubuntu-24.04
+            name: ubuntu-24.04-clang-18-nopch-dynamic
+            compiler:
+              CC: clang-18
+              CXX: clang++-18
+            scripts: dynamic
+            modules_mode: static
+            dynamic_linkage: true
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }}-${{ matrix.compiler.CC }}-nopch
+    name: ${{ matrix.name || format('{0}-{1}-nopch', matrix.os, matrix.compiler.CC) }}
     if: github.repository == 'azerothcore/azerothcore-wotlk' && !github.event.pull_request.draft
     steps:
       - uses: actions/checkout@v7
@@ -81,6 +93,9 @@ jobs:
           CC: ${{ matrix.compiler.CC }}
           CXX: ${{ matrix.compiler.CXX }}
           pch: false
+          scripts: ${{ matrix.scripts || 'static' }}
+          modules_mode: ${{ matrix.modules_mode || 'static' }}
+          dynamic_linkage: ${{ matrix.dynamic_linkage || false }}
 
   e2e:
     name: e2e ${{ inputs.scope || 'full' }}

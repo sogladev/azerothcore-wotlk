@@ -16,6 +16,21 @@ inputs:
     description: Flag to install modules or not
     required: true
     type: boolean
+  scripts:
+    default: static
+    description: Script linkage (static, dynamic, minimal-* or a list of script modules)
+    required: false
+    type: string
+  modules_mode:
+    default: static
+    description: Out-of-tree module linkage (static, dynamic or a list of modules)
+    required: false
+    type: string
+  dynamic_linkage:
+    default: false
+    description: Flag to build the core libraries as shared objects
+    required: false
+    type: boolean
   tools:
     default: none
     description: Flag to enable tools build
@@ -48,22 +63,24 @@ runs:
   steps:
     - name: echo cache key
       shell: bash
-      run: echo "Cache key -> ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}:pch=${{ inputs.pch }}:${{ github.ref_name }}-${{ github.run_id }}"
+      run: echo "Cache key -> ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}:scripts=${{ inputs.scripts }}:modules_mode=${{ inputs.modules_mode }}:dyn=${{ inputs.dynamic_linkage }}:pch=${{ inputs.pch }}:${{ github.ref_name }}-${{ github.run_id }}"
 
     # The primary key is unique per run (`-${{ github.run_id }}`) so every run
     # saves a fresh cache. A static key would hit on itself on the second run
     # and `actions/cache` would then skip the upload, freezing the cache after
     # the first commit on a branch (and permanently on master). The restore-keys
     # walk back from the most-recent cache on this branch to progressively
-    # broader fallbacks (branch -> pch variant -> modules variant -> compiler).
+    # broader fallbacks (branch -> pch variant -> build mode variant -> modules
+    # variant -> compiler).
     - name: Cache
       uses: actions/cache@v6
       with:
         path: ${{ github.workspace }}/var/ccache
-        key: ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}:pch=${{ inputs.pch }}:${{ github.ref_name }}-${{ github.run_id }}
+        key: ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}:scripts=${{ inputs.scripts }}:modules_mode=${{ inputs.modules_mode }}:dyn=${{ inputs.dynamic_linkage }}:pch=${{ inputs.pch }}:${{ github.ref_name }}-${{ github.run_id }}
         restore-keys: |
-          ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}:pch=${{ inputs.pch }}:${{ github.ref_name }}-
-          ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}:pch=${{ inputs.pch }}
+          ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}:scripts=${{ inputs.scripts }}:modules_mode=${{ inputs.modules_mode }}:dyn=${{ inputs.dynamic_linkage }}:pch=${{ inputs.pch }}:${{ github.ref_name }}-
+          ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}:scripts=${{ inputs.scripts }}:modules_mode=${{ inputs.modules_mode }}:dyn=${{ inputs.dynamic_linkage }}:pch=${{ inputs.pch }}
+          ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}:scripts=${{ inputs.scripts }}:modules_mode=${{ inputs.modules_mode }}:dyn=${{ inputs.dynamic_linkage }}
           ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}:${{ inputs.modules }}
           ccache:${{ runner.os }}:${{ inputs.CC }}_${{ inputs.CXX }}
 
@@ -147,8 +164,9 @@ runs:
           -DCMAKE_INSTALL_PREFIX="$GITHUB_WORKSPACE/env/dist" \
           -DAPPS_BUILD="all" \
           -DTOOLS_BUILD=${{ inputs.tools }} \
-          -DSCRIPTS="static" \
-          -DMODULES="static" \
+          -DSCRIPTS="${{ inputs.scripts }}" \
+          -DMODULES="${{ inputs.modules_mode }}" \
+          -DWITH_DYNAMIC_LINKING=${{ inputs.dynamic_linkage == 'true' && 'ON' || 'OFF' }} \
           -DWITH_WARNINGS="ON" \
           -DCMAKE_BUILD_TYPE="Release" \
           -DCMAKE_CXX_COMPILER_LAUNCHER="ccache" \
