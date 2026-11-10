@@ -279,20 +279,36 @@ DEFINE_SCRIPT_REGISTRY_STORAGE(WorldScript)
 template<>
 struct ScriptSwapHooks<CommandScript>
 {
-    static void BeforeReleaseContext(std::string const& /*context*/)
+    static void BeforeReleaseContext(std::string const& context)
     {
+        auto const bounds = ScriptRegistry<CommandScript>::ContextScriptIds.equal_range(context);
+        _releasedScripts += static_cast<std::size_t>(std::distance(bounds.first, bounds.second));
+
         Acore::ChatCommands::InvalidateCommandMap();
     }
 
     static void BeforeSwapContext(bool /*initialize*/)
     {
         Acore::ChatCommands::InvalidateCommandMap();
+
+        if (_releasedScripts)
+        {
+            LOG_INFO("scripts.hotswap", ">> Rebuilt the chat command map without {} released command script(s).",
+                _releasedScripts);
+
+            _releasedScripts = 0;
+        }
     }
 
     static void BeforeUnload()
     {
+        _releasedScripts = 0;
         Acore::ChatCommands::InvalidateCommandMap();
     }
+
+private:
+    /// Command scripts released since the last commit, reported by the commit.
+    static inline std::size_t _releasedScripts = 0;
 };
 
 /// Outdoor PvP content is rebuilt rather than swapped: the systems are shut down
@@ -303,9 +319,12 @@ struct ScriptSwapHooks<OutdoorPvPScript>
 {
     static void BeforeReleaseContext(std::string const& context)
     {
-        if (!_swapped && ScriptRegistry<OutdoorPvPScript>::ContextScriptIds.count(context))
+        auto const bounds = ScriptRegistry<OutdoorPvPScript>::ContextScriptIds.equal_range(context);
+        if (!_swapped && bounds.first != bounds.second)
         {
             _swapped = true;
+            _releasedScripts = static_cast<std::size_t>(std::distance(bounds.first, bounds.second));
+
             sOutdoorPvPMgr->Die();
         }
     }
@@ -317,17 +336,26 @@ struct ScriptSwapHooks<OutdoorPvPScript>
         if (!initialize && _swapped)
         {
             sOutdoorPvPMgr->InitOutdoorPvP();
+
+            LOG_INFO("scripts.hotswap", ">> Re-initialized the outdoor pvp systems without {} released "
+                "outdoor pvp script(s).", _releasedScripts);
+
             _swapped = false;
+            _releasedScripts = 0;
         }
     }
 
     static void BeforeUnload()
     {
         ASSERT(!_swapped, "The outdoor pvp systems should have been initialized by now.");
+
+        _releasedScripts = 0;
     }
 
 private:
     static inline bool _swapped = false;
+    /// Outdoor pvp scripts released since the last commit, reported by the commit.
+    static inline std::size_t _releasedScripts = 0;
 };
 
 /// Battleground and battlefield scripts cannot change owners: their live objects
@@ -541,13 +569,16 @@ namespace
 
     /// Unload pass shared by creature and gameobject scripts: let the objects put
     /// themselves back in order, then drop the AIs of the released scripts.
+    /// Returns how many AIs were destroyed, so the swap can report what it touched.
     template<typename ObjectType>
-    void UnloadAIsOfScriptIds(std::unordered_set<uint32> const& idsToRelease)
+    std::size_t UnloadAIsOfScriptIds(std::unordered_set<uint32> const& idsToRelease)
     {
         if (idsToRelease.empty())
-            return;
+            return 0;
 
-        sMapMgr->DoForAllMaps([&idsToRelease](Map* map)
+        std::size_t unloaded = 0;
+
+        sMapMgr->DoForAllMaps([&idsToRelease, &unloaded](Map* map)
         {
             std::vector<ObjectGuid> guidsToReset;
 
@@ -563,30 +594,37 @@ namespace
                 if (ObjectType* object = GetEntityFromMap<ObjectType>(map, guid))
                     UnloadResetScript(object);
 
-            VisitObjectsToSwapOnMap<ObjectType>(map, idsToRelease, [](ObjectType* object)
+            VisitObjectsToSwapOnMap<ObjectType>(map, idsToRelease, [&unloaded](ObjectType* object)
             {
                 UnloadDestroyScript(object);
+                ++unloaded;
             });
         });
+
+        return unloaded;
     }
 
     /// Load pass shared by creature and gameobject scripts: give every object that
     /// lost its AI one of the newest code, then initialize it like a fresh load.
+    /// Returns how many AIs were created, so the swap can report what it touched.
     template<typename ObjectType>
-    void CreateAIsOfScriptIds(std::unordered_set<uint32> const& idsToCreate)
+    std::size_t CreateAIsOfScriptIds(std::unordered_set<uint32> const& idsToCreate)
     {
         if (idsToCreate.empty())
-            return;
+            return 0;
 
-        sMapMgr->DoForAllMaps([&idsToCreate](Map* map)
+        std::size_t created = 0;
+
+        sMapMgr->DoForAllMaps([&idsToCreate, &created](Map* map)
         {
             std::vector<ObjectGuid> guidsToReset;
 
-            VisitObjectsToSwapOnMap<ObjectType>(map, idsToCreate, [&guidsToReset](ObjectType* object)
+            VisitObjectsToSwapOnMap<ObjectType>(map, idsToCreate, [&guidsToReset, &created](ObjectType* object)
             {
                 if (!object->AI() && !object->GetGUID().IsEmpty())
                 {
                     LoadInitializeScript(object);
+                    ++created;
                     guidsToReset.push_back(object->GetGUID());
                 }
             });
@@ -598,11 +636,16 @@ namespace
                     continue;
 
                 if (!object->AI())
+                {
                     LoadInitializeScript(object);
+                    ++created;
+                }
 
                 LoadResetScript(object);
             }
         });
+
+        return created;
     }
 
     /// Recreates the AI of a creature or game object when the script that selects
@@ -615,7 +658,11 @@ namespace
         static void BeforeReleaseContext(std::string const& context)
         {
             std::unordered_set<uint32> const idsToRelease = GetScriptIdsOfContext<ScriptType>(context);
-            UnloadAIsOfScriptIds<ObjectType>(idsToRelease);
+            std::size_t const dropped = UnloadAIsOfScriptIds<ObjectType>(idsToRelease);
+
+            LOG_DEBUG("scripts.hotswap", ">> Dropped the AI of {} {} of the released script context.",
+                dropped, TypeName());
+
             _idsToRelease.insert(idsToRelease.begin(), idsToRelease.end());
         }
 
@@ -640,7 +687,10 @@ namespace
             ValidateHotswapVisualSpell();
 
             UnloadAIsOfScriptIds<ObjectType>(_idsToRelease);
-            CreateAIsOfScriptIds<ObjectType>(_idsToRelease);
+            std::size_t const created = CreateAIsOfScriptIds<ObjectType>(_idsToRelease);
+
+            LOG_INFO("scripts.hotswap", ">> Recreated the AI of {} {} for {} released script id(s).",
+                created, TypeName(), _idsToRelease.size());
 
             _idsToRelease.clear();
         }
@@ -651,6 +701,14 @@ namespace
         }
 
     private:
+        static constexpr char const* TypeName()
+        {
+            if constexpr (std::is_same_v<ObjectType, Creature>)
+                return "creature(s)";
+            else
+                return "game object(s)";
+        }
+
         /// Script ids released since the last commit, whose objects wait for the
         /// AI the newest code selects.
         static inline std::unordered_set<uint32> _idsToRelease;

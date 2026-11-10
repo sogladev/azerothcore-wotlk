@@ -920,11 +920,13 @@ template<class TScript>
 class DeferredScriptDelete
 {
 public:
-    explicit DeferredScriptDelete(TScript* script)
-        : _script(script) { }
+    /// The registered flag tells whether adding the script increased the counter,
+    /// which a script still waiting for its database promotion never did.
+    DeferredScriptDelete(TScript* script, bool registered)
+        : _script(script), _registered(registered) { }
 
     DeferredScriptDelete(DeferredScriptDelete&& other) noexcept
-        : _script(other._script) { other._script = nullptr; }
+        : _script(other._script), _registered(other._registered) { other._script = nullptr; }
     DeferredScriptDelete(DeferredScriptDelete const&) = delete;
     DeferredScriptDelete& operator= (DeferredScriptDelete const&) = delete;
     DeferredScriptDelete& operator= (DeferredScriptDelete&&) = delete;
@@ -935,11 +937,14 @@ public:
             return;
 
         delete _script;
-        sScriptMgr->DecreaseScriptCount();
+
+        if (_registered)
+            sScriptMgr->DecreaseScriptCount();
     }
 
 private:
     TScript* _script;
+    bool _registered;
 };
 
 template<class TScript>
@@ -1109,7 +1114,9 @@ public:
     /// set is committed, so no hook can reach a destroyed script.
     void ReleaseContext(std::string const& context) final override
     {
-        std::unordered_set<TScript*> scriptsToDelete;
+        // Maps every script of the context to whether registering it increased the
+        // script counter, which decides whether its deletion has to decrease it again.
+        std::unordered_map<TScript*, bool /*registered*/> scriptsToDelete;
 
         auto const bounds = ContextScriptIds.equal_range(context);
         for (auto itr = bounds.first; itr != bounds.second; ++itr)
@@ -1120,7 +1127,7 @@ public:
             if (scriptItr == ScriptPointerList.end())
                 continue;
 
-            scriptsToDelete.insert(scriptItr->second);
+            scriptsToDelete.emplace(scriptItr->second, true);
             ScriptPointerList.erase(scriptItr);
         }
 
@@ -1136,7 +1143,7 @@ public:
                 continue;
             }
 
-            scriptsToDelete.insert(itr->first);
+            scriptsToDelete.emplace(itr->first, false);
             itr = ALScripts.erase(itr);
         }
 
@@ -1150,8 +1157,8 @@ public:
                     hookScripts.end());
         }
 
-        for (TScript* script : scriptsToDelete)
-            sScriptRegistryCompositum->QueueForDelayedDelete(DeferredScriptDelete<TScript>(script));
+        for (auto const& [script, registered] : scriptsToDelete)
+            sScriptRegistryCompositum->QueueForDelayedDelete(DeferredScriptDelete<TScript>(script, registered));
     }
 
     void SwapContext(bool /*initialize*/) final override

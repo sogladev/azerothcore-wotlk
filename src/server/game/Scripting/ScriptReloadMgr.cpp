@@ -504,7 +504,7 @@ class HotSwapScriptReloadMgr final
         BuildJob(std::string moduleName, std::string projectName, std::string buildDirective)
             : _moduleName(std::move(moduleName)), _projectName(std::move(projectName)),
               _buildDirective(std::move(buildDirective)), _startTime(getMSTime()),
-              _type(BuildJobType::BUILD_JOB_NONE) { }
+              _stageStartTime(getMSTime()), _type(BuildJobType::BUILD_JOB_NONE) { }
 
         bool IsValid() const
         {
@@ -518,6 +518,9 @@ class HotSwapScriptReloadMgr final
         std::string const& GetBuildDirective() const { return _buildDirective; }
 
         uint32 GetTimeFromStart() const { return GetMSTimeDiffToNow(_startTime); }
+
+        /// Returns the runtime of the current running job in milliseconds.
+        uint32 GetTimeOfCurrentJob() const { return GetMSTimeDiffToNow(_stageStartTime); }
 
         BuildJobType GetType() const { return _type; }
 
@@ -535,6 +538,7 @@ class HotSwapScriptReloadMgr final
 
             _type = type;
             _asyncResult = std::move(asyncResult);
+            _stageStartTime = getMSTime();
         }
 
     private:
@@ -546,6 +550,8 @@ class HotSwapScriptReloadMgr final
         std::string _buildDirective;
         // The time the job started
         uint32 _startTime;
+        // The time the current running job started
+        uint32 _stageStartTime;
 
         // The type of the current running job
         BuildJobType _type;
@@ -714,6 +720,9 @@ public:
         // start-up change set: every live object already runs the code they select,
         // and the next real change must only rebuild what that change touched.
         sScriptMgr->SwapScriptContext(true);
+
+        LOG_INFO("scripts.hotswap", ">> Committed the start-up set of {} script(s).",
+            sScriptMgr->GetScriptCount());
     }
 
     /// Needs to be called periodically from the worldserver loop
@@ -930,9 +939,6 @@ private:
                 !HasValidScriptModuleName(dirItr->path().filename().generic_string()))
                 continue;
 
-            LOG_INFO("scripts.hotswap", "Loading script module \"{}\"...",
-                dirItr->path().filename().generic_string());
-
             // Don't swap the script context to do bulk loading
             ProcessLoadScriptModule(dirItr->path(), false);
             ++count;
@@ -1064,10 +1070,30 @@ private:
         _librariesChanged.clear();
     }
 
+    /// Applies the queued script change set and reports the commit, including the
+    /// case where the world refuses it because database scripts are running.
+    void CommitScriptContextChange(std::string const& moduleName)
+    {
+        sScriptMgr->SwapScriptContext();
+
+        if (sScriptMgr->IsSwapPending())
+        {
+            LOG_INFO("scripts.hotswap", ">> The change set of module \"{}\" is committed on the next world "
+                "tick, because database scripts are still running.", moduleName);
+            return;
+        }
+
+        LOG_INFO("scripts.hotswap", ">> Committed the change set of module \"{}\" ({} script(s) registered "
+            "in total).", moduleName, sScriptMgr->GetScriptCount());
+    }
+
     void ProcessLoadScriptModule(fs::path const& path, bool swapContext = true)
     {
         ASSERT(_runningScriptModuleNames.find(path) == _runningScriptModuleNames.end(),
             "Can't load a module which is running already!");
+
+        LOG_INFO("scripts.hotswap", "Loading script module \"{}\" from \"{}\"...",
+            path.filename().generic_string(), path.generic_string());
 
         // Copy the shared library into a cache
         auto const cachePath = GenerateUniquePathForLibraryInCache(path);
@@ -1168,10 +1194,11 @@ private:
         // Process the script loading after the module was registered correctly.
         sScriptMgr->SetScriptContext(moduleName);
         (*module)->AddScripts();
-        LOG_TRACE("scripts.hotswap", ">> Registered all scripts of module \"{}\".", moduleName);
+        LOG_INFO("scripts.hotswap", ">> Registered the scripts of module \"{}\" (revision \"{}\") under the "
+            "script context \"{}\".", moduleName, moduleRevision, moduleName);
 
         if (swapContext)
-            sScriptMgr->SwapScriptContext();
+            CommitScriptContextChange(moduleName);
     }
 
     void ProcessReloadScriptModule(fs::path const& path)
@@ -1188,14 +1215,17 @@ private:
         ASSERT(itr != _runningScriptModuleNames.end(),
             "Can't unload a module which isn't running!");
 
+        LOG_INFO("scripts.hotswap", "Releasing script module \"{}\" (\"{}\")...",
+            path.filename().generic_string(), itr->second);
+
         // Unload the script context
         sScriptMgr->ReleaseScriptContext(itr->second);
 
         if (finish)
-            sScriptMgr->SwapScriptContext();
+            CommitScriptContextChange(itr->second);
 
-        LOG_INFO("scripts.hotswap", "Released script module \"{}\" (\"{}\")...",
-            path.filename().generic_string(), itr->second);
+        LOG_INFO("scripts.hotswap", ">> Released script module \"{}\" (\"{}\", {} script(s) registered in "
+            "total).", path.filename().generic_string(), itr->second, sScriptMgr->GetScriptCount());
 
         // Unload the script module
         auto const ref = _runningScriptModules.find(itr->second);
@@ -1345,14 +1375,19 @@ private:
         std::string const projectName = CalculateProjectNameOfModule(moduleName);
         std::string const buildDirective = CalculateBuildDirectiveOfModule(moduleName);
 
-        LOG_INFO("scripts.hotswap", "Recompiling script module \"{}\" (project \"{}\", build directive \"{}\")...",
-            moduleName, projectName, buildDirective);
+        // Rerun CMake when the build files have to be recreated for added or
+        // removed sources
+        bool const rerunCMake = rebuildBuildFiles &&
+            sWorld->getBoolConfig(CONFIG_HOTSWAP_BUILD_FILE_RECREATION_ENABLED);
+
+        LOG_INFO("scripts.hotswap", "Recompiling script module \"{}\" (project \"{}\", build directive "
+            "\"{}\", {}, installed afterwards: {}).", moduleName, projectName, buildDirective,
+            rerunCMake ? "recreating the build files first" : "without recreating the build files",
+            sWorld->getBoolConfig(CONFIG_HOTSWAP_INSTALL_ENABLED) ? "yes" : "no");
 
         _buildJob.emplace(moduleName, projectName, buildDirective);
 
-        // Rerun CMake when the build files have to be recreated for added or
-        // removed sources
-        if (rebuildBuildFiles && sWorld->getBoolConfig(CONFIG_HOTSWAP_BUILD_FILE_RECREATION_ENABLED))
+        if (rerunCMake)
             DoRerunCMake();
         else
             DoCompileCurrentProcessedModule();
@@ -1370,9 +1405,9 @@ private:
         if (_terminateEarly)
         {
             LOG_INFO("scripts.hotswap", "Discarded the build of module \"{}\" (project \"{}\", build "
-                "directive \"{}\", exit status {}) because its sources changed while it ran.",
+                "directive \"{}\", exit status {}, ran {}s) because its sources changed while it ran.",
                 _buildJob->GetModuleName(), _buildJob->GetProjectName(), _buildJob->GetBuildDirective(),
-                exitStatus);
+                exitStatus, _buildJob->GetTimeOfCurrentJob() / IN_MILLISECONDS);
 
             _buildJob.reset();
             _terminateEarly = false;
@@ -1386,15 +1421,17 @@ private:
                 if (!exitStatus)
                 {
                     LOG_INFO("scripts.hotswap", ">> Successfully updated the build files of module \"{}\" "
-                        "(project \"{}\").", _buildJob->GetModuleName(), _buildJob->GetProjectName());
+                        "(project \"{}\") in {}s.", _buildJob->GetModuleName(), _buildJob->GetProjectName(),
+                        _buildJob->GetTimeOfCurrentJob() / IN_MILLISECONDS);
                 }
                 else
                 {
                     LOG_ERROR("scripts.hotswap", ">> Updating the build files of module \"{}\" (project "
-                        "\"{}\", build directive \"{}\") failed with exit status {}! Recently added sources "
-                        "may be missing from the next build, rerun CMake manually.",
+                        "\"{}\", build directive \"{}\", exit status {}, ran {}s) failed! Recently added "
+                        "sources may be missing from the next build, rerun CMake manually.",
                         _buildJob->GetModuleName(), _buildJob->GetProjectName(),
-                        _buildJob->GetBuildDirective(), exitStatus);
+                        _buildJob->GetBuildDirective(), exitStatus,
+                        _buildJob->GetTimeOfCurrentJob() / IN_MILLISECONDS);
                 }
 
                 // Continue with building the changed sources
@@ -1408,25 +1445,28 @@ private:
                     if (sWorld->getBoolConfig(CONFIG_HOTSWAP_INSTALL_ENABLED))
                     {
                         LOG_INFO("scripts.hotswap", ">> Successfully built module \"{}\" (project \"{}\", "
-                            "build directive \"{}\"), continue with installing...",
+                            "build directive \"{}\") in {}s, continue with installing...",
                             _buildJob->GetModuleName(), _buildJob->GetProjectName(),
-                            _buildJob->GetBuildDirective());
+                            _buildJob->GetBuildDirective(),
+                            _buildJob->GetTimeOfCurrentJob() / IN_MILLISECONDS);
 
                         DoInstallCurrentProcessedModule();
                         return;
                     }
 
                     LOG_INFO("scripts.hotswap", ">> Successfully built module \"{}\" (project \"{}\", "
-                        "build directive \"{}\"), skipped the installation because it is disabled by "
+                        "build directive \"{}\") in {}s, skipped the installation because it is disabled by "
                         "HotSwap.EnableInstall.", _buildJob->GetModuleName(), _buildJob->GetProjectName(),
-                        _buildJob->GetBuildDirective());
+                        _buildJob->GetBuildDirective(),
+                        _buildJob->GetTimeOfCurrentJob() / IN_MILLISECONDS);
                 }
                 else
                 {
                     LOG_ERROR("scripts.hotswap", ">> The build of module \"{}\" (project \"{}\", build "
-                        "directive \"{}\") failed with exit status {}! See the log for details.",
+                        "directive \"{}\", exit status {}, ran {}s) failed! See the log for details.",
                         _buildJob->GetModuleName(), _buildJob->GetProjectName(),
-                        _buildJob->GetBuildDirective(), exitStatus);
+                        _buildJob->GetBuildDirective(), exitStatus,
+                        _buildJob->GetTimeOfCurrentJob() / IN_MILLISECONDS);
                 }
                 break;
             }
@@ -1435,16 +1475,18 @@ private:
                 if (!exitStatus)
                 {
                     LOG_INFO("scripts.hotswap", ">> Successfully installed module \"{}\" (project \"{}\", "
-                        "build directive \"{}\") in {}s.", _buildJob->GetModuleName(),
-                        _buildJob->GetProjectName(), _buildJob->GetBuildDirective(),
+                        "build directive \"{}\") in {}s, {}s since the change was detected.",
+                        _buildJob->GetModuleName(), _buildJob->GetProjectName(),
+                        _buildJob->GetBuildDirective(), _buildJob->GetTimeOfCurrentJob() / IN_MILLISECONDS,
                         _buildJob->GetTimeFromStart() / IN_MILLISECONDS);
                 }
                 else
                 {
                     LOG_ERROR("scripts.hotswap", ">> The installation of module \"{}\" (project \"{}\", "
-                        "build directive \"{}\") failed with exit status {}! See the log for details.",
+                        "build directive \"{}\", exit status {}, ran {}s) failed! See the log for details.",
                         _buildJob->GetModuleName(), _buildJob->GetProjectName(),
-                        _buildJob->GetBuildDirective(), exitStatus);
+                        _buildJob->GetBuildDirective(), exitStatus,
+                        _buildJob->GetTimeOfCurrentJob() / IN_MILLISECONDS);
                 }
                 break;
             }
@@ -1641,8 +1683,8 @@ SourceUpdateListener::SourceUpdateListener(fs::path path, std::string scriptModu
 {
     if (_watcherId >= 0)
     {
-        LOG_TRACE("scripts.hotswap", ">> Attached the source recompiler to \"{}\".",
-            _path.generic_string());
+        LOG_INFO("scripts.hotswap", ">> Watching the sources of module \"{}\" in \"{}\".",
+            _scriptModuleName, _path.generic_string());
     }
     else
     {
