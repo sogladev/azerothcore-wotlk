@@ -27,7 +27,7 @@
 class Map;
 class UpdateRequest;
 
-class MapUpdater
+class AC_GAME_API MapUpdater
 {
 public:
     MapUpdater();

@@ -300,7 +300,7 @@ enum BattlegroundQueueInvitationType
     BG_QUEUE_INVITATION_TYPE_EVEN       = 2  // teams even: N vs N players
 };
 
-class Battleground
+class AC_GAME_API Battleground
 {
 public:
     Battleground();

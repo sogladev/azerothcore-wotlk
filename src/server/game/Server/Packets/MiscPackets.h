@@ -41,7 +41,7 @@ namespace WorldPackets
             WeatherState WeatherID = WeatherState(0);
         };
 
-        class LevelUpInfo final : public ServerPacket
+        class AC_GAME_API LevelUpInfo final : public ServerPacket
         {
         public:
             LevelUpInfo() : ServerPacket(SMSG_LEVELUP_INFO, 56) { }
@@ -93,7 +93,7 @@ namespace WorldPackets
             uint32 SoundKitID = 0;
         };
 
-        class MinimapPingClient final : public ClientPacket
+        class AC_GAME_API MinimapPingClient final : public ClientPacket
         {
         public:
             MinimapPingClient(WorldPacket&& packet) : ClientPacket(MSG_MINIMAP_PING, std::move(packet)) {}
@@ -104,7 +104,7 @@ namespace WorldPackets
             float MapY = 0.0f;
         };
 
-        class MinimapPing final : public ServerPacket
+        class AC_GAME_API MinimapPing final : public ServerPacket
         {
         public:
             MinimapPing() : ServerPacket(MSG_MINIMAP_PING, 8 + 4 + 4) { }
@@ -116,7 +116,7 @@ namespace WorldPackets
             float MapY = 0.0f;
         };
 
-        class RandomRollClient final : public ClientPacket
+        class AC_GAME_API RandomRollClient final : public ClientPacket
         {
         public:
             RandomRollClient(WorldPacket&& packet) : ClientPacket(MSG_RANDOM_ROLL, std::move(packet)) { }
@@ -127,7 +127,7 @@ namespace WorldPackets
             uint32 Max = 0;
         };
 
-        class RandomRoll final : public ServerPacket
+        class AC_GAME_API RandomRoll final : public ServerPacket
         {
         public:
             RandomRoll() : ServerPacket(MSG_RANDOM_ROLL, 4 + 4 + 4 + 8) { }
@@ -140,7 +140,7 @@ namespace WorldPackets
             ObjectGuid Roller;
         };
 
-        class StartMirrorTimer final : public ServerPacket
+        class AC_GAME_API StartMirrorTimer final : public ServerPacket
         {
         public:
             StartMirrorTimer() : ServerPacket(SMSG_START_MIRROR_TIMER, 21) { }
@@ -157,7 +157,7 @@ namespace WorldPackets
             uint32 SpellID = 0;
         };
 
-        class PauseMirrorTimer final : public ServerPacket
+        class AC_GAME_API PauseMirrorTimer final : public ServerPacket
         {
         public:
             PauseMirrorTimer() : ServerPacket(SMSG_PAUSE_MIRROR_TIMER, 5) { }
@@ -169,7 +169,7 @@ namespace WorldPackets
             bool Paused = true;
         };
 
-        class StopMirrorTimer final : public ServerPacket
+        class AC_GAME_API StopMirrorTimer final : public ServerPacket
         {
         public:
             StopMirrorTimer() : ServerPacket(SMSG_STOP_MIRROR_TIMER, 4) { }
@@ -188,7 +188,7 @@ namespace WorldPackets
             WorldPacket const* Write() override { return &_worldPacket; }
         };
 
-        class CrossedInebriationThreshold final : public ServerPacket
+        class AC_GAME_API CrossedInebriationThreshold final : public ServerPacket
         {
         public:
             CrossedInebriationThreshold() : ServerPacket(SMSG_CROSSED_INEBRIATION_THRESHOLD, 8 + 4 + 4) { }
@@ -201,7 +201,7 @@ namespace WorldPackets
 
         };
 
-        class UITime final : public ServerPacket
+        class AC_GAME_API UITime final : public ServerPacket
         {
         public:
             UITime() : ServerPacket(SMSG_WORLD_STATE_UI_TIMER_UPDATE, 4) { }
@@ -211,7 +211,7 @@ namespace WorldPackets
             uint32 Time = 0;
         };
 
-        class Complain final : public ClientPacket
+        class AC_GAME_API Complain final : public ClientPacket
         {
         public:
             Complain(WorldPacket&& packet) : ClientPacket(CMSG_COMPLAIN, std::move(packet)) {}
@@ -227,7 +227,7 @@ namespace WorldPackets
             std::string Description     = "";
         };
 
-        class ComplainResult final : public ServerPacket
+        class AC_GAME_API ComplainResult final : public ServerPacket
         {
         public:
             ComplainResult() : ServerPacket(SMSG_COMPLAIN_RESULT, 1) {}
@@ -237,7 +237,7 @@ namespace WorldPackets
             uint8 Unk = 0;
         };
 
-        class PlayTimeWarning final : public ServerPacket
+        class AC_GAME_API PlayTimeWarning final : public ServerPacket
         {
         public:
             PlayTimeWarning() : ServerPacket(SMSG_PLAY_TIME_WARNING, 4 + 4) {}

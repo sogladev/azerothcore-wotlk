@@ -23,11 +23,12 @@
 // predef classes used in functions
 class Player;
 // returns true and sets the appropriate info if the player can create a perfect item with the given spellId
-bool CanCreatePerfectItem(Player* player, uint32 spellId, float& perfectCreateChance, uint32& perfectItemType);
+AC_GAME_API bool CanCreatePerfectItem(Player* player, uint32 spellId, float& perfectCreateChance,
+    uint32& perfectItemType);
 // load perfection proc info from DB
-void LoadSkillPerfectItemTable();
+AC_GAME_API void LoadSkillPerfectItemTable();
 // returns true and sets the appropriate info if the player can create extra items with the given spellId
-bool canCreateExtraItems(Player* player, uint32 spellId, float& additionalChance, int32& newMaxOrEntry);
+AC_GAME_API bool canCreateExtraItems(Player* player, uint32 spellId, float& additionalChance, int32& newMaxOrEntry);
 // function to load the extra item creation info from DB
-void LoadSkillExtraItemTable();
+AC_GAME_API void LoadSkillExtraItemTable();
 #endif

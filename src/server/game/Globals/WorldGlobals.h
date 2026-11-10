@@ -27,7 +27,7 @@ struct AntiDosOpcodePolicy
     uint16 MaxAllowedCount;
 };
 
-class WorldGlobals
+class AC_GAME_API WorldGlobals
 {
 public:
     static WorldGlobals* instance();

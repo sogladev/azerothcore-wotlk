@@ -530,7 +530,7 @@ enum ServerConfigs
     MAX_NUM_SERVER_CONFIGS
 };
 
-class WorldConfig : public ConfigValueCache<ServerConfigs>
+class AC_GAME_API WorldConfig : public ConfigValueCache<ServerConfigs>
 {
 public:
     WorldConfig() : ConfigValueCache(MAX_NUM_SERVER_CONFIGS) { }

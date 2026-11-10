@@ -27,7 +27,7 @@
 
 class Map;
 
-class MapGridManager
+class AC_GAME_API MapGridManager
 {
 public:
     MapGridManager(Map* map) : _map(map), _createdGridsCount(0), _loadedGridsCount(0) { }

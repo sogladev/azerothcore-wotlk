@@ -1704,7 +1704,7 @@ struct BG_AV_NodeInfo
 
 inline BG_AV_Nodes& operator++(BG_AV_Nodes& i) { return i = BG_AV_Nodes(i + 1); }
 
-struct BattlegroundAVScore final : public BattlegroundScore
+struct AC_GAME_API BattlegroundAVScore final : public BattlegroundScore
 {
     friend class BattlegroundAV;
 

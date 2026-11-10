@@ -899,6 +899,11 @@ public:
 private:
     ScriptRegistryCompositum() = default;
 
+    /// A singleton holding a queue of owning pointers is not copyable, and exporting
+    /// the class makes MSVC instantiate the implicit copy operations.
+    ScriptRegistryCompositum(ScriptRegistryCompositum const&) = delete;
+    ScriptRegistryCompositum& operator= (ScriptRegistryCompositum const&) = delete;
+
     void DoDelayedDelete();
 
     std::unordered_set<ScriptRegistryInterface*> _registries;

@@ -23,7 +23,7 @@
 #include "GridDefines.h"
 #include "ObjectMgr.h"
 
-class GridObjectLoader
+class AC_GAME_API GridObjectLoader
 {
 public:
     GridObjectLoader(MapGridType& grid, Map* map)
@@ -43,7 +43,7 @@ private:
 };
 
 // Clean up and remove from world
-class GridObjectCleaner
+class AC_GAME_API GridObjectCleaner
 {
 public:
     template<class T> void Visit(GridRefMgr<T>&);
@@ -51,7 +51,7 @@ public:
 };
 
 // Delete objects before deleting NGrid
-class GridObjectUnloader
+class AC_GAME_API GridObjectUnloader
 {
 public:
     void Visit(CorpseMapType&) { }    // corpses are deleted with Map

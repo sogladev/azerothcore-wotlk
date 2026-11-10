@@ -173,7 +173,7 @@ enum BG_WS_Trigger
     BG_WS_TRIGGER_HORDE_ELIXIR_BERSERK_SPAWN    = 3709,
 };
 
-struct BattlegroundWGScore final : public BattlegroundScore
+struct AC_GAME_API BattlegroundWGScore final : public BattlegroundScore
 {
     friend class BattlegroundWS;
 

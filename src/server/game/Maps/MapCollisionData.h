@@ -31,7 +31,7 @@ namespace VMAP
 }
 
 // Simple wrappers for vmap static & dynamic trees to enable clear separation of use for increased readability
-class StaticVMapCollisionData
+class AC_GAME_API StaticVMapCollisionData
 {
     friend class MapCollisionData;
 
@@ -48,13 +48,13 @@ protected:
     uint32 _mapId;
 };
 
-class DynamicVMapCollisionData : public DynamicMapTree
+class AC_GAME_API DynamicVMapCollisionData : public DynamicMapTree
 {
 public:
     bool GetObjectHitPos(uint32 phasemask, float x1, float y1, float z1, float x2, float y2, float z2, float& rx, float& ry, float& rz, float modifyDist) const;
 };
 
-class MMapData
+class AC_GAME_API MMapData
 {
     friend class MapCollisionData;
 
@@ -70,7 +70,7 @@ protected:
 };
 
 // Map collision data holders (dynamic&static vmap, mmaps)
-class MapCollisionData
+class AC_GAME_API MapCollisionData
 {
 public:
     MapCollisionData(Map const& map, Map const* parentMap);

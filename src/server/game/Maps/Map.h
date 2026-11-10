@@ -164,7 +164,7 @@ enum EncounterCreditType : uint8
     ENCOUNTER_CREDIT_CAST_SPELL     = 1,
 };
 
-class Map : public GridRefMgr<MapGridType>
+class AC_GAME_API Map : public GridRefMgr<MapGridType>
 {
     friend class MapReference;
     friend class GridObjectLoader;
@@ -723,7 +723,7 @@ enum InstanceResetMethod
     INSTANCE_RESET_GROUP_LEAVE          // on leaving group
 };
 
-class InstanceMap : public Map
+class AC_GAME_API InstanceMap : public Map
 {
 public:
     InstanceMap(uint32 id, uint32 InstanceId, uint8 SpawnMode, Map* _parent);
@@ -757,7 +757,7 @@ private:
     uint32 i_script_id;
 };
 
-class BattlegroundMap : public Map
+class AC_GAME_API BattlegroundMap : public Map
 {
 public:
     BattlegroundMap(uint32 id, uint32 InstanceId, Map* _parent, uint8 spawnMode);

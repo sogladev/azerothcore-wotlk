@@ -79,7 +79,7 @@ enum MailShowFlags
     MAIL_SHOW_RETURN  = 0x0010,
 };
 
-class MailSender
+class AC_GAME_API MailSender
 {
 public:                                                 // Constructors
     MailSender(MailMessageType messageType, uint32 sender_guidlow_or_entry, MailStationery stationery = MAIL_STATIONERY_DEFAULT)
@@ -101,7 +101,7 @@ private:
     MailStationery m_stationery;
 };
 
-class MailReceiver
+class AC_GAME_API MailReceiver
 {
 public:                                                 // Constructors
     explicit MailReceiver(ObjectGuid::LowType receiver_lowguid) : m_receiver(nullptr), m_receiver_lowguid(receiver_lowguid) {}
@@ -115,7 +115,7 @@ private:
     ObjectGuid::LowType  m_receiver_lowguid;
 };
 
-class MailDraft
+class AC_GAME_API MailDraft
 {
     typedef std::map<ObjectGuid, Item*> MailItemMap;
 

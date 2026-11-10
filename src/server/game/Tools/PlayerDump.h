@@ -63,7 +63,7 @@ struct DumpTable;
 struct TableStruct;
 class StringTransaction;
 
-class PlayerDump
+class AC_GAME_API PlayerDump
 {
 public:
     static void InitializeTables();
@@ -72,7 +72,7 @@ protected:
     PlayerDump() { }
 };
 
-class PlayerDumpWriter : public PlayerDump
+class AC_GAME_API PlayerDumpWriter : public PlayerDump
 {
 public:
     PlayerDumpWriter() { }
@@ -92,7 +92,7 @@ private:
     std::set<uint64> _itemSets;
 };
 
-class PlayerDumpReader : public PlayerDump
+class AC_GAME_API PlayerDumpReader : public PlayerDump
 {
 public:
     PlayerDumpReader() { }

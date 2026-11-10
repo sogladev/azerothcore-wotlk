@@ -60,30 +60,30 @@ public:
 namespace ObjectAccessor
 {
     // these functions return objects only if in map of specified object
-    WorldObject* GetWorldObject(WorldObject const&, ObjectGuid const& guid);
-    Object* GetObjectByTypeMask(WorldObject const&, ObjectGuid const& guid, uint32 typemask);
-    Corpse* GetCorpse(WorldObject const& u, ObjectGuid const& guid);
-    GameObject* GetGameObject(WorldObject const& u, ObjectGuid const& guid);
-    Transport* GetTransport(WorldObject const& u, ObjectGuid const& guid);
-    DynamicObject* GetDynamicObject(WorldObject const& u, ObjectGuid const& guid);
-    Unit* GetUnit(WorldObject const&, ObjectGuid const& guid);
-    Creature* GetCreature(WorldObject const& u, ObjectGuid const& guid);
-    Pet* GetPet(WorldObject const&, ObjectGuid const& guid);
-    Player* GetPlayer(Map const*, ObjectGuid const& guid);
-    Player* GetPlayer(WorldObject const&, ObjectGuid const& guid);
-    Creature* GetCreatureOrPetOrVehicle(WorldObject const&, ObjectGuid const&);
+    AC_GAME_API WorldObject* GetWorldObject(WorldObject const&, ObjectGuid const& guid);
+    AC_GAME_API Object* GetObjectByTypeMask(WorldObject const&, ObjectGuid const& guid, uint32 typemask);
+    AC_GAME_API Corpse* GetCorpse(WorldObject const& u, ObjectGuid const& guid);
+    AC_GAME_API GameObject* GetGameObject(WorldObject const& u, ObjectGuid const& guid);
+    AC_GAME_API Transport* GetTransport(WorldObject const& u, ObjectGuid const& guid);
+    AC_GAME_API DynamicObject* GetDynamicObject(WorldObject const& u, ObjectGuid const& guid);
+    AC_GAME_API Unit* GetUnit(WorldObject const&, ObjectGuid const& guid);
+    AC_GAME_API Creature* GetCreature(WorldObject const& u, ObjectGuid const& guid);
+    AC_GAME_API Pet* GetPet(WorldObject const&, ObjectGuid const& guid);
+    AC_GAME_API Player* GetPlayer(Map const*, ObjectGuid const& guid);
+    AC_GAME_API Player* GetPlayer(WorldObject const&, ObjectGuid const& guid);
+    AC_GAME_API Creature* GetCreatureOrPetOrVehicle(WorldObject const&, ObjectGuid const&);
 
     // these functions return objects if found in whole world
     // ACCESS LIKE THAT IS NOT THREAD SAFE
-    Player* FindPlayer(ObjectGuid const guid);
-    Player* FindPlayerByLowGUID(ObjectGuid::LowType lowguid);
-    Player* FindConnectedPlayer(ObjectGuid const guid);
-    Player* FindPlayerByName(std::string const& name, bool checkInWorld = true);
-    Creature* GetSpawnedCreatureByDBGUID(uint32 mapId, uint64 guid);
-    GameObject* GetSpawnedGameObjectByDBGUID(uint32 mapId, uint64 guid);
+    AC_GAME_API Player* FindPlayer(ObjectGuid const guid);
+    AC_GAME_API Player* FindPlayerByLowGUID(ObjectGuid::LowType lowguid);
+    AC_GAME_API Player* FindConnectedPlayer(ObjectGuid const guid);
+    AC_GAME_API Player* FindPlayerByName(std::string const& name, bool checkInWorld = true);
+    AC_GAME_API Creature* GetSpawnedCreatureByDBGUID(uint32 mapId, uint64 guid);
+    AC_GAME_API GameObject* GetSpawnedGameObjectByDBGUID(uint32 mapId, uint64 guid);
 
     // when using this, you must use the hashmapholder's lock
-    HashMapHolder<Player>::MapType const& GetPlayers();
+    AC_GAME_API HashMapHolder<Player>::MapType const& GetPlayers();
 
     template<class T>
     void AddObject(T* object)
@@ -97,7 +97,7 @@ namespace ObjectAccessor
         HashMapHolder<T>::Remove(object);
     }
 
-    void SaveAllPlayers();
+    AC_GAME_API void SaveAllPlayers();
 
     template<>
     void AddObject(Player* player);
@@ -105,7 +105,7 @@ namespace ObjectAccessor
     template<>
     void RemoveObject(Player* player);
 
-    void UpdatePlayerNameMapReference(std::string oldname, Player* player);
+    AC_GAME_API void UpdatePlayerNameMapReference(std::string oldname, Player* player);
 }
 
 #endif

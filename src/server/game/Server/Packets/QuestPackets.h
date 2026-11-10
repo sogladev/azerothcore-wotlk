@@ -34,7 +34,7 @@ namespace WorldPackets
             WorldPacket const* Write() override { return &_worldPacket; }
         };
 
-        class QuestUpdateComplete final : public ServerPacket
+        class AC_GAME_API QuestUpdateComplete final : public ServerPacket
         {
         public:
             QuestUpdateComplete() : ServerPacket(SMSG_QUESTUPDATE_COMPLETE, 4) {}
@@ -44,7 +44,7 @@ namespace WorldPackets
             uint32 QuestId = 0;
         };
 
-        class QuestGiverQuestComplete final : public ServerPacket
+        class AC_GAME_API QuestGiverQuestComplete final : public ServerPacket
         {
         public:
             QuestGiverQuestComplete() : ServerPacket(SMSG_QUESTGIVER_QUEST_COMPLETE, 4 + 4 + 4 + 4 + 4 + 4) {}
@@ -59,7 +59,7 @@ namespace WorldPackets
             uint32 RewardArena = 0;
         };
 
-        class QuestGiverQuestFailed final : public ServerPacket
+        class AC_GAME_API QuestGiverQuestFailed final : public ServerPacket
         {
         public:
             QuestGiverQuestFailed() : ServerPacket(SMSG_QUESTGIVER_QUEST_FAILED, 4 + 4) {}
@@ -70,7 +70,7 @@ namespace WorldPackets
             uint32 FailureReason = 0;
         };
 
-        class QuestUpdateFailedTimer final : public ServerPacket
+        class AC_GAME_API QuestUpdateFailedTimer final : public ServerPacket
         {
         public:
             QuestUpdateFailedTimer() : ServerPacket(SMSG_QUESTUPDATE_FAILEDTIMER, 4) {}
@@ -80,7 +80,7 @@ namespace WorldPackets
             uint32 QuestId = 0;
         };
 
-        class QuestGiverQuestInvalid final : public ServerPacket
+        class AC_GAME_API QuestGiverQuestInvalid final : public ServerPacket
         {
         public:
             QuestGiverQuestInvalid() : ServerPacket(SMSG_QUESTGIVER_QUEST_INVALID, 4) {}
@@ -90,7 +90,7 @@ namespace WorldPackets
             QuestFailedReason FailureReason = INVALIDREASON_DONT_HAVE_REQ;
         };
 
-        class QuestConfirmAccept final : public ServerPacket
+        class AC_GAME_API QuestConfirmAccept final : public ServerPacket
         {
         public:
             // 4 (QuestId) + title (variable, 16 reserved estimate) + 8 (GUID)
@@ -103,7 +103,7 @@ namespace WorldPackets
             ObjectGuid PlayerGuid;
         };
 
-        class QuestPushResult final : public ServerPacket
+        class AC_GAME_API QuestPushResult final : public ServerPacket
         {
         public:
             QuestPushResult() : ServerPacket(MSG_QUEST_PUSH_RESULT, 8 + 1) {}
@@ -122,7 +122,7 @@ namespace WorldPackets
             WorldPacket const* Write() override { return &_worldPacket; }
         };
 
-        class QuestUpdateAddKill final : public ServerPacket
+        class AC_GAME_API QuestUpdateAddKill final : public ServerPacket
         {
         public:
             QuestUpdateAddKill() : ServerPacket(SMSG_QUESTUPDATE_ADD_KILL, 4 * 4 + 8) {}
@@ -136,7 +136,7 @@ namespace WorldPackets
             ObjectGuid ObjectiveGuid;
         };
 
-        class QuestUpdateAddPvPKill final : public ServerPacket
+        class AC_GAME_API QuestUpdateAddPvPKill final : public ServerPacket
         {
         public:
             QuestUpdateAddPvPKill() : ServerPacket(SMSG_QUESTUPDATE_ADD_PVP_KILL, 3 * 4) {}
@@ -148,7 +148,7 @@ namespace WorldPackets
             uint32 RequiredCount = 0;
         };
 
-        class QuestPushResultClient final : public ClientPacket
+        class AC_GAME_API QuestPushResultClient final : public ClientPacket
         {
         public:
             QuestPushResultClient(WorldPacket&& packet) : ClientPacket(MSG_QUEST_PUSH_RESULT, std::move(packet)) {}
@@ -168,7 +168,7 @@ namespace WorldPackets
             void Read() override {}
         };
 
-        class QuestLogSwapQuest final : public ClientPacket
+        class AC_GAME_API QuestLogSwapQuest final : public ClientPacket
         {
         public:
             QuestLogSwapQuest(WorldPacket&& packet) : ClientPacket(CMSG_QUESTLOG_SWAP_QUEST, std::move(packet)) {}
@@ -179,7 +179,7 @@ namespace WorldPackets
             uint8 Slot2 = 0;
         };
 
-        class QuestLogRemoveQuest final : public ClientPacket
+        class AC_GAME_API QuestLogRemoveQuest final : public ClientPacket
         {
         public:
             QuestLogRemoveQuest(WorldPacket&& packet) : ClientPacket(CMSG_QUESTLOG_REMOVE_QUEST, std::move(packet)) {}
@@ -189,7 +189,7 @@ namespace WorldPackets
             uint8 Slot = 0;
         };
 
-        class QuestConfirmAcceptClient final : public ClientPacket
+        class AC_GAME_API QuestConfirmAcceptClient final : public ClientPacket
         {
         public:
             QuestConfirmAcceptClient(WorldPacket&& packet) : ClientPacket(CMSG_QUEST_CONFIRM_ACCEPT, std::move(packet)) {}
@@ -199,7 +199,7 @@ namespace WorldPackets
             uint32 QuestId = 0;
         };
 
-        class PushQuestToParty final : public ClientPacket
+        class AC_GAME_API PushQuestToParty final : public ClientPacket
         {
         public:
             PushQuestToParty(WorldPacket&& packet) : ClientPacket(CMSG_PUSHQUESTTOPARTY, std::move(packet)) {}

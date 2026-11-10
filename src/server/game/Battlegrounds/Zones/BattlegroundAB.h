@@ -213,7 +213,7 @@ const float BG_AB_SpiritGuidePos[BG_AB_ALL_NODES_COUNT][4] =
     {714.61f, 646.15f, -10.87f, 4.34f}                      // horde starting base
 };
 
-struct BattlegroundABScore final : public BattlegroundScore
+struct AC_GAME_API BattlegroundABScore final : public BattlegroundScore
 {
     friend class BattlegroundAB;
 

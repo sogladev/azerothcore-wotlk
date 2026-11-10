@@ -40,7 +40,7 @@ class Player;
 
 namespace Acore
 {
-    struct VisibleNotifier
+    struct AC_GAME_API VisibleNotifier
     {
         Player& i_player;
         std::vector<Unit*>& i_visibleNow;
@@ -59,7 +59,7 @@ namespace Acore
         void SendToSelf(void);
     };
 
-    struct VisibleChangesNotifier
+    struct AC_GAME_API VisibleChangesNotifier
     {
         WorldObject& i_object;
 
@@ -70,7 +70,7 @@ namespace Acore
         void Visit(DynamicObjectMapType&);
     };
 
-    struct PlayerRelocationNotifier : public VisibleNotifier
+    struct AC_GAME_API PlayerRelocationNotifier : public VisibleNotifier
     {
         PlayerRelocationNotifier(Player& player): VisibleNotifier(player, false) { }
 
@@ -79,7 +79,7 @@ namespace Acore
         void Visit(PlayerMapType&);
     };
 
-    struct CreatureRelocationNotifier
+    struct AC_GAME_API CreatureRelocationNotifier
     {
         Creature& i_creature;
         CreatureRelocationNotifier(Creature& c) : i_creature(c) {}
@@ -87,7 +87,7 @@ namespace Acore
         void Visit(PlayerMapType&);
     };
 
-    struct AIRelocationNotifier
+    struct AC_GAME_API AIRelocationNotifier
     {
         Unit& i_unit;
         bool isCreature;
@@ -105,7 +105,7 @@ namespace Acore
         OtherTeam,
     };
 
-    struct MessageDistDeliverer
+    struct AC_GAME_API MessageDistDeliverer
     {
         WorldObject const* i_source;
         WorldPacket const* i_message;
@@ -162,7 +162,7 @@ namespace Acore
         }
     };
 
-    struct MessageDistDelivererToHostile
+    struct AC_GAME_API MessageDistDelivererToHostile
     {
         Unit* i_source;
         WorldPacket* i_message;
@@ -634,7 +634,7 @@ namespace Acore
 
     // WorldObject check classes
 
-    class AnyDeadUnitObjectInRangeCheck
+    class AC_GAME_API AnyDeadUnitObjectInRangeCheck
     {
     public:
         AnyDeadUnitObjectInRangeCheck(Unit* searchObj, float range) : i_searchObj(searchObj), i_range(range) {}
@@ -647,7 +647,7 @@ namespace Acore
         float i_range;
     };
 
-    class AnyDeadUnitSpellTargetInRangeCheck : public AnyDeadUnitObjectInRangeCheck
+    class AC_GAME_API AnyDeadUnitSpellTargetInRangeCheck : public AnyDeadUnitObjectInRangeCheck
     {
     public:
         AnyDeadUnitSpellTargetInRangeCheck(Unit* searchObj, float range, SpellInfo const* spellInfo, SpellTargetCheckTypes check)

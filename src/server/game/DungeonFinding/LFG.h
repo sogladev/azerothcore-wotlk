@@ -494,9 +494,9 @@ namespace lfg
         }
     };
 
-    std::string ConcatenateDungeons(LfgDungeonSet const& dungeons);
-    std::string GetRolesString(uint8 roles);
-    std::string GetStateString(LfgState state);
+    AC_GAME_API std::string ConcatenateDungeons(LfgDungeonSet const& dungeons);
+    AC_GAME_API std::string GetRolesString(uint8 roles);
+    AC_GAME_API std::string GetStateString(LfgState state);
 
 } // namespace lfg
 

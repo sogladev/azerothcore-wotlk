@@ -84,7 +84,7 @@ constexpr std::pair<std::string_view, ServerMailConditionType> ServerMailConditi
  *
  * Conditions are attached to server mail templates and are evaluated when players log in.
  */
-struct ServerMailCondition
+struct AC_GAME_API ServerMailCondition
 {
     ServerMailCondition() = default;
 
@@ -145,7 +145,7 @@ struct ServerMail
 
 typedef std::unordered_map<uint32, ServerMail> ServerMailContainer;
 
-class ServerMailMgr
+class AC_GAME_API ServerMailMgr
 {
 private:
     ServerMailMgr() = default;

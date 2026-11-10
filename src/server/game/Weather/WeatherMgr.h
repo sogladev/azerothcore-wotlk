@@ -29,8 +29,8 @@ struct WeatherData;
 
 namespace WeatherMgr
 {
-    void LoadWeatherData();
-    WeatherData const* GetWeatherData(uint32 zone_id);
+    AC_GAME_API void LoadWeatherData();
+    AC_GAME_API WeatherData const* GetWeatherData(uint32 zone_id);
 }
 
 #endif

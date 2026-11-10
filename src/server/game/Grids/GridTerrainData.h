@@ -218,7 +218,7 @@ enum class TerrainMapDataReadResult
     InvalidHoleData
 };
 
-class GridTerrainData
+class AC_GAME_API GridTerrainData
 {
     bool LoadAreaData(std::ifstream& fileStream, uint32 const offset);
     bool LoadHeightData(std::ifstream& fileStream, uint32 const offset);

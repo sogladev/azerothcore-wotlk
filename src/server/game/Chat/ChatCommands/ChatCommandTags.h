@@ -140,6 +140,8 @@ namespace Acore::ChatCommands
     {
         using value_type = std::string;
 
+        // Only the out-of-line member is exported: a class-level annotation would
+        // collide with it (MSVC C2487).
         AC_GAME_API ChatCommandResult TryConsume(ChatHandler const* handler, std::string_view args);
     };
 

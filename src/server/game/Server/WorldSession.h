@@ -290,7 +290,7 @@ enum CharterTypes
     ARENA_TEAM_CHARTER_5v5_TYPE                   = 5
 };
 
-class LoginQueryHolder : public CharacterDatabaseQueryHolder
+class AC_GAME_API LoginQueryHolder : public CharacterDatabaseQueryHolder
 {
 public:
     LoginQueryHolder(uint32 accountId, ObjectGuid guid);
@@ -333,7 +333,7 @@ protected:
     WorldSession* const m_pSession;
 };
 //process only thread-safe packets in Map::Update()
-class MapSessionFilter : public PacketFilter
+class AC_GAME_API MapSessionFilter : public PacketFilter
 {
 public:
     explicit MapSessionFilter(WorldSession* pSession) : PacketFilter(pSession) {}
@@ -346,7 +346,7 @@ public:
 
 //class used to filer only thread-unsafe packets from queue
 //in order to update only be used in World::UpdateSessions()
-class WorldSessionFilter : public PacketFilter
+class AC_GAME_API WorldSessionFilter : public PacketFilter
 {
 public:
     explicit WorldSessionFilter(WorldSession* pSession) : PacketFilter(pSession) {}
@@ -426,7 +426,7 @@ struct PacketCounter
 };
 
 /// Player session in the World
-class WorldSession
+class AC_GAME_API WorldSession
 {
 public:
     WorldSession(uint32 id, std::string&& name, uint32 accountFlags, std::shared_ptr<WorldSocket> sock,

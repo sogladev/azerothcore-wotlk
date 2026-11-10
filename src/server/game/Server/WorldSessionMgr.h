@@ -37,7 +37,7 @@ struct AccountPlayHistory
     Seconds playedTime = Seconds::zero(); // reset after 5 hours offline time
 };
 
-class WorldSessionMgr
+class AC_GAME_API WorldSessionMgr
 {
 public:
     static WorldSessionMgr* Instance();

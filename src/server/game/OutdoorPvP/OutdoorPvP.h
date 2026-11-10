@@ -87,7 +87,7 @@ struct GossipMenuItems;
 
 typedef GuidSet PlayerSet;
 
-class OPvPCapturePoint
+class AC_GAME_API OPvPCapturePoint
 {
 public:
     explicit OPvPCapturePoint(OutdoorPvP* pvp);
@@ -184,7 +184,7 @@ protected:
 };
 
 // base class for specific outdoor pvp handlers
-class OutdoorPvP : public ZoneScript
+class AC_GAME_API OutdoorPvP : public ZoneScript
 {
     friend class OutdoorPvPMgr;
 

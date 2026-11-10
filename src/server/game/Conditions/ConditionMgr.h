@@ -194,7 +194,7 @@ struct ConditionSourceInfo
     }
 };
 
-struct Condition
+struct AC_GAME_API Condition
 {
     ConditionSourceType     SourceType;        //SourceTypeOrReferenceId
     uint32                  SourceGroup;
@@ -247,7 +247,7 @@ typedef std::map<std::pair<uint32 /*SourceEntry*/, uint32 /*SourceGroup*/>, std:
 
 typedef std::map<uint32, ConditionList> ConditionReferenceContainer;//only used for references
 
-class ConditionMgr
+class AC_GAME_API ConditionMgr
 {
 private:
     ConditionMgr();

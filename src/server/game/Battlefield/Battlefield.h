@@ -82,7 +82,7 @@ class BfGraveyard;
 using GraveyardVect = std::vector<BfGraveyard*>;
 using PlayerTimerMap = std::map<ObjectGuid, time_t>;
 
-class BfCapturePoint
+class AC_GAME_API BfCapturePoint
 {
 public:
     BfCapturePoint(Battlefield* bf);
@@ -152,7 +152,7 @@ protected:
     ObjectGuid CapturePoint;
 };
 
-class BfGraveyard
+class AC_GAME_API BfGraveyard
 {
 public:
     BfGraveyard(Battlefield* bf);
@@ -192,7 +192,7 @@ protected:
     Battlefield* Bf;
 };
 
-class Battlefield : public ZoneScript
+class AC_GAME_API Battlefield : public ZoneScript
 {
     friend class BattlefieldMgr;
 

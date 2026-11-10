@@ -31,7 +31,7 @@ class StaticTransport;
 class MotionTransport;
 struct TransportCreatureProto;
 
-class MapMgr
+class AC_GAME_API MapMgr
 {
 public:
     static MapMgr* instance();

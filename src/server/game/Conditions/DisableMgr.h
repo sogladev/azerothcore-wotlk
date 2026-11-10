@@ -59,7 +59,7 @@ struct DisableData
     std::set<uint32> params[2];                             // params0, params1
 };
 
-class DisableMgr
+class AC_GAME_API DisableMgr
 {
 private:
     DisableMgr();

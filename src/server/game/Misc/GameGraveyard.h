@@ -46,7 +46,7 @@ typedef std::multimap<uint32, GraveyardData> WGGraveyardContainer;
 typedef std::pair<WGGraveyardContainer::const_iterator, WGGraveyardContainer::const_iterator> GraveyardMapBounds;
 typedef std::pair<WGGraveyardContainer::iterator, WGGraveyardContainer::iterator> GraveyardMapBoundsNonConst;
 
-class Graveyard
+class AC_GAME_API Graveyard
 {
 public:
     static Graveyard* instance();

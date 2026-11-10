@@ -189,7 +189,7 @@ enum eScriptFlags
     SF_ORIENTATION_FACE_TARGET  = 0x1,
 };
 
-struct ScriptInfo
+struct AC_GAME_API ScriptInfo
 {
     ScriptsType type;
     uint32 id;
@@ -389,15 +389,15 @@ typedef std::multimap<uint32, ScriptInfo> ScriptMap;
 typedef std::map<uint32, ScriptMap > ScriptMapMap;
 typedef std::multimap<uint32, uint32> SpellScriptsContainer;
 typedef std::pair<SpellScriptsContainer::iterator, SpellScriptsContainer::iterator> SpellScriptsBounds;
-extern ScriptMapMap sSpellScripts;
-extern ScriptMapMap sEventScripts;
-extern ScriptMapMap sWaypointScripts;
+AC_GAME_API extern ScriptMapMap sSpellScripts;
+AC_GAME_API extern ScriptMapMap sEventScripts;
+AC_GAME_API extern ScriptMapMap sWaypointScripts;
 
-std::string GetScriptsTableNameByType(ScriptsType type);
-ScriptMapMap* GetScriptsMapByType(ScriptsType type);
-std::string GetScriptCommandName(ScriptCommands command);
+AC_GAME_API std::string GetScriptsTableNameByType(ScriptsType type);
+AC_GAME_API ScriptMapMap* GetScriptsMapByType(ScriptsType type);
+AC_GAME_API std::string GetScriptCommandName(ScriptCommands command);
 
-struct SpellClickInfo
+struct AC_GAME_API SpellClickInfo
 {
     uint32 spellId;
     uint8 castFlags;
@@ -682,7 +682,7 @@ enum SkillRangeType
     SKILL_RANGE_NONE,                                       // 0..0 always
 };
 
-SkillRangeType GetSkillRangeType(SkillRaceClassInfoEntry const* rcEntry);
+AC_GAME_API SkillRangeType GetSkillRangeType(SkillRaceClassInfoEntry const* rcEntry);
 
 #define MAX_PLAYER_NAME          12                         // max allowed by client name length
 #define MAX_INTERNAL_PLAYER_NAME 15                         // max server internal player name length (> MAX_PLAYER_NAME for support declined names)
@@ -690,7 +690,7 @@ SkillRangeType GetSkillRangeType(SkillRaceClassInfoEntry const* rcEntry);
 #define MAX_CHARTER_NAME         24                         // max allowed by client name length
 #define MAX_CHANNEL_NAME         50                         // pussywizard
 
-bool normalizePlayerName(std::string& name);
+AC_GAME_API bool normalizePlayerName(std::string& name);
 
 struct LanguageDesc
 {
@@ -699,8 +699,8 @@ struct LanguageDesc
     uint32   skill_id;
 };
 
-extern LanguageDesc lang_description[LANGUAGES_COUNT];
-LanguageDesc const* GetLanguageDescByID(uint32 lang);
+AC_GAME_API extern LanguageDesc lang_description[LANGUAGES_COUNT];
+AC_GAME_API LanguageDesc const* GetLanguageDescByID(uint32 lang);
 
 struct DungeonEncounter
 {
@@ -726,7 +726,7 @@ typedef std::unordered_map<uint32, QuestMoneyRewardArray> QuestMoneyRewardStore;
 
 class PlayerDumpReader;
 
-class ObjectMgr
+class AC_GAME_API ObjectMgr
 {
     friend class PlayerDumpReader;
 

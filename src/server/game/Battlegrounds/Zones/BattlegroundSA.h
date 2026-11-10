@@ -391,7 +391,7 @@ const float SOTADefPortalDest[5][4] =
     { 1193.857f, 69.9f, 58.046f, 5.7245f },
 };
 
-struct BattlegroundSAScore final : public BattlegroundScore
+struct AC_GAME_API BattlegroundSAScore final : public BattlegroundScore
 {
     friend class BattlegroundSA;
 

@@ -855,7 +855,7 @@ enum HonorRewards
     WINNER_HONOR_AMOUNT = 500
 };
 
-struct BattlegroundICScore final : public BattlegroundScore
+struct AC_GAME_API BattlegroundICScore final : public BattlegroundScore
 {
     friend class BattlegroundIC;
 

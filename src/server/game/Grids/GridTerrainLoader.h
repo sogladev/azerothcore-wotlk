@@ -22,7 +22,7 @@
 
 class Map;
 
-class GridTerrainLoader
+class AC_GAME_API GridTerrainLoader
 {
 public:
     GridTerrainLoader(MapGridType& grid, Map* map)

@@ -25,7 +25,7 @@ namespace lfg
     /**
         Stores all lfg data needed about a group.
     */
-    class LfgGroupData
+    class AC_GAME_API LfgGroupData
     {
     public:
         LfgGroupData();

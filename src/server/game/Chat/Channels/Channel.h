@@ -140,7 +140,7 @@ enum eChannelRights
     CHANNEL_RIGHT_DONT_PRESERVE             = 0x100,
 };
 
-class Channel
+class AC_GAME_API Channel
 {
     struct PlayerInfo
     {

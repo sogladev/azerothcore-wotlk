@@ -171,7 +171,7 @@ namespace Acore::Impl::ChatCommands
         Acore::ChatCommands::Console AllowConsole;
     };
 
-    class ChatCommandNode
+    class AC_GAME_API ChatCommandNode
     {
     friend struct FilteredCommandListIterator;
     using ChatCommandBuilder = Acore::ChatCommands::ChatCommandBuilder;

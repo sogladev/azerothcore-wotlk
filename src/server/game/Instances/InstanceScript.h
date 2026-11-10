@@ -85,13 +85,16 @@ struct BossBoundaryEntry
     AreaBoundary const* const boundary;
 };
 
+// The class cannot be exported as a whole: BossBoundaryEntry holds const members, so
+// exporting BossBoundaryData instantiates a copy assignment that cannot exist (MSVC
+// C2280). Only the destructor is out of line, so it carries the annotation instead.
 struct BossBoundaryData
 {
     typedef std::vector<BossBoundaryEntry> StorageType;
     typedef StorageType::const_iterator const_iterator;
 
     BossBoundaryData(std::initializer_list<BossBoundaryEntry> data) : _data(data) { }
-    ~BossBoundaryData();
+    AC_GAME_API ~BossBoundaryData();
     const_iterator begin() const { return _data.begin(); }
     const_iterator end() const { return _data.end(); }
 
@@ -141,7 +144,7 @@ typedef std::map<uint32 /*type*/, ObjectGuid /*guid*/> ObjectGuidMap;
 typedef std::map<uint32 /*entry*/, uint32 /*type*/> ObjectInfoMap;
 typedef std::map<ObjectGuid::LowType /*spawnId*/, uint8 /*state*/> ObjectStateMap;
 
-class InstanceScript : public ZoneScript
+class AC_GAME_API InstanceScript : public ZoneScript
 {
 public:
     explicit InstanceScript(Map* map);

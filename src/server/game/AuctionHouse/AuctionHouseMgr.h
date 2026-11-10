@@ -93,7 +93,7 @@ enum class AuctionHouseId : uint8
 
 #define MAX_AUCTION_HOUSE_FACTIONS 3
 
-struct AuctionEntry
+struct AC_GAME_API AuctionEntry
 {
     uint32 Id;
     AuctionHouseId houseId;
@@ -123,7 +123,7 @@ struct AuctionEntry
 };
 
 //this class is used as auctionhouse instance
-class AuctionHouseObject
+class AC_GAME_API AuctionHouseObject
 {
 public:
     // Initialize storage
@@ -161,7 +161,7 @@ private:
     AuctionEntryMap::const_iterator _next;
 };
 
-class AuctionHouseMgr
+class AC_GAME_API AuctionHouseMgr
 {
 private:
     AuctionHouseMgr();

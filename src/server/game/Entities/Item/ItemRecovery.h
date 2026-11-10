@@ -56,15 +56,15 @@ struct RecoveryItem
 namespace ItemRecovery
 {
     // Returns false when the item is filtered out by the ItemDelete.* settings.
-    bool Save(Item const* item, uint32 count, RecoveryItemSource source, uint32 money = 0, RecoveryItemLoot const& loot = { });
-    [[nodiscard]] std::optional<RecoveryItem> Load(uint32 recoveryId);
+    AC_GAME_API bool Save(Item const* item, uint32 count, RecoveryItemSource source, uint32 money = 0, RecoveryItemLoot const& loot = { });
+    [[nodiscard]] AC_GAME_API std::optional<RecoveryItem> Load(uint32 recoveryId);
 
     // Mails the item as it was recorded and deletes the recovery row. owner may be null when offline.
-    bool Restore(RecoveryItem const& recovery, Player* owner);
-    void DeleteFromDB(CharacterDatabaseTransaction trans, uint32 recoveryId);
+    AC_GAME_API bool Restore(RecoveryItem const& recovery, Player* owner);
+    AC_GAME_API void DeleteFromDB(CharacterDatabaseTransaction trans, uint32 recoveryId);
 
     // A vendored item still in the buyback tab must not be restored, or the player could buy it back as well.
-    [[nodiscard]] bool IsInBuyback(Player* player, RecoveryItem const& recovery);
+    [[nodiscard]] AC_GAME_API bool IsInBuyback(Player* player, RecoveryItem const& recovery);
 }
 
 #endif

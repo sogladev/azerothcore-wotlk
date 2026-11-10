@@ -64,7 +64,7 @@ enum BattlegroundQueueGroupTypes
     BG_QUEUE_MAX = 10
 };
 
-class BattlegroundQueue
+class AC_GAME_API BattlegroundQueue
 {
 public:
     BattlegroundQueue();
@@ -147,7 +147,7 @@ private:
     This class is used to invite player to BG again, when minute lasts from his first invitation
     it is capable to solve all possibilities
 */
-class BGQueueInviteEvent : public BasicEvent
+class AC_GAME_API BGQueueInviteEvent : public BasicEvent
 {
 public:
     BGQueueInviteEvent(ObjectGuid pl_guid, uint32 BgInstanceGUID, BattlegroundTypeId BgTypeId, uint8 arenaType, uint32 removeTime) :
@@ -170,7 +170,7 @@ private:
     We must store removeInvite time in case player left queue and joined and is invited again
     We must store bgQueueTypeId, because battleground can be deleted already, when player entered it
 */
-class BGQueueRemoveEvent : public BasicEvent
+class AC_GAME_API BGQueueRemoveEvent : public BasicEvent
 {
 public:
     BGQueueRemoveEvent(ObjectGuid pl_guid, uint32 bgInstanceGUID, BattlegroundTypeId BgTypeId, BattlegroundQueueTypeId bgQueueTypeId, uint32 removeTime) :

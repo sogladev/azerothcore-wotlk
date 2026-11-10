@@ -61,7 +61,7 @@ enum WeatherState : uint32
 };
 
 /// Weather for one zone
-class Weather
+class AC_GAME_API Weather
 {
 public:
     Weather(Map* map, uint32 zone, WeatherData const* weatherChances);

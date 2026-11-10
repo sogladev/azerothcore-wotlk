@@ -88,7 +88,7 @@ struct ArenaSeasonRewardGroup
     }
 };
 
-class ArenaSeasonMgr
+class AC_GAME_API ArenaSeasonMgr
 {
 public:
     static ArenaSeasonMgr* instance();

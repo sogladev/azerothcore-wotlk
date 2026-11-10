@@ -29,7 +29,7 @@ enum BanReturn
     BAN_LONGER_EXISTS
 };
 
-class BanMgr
+class AC_GAME_API BanMgr
 {
 public:
     static BanMgr* instance();

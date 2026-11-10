@@ -235,7 +235,7 @@ enum GuildMemberFlags
 };
 
 // Emblem info
-class EmblemInfo
+class AC_GAME_API EmblemInfo
 {
 public:
     explicit EmblemInfo(uint32 style = 0, uint32 color = 0, uint32 borderStyle = 0, uint32 borderColor = 0,
@@ -291,7 +291,7 @@ private:
 
 using SlotIds = std::set<uint8>;
 
-class Guild
+class AC_GAME_API Guild
 {
 public: // pussywizard: public class Member
     // Class representing guild member

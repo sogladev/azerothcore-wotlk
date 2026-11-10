@@ -37,7 +37,7 @@ namespace lfg
     };
 
     // Stores player or group queue info
-    struct LfgQueueData
+    struct AC_GAME_API LfgQueueData
     {
         LfgQueueData();
 
@@ -70,7 +70,7 @@ namespace lfg
     /**
         Stores all data related to queue
     */
-    class LFGQueue
+    class AC_GAME_API LFGQueue
     {
     public:
         // Add/Remove from queue

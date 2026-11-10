@@ -42,7 +42,7 @@ struct BattlegroundData
     BGFreeSlotQueueContainer BGFreeSlotQueue;
 };
 
-struct BattlegroundTemplate
+struct AC_GAME_API BattlegroundTemplate
 {
     BattlegroundTypeId Id;
     uint16 MinPlayersPerTeam;
@@ -58,7 +58,7 @@ struct BattlegroundTemplate
     bool IsArena() const;
 };
 
-class BattlegroundMgr
+class AC_GAME_API BattlegroundMgr
 {
 private:
     BattlegroundMgr();

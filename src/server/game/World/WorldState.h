@@ -172,7 +172,7 @@ enum SICityTimers
     CITY_ATTACK_TIMER_MAX                               = 60 * 60, // 60 min.
 };
 
-struct ScourgeInvasionData
+struct AC_GAME_API ScourgeInvasionData
 {
     struct InvasionZone
     {
@@ -259,7 +259,7 @@ enum SunwellGateCounters
     COUNTERS_MAX_GATES,
 };
 
-struct SunsReachReclamationData
+struct AC_GAME_API SunsReachReclamationData
 {
     uint32 m_phase;
     uint32 m_subphaseMask;
@@ -280,7 +280,7 @@ struct SunsReachReclamationData
 };
 
 // Intended for implementing server wide scripts, note: all behaviour must be safeguarded towards multithreading
-class WorldState
+class AC_GAME_API WorldState
 {
     public:
         WorldState();

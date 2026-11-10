@@ -5,6 +5,7 @@
 #ifndef _DATA_MAP_H_
 #define _DATA_MAP_H_
 
+#include "Define.h"
 #include <memory>
 #include <string>
 #include <type_traits>
@@ -13,6 +14,14 @@
 class DataMap
 {
 public:
+    DataMap() = default;
+
+    /// The container owns its values through unique_ptr, so a DataMap was never copyable;
+    /// saying so explicitly keeps an exported holder (Object, Map, Group) from instantiating
+    /// an ill-formed copy assignment (MSVC C2679).
+    DataMap(DataMap const&) = delete;
+    DataMap& operator= (DataMap const&) = delete;
+
     /**
      * Base class that you should inherit in your script.
      * Inheriting classes can be stored to DataMap

@@ -32,7 +32,7 @@
  *
  * Opening up many possiblilties for a patch-less custom server.
  */
-class WardenPayloadMgr
+class AC_GAME_API WardenPayloadMgr
 {
 public:
     WardenPayloadMgr();

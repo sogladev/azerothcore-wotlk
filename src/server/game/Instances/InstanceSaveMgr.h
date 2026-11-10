@@ -53,7 +53,7 @@ struct BoundInstancesMapWrapper
 
 typedef std::unordered_map<ObjectGuid /*guid*/, BoundInstancesMapWrapper* > PlayerBindStorage;
 
-class InstanceSave
+class AC_GAME_API InstanceSave
 {
     friend class InstanceSaveMgr;
 public:
@@ -129,7 +129,7 @@ struct InstanceMapLoadRows
     std::vector<BindRow> binds;
 };
 
-class InstanceSaveMgr
+class AC_GAME_API InstanceSaveMgr
 {
     friend class InstanceSave;
 

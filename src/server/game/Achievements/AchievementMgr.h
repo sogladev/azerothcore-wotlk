@@ -94,7 +94,7 @@ enum AchievementCommonCategories
 class Player;
 class Unit;
 
-struct AchievementCriteriaData
+struct AC_GAME_API AchievementCriteriaData
 {
     AchievementCriteriaDataType dataType{ACHIEVEMENT_CRITERIA_DATA_TYPE_NONE};
     union
@@ -242,7 +242,7 @@ struct AchievementCriteriaData
     bool Meets(uint32 criteria_id, Player const* source, Unit const* target, uint32 miscvalue1 = 0) const;
 };
 
-struct AchievementCriteriaDataSet
+struct AC_GAME_API AchievementCriteriaDataSet
 {
     AchievementCriteriaDataSet()  = default;
     typedef std::vector<AchievementCriteriaData> Storage;
@@ -289,7 +289,7 @@ class Unit;
 class Player;
 class WorldPacket;
 
-class AchievementMgr
+class AC_GAME_API AchievementMgr
 {
 public:
     AchievementMgr(Player* player);
@@ -346,7 +346,7 @@ private:
     std::vector<AchievementOfflinePlayerUpdate> _offlineUpdatesQueue;
 };
 
-class AchievementGlobalMgr
+class AC_GAME_API AchievementGlobalMgr
 {
     AchievementGlobalMgr() = default;
     ~AchievementGlobalMgr() = default;

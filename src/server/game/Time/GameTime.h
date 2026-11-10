@@ -55,7 +55,7 @@ namespace GameTime
     }
 
     /// Update all timers
-    void UpdateGameTimers();
+    AC_GAME_API void UpdateGameTimers();
 }
 
 #endif

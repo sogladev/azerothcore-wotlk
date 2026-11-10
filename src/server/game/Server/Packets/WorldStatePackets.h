@@ -24,7 +24,7 @@ namespace WorldPackets
 {
     namespace WorldState
     {
-        class InitWorldStates final : public ServerPacket
+        class AC_GAME_API InitWorldStates final : public ServerPacket
         {
         public:
             struct WorldStateInfo
@@ -46,7 +46,7 @@ namespace WorldPackets
             std::vector<WorldStateInfo> Worldstates;
         };
 
-        class UpdateWorldState final : public ServerPacket
+        class AC_GAME_API UpdateWorldState final : public ServerPacket
         {
         public:
             UpdateWorldState() : ServerPacket(SMSG_UPDATE_WORLD_STATE, 4 + 4) { }

@@ -1401,7 +1401,7 @@ public:
         : OpcodeHandler(name, status) { }
 };
 
-class OpcodeTable
+class AC_GAME_API OpcodeTable
 {
 public:
     OpcodeTable();
@@ -1427,9 +1427,9 @@ private:
     ClientOpcodeHandler* _internalTableClient[NUM_OPCODE_HANDLERS];
 };
 
-extern OpcodeTable opcodeTable;
+AC_GAME_API extern OpcodeTable opcodeTable;
 
 /// Lookup opcode name for human understandable logging
-std::string GetOpcodeNameForLogging(Opcodes opcode);
+AC_GAME_API std::string GetOpcodeNameForLogging(Opcodes opcode);
 
 #endif
