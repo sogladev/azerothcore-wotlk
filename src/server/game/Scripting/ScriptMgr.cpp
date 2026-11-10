@@ -905,11 +905,19 @@ std::size_t ScriptMgr::PromoteAfterLoadScripts()
     return promoted;
 }
 
-std::shared_ptr<ModuleReference> ScriptMgr::AcquireModuleReferenceOfScriptName(std::string const& /*scriptname*/) const
+std::shared_ptr<ModuleReference> ScriptMgr::AcquireModuleReferenceOfScriptName(std::string const& scriptname) const
 {
-    // Handing out a module reference needs the reload manager that owns the loaded
-    // libraries; until it can, no script outlives the library it came from.
-    return nullptr;
+#ifdef ACORE_API_USE_DYNAMIC_LINKING
+    // A live object keeps the library that provided its script loaded, so it can
+    // outlive an unload and still run mapped code.
+    return ScriptReloadMgr::AcquireModuleReferenceOfContext(
+        sScriptRegistryCompositum->GetScriptContextOfScriptName(scriptname));
+#else
+    // A statically linked server has no library to keep alive; every caller guards
+    // this call, so reaching it means a caller ignored that.
+    (void)scriptname;
+    WPAbort();
+#endif
 }
 
 void ScriptMgr::LoadDatabase()
