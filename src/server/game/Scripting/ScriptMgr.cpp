@@ -658,6 +658,64 @@ struct ScriptSwapHooks<GameObjectScript> : AIObjectScriptSwapHooks<GameObject, G
 
 namespace
 {
+    /// Bookkeeping shared by the lazy types: there is nothing to repair on the
+    /// objects that already run a released library's code, they keep it. The
+    /// release only remembers that the change set has something to do, and the
+    /// commit clears it again.
+    template<typename ScriptType>
+    struct LazyScriptSwapHooks
+    {
+        static void BeforeReleaseContext(std::string const& context)
+        {
+            auto const bounds = ScriptRegistry<ScriptType>::ContextScriptIds.equal_range(context);
+            if (bounds.first != bounds.second)
+                _swapped = true;
+        }
+
+        static void BeforeUnload()
+        {
+            ASSERT(!_swapped, "The scripts of a lazy script type should have been swapped by now.");
+        }
+
+    protected:
+        static void ClearSwappedFlag()
+        {
+            _swapped = false;
+        }
+
+        static inline bool _swapped = false;
+    };
+}
+
+/// An instance keeps the library it was created from mapped through its module
+/// reference, so a released library's instances run their own version of the
+/// code and only instances created after the commit use the newest one.
+template<>
+struct ScriptSwapHooks<InstanceMapScript> : LazyScriptSwapHooks<InstanceMapScript>
+{
+    static void BeforeSwapContext(bool /*initialize*/)
+    {
+        ClearSwappedFlag();
+    }
+};
+
+/// The same holds for spell and aura scripts, with one extra step: the spell
+/// script list the database drives is validated again once the released loaders
+/// are gone, so no spell keeps an entry whose code disappeared.
+template<>
+struct ScriptSwapHooks<SpellScriptLoader> : LazyScriptSwapHooks<SpellScriptLoader>
+{
+    static void BeforeSwapContext(bool /*initialize*/)
+    {
+        if (_swapped)
+            sObjectMgr->ValidateSpellScripts();
+
+        ClearSwappedFlag();
+    }
+};
+
+namespace
+{
     /// Runs one swap hook of every registry type whose policy needs it. The whole
     /// type list is walked, so the hooks run in the same order as the registries
     /// are unloaded in.

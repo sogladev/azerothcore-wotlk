@@ -22,9 +22,11 @@
 #include "Spell.h"
 #include "SpellAuraDefines.h"
 #include "Util.h"
+#include <memory>
 #include <stack>
 
 class Unit;
+class ModuleReference;
 class SpellInfo;
 class SpellScript;
 class Spell;
@@ -60,7 +62,7 @@ protected:
     virtual bool _Validate(SpellInfo const* entry);
 
 public:
-    _SpellScript() : m_currentScriptState(SPELL_SCRIPT_STATE_NONE), m_scriptName(nullptr), m_scriptSpellId(0) {}
+    _SpellScript() : m_currentScriptState(SPELL_SCRIPT_STATE_NONE), m_scriptName(nullptr), m_scriptSpellId(0), m_moduleReference(nullptr) {}
     virtual ~_SpellScript() {}
     virtual void _Register();
     virtual void _Unload();
@@ -105,6 +107,9 @@ protected:
     uint8 m_currentScriptState;
     std::string const* m_scriptName;
     uint32 m_scriptSpellId;
+    /// Keeps the library that created this script mapped while a cast still
+    /// holds it, so a swapped library's script finishes on its own code.
+    std::shared_ptr<ModuleReference> m_moduleReference;
 public:
     //
     // SpellScript/AuraScript interface base

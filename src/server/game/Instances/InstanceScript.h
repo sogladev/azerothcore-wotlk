@@ -24,6 +24,7 @@
 #include "World.h"
 #include "ZoneScript.h"
 #include "WorldStatePackets.h"
+#include <memory>
 #include <set>
 
 #define OUT_SAVE_INST_DATA             LOG_DEBUG("scripts.ai", "Saving Instance Data for Instance {} (Map {}, Instance Id {})", instance->GetMapName(), instance->GetId(), instance->GetInstanceId())
@@ -33,6 +34,7 @@
 #define OUT_LOAD_INST_DATA_FAIL        LOG_ERROR("scripts.ai", "Unable to load Instance Data for Instance {} (Map {}, Instance Id: {}).", instance->GetMapName(), instance->GetId(), instance->GetInstanceId())
 
 class Map;
+class ModuleReference;
 class Unit;
 class Player;
 class GameObject;
@@ -142,11 +144,16 @@ typedef std::map<ObjectGuid::LowType /*spawnId*/, uint8 /*state*/> ObjectStateMa
 class InstanceScript : public ZoneScript
 {
 public:
-    explicit InstanceScript(Map* map) : instance(map), completedEncounters(0), _teamIdInInstance(TEAM_NEUTRAL) {}
+    explicit InstanceScript(Map* map);
 
     ~InstanceScript() override {}
 
     Map* instance;
+
+    /// Keeps the library that created this instance's script mapped for as long
+    /// as the instance lives, so a reloaded or unloaded library leaves the
+    /// already created instances running their own version of the code.
+    std::shared_ptr<ModuleReference> module_reference;
 
     //On creation, NOT load.
     virtual void Initialize() {}

@@ -34,6 +34,21 @@
 #include "TC9Sidecar.h"
 #include "WorldSession.h"
 
+InstanceScript::InstanceScript(Map* map) : instance(map), completedEncounters(0), _teamIdInInstance(TEAM_NEUTRAL)
+{
+#ifdef ACORE_API_USE_DYNAMIC_LINKING
+    // Acquire a strong reference from the script module to keep it loaded until
+    // this object is destroyed. An instance whose script was created by another
+    // source, or whose map carries no instance template, has no module to keep.
+    if (InstanceTemplate const* instanceTemplate = sObjectMgr->GetInstanceTemplate(map->GetId()))
+    {
+        std::string const& scriptname = sObjectMgr->GetScriptName(instanceTemplate->ScriptId);
+        if (!scriptname.empty())
+            module_reference = sScriptMgr->AcquireModuleReferenceOfScriptName(scriptname);
+    }
+#endif // #ifndef ACORE_API_USE_DYNAMIC_LINKING
+}
+
 BossBoundaryData::~BossBoundaryData()
 {
     for (const_iterator it = begin(); it != end(); ++it)
