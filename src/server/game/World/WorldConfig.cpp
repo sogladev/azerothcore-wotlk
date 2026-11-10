@@ -713,4 +713,17 @@ void WorldConfig::BuildConfigCache()
     // Achievement
     SetConfigValue<uint32>(CONFIG_ACHIEVEMENT_REALM_FIRST_KILL_WINDOW, "Achievement.RealmFirstKillWindow", 60);
     SetConfigValue<bool>(CONFIG_ACHIEVEMENT_REALM_FIRST_RACE_LIMIT_ONE_PER_CHARACTER, "Achievement.RealmFirstRaceLimitOnePerCharacter", true);
+
+    // HotSwap, only honoured by a dynamic build, and only read once at start-up
+    SetConfigValue<bool>(CONFIG_HOTSWAP_ENABLED, "HotSwap.Enabled", true, ConfigValueCache::Reloadable::No);
+    SetConfigValue<bool>(CONFIG_HOTSWAP_RECOMPILER_ENABLED, "HotSwap.EnableReCompiler", true,
+        ConfigValueCache::Reloadable::No);
+    SetConfigValue<bool>(CONFIG_HOTSWAP_EARLY_TERMINATION_ENABLED, "HotSwap.EnableEarlyTermination", true,
+        ConfigValueCache::Reloadable::No);
+    SetConfigValue<bool>(CONFIG_HOTSWAP_BUILD_FILE_RECREATION_ENABLED, "HotSwap.EnableBuildFileRecreation", true,
+        ConfigValueCache::Reloadable::No);
+    SetConfigValue<bool>(CONFIG_HOTSWAP_INSTALL_ENABLED, "HotSwap.EnableInstall", true,
+        ConfigValueCache::Reloadable::No);
+    SetConfigValue<bool>(CONFIG_HOTSWAP_PREFIX_CORRECTION_ENABLED, "HotSwap.EnablePrefixCorrection", true,
+        ConfigValueCache::Reloadable::No);
 }

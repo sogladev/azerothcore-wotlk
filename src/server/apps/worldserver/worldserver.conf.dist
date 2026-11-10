@@ -26,6 +26,7 @@
 #    WEATHER
 #    TICKETS
 #    COMMAND
+#    HOT SWAP
 #
 #  GAME SETTINGS
 #    GAME MASTER
@@ -1502,6 +1503,91 @@ Command.LookupMaxResults = 0
 #                     0 - (Disabled)
 
 Die.Command.Mode = 1
+
+#
+###################################################################################################
+
+###################################################################################################
+# HOT SWAP
+#
+#    Note:        These settings are only honoured by a server built with dynamic linking
+#                 (WITH_DYNAMIC_LINKING=1); a static build ignores all of them.
+#                 They are read once at start-up, so a changed value needs a server restart.
+
+#
+#    HotSwap.Enabled
+#        Description: Enables dynamic script hotswapping.
+#                     A script library dropped into the script directory is loaded into the running
+#                     server, a replaced one is reloaded and a removed one is unloaded, without a
+#                     restart.
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+HotSwap.Enabled = 1
+
+#
+#    HotSwap.ScriptDir
+#        Description: Directory containing the script shared libraries (.dll/.so), relative to the
+#                     directory the worldserver runs from unless an absolute path is given.
+#        Example:     "/usr/local/share/azerothcore/scripts"
+#        Default:     "scripts"
+
+HotSwap.ScriptDir = "scripts"
+
+#
+#    HotSwap.EnableReCompiler
+#        Description: Enables the dynamic script recompiler.
+#                     Watches the script source directories and rebuilds the script libraries whose
+#                     sources changed.
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+HotSwap.EnableReCompiler = 1
+
+#
+#    HotSwap.EnableEarlyTermination
+#        Description: Terminate the build of a module when one of its associated source files changed
+#                     meanwhile.
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+HotSwap.EnableEarlyTermination = 1
+
+#
+#    HotSwap.EnableBuildFileRecreation
+#        Description: Recreate the build files of a module when sources were added to or removed from
+#                     it.
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+HotSwap.EnableBuildFileRecreation = 1
+
+#
+#    HotSwap.EnableInstall
+#        Description: Run cmake install once an automatic build has finished, so the rebuilt library
+#                     replaces the one the server loads.
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+HotSwap.EnableInstall = 1
+
+#
+#    HotSwap.EnablePrefixCorrection
+#        Description: Allow the server to set CMAKE_INSTALL_PREFIX to its own location when the
+#                     configured install prefix no longer matches the running tree.
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+HotSwap.EnablePrefixCorrection = 1
+
+#
+#    HotSwap.ReCompilerBuildType
+#        Description: Build type of the builds invoked by the recompiler.
+#        Default:     ""        - (The build type the module was configured with is used)
+#                     "Release" - (Release builds only)
+#                     "Debug"   - (Debug builds only)
+
+HotSwap.ReCompilerBuildType = ""
 
 #
 ###################################################################################################
