@@ -759,7 +759,9 @@ ScriptMgr::ScriptMgr()
     _scheduledScripts(0),
     _script_loader_callback(nullptr),
     _modules_loader_callback(nullptr),
-    _currentContext(GetNameOfStaticContext()) { }
+    _currentContext(GetNameOfStaticContext()),
+    _swapPending(false),
+    _databaseLoaded(false) { }
 
 ScriptMgr::~ScriptMgr() { }
 
@@ -817,6 +819,9 @@ void ScriptMgr::Unload()
 
     sScriptRegistryCompositum->Unload();
 
+    _swapPending = false;
+    _databaseLoaded = false;
+
     delete[] SpellSummary;
 }
 
@@ -847,6 +852,17 @@ void ScriptMgr::ReleaseScriptContext(std::string const& context)
 
 void ScriptMgr::SwapScriptContext(bool initialize)
 {
+    // Database scripts own the live objects a swap rebuilds, so a change set
+    // assembled while they run has to wait for the next world tick instead of
+    // being applied underneath them.
+    if (!initialize && IsScriptScheduled())
+    {
+        _swapPending = true;
+        LOG_DEBUG("scripts.hotswap", "A script swap was requested while database scripts are running; "
+            "it is retried on the next world tick.");
+        return;
+    }
+
     // Called before the registries clear their change set, so a policy still sees
     // which scripts were added since the last commit.
     RunBeforeSwapContextHooks(initialize);
@@ -856,6 +872,31 @@ void ScriptMgr::SwapScriptContext(bool initialize)
     // Everything registered from here on belongs to the statically linked set
     // again, so a script whose library forgot to set a context is never orphaned.
     _currentContext = GetNameOfStaticContext();
+    _swapPending = false;
+
+    // Scripts are registered before the world database exists, so a module
+    // loaded afterwards brought database-bound scripts that never went through
+    // the promotion pass of LoadDatabase().
+    if (_databaseLoaded)
+    {
+        if (std::size_t const promoted = PromoteAfterLoadScripts())
+            LOG_INFO("scripts.hotswap", "Promoted {} database script(s) of a late-loaded script module.", promoted);
+    }
+}
+
+std::size_t ScriptMgr::PromoteAfterLoadScripts()
+{
+    // Each registry's after-load list is independent, so iteration order does not
+    // matter.
+    std::size_t promoted = 0;
+
+    Acore::for_each<ScriptRegistryTypes>([&promoted]<typename Info>()
+    {
+        if constexpr (Info::PromotedAfterDbLoad)
+            promoted += ScriptRegistry<typename Info::type>::AddALScripts();
+    });
+
+    return promoted;
 }
 
 std::shared_ptr<ModuleReference> ScriptMgr::AcquireModuleReferenceOfScriptName(std::string const& /*scriptname*/) const
@@ -871,13 +912,19 @@ void ScriptMgr::LoadDatabase()
 
     sScriptSystemMgr->LoadScriptWaypoints();
 
-    // Add all scripts that must be loaded after db/maps. Each registry's
-    // after-load list is independent, so iteration order does not matter.
+    // Add all scripts that must be loaded after db/maps.
+    PromoteAfterLoadScripts();
+
+    // The boot set is no change set: every live object already runs the code its
+    // script selects, so no type may treat these scripts as newly added at the
+    // next commit.
     Acore::for_each<ScriptRegistryTypes>([]<typename Info>()
     {
         if constexpr (Info::PromotedAfterDbLoad)
-            ScriptRegistry<typename Info::type>::AddALScripts();
+            ScriptRegistry<typename Info::type>::RecentlyAddedScriptIds.clear();
     });
+
+    _databaseLoaded = true;
 
     FillSpellSummary();
 

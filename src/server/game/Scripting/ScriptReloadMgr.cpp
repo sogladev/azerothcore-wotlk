@@ -18,6 +18,7 @@
 #include "ScriptReloadMgr.h"
 #include "Config.h"
 #include "Errors.h"
+#include "ScriptMgr.h"
 #include "World.h"
 
 #ifndef ACORE_API_USE_DYNAMIC_LINKING
@@ -32,6 +33,12 @@ std::shared_ptr<ModuleReference>
 
 // Nothing is watched or loaded in a static build, so there is nothing to set up.
 void ScriptReloadMgr::Initialize()
+{
+}
+
+// A statically linked server never loads a script library, so it never has a
+// change set waiting for a commit either.
+void ScriptReloadMgr::Update()
 {
 }
 
@@ -80,7 +87,14 @@ void ScriptReloadMgr::LoadSettings()
 
 // The library loading, unloading and the source watcher are added on top of the
 // manager by the later steps of the hotswap port; until they exist the dynamic
-// build only needs the manager to be present and reachable.
+// build only needs the manager to be present and reachable, and to retry a swap
+// the world refused while database scripts were running.
+void ScriptReloadMgr::Update()
+{
+    if (sScriptMgr->IsSwapPending())
+        sScriptMgr->SwapScriptContext();
+}
+
 std::shared_ptr<ModuleReference>
     ScriptReloadMgr::AcquireModuleReferenceOfContext(std::string const& /*context*/)
 {

@@ -165,8 +165,13 @@ public: /* Script contexts */
     /// are destroyed when the change set is committed by SwapScriptContext.
     void ReleaseScriptContext(std::string const& context);
 
-    /// Commits the change set collected since the last call.
+    /// Commits the change set collected since the last call. Refused while
+    /// database scripts are running: the change set stays queued and the world
+    /// tick retries it.
     void SwapScriptContext(bool initialize = false);
+
+    /// True while a refused swap still waits for the next world tick.
+    [[nodiscard]] bool IsSwapPending() const { return _swapPending; }
 
     /// Returns a strong reference to the module that registered the script with
     /// the given database name, so a live object keeps its module mapped.
@@ -792,6 +797,18 @@ private:
 
     // Context the scripts registered right now belong to.
     std::string _currentContext;
+
+    // A swap refused because database scripts were running, still waiting for
+    // the next world tick.
+    bool _swapPending;
+
+    // The promotion pass of the database-bound scripts ran, so a module loaded
+    // afterwards has to run it again for the scripts it brought along.
+    bool _databaseLoaded;
+
+    /// Promotes the database-bound scripts every after-load script type holds
+    /// back. Returns how many scripts left their deferred list.
+    std::size_t PromoteAfterLoadScripts();
 };
 
 #define sScriptMgr ScriptMgr::instance()
@@ -998,9 +1015,16 @@ public:
         }
     }
 
-    static void AddALScripts()
+    /// Registers the scripts that wait for the database. A promoted script leaves
+    /// the deferred list, so the pass can run again after a late module load
+    /// without registering anything twice. A script the database does not know
+    /// yet stays in the list and stays owned by this registry.
+    /// Returns how many scripts were promoted.
+    static std::size_t AddALScripts()
     {
-        for (ScriptVectorIterator it = ALScripts.begin(); it != ALScripts.end(); ++it)
+        std::size_t promoted = 0;
+
+        for (ScriptVectorIterator it = ALScripts.begin(); it != ALScripts.end();)
         {
             TScript* const script = (*it).first;
 
@@ -1010,52 +1034,56 @@ public:
             {
                 if (!_checkMemory(script))
                 {
-                    return;
+                    ++it;
+                    continue;
                 }
 
                 // Get an ID for the script. An ID only exists if it's a script that is assigned in the database
                 // through a script name (or similar).
                 uint32 id = sObjectMgr->GetScriptId(script->GetName().c_str());
-                if (id)
-                {
-                    // Try to find an existing script.
-                    TScript const* oldScript = nullptr;
-                    for (auto iterator = ScriptPointerList.begin(); iterator != ScriptPointerList.end(); ++iterator)
-                    {
-                        // If the script names match...
-                        if (iterator->second->GetName() == script->GetName())
-                        {
-                            // ... It exists.
-                            oldScript = iterator->second;
-                            break;
-                        }
-                    }
-
-                    // If the script is already assigned -> delete it!
-                    if (oldScript)
-                    {
-                        RemoveFromEnabledHooks(oldScript);
-                        ForgetScript(oldScript);
-                        RemoveFromALScripts(oldScript);
-
-                        delete oldScript;
-                    }
-                    else
-                    {
-                        // Increment script count only with new scripts
-                        sScriptMgr->IncreaseScriptCount();
-                    }
-
-                    // Assign new script!
-                    RegisterScript(script, id);
-                }
-                else
+                if (!id)
                 {
                     // The script uses a script name from database, but isn't assigned to anything.
                     if (script->GetName().find("Smart") == std::string::npos)
                         LOG_ERROR("sql.sql", "Script named '{}' is not assigned in the database.",
                                          script->GetName());
+
+                    // The database may learn this name later, so the script keeps
+                    // waiting and stays owned by this registry until then.
+                    ++it;
+                    continue;
                 }
+
+                // Try to find an existing script.
+                TScript const* oldScript = nullptr;
+                for (auto iterator = ScriptPointerList.begin(); iterator != ScriptPointerList.end(); ++iterator)
+                {
+                    // If the script names match...
+                    if (iterator->second->GetName() == script->GetName())
+                    {
+                        // ... It exists.
+                        oldScript = iterator->second;
+                        break;
+                    }
+                }
+
+                // If the script is already assigned -> delete it!
+                if (oldScript)
+                {
+                    RemoveFromEnabledHooks(oldScript);
+                    ForgetScript(oldScript);
+                    RemoveFromALScripts(oldScript);
+
+                    delete oldScript;
+                }
+                else
+                {
+                    // Increment script count only with new scripts
+                    sScriptMgr->IncreaseScriptCount();
+                }
+
+                // Assign new script!
+                RegisterScript(script, id);
             }
             else
             {
@@ -1066,7 +1094,14 @@ public:
                 RegisterScript(script, _scriptIdCounter++);
                 sScriptMgr->IncreaseScriptCount();
             }
+
+            // Registered, so it is no longer deferred: the deferred list owns
+            // nothing of it any more, and a second pass must not see it again.
+            it = ALScripts.erase(it);
+            ++promoted;
         }
+
+        return promoted;
     }
 
     /// Removes every script of the given context from this registry. The objects
@@ -1141,7 +1176,13 @@ public:
         for (auto const& [scriptID, script] : ScriptPointerList)
             delete script;
 
+        // Scripts still waiting for their database promotion were never
+        // registered, so this registry is the only owner they have.
+        for (auto const& [script, enabledHooks] : ALScripts)
+            delete script;
+
         ScriptPointerList.clear();
+        ALScripts.clear();
         ContextScriptIds.clear();
         RecentlyAddedScriptIds.clear();
 

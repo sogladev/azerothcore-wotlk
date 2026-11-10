@@ -69,7 +69,7 @@ public:
     /// Needs to be called periodically to check for updates on script modules.
     /// Expects to be invoked in a thread safe way which means it's required that
     /// the current thread is the only one which accesses the world data.
-    virtual void Update() { }
+    virtual void Update();
 
     /// Unloads the ScriptReloadMgr
     virtual void Unload() { }
