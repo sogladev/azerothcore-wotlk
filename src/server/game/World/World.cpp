@@ -76,6 +76,7 @@
 #include "RaceMgr.h"
 #include "Realm.h"
 #include "ScriptMgr.h"
+#include "ScriptReloadMgr.h"
 #include "ServerMailMgr.h"
 #include "SkillDiscovery.h"
 #include "SkillExtraItems.h"
@@ -317,6 +318,9 @@ void World::SetInitialWorldSettings()
 
     ///- Initialize config settings
     LoadConfigSettings();
+
+    ///- Configure the script hotswap engine, which needs the settings read above
+    sScriptReloadMgr->LoadSettings();
 
     ///- Initialize Allowed Security Level
     LoadDBAllowedSecurityLevel();
@@ -929,6 +933,8 @@ void World::SetInitialWorldSettings()
 
     _timers[WUPDATE_WHO_LIST].SetInterval(5 * IN_MILLISECONDS); // update who list cache every 5 seconds
 
+    _timers[WUPDATE_CHECK_HOTSWAP].SetInterval(500); // apply script library changes and start their builds
+
     _mail_expire_check_timer = GameTime::GetGameTime() + 6h;
 
     ///- Initialize MapMgr
@@ -1349,6 +1355,14 @@ void World::Update(uint32 diff)
         METRIC_TIMER("world_update_time", METRIC_TAG("type", "Process cli commands"));
         // And last, but not least handle the issued cli commands
         ProcessCliCommands();
+    }
+
+    ///- Apply queued script library changes and start the rebuilds they need
+    if (_timers[WUPDATE_CHECK_HOTSWAP].Passed())
+    {
+        METRIC_TIMER("world_update_time", METRIC_TAG("type", "Update HotSwap"));
+        sScriptReloadMgr->Update();
+        _timers[WUPDATE_CHECK_HOTSWAP].Reset();
     }
 
     {

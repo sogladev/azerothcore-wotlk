@@ -16,7 +16,9 @@
  */
 
 #include "ScriptReloadMgr.h"
+#include "Config.h"
 #include "Errors.h"
+#include "World.h"
 
 #ifndef ACORE_API_USE_DYNAMIC_LINKING
 
@@ -28,6 +30,22 @@ std::shared_ptr<ModuleReference>
     WPAbort();
 }
 
+// Nothing is watched or loaded in a static build, so there is nothing to set up.
+void ScriptReloadMgr::Initialize()
+{
+}
+
+// The settings only matter to a reloader that can load libraries; an operator
+// who asked for hotswapping here only gets told why it does not happen.
+void ScriptReloadMgr::LoadSettings()
+{
+    if (sWorld->getBoolConfig(CONFIG_HOTSWAP_ENABLED))
+    {
+        LOG_WARN("scripts.hotswap", "HotSwap.Enabled is set, but this server was built without "
+            "dynamic linking, so no script library can be loaded.");
+    }
+}
+
 // Returns the empty implemented ScriptReloadMgr
 ScriptReloadMgr* ScriptReloadMgr::instance()
 {
@@ -36,6 +54,29 @@ ScriptReloadMgr* ScriptReloadMgr::instance()
 }
 
 #else
+
+// Starts nothing yet: the scripts are registered before the world configuration
+// is read, so the manager only announces that it is waiting for it.
+void ScriptReloadMgr::Initialize()
+{
+    LOG_INFO("scripts.hotswap", "Script hotswapping is waiting for the world configuration.");
+}
+
+// Resolves the settings the reloader runs with. Loading the libraries that are
+// installed already and starting the watchers comes right after this.
+void ScriptReloadMgr::LoadSettings()
+{
+    if (!sWorld->getBoolConfig(CONFIG_HOTSWAP_ENABLED))
+    {
+        LOG_INFO("scripts.hotswap", "Script hotswapping is disabled by HotSwap.Enabled.");
+        return;
+    }
+
+    std::string const scriptDirectory = sConfigMgr->GetOption<std::string>("HotSwap.ScriptDir", "scripts");
+
+    LOG_INFO("scripts.hotswap", "Script hotswapping is enabled: script directory '{}', recompiler {}.",
+        scriptDirectory, sWorld->getBoolConfig(CONFIG_HOTSWAP_RECOMPILER_ENABLED) ? "enabled" : "disabled");
+}
 
 // The library loading, unloading and the source watcher are added on top of the
 // manager by the later steps of the hotswap port; until they exist the dynamic

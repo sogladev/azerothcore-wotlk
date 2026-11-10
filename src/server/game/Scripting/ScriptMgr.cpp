@@ -24,6 +24,7 @@
 #include "MapMgr.h"
 #include "OutdoorPvPMgr.h"
 #include "ScriptRegistrySwapHooks.h"
+#include "ScriptReloadMgr.h"
 #include "ScriptSystem.h"
 #include "SmartAI.h"
 #include "SpellMgr.h"
@@ -796,6 +797,13 @@ void ScriptMgr::Initialize()
         if constexpr (Info::HasEnabledHooks)
             ScriptRegistry<typename Info::type>::InitEnabledHooksIfNeeded(Info::EnabledHooks);
     });
+
+    // Everything registered so far comes from the statically linked scripts, so it
+    // belongs to the static context; the commit hands it to the registries and is
+    // the last moment a script of the start-up set counts as newly added.
+    SetScriptContext(GetNameOfStaticContext());
+    sScriptReloadMgr->Initialize();
+    SwapScriptContext(true);
 }
 
 void ScriptMgr::Unload()

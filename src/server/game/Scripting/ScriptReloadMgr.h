@@ -57,12 +57,14 @@ protected:
 public:
     virtual ~ScriptReloadMgr() = default;
 
-    /// Initializes the ScriptReloadMgr
-    virtual void Initialize() { }
+    /// Initializes the ScriptReloadMgr. Called while the scripts are registered,
+    /// which happens before the world configuration is read; the settings that
+    /// decide whether the reloader runs at all are applied by LoadSettings().
+    virtual void Initialize();
 
-    /// Applies the settings which can only be read once the world
-    /// configuration exists; a no-op until the reloader supports them.
-    virtual void LoadSettings() { }
+    /// Applies the settings that can only be read once the world configuration
+    /// exists. Called right after the configuration was read.
+    virtual void LoadSettings();
 
     /// Needs to be called periodically to check for updates on script modules.
     /// Expects to be invoked in a thread safe way which means it's required that
