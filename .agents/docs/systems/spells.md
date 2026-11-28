@@ -23,8 +23,9 @@ change to it:
 - A random summon point landing inside geometry: an `OnDestinationTargetSelect` Z-fix taking the height from above
   (`GetMapHeight(x, y, casterZ + margin)`), not pathfinding retries (e.g. `spell_xt002_recharge_robot`).
 - A spell that selects its own unit (implicit target such as `TARGET_UNIT_NEARBY_ENTRY`, narrowed by
-  `conditions`) needs no explicit target: `Spell::InitExplicitTargets` drops a unit target when
-  `GetExplicitTargetMask()` carries no unit flag, so `DoCast(unit, spell)` behaves as `DoCastSelf(spell)`.
+  `conditions`) needs no explicit target when `GetExplicitTargetMask()` has no unit, corpse or dest-location flag:
+  `Spell::InitExplicitTargets` then drops the unit target, so `DoCastSelf(spell)` selects the same targets. Keep
+  `DoCast(unit, spell)` when something reads `GetOriginalTarget()`, which still returns `unit`.
 
 ## Summons
 
